@@ -77,7 +77,7 @@ p26
 I0
 sS'dsphysics_path'
 p27
-VC:/Users/anvie/Desktop/DualSPHysics_v4.0_Windows_x64/EXECS/DualSPHysics4_win64.exe
+VC:/Users/anvie/Desktop/DualSPHysics/EXECS/DualSPHysics4_win64.exe
 p28
 sS'rhopoutmin'
 p29
@@ -105,7 +105,7 @@ p36
 F0.866025
 sS'dp'
 p37
-F0.05
+F0.0005
 sS'viscoboundfactor'
 p38
 I1
@@ -124,7 +124,7 @@ p43
 I01
 sS'partvtk4_path'
 p44
-VC:/Users/anvie/Desktop/DualSPHysics_v4.0_Windows_x64/EXECS/PartVTK4_win64.exe
+VC:/Users/anvie/Desktop/DualSPHysics/EXECS/PartVTK4_win64.exe
 p45
 sS'stepalgorithm'
 p46
@@ -143,7 +143,7 @@ p50
 F0.2
 sS'gencase_path'
 p51
-VC:/Users/anvie/Desktop/DualSPHysics_v4.0_Windows_x64/EXECS/GenCase4_win64.exe
+VC:/Users/anvie/Desktop/DualSPHysics/EXECS/GenCase4_win64.exe
 p52
 sS'posdouble'
 p53

@@ -76,18 +76,65 @@ def set_default_data():
 		data['gencase_path'] = disk_data['gencase_path']
 		data['dsphysics_path'] = disk_data['dsphysics_path']
 		data['partvtk4_path'] = disk_data['partvtk4_path']
-		#TODO: Check that the exe's are the right ones and exist
-		print "DualSPHysics for FreeCAD: Found data file. Loaded data file from disk. Check executables path."
+		
+		#Check executables and see if they are the correct ones
+		print "DualSPHysics for FreeCAD: Found data file. Loading data from disk."
+		execs_correct = True
+		if os.path.isfile(data["gencase_path"]):
+			output = subprocess.check_output([data["gencase_path"]])
+			if "gencase" in output[0:15].lower():
+				print "DualSPHysics for FreeCAD: Found correct GenCase."
+			else:
+				execs_correct = False
+				data["gencase_path"] = ""
+		else:
+			execs_correct = False
+			data["gencase_path"] = ""			
+
+		if os.path.isfile(data["dsphysics_path"]):
+			output = subprocess.check_output([data["dsphysics_path"]])
+			if "dualsphysics" in output[0:20].lower():
+				print "DualSPHysics for FreeCAD: Found correct DualSPHysics."
+			else:
+				execs_correct = False
+				data["dsphysics_path"] = ""
+		else:
+			execs_correct = False
+			data["dsphysics_path"] = ""			
+
+		if os.path.isfile(data["partvtk4_path"]):
+			output = subprocess.check_output([data["partvtk4_path"]])
+			if "partvtk4" in output[0:20].lower():
+				print "DualSPHysics for FreeCAD: Found correct PartVTK4."
+			else:
+				execs_correct = False	
+				data["partvtk4_path"] = ""
+		else:
+			execs_correct = False
+			data["partvtk4_path"] = ""			
+
+		if not execs_correct:
+			print "WARNING: One of more of the executables in the setup is not correct. Check plugin setup to correct missing binaries"
+
 
 	data["project_path"] = "" 
 	data["project_name"] = ""
 
 set_default_data()
-#Close all current documents. TODO: Implement warning
-print "DualSPHysics for FreeCAD: Closing all current documents"
-for doc in App.listDocuments().keys():
-	App.closeDocument(doc)
+#Close all current documents.
+openConfirmDialog = QtGui.QMessageBox()
+openConfirmDialog.setText("DualSPHysics for FreeCAD")
+openConfirmDialog.setInformativeText("To load this module is necessary to close all current documents. Close all the documents?")
+openConfirmDialog.setStandardButtons(QtGui.QMessageBox.Ok | QtGui.QMessageBox.Cancel)
+openConfirmDialog.setDefaultButton(QtGui.QMessageBox.Ok)
+openCDRet = openConfirmDialog.exec_()
 
+if openCDRet == QtGui.QMessageBox.Ok:
+	print "DualSPHysics for FreeCAD: Closing all current documents"
+	for doc in App.listDocuments().keys():
+		App.closeDocument(doc)
+else:
+	quit()
 
 #Establishing references for the different elements that the script will use later
 app = QtGui.qApp
@@ -1117,10 +1164,20 @@ ccgeom_ell_bt = QtGui.QPushButton("ELL")
 
 
 def on_new_case():
-	print "DualSPHysics for FreeCAD: New File. Closing all documents..."
-	for doc in App.listDocuments().keys():
-		App.closeDocument(doc)
-		
+	newConfirmDialog = QtGui.QMessageBox()
+	newConfirmDialog.setText("DualSPHysics for FreeCAD")
+	newConfirmDialog.setInformativeText("To make a new case is necessary to close all the open documents. Close all the documents?")
+	newConfirmDialog.setStandardButtons(QtGui.QMessageBox.Ok | QtGui.QMessageBox.Cancel)
+	newConfirmDialog.setDefaultButton(QtGui.QMessageBox.Ok)
+	openCDRet = newConfirmDialog.exec_()
+
+	if openCDRet == QtGui.QMessageBox.Ok:
+		print "DualSPHysics for FreeCAD: New File. Closing all documents..."
+		for doc in App.listDocuments().keys():
+			App.closeDocument(doc)
+	else:
+		quit()
+
 	App.newDocument("DSPH_Case")
 	App.setActiveDocument("DSPH_Case")
 	App.ActiveDocument=App.getDocument("DSPH_Case")
@@ -1196,6 +1253,7 @@ def on_save_case():
 		if not os.path.exists(saveName+"/"+saveName.split('/')[-1]+ "_Out"):
 			os.makedirs(saveName+"/"+saveName.split('/')[-1]+ "_Out")
 
+		print "DualSPHysics for FreeCAD: Saving data in " + data["project_path"] + "."
 		App.getDocument("DSPH_Case").saveAs(saveName+"/DSPH_Case.FCStd")
 		f = open(saveName+"/" + saveName.split('/')[-1]+ "_Def.xml", 'w')
 		f.write('<?xml version="1.0" encoding="UTF-8" ?>\n')
@@ -1342,6 +1400,12 @@ def on_save_case():
 	else:
 		print "DualSPHysics for FreeCAD: Saving cancelled."
 
+'''
+TODO: Load case. A dialog box that warns the user of saving and that his case will be closed. Then load dialog and such.
+Reenable button obviously
+'''
+def on_load_case():
+	pass
 
 def on_box_bt():
 	App.ActiveDocument.addObject("Part::Box","Box")
