@@ -2,7 +2,7 @@
 
 from PySide import QtGui, QtCore
 from FreeCAD import Base
-import Part,PartGui, os, sys, Draft, subprocess, pickle
+import Part,PartGui, os, sys, Draft, subprocess, pickle, time
 
 print "Loading DualSPHysics for FreeCAD..."
 print "-----------------------------------"
@@ -68,6 +68,10 @@ def set_default_data():
 	data['gencase_path'] = ""
 	data['dsphysics_path'] = ""
 	data['partvtk4_path'] = ""
+
+	data['project_path'] = ""
+	data['project_name'] = "" 
+	data['total_particles'] = -1
 
 	#Try to load saved paths
 	if os.path.isfile(App.getUserAppDataDir()+'/Macro/dsph_data.dsphdata'):
@@ -1152,9 +1156,7 @@ ccgeombuttons2_layout = QtGui.QHBoxLayout()
 casecontrols_label = QtGui.QLabel("Use these controls to define the Case you want to simulate.")
 casecontrols_bt_newdoc = QtGui.QPushButton("New Case")
 casecontrols_bt_savedoc = QtGui.QPushButton("Save Case")
-casecontrols_bt_loaddoc = QtGui.QPushButton("Load Case -NI")
-
-casecontrols_bt_loaddoc.setEnabled(False) #Not implemented yet
+casecontrols_bt_loaddoc = QtGui.QPushButton("Load Case")
 
 ccgeom_box_bt = QtGui.QPushButton("BOX")
 ccgeom_sph_bt = QtGui.QPushButton("SPH")
@@ -1382,30 +1384,62 @@ def on_save_case():
 			bat_file.write('pause\n')
 			bat_file.close()
 
-		#Save data array on disk
-		picklefile = open(saveName+"/casedata.dsphdata", 'wb')
-		pickle.dump(data, picklefile)
+		
 
 		#Use gencase if possible to generate the case final definition
 		if data["gencase_path"] != "":
-			output = subprocess.check_output([data["gencase_path"], data["project_path"]+"/"+data["project_name"]+"_Def", data["project_path"]+"/"+data["project_name"]+"_Out/"+data["project_name"], "-save:+all"])
-			total_particles_text = output[output.index("Total particles: "):output.index(" (bound=")]
-			total_particles = int(total_particles_text[total_particles_text.index(": ") + 2:])
-			print "Total number of particles exported: " + str(total_particles)
-			if total_particles < 300:
-				print "WARNING: Are you sure all the parameters are set right? The number of particles is very low (" + str(total_particles) + "). Lower the DP to increase number of particles"
-			elif total_particles > 200000:
-				print "WARNING: Number of particles is pretty high (" + str(total_particles) + ") and it could take much time to simulate."
+			try:
+				output = subprocess.check_output([data["gencase_path"], data["project_path"]+"/"+data["project_name"]+"_Def", data["project_path"]+"/"+data["project_name"]+"_Out/"+data["project_name"], "-save:+all"])
+				total_particles_text = output[output.index("Total particles: "):output.index(" (bound=")]
+				total_particles = int(total_particles_text[total_particles_text.index(": ") + 2:])
+				data['total_particles'] = total_particles
+
+				print "Total number of particles exported: " + str(total_particles)
+				if total_particles < 300:
+					print "WARNING: Are you sure all the parameters are set right? The number of particles is very low (" + str(total_particles) + "). Lower the DP to increase number of particles"
+				elif total_particles > 200000:
+					print "WARNING: Number of particles is pretty high (" + str(total_particles) + ") and it could take much time to simulate."
+			except subprocess.CalledProcessError:
+				print "WARNING: GenCase Failed. Probably because nothing is in the scene."
+
+		#Save data array on disk
+		picklefile = open(saveName+"/casedata.dsphdata", 'wb')
+		pickle.dump(data, picklefile)		
 
 	else:
 		print "DualSPHysics for FreeCAD: Saving cancelled."
 
-'''
-TODO: Load case. A dialog box that warns the user of saving and that his case will be closed. Then load dialog and such.
-Reenable button obviously
-'''
 def on_load_case():
-	pass
+	loadName, _ = QtGui.QFileDialog.getOpenFileName(dsph_dock, "Load Case", QtCore.QDir.homePath(), "casedata.dsphdata")
+	load_project_name = loadName.split("/")[-2]
+	load_path_project_folder = "/".join(loadName.split("/")[:-1])
+	if not os.path.isfile(load_path_project_folder + "/DSPH_Case.FCStd"):
+		print "ERROR: DSPH_Case.FCStd file not found! Corrupt or moved project. Aborting."
+		return
+
+	loadConfirmDialog = QtGui.QMessageBox()
+	loadConfirmDialog.setText("DualSPHysics for FreeCAD")
+	loadConfirmDialog.setInformativeText("To load a case is necessary to close all the open documents. Close all the documents?")
+	loadConfirmDialog.setStandardButtons(QtGui.QMessageBox.Ok | QtGui.QMessageBox.Cancel)
+	loadConfirmDialog.setDefaultButton(QtGui.QMessageBox.Ok)
+	loadCDRet = loadConfirmDialog.exec_()
+
+	if loadCDRet == QtGui.QMessageBox.Ok:
+		print "DualSPHysics for FreeCAD: Load File. Closing all documents..."
+		for doc in App.listDocuments().keys():
+			App.closeDocument(doc)
+	else:
+		return
+	
+	FreeCAD.open(load_path_project_folder + "/DSPH_Case.FCStd")	
+	load_picklefile = open(loadName, 'rb')
+	load_disk_data = pickle.load(load_picklefile)	
+
+	global data
+	data = load_disk_data
+	global dp_input
+	dp_input.setText(str(data['dp']))
+
 
 def on_box_bt():
 	App.ActiveDocument.addObject("Part::Box","Box")
@@ -1525,6 +1559,7 @@ def on_ell_bt():
 
 casecontrols_bt_newdoc.clicked.connect(on_new_case)
 casecontrols_bt_savedoc.clicked.connect(on_save_case)
+casecontrols_bt_loaddoc.clicked.connect(on_load_case)
 ccgeom_box_bt.clicked.connect(on_box_bt)
 ccgeom_sph_bt.clicked.connect(on_sph_bt)
 ccgeom_cyl_bt.clicked.connect(on_cyl_bt)
@@ -1597,6 +1632,87 @@ mk_buttonlayout.addWidget(mk_mkfluid)
 mk_buttonlayout.addWidget(mk_mkbound)
 mk_layout.addLayout(mk_buttonlayout)
 
+mk_separator = QtGui.QFrame()
+mk_separator.setFrameStyle(QtGui.QFrame.HLine)
+
+run_dialog = QtGui.QDialog()
+
+def on_ex_simulate():
+	ex_selector_combo.setEnabled(False)
+	ex_button.setEnabled(False)
+
+	run_dialog.setModal(False)
+	run_dialog.setWindowTitle("DualSPHysics Simulation: 0%")
+	run_dialog.setFixedSize(550,273)
+	run_dialog_layout = QtGui.QVBoxLayout()
+
+	run_group = QtGui.QGroupBox("Simulation Data")
+	run_group_layout = QtGui.QVBoxLayout()
+	run_group_label_case = QtGui.QLabel("Case Name: " + data['project_name'])
+	run_group_label_proc = QtGui.QLabel("Simulation processor: " + str(ex_selector_combo.currentText()))
+	run_group_label_part = QtGui.QLabel("Number of particles: " + str(data['total_particles']))
+	run_group_label_eta = QtGui.QLabel("Estimated time of completion: Calculating...")
+	run_group_layout.addWidget(run_group_label_case)
+	run_group_layout.addWidget(run_group_label_proc)
+	run_group_layout.addWidget(run_group_label_part)
+	run_group_layout.addWidget(run_group_label_eta)
+	run_group_layout.addStretch(1)
+	run_group.setLayout(run_group_layout)
+
+	run_progbar_layout = QtGui.QHBoxLayout()
+	run_progbar_bar = QtGui.QProgressBar()
+	run_progbar_bar.setTextVisible(False)
+	run_progbar_layout.addWidget(run_progbar_bar)
+
+	run_button_layout = QtGui.QHBoxLayout()
+	run_button_cancel = QtGui.QPushButton("Cancel Simulation")
+	run_button_layout.addStretch(1)
+	run_button_layout.addWidget(run_button_cancel)
+
+	run_dialog_layout.addWidget(run_group)
+	run_dialog_layout.addLayout(run_progbar_layout)
+	run_dialog_layout.addLayout(run_button_layout)
+
+	run_dialog.setLayout(run_dialog_layout)
+
+	def on_cancel():
+		print "DualSPHysics for FreeCAD: Stopping simulation"
+		run_dialog.hide()
+		ex_selector_combo.setEnabled(True)
+		ex_button.setEnabled(True)
+
+	run_button_cancel.clicked.connect(on_cancel)
+
+	#Launch simulation and watch filesystem to monitor simulation
+	startupinfo = subprocess.STARTUPINFO()
+	startupinfo.dwFlags |= subprocess.STARTF_USESHOWWINDOW
+	subprocess.Popen([data["dsphysics_path"], data["project_path"]+"/"+data["project_name"]+"_Out/" + data["project_name"], data["project_path"]+"/"+data["project_name"]+"_Out/", "-svres", "-" + str(ex_selector_combo.currentText()).lower()], startupinfo=startupinfo)
+	
+	#TODO: see http://stackoverflow.com/questions/4789837/how-to-terminate-a-python-subprocess-launched-with-shell-true
+	
+
+	run_dialog.show()
+
+
+
+ex_layout = QtGui.QVBoxLayout()
+ex_label = QtGui.QLabel("This is the simulation group. Use this controls to simulate the case in which you are working. Remember that, depending on the number of particles generated it could take some time.")
+ex_label.setWordWrap(True)
+ex_selector_layout = QtGui.QHBoxLayout()
+ex_selector_label = QtGui.QLabel("Select where to simulate:")
+ex_selector_combo = QtGui.QComboBox()
+ex_selector_combo.addItem("CPU")
+ex_selector_combo.addItem("GPU")
+ex_selector_layout.addWidget(ex_selector_label)
+ex_selector_layout.addWidget(ex_selector_combo)
+ex_button = QtGui.QPushButton("Simulate Case")
+ex_button.clicked.connect(on_ex_simulate)
+ex_layout.addWidget(ex_label)
+ex_layout.addLayout(ex_selector_layout)
+ex_layout.addWidget(ex_button)
+
+ex_separator = QtGui.QFrame()
+ex_separator.setFrameStyle(QtGui.QFrame.HLine)
 
 
 #Layout adding and ordering
@@ -1621,6 +1737,9 @@ main_layout.addWidget(crucialvars_separator)
 main_layout.addLayout(cc_layout)
 main_layout.addWidget(cc_separator)
 main_layout.addLayout(mk_layout)
+main_layout.addWidget(mk_separator)
+main_layout.addLayout(ex_layout)
+main_layout.addWidget(ex_separator)
 
 main_layout.addStretch(1)
 
@@ -1634,6 +1753,3 @@ dsph_dock.setWidget(scaff_widget)
 
 mw.addDockWidget(QtCore.Qt.RightDockWidgetArea,dsph_dock)
 print "DualSPHysics for FreeCAD: Done loading data."
-
-
-
