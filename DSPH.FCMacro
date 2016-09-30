@@ -14,6 +14,7 @@ print "-----------------------------------"
 
 #Main data structure
 data = dict()
+temp_data = dict()
 
 def set_default_data():
 	data['lattice_bound'] = 1
@@ -72,6 +73,7 @@ def set_default_data():
 	data['project_path'] = ""
 	data['project_name'] = "" 
 	data['total_particles'] = -1
+	temp_data['current_process'] = None
 
 	#Try to load saved paths
 	if os.path.isfile(App.getUserAppDataDir()+'/Macro/dsph_data.dsphdata'):
@@ -1635,48 +1637,57 @@ mk_layout.addLayout(mk_buttonlayout)
 mk_separator = QtGui.QFrame()
 mk_separator.setFrameStyle(QtGui.QFrame.HLine)
 
-run_dialog = QtGui.QDialog()
+run_dialog = QtGui.QDialog(None, QtCore.Qt.CustomizeWindowHint|QtCore.Qt.WindowTitleHint)
+run_watcher = QtCore.QFileSystemWatcher()
+
+run_dialog.setModal(False)
+run_dialog.setWindowTitle("DualSPHysics Simulation: 0%")
+run_dialog.setFixedSize(550,273)
+run_dialog_layout = QtGui.QVBoxLayout()
+
+run_group = QtGui.QGroupBox("Simulation Data")
+run_group_layout = QtGui.QVBoxLayout()
+run_group_label_case = QtGui.QLabel("Case Name: " + data['project_name'])
+run_group_label_proc = QtGui.QLabel("Simulation processor: ")
+run_group_label_part = QtGui.QLabel("Number of particles: ")
+run_group_label_eta = QtGui.QLabel(run_dialog)
+run_group_label_eta.setText("Estimated time of completion: Calculating...")
+run_group_layout.addWidget(run_group_label_case)
+run_group_layout.addWidget(run_group_label_proc)
+run_group_layout.addWidget(run_group_label_part)
+run_group_layout.addWidget(run_group_label_eta)
+run_group_layout.addStretch(1)
+run_group.setLayout(run_group_layout)
+
+run_progbar_layout = QtGui.QHBoxLayout()
+run_progbar_bar = QtGui.QProgressBar()
+run_progbar_bar.setRange(0, 100)
+run_progbar_bar.setTextVisible(False)
+run_progbar_layout.addWidget(run_progbar_bar)
+
+run_button_layout = QtGui.QHBoxLayout()
+run_button_cancel = QtGui.QPushButton("Cancel Simulation")
+run_button_layout.addStretch(1)
+run_button_layout.addWidget(run_button_cancel)
+
+run_dialog_layout.addWidget(run_group)
+run_dialog_layout.addLayout(run_progbar_layout)
+run_dialog_layout.addLayout(run_button_layout)
+
+run_dialog.setLayout(run_dialog_layout)
 
 def on_ex_simulate():
+	run_button_cancel.setText("Cancel Simulation")
 	ex_selector_combo.setEnabled(False)
 	ex_button.setEnabled(False)
-
-	run_dialog.setModal(False)
-	run_dialog.setWindowTitle("DualSPHysics Simulation: 0%")
-	run_dialog.setFixedSize(550,273)
-	run_dialog_layout = QtGui.QVBoxLayout()
-
-	run_group = QtGui.QGroupBox("Simulation Data")
-	run_group_layout = QtGui.QVBoxLayout()
-	run_group_label_case = QtGui.QLabel("Case Name: " + data['project_name'])
-	run_group_label_proc = QtGui.QLabel("Simulation processor: " + str(ex_selector_combo.currentText()))
-	run_group_label_part = QtGui.QLabel("Number of particles: " + str(data['total_particles']))
-	run_group_label_eta = QtGui.QLabel("Estimated time of completion: Calculating...")
-	run_group_layout.addWidget(run_group_label_case)
-	run_group_layout.addWidget(run_group_label_proc)
-	run_group_layout.addWidget(run_group_label_part)
-	run_group_layout.addWidget(run_group_label_eta)
-	run_group_layout.addStretch(1)
-	run_group.setLayout(run_group_layout)
-
-	run_progbar_layout = QtGui.QHBoxLayout()
-	run_progbar_bar = QtGui.QProgressBar()
-	run_progbar_bar.setTextVisible(False)
-	run_progbar_layout.addWidget(run_progbar_bar)
-
-	run_button_layout = QtGui.QHBoxLayout()
-	run_button_cancel = QtGui.QPushButton("Cancel Simulation")
-	run_button_layout.addStretch(1)
-	run_button_layout.addWidget(run_button_cancel)
-
-	run_dialog_layout.addWidget(run_group)
-	run_dialog_layout.addLayout(run_progbar_layout)
-	run_dialog_layout.addLayout(run_button_layout)
-
-	run_dialog.setLayout(run_dialog_layout)
-
+	run_group_label_proc.setText("Simulation processor: " + str(ex_selector_combo.currentText()))
+	run_group_label_part.setText("Number of particles: " + str(data['total_particles']))
+	
 	def on_cancel():
 		print "DualSPHysics for FreeCAD: Stopping simulation"
+		if temp_data["current_process"] != None :
+			temp_data["current_process"].kill()
+
 		run_dialog.hide()
 		ex_selector_combo.setEnabled(True)
 		ex_button.setEnabled(True)
@@ -1684,12 +1695,54 @@ def on_ex_simulate():
 	run_button_cancel.clicked.connect(on_cancel)
 
 	#Launch simulation and watch filesystem to monitor simulation
-	startupinfo = subprocess.STARTUPINFO()
-	startupinfo.dwFlags |= subprocess.STARTF_USESHOWWINDOW
-	subprocess.Popen([data["dsphysics_path"], data["project_path"]+"/"+data["project_name"]+"_Out/" + data["project_name"], data["project_path"]+"/"+data["project_name"]+"_Out/", "-svres", "-" + str(ex_selector_combo.currentText()).lower()], startupinfo=startupinfo)
+	filelist = [ f for f in os.listdir(data["project_path"]+"/"+data["project_name"]+"_Out/") if f.startswith("Part") ]
+	for f in filelist:
+		os.remove(data["project_path"]+"/"+data["project_name"]+"_Out/" + f)
 	
-	#TODO: see http://stackoverflow.com/questions/4789837/how-to-terminate-a-python-subprocess-launched-with-shell-true
+	def on_dsph_sim_finished(exitCode):
+		run_watcher.removePath(data["project_path"]+"/"+data["project_name"]+"_Out/")
+		run_dialog.setWindowTitle("DualSPHysics Simulation: Complete")
+		run_progbar_bar.setValue(100)
+		run_button_cancel.setText("Close")
+
+	process = QtCore.QProcess(run_dialog)
+	process.finished.connect(on_dsph_sim_finished)
+	process.start(data["dsphysics_path"], [data["project_path"]+"/"+data["project_name"]+"_Out/" + data["project_name"], data["project_path"]+"/"+data["project_name"]+"_Out/", "-svres", "-" + str(ex_selector_combo.currentText()).lower()])
+
+	temp_data["current_process"] = process
 	
+	def on_fs_change(path):
+		try:
+			run_file = open(data["project_path"]+"/"+data["project_name"]+"_Out/Run.out", "r")
+			run_file_data = run_file.readlines()
+			run_file.close()
+		except Exception as e:
+			print e
+
+		#Set percentage scale based on timemax and detect finished simulation
+		for l in run_file_data:
+			if data["timemax"] == -1:
+				if "TimeMax=" in l:
+					data["timemax"] = float(l.split("=")[1])
+
+		last_line_parttime = run_file_data[-1].split("      ")
+		if "Part" in last_line_parttime[0]:
+			current_value = (float(last_line_parttime[1]) * float(100)) / float(data["timemax"])
+			run_progbar_bar.setValue(current_value)
+			run_dialog.setWindowTitle("DualSPHysics Simulation: " +str(current_value)+ "%")
+			
+		last_line_time = run_file_data[-1].split("  ")[-1]
+		if ("===" not in last_line_time) and ("CellDiv" not in last_line_time) and ("memory" not in last_line_time) and ("-" in last_line_time):
+			#update time field
+			try:
+				run_group_label_eta.setText("Estimated time of completion: " + last_line_time)
+			except RuntimeError:
+				pass
+		run_file = None
+
+
+	run_watcher.addPath(data["project_path"]+"/"+data["project_name"]+"_Out/")
+	run_watcher.directoryChanged.connect(on_fs_change)
 
 	run_dialog.show()
 
