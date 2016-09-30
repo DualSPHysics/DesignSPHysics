@@ -73,6 +73,10 @@ def set_default_data():
 	data['project_path'] = ""
 	data['project_name'] = "" 
 	data['total_particles'] = -1
+
+	data['gencase_done'] = False
+	data['simulation_done'] = False
+
 	temp_data['current_process'] = None
 
 	#Try to load saved paths
@@ -127,20 +131,22 @@ def set_default_data():
 	data["project_name"] = ""
 
 set_default_data()
-#Close all current documents.
-openConfirmDialog = QtGui.QMessageBox()
-openConfirmDialog.setText("DualSPHysics for FreeCAD")
-openConfirmDialog.setInformativeText("To load this module is necessary to close all current documents. Close all the documents?")
-openConfirmDialog.setStandardButtons(QtGui.QMessageBox.Ok | QtGui.QMessageBox.Cancel)
-openConfirmDialog.setDefaultButton(QtGui.QMessageBox.Ok)
-openCDRet = openConfirmDialog.exec_()
 
-if openCDRet == QtGui.QMessageBox.Ok:
-	print "DualSPHysics for FreeCAD: Closing all current documents"
-	for doc in App.listDocuments().keys():
-		App.closeDocument(doc)
-else:
-	quit()
+if len(App.listDocuments().keys()) > 0:
+	#Close all current documents.
+	openConfirmDialog = QtGui.QMessageBox()
+	openConfirmDialog.setText("DualSPHysics for FreeCAD")
+	openConfirmDialog.setInformativeText("To load this module is necessary to close all current documents. Close all the documents?")
+	openConfirmDialog.setStandardButtons(QtGui.QMessageBox.Ok | QtGui.QMessageBox.Cancel)
+	openConfirmDialog.setDefaultButton(QtGui.QMessageBox.Ok)
+	openCDRet = openConfirmDialog.exec_()
+
+	if openCDRet == QtGui.QMessageBox.Ok:
+		print "DualSPHysics for FreeCAD: Closing all current documents"
+		for doc in App.listDocuments().keys():
+			App.closeDocument(doc)
+	else:
+		quit()
 
 #Establishing references for the different elements that the script will use later
 app = QtGui.qApp
@@ -1168,19 +1174,20 @@ ccgeom_ell_bt = QtGui.QPushButton("ELL")
 
 
 def on_new_case():
-	newConfirmDialog = QtGui.QMessageBox()
-	newConfirmDialog.setText("DualSPHysics for FreeCAD")
-	newConfirmDialog.setInformativeText("To make a new case is necessary to close all the open documents. Close all the documents?")
-	newConfirmDialog.setStandardButtons(QtGui.QMessageBox.Ok | QtGui.QMessageBox.Cancel)
-	newConfirmDialog.setDefaultButton(QtGui.QMessageBox.Ok)
-	openCDRet = newConfirmDialog.exec_()
+	if len(App.listDocuments().keys()) > 0:
+		newConfirmDialog = QtGui.QMessageBox()
+		newConfirmDialog.setText("DualSPHysics for FreeCAD")
+		newConfirmDialog.setInformativeText("To make a new case is necessary to close all the open documents. Close all the documents?")
+		newConfirmDialog.setStandardButtons(QtGui.QMessageBox.Ok | QtGui.QMessageBox.Cancel)
+		newConfirmDialog.setDefaultButton(QtGui.QMessageBox.Ok)
+		openCDRet = newConfirmDialog.exec_()
 
-	if openCDRet == QtGui.QMessageBox.Ok:
-		print "DualSPHysics for FreeCAD: New File. Closing all documents..."
-		for doc in App.listDocuments().keys():
-			App.closeDocument(doc)
-	else:
-		quit()
+		if openCDRet == QtGui.QMessageBox.Ok:
+			print "DualSPHysics for FreeCAD: New File. Closing all documents..."
+			for doc in App.listDocuments().keys():
+				App.closeDocument(doc)
+		else:
+			return
 
 	App.newDocument("DSPH_Case")
 	App.setActiveDocument("DSPH_Case")
@@ -1205,6 +1212,20 @@ def on_new_case():
 	App.ActiveDocument.recompute()
 	Gui.SendMsgToActiveView("ViewFit")
 	set_default_data()
+	constants_button.setEnabled(True)
+	execparams_button.setEnabled(True)
+	casecontrols_bt_savedoc.setEnabled(True)
+	dp_input.setEnabled(True)
+	ccgeom_box_bt.setEnabled(True)
+	ccgeom_sph_bt.setEnabled(True)
+	ccgeom_cyl_bt.setEnabled(True)
+	ccgeom_pyr_bt.setEnabled(True)
+	ccgeom_ell_bt.setEnabled(True)
+	mk_mkbound.setEnabled(True)
+	mk_mkfluid.setEnabled(True)
+	ex_selector_combo.setEnabled(False)
+	ex_button.setEnabled(False)
+	export_button.setEnabled(False)
 
 
 def on_save_case():
@@ -1258,7 +1279,10 @@ def on_save_case():
 			os.makedirs(saveName+"/"+saveName.split('/')[-1]+ "_Out")
 
 		print "DualSPHysics for FreeCAD: Saving data in " + data["project_path"] + "."
-		App.getDocument("DSPH_Case").saveAs(saveName+"/DSPH_Case.FCStd")
+		if (data["project_path"] == "") and (data["project_name"] == ""):
+			App.getDocument("DSPH_Case").saveAs(saveName+"/DSPH_Case.FCStd")
+		else:
+			App.getDocument("DSPH_Case").save()
 		f = open(saveName+"/" + saveName.split('/')[-1]+ "_Def.xml", 'w')
 		f.write('<?xml version="1.0" encoding="UTF-8" ?>\n')
 		f.write('<case>\n')
@@ -1387,7 +1411,7 @@ def on_save_case():
 			bat_file.close()
 
 		
-
+		data["gencase_done"] = False
 		#Use gencase if possible to generate the case final definition
 		if data["gencase_path"] != "":
 			try:
@@ -1401,6 +1425,9 @@ def on_save_case():
 					print "WARNING: Are you sure all the parameters are set right? The number of particles is very low (" + str(total_particles) + "). Lower the DP to increase number of particles"
 				elif total_particles > 200000:
 					print "WARNING: Number of particles is pretty high (" + str(total_particles) + ") and it could take much time to simulate."
+				data["gencase_done"] = True
+				ex_selector_combo.setEnabled(True)
+				ex_button.setEnabled(True)
 			except subprocess.CalledProcessError:
 				print "WARNING: GenCase Failed. Probably because nothing is in the scene."
 
@@ -1419,19 +1446,20 @@ def on_load_case():
 		print "ERROR: DSPH_Case.FCStd file not found! Corrupt or moved project. Aborting."
 		return
 
-	loadConfirmDialog = QtGui.QMessageBox()
-	loadConfirmDialog.setText("DualSPHysics for FreeCAD")
-	loadConfirmDialog.setInformativeText("To load a case is necessary to close all the open documents. Close all the documents?")
-	loadConfirmDialog.setStandardButtons(QtGui.QMessageBox.Ok | QtGui.QMessageBox.Cancel)
-	loadConfirmDialog.setDefaultButton(QtGui.QMessageBox.Ok)
-	loadCDRet = loadConfirmDialog.exec_()
+	if len(App.listDocuments().keys()) > 0:
+		loadConfirmDialog = QtGui.QMessageBox()
+		loadConfirmDialog.setText("DualSPHysics for FreeCAD")
+		loadConfirmDialog.setInformativeText("To load a case is necessary to close all the open documents. Close all the documents?")
+		loadConfirmDialog.setStandardButtons(QtGui.QMessageBox.Ok | QtGui.QMessageBox.Cancel)
+		loadConfirmDialog.setDefaultButton(QtGui.QMessageBox.Ok)
+		loadCDRet = loadConfirmDialog.exec_()
 
-	if loadCDRet == QtGui.QMessageBox.Ok:
-		print "DualSPHysics for FreeCAD: Load File. Closing all documents..."
-		for doc in App.listDocuments().keys():
-			App.closeDocument(doc)
-	else:
-		return
+		if loadCDRet == QtGui.QMessageBox.Ok:
+			print "DualSPHysics for FreeCAD: Load File. Closing all documents..."
+			for doc in App.listDocuments().keys():
+				App.closeDocument(doc)
+		else:
+			return
 	
 	FreeCAD.open(load_path_project_folder + "/DSPH_Case.FCStd")	
 	load_picklefile = open(loadName, 'rb')
@@ -1441,6 +1469,29 @@ def on_load_case():
 	data = load_disk_data
 	global dp_input
 	dp_input.setText(str(data['dp']))
+	constants_button.setEnabled(True)
+	execparams_button.setEnabled(True)
+	casecontrols_bt_savedoc.setEnabled(True)
+	dp_input.setEnabled(True)
+	ccgeom_box_bt.setEnabled(True)
+	ccgeom_sph_bt.setEnabled(True)
+	ccgeom_cyl_bt.setEnabled(True)
+	ccgeom_pyr_bt.setEnabled(True)
+	ccgeom_ell_bt.setEnabled(True)
+	mk_mkbound.setEnabled(True)
+	mk_mkfluid.setEnabled(True)
+	if data["gencase_done"]:
+		ex_selector_combo.setEnabled(True)
+		ex_button.setEnabled(True)
+	else:
+		ex_selector_combo.setEnabled(False)
+		ex_button.setEnabled(False)
+	
+	if data["simulation_done"]:	
+		export_button.setEnabled(True)
+	else:
+		export_button.setEnabled(False)
+
 
 
 def on_box_bt():
@@ -1647,7 +1698,7 @@ run_dialog_layout = QtGui.QVBoxLayout()
 
 run_group = QtGui.QGroupBox("Simulation Data")
 run_group_layout = QtGui.QVBoxLayout()
-run_group_label_case = QtGui.QLabel("Case Name: " + data['project_name'])
+run_group_label_case = QtGui.QLabel("Case Name: ")
 run_group_label_proc = QtGui.QLabel("Simulation processor: ")
 run_group_label_part = QtGui.QLabel("Number of particles: ")
 run_group_label_eta = QtGui.QLabel(run_dialog)
@@ -1677,9 +1728,13 @@ run_dialog_layout.addLayout(run_button_layout)
 run_dialog.setLayout(run_dialog_layout)
 
 def on_ex_simulate():
+	data["simulation_done"] = False
+	ex_button.setEnabled(False)
+	export_button.setEnabled(False)
 	run_button_cancel.setText("Cancel Simulation")
 	ex_selector_combo.setEnabled(False)
 	ex_button.setEnabled(False)
+	run_group_label_case.setText("Case Name: " + data['project_name'])
 	run_group_label_proc.setText("Simulation processor: " + str(ex_selector_combo.currentText()))
 	run_group_label_part.setText("Number of particles: " + str(data['total_particles']))
 	
@@ -1704,6 +1759,10 @@ def on_ex_simulate():
 		run_dialog.setWindowTitle("DualSPHysics Simulation: Complete")
 		run_progbar_bar.setValue(100)
 		run_button_cancel.setText("Close")
+		if exitCode == 0:
+			data["simulation_done"] = True
+			export_button.setEnabled(True)
+
 
 	process = QtCore.QProcess(run_dialog)
 	process.finished.connect(on_dsph_sim_finished)
@@ -1768,6 +1827,33 @@ ex_separator = QtGui.QFrame()
 ex_separator.setFrameStyle(QtGui.QFrame.HLine)
 
 
+
+def on_export():
+
+	temp_data["export_button"].setEnabled(False)
+
+	def on_export_finished(exitCode):
+		temp_data["export_button"].setEnabled(True)
+
+	export_process = QtCore.QProcess(dsph_dock)
+	export_process.finished.connect(on_export_finished)
+	export_process.start(data["partvtk4_path"], ["-dirin "+data["project_path"]+"/"+data["project_name"]+"_Out/", "-savevtk "+data["project_path"]+"/"+data["project_name"]+"_Out/PartFluid", "-onlytype:-all,+fluid"])
+
+	temp_data["current_export_process"] = export_process
+
+export_layout = QtGui.QVBoxLayout()
+export_label = QtGui.QLabel("This is the export section. Once a simulation is made, you can export to VTK the files generated by DualSPHysics. Press the button below to export")
+export_label.setWordWrap(True)
+export_button = QtGui.QPushButton("Export data to VTK")
+export_button.clicked.connect(on_export)
+temp_data["export_button"] = export_button
+export_layout.addWidget(export_label)
+export_layout.addWidget(export_button)
+
+export_separator = QtGui.QFrame()
+export_separator.setFrameStyle(QtGui.QFrame.HLine)
+
+
 #Layout adding and ordering
 logo_layout.addStretch(0.5)
 logo_layout.addWidget(logo_label)
@@ -1793,9 +1879,26 @@ main_layout.addLayout(mk_layout)
 main_layout.addWidget(mk_separator)
 main_layout.addLayout(ex_layout)
 main_layout.addWidget(ex_separator)
+main_layout.addLayout(export_layout)
+main_layout.addWidget(export_separator)
 
 main_layout.addStretch(1)
 
+#Default disabled widgets
+constants_button.setEnabled(False)
+execparams_button.setEnabled(False)
+casecontrols_bt_savedoc.setEnabled(False)
+dp_input.setEnabled(False)
+ccgeom_box_bt.setEnabled(False)
+ccgeom_sph_bt.setEnabled(False)
+ccgeom_cyl_bt.setEnabled(False)
+ccgeom_pyr_bt.setEnabled(False)
+ccgeom_ell_bt.setEnabled(False)
+mk_mkbound.setEnabled(False)
+mk_mkfluid.setEnabled(False)
+ex_selector_combo.setEnabled(False)
+ex_button.setEnabled(False)
+export_button.setEnabled(False)
 
 '''You can't apply layouts to a QDockWidget, 
 so creating a standard widget, applying the layouts, 
