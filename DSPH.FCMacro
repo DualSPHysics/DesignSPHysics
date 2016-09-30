@@ -1106,7 +1106,6 @@ def def_setup_window():
 	setup_window.resize(600,400)
 	ret_val = setup_window.exec_()
 
-'''WORK IN ADDING LOGO. '''
 #Main Widget layout. Vertical ordering
 main_layout = QtGui.QVBoxLayout()
 
@@ -1908,4 +1907,32 @@ dsph_dock.setWidget(scaff_widget)
 
 
 mw.addDockWidget(QtCore.Qt.RightDockWidgetArea,dsph_dock)
+
+# ----------- START OF OBJECT HIREARCHY WIDGET ----------- 
+#try to remove default freecad dock
+mw_children = mw.findChildren(QtGui.QDockWidget)
+for each in mw_children:
+	if each.objectName() == "Combo View":
+		mw.removeDockWidget(each)
+
+
+
+previous_dock = mw.findChild(QtGui.QDockWidget, "DSPH Hirearchy Widget")
+if previous_dock:
+	previous_dock.setParent(None)
+	previous_dock = None
+
+hire_dock = QtGui.QDockWidget()
+hire_scaff_widget = QtGui.QWidget() #Scaffolding widget, only useful to apply to the hire_dock widget
+hire_main_layout = QtGui.QVBoxLayout()
+
+
+
+hire_scaff_widget.setLayout(hire_main_layout)
+hire_dock.setWidget(hire_scaff_widget)
+hire_dock.setObjectName("DSPH Hirearchy Widget")
+hire_dock.setWindowTitle("DSPH Object Hirearchy")
+mw.addDockWidget(QtCore.Qt.LeftDockWidgetArea,hire_dock)
+
+
 print "DualSPHysics for FreeCAD: Done loading data."
