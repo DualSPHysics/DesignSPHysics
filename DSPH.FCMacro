@@ -2,7 +2,7 @@
 
 from PySide import QtGui, QtCore
 from FreeCAD import Base
-import Part,PartGui, os, sys, Draft, subprocess, pickle, time
+import Part,PartGui, os, sys, Draft, subprocess, pickle, time, threading
 
 print "Loading DualSPHysics for FreeCAD..."
 print "-----------------------------------"
@@ -15,6 +15,8 @@ print "-----------------------------------"
 #Main data structure
 data = dict()
 temp_data = dict()
+#Objects: Key is TreeWidgetItem id. Saved list is: [treewidgetitemname, internalObjectName, fluid/solid, mknumber, solid/full/face/wire]
+objects = dict()
 
 def set_default_data():
 	data['lattice_bound'] = 1
@@ -76,6 +78,8 @@ def set_default_data():
 
 	data['gencase_done'] = False
 	data['simulation_done'] = False
+
+	data['max_object_id'] = 0
 
 	temp_data['current_process'] = None
 
@@ -1192,12 +1196,9 @@ def on_new_case():
 	App.setActiveDocument("DSPH_Case")
 	App.ActiveDocument=App.getDocument("DSPH_Case")
 	Gui.ActiveDocument=Gui.getDocument("DSPH_Case")
-	''' Grid. Now disabled as it is not very useful but resource consuming to load
-	Gui.activateWorkbench("DraftWorkbench")
-	FreeCADGui.Snapper.setGrid()
-	'''
 	Gui.activateWorkbench("PartWorkbench")
 	Gui.activeDocument().activeView().viewAxonometric()
+	objectList.clear()	
 	App.ActiveDocument.addObject("Part::Box","Case_Limits")
 	App.ActiveDocument.getObject("Case_Limits").Label = "Case_Limits"
 	App.ActiveDocument.getObject("Case_Limits").Length = '15 mm'
@@ -1209,6 +1210,11 @@ def on_new_case():
 	Gui.ActiveDocument.getObject("Case_Limits").LineWidth = 2.00
 	Gui.ActiveDocument.getObject("Case_Limits").Selectable = False
 	App.ActiveDocument.recompute()
+	hireobj_caseLimits = QtGui.QTreeWidgetItem(objectList)
+	hireobj_caseLimits.setText(0, "0")
+	hireobj_caseLimits.setText(1, "Case Limits")
+	hireobj_caseLimits.setText(2, "")
+	objects["0"] = ["Case Limits", "Case_Limits", "special", "special", "special"]
 	Gui.SendMsgToActiveView("ViewFit")
 	set_default_data()
 	constants_button.setEnabled(True)
@@ -1220,49 +1226,14 @@ def on_new_case():
 	ccgeom_cyl_bt.setEnabled(True)
 	ccgeom_pyr_bt.setEnabled(True)
 	ccgeom_ell_bt.setEnabled(True)
-	mk_mkbound.setEnabled(True)
-	mk_mkfluid.setEnabled(True)
 	ex_selector_combo.setEnabled(False)
 	ex_button.setEnabled(False)
 	export_button.setEnabled(False)
 
 
+
 def on_save_case():
-	#verify all is correct to save, for now not working
-	save_error = False
-	objects = App.getDocument("DSPH_Case").Objects
-	for o in objects:
-		if o.Name == "Case_Limits":
-			if len(o.InList) != 0:
-				#ERROR. Should not be interacting with anything
-				print "ERROR: Case Limits is not valid. Did you put it inside some group?"
-				save_error = True
-				break
-		else:
-			if str(o.TypeId) == 'App::DocumentObjectGroup':
-				continue
-			else:
-				#verify that the object is in a group
-				if len(o.InList) < 1:
-					print "ERROR: Object "+o.Label+" is not in a group."
-					save_error = True
-					break
-				else:
-					for elem in o.InList:
-						object_correct = False
-						if str(elem.TypeId) == 'App::DocumentObjectGroup':
-							object_correct = True
-							break
-					if object_correct:
-						continue
-					else:
-						print "ERROR: Object "+o.Label+" is not in a group but has something linked. Are you sure it's a bound or fluid group?."
-						save_error = True
-					break
-
-	if save_error:
-		return
-
+	#TODO: Verify saving
 	if (data["project_path"] == "") and (data["project_name"] == ""):
 		saveName, _ = QtGui.QFileDialog.getSaveFileName(dsph_dock, "Save Case", QtCore.QDir.homePath())
 	else:
@@ -1319,19 +1290,19 @@ def on_save_case():
 		f.write('\t\t\t\t\t<setdrawmode mode="full"/>\n')
 		objects = App.getDocument("DSPH_Case").Objects
 		for o in objects:
-			if (o.Name != "Case_Limits") and (str(o.TypeId) != 'App::DocumentObjectGroup'):
-				gp_label = o.InList[0].Name
-				gp_num = o.InList[0].Name[8:]
+			if (o.Name != "Case_Limits"):
+				#TODO: fix mk grouping descriptor
+				'''
 				if gp_label[0:7] == "MKFluid":
-					f.write('\t\t\t\t\t<setmkfluid mk="'+gp_num+'" />\n')
+					f.write('\t\t\t\t\t<setmkfluid mk="'+"0"+'" />\n')
 
 				elif gp_label[0:7] == "MKBound":
-					f.write('\t\t\t\t\t<setmkbound mk="'+gp_num+'" />\n')
+					f.write('\t\t\t\t\t<setmkbound mk="'+"0"+'" />\n')
 
 				else:
 					print "ERROR: Group Name not recognized. Aborting"
 					return
-
+				'''
 				if "box" in o.Name.lower():
 					f.write('\t\t\t\t\t<drawbox>\n')
 					f.write('\t\t\t\t\t\t<boxfill>solid</boxfill>\n')
@@ -1432,7 +1403,9 @@ def on_save_case():
 
 		#Save data array on disk
 		picklefile = open(saveName+"/casedata.dsphdata", 'wb')
-		pickle.dump(data, picklefile)		
+		save_data["data"] = data
+		save_data["objects"] = objects
+		pickle.dump(save_data, picklefile)		
 
 	else:
 		print "DualSPHysics for FreeCAD: Saving cancelled."
@@ -1465,7 +1438,8 @@ def on_load_case():
 	load_disk_data = pickle.load(load_picklefile)	
 
 	global data
-	data = load_disk_data
+	data = load_disk_data["data"]
+	objects = load_disk_data["objects"]
 	global dp_input
 	dp_input.setText(str(data['dp']))
 	constants_button.setEnabled(True)
@@ -1477,8 +1451,6 @@ def on_load_case():
 	ccgeom_cyl_bt.setEnabled(True)
 	ccgeom_pyr_bt.setEnabled(True)
 	ccgeom_ell_bt.setEnabled(True)
-	mk_mkbound.setEnabled(True)
-	mk_mkfluid.setEnabled(True)
 	if data["gencase_done"]:
 		ex_selector_combo.setEnabled(True)
 		ex_button.setEnabled(True)
@@ -1492,24 +1464,43 @@ def on_load_case():
 		export_button.setEnabled(False)
 
 
+	objectList.clear()	
 
 def on_box_bt():
-	App.ActiveDocument.addObject("Part::Box","Box")
-	App.ActiveDocument.ActiveObject.Label = "Box"
+	added = App.ActiveDocument.addObject("Part::Box","Box")
+	added.Label = "Box"
 	App.ActiveDocument.recompute()
 	Gui.SendMsgToActiveView("ViewFit")
+	data["max_object_id"] += 1
+	objects[data["max_object_id"]] = [added.Label, added.Name, "solid", "Not Set", "full"]
+	hireobj = QtGui.QTreeWidgetItem(objectList)
+	hireobj.setText(0, str(data["max_object_id"]))
+	hireobj.setText(1, added.Label)
+	hireobj.setText(2, "Not Set")
 
 def on_sph_bt():
-	App.ActiveDocument.addObject("Part::Sphere","Sphere")
-	App.ActiveDocument.ActiveObject.Label = "Sphere"
+	added = App.ActiveDocument.addObject("Part::Sphere","Sphere")
+	added.Label = "Sphere"
 	App.ActiveDocument.recompute()
 	Gui.SendMsgToActiveView("ViewFit")
+	data["max_object_id"] += 1
+	objects[data["max_object_id"]] = [added.Label, added.Name, "solid", "Not Set", "full"]
+	hireobj = QtGui.QTreeWidgetItem(objectList)
+	hireobj.setText(0, str(data["max_object_id"]))
+	hireobj.setText(1, added.Label)
+	hireobj.setText(2, "Not Set")
 
 def on_cyl_bt():
-	App.ActiveDocument.addObject("Part::Cylinder","Cylinder")
-	App.ActiveDocument.ActiveObject.Label = "Cylinder"
+	added = App.ActiveDocument.addObject("Part::Cylinder","Cylinder")
+	added.Label = "Cylinder"
 	App.ActiveDocument.recompute()
 	Gui.SendMsgToActiveView("ViewFit")
+	data["max_object_id"] += 1
+	objects[data["max_object_id"]] = [added.Label, added.Name, "solid", "Not Set", "full"]
+	hireobj = QtGui.QTreeWidgetItem(objectList)
+	hireobj.setText(0, str(data["max_object_id"]))
+	hireobj.setText(1, added.Label)
+	hireobj.setText(2, "Not Set")
 
 def on_pyr_bt():
 	App.ActiveDocument.addObject("Part::Vertex","b1")
@@ -1585,28 +1576,39 @@ def on_pyr_bt():
 
 	shell=App.ActiveDocument.s1.Shape
 	_=Part.Solid(shell)
-	App.ActiveDocument.addObject('Part::Feature','Pyramid').Shape=_.removeSplitter()
+	added = App.ActiveDocument.addObject('Part::Feature','Pyramid')
+	added.Shape = _.removeSplitter()
+	added.Label = "Pyramid"
 	del _
 
 	App.ActiveDocument.removeObject("s1")
-
-
-
 	App.ActiveDocument.recompute()
 	Gui.SendMsgToActiveView("ViewFit")
+	data["max_object_id"] += 1
+	objects[data["max_object_id"]] = [added.Label, added.Name, "solid", "Not Set", "full"]
+	hireobj = QtGui.QTreeWidgetItem(objectList)
+	hireobj.setText(0, str(data["max_object_id"]))
+	hireobj.setText(1, added.Label)
+	hireobj.setText(2, "Not Set")
 
 def on_ell_bt():
-	App.ActiveDocument.addObject("Part::Ellipsoid","Ellipsoid")
-	App.ActiveDocument.Ellipsoid.Radius1=2.00
-	App.ActiveDocument.Ellipsoid.Radius2=4.00
-	App.ActiveDocument.Ellipsoid.Radius3=4.00
-	App.ActiveDocument.Ellipsoid.Angle1=-90.00
-	App.ActiveDocument.Ellipsoid.Angle2=90.00
-	App.ActiveDocument.Ellipsoid.Angle3=360.00
-	App.ActiveDocument.Ellipsoid.Placement=Base.Placement(Base.Vector(0.00,0.00,0.00),Base.Rotation(0.00,0.00,0.00,1.00))
-	App.ActiveDocument.Ellipsoid.Label='Ellipsoid'
+	added = App.ActiveDocument.addObject("Part::Ellipsoid","Ellipsoid")
+	added.Radius1=2.00
+	added.Radius2=4.00
+	added.Radius3=4.00
+	added.Angle1=-90.00
+	added.Angle2=90.00
+	added.Angle3=360.00
+	added.Placement=Base.Placement(Base.Vector(0.00,0.00,0.00),Base.Rotation(0.00,0.00,0.00,1.00))
+	added.Label='Ellipsoid'
 	App.ActiveDocument.recompute()
 	Gui.SendMsgToActiveView("ViewFit")
+	data["max_object_id"] += 1
+	objects[data["max_object_id"]] = [added.Label, added.Name, "solid", "Not Set", "full"]
+	hireobj = QtGui.QTreeWidgetItem(objectList)
+	hireobj.setText(0, str(data["max_object_id"]))
+	hireobj.setText(1, added.Label)
+	hireobj.setText(2, "Not Set")
 
 
 casecontrols_bt_newdoc.clicked.connect(on_new_case)
@@ -1636,56 +1638,6 @@ cc_layout.addLayout(ccgeombuttons_layout)
 cc_layout.addLayout(ccgeombuttons2_layout)
 cc_separator = QtGui.QFrame()
 cc_separator.setFrameStyle(QtGui.QFrame.HLine)
-
-#Group buttons management
-
-def on_mkbound():
-	boundgroup = App.ActiveDocument.getObject("MKBound_0")
-	if boundgroup == None:
-		App.ActiveDocument.addObject("App::DocumentObjectGroup","MKBound_0")
-	else:
-		num = 1
-		while True:
-			if num == 240:
-				print "ERROR: Too many bound groups, max is 240"
-				return
-			boundgroup = App.ActiveDocument.getObject("MKBound_" + str(num))
-			if boundgroup == None:
-				App.ActiveDocument.addObject("App::DocumentObjectGroup","MKBound_"+ str(num))
-				break
-			num = num+1
-
-def on_mkfluid():
-	fluidgroup = App.ActiveDocument.getObject("MKFluid_0")
-	if fluidgroup == None:
-		App.ActiveDocument.addObject("App::DocumentObjectGroup","MKFluid_0")
-	else:
-		num = 1
-		while True:
-			if num == 10:
-				print "ERROR: Too many fluid groups, max is 10"
-				return
-			fluidgroup = App.ActiveDocument.getObject("MKFluid_" + str(num))
-			if fluidgroup == None:
-				App.ActiveDocument.addObject("App::DocumentObjectGroup","MKFluid_"+ str(num))
-				break
-			num = num+1
-
-mk_layout = QtGui.QVBoxLayout()
-mk_buttonlayout = QtGui.QHBoxLayout()
-mk_label = QtGui.QLabel("Use these controls to create MK groups for fluids and bounds.\nUse the groups created to order the scene. All objects created MUST go into a group, except Case_Limits")
-mk_label.setWordWrap(True)
-mk_mkfluid = QtGui.QPushButton("Create Fluid Group")
-mk_mkbound = QtGui.QPushButton("Create Bound Group")
-mk_mkbound.clicked.connect(on_mkbound)
-mk_mkfluid.clicked.connect(on_mkfluid)
-mk_layout.addWidget(mk_label)
-mk_buttonlayout.addWidget(mk_mkfluid)
-mk_buttonlayout.addWidget(mk_mkbound)
-mk_layout.addLayout(mk_buttonlayout)
-
-mk_separator = QtGui.QFrame()
-mk_separator.setFrameStyle(QtGui.QFrame.HLine)
 
 run_dialog = QtGui.QDialog(None, QtCore.Qt.CustomizeWindowHint|QtCore.Qt.WindowTitleHint)
 run_watcher = QtCore.QFileSystemWatcher()
@@ -1874,8 +1826,6 @@ main_layout.addLayout(dp_layout)
 main_layout.addWidget(crucialvars_separator)
 main_layout.addLayout(cc_layout)
 main_layout.addWidget(cc_separator)
-main_layout.addLayout(mk_layout)
-main_layout.addWidget(mk_separator)
 main_layout.addLayout(ex_layout)
 main_layout.addWidget(ex_separator)
 main_layout.addLayout(export_layout)
@@ -1893,8 +1843,6 @@ ccgeom_sph_bt.setEnabled(False)
 ccgeom_cyl_bt.setEnabled(False)
 ccgeom_pyr_bt.setEnabled(False)
 ccgeom_ell_bt.setEnabled(False)
-mk_mkbound.setEnabled(False)
-mk_mkfluid.setEnabled(False)
 ex_selector_combo.setEnabled(False)
 ex_button.setEnabled(False)
 export_button.setEnabled(False)
@@ -1915,8 +1863,7 @@ for each in mw_children:
 	if each.objectName() == "Combo View":
 		mw.removeDockWidget(each)
 
-
-
+#try to remove previous dsph dock
 previous_dock = mw.findChild(QtGui.QDockWidget, "DSPH Hirearchy Widget")
 if previous_dock:
 	previous_dock.setParent(None)
@@ -1926,6 +1873,24 @@ hire_dock = QtGui.QDockWidget()
 hire_scaff_widget = QtGui.QWidget() #Scaffolding widget, only useful to apply to the hire_dock widget
 hire_main_layout = QtGui.QVBoxLayout()
 
+def on_object_menu(pos):
+	#TODO: Implement context menu
+	print pos
+
+
+objectList = QtGui.QTreeWidget()
+objectList.setHeaderLabels(["ID", "Object", "MK"])
+objectList.setContextMenuPolicy(QtCore.Qt.CustomContextMenu)
+objectList.customContextMenuRequested.connect(on_object_menu)
+objectProps = QtGui.QTableWidget()
+objectProps.setHorizontalHeaderLabels(["Property", "Value"])
+
+splitter = QtGui.QSplitter()
+splitter.setOrientation(QtCore.Qt.Vertical)
+splitter.addWidget(objectList)
+splitter.addWidget(objectProps)
+splitter.setChildrenCollapsible(False)
+hire_main_layout.addWidget(splitter)
 
 
 hire_scaff_widget.setLayout(hire_main_layout)
@@ -1934,5 +1899,50 @@ hire_dock.setObjectName("DSPH Hirearchy Widget")
 hire_dock.setWindowTitle("DSPH Object Hirearchy")
 mw.addDockWidget(QtCore.Qt.LeftDockWidgetArea,hire_dock)
 
+def hirearchy_monitor():
+	while True:
+		try:
+			if App.ActiveDocument != None and App.ActiveDocument.Name == "DSPH_Case":
+				for obj in App.getDocument("DSPH_Case").Objects:
+					if len(obj.InList) > 0:
+						continue
+					isInObjects = False
+					for dsphobj in objects.values():
+						if dsphobj[1] == obj.Name:
+							isInObjects = True
+							break
+					if not isInObjects:
+							data["max_object_id"] += 1
+							objects[data["max_object_id"]] = [obj.Label, obj.Name, "solid", "Not Set", "full"]
+							hireobj = QtGui.QTreeWidgetItem(objectList)
+							hireobj.setText(0, str(data["max_object_id"]))
+							hireobj.setText(1, obj.Label)
+							hireobj.setText(2, "Not Set")
+				toRemove = []
+				for dsphobjkey, value in objects.iteritems():
+					isInFreeCAD = False
+					for obj in App.getDocument("DSPH_Case").Objects:
+						if value[1] == obj.Name:
+							isInFreeCAD = True
+					if not isInFreeCAD:
+						toRemove.append(dsphobjkey)
+				
+				for elem in toRemove:
+					objects.pop(elem, None)
+					for i in range(0, objectList.topLevelItemCount()):
+						item = objectList.topLevelItem(i)
+						print item.text(0)
+						print "element:" + str(elem)
+						if item.text(0) == str(elem):
+							objectList.takeTopLevelItem(i)
+							del item
+							break
+
+
+		except Exception as e:
+			print e
+		time.sleep(0.35)
+monitor_thread = threading.Thread(target = hirearchy_monitor)
+monitor_thread.start()
 
 print "DualSPHysics for FreeCAD: Done loading data."
