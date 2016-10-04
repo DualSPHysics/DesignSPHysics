@@ -2,7 +2,7 @@
 
 from PySide import QtGui, QtCore
 from FreeCAD import Base
-import Part,PartGui, os, sys, Draft, subprocess, pickle, time, threading
+import Part,PartGui, os, sys, Draft, subprocess, pickle, time, threading, traceback
 
 print "Loading DualSPHysics for FreeCAD..."
 print "-----------------------------------"
@@ -15,8 +15,6 @@ print "-----------------------------------"
 #Main data structure
 data = dict()
 temp_data = dict()
-#Objects: Key is TreeWidgetItem id. Saved list is: [treewidgetitemname, internalObjectName, fluid/solid, mknumber, solid/full/face/wire]
-objects = dict()
 
 def set_default_data():
 	data['lattice_bound'] = 1
@@ -78,8 +76,6 @@ def set_default_data():
 
 	data['gencase_done'] = False
 	data['simulation_done'] = False
-
-	data['max_object_id'] = 0
 
 	temp_data['current_process'] = None
 
@@ -1198,7 +1194,6 @@ def on_new_case():
 	Gui.ActiveDocument=Gui.getDocument("DSPH_Case")
 	Gui.activateWorkbench("PartWorkbench")
 	Gui.activeDocument().activeView().viewAxonometric()
-	objectList.clear()	
 	App.ActiveDocument.addObject("Part::Box","Case_Limits")
 	App.ActiveDocument.getObject("Case_Limits").Label = "Case_Limits"
 	App.ActiveDocument.getObject("Case_Limits").Length = '15 mm'
@@ -1210,11 +1205,6 @@ def on_new_case():
 	Gui.ActiveDocument.getObject("Case_Limits").LineWidth = 2.00
 	Gui.ActiveDocument.getObject("Case_Limits").Selectable = False
 	App.ActiveDocument.recompute()
-	hireobj_caseLimits = QtGui.QTreeWidgetItem(objectList)
-	hireobj_caseLimits.setText(0, "0")
-	hireobj_caseLimits.setText(1, "Case Limits")
-	hireobj_caseLimits.setText(2, "")
-	objects["0"] = ["Case Limits", "Case_Limits", "special", "special", "special"]
 	Gui.SendMsgToActiveView("ViewFit")
 	set_default_data()
 	constants_button.setEnabled(True)
@@ -1249,10 +1239,7 @@ def on_save_case():
 			os.makedirs(saveName+"/"+saveName.split('/')[-1]+ "_Out")
 
 		print "DualSPHysics for FreeCAD: Saving data in " + data["project_path"] + "."
-		if (data["project_path"] == "") and (data["project_name"] == ""):
-			App.getDocument("DSPH_Case").saveAs(saveName+"/DSPH_Case.FCStd")
-		else:
-			App.getDocument("DSPH_Case").save()
+		App.getDocument("DSPH_Case").saveAs(saveName+"/DSPH_Case.FCStd")
 		f = open(saveName+"/" + saveName.split('/')[-1]+ "_Def.xml", 'w')
 		f.write('<?xml version="1.0" encoding="UTF-8" ?>\n')
 		f.write('<case>\n')
@@ -1288,8 +1275,8 @@ def on_save_case():
 		f.write('\t\t\t<commands>\n')
 		f.write('\t\t\t\t<mainlist>\n')
 		f.write('\t\t\t\t\t<setdrawmode mode="full"/>\n')
-		objects = App.getDocument("DSPH_Case").Objects
-		for o in objects:
+		#TODO: Implement object export
+		for o in []:
 			if (o.Name != "Case_Limits"):
 				#TODO: fix mk grouping descriptor
 				'''
@@ -1403,9 +1390,7 @@ def on_save_case():
 
 		#Save data array on disk
 		picklefile = open(saveName+"/casedata.dsphdata", 'wb')
-		save_data["data"] = data
-		save_data["objects"] = objects
-		pickle.dump(save_data, picklefile)		
+		pickle.dump(data, picklefile)		
 
 	else:
 		print "DualSPHysics for FreeCAD: Saving cancelled."
@@ -1438,8 +1423,7 @@ def on_load_case():
 	load_disk_data = pickle.load(load_picklefile)	
 
 	global data
-	data = load_disk_data["data"]
-	objects = load_disk_data["objects"]
+	data = load_disk_data
 	global dp_input
 	dp_input.setText(str(data['dp']))
 	constants_button.setEnabled(True)
@@ -1463,44 +1447,23 @@ def on_load_case():
 	else:
 		export_button.setEnabled(False)
 
-
-	objectList.clear()	
-
 def on_box_bt():
 	added = App.ActiveDocument.addObject("Part::Box","Box")
 	added.Label = "Box"
 	App.ActiveDocument.recompute()
 	Gui.SendMsgToActiveView("ViewFit")
-	data["max_object_id"] += 1
-	objects[data["max_object_id"]] = [added.Label, added.Name, "solid", "Not Set", "full"]
-	hireobj = QtGui.QTreeWidgetItem(objectList)
-	hireobj.setText(0, str(data["max_object_id"]))
-	hireobj.setText(1, added.Label)
-	hireobj.setText(2, "Not Set")
 
 def on_sph_bt():
 	added = App.ActiveDocument.addObject("Part::Sphere","Sphere")
 	added.Label = "Sphere"
 	App.ActiveDocument.recompute()
 	Gui.SendMsgToActiveView("ViewFit")
-	data["max_object_id"] += 1
-	objects[data["max_object_id"]] = [added.Label, added.Name, "solid", "Not Set", "full"]
-	hireobj = QtGui.QTreeWidgetItem(objectList)
-	hireobj.setText(0, str(data["max_object_id"]))
-	hireobj.setText(1, added.Label)
-	hireobj.setText(2, "Not Set")
 
 def on_cyl_bt():
 	added = App.ActiveDocument.addObject("Part::Cylinder","Cylinder")
 	added.Label = "Cylinder"
 	App.ActiveDocument.recompute()
 	Gui.SendMsgToActiveView("ViewFit")
-	data["max_object_id"] += 1
-	objects[data["max_object_id"]] = [added.Label, added.Name, "solid", "Not Set", "full"]
-	hireobj = QtGui.QTreeWidgetItem(objectList)
-	hireobj.setText(0, str(data["max_object_id"]))
-	hireobj.setText(1, added.Label)
-	hireobj.setText(2, "Not Set")
 
 def on_pyr_bt():
 	App.ActiveDocument.addObject("Part::Vertex","b1")
@@ -1584,12 +1547,6 @@ def on_pyr_bt():
 	App.ActiveDocument.removeObject("s1")
 	App.ActiveDocument.recompute()
 	Gui.SendMsgToActiveView("ViewFit")
-	data["max_object_id"] += 1
-	objects[data["max_object_id"]] = [added.Label, added.Name, "solid", "Not Set", "full"]
-	hireobj = QtGui.QTreeWidgetItem(objectList)
-	hireobj.setText(0, str(data["max_object_id"]))
-	hireobj.setText(1, added.Label)
-	hireobj.setText(2, "Not Set")
 
 def on_ell_bt():
 	added = App.ActiveDocument.addObject("Part::Ellipsoid","Ellipsoid")
@@ -1603,12 +1560,6 @@ def on_ell_bt():
 	added.Label='Ellipsoid'
 	App.ActiveDocument.recompute()
 	Gui.SendMsgToActiveView("ViewFit")
-	data["max_object_id"] += 1
-	objects[data["max_object_id"]] = [added.Label, added.Name, "solid", "Not Set", "full"]
-	hireobj = QtGui.QTreeWidgetItem(objectList)
-	hireobj.setText(0, str(data["max_object_id"]))
-	hireobj.setText(1, added.Label)
-	hireobj.setText(2, "Not Set")
 
 
 casecontrols_bt_newdoc.clicked.connect(on_new_case)
@@ -1804,6 +1755,18 @@ export_layout.addWidget(export_button)
 export_separator = QtGui.QFrame()
 export_separator.setFrameStyle(QtGui.QFrame.HLine)
 
+objectlist_layout = QtGui.QVBoxLayout()
+objectlist_label = QtGui.QLabel("Objects marked for case simulation:")
+objectlist_label.setWordWrap(True)
+objectlist_tree = QtGui.QTreeWidget()
+objectlist_tree.setColumnCount(1)
+objectlist_tree.setHeaderLabels(["Object Name"])
+temp_data["objectlist_tree"] = objectlist_tree
+objectlist_layout.addWidget(objectlist_label)
+objectlist_layout.addWidget(objectlist_tree)
+
+objectlist_separator = QtGui.QFrame()
+objectlist_separator.setFrameStyle(QtGui.QFrame.HLine)
 
 #Layout adding and ordering
 logo_layout.addStretch(0.5)
@@ -1830,6 +1793,8 @@ main_layout.addLayout(ex_layout)
 main_layout.addWidget(ex_separator)
 main_layout.addLayout(export_layout)
 main_layout.addWidget(export_separator)
+main_layout.addLayout(objectlist_layout)
+main_layout.addWidget(objectlist_separator)
 
 main_layout.addStretch(1)
 
@@ -1856,93 +1821,44 @@ dsph_dock.setWidget(scaff_widget)
 
 mw.addDockWidget(QtCore.Qt.RightDockWidgetArea,dsph_dock)
 
-# ----------- START OF OBJECT HIREARCHY WIDGET ----------- 
-#try to remove default freecad dock
-mw_children = mw.findChildren(QtGui.QDockWidget)
-for each in mw_children:
-	if each.objectName() == "Combo View":
-		mw.removeDockWidget(each)
-
-#try to remove previous dsph dock
-previous_dock = mw.findChild(QtGui.QDockWidget, "DSPH Hirearchy Widget")
+previous_dock = mw.findChild(QtGui.QDockWidget, "DSPH_Properties")
 if previous_dock:
 	previous_dock.setParent(None)
 	previous_dock = None
 
-hire_dock = QtGui.QDockWidget()
-hire_scaff_widget = QtGui.QWidget() #Scaffolding widget, only useful to apply to the hire_dock widget
-hire_main_layout = QtGui.QVBoxLayout()
+properties_widget = QtGui.QDockWidget()
+properties_widget.setMinimumHeight(400)
+properties_widget.setObjectName("DSPH_Properties")
+properties_widget.setWindowTitle("DSPH Object Properties")
+properties_scaff_widget = QtGui.QWidget() #Scaffolding widget, only useful to apply to the properties_dock widget
 
-def on_object_menu(pos):
-	#TODO: Implement context menu
-	print pos
+property_widget_layout = QtGui.QVBoxLayout()
+property_table = QtGui.QTableWidget(15,2)
+property_table.setHorizontalHeaderLabels(["Property Name", "Value"])
+property_table.verticalHeader().setVisible(False)
+property_table.horizontalHeader().setResizeMode(QtGui.QHeaderView.Stretch)
+property_widget_layout.addWidget(property_table)
+properties_scaff_widget.setLayout(property_widget_layout)
 
+properties_widget.setWidget(properties_scaff_widget)
 
-objectList = QtGui.QTreeWidget()
-objectList.setHeaderLabels(["ID", "Object", "MK"])
-objectList.setContextMenuPolicy(QtCore.Qt.CustomContextMenu)
-objectList.customContextMenuRequested.connect(on_object_menu)
-objectProps = QtGui.QTableWidget()
-objectProps.setHorizontalHeaderLabels(["Property", "Value"])
+mw.addDockWidget(QtCore.Qt.LeftDockWidgetArea, properties_widget)
 
-splitter = QtGui.QSplitter()
-splitter.setOrientation(QtCore.Qt.Vertical)
-splitter.addWidget(objectList)
-splitter.addWidget(objectProps)
-splitter.setChildrenCollapsible(False)
-hire_main_layout.addWidget(splitter)
-
-
-hire_scaff_widget.setLayout(hire_main_layout)
-hire_dock.setWidget(hire_scaff_widget)
-hire_dock.setObjectName("DSPH Hirearchy Widget")
-hire_dock.setWindowTitle("DSPH Object Hirearchy")
-mw.addDockWidget(QtCore.Qt.LeftDockWidgetArea,hire_dock)
-
-def hirearchy_monitor():
+def item_selection_monitor():
 	while True:
-		try:
-			if App.ActiveDocument != None and App.ActiveDocument.Name == "DSPH_Case":
-				for obj in App.getDocument("DSPH_Case").Objects:
-					if len(obj.InList) > 0:
-						continue
-					isInObjects = False
-					for dsphobj in objects.values():
-						if dsphobj[1] == obj.Name:
-							isInObjects = True
-							break
-					if not isInObjects:
-							data["max_object_id"] += 1
-							objects[data["max_object_id"]] = [obj.Label, obj.Name, "solid", "Not Set", "full"]
-							hireobj = QtGui.QTreeWidgetItem(objectList)
-							hireobj.setText(0, str(data["max_object_id"]))
-							hireobj.setText(1, obj.Label)
-							hireobj.setText(2, "Not Set")
-				toRemove = []
-				for dsphobjkey, value in objects.iteritems():
-					isInFreeCAD = False
-					for obj in App.getDocument("DSPH_Case").Objects:
-						if value[1] == obj.Name:
-							isInFreeCAD = True
-					if not isInFreeCAD:
-						toRemove.append(dsphobjkey)
-				
-				for elem in toRemove:
-					objects.pop(elem, None)
-					for i in range(0, objectList.topLevelItemCount()):
-						item = objectList.topLevelItem(i)
-						print item.text(0)
-						print "element:" + str(elem)
-						if item.text(0) == str(elem):
-							objectList.takeTopLevelItem(i)
-							del item
-							break
+		selection = FreeCADGui.Selection.getSelection()
+		if len(selection) > 0:
+			if len(selection) > 1:
+				#Multiple objects selected
+				#TODO: populate table, detect if object is part of simulation and so on...
+				pass
+			else:
+				#One object selected
+				pass
 
+		time.sleep(0.02)
 
-		except Exception as e:
-			print e
-		time.sleep(0.35)
-monitor_thread = threading.Thread(target = hirearchy_monitor)
+monitor_thread = threading.Thread(target=item_selection_monitor)
 monitor_thread.start()
 
 print "DualSPHysics for FreeCAD: Done loading data."
