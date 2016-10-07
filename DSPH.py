@@ -2,7 +2,8 @@
 
 from PySide import QtGui, QtCore
 from FreeCAD import Base
-import Part,PartGui, os, sys, Draft, subprocess, pickle, time, threading, traceback
+from datetime import datetime
+import Part,PartGui, os, sys, Draft, subprocess, pickle, time, threading, traceback, Mesh
 
 print "Loading DualSPHysics for FreeCAD..."
 print "-----------------------------------"
@@ -73,11 +74,16 @@ def set_default_data():
 	data['project_path'] = ""
 	data['project_name'] = "" 
 	data['total_particles'] = -1
+	data['total_particles_out'] = 0
 
 	data['gencase_done'] = False
 	data['simulation_done'] = False
 
+	data['simobjects'] = dict()
+
 	temp_data['current_process'] = None
+	temp_data['stored_selection'] = []
+	temp_data['supported_types'] = ["box", "sphere", "cylinder"]
 
 	#Try to load saved paths
 	if os.path.isfile(App.getUserAppDataDir()+'/Macro/dsph_data.dsphdata'):
@@ -1118,8 +1124,10 @@ constants_label = QtGui.QLabel("\nConstant Definition and Execution Parameters: 
 constants_label.setWordWrap(True)
 constants_button = QtGui.QPushButton("Define Constants")
 constants_button.clicked.connect(def_constants_window)
+constants_button.setMaximumWidth(140)
 setup_button = QtGui.QPushButton("Setup Plugin")
 setup_button.clicked.connect(def_setup_window)
+setup_button.setMaximumWidth(140)
 execparams_button = QtGui.QPushButton("Execution Parameters")
 execparams_button.clicked.connect(def_execparams_window)
 constants_separator = QtGui.QFrame()
@@ -1157,19 +1165,17 @@ dp_layout.addWidget(dp_label2)
 cc_layout = QtGui.QVBoxLayout()
 cclabel_layout = QtGui.QHBoxLayout()
 ccfilebuttons_layout = QtGui.QHBoxLayout()
-ccgeombuttons_layout = QtGui.QHBoxLayout()
-ccgeombuttons2_layout = QtGui.QHBoxLayout()
 
 casecontrols_label = QtGui.QLabel("Use these controls to define the Case you want to simulate.")
-casecontrols_bt_newdoc = QtGui.QPushButton("New Case")
-casecontrols_bt_savedoc = QtGui.QPushButton("Save Case")
-casecontrols_bt_loaddoc = QtGui.QPushButton("Load Case")
-
-ccgeom_box_bt = QtGui.QPushButton("BOX")
-ccgeom_sph_bt = QtGui.QPushButton("SPH")
-ccgeom_cyl_bt = QtGui.QPushButton("CYL")
-ccgeom_pyr_bt = QtGui.QPushButton("PYR")
-ccgeom_ell_bt = QtGui.QPushButton("ELL")
+casecontrols_bt_newdoc = QtGui.QPushButton("  New Case")
+casecontrols_bt_newdoc.setIcon(QtGui.QIcon(App.getUserAppDataDir() + "Macro/DSPH_Images/new.png"));
+casecontrols_bt_newdoc.setIconSize(QtCore.QSize(28,28));
+casecontrols_bt_savedoc = QtGui.QPushButton("  Save Case")
+casecontrols_bt_savedoc.setIcon(QtGui.QIcon(App.getUserAppDataDir() + "Macro/DSPH_Images/save.png"));
+casecontrols_bt_savedoc.setIconSize(QtCore.QSize(28,28));
+casecontrols_bt_loaddoc = QtGui.QPushButton("  Load Case")
+casecontrols_bt_loaddoc.setIcon(QtGui.QIcon(App.getUserAppDataDir() + "Macro/DSPH_Images/load.png"));
+casecontrols_bt_loaddoc.setIconSize(QtCore.QSize(28,28));
 
 
 def on_new_case():
@@ -1211,14 +1217,11 @@ def on_new_case():
 	execparams_button.setEnabled(True)
 	casecontrols_bt_savedoc.setEnabled(True)
 	dp_input.setEnabled(True)
-	ccgeom_box_bt.setEnabled(True)
-	ccgeom_sph_bt.setEnabled(True)
-	ccgeom_cyl_bt.setEnabled(True)
-	ccgeom_pyr_bt.setEnabled(True)
-	ccgeom_ell_bt.setEnabled(True)
 	ex_selector_combo.setEnabled(False)
 	ex_button.setEnabled(False)
 	export_button.setEnabled(False)
+	data['simobjects']['Case_Limits'] = ["mkspecial", "typespecial", "fillspecial"]
+	on_tree_item_selection_change()
 
 
 
@@ -1242,7 +1245,7 @@ def on_save_case():
 		App.getDocument("DSPH_Case").saveAs(saveName+"/DSPH_Case.FCStd")
 		f = open(saveName+"/" + saveName.split('/')[-1]+ "_Def.xml", 'w')
 		f.write('<?xml version="1.0" encoding="UTF-8" ?>\n')
-		f.write('<case>\n')
+		f.write('<case app="' + data["project_name"] + '" date="' + datetime.now().strftime('%d-%m-%Y %H:%M:%S') + '">\n')
 		f.write('\t<casedef>\n')
 		f.write('\t\t<constantsdef>\n')
 
@@ -1274,39 +1277,39 @@ def on_save_case():
 		f.write('\t\t\t</definition>\n')
 		f.write('\t\t\t<commands>\n')
 		f.write('\t\t\t\t<mainlist>\n')
-		f.write('\t\t\t\t\t<setdrawmode mode="full"/>\n')
-		#TODO: Implement object export
-		for o in []:
-			if (o.Name != "Case_Limits"):
-				#TODO: fix mk grouping descriptor
-				'''
-				if gp_label[0:7] == "MKFluid":
-					f.write('\t\t\t\t\t<setmkfluid mk="'+"0"+'" />\n')
-
-				elif gp_label[0:7] == "MKBound":
-					f.write('\t\t\t\t\t<setmkbound mk="'+"0"+'" />\n')
-
-				else:
-					print "ERROR: Group Name not recognized. Aborting"
-					return
-				'''
-				if "box" in o.Name.lower():
+		for name, valuelist in data["simobjects"].iteritems():
+			o = App.getDocument("DSPH_Case").getObject(name)
+			if (name != "Case_Limits"):
+				if valuelist[1].lower() == "fluid":
+					f.write('\t\t\t\t\t<setmkfluid mk="'+str(valuelist[0])+'"/>\n')
+				elif valuelist[1].lower() == "bound":
+					f.write('\t\t\t\t\t<setmkbound mk="'+str(valuelist[0])+'"/>\n')
+				f.write('\t\t\t\t\t<setdrawmode mode="'+valuelist[2].lower()+'"/>\n')
+				#TODO: set rotation
+				if "box" in name.lower():
 					f.write('\t\t\t\t\t<drawbox>\n')
 					f.write('\t\t\t\t\t\t<boxfill>solid</boxfill>\n')
 					f.write('\t\t\t\t\t\t<point x="'+str(o.Placement.Base.x / 1000)+'" y="'+str(o.Placement.Base.y / 1000)+'" z="'+str(o.Placement.Base.z / 1000)+'" />\n')
 					f.write('\t\t\t\t\t\t<size x="'+str(o.Length.Value / 1000)+'" y="'+str(o.Width.Value / 1000)+'" z="'+str(o.Height.Value / 1000)+'" />\n')
 					f.write('\t\t\t\t\t</drawbox>\n')
-
-				if "sphere" in o.Name.lower():
+				elif "sphere" in name.lower():
 					f.write('\t\t\t\t\t<drawsphere radius="'+str(o.Radius.Value / 1000)+'">\n')
 					f.write('\t\t\t\t\t\t<point x="'+str(o.Placement.Base.x / 1000)+'" y="'+str(o.Placement.Base.y / 1000)+'" z="'+str(o.Placement.Base.z / 1000)+'" />\n')
 					f.write('\t\t\t\t\t</drawsphere>\n')
-
-				if "cylinder" in o.Name.lower():
+				elif "cylinder" in name.lower():
 					f.write('\t\t\t\t\t<drawcylinder radius="'+str(o.Radius.Value / 1000)+'">\n')
 					f.write('\t\t\t\t\t\t<point x="'+str(o.Placement.Base.x / 1000)+'" y="'+str(o.Placement.Base.y / 1000)+'" z="'+str(o.Placement.Base.z / 1000)+'" />\n')
 					f.write('\t\t\t\t\t\t<point x="'+str(o.Placement.Base.x / 1000)+'" y="'+str(o.Placement.Base.y / 1000)+'" z="'+str((o.Placement.Base.z + o.Height.Value) / 1000)+'" />\n')
 					f.write('\t\t\t\t\t</drawcylinder>\n')
+				else:
+					#Not a xml parametric object. Needs exporting
+					__objs__=[]
+					__objs__.append(o)
+					Mesh.export(__objs__,saveName + "/" + o.Name + ".stl")
+					f.write('\t\t\t\t\t<drawfilestl file="'+ o.Name + ".stl"+'" >\n')
+					f.write('\t\t\t\t\t\t<drawscale x="0.001" y="0.001" z="0.001" />\n')
+					f.write('\t\t\t\t\t</drawfilestl>\n')
+					del __objs__
 		f.write('\t\t\t\t</mainlist>\n')
 		f.write('\t\t\t</commands>\n')
 		
@@ -1372,6 +1375,7 @@ def on_save_case():
 		#Use gencase if possible to generate the case final definition
 		if data["gencase_path"] != "":
 			try:
+				os.chdir(data["project_path"])
 				output = subprocess.check_output([data["gencase_path"], data["project_path"]+"/"+data["project_name"]+"_Def", data["project_path"]+"/"+data["project_name"]+"_Out/"+data["project_name"], "-save:+all"])
 				total_particles_text = output[output.index("Total particles: "):output.index(" (bound=")]
 				total_particles = int(total_particles_text[total_particles_text.index(": ") + 2:])
@@ -1423,18 +1427,13 @@ def on_load_case():
 	load_disk_data = pickle.load(load_picklefile)	
 
 	global data
-	data = load_disk_data
+	data.update(load_disk_data)
 	global dp_input
 	dp_input.setText(str(data['dp']))
 	constants_button.setEnabled(True)
 	execparams_button.setEnabled(True)
 	casecontrols_bt_savedoc.setEnabled(True)
 	dp_input.setEnabled(True)
-	ccgeom_box_bt.setEnabled(True)
-	ccgeom_sph_bt.setEnabled(True)
-	ccgeom_cyl_bt.setEnabled(True)
-	ccgeom_pyr_bt.setEnabled(True)
-	ccgeom_ell_bt.setEnabled(True)
 	if data["gencase_done"]:
 		ex_selector_combo.setEnabled(True)
 		ex_button.setEnabled(True)
@@ -1447,146 +1446,20 @@ def on_load_case():
 	else:
 		export_button.setEnabled(False)
 
-def on_box_bt():
-	added = App.ActiveDocument.addObject("Part::Box","Box")
-	added.Label = "Box"
-	App.ActiveDocument.recompute()
-	Gui.SendMsgToActiveView("ViewFit")
-
-def on_sph_bt():
-	added = App.ActiveDocument.addObject("Part::Sphere","Sphere")
-	added.Label = "Sphere"
-	App.ActiveDocument.recompute()
-	Gui.SendMsgToActiveView("ViewFit")
-
-def on_cyl_bt():
-	added = App.ActiveDocument.addObject("Part::Cylinder","Cylinder")
-	added.Label = "Cylinder"
-	App.ActiveDocument.recompute()
-	Gui.SendMsgToActiveView("ViewFit")
-
-def on_pyr_bt():
-	App.ActiveDocument.addObject("Part::Vertex","b1")
-	App.ActiveDocument.b1.X=0.00
-	App.ActiveDocument.b1.Y=0.00
-	App.ActiveDocument.b1.Z=0.00
-	App.ActiveDocument.b1.Placement=Base.Placement(Base.Vector(0.00,0.00,0.00),Base.Rotation(0.00,0.00,0.00,1.00))
-	App.ActiveDocument.b1.Label='b1'
-
-	App.ActiveDocument.addObject("Part::Vertex","b2")
-	App.ActiveDocument.b2.X=10.00
-	App.ActiveDocument.b2.Y=0.00
-	App.ActiveDocument.b2.Z=0.00
-	App.ActiveDocument.b2.Placement=Base.Placement(Base.Vector(0.00,0.00,0.00),Base.Rotation(0.00,0.00,0.00,1.00))
-	App.ActiveDocument.b2.Label='b2'
-
-	App.ActiveDocument.addObject("Part::Vertex","b3")
-	App.ActiveDocument.b3.X=10.00
-	App.ActiveDocument.b3.Y=10.00
-	App.ActiveDocument.b3.Z=0.00
-	App.ActiveDocument.b3.Placement=Base.Placement(Base.Vector(0.00,0.00,0.00),Base.Rotation(0.00,0.00,0.00,1.00))
-	App.ActiveDocument.b3.Label='b3'
-
-	App.ActiveDocument.addObject("Part::Vertex","b4")
-	App.ActiveDocument.b4.X=0.00
-	App.ActiveDocument.b4.Y=10.00
-	App.ActiveDocument.b4.Z=0.00
-	App.ActiveDocument.b4.Placement=Base.Placement(Base.Vector(0.00,0.00,0.00),Base.Rotation(0.00,0.00,0.00,1.00))
-	App.ActiveDocument.b4.Label='b4'
-
-	App.ActiveDocument.addObject("Part::Vertex","t")
-	App.ActiveDocument.t.X=5.00
-	App.ActiveDocument.t.Y=5.00
-	App.ActiveDocument.t.Z=10.00
-	App.ActiveDocument.t.Placement=Base.Placement(Base.Vector(0.00,0.00,0.00),Base.Rotation(0.00,0.00,0.00,1.00))
-	App.ActiveDocument.t.Label='t'
-
-	_=Part.Face(Part.makePolygon([App.ActiveDocument.b2.Shape.Vertex1.Point, App.ActiveDocument.b1.Shape.Vertex1.Point, App.ActiveDocument.t.Shape.Vertex1.Point, ], True))
-	App.ActiveDocument.addObject('Part::Feature','f1').Shape=_
-	del _
-
-	_=Part.Face(Part.makePolygon([App.ActiveDocument.b2.Shape.Vertex1.Point, App.ActiveDocument.b3.Shape.Vertex1.Point, App.ActiveDocument.t.Shape.Vertex1.Point, ], True))
-	App.ActiveDocument.addObject('Part::Feature','f2').Shape=_
-	del _
-
-	_=Part.Face(Part.makePolygon([App.ActiveDocument.b3.Shape.Vertex1.Point, App.ActiveDocument.b4.Shape.Vertex1.Point, App.ActiveDocument.t.Shape.Vertex1.Point, ], True))
-	App.ActiveDocument.addObject('Part::Feature','f3').Shape=_
-	del _
-
-	_=Part.Face(Part.makePolygon([App.ActiveDocument.b4.Shape.Vertex1.Point, App.ActiveDocument.b1.Shape.Vertex1.Point, App.ActiveDocument.t.Shape.Vertex1.Point, ], True))
-	App.ActiveDocument.addObject('Part::Feature','f4').Shape=_
-	del _
-
-	_=Part.Face(Part.makePolygon([App.ActiveDocument.b1.Shape.Vertex1.Point, App.ActiveDocument.b2.Shape.Vertex1.Point, App.ActiveDocument.b3.Shape.Vertex1.Point, App.ActiveDocument.b4.Shape.Vertex1.Point, ], True))
-	App.ActiveDocument.addObject('Part::Feature','f5').Shape=_
-	del _
-
-	App.ActiveDocument.removeObject("b1")
-	App.ActiveDocument.removeObject("b2")
-	App.ActiveDocument.removeObject("b3")
-	App.ActiveDocument.removeObject("b4")
-	App.ActiveDocument.removeObject("t")
-
-	_=Part.Shell([App.ActiveDocument.f1.Shape.Face1, App.ActiveDocument.f2.Shape.Face1, App.ActiveDocument.f3.Shape.Face1, App.ActiveDocument.f5.Shape.Face1, App.ActiveDocument.f4.Shape.Face1, ])
-	App.ActiveDocument.addObject('Part::Feature','s1').Shape=_.removeSplitter()
-	del _
-
-	App.ActiveDocument.removeObject("f1")
-	App.ActiveDocument.removeObject("f2")
-	App.ActiveDocument.removeObject("f3")
-	App.ActiveDocument.removeObject("f4")
-	App.ActiveDocument.removeObject("f5")
-
-	shell=App.ActiveDocument.s1.Shape
-	_=Part.Solid(shell)
-	added = App.ActiveDocument.addObject('Part::Feature','Pyramid')
-	added.Shape = _.removeSplitter()
-	added.Label = "Pyramid"
-	del _
-
-	App.ActiveDocument.removeObject("s1")
-	App.ActiveDocument.recompute()
-	Gui.SendMsgToActiveView("ViewFit")
-
-def on_ell_bt():
-	added = App.ActiveDocument.addObject("Part::Ellipsoid","Ellipsoid")
-	added.Radius1=2.00
-	added.Radius2=4.00
-	added.Radius3=4.00
-	added.Angle1=-90.00
-	added.Angle2=90.00
-	added.Angle3=360.00
-	added.Placement=Base.Placement(Base.Vector(0.00,0.00,0.00),Base.Rotation(0.00,0.00,0.00,1.00))
-	added.Label='Ellipsoid'
-	App.ActiveDocument.recompute()
-	Gui.SendMsgToActiveView("ViewFit")
+	os.chdir(data["project_path"])
 
 
 casecontrols_bt_newdoc.clicked.connect(on_new_case)
 casecontrols_bt_savedoc.clicked.connect(on_save_case)
 casecontrols_bt_loaddoc.clicked.connect(on_load_case)
-ccgeom_box_bt.clicked.connect(on_box_bt)
-ccgeom_sph_bt.clicked.connect(on_sph_bt)
-ccgeom_cyl_bt.clicked.connect(on_cyl_bt)
-ccgeom_pyr_bt.clicked.connect(on_pyr_bt)
-ccgeom_ell_bt.clicked.connect(on_ell_bt)
-
-
 
 cclabel_layout.addWidget(casecontrols_label)
 ccfilebuttons_layout.addWidget(casecontrols_bt_newdoc)
 ccfilebuttons_layout.addWidget(casecontrols_bt_savedoc)
 ccfilebuttons_layout.addWidget(casecontrols_bt_loaddoc)
-ccgeombuttons_layout.addWidget(ccgeom_box_bt)
-ccgeombuttons_layout.addWidget(ccgeom_sph_bt)
-ccgeombuttons_layout.addWidget(ccgeom_cyl_bt)
-ccgeombuttons2_layout.addWidget(ccgeom_pyr_bt)
-ccgeombuttons2_layout.addWidget(ccgeom_ell_bt)
 
 cc_layout.addLayout(cclabel_layout)
 cc_layout.addLayout(ccfilebuttons_layout)
-cc_layout.addLayout(ccgeombuttons_layout)
-cc_layout.addLayout(ccgeombuttons2_layout)
 cc_separator = QtGui.QFrame()
 cc_separator.setFrameStyle(QtGui.QFrame.HLine)
 
@@ -1603,11 +1476,13 @@ run_group_layout = QtGui.QVBoxLayout()
 run_group_label_case = QtGui.QLabel("Case Name: ")
 run_group_label_proc = QtGui.QLabel("Simulation processor: ")
 run_group_label_part = QtGui.QLabel("Number of particles: ")
+run_group_label_partsout = QtGui.QLabel("Total particles out of case: ")
 run_group_label_eta = QtGui.QLabel(run_dialog)
 run_group_label_eta.setText("Estimated time of completion: Calculating...")
 run_group_layout.addWidget(run_group_label_case)
 run_group_layout.addWidget(run_group_label_proc)
 run_group_layout.addWidget(run_group_label_part)
+run_group_layout.addWidget(run_group_label_partsout)
 run_group_layout.addWidget(run_group_label_eta)
 run_group_layout.addStretch(1)
 run_group.setLayout(run_group_layout)
@@ -1639,6 +1514,8 @@ def on_ex_simulate():
 	run_group_label_case.setText("Case Name: " + data['project_name'])
 	run_group_label_proc.setText("Simulation processor: " + str(ex_selector_combo.currentText()))
 	run_group_label_part.setText("Number of particles: " + str(data['total_particles']))
+	run_group_label_partsout.setText("Total particles out of case: " + str(data['total_particles_out']))
+	run_progbar_bar.setValue(0)
 	
 	def on_cancel():
 		print "DualSPHysics for FreeCAD: Stopping simulation"
@@ -1680,25 +1557,30 @@ def on_ex_simulate():
 		except Exception as e:
 			print e
 
-		#Set percentage scale based on timemax and detect finished simulation
+		#Set percentage scale based on timemax
 		for l in run_file_data:
 			if data["timemax"] == -1:
 				if "TimeMax=" in l:
 					data["timemax"] = float(l.split("=")[1])
 
-		last_line_parttime = run_file_data[-1].split("      ")
-		if "Part" in last_line_parttime[0]:
-			current_value = (float(last_line_parttime[1]) * float(100)) / float(data["timemax"])
-			run_progbar_bar.setValue(current_value)
-			run_dialog.setWindowTitle("DualSPHysics Simulation: " +str(current_value)+ "%")
-			
-		last_line_time = run_file_data[-1].split("  ")[-1]
-		if ("===" not in last_line_time) and ("CellDiv" not in last_line_time) and ("memory" not in last_line_time) and ("-" in last_line_time):
-			#update time field
-			try:
-				run_group_label_eta.setText("Estimated time of completion: " + last_line_time)
-			except RuntimeError:
-				pass
+		if "Part_" in run_file_data[-1]:
+			last_line_parttime = run_file_data[-1].split("      ")
+			if "Part_" in last_line_parttime[0]:
+				current_value = (float(last_line_parttime[1]) * float(100)) / float(data["timemax"])
+				run_progbar_bar.setValue(current_value)
+				run_dialog.setWindowTitle("DualSPHysics Simulation: " +str(current_value)+ "%")
+				
+			last_line_time = run_file_data[-1].split("  ")[-1]
+			if ("===" not in last_line_time) and ("CellDiv" not in last_line_time) and ("memory" not in last_line_time) and ("-" in last_line_time):
+				#update time field
+				try:
+					run_group_label_eta.setText("Estimated time of completion: " + last_line_time)
+				except RuntimeError:
+					pass
+		elif "Particles out:" in run_file_data[-1]:
+			totalpartsout = int(run_file_data[-1].split("(total: ")[1].split(")")[0])
+			data["total_particles_out"] = totalpartsout
+			run_group_label_partsout.setText("Total particles out of case: " + str(data['total_particles_out']))
 		run_file = None
 
 
@@ -1756,14 +1638,16 @@ export_separator = QtGui.QFrame()
 export_separator.setFrameStyle(QtGui.QFrame.HLine)
 
 objectlist_layout = QtGui.QVBoxLayout()
-objectlist_label = QtGui.QLabel("Objects marked for case simulation:")
+objectlist_label = QtGui.QLabel("Order of objects marked for case simulation:")
 objectlist_label.setWordWrap(True)
-objectlist_tree = QtGui.QTreeWidget()
-objectlist_tree.setColumnCount(1)
-objectlist_tree.setHeaderLabels(["Object Name"])
-temp_data["objectlist_tree"] = objectlist_tree
+objectlist_table = QtGui.QTableWidget(0,3)
+objectlist_table.setObjectName("DSPH Objects")
+objectlist_table.verticalHeader().setVisible(False)
+objectlist_table.setHorizontalHeaderLabels(["Object Name", "Order up", "Order down"])
+objectlist_table.horizontalHeader().setResizeMode(QtGui.QHeaderView.Stretch)
+temp_data["objectlist_table"] = objectlist_table
 objectlist_layout.addWidget(objectlist_label)
-objectlist_layout.addWidget(objectlist_tree)
+objectlist_layout.addWidget(objectlist_table)
 
 objectlist_separator = QtGui.QFrame()
 objectlist_separator.setFrameStyle(QtGui.QFrame.HLine)
@@ -1803,11 +1687,6 @@ constants_button.setEnabled(False)
 execparams_button.setEnabled(False)
 casecontrols_bt_savedoc.setEnabled(False)
 dp_input.setEnabled(False)
-ccgeom_box_bt.setEnabled(False)
-ccgeom_sph_bt.setEnabled(False)
-ccgeom_cyl_bt.setEnabled(False)
-ccgeom_pyr_bt.setEnabled(False)
-ccgeom_ell_bt.setEnabled(False)
 ex_selector_combo.setEnabled(False)
 ex_button.setEnabled(False)
 export_button.setEnabled(False)
@@ -1833,32 +1712,181 @@ properties_widget.setWindowTitle("DSPH Object Properties")
 properties_scaff_widget = QtGui.QWidget() #Scaffolding widget, only useful to apply to the properties_dock widget
 
 property_widget_layout = QtGui.QVBoxLayout()
-property_table = QtGui.QTableWidget(15,2)
+property_table = QtGui.QTableWidget(3,2)
 property_table.setHorizontalHeaderLabels(["Property Name", "Value"])
 property_table.verticalHeader().setVisible(False)
 property_table.horizontalHeader().setResizeMode(QtGui.QHeaderView.Stretch)
+addtodsph_button = QtGui.QPushButton("Add to DSPH Simulation")
+removefromdsph_button = QtGui.QPushButton("Remove from DSPH Simulation")
 property_widget_layout.addWidget(property_table)
+property_widget_layout.addWidget(addtodsph_button)
+property_widget_layout.addWidget(removefromdsph_button)
 properties_scaff_widget.setLayout(property_widget_layout)
 
 properties_widget.setWidget(properties_scaff_widget)
+propertylabel1 = QtGui.QLabel("   MK Group")
+propertylabel2 = QtGui.QLabel("   Type of object")
+propertylabel3 = QtGui.QLabel("   Fill mode")
+propertylabel1.setAlignment(QtCore.Qt.AlignLeft)
+propertylabel2.setAlignment(QtCore.Qt.AlignLeft)
+propertylabel3.setAlignment(QtCore.Qt.AlignLeft)
+property_table.setCellWidget(0,0, propertylabel1)
+property_table.setCellWidget(1,0, propertylabel2)
+property_table.setCellWidget(2,0, propertylabel3)
+
+def property1_change(value):
+	selection = FreeCADGui.Selection.getSelection()[0]
+	data['simobjects'][selection.Name][0] = value
+def property2_change(index):
+	selection = FreeCADGui.Selection.getSelection()[0]
+	data['simobjects'][selection.Name][1] = property2.itemText(index)
+	if property2.itemText(index).lower() == "bound":
+		property1.setRange(0, 240)
+	elif property2.itemText(index).lower() == "fluid":
+		property1.setRange(0, 10)
+
+def property3_change(index):
+	selection = FreeCADGui.Selection.getSelection()[0]
+	data['simobjects'][selection.Name][2] = property3.itemText(index)
+
+
+property1 = QtGui.QSpinBox()
+property2 = QtGui.QComboBox()
+property3 = QtGui.QComboBox()
+property1.setRange(0, 240)
+property2.insertItems(0, ["Fluid", "Bound"])
+property3.insertItems(1, ["Full", "Solid", "Face", "Wire"])
+property1.valueChanged.connect(property1_change)
+property2.currentIndexChanged.connect(property2_change)
+property3.currentIndexChanged.connect(property3_change)
+property_table.setCellWidget(0,1, property1)
+property_table.setCellWidget(1,1, property2)
+property_table.setCellWidget(2,1, property3)
 
 mw.addDockWidget(QtCore.Qt.LeftDockWidgetArea, properties_widget)
 
-def item_selection_monitor():
-	while True:
-		selection = FreeCADGui.Selection.getSelection()
-		if len(selection) > 0:
-			if len(selection) > 1:
-				#Multiple objects selected
-				#TODO: populate table, detect if object is part of simulation and so on...
+property_table.hide()
+addtodsph_button.hide()
+removefromdsph_button.hide()
+
+def add_object_to_sim():
+	selection = FreeCADGui.Selection.getSelection()
+	for item in selection:
+		if item.Name == "Case_Limits":
+			continue
+		if item.Name not in data['simobjects'].keys():
+			data['simobjects'][item.Name] = [0, 'bound', 'full']
+	on_tree_item_selection_change()
+
+addtodsph_button.clicked.connect(add_object_to_sim)
+
+def remove_object_from_sim():
+	selection = FreeCADGui.Selection.getSelection()
+	for item in selection:
+		if item.Name == "Case_Limits":
+			continue
+		data['simobjects'].pop(item.Name, None)
+	on_tree_item_selection_change()
+
+removefromdsph_button.clicked.connect(remove_object_from_sim)
+
+trees = []
+#find treewidgets of freecad
+for item in mw.findChildren(QtGui.QTreeWidget):
+	if item.objectName() != "DSPH Objects":
+		trees.append(item)
+
+def up_clicked(currentRow):
+	print "to be implemented. Reorder up on element " + str(currentRow)
+	pass
+
+def down_clicked(currentRow):
+	print "to be implemented. Reorder down on element " + str(currentRow)
+	pass
+
+def on_tree_item_selection_change():
+	selection = FreeCADGui.Selection.getSelection()
+	objectNames = []
+	for item in App.getDocument("DSPH_Case").Objects:
+		objectNames.append(item.Name)
+	
+	#Detect object deletion
+	for key in data['simobjects'].keys():
+		if key not in objectNames:
+			data['simobjects'].pop(key, None)
+
+	if len(selection) > 0:
+		if len(selection) > 1:
+			#Multiple objects selected
+			addtodsph_button.setText("Add all to DSPH Simulation")
+			property_table.hide()
+			addtodsph_button.show()
+			removefromdsph_button.hide()
+			pass
+		else:
+			#One object selected
+			if selection[0].Name == "Case_Limits":
+				property_table.hide()
+				addtodsph_button.hide()
+				removefromdsph_button.hide()
+				return
+			if selection[0].Name in data['simobjects'].keys():
+				#Show properties on table
+				property_table.show()
+				addtodsph_button.hide()
+				removefromdsph_button.show()
+				toChange = property_table.cellWidget(0,1)
+				toChange.setValue(data['simobjects'][selection[0].Name][0])
+
+				toChange = property_table.cellWidget(1,1)
+				if data['simobjects'][selection[0].Name][1].lower() == "fluid":
+					toChange.setCurrentIndex(0)
+					property1.setRange(0, 10)
+				elif data['simobjects'][selection[0].Name][1].lower() == "bound":
+					toChange.setCurrentIndex(1)
+					property1.setRange(0, 240)
+
+				toChange = property_table.cellWidget(2,1)
+				if data['simobjects'][selection[0].Name][2].lower() == "full":
+					toChange.setCurrentIndex(0)
+				elif data['simobjects'][selection[0].Name][2].lower() == "solid":
+					toChange.setCurrentIndex(1)
+				elif data['simobjects'][selection[0].Name][2].lower() == "face":
+					toChange.setCurrentIndex(2)
+				elif data['simobjects'][selection[0].Name][2].lower() == "wire":
+					toChange.setCurrentIndex(3)
 				pass
 			else:
-				#One object selected
+				#Show button to add to simulation
+				addtodsph_button.setText("Add to DSPH Simulation")
+				property_table.hide()
+				addtodsph_button.show()
+				removefromdsph_button.hide()
 				pass
+	else:
+		property_table.hide()
+		addtodsph_button.hide()
+		removefromdsph_button.hide()
 
-		time.sleep(0.02)
+	#Update dsph objects list
+	objectlist_table.clear()
+	objectlist_table.setRowCount(len(data["simobjects"]))
+	currentRow = 0
+	for key, each in data["simobjects"].iteritems():
+		objectlist_table.setCellWidget(currentRow, 0, QtGui.QLabel(App.getDocument("DSPH_Case").getObject(key).Label))
+		up = QtGui.QPushButton("^")
+		down = QtGui.QPushButton("v")
+		up.clicked.connect(up_clicked)
+		down.clicked.connect(down_clicked)
+		#TODO: Reorder. this does not work
+		objectlist_table.setCellWidget(currentRow,1, up)
+		objectlist_table.setCellWidget(currentRow,2, down)
 
-monitor_thread = threading.Thread(target=item_selection_monitor)
-monitor_thread.start()
+		currentRow += 1
+		#TODO: Implement reorder widget
+		#objectlist_table.setItemWidget(toAdd, 1, reorder_widget)
+
+for item in trees:
+	item.itemSelectionChanged.connect(on_tree_item_selection_change)
 
 print "DualSPHysics for FreeCAD: Done loading data."
