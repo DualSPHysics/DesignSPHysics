@@ -83,7 +83,7 @@ def set_default_data():
 
 	temp_data['current_process'] = None
 	temp_data['stored_selection'] = []
-	temp_data['supported_types'] = ["box", "sphere", "cylinder"]
+	temp_data['supported_types'] = ["Part::Box", "Part::Sphere", "Part::Cylinder"]
 
 	#Try to load saved paths
 	if os.path.isfile(App.getUserAppDataDir()+'/Macro/dsph_data.dsphdata'):
@@ -1286,17 +1286,17 @@ def on_save_case():
 					f.write('\t\t\t\t\t<setmkbound mk="'+str(valuelist[0])+'"/>\n')
 				f.write('\t\t\t\t\t<setdrawmode mode="'+valuelist[2].lower()+'"/>\n')
 				#TODO: set rotation
-				if "box" in name.lower():
+				if o.TypeId == "Part::Box":
 					f.write('\t\t\t\t\t<drawbox>\n')
 					f.write('\t\t\t\t\t\t<boxfill>solid</boxfill>\n')
 					f.write('\t\t\t\t\t\t<point x="'+str(o.Placement.Base.x / 1000)+'" y="'+str(o.Placement.Base.y / 1000)+'" z="'+str(o.Placement.Base.z / 1000)+'" />\n')
 					f.write('\t\t\t\t\t\t<size x="'+str(o.Length.Value / 1000)+'" y="'+str(o.Width.Value / 1000)+'" z="'+str(o.Height.Value / 1000)+'" />\n')
 					f.write('\t\t\t\t\t</drawbox>\n')
-				elif "sphere" in name.lower():
+				elif o.TypeId == "Part::Sphere":
 					f.write('\t\t\t\t\t<drawsphere radius="'+str(o.Radius.Value / 1000)+'">\n')
 					f.write('\t\t\t\t\t\t<point x="'+str(o.Placement.Base.x / 1000)+'" y="'+str(o.Placement.Base.y / 1000)+'" z="'+str(o.Placement.Base.z / 1000)+'" />\n')
 					f.write('\t\t\t\t\t</drawsphere>\n')
-				elif "cylinder" in name.lower():
+				elif o.TypeId == "Part::Cylinder":
 					f.write('\t\t\t\t\t<drawcylinder radius="'+str(o.Radius.Value / 1000)+'">\n')
 					f.write('\t\t\t\t\t\t<point x="'+str(o.Placement.Base.x / 1000)+'" y="'+str(o.Placement.Base.y / 1000)+'" z="'+str(o.Placement.Base.z / 1000)+'" />\n')
 					f.write('\t\t\t\t\t\t<point x="'+str(o.Placement.Base.x / 1000)+'" y="'+str(o.Placement.Base.y / 1000)+'" z="'+str((o.Placement.Base.z + o.Height.Value) / 1000)+'" />\n')
@@ -1736,18 +1736,48 @@ property_table.setCellWidget(2,0, propertylabel3)
 
 def property1_change(value):
 	selection = FreeCADGui.Selection.getSelection()[0]
+	selectiongui = FreeCADGui.getDocument("DSPH_Case").getObject(selection.Name)
 	data['simobjects'][selection.Name][0] = value
+
 def property2_change(index):
 	selection = FreeCADGui.Selection.getSelection()[0]
+	selectiongui = FreeCADGui.getDocument("DSPH_Case").getObject(selection.Name)
 	data['simobjects'][selection.Name][1] = property2.itemText(index)
 	if property2.itemText(index).lower() == "bound":
 		property1.setRange(0, 240)
+		selectiongui.ShapeColor = (0.80,0.80,0.80)
+		selectiongui.Transparency = 0
 	elif property2.itemText(index).lower() == "fluid":
 		property1.setRange(0, 10)
+		selectiongui.ShapeColor = (0.00,0.45,1.00)
+		selectiongui.Transparency = 30
 
 def property3_change(index):
 	selection = FreeCADGui.Selection.getSelection()[0]
+	selectiongui = FreeCADGui.getDocument("DSPH_Case").getObject(selection.Name)
 	data['simobjects'][selection.Name][2] = property3.itemText(index)
+	if property3.itemText(index).lower() == "full":
+		#TOOD: Fix this. object does not seem to change opacity
+		if property2.itemText(index).lower() == "fluid":
+			selectiongui.Transparency = 30
+		elif property2.itemText(index).lower() == "bound":
+			selectiongui.Transparency = 0
+	elif property3.itemText(index).lower() == "solid":
+		if property2.itemText(index).lower() == "fluid":
+			selectiongui.Transparency = 30
+		elif property2.itemText(index).lower() == "bound":
+			selectiongui.Transparency = 0
+	elif property3.itemText(index).lower() == "face":
+		if property2.itemText(index).lower() == "fluid":
+			selectiongui.Transparency = 80
+		elif property2.itemText(index).lower() == "bound":
+			selectiongui.Transparency = 80
+	elif property3.itemText(index).lower() == "wire":
+		if property2.itemText(index).lower() == "fluid":
+			selectiongui.Transparency = 85
+		elif property2.itemText(index).lower() == "bound":
+			selectiongui.Transparency = 85
+
 
 
 property1 = QtGui.QSpinBox()
@@ -1773,6 +1803,8 @@ def add_object_to_sim():
 	selection = FreeCADGui.Selection.getSelection()
 	for item in selection:
 		if item.Name == "Case_Limits":
+			continue
+		if len(item.InList) > 0:
 			continue
 		if item.Name not in data['simobjects'].keys():
 			data['simobjects'][item.Name] = [0, 'bound', 'full']
@@ -1815,10 +1847,11 @@ def on_tree_item_selection_change():
 		if key not in objectNames:
 			data['simobjects'].pop(key, None)
 
+	addtodsph_button.setEnabled(True)
 	if len(selection) > 0:
 		if len(selection) > 1:
 			#Multiple objects selected
-			addtodsph_button.setText("Add all to DSPH Simulation")
+			addtodsph_button.setText("Add all possible to DSPH Simulation")
 			property_table.hide()
 			addtodsph_button.show()
 			removefromdsph_button.hide()
@@ -1839,29 +1872,44 @@ def on_tree_item_selection_change():
 				toChange.setValue(data['simobjects'][selection[0].Name][0])
 
 				toChange = property_table.cellWidget(1,1)
-				if data['simobjects'][selection[0].Name][1].lower() == "fluid":
-					toChange.setCurrentIndex(0)
-					property1.setRange(0, 10)
-				elif data['simobjects'][selection[0].Name][1].lower() == "bound":
-					toChange.setCurrentIndex(1)
-					property1.setRange(0, 240)
+				if selection[0].TypeId in temp_data["supported_types"]:
+					toChange.setEnabled(True)
+					if data['simobjects'][selection[0].Name][1].lower() == "fluid":
+						toChange.setCurrentIndex(0)
+						property1.setRange(0, 10)
+					elif data['simobjects'][selection[0].Name][1].lower() == "bound":
+						toChange.setCurrentIndex(1)
+						property1.setRange(0, 240)
+				else:
+					toChange.setEnabled(False)
 
 				toChange = property_table.cellWidget(2,1)
-				if data['simobjects'][selection[0].Name][2].lower() == "full":
-					toChange.setCurrentIndex(0)
-				elif data['simobjects'][selection[0].Name][2].lower() == "solid":
-					toChange.setCurrentIndex(1)
-				elif data['simobjects'][selection[0].Name][2].lower() == "face":
-					toChange.setCurrentIndex(2)
-				elif data['simobjects'][selection[0].Name][2].lower() == "wire":
-					toChange.setCurrentIndex(3)
+				if selection[0].TypeId in temp_data["supported_types"]:
+					toChange.setEnabled(True)
+					if data['simobjects'][selection[0].Name][2].lower() == "full":
+						toChange.setCurrentIndex(0)
+					elif data['simobjects'][selection[0].Name][2].lower() == "solid":
+						toChange.setCurrentIndex(1)
+					elif data['simobjects'][selection[0].Name][2].lower() == "face":
+						toChange.setCurrentIndex(2)
+					elif data['simobjects'][selection[0].Name][2].lower() == "wire":
+						toChange.setCurrentIndex(3)
+				else:
+					toChange.setEnabled(False)
 				pass
 			else:
-				#Show button to add to simulation
-				addtodsph_button.setText("Add to DSPH Simulation")
-				property_table.hide()
-				addtodsph_button.show()
-				removefromdsph_button.hide()
+				if selection[0].InList == []:
+					#Show button to add to simulation
+					addtodsph_button.setText("Add to DSPH Simulation")
+					property_table.hide()
+					addtodsph_button.show()
+					removefromdsph_button.hide()
+				else:
+					addtodsph_button.setText("Can't add this object to the simulation")
+					property_table.hide()
+					addtodsph_button.show()
+					addtodsph_button.setEnabled(False)
+					removefromdsph_button.hide()
 				pass
 	else:
 		property_table.hide()
@@ -1870,10 +1918,19 @@ def on_tree_item_selection_change():
 
 	#Update dsph objects list
 	objectlist_table.clear()
-	objectlist_table.setRowCount(len(data["simobjects"]))
+	#Substract one that represent case limits object
+	objectlist_table.setRowCount(len(data["simobjects"]) - 1)
+	objectlist_table.setHorizontalHeaderLabels(["Object Name", "Order up", "Order down"])
 	currentRow = 0
+	objectsWithParent = []
 	for key, each in data["simobjects"].iteritems():
-		objectlist_table.setCellWidget(currentRow, 0, QtGui.QLabel(App.getDocument("DSPH_Case").getObject(key).Label))
+		contextObject = App.getDocument("DSPH_Case").getObject(key)
+		if contextObject.InList != []:
+			objectsWithParent.append(contextObject.Name)
+			continue
+		if contextObject.Name == "Case_Limits":
+			continue
+		objectlist_table.setCellWidget(currentRow, 0, QtGui.QLabel(contextObject.Label))
 		up = QtGui.QPushButton("^")
 		down = QtGui.QPushButton("v")
 		up.clicked.connect(up_clicked)
@@ -1885,8 +1942,23 @@ def on_tree_item_selection_change():
 		currentRow += 1
 		#TODO: Implement reorder widget
 		#objectlist_table.setItemWidget(toAdd, 1, reorder_widget)
+	for each in objectsWithParent:
+		data["simobjects"].pop(each, None)
 
 for item in trees:
 	item.itemSelectionChanged.connect(on_tree_item_selection_change)
+
+#Watch if no object is selected 
+def selection_monitor():
+	while True:
+		if len(FreeCADGui.Selection.getSelection()) == 0:
+			property_table.hide()
+			addtodsph_button.hide()
+			removefromdsph_button.hide()
+		threading._sleep(0.1)
+
+monitor_thread = threading.Thread(target=selection_monitor)
+monitor_thread.start()
+
 
 print "DualSPHysics for FreeCAD: Done loading data."
