@@ -81,6 +81,8 @@ def set_default_data():
 
 	data['simobjects'] = dict()
 
+	data['export_order'] = []
+
 	temp_data['current_process'] = None
 	temp_data['stored_selection'] = []
 	temp_data['supported_types'] = ["Part::Box", "Part::Sphere", "Part::Cylinder"]
@@ -1165,6 +1167,7 @@ dp_layout.addWidget(dp_label2)
 cc_layout = QtGui.QVBoxLayout()
 cclabel_layout = QtGui.QHBoxLayout()
 ccfilebuttons_layout = QtGui.QHBoxLayout()
+ccaddbuttons_layout = QtGui.QHBoxLayout()
 
 casecontrols_label = QtGui.QLabel("Use these controls to define the Case you want to simulate.")
 casecontrols_bt_newdoc = QtGui.QPushButton("  New Case")
@@ -1176,6 +1179,9 @@ casecontrols_bt_savedoc.setIconSize(QtCore.QSize(28,28));
 casecontrols_bt_loaddoc = QtGui.QPushButton("  Load Case")
 casecontrols_bt_loaddoc.setIcon(QtGui.QIcon(App.getUserAppDataDir() + "Macro/DSPH_Images/load.png"));
 casecontrols_bt_loaddoc.setIconSize(QtCore.QSize(28,28));
+
+casecontrols_bt_addfillbox = QtGui.QPushButton("Add fillbox")
+casecontrols_bt_addfillbox.setEnabled(False)
 
 
 def on_new_case():
@@ -1220,6 +1226,7 @@ def on_new_case():
 	ex_selector_combo.setEnabled(False)
 	ex_button.setEnabled(False)
 	export_button.setEnabled(False)
+	casecontrols_bt_addfillbox.setEnabled(True)
 	data['simobjects']['Case_Limits'] = ["mkspecial", "typespecial", "fillspecial"]
 	on_tree_item_selection_change()
 
@@ -1277,7 +1284,9 @@ def on_save_case():
 		f.write('\t\t\t</definition>\n')
 		f.write('\t\t\t<commands>\n')
 		f.write('\t\t\t\t<mainlist>\n')
-		for name, valuelist in data["simobjects"].iteritems():
+		for key in data["export_order"]:
+			name = key
+			valuelist = data["simobjects"][name]
 			o = App.getDocument("DSPH_Case").getObject(name)
 			if (name != "Case_Limits"):
 				if valuelist[1].lower() == "fluid":
@@ -1302,14 +1311,35 @@ def on_save_case():
 					f.write('\t\t\t\t\t\t<point x="'+str(o.Placement.Base.x / 1000)+'" y="'+str(o.Placement.Base.y / 1000)+'" z="'+str((o.Placement.Base.z + o.Height.Value) / 1000)+'" />\n')
 					f.write('\t\t\t\t\t</drawcylinder>\n')
 				else:
-					#Not a xml parametric object. Needs exporting
-					__objs__=[]
-					__objs__.append(o)
-					Mesh.export(__objs__,saveName + "/" + o.Name + ".stl")
-					f.write('\t\t\t\t\t<drawfilestl file="'+ o.Name + ".stl"+'" >\n')
-					f.write('\t\t\t\t\t\t<drawscale x="0.001" y="0.001" z="0.001" />\n')
-					f.write('\t\t\t\t\t</drawfilestl>\n')
-					del __objs__
+					#Watch if it is a fillbox group
+					if o.TypeId == "App::DocumentObjectGroup" and "fillbox" in o.Name.lower():
+						filllimits = None
+						fillpoint = None
+						for element in o.OutList:
+							if "filllimit" in element.Name.lower():
+								filllimits = element
+							elif "fillpoint" in element.Name.lower():
+								fillpoint = element
+
+						if filllimits and fillpoint:
+							f.write('\t\t\t\t\t<fillbox x="'+str(fillpoint.Placement.Base.x / 1000)+'" y="'+str(fillpoint.Placement.Base.y / 1000)+'" z="'+str(fillpoint.Placement.Base.z / 1000)+'">\n')
+							f.write('\t\t\t\t\t\t<modefill>void</modefill>\n')
+							f.write('\t\t\t\t\t\t<point x="'+str(filllimits.Placement.Base.x / 1000)+'" y="'+str(filllimits.Placement.Base.y / 1000)+'" z="'+str(filllimits.Placement.Base.z / 1000)+'" />\n')
+							f.write('\t\t\t\t\t\t<size x="'+str(filllimits.Length.Value / 1000)+'" y="'+str(filllimits.Width.Value / 1000)+'" z="'+str(filllimits.Height.Value / 1000)+'" />\n')
+							f.write('\t\t\t\t\t</fillbox>\n')
+						else:
+							#Something went wrong, one of the needed objects is not in the fillbox group
+							print "ERROR: Limits or point missing in a fillbox group. Ignoring it"
+							continue
+					else:
+						#Not a xml parametric object. Needs exporting
+						__objs__=[]
+						__objs__.append(o)
+						Mesh.export(__objs__,saveName + "/" + o.Name + ".stl")
+						f.write('\t\t\t\t\t<drawfilestl file="'+ o.Name + ".stl"+'" >\n')
+						f.write('\t\t\t\t\t\t<drawscale x="0.001" y="0.001" z="0.001" />\n')
+						f.write('\t\t\t\t\t</drawfilestl>\n')
+						del __objs__
 		f.write('\t\t\t\t</mainlist>\n')
 		f.write('\t\t\t</commands>\n')
 		
@@ -1445,21 +1475,40 @@ def on_load_case():
 		export_button.setEnabled(True)
 	else:
 		export_button.setEnabled(False)
+	casecontrols_bt_addfillbox.setEnabled(True)
 
 	os.chdir(data["project_path"])
+	on_tree_item_selection_change()
 
+
+def on_add_fillbox():
+	fillbox_gp = App.getDocument("DSPH_Case").addObject("App::DocumentObjectGroup","FillBox")
+	fillbox_point = App.ActiveDocument.addObject("Part::Sphere","FillPoint")
+	fillbox_limits = App.ActiveDocument.addObject("Part::Box","FillLimit")
+	fillbox_limits.ViewObject.DisplayMode = "Wireframe"
+	fillbox_limits.ViewObject.LineColor = (0.00,0.78,1.00)
+	fillbox_point.Radius.Value = 0.2
+	fillbox_point.Placement.Base = App.Vector(5,5,5)
+	fillbox_point.ViewObject.ShapeColor = (0.00,0.00,0.00)
+	fillbox_gp.addObject(fillbox_limits)
+	fillbox_gp.addObject(fillbox_point)
+	App.ActiveDocument.recompute()
+	Gui.SendMsgToActiveView("ViewFit")
 
 casecontrols_bt_newdoc.clicked.connect(on_new_case)
 casecontrols_bt_savedoc.clicked.connect(on_save_case)
 casecontrols_bt_loaddoc.clicked.connect(on_load_case)
+casecontrols_bt_addfillbox.clicked.connect(on_add_fillbox)
 
 cclabel_layout.addWidget(casecontrols_label)
 ccfilebuttons_layout.addWidget(casecontrols_bt_newdoc)
 ccfilebuttons_layout.addWidget(casecontrols_bt_savedoc)
 ccfilebuttons_layout.addWidget(casecontrols_bt_loaddoc)
+ccaddbuttons_layout.addWidget(casecontrols_bt_addfillbox)
 
 cc_layout.addLayout(cclabel_layout)
 cc_layout.addLayout(ccfilebuttons_layout)
+cc_layout.addLayout(ccaddbuttons_layout)
 cc_separator = QtGui.QFrame()
 cc_separator.setFrameStyle(QtGui.QFrame.HLine)
 
@@ -1743,6 +1792,8 @@ def property2_change(index):
 	selection = FreeCADGui.Selection.getSelection()[0]
 	selectiongui = FreeCADGui.getDocument("DSPH_Case").getObject(selection.Name)
 	data['simobjects'][selection.Name][1] = property2.itemText(index)
+	if "fillbox" in selection.Name.lower():
+		return
 	if property2.itemText(index).lower() == "bound":
 		property1.setRange(0, 240)
 		selectiongui.ShapeColor = (0.80,0.80,0.80)
@@ -1758,25 +1809,19 @@ def property3_change(index):
 	data['simobjects'][selection.Name][2] = property3.itemText(index)
 	if property3.itemText(index).lower() == "full":
 		#TOOD: Fix this. object does not seem to change opacity
-		if property2.itemText(index).lower() == "fluid":
+		if property2.itemText(property2.currentIndex()).lower() == "fluid":
 			selectiongui.Transparency = 30
-		elif property2.itemText(index).lower() == "bound":
+		elif property2.itemText(property2.currentIndex()).lower() == "bound":
 			selectiongui.Transparency = 0
 	elif property3.itemText(index).lower() == "solid":
-		if property2.itemText(index).lower() == "fluid":
+		if property2.itemText(property2.currentIndex()).lower() == "fluid":
 			selectiongui.Transparency = 30
-		elif property2.itemText(index).lower() == "bound":
+		elif property2.itemText(property2.currentIndex()).lower() == "bound":
 			selectiongui.Transparency = 0
 	elif property3.itemText(index).lower() == "face":
-		if property2.itemText(index).lower() == "fluid":
-			selectiongui.Transparency = 80
-		elif property2.itemText(index).lower() == "bound":
-			selectiongui.Transparency = 80
+		selectiongui.Transparency = 80
 	elif property3.itemText(index).lower() == "wire":
-		if property2.itemText(index).lower() == "fluid":
-			selectiongui.Transparency = 85
-		elif property2.itemText(index).lower() == "bound":
-			selectiongui.Transparency = 85
+		selectiongui.Transparency = 85
 
 
 
@@ -1807,7 +1852,11 @@ def add_object_to_sim():
 		if len(item.InList) > 0:
 			continue
 		if item.Name not in data['simobjects'].keys():
-			data['simobjects'][item.Name] = [0, 'bound', 'full']
+			if "fillbox" in item.Name.lower():
+				data['simobjects'][item.Name] = [0, 'fluid', 'full']
+			else:
+				data['simobjects'][item.Name] = [0, 'bound', 'full']
+			data["export_order"].append(item.Name)
 	on_tree_item_selection_change()
 
 addtodsph_button.clicked.connect(add_object_to_sim)
@@ -1817,7 +1866,12 @@ def remove_object_from_sim():
 	for item in selection:
 		if item.Name == "Case_Limits":
 			continue
+		print data['export_order']
+		if item.Name in data["export_order"]:
+			data['export_order'].remove(item.Name)
 		data['simobjects'].pop(item.Name, None)
+		print data['export_order']
+
 	on_tree_item_selection_change()
 
 removefromdsph_button.clicked.connect(remove_object_from_sim)
@@ -1828,12 +1882,12 @@ for item in mw.findChildren(QtGui.QTreeWidget):
 	if item.objectName() != "DSPH Objects":
 		trees.append(item)
 
-def up_clicked(currentRow):
-	print "to be implemented. Reorder up on element " + str(currentRow)
+def up_clicked(row):
+	print "to be implemented. Reorder up on element " + str(row)
 	pass
 
-def down_clicked(currentRow):
-	print "to be implemented. Reorder down on element " + str(currentRow)
+def down_clicked(row):
+	print "to be implemented. Reorder down on element " + str(row)
 	pass
 
 def on_tree_item_selection_change():
@@ -1881,7 +1935,17 @@ def on_tree_item_selection_change():
 						toChange.setCurrentIndex(1)
 						property1.setRange(0, 240)
 				else:
-					toChange.setEnabled(False)
+					if selection[0].TypeId == "App::DocumentObjectGroup" and "fillbox" in selection[0].Name.lower():
+						toChange.setEnabled(True)
+						if data['simobjects'][selection[0].Name][1].lower() == "fluid":
+							toChange.setCurrentIndex(0)
+							property1.setRange(0, 10)
+						elif data['simobjects'][selection[0].Name][1].lower() == "bound":
+							toChange.setCurrentIndex(1)
+							property1.setRange(0, 240)
+					else:
+						toChange.setCurrentIndex(1)
+						toChange.setEnabled(False)
 
 				toChange = property_table.cellWidget(2,1)
 				if selection[0].TypeId in temp_data["supported_types"]:
@@ -1895,6 +1959,7 @@ def on_tree_item_selection_change():
 					elif data['simobjects'][selection[0].Name][2].lower() == "wire":
 						toChange.setCurrentIndex(3)
 				else:
+					toChange.setCurrentIndex(0)
 					toChange.setEnabled(False)
 				pass
 			else:
@@ -1918,35 +1983,85 @@ def on_tree_item_selection_change():
 
 	#Update dsph objects list
 	objectlist_table.clear()
+	if len(data["export_order"]) == 0:
+		data["export_order"] = data["simobjects"].keys()
 	#Substract one that represent case limits object
-	objectlist_table.setRowCount(len(data["simobjects"]) - 1)
+	objectlist_table.setRowCount(len(data["export_order"]) - 1)
 	objectlist_table.setHorizontalHeaderLabels(["Object Name", "Order up", "Order down"])
 	currentRow = 0
 	objectsWithParent = []
-	for key, each in data["simobjects"].iteritems():
+	for key in data["export_order"]:
 		contextObject = App.getDocument("DSPH_Case").getObject(key)
+		if not contextObject:
+			data["export_order"].remove(key)
+			continue
 		if contextObject.InList != []:
 			objectsWithParent.append(contextObject.Name)
 			continue
 		if contextObject.Name == "Case_Limits":
 			continue
-		objectlist_table.setCellWidget(currentRow, 0, QtGui.QLabel(contextObject.Label))
-		up = QtGui.QPushButton("^")
-		down = QtGui.QPushButton("v")
-		up.clicked.connect(up_clicked)
-		down.clicked.connect(down_clicked)
+		objectlist_table.setCellWidget(currentRow, 0, QtGui.QLabel("   " + contextObject.Label))
+		up = QtGui.QLabel("   Move Up")
+		up.setAlignment(QtCore.Qt.AlignLeft)
+		up.setStyleSheet("QLabel { background-color : rgb(225,225,225); color : black; margin: 2px;} QLabel:hover { background-color : rgb(215,215,255); color : black; }")
+		
+		down = QtGui.QLabel("   Move Down")
+		down.setAlignment(QtCore.Qt.AlignLeft)
+		down.setStyleSheet("QLabel { background-color : rgb(225,225,225); color : black; margin: 2px;} QLabel:hover { background-color : rgb(215,215,255); color : black; }")
+
 		#TODO: Reorder. this does not work
-		objectlist_table.setCellWidget(currentRow,1, up)
-		objectlist_table.setCellWidget(currentRow,2, down)
+		if currentRow != 0:
+			objectlist_table.setCellWidget(currentRow,1, up)
+		if (currentRow + 2) != len(data["export_order"]):
+			objectlist_table.setCellWidget(currentRow,2, down)
 
 		currentRow += 1
-		#TODO: Implement reorder widget
-		#objectlist_table.setItemWidget(toAdd, 1, reorder_widget)
 	for each in objectsWithParent:
+		toDeleteKey = data["simobjects"].values().index(each)
 		data["simobjects"].pop(each, None)
+		data["export_order"].remove(toDeleteKey)
 
 for item in trees:
 	item.itemSelectionChanged.connect(on_tree_item_selection_change)
+
+def on_cell_click(row, column):
+	label_pressed = objectlist_table.cellWidget(row, column)
+	#set in row + 1 to ignore case_limits (always first)
+	object_pressed = FreeCAD.getDocument("DSPH_Case").getObject(data["simobjects"].keys()[row + 1])
+
+	new_order = []
+	if column == 1:
+		#order up
+		curr_elem = data["export_order"][row + 1]
+		prev_elem = data["export_order"][row]
+
+		data["export_order"].remove(curr_elem)
+
+		for element in data["export_order"]:
+			if element == prev_elem:
+				new_order.append(curr_elem)
+			new_order.append(element)
+
+		data['export_order'] = new_order
+	elif column == 2:
+		#order down
+		curr_elem = data["export_order"][row + 1]
+		next_elem = data["export_order"][row + 2]
+
+		data["export_order"].remove(curr_elem)
+
+		for element in data["export_order"]:
+			new_order.append(element)
+			if element == next_elem:
+				new_order.append(curr_elem)
+
+		data['export_order'] = new_order
+	else:
+		#ignore
+		pass
+	on_tree_item_selection_change()
+
+objectlist_table.cellClicked.connect(on_cell_click)
 
 #Watch if no object is selected 
 def selection_monitor():
