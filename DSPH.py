@@ -88,13 +88,17 @@ def set_default_data():
 	temp_data['supported_types'] = ["Part::Box", "Part::Sphere", "Part::Cylinder"]
 
 	#Try to load saved paths
-	if os.path.isfile(App.getUserAppDataDir()+'/Macro/dsph_data.dsphdata'):
-		picklefile = open(App.getUserAppDataDir()+'/Macro/dsph_data.dsphdata', 'rb')
-		disk_data = pickle.load(picklefile)
-		data['gencase_path'] = disk_data['gencase_path']
-		data['dsphysics_path'] = disk_data['dsphysics_path']
-		data['partvtk4_path'] = disk_data['partvtk4_path']
-		
+	if os.path.isfile(App.getUserAppDataDir()+'/dsph_data.dsphdata'):
+		try:
+			picklefile = open(App.getUserAppDataDir()+'/dsph_data.dsphdata', 'rb')
+			disk_data = pickle.load(picklefile)
+			data['gencase_path'] = disk_data['gencase_path']
+			data['dsphysics_path'] = disk_data['dsphysics_path']
+			data['partvtk4_path'] = disk_data['partvtk4_path']
+		except:
+			data['gencase_path'] = ""
+			data['dsphysics_path'] = ""
+			data['partvtk4_path'] = ""
 		#Check executables and see if they are the correct ones
 		print "DualSPHysics for FreeCAD: Found data file. Loading data from disk."
 		execs_correct = True
@@ -133,10 +137,9 @@ def set_default_data():
 
 		if not execs_correct:
 			print "WARNING: One of more of the executables in the setup is not correct. Check plugin setup to correct missing binaries"
-
-
-	data["project_path"] = "" 
-	data["project_name"] = ""
+	else:
+		data["project_path"] = "" 
+		data["project_name"] = ""
 
 set_default_data()
 
@@ -1046,9 +1049,9 @@ def def_setup_window():
 		data['gencase_path'] = gencasepath_input.text()
 		data['dsphysics_path'] = dsphpath_input.text()
 		data['partvtk4_path'] = partvtk4path_input.text()
-		picklefile = open(App.getUserAppDataDir()+'/Macro/dsph_data.dsphdata', 'wb')
+		picklefile = open(App.getUserAppDataDir()+'/dsph_data.dsphdata', 'wb')
 		pickle.dump(data, picklefile)
-		print "DualSPHysics for FreeCAD: Setup changed. Saved to App.getUserAppDataDir()+'/Macro/dsph_data.dsphdata'"
+		print "DualSPHysics for FreeCAD: Setup changed. Saved to "+App.getUserAppDataDir()+"/dsph_data.dsphdata"
 		setup_window.accept()
 
 	def on_cancel():
