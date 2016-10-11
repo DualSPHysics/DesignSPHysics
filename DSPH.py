@@ -3,7 +3,7 @@
 from PySide import QtGui, QtCore
 from FreeCAD import Base
 from datetime import datetime
-import Part,PartGui, os, sys, Draft, subprocess, pickle, time, threading, traceback, Mesh
+import Part,PartGui, os, sys, Draft, subprocess, pickle, time, threading, traceback, Mesh, math
 
 print "Loading DualSPHysics for FreeCAD..."
 print "-----------------------------------"
@@ -1242,7 +1242,6 @@ def on_new_case():
 
 
 def on_save_case():
-	#TODO: Verify saving
 	if (data["project_path"] == "") and (data["project_name"] == ""):
 		saveName, _ = QtGui.QFileDialog.getSaveFileName(dsph_dock, "Save Case", QtCore.QDir.homePath())
 	else:
@@ -1302,22 +1301,32 @@ def on_save_case():
 					f.write('\t\t\t\t\t<setmkfluid mk="'+str(valuelist[0])+'"/>\n')
 				elif valuelist[1].lower() == "bound":
 					f.write('\t\t\t\t\t<setmkbound mk="'+str(valuelist[0])+'"/>\n')
+				
 				f.write('\t\t\t\t\t<setdrawmode mode="'+valuelist[2].lower()+'"/>\n')
 				#TODO: set rotation
 				if o.TypeId == "Part::Box":
+					f.write('\t\t\t\t\t<matrixreset />\n')
+					f.write('\t\t\t\t\t<move x="'+str(o.Placement.Base.x / 1000)+'" y="'+str(o.Placement.Base.y / 1000)+'" z="'+str(o.Placement.Base.z / 1000)+'" />\n')
+					f.write('\t\t\t\t\t<rotate ang="'+str(math.degrees(o.Placement.Rotation.Angle))+'" x="'+str(-o.Placement.Rotation.Axis.x)+'" y="'+str(-o.Placement.Rotation.Axis.y)+'" z="'+str(-o.Placement.Rotation.Axis.z)+'" />\n')
 					f.write('\t\t\t\t\t<drawbox>\n')
 					f.write('\t\t\t\t\t\t<boxfill>solid</boxfill>\n')
-					f.write('\t\t\t\t\t\t<point x="'+str(o.Placement.Base.x / 1000)+'" y="'+str(o.Placement.Base.y / 1000)+'" z="'+str(o.Placement.Base.z / 1000)+'" />\n')
+					f.write('\t\t\t\t\t\t<point x="0" y="0" z="0" />\n')
 					f.write('\t\t\t\t\t\t<size x="'+str(o.Length.Value / 1000)+'" y="'+str(o.Width.Value / 1000)+'" z="'+str(o.Height.Value / 1000)+'" />\n')
 					f.write('\t\t\t\t\t</drawbox>\n')
 				elif o.TypeId == "Part::Sphere":
+					f.write('\t\t\t\t\t<matrixreset />\n')
+					f.write('\t\t\t\t\t<move x="'+str(o.Placement.Base.x / 1000)+'" y="'+str(o.Placement.Base.y / 1000)+'" z="'+str(o.Placement.Base.z / 1000)+'" />\n')
+					f.write('\t\t\t\t\t<rotate ang="'+str(math.degrees(o.Placement.Rotation.Angle))+'" x="'+str(-o.Placement.Rotation.Axis.x)+'" y="'+str(-o.Placement.Rotation.Axis.y)+'" z="'+str(-o.Placement.Rotation.Axis.z)+'" />\n')
 					f.write('\t\t\t\t\t<drawsphere radius="'+str(o.Radius.Value / 1000)+'">\n')
-					f.write('\t\t\t\t\t\t<point x="'+str(o.Placement.Base.x / 1000)+'" y="'+str(o.Placement.Base.y / 1000)+'" z="'+str(o.Placement.Base.z / 1000)+'" />\n')
+					f.write('\t\t\t\t\t\t<point x="0" y="0" z="0" />\n')
 					f.write('\t\t\t\t\t</drawsphere>\n')
 				elif o.TypeId == "Part::Cylinder":
+					f.write('\t\t\t\t\t<matrixreset />\n')
+					f.write('\t\t\t\t\t<move x="'+str(o.Placement.Base.x / 1000)+'" y="'+str(o.Placement.Base.y / 1000)+'" z="'+str(o.Placement.Base.z / 1000)+'" />\n')
+					f.write('\t\t\t\t\t<rotate ang="'+str(math.degrees(o.Placement.Rotation.Angle))+'" x="'+str(-o.Placement.Rotation.Axis.x)+'" y="'+str(-o.Placement.Rotation.Axis.y)+'" z="'+str(-o.Placement.Rotation.Axis.z)+'" />\n')
 					f.write('\t\t\t\t\t<drawcylinder radius="'+str(o.Radius.Value / 1000)+'">\n')
-					f.write('\t\t\t\t\t\t<point x="'+str(o.Placement.Base.x / 1000)+'" y="'+str(o.Placement.Base.y / 1000)+'" z="'+str(o.Placement.Base.z / 1000)+'" />\n')
-					f.write('\t\t\t\t\t\t<point x="'+str(o.Placement.Base.x / 1000)+'" y="'+str(o.Placement.Base.y / 1000)+'" z="'+str((o.Placement.Base.z + o.Height.Value) / 1000)+'" />\n')
+					f.write('\t\t\t\t\t\t<point x="0" y="0" z="0" />\n')
+					f.write('\t\t\t\t\t\t<point x="0" y="0" z="'+str((0 + o.Height.Value) / 1000)+'" />\n')
 					f.write('\t\t\t\t\t</drawcylinder>\n')
 				else:
 					#Watch if it is a fillbox group
@@ -1331,9 +1340,12 @@ def on_save_case():
 								fillpoint = element
 
 						if filllimits and fillpoint:
+							f.write('\t\t\t\t\t<matrixreset />\n')
+							f.write('\t\t\t\t\t<move x="'+str(o.Placement.Base.x / 1000)+'" y="'+str(o.Placement.Base.y / 1000)+'" z="'+str(o.Placement.Base.z / 1000)+'" />\n')
+							f.write('\t\t\t\t\t<rotate ang="'+str(math.degrees(o.Placement.Rotation.Angle))+'" x="'+str(-o.Placement.Rotation.Axis.x)+'" y="'+str(-o.Placement.Rotation.Axis.y)+'" z="'+str(-o.Placement.Rotation.Axis.z)+'" />\n')
 							f.write('\t\t\t\t\t<fillbox x="'+str(fillpoint.Placement.Base.x / 1000)+'" y="'+str(fillpoint.Placement.Base.y / 1000)+'" z="'+str(fillpoint.Placement.Base.z / 1000)+'">\n')
 							f.write('\t\t\t\t\t\t<modefill>void</modefill>\n')
-							f.write('\t\t\t\t\t\t<point x="'+str(filllimits.Placement.Base.x / 1000)+'" y="'+str(filllimits.Placement.Base.y / 1000)+'" z="'+str(filllimits.Placement.Base.z / 1000)+'" />\n')
+							f.write('\t\t\t\t\t\t<point x="0" y="0" z="0" />\n')
 							f.write('\t\t\t\t\t\t<size x="'+str(filllimits.Length.Value / 1000)+'" y="'+str(filllimits.Width.Value / 1000)+'" z="'+str(filllimits.Height.Value / 1000)+'" />\n')
 							f.write('\t\t\t\t\t</fillbox>\n')
 						else:
@@ -1345,6 +1357,7 @@ def on_save_case():
 						__objs__=[]
 						__objs__.append(o)
 						Mesh.export(__objs__,saveName + "/" + o.Name + ".stl")
+						f.write('\t\t\t\t\t<matrixreset />\n')
 						f.write('\t\t\t\t\t<drawfilestl file="'+ o.Name + ".stl"+'" >\n')
 						f.write('\t\t\t\t\t\t<drawscale x="0.001" y="0.001" z="0.001" />\n')
 						f.write('\t\t\t\t\t</drawfilestl>\n')
@@ -1699,9 +1712,9 @@ export_separator.setFrameStyle(QtGui.QFrame.HLine)
 
 objectlist_layout = QtGui.QVBoxLayout()
 objectlist_label = QtGui.QLabel("Order of objects marked for case simulation:")
-#TODO:CONTINUE SETTING TOOLTIPS
 objectlist_label.setWordWrap(True)
 objectlist_table = QtGui.QTableWidget(0,3)
+objectlist_table.setToolTip("Press 'Move up' to move an object up in the hirearchy.\nPress 'Move down' to move an object down in the hirearchy.")
 objectlist_table.setObjectName("DSPH Objects")
 objectlist_table.verticalHeader().setVisible(False)
 objectlist_table.setHorizontalHeaderLabels(["Object Name", "Order up", "Order down"])
@@ -1778,7 +1791,9 @@ property_table.setHorizontalHeaderLabels(["Property Name", "Value"])
 property_table.verticalHeader().setVisible(False)
 property_table.horizontalHeader().setResizeMode(QtGui.QHeaderView.Stretch)
 addtodsph_button = QtGui.QPushButton("Add to DSPH Simulation")
+addtodsph_button.setToolTip("Adds the current selection to\nthe case. Objects not included will not be exported.")
 removefromdsph_button = QtGui.QPushButton("Remove from DSPH Simulation")
+removefromdsph_button.setToolTip("Removes the current selection from the case.\nObjects not included in the case will not be exported.")
 property_widget_layout.addWidget(property_table)
 property_widget_layout.addWidget(addtodsph_button)
 property_widget_layout.addWidget(removefromdsph_button)
@@ -1786,8 +1801,11 @@ properties_scaff_widget.setLayout(property_widget_layout)
 
 properties_widget.setWidget(properties_scaff_widget)
 propertylabel1 = QtGui.QLabel("   MK Group")
+propertylabel1.setToolTip("Establishes the object group.")
 propertylabel2 = QtGui.QLabel("   Type of object")
+propertylabel2.setToolTip("Establishes the object type, fluid or bound")
 propertylabel3 = QtGui.QLabel("   Fill mode")
+propertylabel3.setToolTip("Sets fill mode.\nFull: generates filling and external mesh.\nSolid: generates only filling.\nFace: generates only external mesh.\nWire: generates only external mesh polygon edges.")
 propertylabel1.setAlignment(QtCore.Qt.AlignLeft)
 propertylabel2.setAlignment(QtCore.Qt.AlignLeft)
 propertylabel3.setAlignment(QtCore.Qt.AlignLeft)
@@ -1878,11 +1896,9 @@ def remove_object_from_sim():
 	for item in selection:
 		if item.Name == "Case_Limits":
 			continue
-		print data['export_order']
 		if item.Name in data["export_order"]:
 			data['export_order'].remove(item.Name)
 		data['simobjects'].pop(item.Name, None)
-		print data['export_order']
 
 	on_tree_item_selection_change()
 
@@ -2021,7 +2037,6 @@ def on_tree_item_selection_change():
 		down.setAlignment(QtCore.Qt.AlignLeft)
 		down.setStyleSheet("QLabel { background-color : rgb(225,225,225); color : black; margin: 2px;} QLabel:hover { background-color : rgb(215,215,255); color : black; }")
 
-		#TODO: Reorder. this does not work
 		if currentRow != 0:
 			objectlist_table.setCellWidget(currentRow,1, up)
 		if (currentRow + 2) != len(data["export_order"]):
