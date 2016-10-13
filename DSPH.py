@@ -18,6 +18,8 @@ data = dict()
 temp_data = dict()
 
 def set_default_data():
+	'''Sets default data at start of the macro.'''
+	#Data relative to constant definition
 	data['lattice_bound'] = 1
 	data['lattice_fluid'] = 1
 	data['gravity'] = [0,0,-9.81]
@@ -42,6 +44,7 @@ def set_default_data():
 	data['massfluid_auto'] = True
 	data['dp'] = 0.0005
 
+	#Data relative to execution parameters
 	data['posdouble'] = 1	
 	data['stepalgorithm'] = 1	
 	data['verletsteps'] = 40	
@@ -67,27 +70,34 @@ def set_default_data():
 	data['rhopoutmin'] = 700	
 	data['rhopoutmax'] = 1300
 
+	#Stores paths to executables
 	data['gencase_path'] = ""
 	data['dsphysics_path'] = ""
 	data['partvtk4_path'] = ""
 
+	#Stores project path and name for future script needs
 	data['project_path'] = ""
 	data['project_name'] = "" 
 	data['total_particles'] = -1
 	data['total_particles_out'] = 0
 
+	#Control data for enabling features
 	data['gencase_done'] = False
 	data['simulation_done'] = False
 
+	#Simulation objects with its parameters. Without order.
 	data['simobjects'] = dict()
 
+	#Keys of simobjects. Ordered.
 	data['export_order'] = []
 
+	#Temporal data dict to control execution features.
 	temp_data['current_process'] = None
 	temp_data['stored_selection'] = []
 	temp_data['supported_types'] = ["Part::Box", "Part::Sphere", "Part::Cylinder"]
 
-	#Try to load saved paths
+	'''Try to load saved paths. This way the user does not need
+	to introduce the software paths every time'''
 	if os.path.isfile(App.getUserAppDataDir()+'/dsph_data.dsphdata'):
 		try:
 			picklefile = open(App.getUserAppDataDir()+'/dsph_data.dsphdata', 'rb')
@@ -141,8 +151,11 @@ def set_default_data():
 		data["project_path"] = "" 
 		data["project_name"] = ""
 
+#Executes the default data function the first time
 set_default_data()
 
+'''The script needs only one document open, called DSHP_Case.
+This section tries to close all the current documents.'''
 if len(App.listDocuments().keys()) > 0:
 	#Close all current documents.
 	openConfirmDialog = QtGui.QMessageBox()
@@ -176,9 +189,8 @@ if previous_dock:
 dsph_dock.setObjectName("DSPH Widget")
 dsph_dock.setWindowTitle("DualSPHysics for FreeCAD v0.01")
 
-#Defines what happens when Define Constants button is pressed
 def def_constants_window():
-
+	'''Defines the constants window creation and functonality'''
 	#Creates a dialog and 2 main buttons
 	constants_window = QtGui.QDialog()
 	constants_window.setWindowTitle("DSPH Constant definition")
@@ -627,6 +639,7 @@ def def_constants_window():
 	ret_val = constants_window.exec_()	
 
 def def_execparams_window():
+	'''Defines the execution parameters window'''
 	#Creates a dialog and 2 main buttons
 	execparams_window = QtGui.QDialog()
 	execparams_window.setWindowTitle("DSPH Execution Parameters")
@@ -1001,6 +1014,7 @@ def def_execparams_window():
 	ret_val = execparams_window.exec_()
 
 def def_setup_window():
+	'''Defines the setup window'''
 	#Creates a dialog and 2 main buttons
 	setup_window = QtGui.QDialog()
 	setup_window.setWindowTitle("DSPH Setup")
@@ -1144,8 +1158,6 @@ constants_separator.setFrameStyle(QtGui.QFrame.HLine)
 crucialvars_separator = QtGui.QFrame()
 crucialvars_separator.setFrameStyle(QtGui.QFrame.HLine)
 
-
-
 #Logo layout related operations
 logo_label = QtGui.QLabel()
 logo_label.setPixmap(App.getUserAppDataDir() + "Macro/DSPH_Images/logo.png")
@@ -1195,8 +1207,9 @@ casecontrols_bt_addfillbox = QtGui.QPushButton("Add fillbox")
 casecontrols_bt_addfillbox.setToolTip("Adds a FillBox. A FillBox is able to fill an empty space\nwithin limits of geometry and a maximum bounding\nbox placed by the user.")
 casecontrols_bt_addfillbox.setEnabled(False)
 
-
 def on_new_case():
+	'''Defines what happens when new case is clicked. Closes all documents
+	if possible and creates a FreeCAD document with Case Limits object.'''
 	if len(App.listDocuments().keys()) > 0:
 		newConfirmDialog = QtGui.QMessageBox()
 		newConfirmDialog.setText("DualSPHysics for FreeCAD")
@@ -1242,9 +1255,11 @@ def on_new_case():
 	data['simobjects']['Case_Limits'] = ["mkspecial", "typespecial", "fillspecial"]
 	on_tree_item_selection_change()
 
-
-
 def on_save_case():
+	'''Defines what happens when save case button is clicked.
+	Saves a freecad scene definition, a dump of dsph data useful for this macro
+	and tries to generate a case with gencase.'''
+	#Watch if save path is available. Prompt the user if not.
 	if (data["project_path"] == "") and (data["project_name"] == ""):
 		saveName, _ = QtGui.QFileDialog.getSaveFileName(dsph_dock, "Save Case", QtCore.QDir.homePath())
 	else:
@@ -1252,13 +1267,14 @@ def on_save_case():
 	if saveName != '' :
 		if not os.path.exists(saveName):
 			os.makedirs(saveName)
-
 		data["project_path"] = saveName
 		data["project_name"] = saveName.split('/')[-1]
 		
+		#Watch if folder already exists or create it
 		if not os.path.exists(saveName+"/"+saveName.split('/')[-1]+ "_Out"):
 			os.makedirs(saveName+"/"+saveName.split('/')[-1]+ "_Out")
 
+		#Saves all the data in XML format.
 		print "DualSPHysics for FreeCAD: Saving data in " + data["project_path"] + "."
 		App.getDocument("DSPH_Case").saveAs(saveName+"/DSPH_Case.FCStd")
 		f = open(saveName+"/" + saveName.split('/')[-1]+ "_Def.xml", 'w')
@@ -1266,7 +1282,6 @@ def on_save_case():
 		f.write('<case app="' + data["project_name"] + '" date="' + datetime.now().strftime('%d-%m-%Y %H:%M:%S') + '">\n')
 		f.write('\t<casedef>\n')
 		f.write('\t\t<constantsdef>\n')
-
 		f.write('\t\t\t<lattice bound="'+str(data['lattice_bound'])+'" fluid="'+str(data['lattice_fluid'])+'" />\n')
 		f.write('\t\t\t<gravity x="'+str(data['gravity'][0])+'" y="'+str(data['gravity'][1])+'" z="'+str(data['gravity'][2])+'" comment="Gravitational acceleration" units_comment="m/s^2" />\n')
 		f.write('\t\t\t<rhop0 value="'+str(data['rhop0'])+'" comment="Reference density of the fluid" units_comment="kg/m^3" />\n')
@@ -1282,10 +1297,8 @@ def on_save_case():
 		f.write('\t\t\t<massbound value="'+str(data['massbound'])+'" auto="'+str(data['massbound_auto']).lower()+'" units_comment="kg" />\n')
 		f.write('\t\t\t<massfluid value="'+str(data['massfluid'])+'" auto="'+str(data['massfluid_auto']).lower()+'" units_comment="kg" />\n')
 		f.write('\t\t</constantsdef>\n')
-
 		f.write('\t\t<mkconfig boundcount="240" fluidcount="10">\n')
 		f.write('\t\t</mkconfig>\n')
-
 		f.write('\t\t<geometry>\n')
 		f.write('\t\t\t<definition dp="'+str(data['dp'])+'" comment="Initial inter-particle distance" units_comment="metres (m)">\n')
 		min_point = App.ActiveDocument.getObject("Case_Limits").Placement.Base
@@ -1295,18 +1308,22 @@ def on_save_case():
 		f.write('\t\t\t</definition>\n')
 		f.write('\t\t\t<commands>\n')
 		f.write('\t\t\t\t<mainlist>\n')
+		#Export in strict order
 		for key in data["export_order"]:
 			name = key
 			valuelist = data["simobjects"][name]
 			o = App.getDocument("DSPH_Case").getObject(name)
+			#Ignores case limits
 			if (name != "Case_Limits"):
+				#Sets MKfluid or bound depending on object properties.
 				if valuelist[1].lower() == "fluid":
 					f.write('\t\t\t\t\t<setmkfluid mk="'+str(valuelist[0])+'"/>\n')
 				elif valuelist[1].lower() == "bound":
 					f.write('\t\t\t\t\t<setmkbound mk="'+str(valuelist[0])+'"/>\n')
-				
 				f.write('\t\t\t\t\t<setdrawmode mode="'+valuelist[2].lower()+'"/>\n')
-				#TODO: set rotation
+				''' Exports supported objects in a xml parametric mode.
+				If specal objects are found, exported in an specific manner (p.e FillBox)
+				The rest of the things are exported in STL format.'''
 				if o.TypeId == "Part::Box":
 					f.write('\t\t\t\t\t<matrixreset />\n')
 					f.write('\t\t\t\t\t<move x="'+str(o.Placement.Base.x / 1000)+'" y="'+str(o.Placement.Base.y / 1000)+'" z="'+str(o.Placement.Base.z / 1000)+'" />\n')
@@ -1341,7 +1358,6 @@ def on_save_case():
 								filllimits = element
 							elif "fillpoint" in element.Name.lower():
 								fillpoint = element
-
 						if filllimits and fillpoint:
 							f.write('\t\t\t\t\t<matrixreset />\n')
 							f.write('\t\t\t\t\t<move x="'+str(o.Placement.Base.x / 1000)+'" y="'+str(o.Placement.Base.y / 1000)+'" z="'+str(o.Placement.Base.z / 1000)+'" />\n')
@@ -1367,14 +1383,11 @@ def on_save_case():
 						del __objs__
 		f.write('\t\t\t\t</mainlist>\n')
 		f.write('\t\t\t</commands>\n')
-		
 		f.write('\t\t</geometry>\n')
 		f.write('\t</casedef>\n')
-
 		f.write('\t<execution>\n')
 		f.write('\t\t<parameters>\n')
-		
-
+		#Writes parameters as user introduced
 		f.write('\t\t\t<parameter key="PosDouble" value="'+str(data['posdouble'])+'" comment="Precision in particle interaction 0:Simple, 1:Double, 2:Uses and saves double (default=0)" />\n')
 		f.write('\t\t\t<parameter key="StepAlgorithm" value="'+str(data['stepalgorithm'])+'" comment="Step Algorithm 1:Verlet, 2:Symplectic (default=1)" />\n')
 		f.write('\t\t\t<parameter key="VerletSteps" value="'+str(data['verletsteps'])+'" comment="Verlet only: Number of steps to apply Euler timestepping (default=40)" />\n')
@@ -1399,12 +1412,8 @@ def on_save_case():
 		f.write('\t\t\t<parameter key="PartsOutMax" value="'+str(data['partsoutmax'])+'" comment="%/100 of fluid particles allowed to be excluded from domain (default=1)" units_comment="decimal" />\n')
 		f.write('\t\t\t<parameter key="RhopOutMin" value="'+str(data['rhopoutmin'])+'" comment="Minimum rhop valid (default=700)" units_comment="kg/m^3" />\n')
 		f.write('\t\t\t<parameter key="RhopOutMax" value="'+str(data['rhopoutmax'])+'" comment="Maximum rhop valid (default=1300)" units_comment="kg/m^3" />\n')
-
-
 		f.write('\t\t</parameters>\n')
 		f.write('\t</execution>\n')
-
-
 		f.write('</case>\n')
 		f.close()
 
@@ -1455,13 +1464,18 @@ def on_save_case():
 		print "DualSPHysics for FreeCAD: Saving cancelled."
 
 def on_load_case():
+	'''Defines loading case mechanism.
+	Load points to a dsphdata custom file, that stores all the relevant info.
+	If FCStd file is not found the project is considered corrupt.'''
 	loadName, _ = QtGui.QFileDialog.getOpenFileName(dsph_dock, "Load Case", QtCore.QDir.homePath(), "casedata.dsphdata")
 	load_project_name = loadName.split("/")[-2]
 	load_path_project_folder = "/".join(loadName.split("/")[:-1])
 	if not os.path.isfile(load_path_project_folder + "/DSPH_Case.FCStd"):
+		#TODO: Needs dialog
 		print "ERROR: DSPH_Case.FCStd file not found! Corrupt or moved project. Aborting."
 		return
 
+	#Tries to close all documents
 	if len(App.listDocuments().keys()) > 0:
 		loadConfirmDialog = QtGui.QMessageBox()
 		loadConfirmDialog.setText("DualSPHysics for FreeCAD")
@@ -1477,10 +1491,12 @@ def on_load_case():
 		else:
 			return
 	
+	#Opens the case freecad document
 	FreeCAD.open(load_path_project_folder + "/DSPH_Case.FCStd")	
+
+	#Loads own file and sets data and button behaviour
 	load_picklefile = open(loadName, 'rb')
 	load_disk_data = pickle.load(load_picklefile)	
-
 	global data
 	data.update(load_disk_data)
 	global dp_input
@@ -1505,8 +1521,11 @@ def on_load_case():
 	os.chdir(data["project_path"])
 	on_tree_item_selection_change()
 
-
 def on_add_fillbox():
+	'''Add fillbox group. It consists
+	in a group with 2 objects inside: a point and a box.
+	The point represents the fill seed and the box sets
+	the bounds for the filling'''
 	fillbox_gp = App.getDocument("DSPH_Case").addObject("App::DocumentObjectGroup","FillBox")
 	fillbox_point = App.ActiveDocument.addObject("Part::Sphere","FillPoint")
 	fillbox_limits = App.ActiveDocument.addObject("Part::Box","FillLimit")
@@ -1520,23 +1539,25 @@ def on_add_fillbox():
 	App.ActiveDocument.recompute()
 	Gui.SendMsgToActiveView("ViewFit")
 
+#Connect case control buttons
 casecontrols_bt_newdoc.clicked.connect(on_new_case)
 casecontrols_bt_savedoc.clicked.connect(on_save_case)
 casecontrols_bt_loaddoc.clicked.connect(on_load_case)
 casecontrols_bt_addfillbox.clicked.connect(on_add_fillbox)
 
+#Defines case control scaffolding
 cclabel_layout.addWidget(casecontrols_label)
 ccfilebuttons_layout.addWidget(casecontrols_bt_newdoc)
 ccfilebuttons_layout.addWidget(casecontrols_bt_savedoc)
 ccfilebuttons_layout.addWidget(casecontrols_bt_loaddoc)
 ccaddbuttons_layout.addWidget(casecontrols_bt_addfillbox)
-
 cc_layout.addLayout(cclabel_layout)
 cc_layout.addLayout(ccfilebuttons_layout)
 cc_layout.addLayout(ccaddbuttons_layout)
 cc_separator = QtGui.QFrame()
 cc_separator.setFrameStyle(QtGui.QFrame.HLine)
 
+#Defines run window dialog
 run_dialog = QtGui.QDialog(None, QtCore.Qt.CustomizeWindowHint|QtCore.Qt.WindowTitleHint)
 run_watcher = QtCore.QFileSystemWatcher()
 
@@ -1579,6 +1600,9 @@ run_dialog_layout.addLayout(run_button_layout)
 run_dialog.setLayout(run_dialog_layout)
 
 def on_ex_simulate():
+	'''Defines what happens on simulation button press.
+	It shows the run window and starts a background process
+	with dualsphysics running. Updates the window with useful info.'''
 	data["simulation_done"] = False
 	ex_button.setEnabled(False)
 	export_button.setEnabled(False)
@@ -1616,7 +1640,7 @@ def on_ex_simulate():
 			data["simulation_done"] = True
 			export_button.setEnabled(True)
 
-
+	#Launches a QProcess in background
 	process = QtCore.QProcess(run_dialog)
 	process.finished.connect(on_dsph_sim_finished)
 	process.start(data["dsphysics_path"], [data["project_path"]+"/"+data["project_name"]+"_Out/" + data["project_name"], data["project_path"]+"/"+data["project_name"]+"_Out/", "-svres", "-" + str(ex_selector_combo.currentText()).lower()])
@@ -1663,8 +1687,7 @@ def on_ex_simulate():
 
 	run_dialog.show()
 
-
-
+#Execution section scaffolding
 ex_layout = QtGui.QVBoxLayout()
 ex_label = QtGui.QLabel("This is the simulation group. Use this controls to simulate the case in which you are working. Remember that, depending on the number of particles generated it could take some time.")
 ex_label.setWordWrap(True)
@@ -1685,10 +1708,9 @@ ex_layout.addWidget(ex_button)
 ex_separator = QtGui.QFrame()
 ex_separator.setFrameStyle(QtGui.QFrame.HLine)
 
-
-
 def on_export():
-
+	'''Export VTK button behaviour.
+	Launches a process while disabling the button.'''
 	temp_data["export_button"].setEnabled(False)
 
 	def on_export_finished(exitCode):
@@ -1700,6 +1722,7 @@ def on_export():
 
 	temp_data["current_export_process"] = export_process
 
+#Export to VTK section scaffolding
 export_layout = QtGui.QVBoxLayout()
 export_label = QtGui.QLabel("This is the export section. Once a simulation is made, you can export to VTK the files generated by DualSPHysics. Press the button below to export")
 export_label.setWordWrap(True)
@@ -1713,6 +1736,7 @@ export_layout.addWidget(export_button)
 export_separator = QtGui.QFrame()
 export_separator.setFrameStyle(QtGui.QFrame.HLine)
 
+#Object list table scaffolding
 objectlist_layout = QtGui.QVBoxLayout()
 objectlist_label = QtGui.QLabel("Order of objects marked for case simulation:")
 objectlist_label.setWordWrap(True)
@@ -1734,16 +1758,14 @@ logo_layout.addStretch(0.5)
 logo_layout.addWidget(logo_label)
 logo_layout.addStretch(0.5)
 
+#Adding things here and there
 intro_layout.addWidget(constants_label)
-
 constantsandsetup_layout = QtGui.QHBoxLayout()
 constantsandsetup_layout.addWidget(constants_button)
 constantsandsetup_layout.addWidget(setup_button)
 intro_layout.addLayout(constantsandsetup_layout)
-
 intro_layout.addWidget(execparams_button)
 intro_layout.addWidget(constants_separator)
-
 main_layout.addLayout(logo_layout)
 main_layout.addLayout(intro_layout)
 main_layout.addLayout(dp_layout)
@@ -1756,7 +1778,6 @@ main_layout.addLayout(export_layout)
 main_layout.addWidget(export_separator)
 main_layout.addLayout(objectlist_layout)
 main_layout.addWidget(objectlist_separator)
-
 main_layout.addStretch(1)
 
 #Default disabled widgets
@@ -1774,14 +1795,17 @@ and then setting it as the QDockWidget'''
 scaff_widget.setLayout(main_layout)
 dsph_dock.setWidget(scaff_widget)
 
-
+#And docking it at right side of screen
 mw.addDockWidget(QtCore.Qt.RightDockWidgetArea,dsph_dock)
 
+#------------------------ DSPH OBJECT PROPERTIES DOCK RELATED CODE ----------------------------
+#Tries to find and close previous instances of the widget.
 previous_dock = mw.findChild(QtGui.QDockWidget, "DSPH_Properties")
 if previous_dock:
 	previous_dock.setParent(None)
 	previous_dock = None
 
+#Creation of the widget and scaffolding
 properties_widget = QtGui.QDockWidget()
 properties_widget.setMinimumHeight(400)
 properties_widget.setObjectName("DSPH_Properties")
@@ -1817,11 +1841,13 @@ property_table.setCellWidget(1,0, propertylabel2)
 property_table.setCellWidget(2,0, propertylabel3)
 
 def property1_change(value):
+	'''Defines what happens when MKGroup is changed.'''
 	selection = FreeCADGui.Selection.getSelection()[0]
 	selectiongui = FreeCADGui.getDocument("DSPH_Case").getObject(selection.Name)
 	data['simobjects'][selection.Name][0] = value
 
 def property2_change(index):
+	'''Defines what happens when type of object is changed'''
 	selection = FreeCADGui.Selection.getSelection()[0]
 	selectiongui = FreeCADGui.getDocument("DSPH_Case").getObject(selection.Name)
 	data['simobjects'][selection.Name][1] = property2.itemText(index)
@@ -1837,6 +1863,7 @@ def property2_change(index):
 		selectiongui.Transparency = 30
 
 def property3_change(index):
+	'''Defines what happens when fill mode is changed'''
 	selection = FreeCADGui.Selection.getSelection()[0]
 	selectiongui = FreeCADGui.getDocument("DSPH_Case").getObject(selection.Name)
 	data['simobjects'][selection.Name][2] = property3.itemText(index)
@@ -1856,8 +1883,7 @@ def property3_change(index):
 	elif property3.itemText(index).lower() == "wire":
 		selectiongui.Transparency = 85
 
-
-
+#Property change widgets
 property1 = QtGui.QSpinBox()
 property2 = QtGui.QComboBox()
 property3 = QtGui.QComboBox()
@@ -1871,13 +1897,17 @@ property_table.setCellWidget(0,1, property1)
 property_table.setCellWidget(1,1, property2)
 property_table.setCellWidget(2,1, property3)
 
+#Dock the widget to the left side of screen
 mw.addDockWidget(QtCore.Qt.LeftDockWidgetArea, properties_widget)
 
+#By default all is hidden in the widget
 property_table.hide()
 addtodsph_button.hide()
 removefromdsph_button.hide()
 
 def add_object_to_sim():
+	'''Defines what happens when "Add object to sim" button is presseed.
+	Takes the selection of FreeCAD and watches what type of thing it is adding'''
 	selection = FreeCADGui.Selection.getSelection()
 	for item in selection:
 		if item.Name == "Case_Limits":
@@ -1892,9 +1922,9 @@ def add_object_to_sim():
 			data["export_order"].append(item.Name)
 	on_tree_item_selection_change()
 
-addtodsph_button.clicked.connect(add_object_to_sim)
-
 def remove_object_from_sim():
+	'''Defines what happens when removing objects from
+	the simulation'''
 	selection = FreeCADGui.Selection.getSelection()
 	for item in selection:
 		if item.Name == "Case_Limits":
@@ -1905,10 +1935,12 @@ def remove_object_from_sim():
 
 	on_tree_item_selection_change()
 
+#Connects buttons to its functions
+addtodsph_button.clicked.connect(add_object_to_sim)
 removefromdsph_button.clicked.connect(remove_object_from_sim)
 
+#Find treewidgets of freecad.
 trees = []
-#find treewidgets of freecad
 for item in mw.findChildren(QtGui.QTreeWidget):
 	if item.objectName() != "DSPH Objects":
 		trees.append(item)
