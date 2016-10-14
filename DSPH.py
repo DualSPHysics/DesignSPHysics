@@ -1315,7 +1315,8 @@ def on_save_case():
 			o = App.getDocument("DSPH_Case").getObject(name)
 			#Ignores case limits
 			if (name != "Case_Limits"):
-				#Sets MKfluid or bound depending on object properties.
+				#Sets MKfluid or bound depending on object properties and resets the matrix
+				f.write('\t\t\t\t\t<matrixreset />\n')
 				if valuelist[1].lower() == "fluid":
 					f.write('\t\t\t\t\t<setmkfluid mk="'+str(valuelist[0])+'"/>\n')
 				elif valuelist[1].lower() == "bound":
@@ -1325,7 +1326,6 @@ def on_save_case():
 				If specal objects are found, exported in an specific manner (p.e FillBox)
 				The rest of the things are exported in STL format.'''
 				if o.TypeId == "Part::Box":
-					f.write('\t\t\t\t\t<matrixreset />\n')
 					f.write('\t\t\t\t\t<move x="'+str(o.Placement.Base.x / 1000)+'" y="'+str(o.Placement.Base.y / 1000)+'" z="'+str(o.Placement.Base.z / 1000)+'" />\n')
 					f.write('\t\t\t\t\t<rotate ang="'+str(math.degrees(o.Placement.Rotation.Angle))+'" x="'+str(-o.Placement.Rotation.Axis.x)+'" y="'+str(-o.Placement.Rotation.Axis.y)+'" z="'+str(-o.Placement.Rotation.Axis.z)+'" />\n')
 					f.write('\t\t\t\t\t<drawbox>\n')
@@ -1334,14 +1334,12 @@ def on_save_case():
 					f.write('\t\t\t\t\t\t<size x="'+str(o.Length.Value / 1000)+'" y="'+str(o.Width.Value / 1000)+'" z="'+str(o.Height.Value / 1000)+'" />\n')
 					f.write('\t\t\t\t\t</drawbox>\n')
 				elif o.TypeId == "Part::Sphere":
-					f.write('\t\t\t\t\t<matrixreset />\n')
 					f.write('\t\t\t\t\t<move x="'+str(o.Placement.Base.x / 1000)+'" y="'+str(o.Placement.Base.y / 1000)+'" z="'+str(o.Placement.Base.z / 1000)+'" />\n')
 					f.write('\t\t\t\t\t<rotate ang="'+str(math.degrees(o.Placement.Rotation.Angle))+'" x="'+str(-o.Placement.Rotation.Axis.x)+'" y="'+str(-o.Placement.Rotation.Axis.y)+'" z="'+str(-o.Placement.Rotation.Axis.z)+'" />\n')
 					f.write('\t\t\t\t\t<drawsphere radius="'+str(o.Radius.Value / 1000)+'">\n')
 					f.write('\t\t\t\t\t\t<point x="0" y="0" z="0" />\n')
 					f.write('\t\t\t\t\t</drawsphere>\n')
 				elif o.TypeId == "Part::Cylinder":
-					f.write('\t\t\t\t\t<matrixreset />\n')
 					f.write('\t\t\t\t\t<move x="'+str(o.Placement.Base.x / 1000)+'" y="'+str(o.Placement.Base.y / 1000)+'" z="'+str(o.Placement.Base.z / 1000)+'" />\n')
 					f.write('\t\t\t\t\t<rotate ang="'+str(math.degrees(o.Placement.Rotation.Angle))+'" x="'+str(-o.Placement.Rotation.Axis.x)+'" y="'+str(-o.Placement.Rotation.Axis.y)+'" z="'+str(-o.Placement.Rotation.Axis.z)+'" />\n')
 					f.write('\t\t\t\t\t<drawcylinder radius="'+str(o.Radius.Value / 1000)+'">\n')
@@ -1359,13 +1357,13 @@ def on_save_case():
 							elif "fillpoint" in element.Name.lower():
 								fillpoint = element
 						if filllimits and fillpoint:
-							f.write('\t\t\t\t\t<matrixreset />\n')
-							f.write('\t\t\t\t\t<move x="'+str(o.Placement.Base.x / 1000)+'" y="'+str(o.Placement.Base.y / 1000)+'" z="'+str(o.Placement.Base.z / 1000)+'" />\n')
-							f.write('\t\t\t\t\t<rotate ang="'+str(math.degrees(o.Placement.Rotation.Angle))+'" x="'+str(-o.Placement.Rotation.Axis.x)+'" y="'+str(-o.Placement.Rotation.Axis.y)+'" z="'+str(-o.Placement.Rotation.Axis.z)+'" />\n')
-							f.write('\t\t\t\t\t<fillbox x="'+str(fillpoint.Placement.Base.x / 1000)+'" y="'+str(fillpoint.Placement.Base.y / 1000)+'" z="'+str(fillpoint.Placement.Base.z / 1000)+'">\n')
+							f.write('\t\t\t\t\t<move x="'+str(filllimits.Placement.Base.x / 1000)+'" y="'+str(filllimits.Placement.Base.y / 1000)+'" z="'+str(filllimits.Placement.Base.z / 1000)+'" />\n')
+							f.write('\t\t\t\t\t<rotate ang="'+str(math.degrees(filllimits.Placement.Rotation.Angle))+'" x="'+str(-filllimits.Placement.Rotation.Axis.x)+'" y="'+str(-filllimits.Placement.Rotation.Axis.y)+'" z="'+str(-filllimits.Placement.Rotation.Axis.z)+'" />\n')
+							f.write('\t\t\t\t\t<fillbox x="'+str((fillpoint.Placement.Base.x - filllimits.Placement.Base.x) / 1000)+'" y="'+str((fillpoint.Placement.Base.y - filllimits.Placement.Base.y) / 1000)+'" z="'+str((fillpoint.Placement.Base.z - filllimits.Placement.Base.z) / 1000)+'">\n')
 							f.write('\t\t\t\t\t\t<modefill>void</modefill>\n')
 							f.write('\t\t\t\t\t\t<point x="0" y="0" z="0" />\n')
 							f.write('\t\t\t\t\t\t<size x="'+str(filllimits.Length.Value / 1000)+'" y="'+str(filllimits.Width.Value / 1000)+'" z="'+str(filllimits.Height.Value / 1000)+'" />\n')
+							f.write('\t\t\t\t\t\t<matrixreset />\n')
 							f.write('\t\t\t\t\t</fillbox>\n')
 						else:
 							#Something went wrong, one of the needed objects is not in the fillbox group
@@ -1376,7 +1374,6 @@ def on_save_case():
 						__objs__=[]
 						__objs__.append(o)
 						Mesh.export(__objs__,saveName + "/" + o.Name + ".stl")
-						f.write('\t\t\t\t\t<matrixreset />\n')
 						f.write('\t\t\t\t\t<drawfilestl file="'+ o.Name + ".stl"+'" >\n')
 						f.write('\t\t\t\t\t\t<drawscale x="0.001" y="0.001" z="0.001" />\n')
 						f.write('\t\t\t\t\t</drawfilestl>\n')
@@ -1501,6 +1498,8 @@ def on_load_case():
 	data.update(load_disk_data)
 	global dp_input
 	dp_input.setText(str(data['dp']))
+	data["project_path"] = load_path_project_folder
+	data["project_name"] = load_path_project_folder.split("/")[-1]
 	constants_button.setEnabled(True)
 	execparams_button.setEnabled(True)
 	casecontrols_bt_savedoc.setEnabled(True)
@@ -1603,17 +1602,18 @@ def on_ex_simulate():
 	'''Defines what happens on simulation button press.
 	It shows the run window and starts a background process
 	with dualsphysics running. Updates the window with useful info.'''
+	run_progbar_bar.setValue(0)
 	data["simulation_done"] = False
 	ex_button.setEnabled(False)
 	export_button.setEnabled(False)
 	run_button_cancel.setText("Cancel Simulation")
 	ex_selector_combo.setEnabled(False)
 	ex_button.setEnabled(False)
+	run_dialog.setWindowTitle("DualSPHysics Simulation: 0%")
 	run_group_label_case.setText("Case Name: " + data['project_name'])
 	run_group_label_proc.setText("Simulation processor: " + str(ex_selector_combo.currentText()))
 	run_group_label_part.setText("Number of particles: " + str(data['total_particles']))
 	run_group_label_partsout.setText("Total particles out of case: " + str(data['total_particles_out']))
-	run_progbar_bar.setValue(0)
 	
 	def on_cancel():
 		print "DualSPHysics for FreeCAD: Stopping simulation"
@@ -1963,6 +1963,7 @@ def on_tree_item_selection_change():
 	for key in data['simobjects'].keys():
 		if key not in objectNames:
 			data['simobjects'].pop(key, None)
+			data["export_order"].remove(key)
 
 	addtodsph_button.setEnabled(True)
 	if len(selection) > 0:
@@ -2125,13 +2126,26 @@ def on_cell_click(row, column):
 
 objectlist_table.cellClicked.connect(on_cell_click)
 
-#Watch if no object is selected 
+#Watch if no object is selected and prevent fillbox rotations
 def selection_monitor():
 	while True:
+		#ensure everything is fine when objects are not selected
 		if len(FreeCADGui.Selection.getSelection()) == 0:
 			property_table.hide()
 			addtodsph_button.hide()
 			removefromdsph_button.hide()
+		#watch fillbox rotations and prevent them
+		try:
+			for o in FreeCAD.getDocument("DSPH_Case").Objects:
+				if o.TypeId == "App::DocumentObjectGroup" and "fillbox" in o.Name.lower():
+					for subelem in o.OutList:
+						if subelem.Placement.Rotation.Angle != 0.0:
+							subelem.Placement.Rotation.Angle = 0.0
+							print "ERROR: Can't change fillbox contents rotation!"
+		except NameError as e:
+			#not yet opened
+			continue
+
 		threading._sleep(0.1)
 
 monitor_thread = threading.Thread(target=selection_monitor)
