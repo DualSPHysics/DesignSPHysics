@@ -17,6 +17,50 @@ print "-----------------------------------"
 data = dict()
 temp_data = dict()
 
+#Check executables and see if they are the correct ones
+def check_executables():
+	execs_correct = True
+	if os.path.isfile(data["gencase_path"]):
+		output = subprocess.check_output([data["gencase_path"]])
+		if "gencase" in output[0:15].lower():
+			print "DualSPHysics for FreeCAD: Found correct GenCase."
+		else:
+			execs_correct = False
+			data["gencase_path"] = ""
+	else:
+		execs_correct = False
+		data["gencase_path"] = ""			
+
+	if os.path.isfile(data["dsphysics_path"]):
+		output = subprocess.check_output([data["dsphysics_path"]])
+		if "dualsphysics" in output[0:20].lower():
+			print "DualSPHysics for FreeCAD: Found correct DualSPHysics."
+		else:
+			execs_correct = False
+			data["dsphysics_path"] = ""
+	else:
+		execs_correct = False
+		data["dsphysics_path"] = ""			
+
+	if os.path.isfile(data["partvtk4_path"]):
+		output = subprocess.check_output([data["partvtk4_path"]])
+		if "partvtk4" in output[0:20].lower():
+			print "DualSPHysics for FreeCAD: Found correct PartVTK4."
+		else:
+			execs_correct = False	
+			data["partvtk4_path"] = ""
+	else:
+		execs_correct = False
+		data["partvtk4_path"] = ""			
+
+	if not execs_correct:
+		print "WARNING: One or more of the executables in the setup is not correct. Check plugin setup to fix missing binaries"
+		exec_not_correct_dialog = QtGui.QMessageBox()
+		exec_not_correct_dialog.setText("One or more of the executables in the setup is not correct. Check plugin setup to fix missing binaries.")
+		exec_not_correct_dialog.setIcon(QtGui.QMessageBox.Warning)
+		exec_not_correct_dialog.exec_()
+	return execs_correct
+
 def set_default_data():
 	'''Sets default data at start of the macro.'''
 	#Data relative to constant definition
@@ -32,7 +76,7 @@ def set_default_data():
 	data['coefsound'] = 20
 	data['speedsound'] = 0
 	data['speedsound_auto'] = True
-	data['coefh'] = 0.866025
+	data['coefh'] = 1
 	data['cflnumber'] = 0.2
 	data['h'] = 0
 	data['h_auto'] = True
@@ -48,9 +92,9 @@ def set_default_data():
 	data['posdouble'] = 1	
 	data['stepalgorithm'] = 1	
 	data['verletsteps'] = 40	
-	data['kernel'] = 1	
+	data['kernel'] = 2	
 	data['viscotreatment'] = 1	
-	data['visco'] = 0.1	
+	data['visco'] = 0.01	
 	data['viscoboundfactor'] = 1	
 	data['deltasph'] = 0	
 	data['shifting'] = 0	
@@ -60,7 +104,9 @@ def set_default_data():
 	data['ftpause'] = 0.0	
 	data['coefdtmin'] = 0.05	
 	data['dtini'] = 0.0001	
+	data['dtini_auto'] = True	
 	data['dtmin'] = 0.00001	
+	data['dtmin_auto'] = True	
 	data['dtfixed'] = "DtFixed.dat"	
 	data['dtallparticles'] = 0	
 	data['timemax'] = 1.5	
@@ -109,50 +155,16 @@ def set_default_data():
 			data['gencase_path'] = ""
 			data['dsphysics_path'] = ""
 			data['partvtk4_path'] = ""
-		#Check executables and see if they are the correct ones
+	
 		print "DualSPHysics for FreeCAD: Found data file. Loading data from disk."
-		execs_correct = True
-		if os.path.isfile(data["gencase_path"]):
-			output = subprocess.check_output([data["gencase_path"]])
-			if "gencase" in output[0:15].lower():
-				print "DualSPHysics for FreeCAD: Found correct GenCase."
-			else:
-				execs_correct = False
-				data["gencase_path"] = ""
-		else:
-			execs_correct = False
-			data["gencase_path"] = ""			
-
-		if os.path.isfile(data["dsphysics_path"]):
-			output = subprocess.check_output([data["dsphysics_path"]])
-			if "dualsphysics" in output[0:20].lower():
-				print "DualSPHysics for FreeCAD: Found correct DualSPHysics."
-			else:
-				execs_correct = False
-				data["dsphysics_path"] = ""
-		else:
-			execs_correct = False
-			data["dsphysics_path"] = ""			
-
-		if os.path.isfile(data["partvtk4_path"]):
-			output = subprocess.check_output([data["partvtk4_path"]])
-			if "partvtk4" in output[0:20].lower():
-				print "DualSPHysics for FreeCAD: Found correct PartVTK4."
-			else:
-				execs_correct = False	
-				data["partvtk4_path"] = ""
-		else:
-			execs_correct = False
-			data["partvtk4_path"] = ""			
-
-		if not execs_correct:
-			print "WARNING: One of more of the executables in the setup is not correct. Check plugin setup to correct missing binaries"
+		check_executables()
 	else:
 		data["project_path"] = "" 
 		data["project_name"] = ""
 
 #Executes the default data function the first time
 set_default_data()
+
 
 '''The script needs only one document open, called DSHP_Case.
 This section tries to close all the current documents.'''
@@ -459,7 +471,7 @@ def def_constants_window():
 
 	#b: layout and components
 	bauto_layout = QtGui.QHBoxLayout()
-	bauto_chk = QtGui.QCheckBox("Auto calcule b constant for EOS ")
+	bauto_chk = QtGui.QCheckBox("Auto b constant for EOS ")
 	if data['b_auto']:
 		bauto_chk.setCheckState(QtCore.Qt.Checked)
 	else:
@@ -475,7 +487,7 @@ def def_constants_window():
 	bauto_layout.addWidget(bauto_chk)
 
 	b_layout = QtGui.QHBoxLayout()
-	b_label = QtGui.QLabel("B constant for Equation of State: ")
+	b_label = QtGui.QLabel("B constant: ")
 	b_input = QtGui.QLineEdit()
 	b_input.setMaxLength(10)	
 	b_validator = QtGui.QDoubleValidator(0, 100, 8, b_input)
@@ -490,73 +502,6 @@ def def_constants_window():
 	#Manually trigger check for the first time
 	on_bauto_check()
 
-
-	#massbound: layout and components
-	massboundauto_layout = QtGui.QHBoxLayout()
-	massboundauto_chk = QtGui.QCheckBox("Auto boundary mass ")
-	if data['massbound_auto']:
-		massboundauto_chk.setCheckState(QtCore.Qt.Checked)
-	else:
-		massboundauto_chk.setCheckState(QtCore.Qt.Unchecked)
-
-	def on_massboundauto_check(): #Controls if user selected auto massbound or not enabling/disablen massbound custom value introduction
-		if massboundauto_chk.isChecked():
-			massbound_input.setEnabled(False)
-		else:
-			massbound_input.setEnabled(True)
-
-	massboundauto_chk.toggled.connect(on_massboundauto_check)
-	massboundauto_layout.addWidget(massboundauto_chk)
-
-	massbound_layout = QtGui.QHBoxLayout()
-	massbound_label = QtGui.QLabel("Boundary mass: ")
-	massbound_input = QtGui.QLineEdit()
-	massbound_input.setMaxLength(10)	
-	massbound_validator = QtGui.QDoubleValidator(0, 10000, 8, massbound_input)
-	massbound_input.setText(str(data['massbound']))
-	massbound_input.setValidator(massbound_validator)
-	massbound_label2 = QtGui.QLabel("kg")
-
-	massbound_layout.addWidget(massbound_label)
-	massbound_layout.addWidget(massbound_input)
-	massbound_layout.addWidget(massbound_label2)
-
-	#Manually trigger check for the first time
-	on_massboundauto_check()
-
-
-	#massfluid: layout and components
-	massfluidauto_layout = QtGui.QHBoxLayout()
-	massfluidauto_chk = QtGui.QCheckBox("Auto fluid mass ")
-	if data['massfluid_auto']:
-		massfluidauto_chk.setCheckState(QtCore.Qt.Checked)
-	else:
-		massfluidauto_chk.setCheckState(QtCore.Qt.Unchecked)
-
-	def on_massfluidauto_check(): #Controls if user selected auto massfluid or not enabling/disablen massfluid custom value introduction
-		if massfluidauto_chk.isChecked():
-			massfluid_input.setEnabled(False)
-		else:
-			massfluid_input.setEnabled(True)
-
-	massfluidauto_chk.toggled.connect(on_massfluidauto_check)
-	massfluidauto_layout.addWidget(massfluidauto_chk)
-
-	massfluid_layout = QtGui.QHBoxLayout()
-	massfluid_label = QtGui.QLabel("Fluid mass: ")
-	massfluid_input = QtGui.QLineEdit()
-	massfluid_input.setMaxLength(10)	
-	massfluid_validator = QtGui.QDoubleValidator(0, 10000, 8, massfluid_input)
-	massfluid_input.setText(str(data['massfluid']))
-	massfluid_input.setValidator(massfluid_validator)
-	massfluid_label2 = QtGui.QLabel("kg")
-
-	massfluid_layout.addWidget(massfluid_label)
-	massfluid_layout.addWidget(massfluid_input)
-	massfluid_layout.addWidget(massfluid_label2)
-
-	#Manually trigger check for the first time
-	on_massfluidauto_check()
 
 	#------------ Button behaviour definition --------------
 	def on_ok():
@@ -578,10 +523,6 @@ def def_constants_window():
 		data['h_auto'] = hauto_chk.isChecked()
 		data['b'] = b_input.text()
 		data['b_auto'] = bauto_chk.isChecked()
-		data['massbound'] = massbound_input.text()
-		data['massbound_auto'] = massboundauto_chk.isChecked()
-		data['massfluid'] = massfluid_input.text()
-		data['massfluid_auto'] = massfluidauto_chk.isChecked()
 		print "DualSPHysics for FreeCAD: Constants changed"
 		constants_window.accept()
 
@@ -618,10 +559,6 @@ def def_constants_window():
 	cw_main_layout.addLayout(h_layout)
 	cw_main_layout.addLayout(bauto_layout)
 	cw_main_layout.addLayout(b_layout)
-	cw_main_layout.addLayout(massboundauto_layout)
-	cw_main_layout.addLayout(massbound_layout)
-	cw_main_layout.addLayout(massfluidauto_layout)
-	cw_main_layout.addLayout(massfluid_layout)
 
 	cw_main_layout.addStretch(1)
 
@@ -701,6 +638,14 @@ def def_execparams_window():
 	kernel_layout.addWidget(kernel_label2)
 
 	#Viscosity formulation
+	def on_viscotreatment_change():
+		if viscotreatment_input.text() == "1":
+			visco_input.setText("0.01")
+			
+		elif viscotreatment_input.text() == "2":			
+			visco_input.setText("0.000001")
+
+
 	viscotreatment_layout = QtGui.QHBoxLayout()
 	viscotreatment_label = QtGui.QLabel("Viscosity Formulation: ")
 	viscotreatment_input = QtGui.QLineEdit()
@@ -708,6 +653,7 @@ def def_execparams_window():
 	viscotreatment_validator = QtGui.QIntValidator(0, 2, viscotreatment_input)
 	viscotreatment_input.setText(str(data['viscotreatment']))
 	viscotreatment_input.setValidator(viscotreatment_validator)
+	viscotreatment_input.textChanged.connect(on_viscotreatment_change)
 	viscotreatment_label2 = QtGui.QLabel("[1,2]")
 
 	viscotreatment_layout.addWidget(viscotreatment_label)
@@ -816,6 +762,22 @@ def def_execparams_window():
 	coefdtmin_layout.addWidget(coefdtmin_input)
 
 	#Initial time step
+	dtiniauto_layout = QtGui.QHBoxLayout()
+	dtiniauto_chk = QtGui.QCheckBox("Initial time step auto")
+	if data['dtini_auto']:
+		dtiniauto_chk.setCheckState(QtCore.Qt.Checked)
+	else:
+		dtiniauto_chk.setCheckState(QtCore.Qt.Unchecked)
+
+	def on_dtiniauto_check(): #Controls if user selected auto b or not enabling/disablen b custom value introduction
+		if dtiniauto_chk.isChecked():
+			dtini_input.setEnabled(False)
+		else:
+			dtini_input.setEnabled(True)
+
+	dtiniauto_chk.toggled.connect(on_dtiniauto_check)
+	dtiniauto_layout.addWidget(dtiniauto_chk)
+
 	dtini_layout = QtGui.QHBoxLayout()
 	dtini_label = QtGui.QLabel("Initial time step: ")
 	dtini_input = QtGui.QLineEdit()
@@ -827,7 +789,24 @@ def def_execparams_window():
 	dtini_layout.addWidget(dtini_input)
 	dtini_layout.addWidget(dtini_label2)
 
+	on_dtiniauto_check()
+
 	#Minimium time step
+	dtminauto_layout = QtGui.QHBoxLayout()
+	dtminauto_chk = QtGui.QCheckBox("Minimum time step: ")
+	if data['dtmin_auto']:
+		dtminauto_chk.setCheckState(QtCore.Qt.Checked)
+	else:
+		dtminauto_chk.setCheckState(QtCore.Qt.Unchecked)
+
+	def on_dtminauto_check(): #Controls if user selected auto b or not enabling/disablen b custom value introduction
+		if dtminauto_chk.isChecked():
+			dtmin_input.setEnabled(False)
+		else:
+			dtmin_input.setEnabled(True)
+
+	dtminauto_chk.toggled.connect(on_dtminauto_check)
+	dtminauto_layout.addWidget(dtminauto_chk)
 	dtmin_layout = QtGui.QHBoxLayout()
 	dtmin_label = QtGui.QLabel("Minimium time step: ")
 	dtmin_input = QtGui.QLineEdit()
@@ -838,6 +817,8 @@ def def_execparams_window():
 	dtmin_layout.addWidget(dtmin_label)
 	dtmin_layout.addWidget(dtmin_input)
 	dtmin_layout.addWidget(dtmin_label2)
+
+	on_dtminauto_check()
 
 	#Fixed DT file
 	dtfixed_layout = QtGui.QHBoxLayout()
@@ -949,7 +930,9 @@ def def_execparams_window():
 		data['ftpause'] = ftpause_input.text()
 		data['coefdtmin'] = coefdtmin_input.text()
 		data['dtini'] = dtini_input.text()
+		data['dtini_auto'] = dtiniauto_chk.isChecked()
 		data['dtmin'] = dtmin_input.text()
+		data['dtmin_auto'] = dtminauto_chk.isChecked()
 		data['dtfixed'] = dtfixed_input.text()
 		data['dtallparticles'] = dtallparticles_input.text()
 		data['timemax'] = timemax_input.text()
@@ -990,7 +973,9 @@ def def_execparams_window():
 	ep_main_layout.addLayout(rigidalgorithm_layout)
 	ep_main_layout.addLayout(ftpause_layout)
 	ep_main_layout.addLayout(coefdtmin_layout)
+	ep_main_layout.addLayout(dtiniauto_layout)
 	ep_main_layout.addLayout(dtini_layout)
+	ep_main_layout.addLayout(dtminauto_layout)
 	ep_main_layout.addLayout(dtmin_layout)
 	ep_main_layout.addLayout(dtallparticles_layout)
 	ep_main_layout.addLayout(timemax_layout)
@@ -1066,6 +1051,10 @@ def def_setup_window():
 		picklefile = open(App.getUserAppDataDir()+'/dsph_data.dsphdata', 'wb')
 		pickle.dump(data, picklefile)
 		print "DualSPHysics for FreeCAD: Setup changed. Saved to "+App.getUserAppDataDir()+"/dsph_data.dsphdata"
+		state = check_executables()
+		if not state:
+			ex_selector_combo.setEnabled(False)
+			ex_button.setEnabled(False)
 		setup_window.accept()
 
 	def on_cancel():
@@ -1399,9 +1388,19 @@ def on_save_case():
 		f.write('\t\t\t<parameter key="RigidAlgorithm" value="'+str(data['rigidalgorithm'])+'" comment="Rigid Algorithm 1:SPH, 2:DEM (default=1)" />\n')
 		f.write('\t\t\t<parameter key="FtPause" value="'+str(data['ftpause'])+'" comment="Time to freeze the floatings at simulation start (warmup) (default=0)" units_comment="seconds" />\n')
 		f.write('\t\t\t<parameter key="CoefDtMin" value="'+str(data['coefdtmin'])+'" comment="Coefficient to calculate minimum time step dtmin=coefdtmin*h/speedsound (default=0.05)" />\n')
-		f.write('\t\t\t<parameter key="#DtIni" value="'+str(data['dtini'])+'" comment="Initial time step (default=h/speedsound)" units_comment="seconds" />\n')
-		f.write('\t\t\t<parameter key="#DtMin" value="'+str(data['dtmin'])+'" comment="Minimum time step (default=coefdtmin*h/speedsound)" units_comment="seconds" />\n')
-		f.write('\t\t\t<parameter key="#DtFixed" value="'+str(data['dtfixed'])+'" comment="Dt values are loaded from file (default=disabled)" />\n')
+		comment = ""
+		if data["dtini_auto"]:
+			comment = "#"
+		else:
+			comment = ""
+		f.write('\t\t\t<parameter key="'+comment+'DtIni" value="'+str(data['dtini'])+'" comment="Initial time step (default=h/speedsound)" units_comment="seconds" />\n')
+		comment = ""
+		if data["dtmin_auto"]:
+			comment = "#"
+		else:
+			comment = ""
+		f.write('\t\t\t<parameter key="'+comment+'DtMin" value="'+str(data['dtmin'])+'" comment="Minimum time step (default=coefdtmin*h/speedsound)" units_comment="seconds" />\n')
+		#f.write('\t\t\t<parameter key="#DtFixed" value="'+str(data['dtfixed'])+'" comment="Dt values are loaded from file (default=disabled)" />\n')
 		f.write('\t\t\t<parameter key="DtAllParticles" value="'+str(data['dtallparticles'])+'" comment="Velocity of particles used to calculate DT. 1:All, 0:Only fluid/floating (default=0)" />\n')
 		f.write('\t\t\t<parameter key="TimeMax" value="'+str(data['timemax'])+'" comment="Time of simulation" units_comment="seconds" />\n')
 		f.write('\t\t\t<parameter key="TimeOut" value="'+str(data['timeout'])+'" comment="Time out data" units_comment="seconds" />\n')
@@ -1451,6 +1450,13 @@ def on_save_case():
 				ex_selector_combo.setEnabled(True)
 				ex_button.setEnabled(True)
 			except subprocess.CalledProcessError:
+				#Multiple causes
+				gencase_out_file = open(data["project_path"] + "/" + data["project_name"] + "_Out/" + data["project_name"] + ".out", "rb")
+				gencase_failed_dialog = QtGui.QMessageBox()
+				gencase_failed_dialog.setText("Error executing gencase. View details for more info.")
+				gencase_failed_dialog.setDetailedText(gencase_out_file.read().split("================================")[1])
+				gencase_failed_dialog.setIcon(QtGui.QMessageBox.Critical)
+				gencase_failed_dialog.exec_()
 				print "WARNING: GenCase Failed. Probably because nothing is in the scene."
 
 		#Save data array on disk
@@ -1518,6 +1524,12 @@ def on_load_case():
 	casecontrols_bt_addfillbox.setEnabled(True)
 
 	os.chdir(data["project_path"])
+	correct_execs = check_executables()
+	if not correct_execs:
+		ex_selector_combo.setEnabled(False)
+		ex_button.setEnabled(False)
+		export_button.setEnabled(False)
+
 	on_tree_item_selection_change()
 
 def on_add_fillbox():
@@ -1684,8 +1696,17 @@ def on_ex_simulate():
 
 	run_watcher.addPath(data["project_path"]+"/"+data["project_name"]+"_Out/")
 	run_watcher.directoryChanged.connect(on_fs_change)
+	if temp_data["current_process"].state() == QtCore.QProcess.NotRunning:
+		#Probably error happened.
+		run_watcher.removePath(data["project_path"]+"/"+data["project_name"]+"_Out/")
 
-	run_dialog.show()
+		temp_data["current_process"] = ""
+		exec_not_correct_dialog = QtGui.QMessageBox()
+		exec_not_correct_dialog.setText("Error on simulation start. Is the path of DualSPHysics correctly placed?")
+		exec_not_correct_dialog.setIcon(QtGui.QMessageBox.Critical)
+		exec_not_correct_dialog.exec_()
+	else:
+		run_dialog.show()
 
 #Execution section scaffolding
 ex_layout = QtGui.QVBoxLayout()
@@ -2144,9 +2165,10 @@ def selection_monitor():
 							print "ERROR: Can't change fillbox contents rotation!"
 		except NameError as e:
 			#not yet opened
+			threading._sleep(2)
 			continue
 
-		threading._sleep(0.1)
+		threading._sleep(0.5)
 
 monitor_thread = threading.Thread(target=selection_monitor)
 monitor_thread.start()
