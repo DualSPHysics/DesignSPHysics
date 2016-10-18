@@ -3,7 +3,7 @@
 from PySide import QtGui, QtCore
 from FreeCAD import Base
 from datetime import datetime
-import Part,PartGui, os, sys, Draft, subprocess, pickle, time, threading, traceback, Mesh, math
+import Part,PartGui, os, sys, Draft, subprocess, pickle, time, threading, traceback, Mesh, math, webbrowser
 
 print "Loading DualSPHysics for FreeCAD..."
 print "-----------------------------------"
@@ -127,6 +127,11 @@ def set_default_data():
 	data['total_particles'] = -1
 	data['total_particles_out'] = 0
 	data['additional_parameters'] = ""
+	
+	'''Dictionary that defines floatings. 
+	Keys are mks enabled (ONLY BOUNDS) and values are a list containing:
+	[massbody, center, inertia, velini, omegaini]'''
+	data['floating_mks'] = dict()
 
 	#Control data for enabling features
 	data['gencase_done'] = False
@@ -1122,6 +1127,9 @@ def def_setup_window():
 	setup_window.resize(600,400)
 	ret_val = setup_window.exec_()
 
+def def_help():
+	webbrowser.open("http://dual.sphysics.org/gui/help/")
+
 #Main Widget layout. Vertical ordering
 main_layout = QtGui.QVBoxLayout()
 
@@ -1135,11 +1143,12 @@ constants_label.setWordWrap(True)
 constants_button = QtGui.QPushButton("Define Constants")
 constants_button.setToolTip("Use this button to define case constants,\nsuch as lattice, gravity or fluid reference density.")
 constants_button.clicked.connect(def_constants_window)
-constants_button.setMaximumWidth(140)
+help_button = QtGui.QPushButton("Help")
+help_button.setToolTip("Push this button to open a browser with help\non how to use this tool.")
+help_button.clicked.connect(def_help)
 setup_button = QtGui.QPushButton("Setup Plugin")
 setup_button.setToolTip("Setup of the simulator executables")
 setup_button.clicked.connect(def_setup_window)
-setup_button.setMaximumWidth(140)
 execparams_button = QtGui.QPushButton("Execution Parameters")
 execparams_button.setToolTip("Change execution parameters, such as\ntime of simulation, viscosity, etc.")
 execparams_button.clicked.connect(def_execparams_window)
@@ -1865,6 +1874,7 @@ logo_layout.addStretch(0.5)
 intro_layout.addWidget(constants_label)
 constantsandsetup_layout = QtGui.QHBoxLayout()
 constantsandsetup_layout.addWidget(constants_button)
+constantsandsetup_layout.addWidget(help_button)
 constantsandsetup_layout.addWidget(setup_button)
 intro_layout.addLayout(constantsandsetup_layout)
 intro_layout.addWidget(execparams_button)
@@ -1917,7 +1927,7 @@ properties_widget.setWindowTitle("DSPH Object Properties")
 properties_scaff_widget = QtGui.QWidget() #Scaffolding widget, only useful to apply to the properties_dock widget
 
 property_widget_layout = QtGui.QVBoxLayout()
-property_table = QtGui.QTableWidget(3,2)
+property_table = QtGui.QTableWidget(4,2)
 property_table.setHorizontalHeaderLabels(["Property Name", "Value"])
 property_table.verticalHeader().setVisible(False)
 property_table.horizontalHeader().setResizeMode(QtGui.QHeaderView.Stretch)
@@ -1937,12 +1947,16 @@ propertylabel2 = QtGui.QLabel("   Type of object")
 propertylabel2.setToolTip("Establishes the object type, fluid or bound")
 propertylabel3 = QtGui.QLabel("   Fill mode")
 propertylabel3.setToolTip("Sets fill mode.\nFull: generates filling and external mesh.\nSolid: generates only filling.\nFace: generates only external mesh.\nWire: generates only external mesh polygon edges.")
+propertylabel4 = QtGui.QLabel("   Float state")
+propertylabel4.setToolTip("Sets floating state for this object MK.")
 propertylabel1.setAlignment(QtCore.Qt.AlignLeft)
 propertylabel2.setAlignment(QtCore.Qt.AlignLeft)
 propertylabel3.setAlignment(QtCore.Qt.AlignLeft)
+propertylabel4.setAlignment(QtCore.Qt.AlignLeft)
 property_table.setCellWidget(0,0, propertylabel1)
 property_table.setCellWidget(1,0, propertylabel2)
 property_table.setCellWidget(2,0, propertylabel3)
+property_table.setCellWidget(3,0, propertylabel4)
 
 def property1_change(value):
 	'''Defines what happens when MKGroup is changed.'''
@@ -1972,7 +1986,6 @@ def property3_change(index):
 	selectiongui = FreeCADGui.getDocument("DSPH_Case").getObject(selection.Name)
 	data['simobjects'][selection.Name][2] = property3.itemText(index)
 	if property3.itemText(index).lower() == "full":
-		#TOOD: Fix this. object does not seem to change opacity
 		if property2.itemText(property2.currentIndex()).lower() == "fluid":
 			selectiongui.Transparency = 30
 		elif property2.itemText(property2.currentIndex()).lower() == "bound":
@@ -1987,19 +2000,218 @@ def property3_change(index):
 	elif property3.itemText(index).lower() == "wire":
 		selectiongui.Transparency = 85
 
+def property4_configure():
+	'''Defines a window with floating properties.'''
+	floatings_window = QtGui.QDialog()
+	floatings_window.setWindowTitle("Floating configuration")
+	ok_button = QtGui.QPushButton("Ok")
+	cancel_button = QtGui.QPushButton("Cancel")
+
+	def on_ok():
+		pass
+
+	def on_cancel():
+		pass
+
+	def on_floating_change(index):
+		if index == 0:
+			floating_props_group.setEnabled(True)
+		else:
+			floating_props_group.setEnabled(False)
+	
+	def on_massrhop_change(index):
+		if index == 0:
+			floating_props_massrhop_input.setText("0.0")
+		else:
+			floating_props_massrhop_input.setText("0.0")
+
+	def on_gravity_auto():
+		if floating_center_auto.isChecked():
+			floating_center_input_x.setEnabled(False)
+			floating_center_input_y.setEnabled(False)
+			floating_center_input_z.setEnabled(False)
+		else:
+			floating_center_input_x.setEnabled(True)
+			floating_center_input_y.setEnabled(True)
+			floating_center_input_z.setEnabled(True)
+
+	def on_inertia_auto():
+		if floating_inertia_auto.isChecked():
+			floating_inertia_input_x.setEnabled(False)
+			floating_inertia_input_y.setEnabled(False)
+			floating_inertia_input_z.setEnabled(False)
+		else:
+			floating_inertia_input_x.setEnabled(True)
+			floating_inertia_input_y.setEnabled(True)
+			floating_inertia_input_z.setEnabled(True)
+
+	def on_velini_auto():
+		if floating_velini_auto.isChecked():
+			floating_velini_input_x.setEnabled(False)
+			floating_velini_input_y.setEnabled(False)
+			floating_velini_input_z.setEnabled(False)
+		else:
+			floating_velini_input_x.setEnabled(True)
+			floating_velini_input_y.setEnabled(True)
+			floating_velini_input_z.setEnabled(True)
+
+	def on_omegaini_auto():
+		if floating_omegaini_auto.isChecked():
+			floating_omegaini_input_x.setEnabled(False)
+			floating_omegaini_input_y.setEnabled(False)
+			floating_omegaini_input_z.setEnabled(False)
+		else:
+			floating_omegaini_input_x.setEnabled(True)
+			floating_omegaini_input_y.setEnabled(True)
+			floating_omegaini_input_z.setEnabled(True)
+
+	ok_button.clicked.connect(on_ok)
+	cancel_button.clicked.connect(on_cancel)
+
+	is_floating_layout = QtGui.QHBoxLayout()
+	is_floating_label = QtGui.QLabel("Set floating: ")
+	is_floating_label.setToolTip("Sets the current MK selected as floating.")
+	is_floating_selector = QtGui.QComboBox()
+	is_floating_selector.insertItems(0, ["True", "False"])
+	is_floating_selector.currentIndexChanged.connect(on_floating_change)
+	is_floating_targetlabel = QtGui.QLabel("Target MK: -1")
+	is_floating_layout.addWidget(is_floating_label)
+	is_floating_layout.addWidget(is_floating_selector)
+	is_floating_layout.addStretch(1)
+	is_floating_layout.addWidget(is_floating_targetlabel)
+
+	floating_props_group = QtGui.QGroupBox("Floating properties")
+	floating_props_layout = QtGui.QVBoxLayout()
+
+	floating_props_massrhop_layout = QtGui.QHBoxLayout()
+	floating_props_massrhop_label = QtGui.QLabel("Mass/Density: ")
+	floating_props_massrhop_label.setToolTip("Selects an mass/density calculation method and its value.")
+	floating_props_massrhop_selector = QtGui.QComboBox()
+	floating_props_massrhop_selector.insertItems(0, ["rhopbody", "massbody"])
+	floating_props_massrhop_selector.currentIndexChanged.connect(on_massrhop_change)
+	floating_props_massrhop_input = QtGui.QLineEdit()
+	floating_props_massrhop_layout.addWidget(floating_props_massrhop_label)
+	floating_props_massrhop_layout.addWidget(floating_props_massrhop_selector)
+	floating_props_massrhop_layout.addWidget(floating_props_massrhop_input)
+	
+	floating_center_layout = QtGui.QHBoxLayout()
+	floating_center_label = QtGui.QLabel("Gravity center: ")
+	floating_center_label.setToolTip("Sets the mk group gravity center.")
+	floating_center_label_x = QtGui.QLabel("X")
+	floating_center_input_x = QtGui.QLineEdit()
+	floating_center_label_y = QtGui.QLabel("Y")
+	floating_center_input_y = QtGui.QLineEdit()
+	floating_center_label_z = QtGui.QLabel("Z")
+	floating_center_input_z = QtGui.QLineEdit()
+	floating_center_auto = QtGui.QCheckBox("Auto ")
+	floating_center_auto.toggled.connect(on_gravity_auto)
+	floating_center_layout.addWidget(floating_center_label)
+	floating_center_layout.addWidget(floating_center_label_x)
+	floating_center_layout.addWidget(floating_center_input_x)
+	floating_center_layout.addWidget(floating_center_label_y)
+	floating_center_layout.addWidget(floating_center_input_y)
+	floating_center_layout.addWidget(floating_center_label_z)
+	floating_center_layout.addWidget(floating_center_input_z)
+	floating_center_layout.addWidget(floating_center_auto)
+
+	floating_inertia_layout = QtGui.QHBoxLayout()
+	floating_inertia_label = QtGui.QLabel("Inertia: ")
+	floating_inertia_label.setToolTip("Sets the mk group inertia.")
+	floating_inertia_label_x = QtGui.QLabel("X")
+	floating_inertia_input_x = QtGui.QLineEdit()
+	floating_inertia_label_y = QtGui.QLabel("Y")
+	floating_inertia_input_y = QtGui.QLineEdit()
+	floating_inertia_label_z = QtGui.QLabel("Z")
+	floating_inertia_input_z = QtGui.QLineEdit()
+	floating_inertia_auto = QtGui.QCheckBox("Auto ")
+	floating_inertia_auto.toggled.connect(on_inertia_auto)
+	floating_inertia_layout.addWidget(floating_inertia_label)
+	floating_inertia_layout.addWidget(floating_inertia_label_x)
+	floating_inertia_layout.addWidget(floating_inertia_input_x)
+	floating_inertia_layout.addWidget(floating_inertia_label_y)
+	floating_inertia_layout.addWidget(floating_inertia_input_y)
+	floating_inertia_layout.addWidget(floating_inertia_label_z)
+	floating_inertia_layout.addWidget(floating_inertia_input_z)
+	floating_inertia_layout.addWidget(floating_inertia_auto)
+
+	floating_velini_layout = QtGui.QHBoxLayout()
+	floating_velini_label = QtGui.QLabel("Initial linear velocity: ")
+	floating_velini_label.setToolTip("Sets the mk group initial linear velocity")
+	floating_velini_label_x = QtGui.QLabel("X")
+	floating_velini_input_x = QtGui.QLineEdit()
+	floating_velini_label_y = QtGui.QLabel("Y")
+	floating_velini_input_y = QtGui.QLineEdit()
+	floating_velini_label_z = QtGui.QLabel("Z")
+	floating_velini_input_z = QtGui.QLineEdit()
+	floating_velini_auto = QtGui.QCheckBox("Auto ")
+	floating_velini_auto.toggled.connect(on_velini_auto)
+	floating_velini_layout.addWidget(floating_velini_label)
+	floating_velini_layout.addWidget(floating_velini_label_x)
+	floating_velini_layout.addWidget(floating_velini_input_x)
+	floating_velini_layout.addWidget(floating_velini_label_y)
+	floating_velini_layout.addWidget(floating_velini_input_y)
+	floating_velini_layout.addWidget(floating_velini_label_z)
+	floating_velini_layout.addWidget(floating_velini_input_z)
+	floating_velini_layout.addWidget(floating_velini_auto)
+
+	floating_omegaini_layout = QtGui.QHBoxLayout()
+	floating_omegaini_label = QtGui.QLabel("Initial angular velocity: ")
+	floating_omegaini_label.setToolTip("Sets the mk group initial angular velocity")
+	floating_omegaini_label_x = QtGui.QLabel("X")
+	floating_omegaini_input_x = QtGui.QLineEdit()
+	floating_omegaini_label_y = QtGui.QLabel("Y")
+	floating_omegaini_input_y = QtGui.QLineEdit()
+	floating_omegaini_label_z = QtGui.QLabel("Z")
+	floating_omegaini_input_z = QtGui.QLineEdit()
+	floating_omegaini_auto = QtGui.QCheckBox("Auto ")
+	floating_omegaini_auto.toggled.connect(on_omegaini_auto)
+	floating_omegaini_layout.addWidget(floating_omegaini_label)
+	floating_omegaini_layout.addWidget(floating_omegaini_label_x)
+	floating_omegaini_layout.addWidget(floating_omegaini_input_x)
+	floating_omegaini_layout.addWidget(floating_omegaini_label_y)
+	floating_omegaini_layout.addWidget(floating_omegaini_input_y)
+	floating_omegaini_layout.addWidget(floating_omegaini_label_z)
+	floating_omegaini_layout.addWidget(floating_omegaini_input_z)
+	floating_omegaini_layout.addWidget(floating_omegaini_auto)
+
+	floating_props_layout.addLayout(floating_props_massrhop_layout)
+	floating_props_layout.addLayout(floating_center_layout)
+	floating_props_layout.addLayout(floating_inertia_layout)
+	floating_props_layout.addLayout(floating_velini_layout)
+	floating_props_layout.addLayout(floating_omegaini_layout)
+	floating_props_layout.addStretch(1)
+	floating_props_group.setLayout(floating_props_layout)
+
+	buttons_layout = QtGui.QHBoxLayout()
+	buttons_layout.addStretch(1)
+	buttons_layout.addWidget(ok_button)
+	buttons_layout.addWidget(cancel_button)
+
+	floatings_window_layout = QtGui.QVBoxLayout()
+	floatings_window_layout.addLayout(is_floating_layout)
+	floatings_window_layout.addWidget(floating_props_group)
+	floatings_window_layout.addLayout(buttons_layout)
+
+	floatings_window.setLayout(floatings_window_layout)
+	floatings_window.exec_()
+
+
 #Property change widgets
 property1 = QtGui.QSpinBox()
 property2 = QtGui.QComboBox()
 property3 = QtGui.QComboBox()
+property4 = QtGui.QPushButton("Configure")
 property1.setRange(0, 240)
 property2.insertItems(0, ["Fluid", "Bound"])
 property3.insertItems(1, ["Full", "Solid", "Face", "Wire"])
 property1.valueChanged.connect(property1_change)
 property2.currentIndexChanged.connect(property2_change)
 property3.currentIndexChanged.connect(property3_change)
+property4.clicked.connect(property4_configure)
 property_table.setCellWidget(0,1, property1)
 property_table.setCellWidget(1,1, property2)
 property_table.setCellWidget(2,1, property3)
+property_table.setCellWidget(3,1, property4)
 
 #Dock the widget to the left side of screen
 mw.addDockWidget(QtCore.Qt.LeftDockWidgetArea, properties_widget)
@@ -2268,3 +2480,7 @@ monitor_thread.start()
 
 FreeCADGui.activateWorkbench("PartWorkbench")
 print "DualSPHysics for FreeCAD: Done loading data."
+
+
+#REMOVE THIS
+property4_configure()
