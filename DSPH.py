@@ -126,6 +126,7 @@ def set_default_data():
 	data['project_name'] = "" 
 	data['total_particles'] = -1
 	data['total_particles_out'] = 0
+	data['additional_parameters'] = ""
 
 	#Control data for enabling features
 	data['gencase_done'] = False
@@ -172,7 +173,7 @@ if len(App.listDocuments().keys()) > 0:
 	#Close all current documents.
 	openConfirmDialog = QtGui.QMessageBox()
 	openConfirmDialog.setText("DualSPHysics for FreeCAD")
-	openConfirmDialog.setInformativeText("To load this module is necessary to close all current documents. Close all the documents?")
+	openConfirmDialog.setInformativeText("To load this module you must close all current documents. Close all the documents?")
 	openConfirmDialog.setStandardButtons(QtGui.QMessageBox.Ok | QtGui.QMessageBox.Cancel)
 	openConfirmDialog.setDefaultButton(QtGui.QMessageBox.Ok)
 	openCDRet = openConfirmDialog.exec_()
@@ -199,7 +200,7 @@ if previous_dock:
 
 #Creation of the DSPH Widget
 dsph_dock.setObjectName("DSPH Widget")
-dsph_dock.setWindowTitle("DualSPHysics for FreeCAD v0.01")
+dsph_dock.setWindowTitle("DualSPHysics for FreeCAD v0.03")
 
 def def_constants_window():
 	'''Defines the constants window creation and functonality'''
@@ -1055,6 +1056,7 @@ def def_setup_window():
 		if not state:
 			ex_selector_combo.setEnabled(False)
 			ex_button.setEnabled(False)
+			ex_additional.setEnabled(False)
 		setup_window.accept()
 
 	def on_cancel():
@@ -1202,7 +1204,7 @@ def on_new_case():
 	if len(App.listDocuments().keys()) > 0:
 		newConfirmDialog = QtGui.QMessageBox()
 		newConfirmDialog.setText("DualSPHysics for FreeCAD")
-		newConfirmDialog.setInformativeText("To make a new case is necessary to close all the open documents. Close all the documents?")
+		newConfirmDialog.setInformativeText("To make a new case you must close all the open documents. Close all the documents?")
 		newConfirmDialog.setStandardButtons(QtGui.QMessageBox.Ok | QtGui.QMessageBox.Cancel)
 		newConfirmDialog.setDefaultButton(QtGui.QMessageBox.Ok)
 		openCDRet = newConfirmDialog.exec_()
@@ -1239,6 +1241,7 @@ def on_new_case():
 	dp_input.setEnabled(True)
 	ex_selector_combo.setEnabled(False)
 	ex_button.setEnabled(False)
+	ex_additional.setEnabled(False)
 	export_button.setEnabled(False)
 	casecontrols_bt_addfillbox.setEnabled(True)
 	data['simobjects']['Case_Limits'] = ["mkspecial", "typespecial", "fillspecial"]
@@ -1445,15 +1448,21 @@ def on_save_case():
 				if total_particles < 300:
 					print "WARNING: Are you sure all the parameters are set right? The number of particles is very low (" + str(total_particles) + "). Lower the DP to increase number of particles"
 				elif total_particles > 200000:
-					print "WARNING: Number of particles is pretty high (" + str(total_particles) + ") and it could take much time to simulate."
+					print "WARNING: Number of particles is pretty high (" + str(total_particles) + ") and it could take a lot of time to simulate."
 				data["gencase_done"] = True
 				ex_selector_combo.setEnabled(True)
 				ex_button.setEnabled(True)
+				ex_additional.setEnabled(True)
+				gencase_infosave_dialog = QtGui.QMessageBox()
+				gencase_infosave_dialog.setText("Gencase exported " + str(total_particles) + " particles. Press View Details to check the output.\n")
+				gencase_infosave_dialog.setDetailedText(output.split("================================")[1])
+				gencase_infosave_dialog.setIcon(QtGui.QMessageBox.Information)
+				gencase_infosave_dialog.exec_()
 			except subprocess.CalledProcessError:
 				#Multiple causes
 				gencase_out_file = open(data["project_path"] + "/" + data["project_name"] + "_Out/" + data["project_name"] + ".out", "rb")
 				gencase_failed_dialog = QtGui.QMessageBox()
-				gencase_failed_dialog.setText("Error executing gencase. View details for more info.")
+				gencase_failed_dialog.setText("Error executing gencase. Did you add objects to the case?. Another reason could be memory issues. View details for more info.")
 				gencase_failed_dialog.setDetailedText(gencase_out_file.read().split("================================")[1])
 				gencase_failed_dialog.setIcon(QtGui.QMessageBox.Critical)
 				gencase_failed_dialog.exec_()
@@ -1471,6 +1480,9 @@ def on_load_case():
 	Load points to a dsphdata custom file, that stores all the relevant info.
 	If FCStd file is not found the project is considered corrupt.'''
 	loadName, _ = QtGui.QFileDialog.getOpenFileName(dsph_dock, "Load Case", QtCore.QDir.homePath(), "casedata.dsphdata")
+	if loadName == "":
+		#User pressed cancel. No path is selected.
+		return
 	load_project_name = loadName.split("/")[-2]
 	load_path_project_folder = "/".join(loadName.split("/")[:-1])
 	if not os.path.isfile(load_path_project_folder + "/DSPH_Case.FCStd"):
@@ -1482,7 +1494,7 @@ def on_load_case():
 	if len(App.listDocuments().keys()) > 0:
 		loadConfirmDialog = QtGui.QMessageBox()
 		loadConfirmDialog.setText("DualSPHysics for FreeCAD")
-		loadConfirmDialog.setInformativeText("To load a case is necessary to close all the open documents. Close all the documents?")
+		loadConfirmDialog.setInformativeText("To load a case you must close all the open documents. Close all the documents?")
 		loadConfirmDialog.setStandardButtons(QtGui.QMessageBox.Ok | QtGui.QMessageBox.Cancel)
 		loadConfirmDialog.setDefaultButton(QtGui.QMessageBox.Ok)
 		loadCDRet = loadConfirmDialog.exec_()
@@ -1513,9 +1525,11 @@ def on_load_case():
 	if data["gencase_done"]:
 		ex_selector_combo.setEnabled(True)
 		ex_button.setEnabled(True)
+		ex_additional.setEnabled(True)
 	else:
 		ex_selector_combo.setEnabled(False)
 		ex_button.setEnabled(False)
+		ex_additional.setEnabled(True)
 	
 	if data["simulation_done"]:	
 		export_button.setEnabled(True)
@@ -1528,6 +1542,7 @@ def on_load_case():
 	if not correct_execs:
 		ex_selector_combo.setEnabled(False)
 		ex_button.setEnabled(False)
+		ex_additional.setEnabled(False)
 		export_button.setEnabled(False)
 
 	on_tree_item_selection_change()
@@ -1617,10 +1632,10 @@ def on_ex_simulate():
 	run_progbar_bar.setValue(0)
 	data["simulation_done"] = False
 	ex_button.setEnabled(False)
+	ex_additional.setEnabled(False)
 	export_button.setEnabled(False)
 	run_button_cancel.setText("Cancel Simulation")
 	ex_selector_combo.setEnabled(False)
-	ex_button.setEnabled(False)
 	run_dialog.setWindowTitle("DualSPHysics Simulation: 0%")
 	run_group_label_case.setText("Case Name: " + data['project_name'])
 	run_group_label_proc.setText("Simulation processor: " + str(ex_selector_combo.currentText()))
@@ -1635,6 +1650,7 @@ def on_ex_simulate():
 		run_dialog.hide()
 		ex_selector_combo.setEnabled(True)
 		ex_button.setEnabled(True)
+		ex_additional.setEnabled(True)
 
 	run_button_cancel.clicked.connect(on_cancel)
 
@@ -1644,6 +1660,7 @@ def on_ex_simulate():
 		os.remove(data["project_path"]+"/"+data["project_name"]+"_Out/" + f)
 	
 	def on_dsph_sim_finished(exitCode):
+		output = temp_data["current_process"].readAllStandardOutput()
 		run_watcher.removePath(data["project_path"]+"/"+data["project_name"]+"_Out/")
 		run_dialog.setWindowTitle("DualSPHysics Simulation: Complete")
 		run_progbar_bar.setValue(100)
@@ -1651,13 +1668,32 @@ def on_ex_simulate():
 		if exitCode == 0:
 			data["simulation_done"] = True
 			export_button.setEnabled(True)
+		else:
+			if "exception" in str(output).lower():
+				print "ERROR: Exception in execution."
+				run_dialog.setWindowTitle("DualSPHysics Simulation: Error")
+				run_progbar_bar.setValue(0)
+				run_dialog.hide()
+				ex_selector_combo.setEnabled(True)
+				ex_button.setEnabled(True)
+				ex_additional.setEnabled(True)
+				execution_error_dialog = QtGui.QMessageBox()
+				execution_error_dialog.setText("There was an error in execution. Make sure you set the parameters right (and they exist). Also, make sure that your computer has the right hardware to simulate. Check the details for more information.")
+				execution_error_dialog.setDetailedText(str(output).split("================================")[1])
+				execution_error_dialog.setIcon(QtGui.QMessageBox.Critical)
+				execution_error_dialog.exec_()
 
 	#Launches a QProcess in background
 	process = QtCore.QProcess(run_dialog)
 	process.finished.connect(on_dsph_sim_finished)
-	process.start(data["dsphysics_path"], [data["project_path"]+"/"+data["project_name"]+"_Out/" + data["project_name"], data["project_path"]+"/"+data["project_name"]+"_Out/", "-svres", "-" + str(ex_selector_combo.currentText()).lower()])
-
 	temp_data["current_process"] = process
+	static_params_exe = [data["project_path"]+"/"+data["project_name"]+"_Out/" + data["project_name"], data["project_path"]+"/"+data["project_name"]+"_Out/", "-svres", "-" + str(ex_selector_combo.currentText()).lower()]
+	if len(data["additional_parameters"]) < 2:
+		additional_params_ex = []
+	else:
+		additional_params_ex = data["additional_parameters"].split(" ")
+	final_params_ex = static_params_exe + additional_params_ex
+	temp_data["current_process"].start(data["dsphysics_path"], final_params_ex)
 	
 	def on_fs_change(path):
 		try:
@@ -1678,7 +1714,7 @@ def on_ex_simulate():
 			if "Part_" in last_line_parttime[0]:
 				current_value = (float(last_line_parttime[1]) * float(100)) / float(data["timemax"])
 				run_progbar_bar.setValue(current_value)
-				run_dialog.setWindowTitle("DualSPHysics Simulation: " +str(current_value)+ "%")
+				run_dialog.setWindowTitle("DualSPHysics Simulation: " +str(format(current_value, ".2f"))+ "%")
 				
 			last_line_time = run_file_data[-1].split("  ")[-1]
 			if ("===" not in last_line_time) and ("CellDiv" not in last_line_time) and ("memory" not in last_line_time) and ("-" in last_line_time):
@@ -1686,6 +1722,7 @@ def on_ex_simulate():
 				try:
 					run_group_label_eta.setText("Estimated time of completion: " + last_line_time)
 				except RuntimeError:
+					run_group_label_eta.setText("Estimated time of completion: Calculating..." )
 					pass
 		elif "Particles out:" in run_file_data[-1]:
 			totalpartsout = int(run_file_data[-1].split("(total: ")[1].split(")")[0])
@@ -1708,6 +1745,43 @@ def on_ex_simulate():
 	else:
 		run_dialog.show()
 
+def on_additional_parameters():
+	additional_parameters_window = QtGui.QDialog()
+	additional_parameters_window.setWindowTitle("Additional parameters")
+	ok_button = QtGui.QPushButton("Ok")
+	cancel_button = QtGui.QPushButton("Cancel")
+
+	def on_ok():
+		data['additional_parameters'] = paramintro_input.text()
+		additional_parameters_window.accept()
+
+	def on_cancel():
+		additional_parameters_window.reject()
+
+	ok_button.clicked.connect(on_ok)
+	cancel_button.clicked.connect(on_cancel)
+	#Button layout definition	
+	ap_button_layout = QtGui.QHBoxLayout()
+	ap_button_layout.addStretch(1)
+	ap_button_layout.addWidget(ok_button)
+	ap_button_layout.addWidget(cancel_button)
+
+	paramintro_layout = QtGui.QHBoxLayout()
+	paramintro_label = QtGui.QLabel("Additional Parameters: ")
+	paramintro_input = QtGui.QLineEdit()
+	paramintro_input.setText(data["additional_parameters"])
+	paramintro_layout.addWidget(paramintro_label)
+	paramintro_layout.addWidget(paramintro_input)
+
+	additional_parameters_layout = QtGui.QVBoxLayout()
+	additional_parameters_layout.addLayout(paramintro_layout)
+	additional_parameters_layout.addStretch(1)
+	additional_parameters_layout.addLayout(ap_button_layout)
+
+	additional_parameters_window.setFixedSize(600,110)
+	additional_parameters_window.setLayout(additional_parameters_layout)	
+	additional_parameters_window.exec_()
+
 #Execution section scaffolding
 ex_layout = QtGui.QVBoxLayout()
 ex_label = QtGui.QLabel("This is the simulation group. Use this controls to simulate the case in which you are working. Remember that, depending on the number of particles generated it could take some time.")
@@ -1722,9 +1796,15 @@ ex_selector_layout.addWidget(ex_selector_combo)
 ex_button = QtGui.QPushButton("Simulate Case")
 ex_button.setToolTip("Starts the case simulation. From the simulation\nwindow you can see the current progress and\nuseful information.")
 ex_button.clicked.connect(on_ex_simulate)
+ex_additional = QtGui.QPushButton("Additional parameters")
+ex_additional.setToolTip("Sets simulation additional parameters for execution.")
+ex_additional.clicked.connect(on_additional_parameters)
+ex_button_layout = QtGui.QHBoxLayout()
+ex_button_layout.addWidget(ex_button)
+ex_button_layout.addWidget(ex_additional)
 ex_layout.addWidget(ex_label)
 ex_layout.addLayout(ex_selector_layout)
-ex_layout.addWidget(ex_button)
+ex_layout.addLayout(ex_button_layout)
 
 ex_separator = QtGui.QFrame()
 ex_separator.setFrameStyle(QtGui.QFrame.HLine)
@@ -1733,8 +1813,10 @@ def on_export():
 	'''Export VTK button behaviour.
 	Launches a process while disabling the button.'''
 	temp_data["export_button"].setEnabled(False)
+	temp_data["export_button"].setText("Exporting...")
 
 	def on_export_finished(exitCode):
+		temp_data["export_button"].setText("Export data to VTK")
 		temp_data["export_button"].setEnabled(True)
 
 	export_process = QtCore.QProcess(dsph_dock)
@@ -1808,6 +1890,7 @@ casecontrols_bt_savedoc.setEnabled(False)
 dp_input.setEnabled(False)
 ex_selector_combo.setEnabled(False)
 ex_button.setEnabled(False)
+ex_additional.setEnabled(False)
 export_button.setEnabled(False)
 
 '''You can't apply layouts to a QDockWidget, 
@@ -2068,6 +2151,7 @@ def on_tree_item_selection_change():
 
 	#Update dsph objects list
 	objectlist_table.clear()
+	objectlist_table.setEnabled(True)
 	if len(data["export_order"]) == 0:
 		data["export_order"] = data["simobjects"].keys()
 	#Substract one that represent case limits object
@@ -2164,7 +2248,16 @@ def selection_monitor():
 							subelem.Placement.Rotation.Angle = 0.0
 							print "ERROR: Can't change fillbox contents rotation!"
 		except NameError as e:
-			#not yet opened
+			#DSPH Case not opened, disable things
+			casecontrols_bt_savedoc.setEnabled(False)
+			constants_button.setEnabled(False)
+			execparams_button.setEnabled(False)
+			casecontrols_bt_addfillbox.setEnabled(False)
+			ex_button.setEnabled(False)
+			ex_additional.setEnabled(False)
+			ex_selector_combo.setEnabled(False)
+			export_button.setEnabled(False)
+			objectlist_table.setEnabled(False)
 			threading._sleep(2)
 			continue
 
@@ -2173,5 +2266,5 @@ def selection_monitor():
 monitor_thread = threading.Thread(target=selection_monitor)
 monitor_thread.start()
 
-
+FreeCADGui.activateWorkbench("PartWorkbench")
 print "DualSPHysics for FreeCAD: Done loading data."
