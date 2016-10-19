@@ -130,7 +130,12 @@ def set_default_data():
 	
 	'''Dictionary that defines floatings. 
 	Keys are mks enabled (ONLY BOUNDS) and values are a list containing:
-	[massbody, center, inertia, velini, omegaini]'''
+	{'mkbound': [massrhop, center, inertia, velini, omegaini]}
+	massrhop = [selectedOption (index), value]
+	center = [auto (bool), x,y,z]
+	inertia = [auto (bool), x,y,z]
+	velini = [auto (bool), x,y,z]
+	omegaini = [auto (bool), x,y,z]'''
 	data['floating_mks'] = dict()
 
 	#Control data for enabling features
@@ -138,6 +143,7 @@ def set_default_data():
 	data['simulation_done'] = False
 
 	#Simulation objects with its parameters. Without order.
+	#format is: {'key': ['mk', 'type', 'fill']}
 	data['simobjects'] = dict()
 
 	#Keys of simobjects. Ordered.
@@ -1305,7 +1311,7 @@ def on_save_case():
 		min_point = App.ActiveDocument.getObject("Case_Limits").Placement.Base
 		max_point = App.ActiveDocument.getObject("Case_Limits")
 		f.write('\t\t\t\t<pointmin x="'+str(min_point.x / 1000)+'" y="'+str(min_point.y / 1000)+'" z="'+str(min_point.z / 1000)+'" />\n')
-		f.write('\t\t\t\t<pointmax x="'+str(max_point.Length.Value / 1000)+'" y="'+str(max_point.Width.Value / 1000)+'" z="'+str(max_point.Height.Value / 1000)+'" />\n')
+		f.write('\t\t\t\t<pointmax x="'+str(min_point.x / 1000 + max_point.Length.Value / 1000)+'" y="'+str(min_point.y / 1000 + max_point.Width.Value / 1000)+'" z="'+str(min_point.z / 1000 + max_point.Height.Value / 1000)+'" />\n')
 		f.write('\t\t\t</definition>\n')
 		f.write('\t\t\t<commands>\n')
 		f.write('\t\t\t\t<mainlist>\n')
@@ -1382,6 +1388,27 @@ def on_save_case():
 		f.write('\t\t\t\t</mainlist>\n')
 		f.write('\t\t\t</commands>\n')
 		f.write('\t\t</geometry>\n')
+		#Writes floatings
+		if len(data["floating_mks"].keys()) > 0:
+			f.write('\t\t<floatings>\n')
+			for key, value in data["floating_mks"].iteritems():
+				if value[0][0] == 0:
+					#is massbody
+					f.write('\t\t\t<floating mkbound="'+str(key)+'">\n')
+					f.write('\t\t\t\t<massbody value="'+str(value[0][1])+'" />\n')
+				else:
+					#is rhopbody
+					f.write('\t\t\t<floating mkbound="'+str(key)+'" rhopbody="'+str(value[0][1])+'">\n')
+				if not value[1][0]:
+					f.write('\t\t\t\t<center x="'+str(value[1][1])+'" y="'+str(value[1][2])+'" z="'+str(value[1][3])+'" />\n')
+				if not value[2][0]:
+					f.write('\t\t\t\t<inertia x="'+str(value[2][1])+'" y="'+str(value[2][2])+'" z="'+str(value[2][3])+'" />\n')
+				if not value[3][0]:
+					f.write('\t\t\t\t<velini x="'+str(value[3][1])+'" y="'+str(value[3][2])+'" z="'+str(value[3][3])+'" />\n')
+				if not value[4][0]:
+					f.write('\t\t\t\t<omegaini x="'+str(value[4][1])+'" y="'+str(value[4][2])+'" z="'+str(value[4][3])+'" />\n')
+				f.write('\t\t\t</floating>\n')
+			f.write('\t\t</floatings>\n')
 		f.write('\t</casedef>\n')
 		f.write('\t<execution>\n')
 		f.write('\t\t<parameters>\n')
@@ -1432,13 +1459,13 @@ def on_save_case():
 			bat_file = open(saveName+"/run.bat", 'w')
 			print "Creating " + saveName+"/run.bat"
 			bat_file.write("@echo off\n")
-			bat_file.write('echo "------- Autoexported by DualSPHysics for FreeCAD -------\n')
-			bat_file.write('echo "This script executes GenCase for the case saved, that generates output files in the *_Out dir. Then, executes a simulation on CPU of the case. Last, it exports all the geometry generated in VTK files for viewing with ParaView.\n')
+			bat_file.write('echo "------- Autoexported by DualSPHysics for FreeCAD -------"\n')
+			bat_file.write('echo "This script executes GenCase for the case saved, that generates output files in the *_Out dir. Then, executes a simulation on CPU of the case. Last, it exports all the geometry generated in VTK files for viewing with ParaView."\n')
 			bat_file.write('pause\n')
 			bat_file.write('"'+data["gencase_path"]+'" '+ saveName+"/" + saveName.split('/')[-1]+ "_Def " + saveName+"/"+saveName.split('/')[-1]+ "_Out/" + saveName.split('/')[-1] + ' -save:+all' +'\n')
 			bat_file.write('"'+data["dsphysics_path"]+'" '+ saveName+"/"+saveName.split('/')[-1]+ "_Out/" + saveName.split('/')[-1] + ' ' + saveName+"/"+saveName.split('/')[-1]+ "_Out" + ' -svres -cpu' +'\n')
-			bat_file.write('"'+data["partvtk4_path"]+'" -dirin '+ saveName+"/"+saveName.split('/')[-1]+ "_Out -savevtk " + saveName+"/"+saveName.split('/')[-1]+ "_Out/PartFluid -onlytype:-all,+fluid" +'\n')
-			bat_file.write('echo "------- Execution complete. If results were not the exepected ones check for errors. Make sure your case has a correct DP specification. -------\n')
+			bat_file.write('"'+data["partvtk4_path"]+'" -dirin '+ saveName+"/"+saveName.split('/')[-1]+ "_Out -savevtk " + saveName+"/"+saveName.split('/')[-1]+ "_Out/PartAll" +'\n')
+			bat_file.write('echo "------- Execution complete. If results were not the exepected ones check for errors. Make sure your case has a correct DP specification. -------"\n')
 			bat_file.write('pause\n')
 			bat_file.close()
 
@@ -1830,7 +1857,7 @@ def on_export():
 
 	export_process = QtCore.QProcess(dsph_dock)
 	export_process.finished.connect(on_export_finished)
-	export_process.start(data["partvtk4_path"], ["-dirin "+data["project_path"]+"/"+data["project_name"]+"_Out/", "-savevtk "+data["project_path"]+"/"+data["project_name"]+"_Out/PartFluid", "-onlytype:-all,+fluid"])
+	export_process.start(data["partvtk4_path"], ["-dirin "+data["project_path"]+"/"+data["project_name"]+"_Out/", "-savevtk "+data["project_path"]+"/"+data["project_name"]+"_Out/PartAll"])
 
 	temp_data["current_export_process"] = export_process
 
@@ -2006,12 +2033,22 @@ def property4_configure():
 	floatings_window.setWindowTitle("Floating configuration")
 	ok_button = QtGui.QPushButton("Ok")
 	cancel_button = QtGui.QPushButton("Cancel")
-
+	target_mk = int(data["simobjects"][FreeCADGui.Selection.getSelection()[0].Name][0])
 	def on_ok():
-		pass
+		#TODO: Warn the user of changing all of this mks
+		if is_floating_selector.currentIndex() == 1:
+			#Floating false
+			if str(target_mk) in data["floating_mks"].keys():
+				data["floating_mks"].pop(str(target_mk), None)
+		else:
+			#Floating true
+			#Structure: 'mk': [massrhop, center, inertia, velini, omegaini]
+			data["floating_mks"][str(target_mk)] = [[floating_props_massrhop_selector.currentIndex(), float(floating_props_massrhop_input.text())],[floating_center_auto.isChecked(), float(floating_center_input_x.text()), float(floating_center_input_y.text()), float(floating_center_input_z.text())],[floating_inertia_auto.isChecked(), float(floating_inertia_input_x.text()), float(floating_inertia_input_y.text()), float(floating_inertia_input_z.text())],[floating_velini_auto.isChecked(), float(floating_velini_input_x.text()), float(floating_velini_input_y.text()), float(floating_velini_input_z.text())],[floating_omegaini_auto.isChecked(), float(floating_omegaini_input_x.text()), float(floating_omegaini_input_y.text()), float(floating_omegaini_input_z.text())]]
 
+		floatings_window.accept()
 	def on_cancel():
-		pass
+		floatings_window.reject()
+
 
 	def on_floating_change(index):
 		if index == 0:
@@ -2070,11 +2107,11 @@ def property4_configure():
 
 	is_floating_layout = QtGui.QHBoxLayout()
 	is_floating_label = QtGui.QLabel("Set floating: ")
-	is_floating_label.setToolTip("Sets the current MK selected as floating.")
+	is_floating_label.setToolTip("Sets the current MKBound selected as floating.")
 	is_floating_selector = QtGui.QComboBox()
 	is_floating_selector.insertItems(0, ["True", "False"])
 	is_floating_selector.currentIndexChanged.connect(on_floating_change)
-	is_floating_targetlabel = QtGui.QLabel("Target MK: -1")
+	is_floating_targetlabel = QtGui.QLabel("Target MKBound: "+ str(target_mk))
 	is_floating_layout.addWidget(is_floating_label)
 	is_floating_layout.addWidget(is_floating_selector)
 	is_floating_layout.addStretch(1)
@@ -2082,12 +2119,11 @@ def property4_configure():
 
 	floating_props_group = QtGui.QGroupBox("Floating properties")
 	floating_props_layout = QtGui.QVBoxLayout()
-
 	floating_props_massrhop_layout = QtGui.QHBoxLayout()
 	floating_props_massrhop_label = QtGui.QLabel("Mass/Density: ")
 	floating_props_massrhop_label.setToolTip("Selects an mass/density calculation method and its value.")
 	floating_props_massrhop_selector = QtGui.QComboBox()
-	floating_props_massrhop_selector.insertItems(0, ["rhopbody", "massbody"])
+	floating_props_massrhop_selector.insertItems(0, ["massbody", "rhopbody"])
 	floating_props_massrhop_selector.currentIndexChanged.connect(on_massrhop_change)
 	floating_props_massrhop_input = QtGui.QLineEdit()
 	floating_props_massrhop_layout.addWidget(floating_props_massrhop_label)
@@ -2193,6 +2229,55 @@ def property4_configure():
 	floatings_window_layout.addLayout(buttons_layout)
 
 	floatings_window.setLayout(floatings_window_layout)
+
+	if str(target_mk) in data["floating_mks"].keys():
+		is_floating_selector.setCurrentIndex(0)
+		on_floating_change(0)
+		floating_props_group.setEnabled(True)
+		floating_props_massrhop_selector.setCurrentIndex(data["floating_mks"][str(target_mk)][0][0])
+		floating_props_massrhop_input.setText(str(data["floating_mks"][str(target_mk)][0][1]))
+		floating_center_input_x.setText(str(data["floating_mks"][str(target_mk)][1][1]))
+		floating_center_input_y.setText(str(data["floating_mks"][str(target_mk)][1][2]))
+		floating_center_input_z.setText(str(data["floating_mks"][str(target_mk)][1][3]))
+		floating_inertia_input_x.setText(str(data["floating_mks"][str(target_mk)][2][1]))
+		floating_inertia_input_y.setText(str(data["floating_mks"][str(target_mk)][2][2]))
+		floating_inertia_input_z.setText(str(data["floating_mks"][str(target_mk)][2][3]))
+		floating_velini_input_x.setText(str(data["floating_mks"][str(target_mk)][3][1]))
+		floating_velini_input_y.setText(str(data["floating_mks"][str(target_mk)][3][2]))
+		floating_velini_input_z.setText(str(data["floating_mks"][str(target_mk)][3][3]))
+		floating_omegaini_input_x.setText(str(data["floating_mks"][str(target_mk)][4][1]))
+		floating_omegaini_input_y.setText(str(data["floating_mks"][str(target_mk)][4][2]))
+		floating_omegaini_input_z.setText(str(data["floating_mks"][str(target_mk)][4][3]))
+		floating_center_auto.setCheckState(QtCore.Qt.Checked if data["floating_mks"][str(target_mk)][1][0] else QtCore.Qt.Unchecked)
+		floating_inertia_auto.setCheckState(QtCore.Qt.Checked if data["floating_mks"][str(target_mk)][2][0] else QtCore.Qt.Unchecked)
+		floating_velini_auto.setCheckState(QtCore.Qt.Checked if data["floating_mks"][str(target_mk)][3][0] else QtCore.Qt.Unchecked)
+		floating_omegaini_auto.setCheckState(QtCore.Qt.Checked if data["floating_mks"][str(target_mk)][4][0] else QtCore.Qt.Unchecked)
+	else:
+		is_floating_selector.setCurrentIndex(1)
+		on_floating_change(1)
+		floating_props_group.setEnabled(False)
+		is_floating_selector.setCurrentIndex(1)
+		floating_props_massrhop_selector.setCurrentIndex(0)
+		floating_props_massrhop_input.setText("100")
+		floating_center_input_x.setText("0")
+		floating_center_input_y.setText("0")
+		floating_center_input_z.setText("0")
+		floating_inertia_input_x.setText("0")
+		floating_inertia_input_y.setText("0")
+		floating_inertia_input_z.setText("0")
+		floating_velini_input_x.setText("0")
+		floating_velini_input_y.setText("0")
+		floating_velini_input_z.setText("0")
+		floating_omegaini_input_x.setText("0")
+		floating_omegaini_input_y.setText("0")
+		floating_omegaini_input_z.setText("0")
+
+		floating_center_auto.setCheckState(QtCore.Qt.Checked)
+		floating_inertia_auto.setCheckState(QtCore.Qt.Checked)
+		floating_velini_auto.setCheckState(QtCore.Qt.Checked)
+		floating_omegaini_auto.setCheckState(QtCore.Qt.Checked)
+
+
 	floatings_window.exec_()
 
 
@@ -2480,7 +2565,3 @@ monitor_thread.start()
 
 FreeCADGui.activateWorkbench("PartWorkbench")
 print "DualSPHysics for FreeCAD: Done loading data."
-
-
-#REMOVE THIS
-property4_configure()
