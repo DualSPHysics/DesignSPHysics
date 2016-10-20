@@ -1151,7 +1151,7 @@ def def_setup_window():
 	ret_val = setup_window.exec_()
 
 def def_help():
-	webbrowser.open("http://dual.sphysics.org/gui/help/")
+	webbrowser.open("http://dual.sphysics.org/gui/wiki/")
 
 #Main Widget layout. Vertical ordering
 main_layout = QtGui.QVBoxLayout()
@@ -1301,6 +1301,7 @@ def on_save_case():
 		#Saves all the data in XML format.
 		print "DualSPHysics for FreeCAD: Saving data in " + data["project_path"] + "."
 		App.getDocument("DSPH_Case").saveAs(saveName+"/DSPH_Case.FCStd")
+		Gui.SendMsgToActiveView("Save")
 		f = open(saveName+"/" + saveName.split('/')[-1]+ "_Def.xml", 'w')
 		f.write('<?xml version="1.0" encoding="UTF-8" ?>\n')
 		f.write('<case app="' + data["project_name"] + '" date="' + datetime.now().strftime('%d-%m-%Y %H:%M:%S') + '">\n')
