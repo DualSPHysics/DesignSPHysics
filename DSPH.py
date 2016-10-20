@@ -202,6 +202,23 @@ mw = FreeCADGui.getMainWindow()
 dsph_dock = QtGui.QDockWidget()
 scaff_widget = QtGui.QWidget() #Scaffolding widget, only useful to apply to the dsph_dock widget
 
+def get_first_mk_not_used(type):
+	if type == "fluid":
+		endval = 10
+		mkset = set()
+		for key,value in data["simobjects"].iteritems():
+			if value[1].lower() == "fluid":
+				mkset.add(value[0])
+	else:
+		endval = 240
+		mkset = set()
+		for key,value in data["simobjects"].iteritems():
+			if value[1].lower() == "bound":
+				mkset.add(value[0])
+	for i in range(0, endval):
+		if i not in mkset:
+			return i
+
 #If the script is executed even when a previous DSHP Dock is created
 # it makes sure that it's deleted before
 previous_dock = mw.findChild(QtGui.QDockWidget, "DSPH Widget")
@@ -1552,6 +1569,7 @@ def on_load_case():
 	data.update(load_disk_data)
 	global dp_input
 	dp_input.setText(str(data['dp']))
+
 	data["project_path"] = load_path_project_folder
 	data["project_name"] = load_path_project_folder.split("/")[-1]
 	constants_button.setEnabled(True)
@@ -1676,7 +1694,7 @@ def on_ex_simulate():
 	run_group_label_case.setText("Case Name: " + data['project_name'])
 	run_group_label_proc.setText("Simulation processor: " + str(ex_selector_combo.currentText()))
 	run_group_label_part.setText("Number of particles: " + str(data['total_particles']))
-	run_group_label_partsout.setText("Total particles out of case: " + str(data['total_particles_out']))
+	run_group_label_partsout.setText("Total particles out of case: 0")
 	
 	def on_cancel():
 		print "DualSPHysics for FreeCAD: Stopping simulation"
@@ -2317,9 +2335,17 @@ def add_object_to_sim():
 			continue
 		if item.Name not in data['simobjects'].keys():
 			if "fillbox" in item.Name.lower():
-				data['simobjects'][item.Name] = [0, 'fluid', 'full']
+				mktoput = get_first_mk_not_used("fluid")
+				if not mktoput:
+					mktoput = 0
+				data['simobjects'][item.Name] = [mktoput, 'fluid', 'full']
+				data["mkfluidused"].append(mktoput)
 			else:
-				data['simobjects'][item.Name] = [0, 'bound', 'full']
+				mktoput = get_first_mk_not_used("bound")
+				if not mktoput:
+					mktoput = 0
+				data['simobjects'][item.Name] = [mktoput, 'bound', 'full']
+				data["mkboundused"].append(mktoput)
 			data["export_order"].append(item.Name)
 	on_tree_item_selection_change()
 
@@ -2332,8 +2358,7 @@ def remove_object_from_sim():
 			continue
 		if item.Name in data["export_order"]:
 			data['export_order'].remove(item.Name)
-		data['simobjects'].pop(item.Name, None)
-
+		toRemove = data['simobjects'].pop(item.Name, None)
 	on_tree_item_selection_change()
 
 #Connects buttons to its functions
@@ -2396,9 +2421,11 @@ def on_tree_item_selection_change():
 					if data['simobjects'][selection[0].Name][1].lower() == "fluid":
 						toChange.setCurrentIndex(0)
 						property1.setRange(0, 10)
+						propertylabel1.setText("   MKFluid")
 					elif data['simobjects'][selection[0].Name][1].lower() == "bound":
 						toChange.setCurrentIndex(1)
 						property1.setRange(0, 240)
+						propertylabel1.setText("   MKBound")
 				else:
 					if selection[0].TypeId == "App::DocumentObjectGroup" and "fillbox" in selection[0].Name.lower():
 						toChange.setEnabled(True)
