@@ -1,9 +1,8 @@
 # -*- coding: utf-8 -*-
 
 from PySide import QtGui, QtCore
-from FreeCAD import Base
 from datetime import datetime
-import Part,PartGui, os, sys, Draft, subprocess, pickle, time, threading, traceback, Mesh, math, webbrowser
+import os, sys, pickle, threading, math, webbrowser
 
 print "Loading DualSPHysics for FreeCAD..."
 print "-----------------------------------"
@@ -17,11 +16,20 @@ print "-----------------------------------"
 data = dict()
 temp_data = dict()
 
+#Establishing references for the different elements that the script will use later
+app = QtGui.qApp
+mw = FreeCADGui.getMainWindow()
+dsph_dock = QtGui.QDockWidget()
+scaff_widget = QtGui.QWidget() #Scaffolding widget, only useful to apply to the dsph_dock widget
+
 #Check executables and see if they are the correct ones
 def check_executables():
 	execs_correct = True
 	if os.path.isfile(data["gencase_path"]):
-		output = subprocess.check_output([data["gencase_path"]])
+		process = QtCore.QProcess(mw)
+		process.start(data["gencase_path"])
+		process.waitForFinished()
+		output = str(process.readAllStandardOutput())
 		if "gencase" in output[0:15].lower():
 			print "DualSPHysics for FreeCAD: Found correct GenCase."
 		else:
@@ -32,7 +40,10 @@ def check_executables():
 		data["gencase_path"] = ""			
 
 	if os.path.isfile(data["dsphysics_path"]):
-		output = subprocess.check_output([data["dsphysics_path"]])
+		process = QtCore.QProcess(mw)
+		process.start(data["dsphysics_path"])
+		process.waitForFinished()
+		output = str(process.readAllStandardOutput())
 		if "dualsphysics" in output[0:20].lower():
 			print "DualSPHysics for FreeCAD: Found correct DualSPHysics."
 		else:
@@ -43,7 +54,10 @@ def check_executables():
 		data["dsphysics_path"] = ""			
 
 	if os.path.isfile(data["partvtk4_path"]):
-		output = subprocess.check_output([data["partvtk4_path"]])
+		process = QtCore.QProcess(mw)
+		process.start(data["partvtk4_path"])
+		process.waitForFinished()
+		output = str(process.readAllStandardOutput())
 		if "partvtk4" in output[0:20].lower():
 			print "DualSPHysics for FreeCAD: Found correct PartVTK4."
 		else:
@@ -195,12 +209,6 @@ if len(App.listDocuments().keys()) > 0:
 			App.closeDocument(doc)
 	else:
 		quit()
-
-#Establishing references for the different elements that the script will use later
-app = QtGui.qApp
-mw = FreeCADGui.getMainWindow()
-dsph_dock = QtGui.QDockWidget()
-scaff_widget = QtGui.QWidget() #Scaffolding widget, only useful to apply to the dsph_dock widget
 
 def get_first_mk_not_used(type):
 	if type == "fluid":
@@ -1092,30 +1100,45 @@ def def_setup_window():
 		setup_window.reject()
 
 	def on_gencase_browse():
-		fileName, _ = QtGui.QFileDialog.getOpenFileName(setup_window, "Select GenCase path", QtCore.QDir.homePath(), "Executable File (*.exe)")
+		filedialog = QtGui.QFileDialog()
+		fileName, _ = filedialog.getOpenFileName(setup_window, "Select GenCase path", QtCore.QDir.homePath())
 		if fileName != "":
 			#Verify if exe is indeed gencase
-			output = subprocess.check_output([fileName])
+			process = QtCore.QProcess(mw)
+			process.start(fileName)
+			process.waitForFinished()
+			output = str(process.readAllStandardOutput())
+
 			if "gencase" in output[0:15].lower():
 				gencasepath_input.setText(fileName)
 			else:
 				print "ERROR: I can't recognize GenCase in that exe!"
 
 	def on_dualsphysics_browse():
-		fileName, _ = QtGui.QFileDialog.getOpenFileName(setup_window, "Select DualSPHysics path", QtCore.QDir.homePath(), "Executable File (*.exe)")
+		filedialog = QtGui.QFileDialog()
+		fileName, _ = filedialog.getOpenFileName(setup_window, "Select DualSPHysics path", QtCore.QDir.homePath())
 		if fileName != "":
 			#Verify if exe is indeed dualsphysics
-			output = subprocess.check_output([fileName])
+			process = QtCore.QProcess(mw)
+			process.start(fileName)
+			process.waitForFinished()
+			output = str(process.readAllStandardOutput())
+
 			if "dualsphysics" in output[0:20].lower():
 				dsphpath_input.setText(fileName)
 			else:
 				print "ERROR: I can't recognize DualSPHysics in that exe!"
 
 	def on_partvtk4_browse():
-		fileName, _ = QtGui.QFileDialog.getOpenFileName(setup_window, "Select PartVTK4 path", QtCore.QDir.homePath(), "Executable File (*.exe)")
+		filedialog = QtGui.QFileDialog()
+		fileName, _ = filedialog.getOpenFileName(setup_window, "Select PartVTK4 path", QtCore.QDir.homePath())
 		if fileName != "":
 			#Verify if exe is indeed dualsphysics
-			output = subprocess.check_output([fileName])
+			process = QtCore.QProcess(mw)
+			process.start(fileName)
+			process.waitForFinished()
+			output = str(process.readAllStandardOutput())
+
 			if "partvtk4" in output[0:20].lower():
 				partvtk4path_input.setText(fileName)
 			else:
@@ -1487,13 +1510,28 @@ def on_save_case():
 			bat_file.write('pause\n')
 			bat_file.close()
 
+			bat_file = open(saveName+"/run.sh", 'w')
+			print "Creating " + saveName+"/run.sh"
+			bat_file.write('echo "------- Autoexported by DualSPHysics for FreeCAD -------"\n')
+			bat_file.write('echo "This script executes GenCase for the case saved, that generates output files in the *_Out dir. Then, executes a simulation on CPU of the case. Last, it exports all the geometry generated in VTK files for viewing with ParaView."\n')
+			bat_file.write('read -rsp $"Press any key to continue..." -n 1 key\n')
+			bat_file.write('"'+data["gencase_path"]+'" '+ saveName+"/" + saveName.split('/')[-1]+ "_Def " + saveName+"/"+saveName.split('/')[-1]+ "_Out/" + saveName.split('/')[-1] + ' -save:+all' +'\n')
+			bat_file.write('"'+data["dsphysics_path"]+'" '+ saveName+"/"+saveName.split('/')[-1]+ "_Out/" + saveName.split('/')[-1] + ' ' + saveName+"/"+saveName.split('/')[-1]+ "_Out" + ' -svres -cpu' +'\n')
+			bat_file.write('"'+data["partvtk4_path"]+'" -dirin '+ saveName+"/"+saveName.split('/')[-1]+ "_Out -savevtk " + saveName+"/"+saveName.split('/')[-1]+ "_Out/PartAll" +'\n')
+			bat_file.write('echo "------- Execution complete. If results were not the exepected ones check for errors. Make sure your case has a correct DP specification. -------"\n')
+			bat_file.write('read -rsp $"Press any key to continue..." -n 1 key\n')
+			bat_file.close()
+
 		
 		data["gencase_done"] = False
 		#Use gencase if possible to generate the case final definition
 		if data["gencase_path"] != "":
-			try:
-				os.chdir(data["project_path"])
-				output = subprocess.check_output([data["gencase_path"], data["project_path"]+"/"+data["project_name"]+"_Def", data["project_path"]+"/"+data["project_name"]+"_Out/"+data["project_name"], "-save:+all"])
+			os.chdir(data["project_path"])
+			process = QtCore.QProcess(mw)
+			process.start(data["gencase_path"], [data["project_path"]+"/"+data["project_name"]+"_Def", data["project_path"]+"/"+data["project_name"]+"_Out/"+data["project_name"], "-save:+all"])
+			process.waitForFinished()
+			output = str(process.readAllStandardOutput())
+			if str(process.exitCode()) == "0":
 				total_particles_text = output[output.index("Total particles: "):output.index(" (bound=")]
 				total_particles = int(total_particles_text[total_particles_text.index(": ") + 2:])
 				data['total_particles'] = total_particles
@@ -1512,7 +1550,7 @@ def on_save_case():
 				gencase_infosave_dialog.setDetailedText(output.split("================================")[1])
 				gencase_infosave_dialog.setIcon(QtGui.QMessageBox.Information)
 				gencase_infosave_dialog.exec_()
-			except subprocess.CalledProcessError:
+			else:
 				#Multiple causes
 				gencase_out_file = open(data["project_path"] + "/" + data["project_name"] + "_Out/" + data["project_name"] + ".out", "rb")
 				gencase_failed_dialog = QtGui.QMessageBox()
