@@ -12,16 +12,6 @@ print "School of Mechanical, Aerospace and Civil Engineering, University of Manc
 print "Developed by Andrés Vieira."
 print "-----------------------------------"
 
-#Version check. This script is only compatible with FreeCAD 0.16 or higher
-version_num = FreeCAD.Version()[0] + FreeCAD.Version()[1]
-print int(version_num)
-if int(version_num) < int("017"):
-	exec_not_correct_dialog = QtGui.QMessageBox()
-	exec_not_correct_dialog.setText("This version of FreeCAD is not supported!. Install version 0.16 or higher.")
-	exec_not_correct_dialog.setIcon(QtGui.QMessageBox.Warning)
-	exec_not_correct_dialog.exec_()
-	exit(1)
-
 #Main data structure
 data = dict()
 temp_data = dict()
@@ -182,7 +172,7 @@ def set_default_data():
 	to introduce the software paths every time'''
 	if os.path.isfile(App.getUserAppDataDir()+'/dsph_data.dsphdata'):
 		try:
-			picklefile = open(App.	DataDir()+'/dsph_data.dsphdata', 'rb')
+			picklefile = open(App.getUserAppDataDir()+'/dsph_data.dsphdata', 'rb')
 			disk_data = pickle.load(picklefile)
 			data['gencase_path'] = disk_data['gencase_path']
 			data['dsphysics_path'] = disk_data['dsphysics_path']
