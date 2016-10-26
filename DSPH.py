@@ -2,7 +2,7 @@
 
 from PySide import QtGui, QtCore
 from datetime import datetime
-import os, sys, pickle, threading, math, webbrowser
+import os, sys, pickle, threading, math, webbrowser, traceback
 
 #Special vars
 version = 'v0.10a'
@@ -37,6 +37,7 @@ scaff_widget = QtGui.QWidget() #Scaffolding widget, only useful to apply to the 
 #Check executables and see if they are the correct ones
 def check_executables():
 	execs_correct = True
+	print 'gencase path: ' + data["gencase_path"]
 	if os.path.isfile(data["gencase_path"]):
 		process = QtCore.QProcess(mw)
 		process.start(data["gencase_path"])
@@ -184,12 +185,13 @@ def set_default_data():
 	to introduce the software paths every time'''
 	if os.path.isfile(App.getUserAppDataDir()+'/dsph_data.dsphdata'):
 		try:
-			picklefile = open(App.	DataDir()+'/dsph_data.dsphdata', 'rb')
+			picklefile = open(App.getUserAppDataDir()+'/dsph_data.dsphdata', 'rb')
 			disk_data = pickle.load(picklefile)
 			data['gencase_path'] = disk_data['gencase_path']
 			data['dsphysics_path'] = disk_data['dsphysics_path']
 			data['partvtk4_path'] = disk_data['partvtk4_path']
 		except:
+			traceback.print_exc()
 			data['gencase_path'] = ""
 			data['dsphysics_path'] = ""
 			data['partvtk4_path'] = ""
