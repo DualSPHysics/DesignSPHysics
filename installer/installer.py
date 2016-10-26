@@ -52,6 +52,16 @@ def main():
 				if not os.path.isdir(dest_folder):
 					os.makedirs(dest_folder)
 				dprint(dest_folder)
+				try:
+					os.remove(dest_folder + 'DSPH.py')
+				except OSError as e:
+					#File does not exists. Ignoring
+					pass
+				try:
+					shutil.rmtree(dest_folder + '/DSPH_Images')
+				except OSError as e:
+					#Directory does not exists. Ignoring
+					pass
 				shutil.copy("./resource/DSPH.py" , dest_folder)
 				shutil.copytree("./resource/DSPH_Images" , dest_folder + '/DSPH_Images')
 			elif 'linux' in system.lower():
@@ -59,6 +69,16 @@ def main():
 				if not os.path.isdir(dest_folder):
 					os.makedirs(dest_folder)
 				dprint(dest_folder)
+				try:
+					os.remove(dest_folder + 'DSPH.py')
+				except OSError as e:
+					#File does not exists. Ignoring
+					pass
+				try:
+					shutil.rmtree(dest_folder + '/DSPH_Images')
+				except OSError as e:
+					#Directory does not exists. Ignoring
+					pass
 				shutil.copy("./resource/DSPH.py" , dest_folder)
 				shutil.copytree("./resource/DSPH_Images" , dest_folder + '/DSPH_Images')
 			elif 'darwin' in system.lower():

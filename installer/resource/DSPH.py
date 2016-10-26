@@ -4,6 +4,9 @@ from PySide import QtGui, QtCore
 from datetime import datetime
 import os, sys, pickle, threading, math, webbrowser
 
+#Special vars
+version = 'v0.10a'
+
 print "Loading DualSPHysics for FreeCAD..."
 print "-----------------------------------"
 print "DualSPHysics for FreeCAD is a free macro/module for FreeCAD created to make case definition for DualSPHysics easier."
@@ -11,6 +14,15 @@ print "EPHYSLAB Environmental Physics Laboratory, Universidade de Vigo"
 print "School of Mechanical, Aerospace and Civil Engineering, University of Manchester."
 print "Developed by Andrés Vieira."
 print "-----------------------------------"
+
+#Version check. This script is only compatible with FreeCAD 0.16 or higher
+version_num = FreeCAD.Version()[0] + FreeCAD.Version()[1]
+if int(version_num) < int("016"):
+	exec_not_correct_dialog = QtGui.QMessageBox()
+	exec_not_correct_dialog.setText("This version of FreeCAD is not supported!. Install version 0.16 or higher.")
+	exec_not_correct_dialog.setIcon(QtGui.QMessageBox.Warning)
+	exec_not_correct_dialog.exec_()
+	exit(1)
 
 #Main data structure
 data = dict()
@@ -172,7 +184,7 @@ def set_default_data():
 	to introduce the software paths every time'''
 	if os.path.isfile(App.getUserAppDataDir()+'/dsph_data.dsphdata'):
 		try:
-			picklefile = open(App.getUserAppDataDir()+'/dsph_data.dsphdata', 'rb')
+			picklefile = open(App.	DataDir()+'/dsph_data.dsphdata', 'rb')
 			disk_data = pickle.load(picklefile)
 			data['gencase_path'] = disk_data['gencase_path']
 			data['dsphysics_path'] = disk_data['dsphysics_path']
@@ -236,7 +248,7 @@ if previous_dock:
 
 #Creation of the DSPH Widget
 dsph_dock.setObjectName("DSPH Widget")
-dsph_dock.setWindowTitle("DualSPHysics for FreeCAD v0.03")
+dsph_dock.setWindowTitle("DualSPHysics for FreeCAD " + str(version))
 
 def def_constants_window():
 	'''Defines the constants window creation and functonality'''
