@@ -1,5 +1,28 @@
 # -*- coding: utf-8 -*-
 
+'''
+Copyright (C) 2016 - Andrés Vieira (anvieiravazquez@gmail.com)
+EPHYSLAB Environmental Physics Laboratory, Universidade de Vigo
+
+This file is part of DualSPHysics for FreeCAD.
+
+DualSPHysics for FreeCAD is free software: you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation, either version 3 of the License, or
+(at your option) any later version.
+
+DualSPHysics for FreeCAD is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with DualSPHysics for FreeCAD.  If not, see <http://www.gnu.org/licenses/>.
+'''
+
+print "Copyright (C) 2016 - Andrés Vieira"
+print "EPHYSLAB Environmental Physics Laboratory, Universidade de Vigo"
+
 import sys, threading, shutil, platform, os
 from PySide import QtGui, QtCore
 
@@ -46,12 +69,10 @@ def main():
 			install_button.setEnabled(False)
 			install_button.setText('Installing...')
 			system = platform.system()
-			dprint(system)
 			if 'windows' in system.lower():
 				dest_folder = os.getenv('APPDATA') + '/FreeCAD/Macro'
 				if not os.path.isdir(dest_folder):
 					os.makedirs(dest_folder)
-				dprint(dest_folder)
 				try:
 					os.remove(dest_folder + 'DSPH.py')
 				except OSError as e:
@@ -68,7 +89,6 @@ def main():
 				dest_folder = os.path.expanduser('~') + '/.FreeCAD/Macro'
 				if not os.path.isdir(dest_folder):
 					os.makedirs(dest_folder)
-				dprint(dest_folder)
 				try:
 					os.remove(dest_folder + 'DSPH.py')
 				except OSError as e:

@@ -1,5 +1,25 @@
 # -*- coding: utf-8 -*-
 
+'''
+Copyright (C) 2016 - Andrés Vieira (anvieiravazquez@gmail.com)
+EPHYSLAB Environmental Physics Laboratory, Universidade de Vigo
+
+This file is part of DualSPHysics for FreeCAD.
+
+DualSPHysics for FreeCAD is free software: you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation, either version 3 of the License, or
+(at your option) any later version.
+
+DualSPHysics for FreeCAD is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with DualSPHysics for FreeCAD.  If not, see <http://www.gnu.org/licenses/>.
+'''
+
 from PySide import QtGui, QtCore
 from datetime import datetime
 import os, sys, pickle, threading, math, webbrowser, traceback
@@ -10,10 +30,24 @@ version = 'v0.10a'
 print "Loading DualSPHysics for FreeCAD..."
 print "-----------------------------------"
 print "DualSPHysics for FreeCAD is a free macro/module for FreeCAD created to make case definition for DualSPHysics easier."
+print "Copyright (C) 2016 - Andrés Vieira"
 print "EPHYSLAB Environmental Physics Laboratory, Universidade de Vigo"
-print "School of Mechanical, Aerospace and Civil Engineering, University of Manchester."
-print "Developed by Andrés Vieira."
 print "-----------------------------------"
+
+print "This file is part of DualSPHysics for FreeCAD."
+print ""
+print "DualSPHysics for FreeCAD is free software: you can redistribute it and/or modify"
+print "it under the terms of the GNU General Public License as published by"
+print "the Free Software Foundation, either version 3 of the License, or"
+print "(at your option) any later version."
+print ""
+print "DualSPHysics for FreeCAD is distributed in the hope that it will be useful,"
+print "but WITHOUT ANY WARRANTY; without even the implied warranty of"
+print "MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the"
+print "GNU General Public License for more details."
+print ""
+print "You should have received a copy of the GNU General Public License"
+print "along with DualSPHysics for FreeCAD.  If not, see <http://www.gnu.org/licenses/>."
 
 #Version check. This script is only compatible with FreeCAD 0.16 or higher
 version_num = FreeCAD.Version()[0] + FreeCAD.Version()[1]
@@ -37,7 +71,6 @@ scaff_widget = QtGui.QWidget() #Scaffolding widget, only useful to apply to the 
 #Check executables and see if they are the correct ones
 def check_executables():
 	execs_correct = True
-	print 'gencase path: ' + data["gencase_path"]
 	if os.path.isfile(data["gencase_path"]):
 		process = QtCore.QProcess(mw)
 		process.start(data["gencase_path"])
@@ -1030,7 +1063,7 @@ def def_execparams_window():
 	ep_main_layout.addLayout(dtini_layout)
 	ep_main_layout.addLayout(dtminauto_layout)
 	ep_main_layout.addLayout(dtmin_layout)
-	ep_main_layout.addLayout(dtallparticles_layout)
+	#ep_main_layout.addLayout(dtallparticles_layout)
 	ep_main_layout.addLayout(timemax_layout)
 	ep_main_layout.addLayout(timeout_layout)
 	ep_main_layout.addLayout(incz_layout)

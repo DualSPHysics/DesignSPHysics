@@ -19,3 +19,23 @@ Clone this repository and copy DSHP.py and DSPH_Images to FreeCAD macro director
 
 ## Where to get help
 You can check the [DualSPHysics for FreeCAD Wiki](http://dual.sphysics.org/wiki) to get help.
+
+## Copyright and License
+Copyright (C) 2016 - Andrés Vieira (anvieiravazquez@gmail.com)
+
+EPHYSLAB Environmental Physics Laboratory, Universidade de Vigo
+
+This file is part of DualSPHysics for FreeCAD.
+
+DualSPHysics for FreeCAD is free software: you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation, either version 3 of the License, or
+(at your option) any later version.
+
+DualSPHysics for FreeCAD is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with DualSPHysics for FreeCAD.  If not, see <http://www.gnu.org/licenses/>.
