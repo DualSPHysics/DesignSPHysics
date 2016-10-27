@@ -154,6 +154,8 @@ def set_default_data():
 	data['total_particles'] = -1
 	data['total_particles_out'] = 0
 	data['additional_parameters'] = ""
+	data["mkboundused"] = []
+	data["mkfluidused"] = []
 	
 	'''Dictionary that defines floatings. 
 	Keys are mks enabled (ONLY BOUNDS) and values are a list containing:
