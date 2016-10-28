@@ -2108,10 +2108,14 @@ def property2_change(index):
 		property1.setRange(0, 240)
 		selectiongui.ShapeColor = (0.80,0.80,0.80)
 		selectiongui.Transparency = 0
+		property4.setEnabled(True)
 	elif property2.itemText(index).lower() == "fluid":
 		property1.setRange(0, 10)
 		selectiongui.ShapeColor = (0.00,0.45,1.00)
 		selectiongui.Transparency = 30
+		if str(str(data['simobjects'][selection.Name][0])) in data["floating_mks"].keys():
+			data["floating_mks"].pop(str(data['simobjects'][selection.Name][0]), None)
+		property4.setEnabled(False)
 
 def property3_change(index):
 	'''Defines what happens when fill mode is changed'''
@@ -2459,14 +2463,6 @@ for item in mw.findChildren(QtGui.QTreeWidget):
 	if item.objectName() != "DSPH Objects":
 		trees.append(item)
 
-def up_clicked(row):
-	print "to be implemented. Reorder up on element " + str(row)
-	pass
-
-def down_clicked(row):
-	print "to be implemented. Reorder down on element " + str(row)
-	pass
-
 def on_tree_item_selection_change():
 	selection = FreeCADGui.Selection.getSelection()
 	objectNames = []
@@ -2514,18 +2510,12 @@ def on_tree_item_selection_change():
 						toChange.setCurrentIndex(1)
 						property1.setRange(0, 240)
 						propertylabel1.setText("   MKBound")
-				else:
-					if selection[0].TypeId == "App::DocumentObjectGroup" and "fillbox" in selection[0].Name.lower():
-						toChange.setEnabled(True)
-						if data['simobjects'][selection[0].Name][1].lower() == "fluid":
-							toChange.setCurrentIndex(0)
-							property1.setRange(0, 10)
-						elif data['simobjects'][selection[0].Name][1].lower() == "bound":
-							toChange.setCurrentIndex(1)
-							property1.setRange(0, 240)
-					else:
-						toChange.setCurrentIndex(1)
+				elif selection[0].TypeId == "App::DocumentObjectGroup" and "fillbox" in selection[0].Name.lower():
 						toChange.setEnabled(False)
+						toChange.setCurrentIndex(0)
+				else:
+					toChange.setCurrentIndex(1)
+					toChange.setEnabled(False)
 
 				toChange = property_table.cellWidget(2,1)
 				if selection[0].TypeId in temp_data["supported_types"]:
@@ -2541,7 +2531,15 @@ def on_tree_item_selection_change():
 				else:
 					toChange.setCurrentIndex(0)
 					toChange.setEnabled(False)
-				pass
+
+				#float state config
+				toChange = property_table.cellWidget(3,1)
+				if selection[0].TypeId in temp_data["supported_types"]:
+					if data['simobjects'][selection[0].Name][1].lower() == "fluid":
+						toChange.setEnabled(False)
+					else:
+						toChange.setEnabled(True)
+
 			else:
 				if selection[0].InList == []:
 					#Show button to add to simulation
@@ -2555,7 +2553,6 @@ def on_tree_item_selection_change():
 					addtodsph_button.show()
 					addtodsph_button.setEnabled(False)
 					removefromdsph_button.hide()
-				pass
 	else:
 		property_table.hide()
 		addtodsph_button.hide()
