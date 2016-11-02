@@ -22,17 +22,10 @@ along with DualSPHysics for FreeCAD.  If not, see <http://www.gnu.org/licenses/>
 
 from PySide import QtGui, QtCore
 from datetime import datetime
-import os, sys, pickle, threading, math, webbrowser, traceback
+import os, sys, pickle, threading, math, webbrowser, traceback, glob
 
 #Special vars
-version = 'v0.10a'
-
-print "Loading DualSPHysics for FreeCAD..."
-print "-----------------------------------"
-print "DualSPHysics for FreeCAD is a free macro/module for FreeCAD created to make case definition for DualSPHysics easier."
-print "Copyright (C) 2016 - Andrés Vieira"
-print "EPHYSLAB Environmental Physics Laboratory, Universidade de Vigo"
-print "-----------------------------------"
+version = 'v0.11a'
 
 print "This file is part of DualSPHysics for FreeCAD."
 print ""
@@ -48,6 +41,14 @@ print "GNU General Public License for more details."
 print ""
 print "You should have received a copy of the GNU General Public License"
 print "along with DualSPHysics for FreeCAD.  If not, see <http://www.gnu.org/licenses/>."
+print "-----------------------------------"
+print ""
+print "Loading DualSPHysics for FreeCAD..."
+print "-----------------------------------"
+print "DualSPHysics for FreeCAD is a free macro/module for FreeCAD created to make case definition for DualSPHysics easier."
+print "Copyright (C) 2016 - Andrés Vieira"
+print "EPHYSLAB Environmental Physics Laboratory, Universidade de Vigo"
+print "-----------------------------------"
 
 #Version check. This script is only compatible with FreeCAD 0.16 or higher
 version_num = FreeCAD.Version()[0] + FreeCAD.Version()[1]
@@ -187,6 +188,7 @@ def set_default_data():
 	data['total_particles'] = -1
 	data['total_particles_out'] = 0
 	data['additional_parameters'] = ""
+	data['export_options'] = ""
 	data["mkboundused"] = []
 	data["mkfluidused"] = []
 	
@@ -214,6 +216,8 @@ def set_default_data():
 	#Temporal data dict to control execution features.
 	temp_data['current_process'] = None
 	temp_data['stored_selection'] = []
+	temp_data['export_numparts'] = ""
+	temp_data['total_export_parts'] = -1
 	temp_data['supported_types'] = ["Part::Box", "Part::Sphere", "Part::Cylinder"]
 
 	'''Try to load saved paths. This way the user does not need
@@ -1347,6 +1351,7 @@ def on_new_case():
 	ex_button.setEnabled(False)
 	ex_additional.setEnabled(False)
 	export_button.setEnabled(False)
+	exportopts_button.setEnabled(False)
 	casecontrols_bt_addfillbox.setEnabled(True)
 	data['simobjects']['Case_Limits'] = ["mkspecial", "typespecial", "fillspecial"]
 	on_tree_item_selection_change()
@@ -1580,26 +1585,31 @@ def on_save_case():
 			process.start(data["gencase_path"], [data["project_path"]+"/"+data["project_name"]+"_Def", data["project_path"]+"/"+data["project_name"]+"_Out/"+data["project_name"], "-save:+all"])
 			process.waitForFinished()
 			output = str(process.readAllStandardOutput())
+			errorInGenCase = False
 			if str(process.exitCode()) == "0":
-				total_particles_text = output[output.index("Total particles: "):output.index(" (bound=")]
-				total_particles = int(total_particles_text[total_particles_text.index(": ") + 2:])
-				data['total_particles'] = total_particles
+				try:
+					total_particles_text = output[output.index("Total particles: "):output.index(" (bound=")]
+					total_particles = int(total_particles_text[total_particles_text.index(": ") + 2:])
+					data['total_particles'] = total_particles
 
-				print "Total number of particles exported: " + str(total_particles)
-				if total_particles < 300:
-					print "WARNING: Are you sure all the parameters are set right? The number of particles is very low (" + str(total_particles) + "). Lower the DP to increase number of particles"
-				elif total_particles > 200000:
-					print "WARNING: Number of particles is pretty high (" + str(total_particles) + ") and it could take a lot of time to simulate."
-				data["gencase_done"] = True
-				ex_selector_combo.setEnabled(True)
-				ex_button.setEnabled(True)
-				ex_additional.setEnabled(True)
-				gencase_infosave_dialog = QtGui.QMessageBox()
-				gencase_infosave_dialog.setText("Gencase exported " + str(total_particles) + " particles. Press View Details to check the output.\n")
-				gencase_infosave_dialog.setDetailedText(output.split("================================")[1])
-				gencase_infosave_dialog.setIcon(QtGui.QMessageBox.Information)
-				gencase_infosave_dialog.exec_()
-			else:
+					print "Total number of particles exported: " + str(total_particles)
+					if total_particles < 300:
+						print "WARNING: Are you sure all the parameters are set right? The number of particles is very low (" + str(total_particles) + "). Lower the DP to increase number of particles"
+					elif total_particles > 200000:
+						print "WARNING: Number of particles is pretty high (" + str(total_particles) + ") and it could take a lot of time to simulate."
+					data["gencase_done"] = True
+					ex_selector_combo.setEnabled(True)
+					ex_button.setEnabled(True)
+					ex_additional.setEnabled(True)
+					gencase_infosave_dialog = QtGui.QMessageBox()
+					gencase_infosave_dialog.setText("Gencase exported " + str(total_particles) + " particles. Press View Details to check the output.\n")
+					gencase_infosave_dialog.setDetailedText(output.split("================================")[1])
+					gencase_infosave_dialog.setIcon(QtGui.QMessageBox.Information)
+					gencase_infosave_dialog.exec_()
+				except ValueError as e:
+					errorInGenCase = True
+
+			if str(process.exitCode()) != "0" or errorInGenCase:
 				#Multiple causes
 				gencase_out_file = open(data["project_path"] + "/" + data["project_name"] + "_Out/" + data["project_name"] + ".out", "rb")
 				gencase_failed_dialog = QtGui.QMessageBox()
@@ -1675,8 +1685,10 @@ def on_load_case():
 	
 	if data["simulation_done"]:	
 		export_button.setEnabled(True)
+		exportopts_button.setEnabled(True)
 	else:
 		export_button.setEnabled(False)
+		exportopts_button.setEnabled(False)
 	casecontrols_bt_addfillbox.setEnabled(True)
 
 	os.chdir(data["project_path"])
@@ -1686,6 +1698,7 @@ def on_load_case():
 		ex_button.setEnabled(False)
 		ex_additional.setEnabled(False)
 		export_button.setEnabled(False)
+		exportopts_button.setEnabled(False)
 
 	on_tree_item_selection_change()
 
@@ -1776,6 +1789,7 @@ def on_ex_simulate():
 	ex_button.setEnabled(False)
 	ex_additional.setEnabled(False)
 	export_button.setEnabled(False)
+	exportopts_button.setEnabled(False)
 	run_button_cancel.setText("Cancel Simulation")
 	ex_selector_combo.setEnabled(False)
 	run_dialog.setWindowTitle("DualSPHysics Simulation: 0%")
@@ -1810,6 +1824,7 @@ def on_ex_simulate():
 		if exitCode == 0:
 			data["simulation_done"] = True
 			export_button.setEnabled(True)
+			exportopts_button.setEnabled(True)
 		else:
 			if "exception" in str(output).lower():
 				print "ERROR: Exception in execution."
@@ -1852,9 +1867,9 @@ def on_ex_simulate():
 					data["timemax"] = float(l.split("=")[1])
 
 		if "Part_" in run_file_data[-1]:
-			last_line_parttime = run_file_data[-1].split("      ")
+			last_line_parttime = run_file_data[-1].split(".")
 			if "Part_" in last_line_parttime[0]:
-				current_value = (float(last_line_parttime[1]) * float(100)) / float(data["timemax"])
+				current_value = (float(last_line_parttime[0].split(" ")[-1] + "." + last_line_parttime[1][:2]) * float(100)) / float(data["timemax"])
 				run_progbar_bar.setValue(current_value)
 				run_dialog.setWindowTitle("DualSPHysics Simulation: " +str(format(current_value, ".2f"))+ "%")
 				
@@ -1894,7 +1909,7 @@ def on_additional_parameters():
 	cancel_button = QtGui.QPushButton("Cancel")
 
 	def on_ok():
-		data['additional_parameters'] = paramintro_input.text()
+		data['additional_parameters'] = export_params.text()
 		additional_parameters_window.accept()
 
 	def on_cancel():
@@ -1903,22 +1918,22 @@ def on_additional_parameters():
 	ok_button.clicked.connect(on_ok)
 	cancel_button.clicked.connect(on_cancel)
 	#Button layout definition	
-	ap_button_layout = QtGui.QHBoxLayout()
-	ap_button_layout.addStretch(1)
-	ap_button_layout.addWidget(ok_button)
-	ap_button_layout.addWidget(cancel_button)
+	eo_button_layout = QtGui.QHBoxLayout()
+	eo_button_layout.addStretch(1)
+	eo_button_layout.addWidget(ok_button)
+	eo_button_layout.addWidget(cancel_button)
 
 	paramintro_layout = QtGui.QHBoxLayout()
 	paramintro_label = QtGui.QLabel("Additional Parameters: ")
-	paramintro_input = QtGui.QLineEdit()
-	paramintro_input.setText(data["additional_parameters"])
+	export_params = QtGui.QLineEdit()
+	export_params.setText(data["additional_parameters"])
 	paramintro_layout.addWidget(paramintro_label)
-	paramintro_layout.addWidget(paramintro_input)
+	paramintro_layout.addWidget(export_params)
 
 	additional_parameters_layout = QtGui.QVBoxLayout()
 	additional_parameters_layout.addLayout(paramintro_layout)
 	additional_parameters_layout.addStretch(1)
-	additional_parameters_layout.addLayout(ap_button_layout)
+	additional_parameters_layout.addLayout(eo_button_layout)
 
 	additional_parameters_window.setFixedSize(600,110)
 	additional_parameters_window.setLayout(additional_parameters_layout)	
@@ -1951,32 +1966,142 @@ ex_layout.addLayout(ex_button_layout)
 ex_separator = QtGui.QFrame()
 ex_separator.setFrameStyle(QtGui.QFrame.HLine)
 
+#Defines export window dialog
+export_dialog = QtGui.QDialog(None, QtCore.Qt.CustomizeWindowHint|QtCore.Qt.WindowTitleHint)
+
+export_dialog.setModal(False)
+export_dialog.setWindowTitle("Export to VTK: 0%")
+export_dialog.setFixedSize(550,143)
+export_dialog_layout = QtGui.QVBoxLayout()
+
+export_progbar_layout = QtGui.QHBoxLayout()
+export_progbar_bar = QtGui.QProgressBar()
+export_progbar_bar.setRange(0, 100)
+export_progbar_bar.setTextVisible(False)
+export_progbar_layout.addWidget(export_progbar_bar)
+
+export_button_layout = QtGui.QHBoxLayout()
+export_button_cancel = QtGui.QPushButton("Cancel Exporting")
+export_button_layout.addStretch(1)
+export_button_layout.addWidget(export_button_cancel)
+
+export_dialog_layout.addLayout(export_progbar_layout)
+export_dialog_layout.addLayout(export_button_layout)
+
+export_dialog.setLayout(export_dialog_layout)
+
 def on_export():
 	'''Export VTK button behaviour.
 	Launches a process while disabling the button.'''
 	temp_data["export_button"].setEnabled(False)
+	temp_data["exportopts_button"].setEnabled(False)
 	temp_data["export_button"].setText("Exporting...")
+
+	#Find total export parts
+	partfiles =  glob.glob(data["project_path"]+"/"+data["project_name"]+"_Out/" + "Part_*.bi4")
+	for filename in partfiles:
+		temp_data["total_export_parts"] = max(int(filename.split("Part_")[1].split(".bi4")[0]), temp_data["total_export_parts"])
+	export_progbar_bar.setRange(0, temp_data["total_export_parts"])
+	export_progbar_bar.setValue(0)
+
+	export_dialog.show()
+
+	def on_cancel():
+		print "DualSPHysics for FreeCAD: Stopping export"
+		if temp_data["current_export_process"] != None :
+			temp_data["current_export_process"].kill()
+		temp_data["export_button"].setText("Export data to VTK")
+		temp_data["export_button"].setEnabled(True)
+		temp_data["exportopts_button"].setEnabled(True)
+		export_dialog.hide()
+
+	export_button_cancel.clicked.connect(on_cancel)
 
 	def on_export_finished(exitCode):
 		temp_data["export_button"].setText("Export data to VTK")
 		temp_data["export_button"].setEnabled(True)
+		temp_data["exportopts_button"].setEnabled(True)
+		export_dialog.hide()
 
 	export_process = QtCore.QProcess(dsph_dock)
 	export_process.finished.connect(on_export_finished)
-	export_process.start(data["partvtk4_path"], ["-dirin "+data["project_path"]+"/"+data["project_name"]+"_Out/", "-savevtk "+data["project_path"]+"/"+data["project_name"]+"_Out/PartAll"])
+	static_params_exp = ["-dirin "+data["project_path"]+"/"+data["project_name"]+"_Out/", "-savevtk "+data["project_path"]+"/"+data["project_name"]+"_Out/PartAll"]
+	if len(data["export_options"]) < 2:
+		additional_params_exp = []
+	else:
+		additional_params_exp = data["additional_parameters"].split(" ")
+	#REVISAR ESTO
+	print data["export_options"]
 
+	final_params_exp = static_params_exp + additional_params_exp
+	export_process.start(data["partvtk4_path"], final_params_exp)
 	temp_data["current_export_process"] = export_process
+
+	def on_stdout_ready():
+		#update progress bar
+		current_output = str(temp_data["current_export_process"].readAllStandardOutput())
+		current_part = int(current_output.split("PartAll_")[1].split(".vtk")[0])
+		export_progbar_bar.setValue(current_part)
+		export_dialog.setWindowTitle("Export to VTK: " + str(current_part) + "/" + str(temp_data["total_export_parts"]))
+
+
+	temp_data["current_export_process"].readyReadStandardOutput.connect(on_stdout_ready)
+
+
+
+def on_exportopts():
+	export_options_window = QtGui.QDialog()
+	export_options_window.setWindowTitle("Export options")
+	ok_button = QtGui.QPushButton("Ok")
+	cancel_button = QtGui.QPushButton("Cancel")
+
+	def on_ok():
+		data['export_options'] = export_params.text()
+		export_options_window.accept()
+
+	def on_cancel():
+		export_options_window.reject()
+
+	ok_button.clicked.connect(on_ok)
+	cancel_button.clicked.connect(on_cancel)
+	#Button layout definition	
+	eo_button_layout = QtGui.QHBoxLayout()
+	eo_button_layout.addStretch(1)
+	eo_button_layout.addWidget(ok_button)
+	eo_button_layout.addWidget(cancel_button)
+
+	export_params_layout = QtGui.QHBoxLayout()
+	export_params_label = QtGui.QLabel("Export parameters: ")
+	export_params = QtGui.QLineEdit()
+	export_params.setText(data["export_options"])
+	export_params_layout.addWidget(export_params_label)
+	export_params_layout.addWidget(export_params)
+
+	export_options_layout = QtGui.QVBoxLayout()
+	export_options_layout.addLayout(export_params_layout)
+	export_options_layout.addStretch(1)
+	export_options_layout.addLayout(eo_button_layout)
+
+	export_options_window.setFixedSize(600,110)
+	export_options_window.setLayout(export_options_layout)	
+	export_options_window.exec_()
 
 #Export to VTK section scaffolding
 export_layout = QtGui.QVBoxLayout()
 export_label = QtGui.QLabel("This is the export section. Once a simulation is made, you can export to VTK the files generated by DualSPHysics. Press the button below to export")
 export_label.setWordWrap(True)
+export_buttons_layout = QtGui.QHBoxLayout()
 export_button = QtGui.QPushButton("Export data to VTK")
+exportopts_button = QtGui.QPushButton("Options")
 export_button.setToolTip("Exports the simulation data to VTK format.")
 export_button.clicked.connect(on_export)
+exportopts_button.clicked.connect(on_exportopts)
 temp_data["export_button"] = export_button
+temp_data["exportopts_button"] = exportopts_button
 export_layout.addWidget(export_label)
-export_layout.addWidget(export_button)
+export_buttons_layout.addWidget(export_button)
+export_buttons_layout.addWidget(exportopts_button)
+export_layout.addLayout(export_buttons_layout)
 
 export_separator = QtGui.QFrame()
 export_separator.setFrameStyle(QtGui.QFrame.HLine)
@@ -2035,6 +2160,7 @@ ex_selector_combo.setEnabled(False)
 ex_button.setEnabled(False)
 ex_additional.setEnabled(False)
 export_button.setEnabled(False)
+exportopts_button.setEnabled(False)
 
 '''You can't apply layouts to a QDockWidget, 
 so creating a standard widget, applying the layouts, 
@@ -2666,6 +2792,7 @@ def selection_monitor():
 			ex_additional.setEnabled(False)
 			ex_selector_combo.setEnabled(False)
 			export_button.setEnabled(False)
+			exportopts_button.setEnabled(False)
 			objectlist_table.setEnabled(False)
 			threading._sleep(2)
 			continue
