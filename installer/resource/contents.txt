@@ -1,1 +1,0 @@
-copy here DSPH.py file and DSPH_Images folder, along with the installer logo and icon

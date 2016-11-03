@@ -19,10 +19,9 @@ GNU General Public License for more details.
 You should have received a copy of the GNU General Public License
 along with DualSPHysics for FreeCAD.  If not, see <http://www.gnu.org/licenses/>.
 '''
-
+import sys, os, pickle, threading, math, webbrowser, traceback, glob, numpy
 from PySide import QtGui, QtCore
 from datetime import datetime
-import os, sys, pickle, threading, math, webbrowser, traceback, glob
 
 #Special vars
 version = 'v0.11a'
@@ -1306,6 +1305,10 @@ casecontrols_bt_addfillbox = QtGui.QPushButton("Add fillbox")
 casecontrols_bt_addfillbox.setToolTip("Adds a FillBox. A FillBox is able to fill an empty space\nwithin limits of geometry and a maximum bounding\nbox placed by the user.")
 casecontrols_bt_addfillbox.setEnabled(False)
 
+casecontrols_bt_addstl = QtGui.QPushButton("Import STL")
+casecontrols_bt_addstl.setToolTip("Imports a STL with postprocessing. This way you can set the scale of the imported object.")
+casecontrols_bt_addstl.setEnabled(False)
+
 def on_new_case():
 	'''Defines what happens when new case is clicked. Closes all documents
 	if possible and creates a FreeCAD document with Case Limits object.'''
@@ -1353,6 +1356,7 @@ def on_new_case():
 	export_button.setEnabled(False)
 	exportopts_button.setEnabled(False)
 	casecontrols_bt_addfillbox.setEnabled(True)
+	casecontrols_bt_addstl.setEnabled(True)
 	data['simobjects']['Case_Limits'] = ["mkspecial", "typespecial", "fillspecial"]
 	on_tree_item_selection_change()
 
@@ -1690,6 +1694,7 @@ def on_load_case():
 		export_button.setEnabled(False)
 		exportopts_button.setEnabled(False)
 	casecontrols_bt_addfillbox.setEnabled(True)
+	casecontrols_bt_addstl.setEnabled(True)
 
 	os.chdir(data["project_path"])
 	correct_execs = check_executables()
@@ -1720,11 +1725,21 @@ def on_add_fillbox():
 	App.ActiveDocument.recompute()
 	Gui.SendMsgToActiveView("ViewFit")
 
+def on_add_stl():
+	'''Add STL file. Opens a file opener and allows
+	the user to set parameters for the import process'''
+	#For now disabled
+	filedialog = QtGui.QFileDialog()
+	fileName, _ = filedialog.getOpenFileName(mw, "Select STL to import", QtCore.QDir.homePath(), "STL Files (*.stl)")
+	stl_mesh = mesh.Mesh.from_file(fileName)
+
 #Connect case control buttons
 casecontrols_bt_newdoc.clicked.connect(on_new_case)
 casecontrols_bt_savedoc.clicked.connect(on_save_case)
 casecontrols_bt_loaddoc.clicked.connect(on_load_case)
 casecontrols_bt_addfillbox.clicked.connect(on_add_fillbox)
+casecontrols_bt_addstl.clicked.connect(on_add_stl)
+
 
 #Defines case control scaffolding
 cclabel_layout.addWidget(casecontrols_label)
@@ -1732,6 +1747,8 @@ ccfilebuttons_layout.addWidget(casecontrols_bt_newdoc)
 ccfilebuttons_layout.addWidget(casecontrols_bt_savedoc)
 ccfilebuttons_layout.addWidget(casecontrols_bt_loaddoc)
 ccaddbuttons_layout.addWidget(casecontrols_bt_addfillbox)
+#TODO: Add custom STL Import
+#ccaddbuttons_layout.addWidget(casecontrols_bt_addstl)
 cc_layout.addLayout(cclabel_layout)
 cc_layout.addLayout(ccfilebuttons_layout)
 cc_layout.addLayout(ccaddbuttons_layout)
@@ -2030,8 +2047,6 @@ def on_export():
 		additional_params_exp = []
 	else:
 		additional_params_exp = data["additional_parameters"].split(" ")
-	#REVISAR ESTO
-	print data["export_options"]
 
 	final_params_exp = static_params_exp + additional_params_exp
 	export_process.start(data["partvtk4_path"], final_params_exp)
@@ -2788,6 +2803,7 @@ def selection_monitor():
 			constants_button.setEnabled(False)
 			execparams_button.setEnabled(False)
 			casecontrols_bt_addfillbox.setEnabled(False)
+			casecontrols_bt_addstl.setEnabled(False)
 			ex_button.setEnabled(False)
 			ex_additional.setEnabled(False)
 			ex_selector_combo.setEnabled(False)

@@ -86,6 +86,7 @@ def main():
 							#Directory does not exists. Ignoring
 							pass
 						shutil.copy("./resource/DSPH.py" , dest_folder)
+						shutil.copy("./resource/LICENSE" , dest_folder)
 						shutil.copytree("./resource/DSPH_Images" , dest_folder + '/DSPH_Images')
 					elif 'linux' in system.lower():
 						dest_folder = os.path.expanduser('~') + '/.FreeCAD/Macro'
@@ -102,6 +103,7 @@ def main():
 							#Directory does not exists. Ignoring
 							pass
 						shutil.copy("./resource/DSPH.py" , dest_folder)
+						shutil.copy("./resource/LICENSE" , dest_folder)
 						shutil.copytree("./resource/DSPH_Images" , dest_folder + '/DSPH_Images')
 					elif 'darwin' in system.lower():
 						#TODO: OS X not supported. spawn dialog
