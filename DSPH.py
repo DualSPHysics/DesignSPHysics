@@ -45,8 +45,8 @@ print ""
 print "Loading DualSPHysics for FreeCAD..."
 print "-----------------------------------"
 print "DualSPHysics for FreeCAD is a free macro/module for FreeCAD created to make case definition for DualSPHysics easier."
-print "Copyright (C) 2016 - Andrés Vieira"
-print "EPHYSLAB Environmental Physics Laboratory, Universidade de Vigo"
+print "DualSPHysics team."
+print "Copyright (C) 2016 - Andrés Vieira (Universidade de Vigo)"
 print "-----------------------------------"
 
 #Version check. This script is only compatible with FreeCAD 0.16 or higher
@@ -2201,7 +2201,7 @@ properties_widget.setWindowTitle("DSPH Object Properties")
 properties_scaff_widget = QtGui.QWidget() #Scaffolding widget, only useful to apply to the properties_dock widget
 
 property_widget_layout = QtGui.QVBoxLayout()
-property_table = QtGui.QTableWidget(4,2)
+property_table = QtGui.QTableWidget(5,2)
 property_table.setHorizontalHeaderLabels(["Property Name", "Value"])
 property_table.verticalHeader().setVisible(False)
 property_table.horizontalHeader().setResizeMode(QtGui.QHeaderView.Stretch)
@@ -2223,14 +2223,18 @@ propertylabel3 = QtGui.QLabel("   Fill mode")
 propertylabel3.setToolTip("Sets fill mode.\nFull: generates filling and external mesh.\nSolid: generates only filling.\nFace: generates only external mesh.\nWire: generates only external mesh polygon edges.")
 propertylabel4 = QtGui.QLabel("   Float state")
 propertylabel4.setToolTip("Sets floating state for this object MK.")
+propertylabel5 = QtGui.QLabel("   Initials")
+propertylabel5.setToolTip("Sets initials options for this object")
 propertylabel1.setAlignment(QtCore.Qt.AlignLeft)
 propertylabel2.setAlignment(QtCore.Qt.AlignLeft)
 propertylabel3.setAlignment(QtCore.Qt.AlignLeft)
 propertylabel4.setAlignment(QtCore.Qt.AlignLeft)
+propertylabel5.setAlignment(QtCore.Qt.AlignLeft)
 property_table.setCellWidget(0,0, propertylabel1)
 property_table.setCellWidget(1,0, propertylabel2)
 property_table.setCellWidget(2,0, propertylabel3)
 property_table.setCellWidget(3,0, propertylabel4)
+property_table.setCellWidget(4,0, propertylabel5)
 
 def property1_change(value):
 	'''Defines what happens when MKGroup is changed.'''
@@ -2528,15 +2532,17 @@ def property4_configure():
 		floating_velini_auto.setCheckState(QtCore.Qt.Checked)
 		floating_omegaini_auto.setCheckState(QtCore.Qt.Checked)
 
-
 	floatings_window.exec_()
 
+def property5_configure():
+	print 'not implemented'
 
 #Property change widgets
 property1 = QtGui.QSpinBox()
 property2 = QtGui.QComboBox()
 property3 = QtGui.QComboBox()
 property4 = QtGui.QPushButton("Configure")
+property5 = QtGui.QPushButton("Configure")
 property1.setRange(0, 240)
 property2.insertItems(0, ["Fluid", "Bound"])
 property3.insertItems(1, ["Full", "Solid", "Face", "Wire"])
@@ -2544,10 +2550,12 @@ property1.valueChanged.connect(property1_change)
 property2.currentIndexChanged.connect(property2_change)
 property3.currentIndexChanged.connect(property3_change)
 property4.clicked.connect(property4_configure)
+property5.clicked.connect(property5_configure)
 property_table.setCellWidget(0,1, property1)
 property_table.setCellWidget(1,1, property2)
 property_table.setCellWidget(2,1, property3)
 property_table.setCellWidget(3,1, property4)
+property_table.setCellWidget(4,1, property5)
 
 #Dock the widget to the left side of screen
 mw.addDockWidget(QtCore.Qt.LeftDockWidgetArea, properties_widget)
@@ -2735,9 +2743,12 @@ def on_tree_item_selection_change():
 
 		currentRow += 1
 	for each in objectsWithParent:
-		toDeleteKey = data["simobjects"].values().index(each)
-		data["simobjects"].pop(each, None)
-		data["export_order"].remove(toDeleteKey)
+		try:
+			data["simobjects"].pop(each, None)
+		except ValueError as e:
+			#Not in list, probably because now is part of a compound object
+			pass
+		data["export_order"].remove(each)
 
 for item in trees:
 	item.itemSelectionChanged.connect(on_tree_item_selection_change)
