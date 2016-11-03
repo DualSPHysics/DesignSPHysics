@@ -49,7 +49,7 @@ def main():
 	description_label = QtGui.QLabel('DualSPHysics for FreeCAD is a macro made for FreeCAD that allows the user to design case environments to use with DualSPHyisics.')
 	description_label.setWordWrap(True)
 	description_label.setAlignment(QtCore.Qt.AlignCenter)
-	credits_label = QtGui.QLabel("EPHYSLAB Environmental Physics Laboratory, Universidade de Vigo\nSchool of Mechanical, Aerospace and Civil Engineering, University of Manchester.\nDeveloped by Andrés Vieira.\n")
+	credits_label = QtGui.QLabel("DualSPHysics team.\nDeveloped by Andrés Vieira (Universidade de Vigo).\n")
 	credits_label.setWordWrap(True)
 	credits_label.setAlignment(QtCore.Qt.AlignCenter)
 	credits_label.setStyleSheet("font: 7pt;")
