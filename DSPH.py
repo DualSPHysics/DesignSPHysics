@@ -19,9 +19,11 @@ GNU General Public License for more details.
 You should have received a copy of the GNU General Public License
 along with DualSPHysics for FreeCAD.  If not, see <http://www.gnu.org/licenses/>.
 '''
+import FreeCAD, FreeCADGui
 import sys, os, pickle, threading, math, webbrowser, traceback, glob, numpy
 from PySide import QtGui, QtCore
 from datetime import datetime
+from dsphfc import utils, guiutils
 
 #Special vars
 version = 'v0.11a'
@@ -50,13 +52,9 @@ print "Copyright (C) 2016 - Andrés Vieira (Universidade de Vigo)"
 print "-----------------------------------"
 
 #Version check. This script is only compatible with FreeCAD 0.16 or higher
-version_num = FreeCAD.Version()[0] + FreeCAD.Version()[1]
-if int(version_num) < int("016"):
-	exec_not_correct_dialog = QtGui.QMessageBox()
-	exec_not_correct_dialog.setText("This version of FreeCAD is not supported!. Install version 0.16 or higher.")
-	exec_not_correct_dialog.setIcon(QtGui.QMessageBox.Warning)
-	exec_not_correct_dialog.exec_()
-	exit(1)
+is_compatible = utils.is_compatible_version()
+if not is_compatible:
+	raise EnvironmentError("This FreeCAD version is not compatible. Please update FreeCAD to version 0.16 or higher.")
 
 #Main data structure
 data = dict()
@@ -68,216 +66,22 @@ mw = FreeCADGui.getMainWindow()
 dsph_dock = QtGui.QDockWidget()
 scaff_widget = QtGui.QWidget() #Scaffolding widget, only useful to apply to the dsph_dock widget
 
-#Check executables and see if they are the correct ones
-def check_executables():
-	execs_correct = True
-	if os.path.isfile(data["gencase_path"]):
-		process = QtCore.QProcess(mw)
-		process.start(data["gencase_path"])
-		process.waitForFinished()
-		output = str(process.readAllStandardOutput())
-		if "gencase" in output[0:15].lower():
-			print "DualSPHysics for FreeCAD: Found correct GenCase."
-		else:
-			execs_correct = False
-			data["gencase_path"] = ""
-	else:
-		execs_correct = False
-		data["gencase_path"] = ""			
-
-	if os.path.isfile(data["dsphysics_path"]):
-		process = QtCore.QProcess(mw)
-		process.start(data["dsphysics_path"])
-		process.waitForFinished()
-		output = str(process.readAllStandardOutput())
-		if "dualsphysics" in output[0:20].lower():
-			print "DualSPHysics for FreeCAD: Found correct DualSPHysics."
-		else:
-			execs_correct = False
-			data["dsphysics_path"] = ""
-	else:
-		execs_correct = False
-		data["dsphysics_path"] = ""			
-
-	if os.path.isfile(data["partvtk4_path"]):
-		process = QtCore.QProcess(mw)
-		process.start(data["partvtk4_path"])
-		process.waitForFinished()
-		output = str(process.readAllStandardOutput())
-		if "partvtk4" in output[0:20].lower():
-			print "DualSPHysics for FreeCAD: Found correct PartVTK4."
-		else:
-			execs_correct = False	
-			data["partvtk4_path"] = ""
-	else:
-		execs_correct = False
-		data["partvtk4_path"] = ""			
-
-	if not execs_correct:
-		print "WARNING: One or more of the executables in the setup is not correct. Check plugin setup to fix missing binaries"
-		exec_not_correct_dialog = QtGui.QMessageBox()
-		exec_not_correct_dialog.setText("One or more of the executables in the setup is not correct. Check plugin setup to fix missing binaries.")
-		exec_not_correct_dialog.setIcon(QtGui.QMessageBox.Warning)
-		exec_not_correct_dialog.exec_()
-	return execs_correct
-
-def set_default_data():
-	'''Sets default data at start of the macro.'''
-	#Data relative to constant definition
-	data['lattice_bound'] = 1
-	data['lattice_fluid'] = 1
-	data['gravity'] = [0,0,-9.81]
-	data['rhop0'] = 1000
-	data['hswl'] = 0
-	data['hswl_auto'] = True
-	data['gamma'] = 7
-	data['speedsystem'] = 0
-	data['speedsystem_auto'] = True
-	data['coefsound'] = 20
-	data['speedsound'] = 0
-	data['speedsound_auto'] = True
-	data['coefh'] = 1
-	data['cflnumber'] = 0.2
-	data['h'] = 0
-	data['h_auto'] = True
-	data['b'] = 0
-	data['b_auto'] = True
-	data['massbound'] = 0
-	data['massbound_auto'] = True
-	data['massfluid'] = 0
-	data['massfluid_auto'] = True
-	data['dp'] = 0.0005
-
-	#Data relative to execution parameters
-	data['posdouble'] = 1	
-	data['stepalgorithm'] = 1	
-	data['verletsteps'] = 40	
-	data['kernel'] = 2	
-	data['viscotreatment'] = 1	
-	data['visco'] = 0.01	
-	data['viscoboundfactor'] = 1	
-	data['deltasph'] = 0	
-	data['shifting'] = 0	
-	data['shiftcoef'] = -2	
-	data['shifttfs'] = 1.5
-	data['rigidalgorithm'] = 1	
-	data['ftpause'] = 0.0	
-	data['coefdtmin'] = 0.05	
-	data['dtini'] = 0.0001	
-	data['dtini_auto'] = True	
-	data['dtmin'] = 0.00001	
-	data['dtmin_auto'] = True	
-	data['dtfixed'] = "DtFixed.dat"	
-	data['dtallparticles'] = 0	
-	data['timemax'] = 1.5	
-	data['timeout'] = 0.01	
-	data['incz'] = 1	
-	data['partsoutmax'] = 1	
-	data['rhopoutmin'] = 700	
-	data['rhopoutmax'] = 1300
-
-	#Stores paths to executables
-	data['gencase_path'] = ""
-	data['dsphysics_path'] = ""
-	data['partvtk4_path'] = ""
-
-	#Stores project path and name for future script needs
-	data['project_path'] = ""
-	data['project_name'] = "" 
-	data['total_particles'] = -1
-	data['total_particles_out'] = 0
-	data['additional_parameters'] = ""
-	data['export_options'] = ""
-	data["mkboundused"] = []
-	data["mkfluidused"] = []
-	
-	'''Dictionary that defines floatings. 
-	Keys are mks enabled (ONLY BOUNDS) and values are a list containing:
-	{'mkbound': [massrhop, center, inertia, velini, omegaini]}
-	massrhop = [selectedOption (index), value]
-	center = [auto (bool), x,y,z]
-	inertia = [auto (bool), x,y,z]
-	velini = [auto (bool), x,y,z]
-	omegaini = [auto (bool), x,y,z]'''
-	data['floating_mks'] = dict()
-
-	#Control data for enabling features
-	data['gencase_done'] = False
-	data['simulation_done'] = False
-
-	#Simulation objects with its parameters. Without order.
-	#format is: {'key': ['mk', 'type', 'fill']}
-	data['simobjects'] = dict()
-
-	#Keys of simobjects. Ordered.
-	data['export_order'] = []
-
-	#Temporal data dict to control execution features.
-	temp_data['current_process'] = None
-	temp_data['stored_selection'] = []
-	temp_data['export_numparts'] = ""
-	temp_data['total_export_parts'] = -1
-	temp_data['supported_types'] = ["Part::Box", "Part::Sphere", "Part::Cylinder"]
-
-	'''Try to load saved paths. This way the user does not need
-	to introduce the software paths every time'''
-	if os.path.isfile(App.getUserAppDataDir()+'/dsph_data.dsphdata'):
-		try:
-			picklefile = open(App.getUserAppDataDir()+'/dsph_data.dsphdata', 'rb')
-			disk_data = pickle.load(picklefile)
-			data['gencase_path'] = disk_data['gencase_path']
-			data['dsphysics_path'] = disk_data['dsphysics_path']
-			data['partvtk4_path'] = disk_data['partvtk4_path']
-		except:
-			traceback.print_exc()
-			data['gencase_path'] = ""
-			data['dsphysics_path'] = ""
-			data['partvtk4_path'] = ""
-	
-		print "DualSPHysics for FreeCAD: Found data file. Loading data from disk."
-		check_executables()
-	else:
-		data["project_path"] = "" 
-		data["project_name"] = ""
-
 #Executes the default data function the first time
-set_default_data()
-
+default_data, default_temp_data = utils.get_default_data()
+data.update(default_data)
+temp_data.update(default_temp_data)
 
 '''The script needs only one document open, called DSHP_Case.
 This section tries to close all the current documents.'''
-if len(App.listDocuments().keys()) > 0:
-	#Close all current documents.
-	openConfirmDialog = QtGui.QMessageBox()
-	openConfirmDialog.setText("DualSPHysics for FreeCAD")
-	openConfirmDialog.setInformativeText("To load this module you must close all current documents. Close all the documents?")
-	openConfirmDialog.setStandardButtons(QtGui.QMessageBox.Ok | QtGui.QMessageBox.Cancel)
-	openConfirmDialog.setDefaultButton(QtGui.QMessageBox.Ok)
-	openCDRet = openConfirmDialog.exec_()
-
-	if openCDRet == QtGui.QMessageBox.Ok:
+if len(FreeCAD.listDocuments().keys()) > 0:
+	user_selection = guiutils.ok_cancel_dialog("DualSPHysics for FreeCAD", "To load this module you must close all current documents. Close all the documents?")
+	if user_selection == QtGui.QMessageBox.Ok:
+		#Close all current documents.
 		print "DualSPHysics for FreeCAD: Closing all current documents"
-		for doc in App.listDocuments().keys():
-			App.closeDocument(doc)
+		for doc in FreeCAD.listDocuments().keys():
+			FreeCAD.closeDocument(doc)
 	else:
 		quit()
-
-def get_first_mk_not_used(type):
-	if type == "fluid":
-		endval = 10
-		mkset = set()
-		for key,value in data["simobjects"].iteritems():
-			if value[1].lower() == "fluid":
-				mkset.add(value[0])
-	else:
-		endval = 240
-		mkset = set()
-		for key,value in data["simobjects"].iteritems():
-			if value[1].lower() == "bound":
-				mkset.add(value[0])
-	for i in range(0, endval):
-		if i not in mkset:
-			return i
 
 #If the script is executed even when a previous DSHP Dock is created
 # it makes sure that it's deleted before
@@ -1137,10 +941,10 @@ def def_setup_window():
 		data['gencase_path'] = gencasepath_input.text()
 		data['dsphysics_path'] = dsphpath_input.text()
 		data['partvtk4_path'] = partvtk4path_input.text()
-		picklefile = open(App.getUserAppDataDir()+'/dsph_data.dsphdata', 'wb')
+		picklefile = open(FreeCAD.getUserAppDataDir()+'/dsph_data.dsphdata', 'wb')
 		pickle.dump(data, picklefile)
-		print "DualSPHysics for FreeCAD: Setup changed. Saved to "+App.getUserAppDataDir()+"/dsph_data.dsphdata"
-		state = check_executables()
+		print "DualSPHysics for FreeCAD: Setup changed. Saved to "+FreeCAD.getUserAppDataDir()+"/dsph_data.dsphdata"
+		data['gencase_path'], data['dsphysics_path'], data['partvtk4_path'], state = utils.check_executables(data['gencase_path'], data['dsphysics_path'], data['partvtk4_path'])
 		if not state:
 			ex_selector_combo.setEnabled(False)
 			ex_button.setEnabled(False)
@@ -1225,9 +1029,6 @@ def def_setup_window():
 	setup_window.resize(600,400)
 	ret_val = setup_window.exec_()
 
-def def_help():
-	webbrowser.open("http://dual.sphysics.org/gui/wiki/")
-
 #Main Widget layout. Vertical ordering
 main_layout = QtGui.QVBoxLayout()
 
@@ -1243,7 +1044,7 @@ constants_button.setToolTip("Use this button to define case constants,\nsuch as 
 constants_button.clicked.connect(def_constants_window)
 help_button = QtGui.QPushButton("Help")
 help_button.setToolTip("Push this button to open a browser with help\non how to use this tool.")
-help_button.clicked.connect(def_help)
+help_button.clicked.connect(utils.open_help)
 setup_button = QtGui.QPushButton("Setup Plugin")
 setup_button.setToolTip("Setup of the simulator executables")
 setup_button.clicked.connect(def_setup_window)
@@ -1258,7 +1059,7 @@ crucialvars_separator.setFrameStyle(QtGui.QFrame.HLine)
 
 #Logo layout related operations
 logo_label = QtGui.QLabel()
-logo_label.setPixmap(App.getUserAppDataDir() + "Macro/DSPH_Images/logo.png")
+logo_label.setPixmap(FreeCAD.getUserAppDataDir() + "Macro/DSPH_Images/logo.png")
 
 #DP introduction
 def on_dp_changed():
@@ -1290,15 +1091,15 @@ ccaddbuttons_layout = QtGui.QHBoxLayout()
 casecontrols_label = QtGui.QLabel("Use these controls to define the Case you want to simulate.")
 casecontrols_bt_newdoc = QtGui.QPushButton("  New Case")
 casecontrols_bt_newdoc.setToolTip("Creates a new case. \nThe current documents opened will be closed.")
-casecontrols_bt_newdoc.setIcon(QtGui.QIcon(App.getUserAppDataDir() + "Macro/DSPH_Images/new.png"));
+casecontrols_bt_newdoc.setIcon(QtGui.QIcon(FreeCAD.getUserAppDataDir() + "Macro/DSPH_Images/new.png"));
 casecontrols_bt_newdoc.setIconSize(QtCore.QSize(28,28));
 casecontrols_bt_savedoc = QtGui.QPushButton("  Save Case")
 casecontrols_bt_savedoc.setToolTip("Saves the case and executes GenCase over.\nIf GenCase fails or is not set up, only the case\nwill be saved.")
-casecontrols_bt_savedoc.setIcon(QtGui.QIcon(App.getUserAppDataDir() + "Macro/DSPH_Images/save.png"));
+casecontrols_bt_savedoc.setIcon(QtGui.QIcon(FreeCAD.getUserAppDataDir() + "Macro/DSPH_Images/save.png"));
 casecontrols_bt_savedoc.setIconSize(QtCore.QSize(28,28));
 casecontrols_bt_loaddoc = QtGui.QPushButton("  Load Case")
 casecontrols_bt_loaddoc.setToolTip("Loads a case from disk. All the current documents\nwill be closed.")
-casecontrols_bt_loaddoc.setIcon(QtGui.QIcon(App.getUserAppDataDir() + "Macro/DSPH_Images/load.png"));
+casecontrols_bt_loaddoc.setIcon(QtGui.QIcon(FreeCAD.getUserAppDataDir() + "Macro/DSPH_Images/load.png"));
 casecontrols_bt_loaddoc.setIconSize(QtCore.QSize(28,28));
 
 casecontrols_bt_addfillbox = QtGui.QPushButton("Add fillbox")
@@ -1312,7 +1113,7 @@ casecontrols_bt_addstl.setEnabled(False)
 def on_new_case():
 	'''Defines what happens when new case is clicked. Closes all documents
 	if possible and creates a FreeCAD document with Case Limits object.'''
-	if len(App.listDocuments().keys()) > 0:
+	if len(FreeCAD.listDocuments().keys()) > 0:
 		newConfirmDialog = QtGui.QMessageBox()
 		newConfirmDialog.setText("DualSPHysics for FreeCAD")
 		newConfirmDialog.setInformativeText("To make a new case you must close all the open documents. Close all the documents?")
@@ -1322,30 +1123,32 @@ def on_new_case():
 
 		if openCDRet == QtGui.QMessageBox.Ok:
 			print "DualSPHysics for FreeCAD: New File. Closing all documents..."
-			for doc in App.listDocuments().keys():
-				App.closeDocument(doc)
+			for doc in FreeCAD.listDocuments().keys():
+				FreeCAD.closeDocument(doc)
 		else:
 			return
 
-	App.newDocument("DSPH_Case")
-	App.setActiveDocument("DSPH_Case")
-	App.ActiveDocument=App.getDocument("DSPH_Case")
+	FreeCAD.newDocument("DSPH_Case")
+	FreeCAD.setActiveDocument("DSPH_Case")
+	FreeCAD.ActiveDocument=FreeCAD.getDocument("DSPH_Case")
 	Gui.ActiveDocument=Gui.getDocument("DSPH_Case")
 	Gui.activateWorkbench("PartWorkbench")
 	Gui.activeDocument().activeView().viewAxonometric()
-	App.ActiveDocument.addObject("Part::Box","Case_Limits")
-	App.ActiveDocument.getObject("Case_Limits").Label = "Case_Limits"
-	App.ActiveDocument.getObject("Case_Limits").Length = '15 mm'
-	App.ActiveDocument.getObject("Case_Limits").Width = '15 mm'
-	App.ActiveDocument.getObject("Case_Limits").Height = '15 mm'
-	App.ActiveDocument.getObject("Case_Limits").Placement = App.Placement(App.Vector(0,0,0),App.Rotation(App.Vector(0,0,1),0))
+	FreeCAD.ActiveDocument.addObject("Part::Box","Case_Limits")
+	FreeCAD.ActiveDocument.getObject("Case_Limits").Label = "Case_Limits"
+	FreeCAD.ActiveDocument.getObject("Case_Limits").Length = '15 mm'
+	FreeCAD.ActiveDocument.getObject("Case_Limits").Width = '15 mm'
+	FreeCAD.ActiveDocument.getObject("Case_Limits").Height = '15 mm'
+	FreeCAD.ActiveDocument.getObject("Case_Limits").Placement = FreeCAD.Placement(FreeCAD.Vector(0,0,0),FreeCAD.Rotation(FreeCAD.Vector(0,0,1),0))
 	Gui.ActiveDocument.getObject("Case_Limits").DisplayMode = "Wireframe"
 	Gui.ActiveDocument.getObject("Case_Limits").LineColor = (1.00,0.00,0.00)
 	Gui.ActiveDocument.getObject("Case_Limits").LineWidth = 2.00
 	Gui.ActiveDocument.getObject("Case_Limits").Selectable = False
-	App.ActiveDocument.recompute()
+	FreeCAD.ActiveDocument.recompute()
 	Gui.SendMsgToActiveView("ViewFit")
-	set_default_data()
+	default_data, default_temp_data = utils.get_default_data()
+	data.update(default_data)
+	temp_data.update(default_temp_data)
 	constants_button.setEnabled(True)
 	execparams_button.setEnabled(True)
 	casecontrols_bt_savedoc.setEnabled(True)
@@ -1381,7 +1184,7 @@ def on_save_case():
 
 		#Saves all the data in XML format.
 		print "DualSPHysics for FreeCAD: Saving data in " + data["project_path"] + "."
-		App.getDocument("DSPH_Case").saveAs(saveName+"/DSPH_Case.FCStd")
+		FreeCAD.getDocument("DSPH_Case").saveAs(saveName+"/DSPH_Case.FCStd")
 		Gui.SendMsgToActiveView("Save")
 		f = open(saveName+"/" + saveName.split('/')[-1]+ "_Def.xml", 'w')
 		f.write('<?xml version="1.0" encoding="UTF-8" ?>\n')
@@ -1407,8 +1210,8 @@ def on_save_case():
 		f.write('\t\t</mkconfig>\n')
 		f.write('\t\t<geometry>\n')
 		f.write('\t\t\t<definition dp="'+str(data['dp'])+'" comment="Initial inter-particle distance" units_comment="metres (m)">\n')
-		min_point = App.ActiveDocument.getObject("Case_Limits").Placement.Base
-		max_point = App.ActiveDocument.getObject("Case_Limits")
+		min_point = FreeCAD.ActiveDocument.getObject("Case_Limits").Placement.Base
+		max_point = FreeCAD.ActiveDocument.getObject("Case_Limits")
 		f.write('\t\t\t\t<pointmin x="'+str(min_point.x / 1000)+'" y="'+str(min_point.y / 1000)+'" z="'+str(min_point.z / 1000)+'" />\n')
 		f.write('\t\t\t\t<pointmax x="'+str(min_point.x / 1000 + max_point.Length.Value / 1000)+'" y="'+str(min_point.y / 1000 + max_point.Width.Value / 1000)+'" z="'+str(min_point.z / 1000 + max_point.Height.Value / 1000)+'" />\n')
 		f.write('\t\t\t</definition>\n')
@@ -1418,7 +1221,7 @@ def on_save_case():
 		for key in data["export_order"]:
 			name = key
 			valuelist = data["simobjects"][name]
-			o = App.getDocument("DSPH_Case").getObject(name)
+			o = FreeCAD.getDocument("DSPH_Case").getObject(name)
 			#Ignores case limits
 			if (name != "Case_Limits"):
 				#Sets MKfluid or bound depending on object properties and resets the matrix
@@ -1487,6 +1290,12 @@ def on_save_case():
 		f.write('\t\t\t\t</mainlist>\n')
 		f.write('\t\t\t</commands>\n')
 		f.write('\t\t</geometry>\n')
+		#Writes initials
+		if len(data["initials_mks"].keys()) > 0:
+			f.write('\t\t<initials>\n')
+			for key, value in data["initials_mks"].iteritems():
+				f.write('\t\t\t<velocity mkfluid="' + str(key) + '" x="' +str(value[0])+ '" y="' +str(value[1])+ '" z="' +str(value[2])+ '"/>\n')
+			f.write('\t\t</initials>\n')
 		#Writes floatings
 		if len(data["floating_mks"].keys()) > 0:
 			f.write('\t\t<floatings>\n')
@@ -1646,7 +1455,7 @@ def on_load_case():
 		return
 
 	#Tries to close all documents
-	if len(App.listDocuments().keys()) > 0:
+	if len(FreeCAD.listDocuments().keys()) > 0:
 		loadConfirmDialog = QtGui.QMessageBox()
 		loadConfirmDialog.setText("DualSPHysics for FreeCAD")
 		loadConfirmDialog.setInformativeText("To load a case you must close all the open documents. Close all the documents?")
@@ -1656,8 +1465,8 @@ def on_load_case():
 
 		if loadCDRet == QtGui.QMessageBox.Ok:
 			print "DualSPHysics for FreeCAD: Load File. Closing all documents..."
-			for doc in App.listDocuments().keys():
-				App.closeDocument(doc)
+			for doc in FreeCAD.listDocuments().keys():
+				FreeCAD.closeDocument(doc)
 		else:
 			return
 	
@@ -1697,7 +1506,7 @@ def on_load_case():
 	casecontrols_bt_addstl.setEnabled(True)
 
 	os.chdir(data["project_path"])
-	correct_execs = check_executables()
+	data['gencase_path'], data['dsphysics_path'], data['partvtk4_path'], correct_execs = utils.check_executables(data['gencase_path'], data['dsphysics_path'], data['partvtk4_path'])
 	if not correct_execs:
 		ex_selector_combo.setEnabled(False)
 		ex_button.setEnabled(False)
@@ -1712,17 +1521,17 @@ def on_add_fillbox():
 	in a group with 2 objects inside: a point and a box.
 	The point represents the fill seed and the box sets
 	the bounds for the filling'''
-	fillbox_gp = App.getDocument("DSPH_Case").addObject("App::DocumentObjectGroup","FillBox")
-	fillbox_point = App.ActiveDocument.addObject("Part::Sphere","FillPoint")
-	fillbox_limits = App.ActiveDocument.addObject("Part::Box","FillLimit")
+	fillbox_gp = FreeCAD.getDocument("DSPH_Case").addObject("App::DocumentObjectGroup","FillBox")
+	fillbox_point = FreeCAD.ActiveDocument.addObject("Part::Sphere","FillPoint")
+	fillbox_limits = FreeCAD.ActiveDocument.addObject("Part::Box","FillLimit")
 	fillbox_limits.ViewObject.DisplayMode = "Wireframe"
 	fillbox_limits.ViewObject.LineColor = (0.00,0.78,1.00)
 	fillbox_point.Radius.Value = 0.2
-	fillbox_point.Placement.Base = App.Vector(5,5,5)
+	fillbox_point.Placement.Base = FreeCAD.Vector(5,5,5)
 	fillbox_point.ViewObject.ShapeColor = (0.00,0.00,0.00)
 	fillbox_gp.addObject(fillbox_limits)
 	fillbox_gp.addObject(fillbox_point)
-	App.ActiveDocument.recompute()
+	FreeCAD.ActiveDocument.recompute()
 	Gui.SendMsgToActiveView("ViewFit")
 
 def on_add_stl():
@@ -2254,6 +2063,7 @@ def property2_change(index):
 		selectiongui.ShapeColor = (0.80,0.80,0.80)
 		selectiongui.Transparency = 0
 		property4.setEnabled(True)
+		property5.setEnabled(False)
 	elif property2.itemText(index).lower() == "fluid":
 		property1.setRange(0, 10)
 		selectiongui.ShapeColor = (0.00,0.45,1.00)
@@ -2261,6 +2071,7 @@ def property2_change(index):
 		if str(str(data['simobjects'][selection.Name][0])) in data["floating_mks"].keys():
 			data["floating_mks"].pop(str(data['simobjects'][selection.Name][0]), None)
 		property4.setEnabled(False)
+		property5.setEnabled(True)
 
 def property3_change(index):
 	'''Defines what happens when fill mode is changed'''
@@ -2535,7 +2346,101 @@ def property4_configure():
 	floatings_window.exec_()
 
 def property5_configure():
-	print 'not implemented'
+	'''Defines a window with floating properties.'''
+	initials_window = QtGui.QDialog()
+	initials_window.setWindowTitle("Initials configuration")
+	ok_button = QtGui.QPushButton("Ok")
+	cancel_button = QtGui.QPushButton("Cancel")
+	target_mk = int(data["simobjects"][FreeCADGui.Selection.getSelection()[0].Name][0])
+	def on_ok():
+		#TODO: Warn the user of changing all of this mks
+		if has_initials_selector.currentIndex() == 1:
+			#Initials false
+			if str(target_mk) in data["initials_mks"].keys():
+				data["initials_mks"].pop(str(target_mk), None)
+		else:
+			#Initials true
+			#Structure: {'mkfluid': [x, y, z]}
+			data["initials_mks"][str(target_mk)] = [float(initials_vector_input_x.text()), float(initials_vector_input_y.text()), float(initials_vector_input_z.text())]
+		initials_window.accept()
+
+	def on_cancel():
+		initials_window.reject()
+
+	def on_initials_change(index):
+		if index == 0:
+			initials_props_group.setEnabled(True)
+		else:
+			initials_props_group.setEnabled(False)
+
+	ok_button.clicked.connect(on_ok)
+	cancel_button.clicked.connect(on_cancel)
+
+	has_initials_layout = QtGui.QHBoxLayout()
+	has_initials_label = QtGui.QLabel("Set initials: ")
+	has_initials_label.setToolTip("Sets the current initial movement vector.")
+	has_initials_selector = QtGui.QComboBox()
+	has_initials_selector.insertItems(0, ["True", "False"])
+	has_initials_selector.currentIndexChanged.connect(on_initials_change)
+	has_initials_targetlabel = QtGui.QLabel("Target MKFluid: "+ str(target_mk))
+	has_initials_layout.addWidget(has_initials_label)
+	has_initials_layout.addWidget(has_initials_selector)
+	has_initials_layout.addStretch(1)
+	has_initials_layout.addWidget(has_initials_targetlabel)
+
+	initials_props_group = QtGui.QGroupBox("Initials properties")
+	initials_props_layout = QtGui.QVBoxLayout()
+	
+	initials_vector_layout = QtGui.QHBoxLayout()
+	initials_vector_label = QtGui.QLabel("Movement vector: ")
+	initials_vector_label.setToolTip("Sets the mk group movement vector.")
+	initials_vector_label_x = QtGui.QLabel("X")
+	initials_vector_input_x = QtGui.QLineEdit()
+	initials_vector_label_y = QtGui.QLabel("Y")
+	initials_vector_input_y = QtGui.QLineEdit()
+	initials_vector_label_z = QtGui.QLabel("Z")
+	initials_vector_input_z = QtGui.QLineEdit()
+	initials_vector_layout.addWidget(initials_vector_label)
+	initials_vector_layout.addWidget(initials_vector_label_x)
+	initials_vector_layout.addWidget(initials_vector_input_x)
+	initials_vector_layout.addWidget(initials_vector_label_y)
+	initials_vector_layout.addWidget(initials_vector_input_y)
+	initials_vector_layout.addWidget(initials_vector_label_z)
+	initials_vector_layout.addWidget(initials_vector_input_z)
+
+	initials_props_layout.addLayout(initials_vector_layout)
+	initials_props_layout.addStretch(1)
+	initials_props_group.setLayout(initials_props_layout)
+
+	buttons_layout = QtGui.QHBoxLayout()
+	buttons_layout.addStretch(1)
+	buttons_layout.addWidget(ok_button)
+	buttons_layout.addWidget(cancel_button)
+
+	initials_window_layout = QtGui.QVBoxLayout()
+	initials_window_layout.addLayout(has_initials_layout)
+	initials_window_layout.addWidget(initials_props_group)
+	initials_window_layout.addLayout(buttons_layout)
+
+	initials_window.setLayout(initials_window_layout)
+
+	if str(target_mk) in data["initials_mks"].keys():
+		has_initials_selector.setCurrentIndex(0)
+		on_initials_change(0)
+		initials_props_group.setEnabled(True)
+		initials_vector_input_x.setText(str(data["initials_mks"][str(target_mk)][0]))
+		initials_vector_input_y.setText(str(data["initials_mks"][str(target_mk)][1]))
+		initials_vector_input_z.setText(str(data["initials_mks"][str(target_mk)][2]))
+	else:
+		has_initials_selector.setCurrentIndex(1)
+		on_initials_change(1)
+		initials_props_group.setEnabled(False)
+		has_initials_selector.setCurrentIndex(1)
+		initials_vector_input_x.setText("0")
+		initials_vector_input_y.setText("0")
+		initials_vector_input_z.setText("0")
+	
+	initials_window.exec_()
 
 #Property change widgets
 property1 = QtGui.QSpinBox()
@@ -2576,13 +2481,13 @@ def add_object_to_sim():
 			continue
 		if item.Name not in data['simobjects'].keys():
 			if "fillbox" in item.Name.lower():
-				mktoput = get_first_mk_not_used("fluid")
+				mktoput = utils.get_first_mk_not_used("fluid", data)
 				if not mktoput:
 					mktoput = 0
 				data['simobjects'][item.Name] = [mktoput, 'fluid', 'full']
 				data["mkfluidused"].append(mktoput)
 			else:
-				mktoput = get_first_mk_not_used("bound")
+				mktoput = utils.get_first_mk_not_used("bound", data)
 				if not mktoput:
 					mktoput = 0
 				data['simobjects'][item.Name] = [mktoput, 'bound', 'full']
@@ -2615,7 +2520,7 @@ for item in mw.findChildren(QtGui.QTreeWidget):
 def on_tree_item_selection_change():
 	selection = FreeCADGui.Selection.getSelection()
 	objectNames = []
-	for item in App.getDocument("DSPH_Case").Objects:
+	for item in FreeCAD.getDocument("DSPH_Case").Objects:
 		objectNames.append(item.Name)
 	
 	#Detect object deletion
@@ -2718,7 +2623,7 @@ def on_tree_item_selection_change():
 	currentRow = 0
 	objectsWithParent = []
 	for key in data["export_order"]:
-		contextObject = App.getDocument("DSPH_Case").getObject(key)
+		contextObject = FreeCAD.getDocument("DSPH_Case").getObject(key)
 		if not contextObject:
 			data["export_order"].remove(key)
 			continue
