@@ -27,116 +27,116 @@ import sys, threading, shutil, platform, os
 from PySide import QtGui, QtCore
 
 def dprint(string):
-	print ">>>Debug: " + str(string)
+    print ">>>Debug: " + str(string)
 
 def main():
-	app = QtGui.QApplication(sys.argv)
+    app = QtGui.QApplication(sys.argv)
 
-	w = QtGui.QDialog()
-	QtCore.QTextCodec.setCodecForCStrings(QtCore.QTextCodec.codecForName('UTF-8'))
-	w.setFixedSize(400, 500)
+    w = QtGui.QDialog()
+    QtCore.QTextCodec.setCodecForCStrings(QtCore.QTextCodec.codecForName('UTF-8'))
+    w.setFixedSize(400, 500)
 
-	w.setWindowFlags(QtCore.Qt.Dialog)
-	w.setWindowTitle('DSPH for FreeCAD Installer')
-	
-	main_layout = QtGui.QVBoxLayout()
-	main_layout.setContentsMargins(0,0,0,0)
-	image_label = QtGui.QLabel()
-	image_label.setPixmap("./resource/installer-image.png")
-	
-	install_layout = QtGui.QVBoxLayout()
-	install_layout.setContentsMargins(10,10,10,10)
-	description_label = QtGui.QLabel('DualSPHysics for FreeCAD is a macro made for FreeCAD that allows the user to design case environments to use with DualSPHyisics.')
-	description_label.setWordWrap(True)
-	description_label.setAlignment(QtCore.Qt.AlignCenter)
-	credits_label = QtGui.QLabel("DualSPHysics team.\nDeveloped by Andrés Vieira (Universidade de Vigo).\n")
-	credits_label.setWordWrap(True)
-	credits_label.setAlignment(QtCore.Qt.AlignCenter)
-	credits_label.setStyleSheet("font: 7pt;")
-	install_button_layout = QtGui.QHBoxLayout()
-	install_button = QtGui.QPushButton('Install')
-	install_button_layout.addStretch(1)
-	install_button_layout.addWidget(install_button)
-	install_button_layout.addStretch(1)
+    w.setWindowFlags(QtCore.Qt.Dialog)
+    w.setWindowTitle('DSPH for FreeCAD Installer')
+    
+    main_layout = QtGui.QVBoxLayout()
+    main_layout.setContentsMargins(0,0,0,0)
+    image_label = QtGui.QLabel()
+    image_label.setPixmap("./resource/installer-image.png")
+    
+    install_layout = QtGui.QVBoxLayout()
+    install_layout.setContentsMargins(10,10,10,10)
+    description_label = QtGui.QLabel('DualSPHysics for FreeCAD is a macro made for FreeCAD that allows the user to design case environments to use with DualSPHyisics.')
+    description_label.setWordWrap(True)
+    description_label.setAlignment(QtCore.Qt.AlignCenter)
+    credits_label = QtGui.QLabel("DualSPHysics team.\nDeveloped by Andrés Vieira (Universidade de Vigo).\n")
+    credits_label.setWordWrap(True)
+    credits_label.setAlignment(QtCore.Qt.AlignCenter)
+    credits_label.setStyleSheet("font: 7pt;")
+    install_button_layout = QtGui.QHBoxLayout()
+    install_button = QtGui.QPushButton('Install')
+    install_button_layout.addStretch(1)
+    install_button_layout.addWidget(install_button)
+    install_button_layout.addStretch(1)
 
-	install_layout.addWidget(description_label)
-	install_layout.addStretch(1)
-	install_layout.addWidget(credits_label)
-	install_layout.addLayout(install_button_layout)
+    install_layout.addWidget(description_label)
+    install_layout.addStretch(1)
+    install_layout.addWidget(credits_label)
+    install_layout.addLayout(install_button_layout)
 
-	def on_install():
-		def threadfunc():
-			install_button.setEnabled(False)
-			install_button.setText('Installing...')
-			system = platform.system()
-			try:
-				if os.path.isdir("./resource/DSPH_Images") and os.path.isfile("./resource/DSPH.py"):
-					if 'windows' in system.lower():
-						dest_folder = os.getenv('APPDATA') + '/FreeCAD/Macro'
-						if not os.path.isdir(dest_folder):
-							os.makedirs(dest_folder)
-						try:
-							os.remove(dest_folder + 'DSPH.py')
-						except OSError as e:
-							#File does not exists. Ignoring
-							pass
-						try:
-							shutil.rmtree(dest_folder + '/DSPH_Images')
-						except OSError as e:
-							#Directory does not exists. Ignoring
-							pass
-						shutil.copy("./resource/DSPH.py" , dest_folder)
-						shutil.copy("./resource/LICENSE" , dest_folder)
-						shutil.copytree("./resource/DSPH_Images" , dest_folder + '/DSPH_Images')
-					elif 'linux' in system.lower():
-						dest_folder = os.path.expanduser('~') + '/.FreeCAD/Macro'
-						if not os.path.isdir(dest_folder):
-							os.makedirs(dest_folder)
-						try:
-							os.remove(dest_folder + 'DSPH.py')
-						except OSError as e:
-							#File does not exists. Ignoring
-							pass
-						try:
-							shutil.rmtree(dest_folder + '/DSPH_Images')
-						except OSError as e:
-							#Directory does not exists. Ignoring
-							pass
-						shutil.copy("./resource/DSPH.py" , dest_folder)
-						shutil.copy("./resource/LICENSE" , dest_folder)
-						shutil.copytree("./resource/DSPH_Images" , dest_folder + '/DSPH_Images')
-					elif 'darwin' in system.lower():
-						#TODO: OS X not supported. spawn dialog
-						pass
-					else:
-						pass
+    def on_install():
+        def threadfunc():
+            install_button.setEnabled(False)
+            install_button.setText('Installing...')
+            system = platform.system()
+            try:
+                if os.path.isdir("./resource/DSPH_Images") and os.path.isfile("./resource/DSPH.py"):
+                    if 'windows' in system.lower():
+                        dest_folder = os.getenv('APPDATA') + '/FreeCAD/Macro'
+                        if not os.path.isdir(dest_folder):
+                            os.makedirs(dest_folder)
+                        try:
+                            os.remove(dest_folder + 'DSPH.py')
+                        except OSError as e:
+                            #File does not exists. Ignoring
+                            pass
+                        try:
+                            shutil.rmtree(dest_folder + '/DSPH_Images')
+                        except OSError as e:
+                            #Directory does not exists. Ignoring
+                            pass
+                        shutil.copy("./resource/DSPH.py" , dest_folder)
+                        shutil.copy("./resource/LICENSE" , dest_folder)
+                        shutil.copytree("./resource/DSPH_Images" , dest_folder + '/DSPH_Images')
+                    elif 'linux' in system.lower():
+                        dest_folder = os.path.expanduser('~') + '/.FreeCAD/Macro'
+                        if not os.path.isdir(dest_folder):
+                            os.makedirs(dest_folder)
+                        try:
+                            os.remove(dest_folder + 'DSPH.py')
+                        except OSError as e:
+                            #File does not exists. Ignoring
+                            pass
+                        try:
+                            shutil.rmtree(dest_folder + '/DSPH_Images')
+                        except OSError as e:
+                            #Directory does not exists. Ignoring
+                            pass
+                        shutil.copy("./resource/DSPH.py" , dest_folder)
+                        shutil.copy("./resource/LICENSE" , dest_folder)
+                        shutil.copytree("./resource/DSPH_Images" , dest_folder + '/DSPH_Images')
+                    elif 'darwin' in system.lower():
+                        #TODO: OS X not supported. spawn dialog
+                        pass
+                    else:
+                        pass
 
-					#Installation completed
-					install_button.setText('Installed!')
-					install_success_dialog = QtGui.QMessageBox()
-					install_success_dialog.setText("DualSPHysics for FreeCAD installed correctly.")
-					install_success_dialog.setIcon(QtGui.QMessageBox.Information)
-					install_success_dialog.exec_()
-				else:
-					raise Exception('DSPH_Images or DSPH.py are not in the resource folder.')
-			except Exception as e:
-				#Something failed, show error
-				install_button.setText('ERROR :(')
-				install_failed_dialog = QtGui.QMessageBox()
-				install_failed_dialog.setText("DualSPHysics for FreeCAD encountered an error while installing. Click on view details for more info.")
-				install_failed_dialog.setDetailedText("Exception " + str(e.__class__.__name__) + " encountered.\nError message: " + str(e))
-				install_failed_dialog.setIcon(QtGui.QMessageBox.Critical)
-				install_failed_dialog.exec_()
-		
-		installthread = threading.Thread(target=threadfunc)
-		installthread.start()
+                    #Installation completed
+                    install_button.setText('Installed!')
+                    install_success_dialog = QtGui.QMessageBox()
+                    install_success_dialog.setText("DualSPHysics for FreeCAD installed correctly.")
+                    install_success_dialog.setIcon(QtGui.QMessageBox.Information)
+                    install_success_dialog.exec_()
+                else:
+                    raise Exception('DSPH_Images or DSPH.py are not in the resource folder.')
+            except Exception as e:
+                #Something failed, show error
+                install_button.setText('ERROR :(')
+                install_failed_dialog = QtGui.QMessageBox()
+                install_failed_dialog.setText("DualSPHysics for FreeCAD encountered an error while installing. Click on view details for more info.")
+                install_failed_dialog.setDetailedText("Exception " + str(e.__class__.__name__) + " encountered.\nError message: " + str(e))
+                install_failed_dialog.setIcon(QtGui.QMessageBox.Critical)
+                install_failed_dialog.exec_()
+        
+        installthread = threading.Thread(target=threadfunc)
+        installthread.start()
 
-	install_button.clicked.connect(on_install)
-	main_layout.addWidget(image_label)
-	main_layout.addLayout(install_layout)
-	w.setLayout(main_layout)
-	w.show()
-	sys.exit(app.exec_())
+    install_button.clicked.connect(on_install)
+    main_layout.addWidget(image_label)
+    main_layout.addLayout(install_layout)
+    w.setLayout(main_layout)
+    w.show()
+    sys.exit(app.exec_())
 
 if __name__ == '__main__':
-	main()
+    main()
