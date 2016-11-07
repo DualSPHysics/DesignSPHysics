@@ -20,9 +20,11 @@ You should have received a copy of the GNU General Public License
 along with DualSPHysics for FreeCAD.  If not, see <http://www.gnu.org/licenses/>.
 '''
 
-import FreeCAD, FreeCADGui, os, guiutils, traceback, pickle, webbrowser
-import utils
+import FreeCAD, FreeCADGui
+import sys, os, pickle, threading, math, webbrowser, traceback, glob, numpy
 from PySide import QtGui, QtCore
+from datetime import datetime
+import utils
 
 def warning_dialog(warn_text):
     '''Spawns a warning dialog with the text passed.'''
