@@ -71,45 +71,51 @@ def main():
             system = platform.system()
             try:
                 if os.path.isdir("./resource/DSPH_Images") and os.path.isfile("./resource/DSPH.py"):
+
+                    #Set the directory depending on the system.
                     if 'windows' in system.lower():
                         dest_folder = os.getenv('APPDATA') + '/FreeCAD/Macro'
-                        if not os.path.isdir(dest_folder):
-                            os.makedirs(dest_folder)
-                        try:
-                            os.remove(dest_folder + 'DSPH.py')
-                        except OSError as e:
-                            #File does not exists. Ignoring
-                            pass
-                        try:
-                            shutil.rmtree(dest_folder + '/DSPH_Images')
-                        except OSError as e:
-                            #Directory does not exists. Ignoring
-                            pass
-                        shutil.copy("./resource/DSPH.py" , dest_folder)
-                        shutil.copy("./resource/LICENSE" , dest_folder)
-                        shutil.copytree("./resource/DSPH_Images" , dest_folder + '/DSPH_Images')
                     elif 'linux' in system.lower():
                         dest_folder = os.path.expanduser('~') + '/.FreeCAD/Macro'
-                        if not os.path.isdir(dest_folder):
-                            os.makedirs(dest_folder)
-                        try:
-                            os.remove(dest_folder + 'DSPH.py')
-                        except OSError as e:
-                            #File does not exists. Ignoring
-                            pass
-                        try:
-                            shutil.rmtree(dest_folder + '/DSPH_Images')
-                        except OSError as e:
-                            #Directory does not exists. Ignoring
-                            pass
-                        shutil.copy("./resource/DSPH.py" , dest_folder)
-                        shutil.copy("./resource/LICENSE" , dest_folder)
-                        shutil.copytree("./resource/DSPH_Images" , dest_folder + '/DSPH_Images')
-                    elif 'darwin' in system.lower():
-                        #TODO: OS X not supported. spawn dialog
-                        pass
                     else:
+                        #Operating system not supported
+                        install_button.setText('ERROR :(')
+                        install_failed_dialog = QtGui.QMessageBox()
+                        install_failed_dialog.setText("DualSPHysics for FreeCAD encountered an error while installing. Click on view details for more info.")
+                        install_failed_dialog.setDetailedText("Operating system not supported: " + str(system))
+                        install_failed_dialog.setIcon(QtGui.QMessageBox.Critical)
+                        install_failed_dialog.exec_()
+                        sys.exit(1)
+
+                    #Try to remove previous files
+                    if not os.path.isdir(dest_folder):
+                        os.makedirs(dest_folder)
+                    try:
+                        os.remove(dest_folder + 'DSPH.py')
+                    except OSError as e:
+                        #File does not exists. Ignoring
                         pass
+                    try:
+                        os.remove(dest_folder + 'LICENSE')
+                    except OSError as e:
+                        #File does not exists. Ignoring
+                        pass
+                    try:
+                        shutil.rmtree(dest_folder + '/DSPH_Images')
+                    except OSError as e:
+                        #Directory does not exists. Ignoring
+                        pass
+                    try:
+                        shutil.rmtree(dest_folder + '/dsphfc')
+                    except OSError as e:
+                        #Directory does not exists. Ignoring
+                        pass
+
+                    #Copy new files
+                    shutil.copy("./resource/DSPH.py" , dest_folder)
+                    shutil.copy("./resource/LICENSE" , dest_folder)
+                    shutil.copytree("./resource/DSPH_Images" , dest_folder + '/DSPH_Images')
+                    shutil.copytree("./resource/dsphfc" , dest_folder + '/dsphfc')
 
                     #Installation completed
                     install_button.setText('Installed!')
@@ -117,6 +123,7 @@ def main():
                     install_success_dialog.setText("DualSPHysics for FreeCAD installed correctly.")
                     install_success_dialog.setIcon(QtGui.QMessageBox.Information)
                     install_success_dialog.exec_()
+                    sys.exit(0)
                 else:
                     raise Exception('DSPH_Images or DSPH.py are not in the resource folder.')
             except Exception as e:
@@ -127,6 +134,8 @@ def main():
                 install_failed_dialog.setDetailedText("Exception " + str(e.__class__.__name__) + " encountered.\nError message: " + str(e))
                 install_failed_dialog.setIcon(QtGui.QMessageBox.Critical)
                 install_failed_dialog.exec_()
+                sys.exit(0)
+
         
         installthread = threading.Thread(target=threadfunc)
         installthread.start()
