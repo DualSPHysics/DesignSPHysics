@@ -36,8 +36,9 @@ if not is_compatible:
     raise EnvironmentError("This FreeCAD version is not compatible. Please update FreeCAD to version 0.16 or higher.")
 
 ''' Main data structure '''
-data = dict()
-temp_data = dict()
+data = dict() # Used to save on disk case parameters and related data
+temp_data = dict() # Used to store temporal useful items (like processes)
+widget_state_elements = dict() #Used to store widgets that will be disabled/enabled, so they are centralized
 
 ''' Establishing references for the different elements that
     the script will use later. '''
@@ -83,6 +84,7 @@ constants_label.setWordWrap(True)
 constants_button = QtGui.QPushButton("Define Constants")
 constants_button.setToolTip("Use this button to define case constants,\nsuch as lattice, gravity or fluid reference density.")
 constants_button.clicked.connect(lambda: guiutils.def_constants_window(data))
+widget_state_elements["constants_button"] = constants_button
 help_button = QtGui.QPushButton("Help")
 help_button.setToolTip("Push this button to open a browser with help\non how to use this tool.")
 help_button.clicked.connect(utils.open_help)
@@ -92,6 +94,7 @@ setup_button.clicked.connect(lambda: guiutils.def_setup_window(data))
 execparams_button = QtGui.QPushButton("Execution Parameters")
 execparams_button.setToolTip("Change execution parameters, such as\ntime of simulation, viscosity, etc.")
 execparams_button.clicked.connect(lambda: guiutils.def_execparams_window(data))
+widget_state_elements["execparams_button"] = execparams_button
 constants_separator = QtGui.QFrame()
 constants_separator.setFrameStyle(QtGui.QFrame.HLine)
 crucialvars_separator = QtGui.QFrame()
@@ -112,6 +115,7 @@ dp_label2 = QtGui.QLabel(" meters")
 dp_input.setMaxLength(10)
 dp_input.setText(str(data["dp"]))
 dp_input.textChanged.connect(on_dp_changed)
+widget_state_elements["dp_input"] = dp_input
 dp_validator = QtGui.QDoubleValidator(0.0, 100, 8, dp_input)
 dp_input.setValidator(dp_validator)
 dp_layout.addWidget(dp_label)
@@ -133,6 +137,7 @@ casecontrols_bt_savedoc = QtGui.QPushButton("  Save Case")
 casecontrols_bt_savedoc.setToolTip("Saves the case and executes GenCase over.\nIf GenCase fails or is not set up, only the case\nwill be saved.")
 casecontrols_bt_savedoc.setIcon(QtGui.QIcon(FreeCAD.getUserAppDataDir() + "Macro/DSPH_Images/save.png"));
 casecontrols_bt_savedoc.setIconSize(QtCore.QSize(28,28));
+widget_state_elements["casecontrols_bt_savedoc"] = casecontrols_bt_savedoc
 casecontrols_bt_loaddoc = QtGui.QPushButton("  Load Case")
 casecontrols_bt_loaddoc.setToolTip("Loads a case from disk. All the current documents\nwill be closed.")
 casecontrols_bt_loaddoc.setIcon(QtGui.QIcon(FreeCAD.getUserAppDataDir() + "Macro/DSPH_Images/load.png"));
@@ -140,9 +145,11 @@ casecontrols_bt_loaddoc.setIconSize(QtCore.QSize(28,28));
 casecontrols_bt_addfillbox = QtGui.QPushButton("Add fillbox")
 casecontrols_bt_addfillbox.setToolTip("Adds a FillBox. A FillBox is able to fill an empty space\nwithin limits of geometry and a maximum bounding\nbox placed by the user.")
 casecontrols_bt_addfillbox.setEnabled(False)
+widget_state_elements["casecontrols_bt_addfillbox"] = casecontrols_bt_addfillbox
 casecontrols_bt_addstl = QtGui.QPushButton("Import STL")
 casecontrols_bt_addstl.setToolTip("Imports a STL with postprocessing. This way you can set the scale of the imported object.")
 casecontrols_bt_addstl.setEnabled(False)
+widget_state_elements["casecontrols_bt_addstl"] = casecontrols_bt_addstl
 
 def on_new_case():
     ''' Defines what happens when new case is clicked. Closes all documents
@@ -156,17 +163,7 @@ def on_new_case():
     default_data, default_temp_data = utils.get_default_data()
     data.update(default_data)
     temp_data.update(default_temp_data)
-    constants_button.setEnabled(True)
-    execparams_button.setEnabled(True)
-    casecontrols_bt_savedoc.setEnabled(True)
-    dp_input.setEnabled(True)
-    ex_selector_combo.setEnabled(False)
-    ex_button.setEnabled(False)
-    ex_additional.setEnabled(False)
-    export_button.setEnabled(False)
-    exportopts_button.setEnabled(False)
-    casecontrols_bt_addfillbox.setEnabled(True)
-    casecontrols_bt_addstl.setEnabled(True)
+    guiutils.widget_state_config(widget_state_elements, "new case")
     data['simobjects']['Case_Limits'] = ["mkspecial", "typespecial", "fillspecial"]
     on_tree_item_selection_change()
 
@@ -244,9 +241,7 @@ def on_save_case():
                     elif total_particles > 200000:
                         print "WARNING: Number of particles is pretty high (" + str(total_particles) + ") and it could take a lot of time to simulate."
                     data["gencase_done"] = True
-                    ex_selector_combo.setEnabled(True)
-                    ex_button.setEnabled(True)
-                    ex_additional.setEnabled(True)
+                    guiutils.widget_state_config(widget_state_elements, "gencase done")
                     gencase_infosave_dialog = QtGui.QMessageBox()
                     gencase_infosave_dialog.setText("Gencase exported " + str(total_particles) + " particles. Press View Details to check the output.\n")
                     gencase_infosave_dialog.setDetailedText(output.split("================================")[1])
@@ -306,37 +301,22 @@ def on_load_case():
 
     data["project_path"] = load_path_project_folder
     data["project_name"] = load_path_project_folder.split("/")[-1]
-    constants_button.setEnabled(True)
-    execparams_button.setEnabled(True)
-    casecontrols_bt_savedoc.setEnabled(True)
-    dp_input.setEnabled(True)
+    guiutils.widget_state_config(widget_state_elements, "load base")
     if data["gencase_done"]:
-        ex_selector_combo.setEnabled(True)
-        ex_button.setEnabled(True)
-        ex_additional.setEnabled(True)
+        guiutils.widget_state_config(widget_state_elements, "gencase done")
     else:
-        ex_selector_combo.setEnabled(False)
-        ex_button.setEnabled(False)
-        ex_additional.setEnabled(True)
+        guiutils.widget_state_config(widget_state_elements, "gencase not done")
     
     if data["simulation_done"]:    
-        export_button.setEnabled(True)
-        exportopts_button.setEnabled(True)
+        guiutils.widget_state_config(widget_state_elements, "simulation done")
     else:
-        export_button.setEnabled(False)
-        exportopts_button.setEnabled(False)
-    casecontrols_bt_addfillbox.setEnabled(True)
-    casecontrols_bt_addstl.setEnabled(True)
-
+        guiutils.widget_state_config(widget_state_elements, "simulation not done")
+    
     os.chdir(data["project_path"])
     data['gencase_path'], data['dsphysics_path'], data['partvtk4_path'], correct_execs = utils.check_executables(data['gencase_path'], data['dsphysics_path'], data['partvtk4_path'])
     if not correct_execs:
-        ex_selector_combo.setEnabled(False)
-        ex_button.setEnabled(False)
-        ex_additional.setEnabled(False)
-        export_button.setEnabled(False)
-        exportopts_button.setEnabled(False)
-
+        guiutils.widget_state_config(widget_state_elements, "execs not correct")
+        
     on_tree_item_selection_change()
 
 def on_add_fillbox():
@@ -434,12 +414,8 @@ def on_ex_simulate():
     with dualsphysics running. Updates the window with useful info.'''
     run_progbar_bar.setValue(0)
     data["simulation_done"] = False
-    ex_button.setEnabled(False)
-    ex_additional.setEnabled(False)
-    export_button.setEnabled(False)
-    exportopts_button.setEnabled(False)
+    guiutils.widget_state_config(widget_state_elements, "sim start")
     run_button_cancel.setText("Cancel Simulation")
-    ex_selector_combo.setEnabled(False)
     run_dialog.setWindowTitle("DualSPHysics Simulation: 0%")
     run_group_label_case.setText("Case Name: " + data['project_name'])
     run_group_label_proc.setText("Simulation processor: " + str(ex_selector_combo.currentText()))
@@ -450,12 +426,9 @@ def on_ex_simulate():
         print "DualSPHysics for FreeCAD: Stopping simulation"
         if temp_data["current_process"] != None :
             temp_data["current_process"].kill()
-
         run_dialog.hide()
-        ex_selector_combo.setEnabled(True)
-        ex_button.setEnabled(True)
-        ex_additional.setEnabled(True)
-
+        guiutils.widget_state_config(widget_state_elements, "sim cancel")
+    
     run_button_cancel.clicked.connect(on_cancel)
 
     #Launch simulation and watch filesystem to monitor simulation
@@ -471,17 +444,14 @@ def on_ex_simulate():
         run_button_cancel.setText("Close")
         if exitCode == 0:
             data["simulation_done"] = True
-            export_button.setEnabled(True)
-            exportopts_button.setEnabled(True)
+            guiutils.widget_state_config(widget_state_elements, "sim finished")
         else:
             if "exception" in str(output).lower():
                 print "ERROR: Exception in execution."
                 run_dialog.setWindowTitle("DualSPHysics Simulation: Error")
                 run_progbar_bar.setValue(0)
                 run_dialog.hide()
-                ex_selector_combo.setEnabled(True)
-                ex_button.setEnabled(True)
-                ex_additional.setEnabled(True)
+                guiutils.widget_state_config(widget_state_elements, "sim error")
                 execution_error_dialog = QtGui.QMessageBox()
                 execution_error_dialog.setText("There was an error in execution. Make sure you set the parameters right (and they exist). Also, make sure that your computer has the right hardware to simulate. Check the details for more information.")
                 execution_error_dialog.setDetailedText(str(output).split("================================")[1])
@@ -596,14 +566,17 @@ ex_selector_label = QtGui.QLabel("Select where to simulate:")
 ex_selector_combo = QtGui.QComboBox()
 ex_selector_combo.addItem("CPU")
 ex_selector_combo.addItem("GPU")
+widget_state_elements["ex_selector_combo"] = ex_selector_combo
 ex_selector_layout.addWidget(ex_selector_label)
 ex_selector_layout.addWidget(ex_selector_combo)
 ex_button = QtGui.QPushButton("Simulate Case")
 ex_button.setToolTip("Starts the case simulation. From the simulation\nwindow you can see the current progress and\nuseful information.")
 ex_button.clicked.connect(on_ex_simulate)
+widget_state_elements["ex_button"] = ex_button
 ex_additional = QtGui.QPushButton("Additional parameters")
 ex_additional.setToolTip("Sets simulation additional parameters for execution.")
 ex_additional.clicked.connect(on_additional_parameters)
+widget_state_elements["ex_additional"] = ex_additional
 ex_button_layout = QtGui.QHBoxLayout()
 ex_button_layout.addWidget(ex_button)
 ex_button_layout.addWidget(ex_additional)
@@ -641,8 +614,7 @@ export_dialog.setLayout(export_dialog_layout)
 def on_export():
     '''Export VTK button behaviour.
     Launches a process while disabling the button.'''
-    temp_data["export_button"].setEnabled(False)
-    temp_data["exportopts_button"].setEnabled(False)
+    guiutils.widget_state_config(widget_state_elements, "export start")
     temp_data["export_button"].setText("Exporting...")
 
     #Find total export parts
@@ -659,16 +631,14 @@ def on_export():
         if temp_data["current_export_process"] != None :
             temp_data["current_export_process"].kill()
         temp_data["export_button"].setText("Export data to VTK")
-        temp_data["export_button"].setEnabled(True)
-        temp_data["exportopts_button"].setEnabled(True)
+        guiutils.widget_state_config(widget_state_elements, "export cancel")
         export_dialog.hide()
 
     export_button_cancel.clicked.connect(on_cancel)
 
     def on_export_finished(exitCode):
         temp_data["export_button"].setText("Export data to VTK")
-        temp_data["export_button"].setEnabled(True)
-        temp_data["exportopts_button"].setEnabled(True)
+        guiutils.widget_state_config(widget_state_elements, "export finished")
         export_dialog.hide()
 
     export_process = QtCore.QProcess(dsph_main_dock)
@@ -736,7 +706,9 @@ export_label = QtGui.QLabel("This is the export section. Once a simulation is ma
 export_label.setWordWrap(True)
 export_buttons_layout = QtGui.QHBoxLayout()
 export_button = QtGui.QPushButton("Export data to VTK")
+widget_state_elements["export_button"] = export_button
 exportopts_button = QtGui.QPushButton("Options")
+widget_state_elements["exportopts_button"] = exportopts_button
 export_button.setToolTip("Exports the simulation data to VTK format.")
 export_button.clicked.connect(on_export)
 exportopts_button.clicked.connect(on_exportopts)
@@ -760,6 +732,7 @@ objectlist_table.setObjectName("DSPH Objects")
 objectlist_table.verticalHeader().setVisible(False)
 objectlist_table.setHorizontalHeaderLabels(["Object Name", "Order up", "Order down"])
 objectlist_table.horizontalHeader().setResizeMode(QtGui.QHeaderView.Stretch)
+widget_state_elements["objectlist_table"] = objectlist_table
 temp_data["objectlist_table"] = objectlist_table
 objectlist_layout.addWidget(objectlist_label)
 objectlist_layout.addWidget(objectlist_table)
@@ -796,15 +769,7 @@ main_layout.addWidget(objectlist_separator)
 main_layout.addStretch(1)
 
 #Default disabled widgets
-constants_button.setEnabled(False)
-execparams_button.setEnabled(False)
-casecontrols_bt_savedoc.setEnabled(False)
-dp_input.setEnabled(False)
-ex_selector_combo.setEnabled(False)
-ex_button.setEnabled(False)
-ex_additional.setEnabled(False)
-export_button.setEnabled(False)
-exportopts_button.setEnabled(False)
+guiutils.widget_state_config(widget_state_elements, "no case")
 
 '''You can't apply layouts to a QDockWidget, 
 so creating a standard widget, applying the layouts, 
@@ -1535,17 +1500,7 @@ def selection_monitor():
                             print "ERROR: Can't change fillbox contents rotation!"
         except NameError as e:
             #DSPH Case not opened, disable things
-            casecontrols_bt_savedoc.setEnabled(False)
-            constants_button.setEnabled(False)
-            execparams_button.setEnabled(False)
-            casecontrols_bt_addfillbox.setEnabled(False)
-            casecontrols_bt_addstl.setEnabled(False)
-            ex_button.setEnabled(False)
-            ex_additional.setEnabled(False)
-            ex_selector_combo.setEnabled(False)
-            export_button.setEnabled(False)
-            exportopts_button.setEnabled(False)
-            objectlist_table.setEnabled(False)
+            guiutils.widget_state_config(widget_state_elements, "no case")
             threading._sleep(2)
             continue
 
