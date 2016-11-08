@@ -968,3 +968,85 @@ def def_setup_window(data):
 
     setup_window.resize(600,400)
     ret_val = setup_window.exec_()
+
+def widget_state_config(widgets, config):
+    ''' Takes an widget dictionary and a config string to
+        enable and disable certain widgets base on a case. '''
+    if config == "no case":
+        widgets["casecontrols_bt_savedoc"].setEnabled(False)
+        widgets["constants_button"].setEnabled(False)
+        widgets["execparams_button"].setEnabled(False)
+        widgets["casecontrols_bt_addfillbox"].setEnabled(False)
+        widgets["casecontrols_bt_addstl"].setEnabled(False)
+        widgets["ex_button"].setEnabled(False)
+        widgets["ex_additional"].setEnabled(False)
+        widgets["ex_selector_combo"].setEnabled(False)
+        widgets["export_button"].setEnabled(False)
+        widgets["exportopts_button"].setEnabled(False)
+        widgets["objectlist_table"].setEnabled(False)
+        widgets["dp_input"].setEnabled(False)
+    elif config == "new case":
+        widgets["constants_button"].setEnabled(True)
+        widgets["execparams_button"].setEnabled(True)
+        widgets["casecontrols_bt_savedoc"].setEnabled(True)
+        widgets["dp_input"].setEnabled(True)
+        widgets["ex_selector_combo"].setEnabled(False)
+        widgets["ex_button"].setEnabled(False)
+        widgets["ex_additional"].setEnabled(False)
+        widgets["export_button"].setEnabled(False)
+        widgets["exportopts_button"].setEnabled(False)
+        widgets["casecontrols_bt_addfillbox"].setEnabled(True)
+        widgets["casecontrols_bt_addstl"].setEnabled(True)
+    elif config == "gencase done":
+        widgets["ex_selector_combo"].setEnabled(True)
+        widgets["ex_button"].setEnabled(True)
+        widgets["ex_additional"].setEnabled(True)
+    elif config == "gencase not done":
+        widgets["ex_selector_combo"].setEnabled(False)
+        widgets["ex_button"].setEnabled(False)
+        widgets["ex_additional"].setEnabled(False)
+    elif config == "load base":
+        widgets["constants_button"].setEnabled(True)
+        widgets["execparams_button"].setEnabled(True)
+        widgets["casecontrols_bt_savedoc"].setEnabled(True)
+        widgets["dp_input"].setEnabled(True)
+        widgets["casecontrols_bt_addfillbox"].setEnabled(True)
+        widgets["casecontrols_bt_addstl"].setEnabled(True)
+    elif config == "simulation done":
+        widgets["export_button"].setEnabled(True)
+        widgets["exportopts_button"].setEnabled(True)
+    elif config == "simulation not done":
+        widgets["export_button"].setEnabled(False)
+        widgets["exportopts_button"].setEnabled(False)
+    elif config == "execs not correct": 
+        widgets["ex_selector_combo"].setEnabled(False)
+        widgets["ex_button"].setEnabled(False)
+        widgets["ex_additional"].setEnabled(False)
+        widgets["export_button"].setEnabled(False)
+        widgets["exportopts_button"].setEnabled(False)
+    elif config == "sim start":
+        widgets["ex_button"].setEnabled(False)
+        widgets["ex_additional"].setEnabled(False)
+        widgets["export_button"].setEnabled(False)
+        widgets["exportopts_button"].setEnabled(False)
+        widgets["ex_selector_combo"].setEnabled(False)
+    elif config == "sim cancel":
+        widgets["ex_selector_combo"].setEnabled(True)
+        widgets["ex_button"].setEnabled(True)
+        widgets["ex_additional"].setEnabled(True)
+    elif config == "sim finished":
+        widgets["export_button"].setEnabled(True)
+        widgets["exportopts_button"].setEnabled(True)
+    elif config == "sim error":
+        widgets["ex_selector_combo"].setEnabled(True)
+        widgets["ex_button"].setEnabled(True)
+        widgets["ex_additional"].setEnabled(True)
+    elif config == "export start":
+        widgets["export_button"].setEnabled(False)
+        widgets["exportopts_button"].setEnabled(False)
+    elif config == "export cancel":
+        widgets["export_button"].setEnabled(True)
+        widgets["exportopts_button"].setEnabled(True)
+    elif config == "export finished":
+        widgets["export_button"].setEnabled(True)
+        widgets["exportopts_button"].setEnabled(True)
