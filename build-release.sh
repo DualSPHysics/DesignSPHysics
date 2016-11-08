@@ -8,6 +8,7 @@ cp -rf ../installer/resource ./
 cp ../DSPH.py ./resource/
 cp ../LICENSE ./resource/
 cp -rf ../DSPH_Images/ ./resource/
+cp -rf ../dsphfc/ ./resource/
 rm ./installer.spec
 rm -rf ./build
 rm -rf ./dist
