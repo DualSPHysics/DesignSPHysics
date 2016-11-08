@@ -1378,6 +1378,17 @@ def on_tree_item_selection_change():
                         toChange.setEnabled(False)
                     else:
                         toChange.setEnabled(True)
+                elif selection[0].TypeId == "App::DocumentObjectGroup" and "fillbox" in selection[0].Name.lower():
+                    toChange.setEnabled(False)
+
+                #initials restrictions
+                toChange = property_table.cellWidget(4,1)
+                if data['simobjects'][selection[0].Name][1].lower() == "fluid":
+                        toChange.setEnabled(True)
+                else:
+                        toChange.setEnabled(False)
+                if selection[0].TypeId == "App::DocumentObjectGroup" and "fillbox" in selection[0].Name.lower():
+                    toChange.setEnabled(False)
 
             else:
                 if selection[0].InList == []:
