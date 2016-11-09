@@ -376,11 +376,11 @@ def def_constants_window(data):
         data['h_auto'] = hauto_chk.isChecked()
         data['b'] = b_input.text()
         data['b_auto'] = bauto_chk.isChecked()
-        print "DualSPHysics for FreeCAD: Constants changed"
+        utils.log("Constants changed")
         constants_window.accept()
 
     def on_cancel():
-        print "DualSPHysics for FreeCAD: Constants not changed"
+        utils.log("Constants not changed")
         constants_window.reject()
 
     ok_button.clicked.connect(on_ok)
@@ -771,11 +771,11 @@ def def_execparams_window(data):
         data['partsoutmax'] = partsoutmax_input.text()
         data['rhopoutmin'] = rhopoutmin_input.text()
         data['rhopoutmax'] = rhopoutmax_input.text()
-        print "DualSPHysics for FreeCAD: Execution Parameters changed"
+        utils.log("Execution Parameters changed")
         execparams_window.accept()
 
     def on_cancel():
-        print "DualSPHysics for FreeCAD: Execution Parameters not changed"
+        utils.log("Execution Parameters not changed")
         execparams_window.reject()
 
     ok_button.clicked.connect(on_ok)
@@ -880,7 +880,7 @@ def def_setup_window(data):
         data['partvtk4_path'] = partvtk4path_input.text()
         picklefile = open(FreeCAD.getUserAppDataDir()+'/dsph_data.dsphdata', 'wb')
         pickle.dump(data, picklefile)
-        print "DualSPHysics for FreeCAD: Setup changed. Saved to "+FreeCAD.getUserAppDataDir()+"/dsph_data.dsphdata"
+        utils.log("Setup changed. Saved to "+FreeCAD.getUserAppDataDir()+"/dsph_data.dsphdata")
         data['gencase_path'], data['dsphysics_path'], data['partvtk4_path'], state = utils.check_executables(data['gencase_path'], data['dsphysics_path'], data['partvtk4_path'])
         if not state:
             ex_selector_combo.setEnabled(False)
@@ -889,7 +889,7 @@ def def_setup_window(data):
         setup_window.accept()
 
     def on_cancel():
-        print "DualSPHysics for FreeCAD: Setup not changed"
+        utils.log("Setup not changed")
         setup_window.reject()
 
     def on_gencase_browse():
@@ -905,7 +905,7 @@ def def_setup_window(data):
             if "gencase" in output[0:15].lower():
                 gencasepath_input.setText(fileName)
             else:
-                print "ERROR: I can't recognize GenCase in that exe!"
+                utils.error("I can't recognize GenCase in that exe!")
                 warning_dialog("I can't recognize GenCase in that exe!")
 
     def on_dualsphysics_browse():
@@ -921,7 +921,7 @@ def def_setup_window(data):
             if "dualsphysics" in output[0:20].lower():
                 dsphpath_input.setText(fileName)
             else:
-                print "ERROR: I can't recognize DualSPHysics in that exe!"
+                utils.error("I can't recognize DualSPHysics in that exe!")
                 warning_dialog("I can't recognize DualSPHysics in that exe!")
 
     def on_partvtk4_browse():
@@ -937,7 +937,7 @@ def def_setup_window(data):
             if "partvtk4" in output[0:20].lower():
                 partvtk4path_input.setText(fileName)
             else:
-                print "ERROR: I can't recognize PartVTK4 in that exe!"
+                utils.error("I can't recognize PartVTK4 in that exe!")
                 warning_dialog("I can't recognize PartVTK4 in that exe!")
 
     ok_button.clicked.connect(on_ok)

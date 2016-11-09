@@ -221,7 +221,11 @@
   <ItemGroup>
     <Compile Include="DSPH.py" />
     <Compile Include="dsphfc\guiutils.py" />
+    <Compile Include="dsphfc\xmlimporter.py">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Include="dsphfc\utils.py" />
+    <Compile Include="dsphfc\xmltodict.py" />
     <Compile Include="dsphfc\__init__.py" />
     <Compile Include="installer\installer.py" />
   </ItemGroup>

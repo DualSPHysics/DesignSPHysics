@@ -30,6 +30,8 @@ def dprint(string):
     print ">>>Debug: " + str(string)
 
 def main():
+    ''' Main function of the installer. Initializes a window
+        that enables the user to install the software. '''
     app = QtGui.QApplication(sys.argv)
 
     w = QtGui.QDialog()
@@ -65,7 +67,11 @@ def main():
     install_layout.addLayout(install_button_layout)
 
     def on_install():
+        ''' Defines what happens when install button
+            is pressed. '''
         def threadfunc():
+            ''' Thread that verifies and copies files to the 
+                installation folder. '''
             install_button.setEnabled(False)
             install_button.setText('Installing...')
             system = platform.system()
@@ -136,9 +142,8 @@ def main():
                 install_failed_dialog.exec_()
                 sys.exit(0)
 
-        
         installthread = threading.Thread(target=threadfunc)
-        installthread.start()
+        installthread.start() #Begins installing on a thread
 
     install_button.clicked.connect(on_install)
     main_layout.addWidget(image_label)
