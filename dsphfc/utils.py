@@ -28,11 +28,13 @@ import guiutils
 
 #------ CONSTANTS DEFINITION ------
 FREECAD_MIN_VERSION = "016"
+APP_NAME = "DualSPHysics for FreeCAD"
+DEBUGGING = True
 #------ END CONSTANTS DEFINITION ------
 
 def is_compatible_version():
-    '''Checks if the current FreeCAD version is suitable
-    for this macro.'''
+    ''' Checks if the current FreeCAD version is suitable
+        for this macro. '''
 
     version_num = FreeCAD.Version()[0] + FreeCAD.Version()[1]
     if int(version_num) < int(FREECAD_MIN_VERSION):
@@ -41,10 +43,24 @@ def is_compatible_version():
     else:
         return True
 
+def log(message):
+    print "[" + APP_NAME + "] " + str(message)
+
+def warning(message):
+    print "[" + APP_NAME + "] " +"[WARNING]" + ": " + str(message)
+
+def error(message):
+    print "[" + APP_NAME + "] " +"[ERROR]" + ": " + str(message)
+
+def debug(message):
+    if DEBUGGING:
+        print "[" + APP_NAME + "] " +"[<<<<DEBUG>>>>]" + ": " + str(message) 
+
 def check_executables(gencase_path, dsphysics_path, partvtk4_path):
-    '''Checks the three needed executables for working with
-    this software. Returns 4 values: 3 string paths and a boolean.
-    If some path is not correct returns the respective empty string and False.'''
+    ''' Checks the three needed executables for working with
+        this software. Returns 4 values: 3 string paths and a boolean.
+        If some path is not correct returns the respective
+        empty string and False. '''
 
     execs_correct = True
     #Tries to identify gencase
@@ -54,7 +70,7 @@ def check_executables(gencase_path, dsphysics_path, partvtk4_path):
         process.waitForFinished()
         output = str(process.readAllStandardOutput())
         if "gencase" in output[0:15].lower():
-            print "DualSPHysics for FreeCAD: Found correct GenCase."
+            log("Found correct GenCase.")
         else:
             execs_correct = False
             gencase_path = ""
@@ -69,7 +85,7 @@ def check_executables(gencase_path, dsphysics_path, partvtk4_path):
         process.waitForFinished()
         output = str(process.readAllStandardOutput())
         if "dualsphysics" in output[0:20].lower():
-            print "DualSPHysics for FreeCAD: Found correct DualSPHysics."
+            log("Found correct DualSPHysics.")
         else:
             execs_correct = False
             dsphysics_path = ""
@@ -84,7 +100,7 @@ def check_executables(gencase_path, dsphysics_path, partvtk4_path):
         process.waitForFinished()
         output = str(process.readAllStandardOutput())
         if "partvtk4" in output[0:20].lower():
-            print "DualSPHysics for FreeCAD: Found correct PartVTK4."
+            log("Found correct PartVTK4.")
         else:
             execs_correct = False    
             partvtk4_path = ""
@@ -94,14 +110,14 @@ def check_executables(gencase_path, dsphysics_path, partvtk4_path):
 
     #Spawn warning dialog and return paths.
     if not execs_correct:
-        print "WARNING: One or more of the executables in the setup is not correct. Check plugin setup to fix missing binaries"
+        warning("One or more of the executables in the setup is not correct. Check plugin setup to fix missing binaries")
         guiutils.warning_dialog("One or more of the executables in the setup is not correct. Check plugin setup to fix missing binaries.")
     return gencase_path, dsphysics_path, partvtk4_path, execs_correct
 
 def get_default_data():
-    '''Sets default data at start of the macro.
-    Returns data and temp_data dict with default values.
-    If there is data saved on disk, tries to load it.'''
+    ''' Sets default data at start of the macro.
+        Returns data and temp_data dict with default values.
+        If there is data saved on disk, tries to load it.'''
 
     data = dict()
     temp_data = dict()
@@ -174,14 +190,14 @@ def get_default_data():
     data["mkboundused"] = []
     data["mkfluidused"] = []
     
-    '''Dictionary that defines floatings. 
-    Keys are mks enabled (ONLY BOUNDS) and values are a list containing:
-    {'mkbound': [massrhop, center, inertia, velini, omegaini]}
-    massrhop = [selectedOption (index), value]
-    center = [auto (bool), x,y,z]
-    inertia = [auto (bool), x,y,z]
-    velini = [auto (bool), x,y,z]
-    omegaini = [auto (bool), x,y,z]'''
+    ''' Dictionary that defines floatings. 
+        Keys are mks enabled (ONLY BOUNDS) and values are a list containing:
+        {'mkbound': [massrhop, center, inertia, velini, omegaini]}
+        massrhop = [selectedOption (index), value]
+        center = [auto (bool), x,y,z]
+        inertia = [auto (bool), x,y,z]
+        velini = [auto (bool), x,y,z]
+        omegaini = [auto (bool), x,y,z]'''
     data['floating_mks'] = dict()
 
     '''Dictionary that defines initials. 
@@ -207,8 +223,8 @@ def get_default_data():
     temp_data['total_export_parts'] = -1
     temp_data['supported_types'] = ["Part::Box", "Part::Sphere", "Part::Cylinder"]
 
-    '''Try to load saved paths. This way the user does not need
-    to introduce the software paths every time'''
+    ''' Try to load saved paths. This way the user does not need
+        to introduce the software paths every time'''
     if os.path.isfile(FreeCAD.getUserAppDataDir()+'/dsph_data.dsphdata'):
         try:
             picklefile = open(FreeCAD.getUserAppDataDir()+'/dsph_data.dsphdata', 'rb')
@@ -222,7 +238,7 @@ def get_default_data():
             data['dsphysics_path'] = ""
             data['partvtk4_path'] = ""
     
-        print "DualSPHysics for FreeCAD: Found data file. Loading data from disk."
+        log("Found data file. Loading data from disk.")
         data['gencase_path'], data['dsphysics_path'], data['partvtk4_path'], state = check_executables(data['gencase_path'], data['dsphysics_path'], data['partvtk4_path'])
     else:
         data["project_path"] = "" 
@@ -232,8 +248,8 @@ def get_default_data():
     return data, temp_data
 
 def get_first_mk_not_used(objtype, data):
-    '''Checks simulation objects to find the first not used
-    MK group.'''
+    ''' Checks simulation objects to find the first not used
+        MK group. '''
 
     if objtype == "fluid":
         endval = 10
@@ -252,12 +268,12 @@ def get_first_mk_not_used(objtype, data):
             return i
 
 def open_help():
-    '''Opens a web browser with this software help.'''
+    ''' Opens a web browser with this software help. '''
 
     webbrowser.open("http://dual.sphysics.org/gui/wiki/")
 
 def print_license():
-    '''Prints this software license'''
+    ''' Prints this software license. '''
     licpath = os.path.abspath(__file__).split("dsphfc")[0] + "LICENSE"
     if os.path.isfile(licpath):
         with open(licpath) as licfile:
@@ -266,12 +282,13 @@ def print_license():
         raise EnvironmentError("LICENSE file could not be found. Are you sure you didn't delete it?")
 
 def prompt_close_all_documents():
-    '''Shows a dialog to close all the current documents.
-    If accepted, close all the current documents, else stops the script execution'''
-    user_selection = guiutils.ok_cancel_dialog("DualSPHysics for FreeCAD", "To load this module you must close all current documents. Close all the documents?")
+    ''' Shows a dialog to close all the current documents.
+        If accepted, close all the current documents, 
+        else stops the script execution. '''
+    user_selection = guiutils.ok_cancel_dialog(APP_NAME, "To load this module you must close all current documents. Close all the documents?")
     if user_selection == QtGui.QMessageBox.Ok:
         #Close all current documents.
-        print "DualSPHysics for FreeCAD: Closing all current documents"
+        log("Closing all current documents")
         for doc in FreeCAD.listDocuments().keys():
             FreeCAD.closeDocument(doc)
         return True
@@ -280,12 +297,12 @@ def prompt_close_all_documents():
 
 def document_count():
     ''' Returns an integer representing the number of
-    current opened documents in FreeCAD'''
+        current opened documents in FreeCAD. '''
     return len(FreeCAD.listDocuments().keys())
 
 def create_dsph_document():
     ''' Creates a new DSPH compatible document in FreeCAD.
-    It includes the case limits and a compatible name'''
+        It includes the case limits and a compatible name. '''
     FreeCAD.newDocument("DSPH_Case")
     FreeCAD.setActiveDocument("DSPH_Case")
     FreeCAD.ActiveDocument=FreeCAD.getDocument("DSPH_Case")
@@ -306,9 +323,10 @@ def create_dsph_document():
     FreeCADGui.SendMsgToActiveView("ViewFit")
 
 def dump_to_xml(data, save_name):
-    ''' Description. '''
+    ''' Saves all of the data in the opened case
+        to disk. Generates a GenCase compatible XML. '''
     #Saves all the data in XML format.
-    print "DualSPHysics for FreeCAD: Saving data in " + data["project_path"] + "."
+    log("Saving data in " + data["project_path"] + ".")
     FreeCAD.getDocument("DSPH_Case").saveAs(save_name+"/DSPH_Case.FCStd")
     FreeCADGui.SendMsgToActiveView("Save")
     f = open(save_name+"/" + save_name.split('/')[-1]+ "_Def.xml", 'w')
@@ -401,7 +419,7 @@ def dump_to_xml(data, save_name):
                         f.write('\t\t\t\t\t</fillbox>\n')
                     else:
                         #Something went wrong, one of the needed objects is not in the fillbox group
-                        print "ERROR: Limits or point missing in a fillbox group. Ignoring it"
+                        error("Limits or point missing in a fillbox group. Ignoring it")
                         continue
                 else:
                     #Not a xml parametric object. Needs exporting

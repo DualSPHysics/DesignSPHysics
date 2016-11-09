@@ -24,10 +24,10 @@ import FreeCAD, FreeCADGui
 import sys, os, pickle, threading, math, webbrowser, traceback, glob, numpy
 from PySide import QtGui, QtCore
 from datetime import datetime
-from dsphfc import utils, guiutils
+from dsphfc import utils, guiutils, xmlimporter
 
 ''' Special vars '''
-version = 'v0.20a'
+APP_VERSION = 'v0.20a'
 utils.print_license()
 
 ''' Version check. This script is only compatible with FreeCAD 0.16 or higher '''
@@ -70,7 +70,7 @@ if previous_dock:
     Creates a widget with a series of layouts added, to apply
     to the DSPH dock at the end. '''
 dsph_main_dock.setObjectName("DSPH Widget")
-dsph_main_dock.setWindowTitle("DualSPHysics for FreeCAD " + str(version))
+dsph_main_dock.setWindowTitle(utils.APP_NAME + str(APP_VERSION))
 main_layout = QtGui.QVBoxLayout() #Main Widget layout. Vertical ordering
 
 #Component layouts definition
@@ -150,6 +150,9 @@ casecontrols_bt_addstl = QtGui.QPushButton("Import STL")
 casecontrols_bt_addstl.setToolTip("Imports a STL with postprocessing. This way you can set the scale of the imported object.")
 casecontrols_bt_addstl.setEnabled(False)
 widget_state_elements["casecontrols_bt_addstl"] = casecontrols_bt_addstl
+casecontrols_bt_importxml = QtGui.QPushButton("Import XML")
+casecontrols_bt_importxml.setToolTip("Imports an already created XML case from disk.")
+casecontrols_bt_importxml.setEnabled(True)
 
 def on_new_case():
     ''' Defines what happens when new case is clicked. Closes all documents
@@ -192,12 +195,12 @@ def on_save_case():
 
         #GENERATE BAT TO EXECUTE EASELY
         if (data["gencase_path"] == "") or (data["dsphysics_path"] == "") or (data["partvtk4_path"] == ""):
-            print "WARNING: Can't create executable bat file! One or more of the paths in plugin setup is not set"
+            utils.warning("Can't create executable bat file! One or more of the paths in plugin setup is not set")
         else:
             bat_file = open(save_name+"/run.bat", 'w')
-            print "Creating " + save_name+"/run.bat"
+            utils.log("Creating " + save_name+"/run.bat")
             bat_file.write("@echo off\n")
-            bat_file.write('echo "------- Autoexported by DualSPHysics for FreeCAD -------"\n')
+            bat_file.write('echo "------- Autoexported by ' + utils.APP_NAME + ' -------"\n')
             bat_file.write('echo "This script executes GenCase for the case saved, that generates output files in the *_Out dir. Then, executes a simulation on CPU of the case. Last, it exports all the geometry generated in VTK files for viewing with ParaView."\n')
             bat_file.write('pause\n')
             bat_file.write('"'+data["gencase_path"]+'" '+ save_name+"/" + save_name.split('/')[-1]+ "_Def " + save_name+"/"+save_name.split('/')[-1]+ "_Out/" + save_name.split('/')[-1] + ' -save:+all' +'\n')
@@ -208,8 +211,8 @@ def on_save_case():
             bat_file.close()
 
             bat_file = open(save_name+"/run.sh", 'w')
-            print "Creating " + save_name+"/run.sh"
-            bat_file.write('echo "------- Autoexported by DualSPHysics for FreeCAD -------"\n')
+            utils.log("Creating " + save_name+"/run.sh")
+            bat_file.write('echo "------- Autoexported by ' + utils.APP_NAME + ' -------"\n')
             bat_file.write('echo "This script executes GenCase for the case saved, that generates output files in the *_Out dir. Then, executes a simulation on CPU of the case. Last, it exports all the geometry generated in VTK files for viewing with ParaView."\n')
             bat_file.write('read -rsp $"Press any key to continue..." -n 1 key\n')
             bat_file.write('"'+data["gencase_path"]+'" '+ save_name+"/" + save_name.split('/')[-1]+ "_Def " + save_name+"/"+save_name.split('/')[-1]+ "_Out/" + save_name.split('/')[-1] + ' -save:+all' +'\n')
@@ -235,11 +238,11 @@ def on_save_case():
                     total_particles = int(total_particles_text[total_particles_text.index(": ") + 2:])
                     data['total_particles'] = total_particles
 
-                    print "Total number of particles exported: " + str(total_particles)
+                    utils.log("Total number of particles exported: " + str(total_particles))
                     if total_particles < 300:
-                        print "WARNING: Are you sure all the parameters are set right? The number of particles is very low (" + str(total_particles) + "). Lower the DP to increase number of particles"
+                        utils.warning("Are you sure all the parameters are set right? The number of particles is very low (" + str(total_particles) + "). Lower the DP to increase number of particles")
                     elif total_particles > 200000:
-                        print "WARNING: Number of particles is pretty high (" + str(total_particles) + ") and it could take a lot of time to simulate."
+                        utils.warning("Number of particles is pretty high (" + str(total_particles) + ") and it could take a lot of time to simulate.")
                     data["gencase_done"] = True
                     guiutils.widget_state_config(widget_state_elements, "gencase done")
                     gencase_infosave_dialog = QtGui.QMessageBox()
@@ -258,14 +261,14 @@ def on_save_case():
                 gencase_failed_dialog.setDetailedText(gencase_out_file.read().split("================================")[1])
                 gencase_failed_dialog.setIcon(QtGui.QMessageBox.Critical)
                 gencase_failed_dialog.exec_()
-                print "WARNING: GenCase Failed. Probably because nothing is in the scene."
+                utils.warning("GenCase Failed. Probably because nothing is in the scene.")
 
         #Save data array on disk
         picklefile = open(save_name+"/casedata.dsphdata", 'wb')
         pickle.dump(data, picklefile)        
 
     else:
-        print "DualSPHysics for FreeCAD: Saving cancelled."
+        utils.log("Saving cancelled.")
 
 def on_load_case():
     '''Defines loading case mechanism.
@@ -279,7 +282,7 @@ def on_load_case():
     load_path_project_folder = "/".join(loadName.split("/")[:-1])
     if not os.path.isfile(load_path_project_folder + "/DSPH_Case.FCStd"):
         guiutils.warning_dialog("DSPH_Case.FCStd file not found! Corrupt or moved project. Aborting.")
-        print "ERROR: DSPH_Case.FCStd file not found! Corrupt or moved project. Aborting."
+        utils.error("DSPH_Case.FCStd file not found! Corrupt or moved project. Aborting.")
         return
 
     #Tries to close all documents
@@ -345,12 +348,26 @@ def on_add_stl():
     fileName, _ = filedialog.getOpenFileName(fc_main_window, "Select STL to import", QtCore.QDir.homePath(), "STL Files (*.stl)")
     stl_mesh = mesh.Mesh.from_file(fileName)
 
+def on_import_xml():
+    ''' Imports an already created GenCase/DSPH compatible
+    file and loads it in the scene. '''
+
+    import_name, _ = QtGui.QFileDialog.getOpenFileName(dsph_main_dock, "Import XML", QtCore.QDir.homePath(), "XML Files (*.xml)")
+    if import_name == "":
+        #User pressed cancel. No path is selected.
+        return
+    
+    result_data = xmlimporter.import_xml_file(import_name)
+    utils.debug(result_data)
+
+
 #Connect case control buttons
 casecontrols_bt_newdoc.clicked.connect(on_new_case)
 casecontrols_bt_savedoc.clicked.connect(on_save_case)
 casecontrols_bt_loaddoc.clicked.connect(on_load_case)
 casecontrols_bt_addfillbox.clicked.connect(on_add_fillbox)
 casecontrols_bt_addstl.clicked.connect(on_add_stl)
+casecontrols_bt_importxml.clicked.connect(on_import_xml)
 
 #Defines case control scaffolding
 cclabel_layout.addWidget(casecontrols_label)
@@ -360,6 +377,7 @@ ccfilebuttons_layout.addWidget(casecontrols_bt_loaddoc)
 ccaddbuttons_layout.addWidget(casecontrols_bt_addfillbox)
 #TODO: Add custom STL Import
 #ccaddbuttons_layout.addWidget(casecontrols_bt_addstl)
+ccaddbuttons_layout.addWidget(casecontrols_bt_importxml)
 cc_layout.addLayout(cclabel_layout)
 cc_layout.addLayout(ccfilebuttons_layout)
 cc_layout.addLayout(ccaddbuttons_layout)
@@ -423,7 +441,7 @@ def on_ex_simulate():
     run_group_label_partsout.setText("Total particles out of case: 0")
     
     def on_cancel():
-        print "DualSPHysics for FreeCAD: Stopping simulation"
+        utils.log("Stopping simulation")
         if temp_data["current_process"] != None :
             temp_data["current_process"].kill()
         run_dialog.hide()
@@ -447,7 +465,7 @@ def on_ex_simulate():
             guiutils.widget_state_config(widget_state_elements, "sim finished")
         else:
             if "exception" in str(output).lower():
-                print "ERROR: Exception in execution."
+                utils.error("Exception in execution.")
                 run_dialog.setWindowTitle("DualSPHysics Simulation: Error")
                 run_progbar_bar.setValue(0)
                 run_dialog.hide()
@@ -476,7 +494,7 @@ def on_ex_simulate():
             run_file_data = run_file.readlines()
             run_file.close()
         except Exception as e:
-            print e
+            utils.debug(e)
 
         #Set percentage scale based on timemax
         for l in run_file_data:
@@ -627,7 +645,7 @@ def on_export():
     export_dialog.show()
 
     def on_cancel():
-        print "DualSPHysics for FreeCAD: Stopping export"
+        utils.log("Stopping export")
         if temp_data["current_export_process"] != None :
             temp_data["current_export_process"].kill()
         temp_data["export_button"].setText("Export data to VTK")
@@ -1508,7 +1526,7 @@ def selection_monitor():
                     for subelem in o.OutList:
                         if subelem.Placement.Rotation.Angle != 0.0:
                             subelem.Placement.Rotation.Angle = 0.0
-                            print "ERROR: Can't change fillbox contents rotation!"
+                            utils.error("Can't change fillbox contents rotation!")
         except NameError as e:
             #DSPH Case not opened, disable things
             guiutils.widget_state_config(widget_state_elements, "no case")
@@ -1521,4 +1539,4 @@ monitor_thread = threading.Thread(target=selection_monitor)
 monitor_thread.start()
 
 FreeCADGui.activateWorkbench("PartWorkbench")
-print "DualSPHysics for FreeCAD: Done loading data."
+utils.log("Done loading data.")
