@@ -1,33 +1,58 @@
+#!/usr/bin/env python
 # -*- coding: utf-8 -*-
+"""VisualSPHysics for FreeCAD GUI Utils.
 
-'''
+This module stores functionality useful for GUI
+operations in VisualSPHysics for FreeCAD.
+
+"""
+
+"""
 Copyright (C) 2016 - Andrés Vieira (anvieiravazquez@gmail.com)
 EPHYSLAB Environmental Physics Laboratory, Universidade de Vigo
 
-This file is part of DualSPHysics for FreeCAD.
+This file is part of VisualSPHysics for FreeCAD.
 
-DualSPHysics for FreeCAD is free software: you can redistribute it and/or modify
+VisualSPHysics for FreeCAD is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
 the Free Software Foundation, either version 3 of the License, or
 (at your option) any later version.
 
-DualSPHysics for FreeCAD is distributed in the hope that it will be useful,
+VisualSPHysics for FreeCAD is distributed in the hope that it will be useful,
 but WITHOUT ANY WARRANTY; without even the implied warranty of
 MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 GNU General Public License for more details.
 
 You should have received a copy of the GNU General Public License
-along with DualSPHysics for FreeCAD.  If not, see <http://www.gnu.org/licenses/>.
-'''
+along with VisualSPHysics for FreeCAD.  If not, see <http://www.gnu.org/licenses/>.
+"""
 
-import FreeCAD, FreeCADGui
-import sys, os, pickle, threading, math, webbrowser, traceback, glob, numpy
+__author__ = "Andrés Vieira"
+__copyright__ = "Copyright 2016, DualSHPysics Team"
+__credits__ = ["Andrés Vieira", "Alejandro Jacobo Cabrera Crespo"]
+__license__ = "GPL"
+__version__ = "v0.1 BETA"
+__maintainer__ = "Andrés Vieira"
+__email__ = "anvieiravazquez@gmail.com"
+__status__ = "Development"
+
+import FreeCAD
+import FreeCADGui
+import sys
+import os
+import pickle
+import threading
+import math
+import webbrowser
+import traceback
+import glob
+import numpy
 from PySide import QtGui, QtCore
 from datetime import datetime
 import utils
 
 def warning_dialog(warn_text):
-    '''Spawns a warning dialog with the text passed.'''
+    """Spawns a warning dialog with the text passed."""
 
     warning_messagebox = QtGui.QMessageBox()
     warning_messagebox.setText(warn_text)
@@ -35,7 +60,7 @@ def warning_dialog(warn_text):
     warning_messagebox.exec_()
 
 def info_dialog(info_text):
-    '''Spawns an info dialog with the text passed.'''
+    """Spawns an info dialog with the text passed."""
 
     info_messagebox = QtGui.QMessageBox()
     info_messagebox.setText(info_text)
@@ -43,7 +68,7 @@ def info_dialog(info_text):
     info_messagebox.exec_()
 
 def ok_cancel_dialog(title, text):
-    '''Spawns an okay/cancel dialog with the title and text passed'''
+    """Spawns an okay/cancel dialog with the title and text passed"""
 
     openConfirmDialog = QtGui.QMessageBox()
     openConfirmDialog.setText(title)
@@ -53,8 +78,8 @@ def ok_cancel_dialog(title, text):
     return openConfirmDialog.exec_()
 
 def def_constants_window(data):
-    '''Defines the constants window creation and functonality.
-    Modifies the passed data dictionary to update data if ok is pressed.'''
+    """Defines the constants window creation and functonality.
+    Modifies the passed data dictionary to update data if ok is pressed."""
 
     #Creates a dialog and 2 main buttons
     constants_window = QtGui.QDialog()
@@ -134,7 +159,8 @@ def def_constants_window(data):
     rhop0_layout.addWidget(rhop0_input)
     rhop0_layout.addWidget(rhop0_label2)
 
-    #Maximum still water lavel to calc. spdofsound using coefsound: layout and components
+    #Maximum still water lavel to calc.  spdofsound using coefsound: layout and
+    #components
     hswlauto_layout = QtGui.QHBoxLayout()
     hswlauto_chk = QtGui.QCheckBox("Auto HSWL ")
     if data['hswl_auto']:
@@ -142,7 +168,8 @@ def def_constants_window(data):
     else:
         hswlauto_chk.setCheckState(QtCore.Qt.Unchecked)
 
-    def on_hswlauto_check(): #Controls if user selected auto HSWL or not enabling/disablen HSWL custom value introduction
+    def on_hswlauto_check(): #Controls if user selected auto HSWL or not enabling/disablen HSWL custom
+                             #value introduction
         if hswlauto_chk.isChecked():
             hswl_input.setEnabled(False)
         else:
@@ -189,7 +216,8 @@ def def_constants_window(data):
     else:
         speedsystemauto_chk.setCheckState(QtCore.Qt.Unchecked)
 
-    def on_speedsystemauto_check(): #Controls if user selected auto speedsystem or not enabling/disablen speedsystem custom value introduction
+    def on_speedsystemauto_check(): #Controls if user selected auto speedsystem or not enabling/disablen
+                                    #speedsystem custom value introduction
         if speedsystemauto_chk.isChecked():
             speedsystem_input.setEnabled(False)
         else:
@@ -236,7 +264,8 @@ def def_constants_window(data):
     else:
         speedsoundauto_chk.setCheckState(QtCore.Qt.Unchecked)
 
-    def on_speedsoundauto_check(): #Controls if user selected auto speedsound or not enabling/disablen speedsound custom value introduction
+    def on_speedsoundauto_check(): #Controls if user selected auto speedsound or not enabling/disablen speedsound
+                                   #custom value introduction
         if speedsoundauto_chk.isChecked():
             speedsound_input.setEnabled(False)
         else:
@@ -297,7 +326,8 @@ def def_constants_window(data):
     else:
         hauto_chk.setCheckState(QtCore.Qt.Unchecked)
 
-    def on_hauto_check(): #Controls if user selected auto h or not enabling/disablen h custom value introduction
+    def on_hauto_check(): #Controls if user selected auto h or not enabling/disablen h custom value
+                          #introduction
         if hauto_chk.isChecked():
             h_input.setEnabled(False)
         else:
@@ -330,7 +360,8 @@ def def_constants_window(data):
     else:
         bauto_chk.setCheckState(QtCore.Qt.Unchecked)
 
-    def on_bauto_check(): #Controls if user selected auto b or not enabling/disablen b custom value introduction
+    def on_bauto_check(): #Controls if user selected auto b or not enabling/disablen b custom value
+                          #introduction
         if bauto_chk.isChecked():
             b_input.setEnabled(False)
         else:
@@ -385,7 +416,7 @@ def def_constants_window(data):
 
     ok_button.clicked.connect(on_ok)
     cancel_button.clicked.connect(on_cancel)
-    #Button layout definition    
+    #Button layout definition
     cw_button_layout = QtGui.QHBoxLayout()
     cw_button_layout.addStretch(1)
     cw_button_layout.addWidget(ok_button)
@@ -429,8 +460,8 @@ def def_constants_window(data):
     ret_val = constants_window.exec_()
 
 def def_execparams_window(data):
-    '''Defines the execution parameters window.
-    Modifies the data dictionary passed as parameter.'''
+    """Defines the execution parameters window.
+    Modifies the data dictionary passed as parameter."""
 
     #Creates a dialog and 2 main buttons
     execparams_window = QtGui.QDialog()
@@ -613,7 +644,8 @@ def def_execparams_window(data):
         dtiniauto_chk.setCheckState(QtCore.Qt.Checked)
     else:
         dtiniauto_chk.setCheckState(QtCore.Qt.Unchecked)
-    def on_dtiniauto_check(): #Controls if user selected auto b or not enabling/disablen b custom value introduction
+    def on_dtiniauto_check(): #Controls if user selected auto b or not enabling/disablen b custom value
+                              #introduction
         if dtiniauto_chk.isChecked():
             dtini_input.setEnabled(False)
         else:
@@ -639,7 +671,8 @@ def def_execparams_window(data):
     else:
         dtminauto_chk.setCheckState(QtCore.Qt.Unchecked)
 
-    def on_dtminauto_check(): #Controls if user selected auto b or not enabling/disablen b custom value introduction
+    def on_dtminauto_check(): #Controls if user selected auto b or not enabling/disablen b custom value
+                              #introduction
         if dtminauto_chk.isChecked():
             dtmin_input.setEnabled(False)
         else:
@@ -780,7 +813,7 @@ def def_execparams_window(data):
 
     ok_button.clicked.connect(on_ok)
     cancel_button.clicked.connect(on_cancel)
-    #Button layout definition    
+    #Button layout definition
     ep_button_layout = QtGui.QHBoxLayout()
     ep_button_layout.addStretch(1)
     ep_button_layout.addWidget(ok_button)
@@ -828,8 +861,8 @@ def def_execparams_window(data):
     ret_val = execparams_window.exec_()
 
 def def_setup_window(data):
-    '''Defines the setup window.
-    Modifies data dictionary passed as parameter.'''
+    """Defines the setup window.
+    Modifies data dictionary passed as parameter."""
 
     #Creates a dialog and 2 main buttons
     setup_window = QtGui.QDialog()
@@ -878,9 +911,9 @@ def def_setup_window(data):
         data['gencase_path'] = gencasepath_input.text()
         data['dsphysics_path'] = dsphpath_input.text()
         data['partvtk4_path'] = partvtk4path_input.text()
-        picklefile = open(FreeCAD.getUserAppDataDir()+'/dsph_data.dsphdata', 'wb')
+        picklefile = open(FreeCAD.getUserAppDataDir() + '/dsph_data.dsphdata', 'wb')
         pickle.dump(data, picklefile)
-        utils.log("Setup changed. Saved to "+FreeCAD.getUserAppDataDir()+"/dsph_data.dsphdata")
+        utils.log("Setup changed. Saved to " + FreeCAD.getUserAppDataDir() + "/dsph_data.dsphdata")
         data['gencase_path'], data['dsphysics_path'], data['partvtk4_path'], state = utils.check_executables(data['gencase_path'], data['dsphysics_path'], data['partvtk4_path'])
         if not state:
             ex_selector_combo.setEnabled(False)
@@ -945,7 +978,7 @@ def def_setup_window(data):
     gencasepath_browse.clicked.connect(on_gencase_browse)
     dsphpath_browse.clicked.connect(on_dualsphysics_browse)
     partvtk4path_browse.clicked.connect(on_partvtk4_browse)
-    #Button layout definition    
+    #Button layout definition
     stp_button_layout = QtGui.QHBoxLayout()
     stp_button_layout.addStretch(1)
     stp_button_layout.addWidget(ok_button)
@@ -970,8 +1003,8 @@ def def_setup_window(data):
     ret_val = setup_window.exec_()
 
 def widget_state_config(widgets, config):
-    ''' Takes an widget dictionary and a config string to
-        enable and disable certain widgets base on a case. '''
+    """ Takes an widget dictionary and a config string to
+        enable and disable certain widgets base on a case. """
     if config == "no case":
         widgets["casecontrols_bt_savedoc"].setEnabled(False)
         widgets["constants_button"].setEnabled(False)

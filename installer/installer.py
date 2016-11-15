@@ -1,37 +1,60 @@
+#!/usr/bin/env python
 # -*- coding: utf-8 -*-
+"""VisualSPHysics for FreeCAD Installer.
 
-'''
+This file spawns a Qt window that installs DSPH files
+into FreeCAD's default Macro directory. 
+
+This script is meant to use with pyinstaller to generate
+a simple standalone executable for release.
+
+"""
+
+"""
 Copyright (C) 2016 - Andrés Vieira (anvieiravazquez@gmail.com)
 EPHYSLAB Environmental Physics Laboratory, Universidade de Vigo
 
-This file is part of DualSPHysics for FreeCAD.
+This file is part of VisualSPHysics for FreeCAD.
 
-DualSPHysics for FreeCAD is free software: you can redistribute it and/or modify
+VisualSPHysics for FreeCAD is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
 the Free Software Foundation, either version 3 of the License, or
 (at your option) any later version.
 
-DualSPHysics for FreeCAD is distributed in the hope that it will be useful,
+VisualSPHysics for FreeCAD is distributed in the hope that it will be useful,
 but WITHOUT ANY WARRANTY; without even the implied warranty of
 MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 GNU General Public License for more details.
 
 You should have received a copy of the GNU General Public License
-along with DualSPHysics for FreeCAD.  If not, see <http://www.gnu.org/licenses/>.
-'''
+along with VisualSPHysics for FreeCAD.  If not, see <http://www.gnu.org/licenses/>.
+"""
+
+__author__ = "Andrés Vieira"
+__copyright__ = "Copyright 2016, DualSHPysics Team"
+__credits__ = ["Andrés Vieira", "Alejandro Jacobo Cabrera Crespo"]
+__license__ = "GPL"
+__version__ = "v0.1 BETA"
+__maintainer__ = "Andrés Vieira"
+__email__ = "anvieiravazquez@gmail.com"
+__status__ = "Development"
+
+import sys
+import threading
+import shutil
+import platform
+import os
+from PySide import QtGui, QtCore
 
 print "Copyright (C) 2016 - Andrés Vieira"
 print "EPHYSLAB Environmental Physics Laboratory, Universidade de Vigo"
-
-import sys, threading, shutil, platform, os
-from PySide import QtGui, QtCore
 
 def dprint(string):
     print ">>>Debug: " + str(string)
 
 def main():
-    ''' Main function of the installer. Initializes a window
-        that enables the user to install the software. '''
+    """ Main function of the installer. Initializes a window
+        that enables the user to install the software. """
     app = QtGui.QApplication(sys.argv)
 
     w = QtGui.QDialog()
@@ -48,7 +71,7 @@ def main():
     
     install_layout = QtGui.QVBoxLayout()
     install_layout.setContentsMargins(10,10,10,10)
-    description_label = QtGui.QLabel('DualSPHysics for FreeCAD is a macro made for FreeCAD that allows the user to design case environments to use with DualSPHyisics.')
+    description_label = QtGui.QLabel('VisualSPHysics for FreeCAD is a macro made for FreeCAD that allows the user to design case environments to use with DualSPHyisics.')
     description_label.setWordWrap(True)
     description_label.setAlignment(QtCore.Qt.AlignCenter)
     credits_label = QtGui.QLabel("DualSPHysics team.\nDeveloped by Andrés Vieira (Universidade de Vigo).\n")
@@ -67,11 +90,11 @@ def main():
     install_layout.addLayout(install_button_layout)
 
     def on_install():
-        ''' Defines what happens when install button
-            is pressed. '''
+        """ Defines what happens when install button
+            is pressed. """
         def threadfunc():
-            ''' Thread that verifies and copies files to the 
-                installation folder. '''
+            """ Thread that verifies and copies files to the 
+                installation folder. """
             install_button.setEnabled(False)
             install_button.setText('Installing...')
             system = platform.system()
@@ -87,7 +110,7 @@ def main():
                         #Operating system not supported
                         install_button.setText('ERROR :(')
                         install_failed_dialog = QtGui.QMessageBox()
-                        install_failed_dialog.setText("DualSPHysics for FreeCAD encountered an error while installing. Click on view details for more info.")
+                        install_failed_dialog.setText("VisualSPHysics for FreeCAD encountered an error while installing. Click on view details for more info.")
                         install_failed_dialog.setDetailedText("Operating system not supported: " + str(system))
                         install_failed_dialog.setIcon(QtGui.QMessageBox.Critical)
                         install_failed_dialog.exec_()
@@ -99,22 +122,22 @@ def main():
                     try:
                         os.remove(dest_folder + 'DSPH.py')
                     except OSError as e:
-                        #File does not exists. Ignoring
+                        #File does not exists.  Ignoring
                         pass
                     try:
                         os.remove(dest_folder + 'LICENSE')
                     except OSError as e:
-                        #File does not exists. Ignoring
+                        #File does not exists.  Ignoring
                         pass
                     try:
                         shutil.rmtree(dest_folder + '/DSPH_Images')
                     except OSError as e:
-                        #Directory does not exists. Ignoring
+                        #Directory does not exists.  Ignoring
                         pass
                     try:
                         shutil.rmtree(dest_folder + '/dsphfc')
                     except OSError as e:
-                        #Directory does not exists. Ignoring
+                        #Directory does not exists.  Ignoring
                         pass
 
                     #Copy new files
@@ -126,7 +149,7 @@ def main():
                     #Installation completed
                     install_button.setText('Installed!')
                     install_success_dialog = QtGui.QMessageBox()
-                    install_success_dialog.setText("DualSPHysics for FreeCAD installed correctly.")
+                    install_success_dialog.setText("VisualSPHysics for FreeCAD installed correctly.")
                     install_success_dialog.setIcon(QtGui.QMessageBox.Information)
                     install_success_dialog.exec_()
                     sys.exit(0)
@@ -136,7 +159,7 @@ def main():
                 #Something failed, show error
                 install_button.setText('ERROR :(')
                 install_failed_dialog = QtGui.QMessageBox()
-                install_failed_dialog.setText("DualSPHysics for FreeCAD encountered an error while installing. Click on view details for more info.")
+                install_failed_dialog.setText("VisualSPHysics for FreeCAD encountered an error while installing. Click on view details for more info.")
                 install_failed_dialog.setDetailedText("Exception " + str(e.__class__.__name__) + " encountered.\nError message: " + str(e))
                 install_failed_dialog.setIcon(QtGui.QMessageBox.Critical)
                 install_failed_dialog.exec_()

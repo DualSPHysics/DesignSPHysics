@@ -1,31 +1,48 @@
+#!/usr/bin/env python
 # -*- coding: utf-8 -*-
+"""VisualSPHysics for FreeCAD XML Importer.
 
-'''
-Copyright (C) 2016 - Andr�s Vieira (anvieiravazquez@gmail.com)
+This script contains functionality useful for
+unpacking an XML file from disk and process it as
+a dictionary.
+
+"""
+
+"""
+Copyright (C) 2016 - Andr?s Vieira (anvieiravazquez@gmail.com)
 EPHYSLAB Environmental Physics Laboratory, Universidade de Vigo
 
-This file is part of DualSPHysics for FreeCAD.
+This file is part of VisualSPHysics for FreeCAD.
 
-DualSPHysics for FreeCAD is free software: you can redistribute it and/or modify
+VisualSPHysics for FreeCAD is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
 the Free Software Foundation, either version 3 of the License, or
 (at your option) any later version.
 
-DualSPHysics for FreeCAD is distributed in the hope that it will be useful,
+VisualSPHysics for FreeCAD is distributed in the hope that it will be useful,
 but WITHOUT ANY WARRANTY; without even the implied warranty of
 MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 GNU General Public License for more details.
 
 You should have received a copy of the GNU General Public License
-along with DualSPHysics for FreeCAD.  If not, see <http://www.gnu.org/licenses/>.
-'''
+along with VisualSPHysics for FreeCAD.  If not, see <http://www.gnu.org/licenses/>.
+"""
 
-from dsphfc import xmltodict
+__author__ = "Andrés Vieira"
+__copyright__ = "Copyright 2016, DualSHPysics Team"
+__credits__ = ["Andrés Vieira", "Alejandro Jacobo Cabrera Crespo"]
+__license__ = "GPL"
+__version__ = "v0.1 BETA"
+__maintainer__ = "Andrés Vieira"
+__email__ = "anvieiravazquez@gmail.com"
+__status__ = "Development"
+
 import json
+from dsphfc import xmltodict
 
 def import_xml_file(filename):
-    ''' Returns data dictionary with values found
-        in a GenCase/DSPH compatible XML file. '''
+    """ Returns data dictionary with values found
+        in a GenCase/DSPH compatible XML file. """
     
     r = dict() #Dictionary to return
     target_file = open(filename, "rb")
@@ -36,12 +53,13 @@ def import_xml_file(filename):
     raw_data = json.loads(json.dumps(xmltodict.parse(target_xml)))
 
     r = filter_data(raw_data)
+    create_fc_objects(target_xml)
 
     return r
 
 def filter_data(raw):
-    ''' Filters a raw json representing an XML file to
-        a compatible data dictionary. '''
+    """ Filters a raw json representing an XML file to
+        a compatible data dictionary. """
     
     fil = dict()
 
@@ -87,20 +105,35 @@ def filter_data(raw):
     #Finding used mkfluids and mkbounds
     fil['mkboundused'] = []
     fil['mkfluidused'] = []
-    mkbounds = raw['case']['casedef']['geometry']['commands']['mainlist']['setmkbound']
-    mkfluids = raw['case']['casedef']['geometry']['commands']['mainlist']['setmkfluid']
-    for setmkbound in mkbounds:
-        fil['mkboundused'].append(int(setmkbound['@mk']))
-    for setmkfluid in mkfluids:
-        fil['mkfluidused'].append(int(setmkfluid['@mk']))
-
-    #Creates supported objects on scene.
-    mainlist_creator(raw['case']['casedef']['geometry']['commands']['mainlist'])
-        
+    try:
+        mkbounds = raw['case']['casedef']['geometry']['commands']['mainlist']['setmkbound']
+        if type(mkbounds) == type(dict()):
+            #Only one mkfluid statement
+            fil['mkboundused'].append(int(mkbounds['@mk']))
+        else:
+            #Multiple mkfluids
+            for setmkbound in mkbounds:
+                fil['mkboundused'].append(int(setmkbound['@mk']))
+    except KeyError as e:
+        #No mkbounds found
+        pass
+    try:
+        mkfluids = raw['case']['casedef']['geometry']['commands']['mainlist']['setmkfluid']
+        if type(mkfluids) == type(dict()):
+            #Only one mkfluid statement
+            fil['mkfluidused'].append(int(mkfluids['@mk']))
+        else:
+            #Multiple mkfluids
+            for setmkfluid in mkfluids:
+                fil['mkfluidused'].append(int(setmkfluid['@mk']))
+    except KeyError as e:
+        #No mkfluids found
+        pass
+            
     return fil
 
-def mainlist_creator(m):
-    ''' Creates supported objects on scene. Iterates over
+def create_fc_objects(f):
+    """ Creates supported objects on scene. Iterates over
         <mainlist> items and tries to recreate the commands in
-        the current opened scene. '''
-    pass
+        the current opened scene. """
+    mainlist = f.split("<mainlist>")[1].split("</mainlist>")[0].replace("\t","").replace("\r", "")
