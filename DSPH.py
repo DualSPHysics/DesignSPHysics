@@ -469,7 +469,7 @@ def on_ex_simulate():
     run_group_label_proc.setText("Simulation processor: " + str(ex_selector_combo.currentText()))
     run_group_label_part.setText("Number of particles: " + str(data['total_particles']))
     run_group_label_partsout.setText("Total particles out: 0")
-    run_group_label_eta.setText("Estimated time to complete simulation: " + "Calculating...");
+    run_group_label_eta.setText("Estimated time to complete simulation: " + "Calculating...")
     
     def on_cancel():
         utils.log("Stopping simulation")
@@ -858,7 +858,7 @@ property_widget_layout.addWidget(removefromdsph_button)
 properties_scaff_widget.setLayout(property_widget_layout)
 
 properties_widget.setWidget(properties_scaff_widget)
-propertylabel1 = QtGui.QLabel("   MK Group")
+propertylabel1 = QtGui.QLabel("   MKGroup")
 propertylabel1.setToolTip("Establishes the object group.")
 propertylabel2 = QtGui.QLabel("   Type of object")
 propertylabel2.setToolTip("Establishes the object type, fluid or bound")
@@ -898,6 +898,7 @@ def property2_change(index):
         selectiongui.Transparency = 0
         property4.setEnabled(True)
         property5.setEnabled(False)
+        propertylabel1.setText("   MKBound")
     elif property2.itemText(index).lower() == "fluid":
         property1.setRange(0, 10)
         selectiongui.ShapeColor = (0.00,0.45,1.00)
@@ -906,6 +907,8 @@ def property2_change(index):
             data["floating_mks"].pop(str(data['simobjects'][selection.Name][0]), None)
         property4.setEnabled(False)
         property5.setEnabled(True)
+        propertylabel1.setText("   MKFluid")
+
 
 def property3_change(index):
     """Defines what happens when fill mode is changed"""
@@ -914,18 +917,36 @@ def property3_change(index):
     data['simobjects'][selection.Name][2] = property3.itemText(index)
     if property3.itemText(index).lower() == "full":
         if property2.itemText(property2.currentIndex()).lower() == "fluid":
-            selectiongui.Transparency = 30
+            try:
+                selectiongui.Transparency = 30
+            except:
+                pass
         elif property2.itemText(property2.currentIndex()).lower() == "bound":
-            selectiongui.Transparency = 0
+            try:
+                selectiongui.Transparency = 0
+            except:
+                pass
     elif property3.itemText(index).lower() == "solid":
         if property2.itemText(property2.currentIndex()).lower() == "fluid":
-            selectiongui.Transparency = 30
+            try:
+                selectiongui.Transparency = 30
+            except:
+                pass
         elif property2.itemText(property2.currentIndex()).lower() == "bound":
-            selectiongui.Transparency = 0
+            try:
+                selectiongui.Transparency = 0
+            except:
+                pass
     elif property3.itemText(index).lower() == "face":
-        selectiongui.Transparency = 80
+        try:
+            selectiongui.Transparency = 80
+        except:
+                pass
     elif property3.itemText(index).lower() == "wire":
-        selectiongui.Transparency = 85
+        try:
+            selectiongui.Transparency = 85
+        except:
+                pass
 
 def property4_configure():
     """Defines a window with floating properties."""
@@ -1437,7 +1458,7 @@ def on_tree_item_selection_change():
                 else:
                         toChange.setEnabled(False)
                 if selection[0].TypeId == "App::DocumentObjectGroup" and "fillbox" in selection[0].Name.lower():
-                    toChange.setEnabled(False)
+                    toChange.setEnabled(True)
 
             else:
                 if selection[0].InList == []:

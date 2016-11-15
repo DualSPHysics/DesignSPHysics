@@ -41,6 +41,7 @@ __status__ = "Development"
 
 import FreeCAD
 import FreeCADGui
+import Mesh
 import sys
 import os
 import pickle
