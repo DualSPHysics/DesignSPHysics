@@ -1,2 +1,5 @@
+#Do not include py compiled sources in any directory
 *.pyc
+**/*.pyc
+#Do not include the release files of any OS
 release-*/

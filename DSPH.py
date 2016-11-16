@@ -54,6 +54,7 @@ import glob
 import numpy
 from PySide import QtGui, QtCore
 from datetime import datetime
+sys.path.append(FreeCAD.getUserAppDataDir() + "Macro/")
 from dsphfc import utils, guiutils, xmlimporter
 
 """ Special vars """
