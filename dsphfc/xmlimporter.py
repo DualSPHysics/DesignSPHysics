@@ -37,8 +37,12 @@ __maintainer__ = "Andrés Vieira"
 __email__ = "anvieiravazquez@gmail.com"
 __status__ = "Development"
 
+import FreeCAD
+import FreeCADGui
 import json
-from dsphfc import xmltodict
+import sys
+sys.path.append(FreeCAD.getUserAppDataDir() + "Macro/dsphfc")
+import xmltodict
 
 def import_xml_file(filename):
     """ Returns data dictionary with values found

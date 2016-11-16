@@ -49,6 +49,7 @@ import glob
 import numpy
 from PySide import QtGui, QtCore
 from datetime import datetime
+sys.path.append(FreeCAD.getUserAppDataDir() + "Macro/dsphfc")
 import utils
 
 def warning_dialog(warn_text):
