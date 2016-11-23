@@ -13,7 +13,7 @@
     <LaunchProvider>Standard Python launcher</LaunchProvider>
     <InterpreterId>{782d6d77-1206-4547-b2b5-05bc0501ce67}</InterpreterId>
     <InterpreterVersion>2.7</InterpreterVersion>
-    <Name>VisualSPHysics Core</Name>
+    <Name>DesignSPHysics Core</Name>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)' == 'Debug'" />
   <PropertyGroup Condition="'$(Configuration)' == 'Release'" />

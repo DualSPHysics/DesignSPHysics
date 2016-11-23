@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
-"""VisualSPHysics for FreeCAD Installer.
+"""DesignSPHysics Installer.
 
 This file spawns a Qt window that installs DSPH files
 into FreeCAD's default Macro directory. 
@@ -14,20 +14,20 @@ a simple standalone executable for release.
 Copyright (C) 2016 - Andrés Vieira (anvieiravazquez@gmail.com)
 EPHYSLAB Environmental Physics Laboratory, Universidade de Vigo
 
-This file is part of VisualSPHysics for FreeCAD.
+This file is part of DesignSPHysics.
 
-VisualSPHysics for FreeCAD is free software: you can redistribute it and/or modify
+DesignSPHysics is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
 the Free Software Foundation, either version 3 of the License, or
 (at your option) any later version.
 
-VisualSPHysics for FreeCAD is distributed in the hope that it will be useful,
+DesignSPHysics is distributed in the hope that it will be useful,
 but WITHOUT ANY WARRANTY; without even the implied warranty of
 MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 GNU General Public License for more details.
 
 You should have received a copy of the GNU General Public License
-along with VisualSPHysics for FreeCAD.  If not, see <http://www.gnu.org/licenses/>.
+along with DesignSPHysics.  If not, see <http://www.gnu.org/licenses/>.
 """
 
 __author__ = "Andrés Vieira"
@@ -71,7 +71,7 @@ def main():
     
     install_layout = QtGui.QVBoxLayout()
     install_layout.setContentsMargins(10,10,10,10)
-    description_label = QtGui.QLabel('VisualSPHysics for FreeCAD is a macro made for FreeCAD that allows the user to design case environments to use with DualSPHyisics.')
+    description_label = QtGui.QLabel('DesignSPHysics is a macro made for FreeCAD that allows the user to design case environments to use with DualSPHyisics.')
     description_label.setWordWrap(True)
     description_label.setAlignment(QtCore.Qt.AlignCenter)
     credits_label = QtGui.QLabel("DualSPHysics team.\nDeveloped by Andrés Vieira (Universidade de Vigo).\n")
@@ -110,7 +110,7 @@ def main():
                         #Operating system not supported
                         install_button.setText('ERROR :(')
                         install_failed_dialog = QtGui.QMessageBox()
-                        install_failed_dialog.setText("VisualSPHysics for FreeCAD encountered an error while installing. Click on view details for more info.")
+                        install_failed_dialog.setText("DesignSPHysics encountered an error while installing. Click on view details for more info.")
                         install_failed_dialog.setDetailedText("Operating system not supported: " + str(system))
                         install_failed_dialog.setIcon(QtGui.QMessageBox.Critical)
                         install_failed_dialog.exec_()
@@ -149,7 +149,7 @@ def main():
                     #Installation completed
                     install_button.setText('Installed!')
                     install_success_dialog = QtGui.QMessageBox()
-                    install_success_dialog.setText("VisualSPHysics for FreeCAD installed correctly.")
+                    install_success_dialog.setText("DesignSPHysics installed correctly.")
                     install_success_dialog.setIcon(QtGui.QMessageBox.Information)
                     install_success_dialog.exec_()
                     sys.exit(0)
@@ -159,7 +159,7 @@ def main():
                 #Something failed, show error
                 install_button.setText('ERROR :(')
                 install_failed_dialog = QtGui.QMessageBox()
-                install_failed_dialog.setText("VisualSPHysics for FreeCAD encountered an error while installing. Click on view details for more info.")
+                install_failed_dialog.setText("DesignSPHysics encountered an error while installing. Click on view details for more info.")
                 install_failed_dialog.setDetailedText("Exception " + str(e.__class__.__name__) + " encountered.\nError message: " + str(e))
                 install_failed_dialog.setIcon(QtGui.QMessageBox.Critical)
                 install_failed_dialog.exec_()

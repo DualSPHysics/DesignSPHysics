@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
-"""VisualSPHysics for FreeCAD.
+"""DesignSPHysics.
 
 This is the main script (or Macro) meant to be used
 with FreeCAD. Initializes a complete interface with
@@ -16,20 +16,20 @@ them.
 Copyright (C) 2016 - Andrés Vieira (anvieiravazquez@gmail.com)
 EPHYSLAB Environmental Physics Laboratory, Universidade de Vigo
 
-This file is part of VisualSPHysics for FreeCAD.
+This file is part of DesignSPHysics.
 
-VisualSPHysics for FreeCAD is free software: you can redistribute it and/or modify
+DesignSPHysics is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
 the Free Software Foundation, either version 3 of the License, or
 (at your option) any later version.
 
-VisualSPHysics for FreeCAD is distributed in the hope that it will be useful,
+DesignSPHysics is distributed in the hope that it will be useful,
 but WITHOUT ANY WARRANTY; without even the implied warranty of
 MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 GNU General Public License for more details.
 
 You should have received a copy of the GNU General Public License
-along with VisualSPHysics for FreeCAD.  If not, see <http://www.gnu.org/licenses/>.
+along with DesignSPHysics.  If not, see <http://www.gnu.org/licenses/>.
 """
 
 __author__ = "Andrés Vieira"
@@ -209,6 +209,10 @@ def on_save_case():
     else:
         save_name = data["project_path"]
 
+    if " " in save_name: #Spawn error if path contains any spaces.
+        guiutils.error_dialog("The path you selected contains spaces. Due to DualSPHysics restrictions, you'll need to use a folder path without any spaces. Sorry for the inconvenience")
+        return
+
     if save_name != '' :
         if not os.path.exists(save_name):
             os.makedirs(save_name)
@@ -380,16 +384,19 @@ def on_import_xml():
     """ Imports an already created GenCase/DSPH compatible
     file and loads it in the scene. """
     
-    guiutils.info_dialog("Feature not complete yet")
-    return
-
     import_name, _ = QtGui.QFileDialog.getOpenFileName(dsph_main_dock, "Import XML", QtCore.QDir.homePath(), "XML Files (*.xml)")
     if import_name == "":
         #User pressed cancel.  No path is selected.
         return
-    
-    result_data = xmlimporter.import_xml_file(import_name)
-    #utils.debug(result_data)
+    else:
+        config, objects = xmlimporter.import_xml_file(import_name)
+        #Set Config
+        #TODO: SET CONFIG
+
+        #Add results to DSPH objects
+        for key, value in objects.iteritems():
+            add_object_to_sim(key)
+            #TODO: COMPLETE THIS
 
 
 #Connect case control buttons
@@ -1326,10 +1333,16 @@ property_table.hide()
 addtodsph_button.hide()
 removefromdsph_button.hide()
 
-def add_object_to_sim():
+def add_object_to_sim(name=None):
     """Defines what happens when "Add object to sim" button is presseed.
     Takes the selection of FreeCAD and watches what type of thing it is adding"""
-    selection = FreeCADGui.Selection.getSelection()
+    if name is None:
+        selection = FreeCADGui.Selection.getSelection()
+    else:
+        utils.debug(name)
+        selection = [].append(FreeCAD.ActiveDocument.getObject(name))
+        utils.debug(selection[0].Name)
+
     for item in selection:
         if item.Name == "Case_Limits":
             continue

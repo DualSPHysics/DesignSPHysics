@@ -1,9 +1,9 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
-"""VisualSPHysics for FreeCAD GUI Utils.
+"""DesignSPHysics GUI Utils.
 
 This module stores functionality useful for GUI
-operations in VisualSPHysics for FreeCAD.
+operations in DesignSPHysics.
 
 """
 
@@ -11,20 +11,20 @@ operations in VisualSPHysics for FreeCAD.
 Copyright (C) 2016 - Andrés Vieira (anvieiravazquez@gmail.com)
 EPHYSLAB Environmental Physics Laboratory, Universidade de Vigo
 
-This file is part of VisualSPHysics for FreeCAD.
+This file is part of DesignSPHysics.
 
-VisualSPHysics for FreeCAD is free software: you can redistribute it and/or modify
+DesignSPHysics is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
 the Free Software Foundation, either version 3 of the License, or
 (at your option) any later version.
 
-VisualSPHysics for FreeCAD is distributed in the hope that it will be useful,
+DesignSPHysics is distributed in the hope that it will be useful,
 but WITHOUT ANY WARRANTY; without even the implied warranty of
 MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 GNU General Public License for more details.
 
 You should have received a copy of the GNU General Public License
-along with VisualSPHysics for FreeCAD.  If not, see <http://www.gnu.org/licenses/>.
+along with DesignSPHysics.  If not, see <http://www.gnu.org/licenses/>.
 """
 
 __author__ = "Andrés Vieira"
@@ -59,6 +59,14 @@ def warning_dialog(warn_text):
     warning_messagebox.setText(warn_text)
     warning_messagebox.setIcon(QtGui.QMessageBox.Warning)
     warning_messagebox.exec_()
+
+def error_dialog(error_text):
+    """Spawns an error dialog with the text passed."""
+
+    error_messagebox = QtGui.QMessageBox()
+    error_messagebox.setText(error_text)
+    error_messagebox.setIcon(QtGui.QMessageBox.Critical)
+    error_messagebox.exec_()
 
 def info_dialog(info_text):
     """Spawns an info dialog with the text passed."""

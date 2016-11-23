@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
-"""VisualSPHysics for FreeCAD XML Importer.
+"""DesignSPHysics XML Importer.
 
 This script contains functionality useful for
 unpacking an XML file from disk and process it as
@@ -9,23 +9,23 @@ a dictionary.
 """
 
 """
-Copyright (C) 2016 - Andr?s Vieira (anvieiravazquez@gmail.com)
+Copyright (C) 2016 - Andrés Vieira (anvieiravazquez@gmail.com)
 EPHYSLAB Environmental Physics Laboratory, Universidade de Vigo
 
-This file is part of VisualSPHysics for FreeCAD.
+This file is part of DesignSPHysics.
 
-VisualSPHysics for FreeCAD is free software: you can redistribute it and/or modify
+DesignSPHysics is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
 the Free Software Foundation, either version 3 of the License, or
 (at your option) any later version.
 
-VisualSPHysics for FreeCAD is distributed in the hope that it will be useful,
+DesignSPHysics is distributed in the hope that it will be useful,
 but WITHOUT ANY WARRANTY; without even the implied warranty of
 MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 GNU General Public License for more details.
 
 You should have received a copy of the GNU General Public License
-along with VisualSPHysics for FreeCAD.  If not, see <http://www.gnu.org/licenses/>.
+along with DesignSPHysics.  If not, see <http://www.gnu.org/licenses/>.
 """
 
 __author__ = "Andrés Vieira"
@@ -43,10 +43,13 @@ import json
 import sys
 sys.path.append(FreeCAD.getUserAppDataDir() + "Macro/dsphfc")
 import xmltodict
+import xml.etree.ElementTree as ET
+import utils
 
 def import_xml_file(filename):
     """ Returns data dictionary with values found
-        in a GenCase/DSPH compatible XML file. """
+        in a GenCase/DSPH compatible XML file and a
+       list of objects to add to simulation """
     
     r = dict() #Dictionary to return
     target_file = open(filename, "rb")
@@ -56,10 +59,10 @@ def import_xml_file(filename):
     #Converts XML in python dictionary
     raw_data = json.loads(json.dumps(xmltodict.parse(target_xml)))
 
-    r = filter_data(raw_data)
-    create_fc_objects(target_xml)
+    config = filter_data(raw_data)
+    objects = create_fc_objects(target_xml)
 
-    return r
+    return config, objects
 
 def filter_data(raw):
     """ Filters a raw json representing an XML file to
@@ -140,4 +143,62 @@ def create_fc_objects(f):
     """ Creates supported objects on scene. Iterates over
         <mainlist> items and tries to recreate the commands in
         the current opened scene. """
-    mainlist = f.split("<mainlist>")[1].split("</mainlist>")[0].replace("\t","").replace("\r", "")
+    #mainlist = f.split("<mainlist>")[1].split("</mainlist>")[0].replace("\t","").replace("\r", "")
+    movement = (0.0, 0.0, 0.0)
+    rotation = (0.0, 0.0, 0.0, 0.0)
+    mk = ("void", "0")
+    drawmode = "full"
+    elementnum = 0
+    toAddDSPH = dict()
+    
+    root = ET.fromstring(f);
+    mainlist = root.findall("./casedef/geometry/commands/mainlist/*")
+    for command in mainlist:
+        if command.tag == "matrixreset":
+            movement = (0.0, 0.0, 0.0)
+            rotation = (0.0, 0.0, 0.0, 0.0)
+            pass
+        elif command.tag == "setmkfluid":
+            mk = ("fluid", command.attrib["mk"]) 
+            pass
+        elif command.tag == "setmkbound":
+            mk = ("bound", command.attrib["mk"]) 
+            pass
+        elif command.tag == "setdrawmode":
+            drawmode = command.attrib["mode"]
+        elif command.tag == "move":
+            movement = (float(command.attrib["x"]) * 1000, float(command.attrib["y"]) * 1000, float(command.attrib["z"]) * 1000)
+        elif command.tag == "rotate":
+            rotation = (float(command.attrib["ang"]), float(command.attrib["x"]) * 1000, float(command.attrib["y"]) * 1000, float(command.attrib["z"]) * 1000)
+        elif command.tag == "drawbox":
+            for subcommand in command:
+                boxfill = "full"
+                point = (0.0, 0.0, 0.0)
+                size = (1.0, 1.0, 1.0)
+                if subcommand.tag == "boxfill":
+                    boxfill = subcommand.text
+                elif subcommand.tag == "point":
+                    point = (float(subcommand.attrib["x"]) * 1000, float(subcommand.attrib["y"]) * 1000, float(subcommand.attrib["z"]) * 1000)
+                elif subcommand.tag == "size":
+                    size = (float(subcommand.attrib["x"]) * 1000, float(subcommand.attrib["y"]) * 1000, float(subcommand.attrib["z"]) * 1000)
+                else:
+                    utils.warning("Modifier unknown ("+subcommand.tag+") for the command: " + command.tag + ". Ignoring...")
+            #Box creation in FreeCAD
+            FreeCAD.ActiveDocument.addObject("Part::Box","Box" + str(elementnum))
+            FreeCAD.ActiveDocument.ActiveObject.Label = "Box" + str(elementnum)
+            FreeCAD.ActiveDocument.getObject("Box" + str(elementnum)).Placement = FreeCAD.Placement(FreeCAD.Vector(point[0] + movement[0], point[1] + movement[1], point[2] + movement[2]),FreeCAD.Rotation(FreeCAD.Vector(rotation[1], rotation[2], rotation[3]), rotation[0]))
+            FreeCAD.ActiveDocument.getObject("Box" + str(elementnum)).Length = str(size[0]) + ' mm'
+            FreeCAD.ActiveDocument.getObject("Box" + str(elementnum)).Width = str(size[1]) + ' mm'
+            FreeCAD.ActiveDocument.getObject("Box" + str(elementnum)).Height = str(size[2]) + ' mm'
+            #Suscribe Box for creation in DSPH Objects
+            #Structure: [name] = [mknumber, type, fill]
+            toAddDSPH["Box" + str(elementnum)] = [mk[1], mk[0], drawmode]
+        else:
+            #Command not supported, report and ignore
+            utils.warning("The command: " + command.tag + " is not yet supported. Ignoring...")
+        
+        elementnum += 1
+
+    FreeCAD.ActiveDocument.recompute()
+    FreeCADGui.SendMsgToActiveView("ViewFit")
+    return toAddDSPH
