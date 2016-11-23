@@ -1362,7 +1362,7 @@ def add_object_to_sim(name=None):
                 mktoput = utils.get_first_mk_not_used("bound", data)
                 if not mktoput:
                     mktoput = 0
-                data['simobjects'][item.Name] = [mktoput, 'bound', 'full']
+                data['simobjects'][item.Name] = [mktoput, 'bound', 'face']
                 data["mkboundused"].append(mktoput)
             data["export_order"].append(item.Name)
     on_tree_item_selection_change()
@@ -1455,7 +1455,7 @@ def on_tree_item_selection_change():
                     elif data['simobjects'][selection[0].Name][2].lower() == "wire":
                         toChange.setCurrentIndex(3)
                 else:
-                    toChange.setCurrentIndex(0)
+                    toChange.setCurrentIndex(2)
                     toChange.setEnabled(False)
 
                 #float state config
