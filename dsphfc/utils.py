@@ -1,9 +1,9 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
-"""VisualSPHysics for FreeCAD Utils.
+"""DesignSPHysics Utils.
 
 This file contains a collection of constants and
-functions meant to use with VisualSPHysics for FreeCAD.
+functions meant to use with DesignSPHysics.
 
 This module stores non-gui related operations, but
 meant to use with FreeCAD.
@@ -14,20 +14,20 @@ meant to use with FreeCAD.
 Copyright (C) 2016 - Andrés Vieira (anvieiravazquez@gmail.com)
 EPHYSLAB Environmental Physics Laboratory, Universidade de Vigo
 
-This file is part of VisualSPHysics for FreeCAD.
+This file is part of DesignSPHysics.
 
-VisualSPHysics for FreeCAD is free software: you can redistribute it and/or modify
+DesignSPHysics is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
 the Free Software Foundation, either version 3 of the License, or
 (at your option) any later version.
 
-VisualSPHysics for FreeCAD is distributed in the hope that it will be useful,
+DesignSPHysics is distributed in the hope that it will be useful,
 but WITHOUT ANY WARRANTY; without even the implied warranty of
 MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 GNU General Public License for more details.
 
 You should have received a copy of the GNU General Public License
-along with VisualSPHysics for FreeCAD.  If not, see <http://www.gnu.org/licenses/>.
+along with DesignSPHysics.  If not, see <http://www.gnu.org/licenses/>.
 """
 
 __author__ = "Andrés Vieira"
@@ -58,7 +58,7 @@ import guiutils
 
 #------ CONSTANTS DEFINITION ------
 FREECAD_MIN_VERSION = "016"
-APP_NAME = "VisualSPHysics for FreeCAD"
+APP_NAME = "DesignSPHysics"
 DEBUGGING = True
 #------ END CONSTANTS DEFINITION ------
 def is_compatible_version():
