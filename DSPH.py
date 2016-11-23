@@ -36,7 +36,7 @@ __author__ = "Andrés Vieira"
 __copyright__ = "Copyright 2016, DualSHPysics Team"
 __credits__ = ["Andrés Vieira", "Alejandro Jacobo Cabrera Crespo"]
 __license__ = "GPL"
-__version__ = "v0.1 BETA"
+__version__ = "v0.1 BETA SNAPSHOT.01"
 __maintainer__ = "Andrés Vieira"
 __email__ = "anvieiravazquez@gmail.com"
 __status__ = "Development"
@@ -383,6 +383,9 @@ def on_add_stl():
 def on_import_xml():
     """ Imports an already created GenCase/DSPH compatible
     file and loads it in the scene. """
+
+    guiutils.info_dialog("This feature is not complete yet. Sorry for the inconvenience")
+    return
     
     import_name, _ = QtGui.QFileDialog.getOpenFileName(dsph_main_dock, "Import XML", QtCore.QDir.homePath(), "XML Files (*.xml)")
     if import_name == "":
@@ -847,7 +850,7 @@ if previous_dock:
 
 #Creation of the widget and scaffolding
 properties_widget = QtGui.QDockWidget()
-properties_widget.setMinimumHeight(400)
+properties_widget.setMinimumHeight(100)
 properties_widget.setObjectName("DSPH_Properties")
 properties_widget.setWindowTitle("DSPH Object Properties")
 properties_scaff_widget = QtGui.QWidget() #Scaffolding widget, only useful to apply to the properties_dock widget
