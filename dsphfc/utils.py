@@ -314,7 +314,7 @@ def prompt_close_all_documents():
     """ Shows a dialog to close all the current documents.
         If accepted, close all the current documents, 
         else stops the script execution. """
-    user_selection = guiutils.ok_cancel_dialog(APP_NAME, "To load this module you must close all current documents. Close all the documents?")
+    user_selection = guiutils.ok_cancel_dialog(APP_NAME, "To do this you must close all current documents. Close all the documents?")
     if user_selection == QtGui.QMessageBox.Ok:
         #Close all current documents.
         log("Closing all current documents")
