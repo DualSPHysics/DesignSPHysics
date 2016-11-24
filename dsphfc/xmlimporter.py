@@ -192,7 +192,7 @@ def create_fc_objects(f):
             FreeCAD.ActiveDocument.getObject("Box" + str(elementnum)).Height = str(size[2]) + ' mm'
             #Suscribe Box for creation in DSPH Objects
             #Structure: [name] = [mknumber, type, fill]
-            toAddDSPH["Box" + str(elementnum)] = [mk[1], mk[0], drawmode]
+            toAddDSPH["Box" + str(elementnum)] = [int(mk[1]), mk[0], drawmode]
         else:
             #Command not supported, report and ignore
             utils.warning("The command: " + command.tag + " is not yet supported. Ignoring...")
