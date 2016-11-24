@@ -383,23 +383,29 @@ def on_add_stl():
 def on_import_xml():
     """ Imports an already created GenCase/DSPH compatible
     file and loads it in the scene. """
-
-    guiutils.info_dialog("This feature is not complete yet. Sorry for the inconvenience")
-    return
     
     import_name, _ = QtGui.QFileDialog.getOpenFileName(dsph_main_dock, "Import XML", QtCore.QDir.homePath(), "XML Files (*.xml)")
     if import_name == "":
         #User pressed cancel.  No path is selected.
         return
     else:
+        if utils.getNumberOfDocuments() > 0:
+            if utils.prompt_close_all_documents():
+                on_new_case()
+            else:
+                return
+        else:
+            on_new_case()
         config, objects = xmlimporter.import_xml_file(import_name)
         #Set Config
-        #TODO: SET CONFIG
+        #TODO: Set constants an parameters
 
         #Add results to DSPH objects
         for key, value in objects.iteritems():
             add_object_to_sim(key)
-            #TODO: COMPLETE THIS
+            data["simobjects"][key] = value
+            on_tree_item_selection_change()
+            #TODO: Change objects appearance to match properties.
 
 
 #Connect case control buttons
@@ -1342,9 +1348,8 @@ def add_object_to_sim(name=None):
     if name is None:
         selection = FreeCADGui.Selection.getSelection()
     else:
-        utils.debug(name)
-        selection = [].append(FreeCAD.ActiveDocument.getObject(name))
-        utils.debug(selection[0].Name)
+        selection = []
+        selection.append(FreeCAD.ActiveDocument.getObject(name))
 
     for item in selection:
         if item.Name == "Case_Limits":

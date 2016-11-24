@@ -312,8 +312,8 @@ def print_license():
 
 def prompt_close_all_documents():
     """ Shows a dialog to close all the current documents.
-        If accepted, close all the current documents, 
-        else stops the script execution. """
+        If accepted, close all the current documents and
+        return True, else returns False. """
     user_selection = guiutils.ok_cancel_dialog(APP_NAME, "To do this you must close all current documents. Close all the documents?")
     if user_selection == QtGui.QMessageBox.Ok:
         #Close all current documents.
@@ -534,3 +534,6 @@ def dump_to_xml(data, save_name):
     f.write('\t</execution>\n')
     f.write('</case>\n')
     f.close()
+
+def getNumberOfDocuments():
+    return len(FreeCAD.listDocuments())
