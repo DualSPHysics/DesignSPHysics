@@ -34,7 +34,7 @@ along with DesignSPHysics.  If not, see <http://www.gnu.org/licenses/>.
 
 __author__ = "Andrés Vieira"
 __copyright__ = "Copyright 2016, DualSHPysics Team"
-__credits__ = ["Andrés Vieira", "Alejandro Jacobo Cabrera Crespo"]
+__credits__ = ["Andrés Vieira", "Alejandro Jacobo Cabrera Crespo", "Orlando García Feal"]
 __license__ = "GPL"
 __version__ = "v0.1 BETA SNAPSHOT.01"
 __maintainer__ = "Andrés Vieira"
@@ -846,7 +846,7 @@ dsph_main_dock.setWidget(dsph_main_dock_scaff_widget)
 #And docking it at right side of screen
 fc_main_window.addDockWidget(QtCore.Qt.RightDockWidgetArea,dsph_main_dock)
 
-#------------------------ DSPH OBJECT PROPERTIES DOCK RELATED CODE
+# DSPH OBJECT PROPERTIES DOCK RELATED CODE
 #----------------------------
 #Tries to find and close previous instances of the widget.
 previous_dock = fc_main_window.findChild(QtGui.QDockWidget, "DSPH_Properties")
@@ -1367,7 +1367,7 @@ def add_object_to_sim(name=None):
                 mktoput = utils.get_first_mk_not_used("bound", data)
                 if not mktoput:
                     mktoput = 0
-                data['simobjects'][item.Name] = [mktoput, 'bound', 'face']
+                data['simobjects'][item.Name] = [mktoput, 'bound', 'full']
                 data["mkboundused"].append(mktoput)
             data["export_order"].append(item.Name)
     on_tree_item_selection_change()
