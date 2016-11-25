@@ -32,7 +32,7 @@ along with DesignSPHysics.  If not, see <http://www.gnu.org/licenses/>.
 
 __author__ = "Andrés Vieira"
 __copyright__ = "Copyright 2016, DualSHPysics Team"
-__credits__ = ["Andrés Vieira", "Alejandro Jacobo Cabrera Crespo"]
+__credits__ = ["Andrés Vieira"]
 __license__ = "GPL"
 __version__ = "v0.1 BETA SNAPSHOT.01"
 __maintainer__ = "Andrés Vieira"
