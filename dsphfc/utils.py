@@ -299,7 +299,7 @@ def get_first_mk_not_used(objtype, data):
 def open_help():
     """ Opens a web browser with this software help. """
 
-    webbrowser.open("http://dual.sphysics.org/gui/wiki/")
+    webbrowser.open("http://design.sphysics.org/wiki/")
 
 def print_license():
     """ Prints this software license. """
