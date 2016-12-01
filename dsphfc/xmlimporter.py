@@ -110,9 +110,6 @@ def filter_data(raw):
         else:
             fil[parameter['@key'].lower()] = float(parameter['@value'])
     
-    #Getting project name
-    fil['project_name'] = raw['case']['@app']
-
     #Finding used mkfluids and mkbounds
     fil['mkboundused'] = []
     fil['mkfluidused'] = []
@@ -241,7 +238,7 @@ def create_fc_objects(f, path):
             stl_path = ""
             stl_path = path + "/" + command.attrib["file"]
             Mesh.insert(stl_path,"DSPH_Case")
-            #TODO: Find a way to reference the mesh imported.  For now it can't
+            #TODO: Find a way to reference the mesh imported for adding it to sim.  For now it can't
             #toAddDSPH["STL" + str(elementnum)] = [int(mk[1]), mk[0], drawmode]
             pass
         else:

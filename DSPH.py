@@ -399,14 +399,13 @@ def on_import_xml():
         config, objects = xmlimporter.import_xml_file(import_name)
         #Set Config
         #TODO: Set constants an parameters
-
+        data.update(config)
         #Add results to DSPH objects
         for key, value in objects.iteritems():
             add_object_to_sim(key)
             data["simobjects"][key] = value
             on_tree_item_selection_change()
             #TODO: Change objects appearance to match properties.
-
 
 #Connect case control buttons
 casecontrols_bt_newdoc.clicked.connect(on_new_case)
@@ -1588,6 +1587,7 @@ objectlist_table.cellClicked.connect(on_cell_click)
 #Watch if no object is selected and prevent fillbox rotations
 def selection_monitor():
     while True:
+
         #ensure everything is fine when objects are not selected
         if len(FreeCADGui.Selection.getSelection()) == 0:
             property_table.hide()
