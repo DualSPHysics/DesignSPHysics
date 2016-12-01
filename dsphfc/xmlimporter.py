@@ -42,25 +42,27 @@ import FreeCADGui
 import Mesh
 import json
 import sys
+
 sys.path.append(FreeCAD.getUserAppDataDir() + "Macro/dsphfc")
 import xmltodict
 import xml.etree.ElementTree as ET
 import utils
 
+
 def import_xml_file(filename):
     """ Returns data dictionary with values found
         in a GenCase/DSPH compatible XML file and a
        list of objects to add to simulation """
-    
-    r = dict() #Dictionary to return
+
+    r = dict()  # Dictionary to return
     target_file = open(filename, "rb")
     target_xml = target_file.read().replace('\n', '')
     target_file.close()
 
-    #Path to xml folder
+    # Path to xml folder
     path = "/".join(filename.split("/")[0:-1])
 
-    #Converts XML in python dictionary
+    # Converts XML in python dictionary
     raw_data = json.loads(json.dumps(xmltodict.parse(target_xml)))
 
     config = filter_data(raw_data)
@@ -68,16 +70,19 @@ def import_xml_file(filename):
 
     return config, objects
 
+
 def filter_data(raw):
     """ Filters a raw json representing an XML file to
         a compatible data dictionary. """
-    
+
     fil = dict()
 
-    #Case constants related code
+    # Case constants related code
     fil['lattice_bound'] = int(raw['case']['casedef']['constantsdef']['lattice']['@bound'])
     fil['lattice_fluid'] = int(raw['case']['casedef']['constantsdef']['lattice']['@fluid'])
-    fil['gravity'] = [float(raw['case']['casedef']['constantsdef']['gravity']['@x']), float(raw['case']['casedef']['constantsdef']['gravity']['@y']), float(raw['case']['casedef']['constantsdef']['gravity']['@z'])]
+    fil['gravity'] = [float(raw['case']['casedef']['constantsdef']['gravity']['@x']),
+                      float(raw['case']['casedef']['constantsdef']['gravity']['@y']),
+                      float(raw['case']['casedef']['constantsdef']['gravity']['@z'])]
     fil['rhop0'] = float(raw['case']['casedef']['constantsdef']['rhop0']['@value'])
     fil['hswl'] = float(raw['case']['casedef']['constantsdef']['hswl']['@value'])
     fil['hswl_auto'] = raw['case']['casedef']['constantsdef']['hswl']['@auto'].lower() == "true"
@@ -97,11 +102,11 @@ def filter_data(raw):
     fil['massbound_auto'] = raw['case']['casedef']['constantsdef']['massbound']['@auto'].lower() == "true"
     fil['massfluid'] = float(raw['case']['casedef']['constantsdef']['massfluid']['@value'])
     fil['massfluid_auto'] = raw['case']['casedef']['constantsdef']['massbound']['@auto'].lower() == "true"
-    
-    #Getting dp
+
+    # Getting dp
     fil['dp'] = float(raw['case']['casedef']['geometry']['definition']['@dp'])
 
-    #Execution parameters related code
+    # Execution parameters related code
     execution_parameters = raw['case']['execution']['parameters']['parameter']
     for parameter in execution_parameters:
         if '#' in parameter['@key']:
@@ -109,36 +114,37 @@ def filter_data(raw):
             fil[parameter['@key'].replace('#', '').lower() + "_auto"] = True
         else:
             fil[parameter['@key'].lower()] = float(parameter['@value'])
-    
-    #Finding used mkfluids and mkbounds
+
+    # Finding used mkfluids and mkbounds
     fil['mkboundused'] = []
     fil['mkfluidused'] = []
     try:
         mkbounds = raw['case']['casedef']['geometry']['commands']['mainlist']['setmkbound']
         if type(mkbounds) == type(dict()):
-            #Only one mkfluid statement
+            # Only one mkfluid statement
             fil['mkboundused'].append(int(mkbounds['@mk']))
         else:
-            #Multiple mkfluids
+            # Multiple mkfluids
             for setmkbound in mkbounds:
                 fil['mkboundused'].append(int(setmkbound['@mk']))
     except KeyError as e:
-        #No mkbounds found
+        # No mkbounds found
         pass
     try:
         mkfluids = raw['case']['casedef']['geometry']['commands']['mainlist']['setmkfluid']
         if type(mkfluids) == type(dict()):
-            #Only one mkfluid statement
+            # Only one mkfluid statement
             fil['mkfluidused'].append(int(mkfluids['@mk']))
         else:
-            #Multiple mkfluids
+            # Multiple mkfluids
             for setmkfluid in mkfluids:
                 fil['mkfluidused'].append(int(setmkfluid['@mk']))
     except KeyError as e:
-        #No mkfluids found
+        # No mkfluids found
         pass
-            
+
     return fil
+
 
 def create_fc_objects(f, path):
     """ Creates supported objects on scene. Iterates over
@@ -150,7 +156,7 @@ def create_fc_objects(f, path):
     drawmode = "full"
     elementnum = 0
     toAddDSPH = dict()
-    
+
     root = ET.fromstring(f)
     mainlist = root.findall("./casedef/geometry/commands/mainlist/*")
     for command in mainlist:
@@ -159,17 +165,18 @@ def create_fc_objects(f, path):
             rotation = (0.0, 0.0, 0.0, 0.0)
             pass
         elif command.tag == "setmkfluid":
-            mk = ("fluid", command.attrib["mk"]) 
+            mk = ("fluid", command.attrib["mk"])
             pass
         elif command.tag == "setmkbound":
-            mk = ("bound", command.attrib["mk"]) 
+            mk = ("bound", command.attrib["mk"])
             pass
         elif command.tag == "setdrawmode":
             drawmode = command.attrib["mode"]
         elif command.tag == "move":
             movement = (float(command.attrib["x"]), float(command.attrib["y"]), float(command.attrib["z"]))
         elif command.tag == "rotate":
-            rotation = (float(command.attrib["ang"]), float(command.attrib["x"]), float(command.attrib["y"]), float(command.attrib["z"]))
+            rotation = (float(command.attrib["ang"]), float(command.attrib["x"]), float(command.attrib["y"]),
+                        float(command.attrib["z"]))
         elif command.tag == "drawbox":
             for subcommand in command:
                 boxfill = "full"
@@ -178,73 +185,87 @@ def create_fc_objects(f, path):
                 if subcommand.tag == "boxfill":
                     boxfill = subcommand.text
                 elif subcommand.tag == "point":
-                    point = (float(subcommand.attrib["x"]), float(subcommand.attrib["y"]), float(subcommand.attrib["z"]))
+                    point = (
+                    float(subcommand.attrib["x"]), float(subcommand.attrib["y"]), float(subcommand.attrib["z"]))
                 elif subcommand.tag == "size":
                     size = (float(subcommand.attrib["x"]), float(subcommand.attrib["y"]), float(subcommand.attrib["z"]))
                 else:
-                    utils.warning("Modifier unknown (" + subcommand.tag + ") for the command: " + command.tag + ". Ignoring...")
-            #Box creation in FreeCAD
-            FreeCAD.ActiveDocument.addObject("Part::Box","Box" + str(elementnum))
+                    utils.warning(
+                        "Modifier unknown (" + subcommand.tag + ") for the command: " + command.tag + ". Ignoring...")
+            # Box creation in FreeCAD
+            FreeCAD.ActiveDocument.addObject("Part::Box", "Box" + str(elementnum))
             FreeCAD.ActiveDocument.ActiveObject.Label = "Box" + str(elementnum)
-            FreeCAD.ActiveDocument.getObject("Box" + str(elementnum)).Placement = FreeCAD.Placement(FreeCAD.Vector((point[0] + movement[0]) * 1000, (point[1] + movement[1]) * 1000, (point[2] + movement[2]) * 1000),FreeCAD.Rotation(FreeCAD.Vector(rotation[1], rotation[2], rotation[3]), rotation[0]))
+            FreeCAD.ActiveDocument.getObject("Box" + str(elementnum)).Placement = FreeCAD.Placement(
+                FreeCAD.Vector((point[0] + movement[0]) * 1000, (point[1] + movement[1]) * 1000,
+                               (point[2] + movement[2]) * 1000),
+                FreeCAD.Rotation(FreeCAD.Vector(rotation[1], rotation[2], rotation[3]), rotation[0]))
             FreeCAD.ActiveDocument.getObject("Box" + str(elementnum)).Length = str(size[0]) + ' m'
             FreeCAD.ActiveDocument.getObject("Box" + str(elementnum)).Width = str(size[1]) + ' m'
             FreeCAD.ActiveDocument.getObject("Box" + str(elementnum)).Height = str(size[2]) + ' m'
-            #Suscribe Box for creation in DSPH Objects
-            #Structure: [name] = [mknumber, type, fill]
+            # Suscribe Box for creation in DSPH Objects
+            # Structure: [name] = [mknumber, type, fill]
             toAddDSPH["Box" + str(elementnum)] = [int(mk[1]), mk[0], drawmode]
         elif command.tag == "drawcylinder":
             radius = 1.0
-            point = [0,0,0]
-            top_point = [0,0,0]
+            point = [0, 0, 0]
+            top_point = [0, 0, 0]
             radius = float(command.attrib["radius"])
             points_found = 0
             for subcommand in command:
                 if subcommand.tag == "point":
                     if points_found == 0:
-                        point = [float(subcommand.attrib["x"]), float(subcommand.attrib["y"]), float(subcommand.attrib["z"])]
+                        point = [float(subcommand.attrib["x"]), float(subcommand.attrib["y"]),
+                                 float(subcommand.attrib["z"])]
                     elif points_found == 1:
-                        top_point = [float(subcommand.attrib["x"]), float(subcommand.attrib["y"]), float(subcommand.attrib["z"])]
+                        top_point = [float(subcommand.attrib["x"]), float(subcommand.attrib["y"]),
+                                     float(subcommand.attrib["z"])]
                     else:
                         utils.warning("Found more than two points in a cylinder definition. Ignoring")
                     points_found += 1
 
-            #Cylinder creation in FreeCAD
-            FreeCAD.ActiveDocument.addObject("Part::Cylinder","Cylinder" + str(elementnum))
+            # Cylinder creation in FreeCAD
+            FreeCAD.ActiveDocument.addObject("Part::Cylinder", "Cylinder" + str(elementnum))
             FreeCAD.ActiveDocument.ActiveObject.Label = "Cylinder" + str(elementnum)
-            FreeCAD.ActiveDocument.getObject("Cylinder" + str(elementnum)).Placement = FreeCAD.Placement(FreeCAD.Vector((point[0] + movement[0]) * 1000, (point[1] + movement[1]) * 1000,(point[2] + movement[2]) * 1000),FreeCAD.Rotation(FreeCAD.Vector(rotation[1], rotation[2], rotation[3]), rotation[0]))
+            FreeCAD.ActiveDocument.getObject("Cylinder" + str(elementnum)).Placement = FreeCAD.Placement(
+                FreeCAD.Vector((point[0] + movement[0]) * 1000, (point[1] + movement[1]) * 1000,
+                               (point[2] + movement[2]) * 1000),
+                FreeCAD.Rotation(FreeCAD.Vector(rotation[1], rotation[2], rotation[3]), rotation[0]))
             FreeCAD.ActiveDocument.getObject("Cylinder" + str(elementnum)).Radius = str(radius) + ' m'
             FreeCAD.ActiveDocument.getObject("Cylinder" + str(elementnum)).Height = (top_point[2] - point[2]) * 1000
-            #Suscribe Cylinder for creation in DSPH Objects
-            #Structure: [name] = [mknumber, type, fill]
+            # Suscribe Cylinder for creation in DSPH Objects
+            # Structure: [name] = [mknumber, type, fill]
             toAddDSPH["Cylinder" + str(elementnum)] = [int(mk[1]), mk[0], drawmode]
         elif command.tag == "drawsphere":
             radius = 1
-            point = [0,0,0]
+            point = [0, 0, 0]
             radius = float(command.attrib["radius"])
             for subcommand in command:
                 if subcommand.tag == "point":
-                    point = [float(subcommand.attrib["x"]), float(subcommand.attrib["y"]), float(subcommand.attrib["z"])]
-            #Sphere creation in FreeCAD
-            FreeCAD.ActiveDocument.addObject("Part::Sphere","Sphere" + str(elementnum))
+                    point = [float(subcommand.attrib["x"]), float(subcommand.attrib["y"]),
+                             float(subcommand.attrib["z"])]
+            # Sphere creation in FreeCAD
+            FreeCAD.ActiveDocument.addObject("Part::Sphere", "Sphere" + str(elementnum))
             FreeCAD.ActiveDocument.ActiveObject.Label = "Sphere" + str(elementnum)
-            FreeCAD.ActiveDocument.getObject("Sphere" + str(elementnum)).Placement = FreeCAD.Placement(FreeCAD.Vector((point[0] + movement[0]) * 1000, (point[1] + movement[1]) * 1000,(point[2] + movement[2]) * 1000),FreeCAD.Rotation(FreeCAD.Vector(rotation[1], rotation[2], rotation[3]), rotation[0]))
+            FreeCAD.ActiveDocument.getObject("Sphere" + str(elementnum)).Placement = FreeCAD.Placement(
+                FreeCAD.Vector((point[0] + movement[0]) * 1000, (point[1] + movement[1]) * 1000,
+                               (point[2] + movement[2]) * 1000),
+                FreeCAD.Rotation(FreeCAD.Vector(rotation[1], rotation[2], rotation[3]), rotation[0]))
             FreeCAD.ActiveDocument.getObject("Sphere" + str(elementnum)).Radius = str(radius) + ' m'
-            #Suscribe Sphere for creation in DSPH Objects
-            #Structure: [name] = [mknumber, type, fill]
+            # Suscribe Sphere for creation in DSPH Objects
+            # Structure: [name] = [mknumber, type, fill]
             toAddDSPH["Sphere" + str(elementnum)] = [int(mk[1]), mk[0], drawmode]
         elif command.tag == "drawfilestl":
-            #Imports the stl file as good as it can
+            # Imports the stl file as good as it can
             stl_path = ""
             stl_path = path + "/" + command.attrib["file"]
-            Mesh.insert(stl_path,"DSPH_Case")
-            #TODO: Find a way to reference the mesh imported for adding it to sim.  For now it can't
-            #toAddDSPH["STL" + str(elementnum)] = [int(mk[1]), mk[0], drawmode]
+            Mesh.insert(stl_path, "DSPH_Case")
+            # TODO: Find a way to reference the mesh imported for adding it to sim.  For now it can't
+            # toAddDSPH["STL" + str(elementnum)] = [int(mk[1]), mk[0], drawmode]
             pass
         else:
-            #Command not supported, report and ignore
+            # Command not supported, report and ignore
             utils.warning("The command: " + command.tag + " is not yet supported. Ignoring...")
-        
+
         elementnum += 1
 
     FreeCAD.ActiveDocument.recompute()

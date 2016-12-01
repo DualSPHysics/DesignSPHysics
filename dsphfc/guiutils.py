@@ -39,18 +39,13 @@ __status__ = "Development"
 import FreeCAD
 import FreeCADGui
 import sys
-import os
 import pickle
-import threading
-import math
-import webbrowser
-import traceback
-import glob
-import numpy
+
 from PySide import QtGui, QtCore
-from datetime import datetime
+
 sys.path.append(FreeCAD.getUserAppDataDir() + "Macro/dsphfc")
 import utils
+
 
 def warning_dialog(warn_text):
     """Spawns a warning dialog with the text passed."""
@@ -60,6 +55,7 @@ def warning_dialog(warn_text):
     warning_messagebox.setIcon(QtGui.QMessageBox.Warning)
     warning_messagebox.exec_()
 
+
 def error_dialog(error_text):
     """Spawns an error dialog with the text passed."""
 
@@ -68,6 +64,7 @@ def error_dialog(error_text):
     error_messagebox.setIcon(QtGui.QMessageBox.Critical)
     error_messagebox.exec_()
 
+
 def info_dialog(info_text):
     """Spawns an info dialog with the text passed."""
 
@@ -75,6 +72,7 @@ def info_dialog(info_text):
     info_messagebox.setText(info_text)
     info_messagebox.setIcon(QtGui.QMessageBox.Information)
     info_messagebox.exec_()
+
 
 def ok_cancel_dialog(title, text):
     """Spawns an okay/cancel dialog with the title and text passed"""
@@ -86,21 +84,22 @@ def ok_cancel_dialog(title, text):
     openConfirmDialog.setDefaultButton(QtGui.QMessageBox.Ok)
     return openConfirmDialog.exec_()
 
+
 def def_constants_window(data):
     """Defines the constants window creation and functonality.
     Modifies the passed data dictionary to update data if ok is pressed."""
 
-    #Creates a dialog and 2 main buttons
+    # Creates a dialog and 2 main buttons
     constants_window = QtGui.QDialog()
     constants_window.setWindowTitle("DSPH Constant definition")
     ok_button = QtGui.QPushButton("Ok")
     cancel_button = QtGui.QPushButton("Cancel")
 
-    #Lattice for boundaries layout and components
+    # Lattice for boundaries layout and components
     lattice_layout = QtGui.QHBoxLayout()
     lattice_label = QtGui.QLabel("Lattice for Boundaries: ")
     lattice_input = QtGui.QLineEdit()
-    lattice_input.setMaxLength(1)    
+    lattice_input.setMaxLength(1)
     lattice_validator = QtGui.QIntValidator(1, 2, lattice_input)
     lattice_input.setText(str(data['lattice_bound']))
     lattice_input.setValidator(lattice_validator)
@@ -110,11 +109,11 @@ def def_constants_window(data):
     lattice_layout.addWidget(lattice_input)
     lattice_layout.addWidget(lattice_label2)
 
-    #Lattice for fluids layout and components
+    # Lattice for fluids layout and components
     lattice2_layout = QtGui.QHBoxLayout()
     lattice2_label = QtGui.QLabel("Lattice for Fluids: ")
     lattice2_input = QtGui.QLineEdit()
-    lattice2_input.setMaxLength(1)    
+    lattice2_input.setMaxLength(1)
     lattice2_validator = QtGui.QIntValidator(1, 2, lattice2_input)
     lattice2_input.setText(str(data['lattice_bound']))
     lattice2_input.setValidator(lattice2_validator)
@@ -124,41 +123,41 @@ def def_constants_window(data):
     lattice2_layout.addWidget(lattice2_input)
     lattice2_layout.addWidget(lattice2_label2)
 
-    #Gravity
+    # Gravity
     gravity_layout = QtGui.QHBoxLayout()
     gravity_label = QtGui.QLabel("Gravity [X, Y, Z]: ")
-    
+
     gravityx_input = QtGui.QLineEdit()
-    gravityx_input.setMaxLength(10)    
+    gravityx_input.setMaxLength(10)
     gravityx_validator = QtGui.QDoubleValidator(-200, 200, 8, gravityx_input)
     gravityx_input.setText(str(data['gravity'][0]))
     gravityx_input.setValidator(gravityx_validator)
 
     gravityy_input = QtGui.QLineEdit()
-    gravityy_input.setMaxLength(10)    
+    gravityy_input.setMaxLength(10)
     gravityy_validator = QtGui.QDoubleValidator(-200, 200, 8, gravityy_input)
     gravityy_input.setText(str(data['gravity'][1]))
     gravityy_input.setValidator(gravityy_validator)
 
     gravityz_input = QtGui.QLineEdit()
-    gravityz_input.setMaxLength(10)    
+    gravityz_input.setMaxLength(10)
     gravityz_validator = QtGui.QDoubleValidator(-200, 200, 8, gravityz_input)
     gravityz_input.setText(str(data['gravity'][2]))
     gravityz_input.setValidator(gravityz_validator)
-    
+
     gravity_label2 = QtGui.QLabel("m/s<span style='vertical-align:super'>2</span>")
 
     gravity_layout.addWidget(gravity_label)
-    gravity_layout.addWidget(gravityx_input) #For X
-    gravity_layout.addWidget(gravityy_input) #For Y
-    gravity_layout.addWidget(gravityz_input) #For Z
+    gravity_layout.addWidget(gravityx_input)  # For X
+    gravity_layout.addWidget(gravityy_input)  # For Y
+    gravity_layout.addWidget(gravityz_input)  # For Z
     gravity_layout.addWidget(gravity_label2)
-    
-    #Reference density of the fluid: layout and components
+
+    # Reference density of the fluid: layout and components
     rhop0_layout = QtGui.QHBoxLayout()
     rhop0_label = QtGui.QLabel("Fluid reference density: ")
     rhop0_input = QtGui.QLineEdit()
-    rhop0_input.setMaxLength(10)    
+    rhop0_input.setMaxLength(10)
     rhop0_validator = QtGui.QIntValidator(0, 10000, rhop0_input)
     rhop0_input.setText(str(data['rhop0']))
     rhop0_input.setValidator(rhop0_validator)
@@ -168,8 +167,8 @@ def def_constants_window(data):
     rhop0_layout.addWidget(rhop0_input)
     rhop0_layout.addWidget(rhop0_label2)
 
-    #Maximum still water lavel to calc.  spdofsound using coefsound: layout and
-    #components
+    # Maximum still water lavel to calc.  spdofsound using coefsound: layout and
+    # components
     hswlauto_layout = QtGui.QHBoxLayout()
     hswlauto_chk = QtGui.QCheckBox("Auto HSWL ")
     if data['hswl_auto']:
@@ -177,8 +176,8 @@ def def_constants_window(data):
     else:
         hswlauto_chk.setCheckState(QtCore.Qt.Unchecked)
 
-    def on_hswlauto_check(): #Controls if user selected auto HSWL or not enabling/disablen HSWL custom
-                             #value introduction
+    def on_hswlauto_check():  # Controls if user selected auto HSWL or not enabling/disablen HSWL custom
+        # value introduction
         if hswlauto_chk.isChecked():
             hswl_input.setEnabled(False)
         else:
@@ -190,7 +189,7 @@ def def_constants_window(data):
     hswl_layout = QtGui.QHBoxLayout()
     hswl_label = QtGui.QLabel("HSWL: ")
     hswl_input = QtGui.QLineEdit()
-    hswl_input.setMaxLength(10)    
+    hswl_input.setMaxLength(10)
     hswl_validator = QtGui.QIntValidator(0, 10000, hswl_input)
     hswl_input.setText(str(data['hswl']))
     hswl_input.setValidator(hswl_validator)
@@ -200,14 +199,14 @@ def def_constants_window(data):
     hswl_layout.addWidget(hswl_input)
     hswl_layout.addWidget(hswl_label2)
 
-    #Manually trigger check for the first time
+    # Manually trigger check for the first time
     on_hswlauto_check()
 
-    #gamma: layout and components
+    # gamma: layout and components
     gamma_layout = QtGui.QHBoxLayout()
     gamma_label = QtGui.QLabel("Gamma: ")
     gamma_input = QtGui.QLineEdit()
-    gamma_input.setMaxLength(3)    
+    gamma_input.setMaxLength(3)
     gamma_validator = QtGui.QIntValidator(0, 999, gamma_input)
     gamma_input.setText(str(data['gamma']))
     gamma_input.setValidator(gamma_validator)
@@ -217,7 +216,7 @@ def def_constants_window(data):
     gamma_layout.addWidget(gamma_input)
     gamma_layout.addWidget(gamma_label2)
 
-    #Speedsystem: layout and components
+    # Speedsystem: layout and components
     speedsystemauto_layout = QtGui.QHBoxLayout()
     speedsystemauto_chk = QtGui.QCheckBox("Auto Speedsystem ")
     if data['speedsystem_auto']:
@@ -225,8 +224,8 @@ def def_constants_window(data):
     else:
         speedsystemauto_chk.setCheckState(QtCore.Qt.Unchecked)
 
-    def on_speedsystemauto_check(): #Controls if user selected auto speedsystem or not enabling/disablen
-                                    #speedsystem custom value introduction
+    def on_speedsystemauto_check():  # Controls if user selected auto speedsystem or not enabling/disablen
+        # speedsystem custom value introduction
         if speedsystemauto_chk.isChecked():
             speedsystem_input.setEnabled(False)
         else:
@@ -238,7 +237,7 @@ def def_constants_window(data):
     speedsystem_layout = QtGui.QHBoxLayout()
     speedsystem_label = QtGui.QLabel("Speedsystem: ")
     speedsystem_input = QtGui.QLineEdit()
-    speedsystem_input.setMaxLength(10)    
+    speedsystem_input.setMaxLength(10)
     speedsystem_validator = QtGui.QIntValidator(0, 10000, speedsystem_input)
     speedsystem_input.setText(str(data['speedsystem']))
     speedsystem_input.setValidator(speedsystem_validator)
@@ -248,14 +247,14 @@ def def_constants_window(data):
     speedsystem_layout.addWidget(speedsystem_input)
     speedsystem_layout.addWidget(speedsystem_label2)
 
-    #Manually trigger check for the first time
+    # Manually trigger check for the first time
     on_speedsystemauto_check()
 
-    #coefsound: layout and components
+    # coefsound: layout and components
     coefsound_layout = QtGui.QHBoxLayout()
     coefsound_label = QtGui.QLabel("Coefsound: ")
     coefsound_input = QtGui.QLineEdit()
-    coefsound_input.setMaxLength(3)    
+    coefsound_input.setMaxLength(3)
     coefsound_validator = QtGui.QIntValidator(0, 999, coefsound_input)
     coefsound_input.setText(str(data['coefsound']))
     coefsound_input.setValidator(coefsound_validator)
@@ -265,7 +264,7 @@ def def_constants_window(data):
     coefsound_layout.addWidget(coefsound_input)
     coefsound_layout.addWidget(coefsound_label2)
 
-    #Speedsound: layout and components
+    # Speedsound: layout and components
     speedsoundauto_layout = QtGui.QHBoxLayout()
     speedsoundauto_chk = QtGui.QCheckBox("Auto Speedsound ")
     if data['speedsound_auto']:
@@ -273,8 +272,8 @@ def def_constants_window(data):
     else:
         speedsoundauto_chk.setCheckState(QtCore.Qt.Unchecked)
 
-    def on_speedsoundauto_check(): #Controls if user selected auto speedsound or not enabling/disablen speedsound
-                                   #custom value introduction
+    def on_speedsoundauto_check():  # Controls if user selected auto speedsound or not enabling/disablen speedsound
+        # custom value introduction
         if speedsoundauto_chk.isChecked():
             speedsound_input.setEnabled(False)
         else:
@@ -286,7 +285,7 @@ def def_constants_window(data):
     speedsound_layout = QtGui.QHBoxLayout()
     speedsound_label = QtGui.QLabel("Speedsound: ")
     speedsound_input = QtGui.QLineEdit()
-    speedsound_input.setMaxLength(10)    
+    speedsound_input.setMaxLength(10)
     speedsound_validator = QtGui.QIntValidator(0, 10000, speedsound_input)
     speedsound_input.setText(str(data['speedsound']))
     speedsound_input.setValidator(speedsound_validator)
@@ -296,14 +295,14 @@ def def_constants_window(data):
     speedsound_layout.addWidget(speedsound_input)
     speedsound_layout.addWidget(speedsound_label2)
 
-    #Manually trigger check for the first time
+    # Manually trigger check for the first time
     on_speedsoundauto_check()
 
-    #coefh: layout and components
+    # coefh: layout and components
     coefh_layout = QtGui.QHBoxLayout()
     coefh_label = QtGui.QLabel("CoefH: ")
     coefh_input = QtGui.QLineEdit()
-    coefh_input.setMaxLength(10)    
+    coefh_input.setMaxLength(10)
     coefh_validator = QtGui.QDoubleValidator(0, 10, 8, coefh_input)
     coefh_input.setText(str(data['coefh']))
     coefh_input.setValidator(coefh_validator)
@@ -313,11 +312,11 @@ def def_constants_window(data):
     coefh_layout.addWidget(coefh_input)
     coefh_layout.addWidget(coefh_label2)
 
-    #cflnumber: layout and components
+    # cflnumber: layout and components
     cflnumber_layout = QtGui.QHBoxLayout()
     cflnumber_label = QtGui.QLabel("cflnumber: ")
     cflnumber_input = QtGui.QLineEdit()
-    cflnumber_input.setMaxLength(10)    
+    cflnumber_input.setMaxLength(10)
     cflnumber_validator = QtGui.QDoubleValidator(0, 10, 8, coefh_input)
     cflnumber_input.setText(str(data['cflnumber']))
     cflnumber_input.setValidator(cflnumber_validator)
@@ -327,7 +326,7 @@ def def_constants_window(data):
     cflnumber_layout.addWidget(cflnumber_input)
     cflnumber_layout.addWidget(cflnumber_label2)
 
-    #h: layout and components
+    # h: layout and components
     hauto_layout = QtGui.QHBoxLayout()
     hauto_chk = QtGui.QCheckBox("Auto Smoothing length ")
     if data['h_auto']:
@@ -335,8 +334,8 @@ def def_constants_window(data):
     else:
         hauto_chk.setCheckState(QtCore.Qt.Unchecked)
 
-    def on_hauto_check(): #Controls if user selected auto h or not enabling/disablen h custom value
-                          #introduction
+    def on_hauto_check():  # Controls if user selected auto h or not enabling/disablen h custom value
+        # introduction
         if hauto_chk.isChecked():
             h_input.setEnabled(False)
         else:
@@ -348,7 +347,7 @@ def def_constants_window(data):
     h_layout = QtGui.QHBoxLayout()
     h_label = QtGui.QLabel("Smoothing Length: ")
     h_input = QtGui.QLineEdit()
-    h_input.setMaxLength(10)    
+    h_input.setMaxLength(10)
     h_validator = QtGui.QDoubleValidator(0, 100, 8, h_input)
     h_input.setText(str(data['h']))
     h_input.setValidator(h_validator)
@@ -358,10 +357,10 @@ def def_constants_window(data):
     h_layout.addWidget(h_input)
     h_layout.addWidget(h_label2)
 
-    #Manually trigger check for the first time
+    # Manually trigger check for the first time
     on_hauto_check()
 
-    #b: layout and components
+    # b: layout and components
     bauto_layout = QtGui.QHBoxLayout()
     bauto_chk = QtGui.QCheckBox("Auto b constant for EOS ")
     if data['b_auto']:
@@ -369,8 +368,8 @@ def def_constants_window(data):
     else:
         bauto_chk.setCheckState(QtCore.Qt.Unchecked)
 
-    def on_bauto_check(): #Controls if user selected auto b or not enabling/disablen b custom value
-                          #introduction
+    def on_bauto_check():  # Controls if user selected auto b or not enabling/disablen b custom value
+        # introduction
         if bauto_chk.isChecked():
             b_input.setEnabled(False)
         else:
@@ -382,7 +381,7 @@ def def_constants_window(data):
     b_layout = QtGui.QHBoxLayout()
     b_label = QtGui.QLabel("B constant: ")
     b_input = QtGui.QLineEdit()
-    b_input.setMaxLength(10)    
+    b_input.setMaxLength(10)
     b_validator = QtGui.QDoubleValidator(0, 100, 8, b_input)
     b_input.setText(str(data['b']))
     b_input.setValidator(b_validator)
@@ -392,11 +391,10 @@ def def_constants_window(data):
     b_layout.addWidget(b_input)
     b_layout.addWidget(b_label2)
 
-    #Manually trigger check for the first time
+    # Manually trigger check for the first time
     on_bauto_check()
 
-
-    #------------ Button behaviour definition --------------
+    # ------------ Button behaviour definition --------------
     def on_ok():
         data['lattice_bound'] = lattice_input.text()
         data['lattice_fluid'] = lattice2_input.text()
@@ -425,15 +423,15 @@ def def_constants_window(data):
 
     ok_button.clicked.connect(on_ok)
     cancel_button.clicked.connect(on_cancel)
-    #Button layout definition
+    # Button layout definition
     cw_button_layout = QtGui.QHBoxLayout()
     cw_button_layout.addStretch(1)
     cw_button_layout.addWidget(ok_button)
     cw_button_layout.addWidget(cancel_button)
 
-    #START Main layout definition and composition.
+    # START Main layout definition and composition.
     cw_main_layout = QtGui.QVBoxLayout()
-    
+
     cw_main_layout.addLayout(lattice_layout)
     cw_main_layout.addLayout(lattice2_layout)
     cw_main_layout.addLayout(gravity_layout)
@@ -455,34 +453,34 @@ def def_constants_window(data):
 
     cw_main_layout.addStretch(1)
 
-
     cw_groupbox = QtGui.QGroupBox("Case constants")
     cw_groupbox.setLayout(cw_main_layout)
     constants_window_layout = QtGui.QVBoxLayout()
-    constants_window_layout.addWidget(cw_groupbox)    
+    constants_window_layout.addWidget(cw_groupbox)
     constants_window_layout.addLayout(cw_button_layout)
     constants_window.setLayout(constants_window_layout)
-    #END Main layout definition and composition.
+    # END Main layout definition and composition.
 
-    #Constant definition window behaviour and general composing
-    constants_window.resize(600,400)
+    # Constant definition window behaviour and general composing
+    constants_window.resize(600, 400)
     ret_val = constants_window.exec_()
+
 
 def def_execparams_window(data):
     """Defines the execution parameters window.
     Modifies the data dictionary passed as parameter."""
 
-    #Creates a dialog and 2 main buttons
+    # Creates a dialog and 2 main buttons
     execparams_window = QtGui.QDialog()
     execparams_window.setWindowTitle("DSPH Execution Parameters")
     ok_button = QtGui.QPushButton("Ok")
     cancel_button = QtGui.QPushButton("Cancel")
 
-    #Precision in particle interaction
+    # Precision in particle interaction
     posdouble_layout = QtGui.QHBoxLayout()
     posdouble_label = QtGui.QLabel("Precision in particle interaction: ")
     posdouble_input = QtGui.QLineEdit()
-    posdouble_input.setMaxLength(1)    
+    posdouble_input.setMaxLength(1)
     posdouble_validator = QtGui.QIntValidator(0, 2, posdouble_input)
     posdouble_input.setText(str(data['posdouble']))
     posdouble_input.setValidator(posdouble_validator)
@@ -492,11 +490,11 @@ def def_execparams_window(data):
     posdouble_layout.addWidget(posdouble_input)
     posdouble_layout.addWidget(posdouble_label2)
 
-    #Step Algorithm
+    # Step Algorithm
     stepalgorithm_layout = QtGui.QHBoxLayout()
     stepalgorithm_label = QtGui.QLabel("Step Algorithm: ")
     stepalgorithm_input = QtGui.QLineEdit()
-    stepalgorithm_input.setMaxLength(1)    
+    stepalgorithm_input.setMaxLength(1)
     stepalgorithm_validator = QtGui.QIntValidator(0, 2, stepalgorithm_input)
     stepalgorithm_input.setText(str(data['stepalgorithm']))
     stepalgorithm_input.setValidator(stepalgorithm_validator)
@@ -506,11 +504,11 @@ def def_execparams_window(data):
     stepalgorithm_layout.addWidget(stepalgorithm_input)
     stepalgorithm_layout.addWidget(stepalgorithm_label2)
 
-    #Verlet steps
+    # Verlet steps
     verletsteps_layout = QtGui.QHBoxLayout()
     verletsteps_label = QtGui.QLabel("Verlet Steps: ")
     verletsteps_input = QtGui.QLineEdit()
-    verletsteps_input.setMaxLength(4)    
+    verletsteps_input.setMaxLength(4)
     verletsteps_validator = QtGui.QIntValidator(0, 9999, verletsteps_input)
     verletsteps_input.setText(str(data['verletsteps']))
     verletsteps_input.setValidator(verletsteps_validator)
@@ -518,11 +516,11 @@ def def_execparams_window(data):
     verletsteps_layout.addWidget(verletsteps_label)
     verletsteps_layout.addWidget(verletsteps_input)
 
-    #Kernel
+    # Kernel
     kernel_layout = QtGui.QHBoxLayout()
     kernel_label = QtGui.QLabel("Interaction kernel: ")
     kernel_input = QtGui.QLineEdit()
-    kernel_input.setMaxLength(1)    
+    kernel_input.setMaxLength(1)
     kernel_validator = QtGui.QIntValidator(0, 2, kernel_input)
     kernel_input.setText(str(data['kernel']))
     kernel_input.setValidator(kernel_validator)
@@ -532,18 +530,18 @@ def def_execparams_window(data):
     kernel_layout.addWidget(kernel_input)
     kernel_layout.addWidget(kernel_label2)
 
-    #Viscosity formulation
+    # Viscosity formulation
     def on_viscotreatment_change():
         if viscotreatment_input.text() == "1":
             visco_input.setText("0.01")
-            
-        elif viscotreatment_input.text() == "2":            
+
+        elif viscotreatment_input.text() == "2":
             visco_input.setText("0.000001")
 
     viscotreatment_layout = QtGui.QHBoxLayout()
     viscotreatment_label = QtGui.QLabel("Viscosity Formulation: ")
     viscotreatment_input = QtGui.QLineEdit()
-    viscotreatment_input.setMaxLength(1)    
+    viscotreatment_input.setMaxLength(1)
     viscotreatment_validator = QtGui.QIntValidator(0, 2, viscotreatment_input)
     viscotreatment_input.setText(str(data['viscotreatment']))
     viscotreatment_input.setValidator(viscotreatment_validator)
@@ -553,70 +551,70 @@ def def_execparams_window(data):
     viscotreatment_layout.addWidget(viscotreatment_input)
     viscotreatment_layout.addWidget(viscotreatment_label2)
 
-    #Viscosity value
+    # Viscosity value
     visco_layout = QtGui.QHBoxLayout()
     visco_label = QtGui.QLabel("Viscosity value: ")
     visco_input = QtGui.QLineEdit()
-    visco_input.setMaxLength(10)    
+    visco_input.setMaxLength(10)
     visco_input.setText(str(data['visco']))
     visco_layout.addWidget(visco_label)
     visco_layout.addWidget(visco_input)
 
-    #Viscosity with boundary
+    # Viscosity with boundary
     viscoboundfactor_layout = QtGui.QHBoxLayout()
     viscoboundfactor_label = QtGui.QLabel("Viscosity with boundary: ")
     viscoboundfactor_input = QtGui.QLineEdit()
-    viscoboundfactor_input.setMaxLength(10)    
+    viscoboundfactor_input.setMaxLength(10)
     viscoboundfactor_input.setText(str(data['viscoboundfactor']))
 
     viscoboundfactor_layout.addWidget(viscoboundfactor_label)
     viscoboundfactor_layout.addWidget(viscoboundfactor_input)
 
-    #DeltaSPH value
+    # DeltaSPH value
     deltasph_layout = QtGui.QHBoxLayout()
     deltasph_label = QtGui.QLabel("DeltaSPH value: ")
     deltasph_input = QtGui.QLineEdit()
-    deltasph_input.setMaxLength(10)    
+    deltasph_input.setMaxLength(10)
     deltasph_input.setText(str(data['deltasph']))
     deltasph_layout.addWidget(deltasph_label)
     deltasph_layout.addWidget(deltasph_input)
 
-    #Shifting mode
+    # Shifting mode
     shifting_layout = QtGui.QHBoxLayout()
     shifting_label = QtGui.QLabel("Shifting mode: ")
     shifting_input = QtGui.QLineEdit()
-    shifting_input.setMaxLength(1)    
+    shifting_input.setMaxLength(1)
     shifting_validator = QtGui.QIntValidator(1, 3, shifting_input)
     shifting_input.setText(str(data['shifting']))
     shifting_input.setValidator(shifting_validator)
     shifting_label2 = QtGui.QLabel("[1,3]")
     shifting_layout.addWidget(shifting_label)
     shifting_layout.addWidget(shifting_input)
-    shifting_layout.addWidget(shifting_label2)    
+    shifting_layout.addWidget(shifting_label2)
 
-    #Coefficient for shifting
+    # Coefficient for shifting
     shiftcoef_layout = QtGui.QHBoxLayout()
     shiftcoef_label = QtGui.QLabel("Coefficient for shifting: ")
     shiftcoef_input = QtGui.QLineEdit()
-    shiftcoef_input.setMaxLength(10)    
+    shiftcoef_input.setMaxLength(10)
     shiftcoef_input.setText(str(data['shiftcoef']))
     shiftcoef_layout.addWidget(shiftcoef_label)
     shiftcoef_layout.addWidget(shiftcoef_input)
 
-    #Free surface detection threshold
+    # Free surface detection threshold
     shifttfs_layout = QtGui.QHBoxLayout()
     shifttfs_label = QtGui.QLabel("Free surface detection threshold: ")
     shifttfs_input = QtGui.QLineEdit()
-    shifttfs_input.setMaxLength(10)    
+    shifttfs_input.setMaxLength(10)
     shifttfs_input.setText(str(data['shifttfs']))
     shifttfs_layout.addWidget(shifttfs_label)
     shifttfs_layout.addWidget(shifttfs_input)
 
-    #Rigid algorithm
+    # Rigid algorithm
     rigidalgorithm_layout = QtGui.QHBoxLayout()
     rigidalgorithm_label = QtGui.QLabel("Rigid algorithm: ")
     rigidalgorithm_input = QtGui.QLineEdit()
-    rigidalgorithm_input.setMaxLength(1)    
+    rigidalgorithm_input.setMaxLength(1)
     rigidalgorithm_validator = QtGui.QIntValidator(1, 2, rigidalgorithm_input)
     rigidalgorithm_input.setText(str(data['rigidalgorithm']))
     rigidalgorithm_input.setValidator(rigidalgorithm_validator)
@@ -625,46 +623,47 @@ def def_execparams_window(data):
     rigidalgorithm_layout.addWidget(rigidalgorithm_input)
     rigidalgorithm_layout.addWidget(rigidalgorithm_label2)
 
-    #Sim start freeze time
+    # Sim start freeze time
     ftpause_layout = QtGui.QHBoxLayout()
     ftpause_label = QtGui.QLabel("Sim start freeze time: ")
     ftpause_input = QtGui.QLineEdit()
-    ftpause_input.setMaxLength(10)    
+    ftpause_input.setMaxLength(10)
     ftpause_input.setText(str(data['ftpause']))
     ftpause_label2 = QtGui.QLabel("seconds")
     ftpause_layout.addWidget(ftpause_label)
     ftpause_layout.addWidget(ftpause_input)
     ftpause_layout.addWidget(ftpause_label2)
 
-
-    #Coefficient to calculate DT
+    # Coefficient to calculate DT
     coefdtmin_layout = QtGui.QHBoxLayout()
     coefdtmin_label = QtGui.QLabel("Coefficient to calculate DT: ")
     coefdtmin_input = QtGui.QLineEdit()
-    coefdtmin_input.setMaxLength(10)    
+    coefdtmin_input.setMaxLength(10)
     coefdtmin_input.setText(str(data['coefdtmin']))
     coefdtmin_layout.addWidget(coefdtmin_label)
     coefdtmin_layout.addWidget(coefdtmin_input)
 
-    #Initial time step
+    # Initial time step
     dtiniauto_layout = QtGui.QHBoxLayout()
     dtiniauto_chk = QtGui.QCheckBox("Initial time step auto")
     if data['dtini_auto']:
         dtiniauto_chk.setCheckState(QtCore.Qt.Checked)
     else:
         dtiniauto_chk.setCheckState(QtCore.Qt.Unchecked)
-    def on_dtiniauto_check(): #Controls if user selected auto b or not enabling/disablen b custom value
-                              #introduction
+
+    def on_dtiniauto_check():  # Controls if user selected auto b or not enabling/disablen b custom value
+        # introduction
         if dtiniauto_chk.isChecked():
             dtini_input.setEnabled(False)
         else:
             dtini_input.setEnabled(True)
+
     dtiniauto_chk.toggled.connect(on_dtiniauto_check)
     dtiniauto_layout.addWidget(dtiniauto_chk)
     dtini_layout = QtGui.QHBoxLayout()
     dtini_label = QtGui.QLabel("Initial time step: ")
     dtini_input = QtGui.QLineEdit()
-    dtini_input.setMaxLength(10)    
+    dtini_input.setMaxLength(10)
     dtini_input.setText(str(data['dtini']))
     dtini_label2 = QtGui.QLabel("seconds")
     dtini_layout.addWidget(dtini_label)
@@ -672,7 +671,7 @@ def def_execparams_window(data):
     dtini_layout.addWidget(dtini_label2)
     on_dtiniauto_check()
 
-    #Minimium time step
+    # Minimium time step
     dtminauto_layout = QtGui.QHBoxLayout()
     dtminauto_chk = QtGui.QCheckBox("Minimum time step: ")
     if data['dtmin_auto']:
@@ -680,8 +679,8 @@ def def_execparams_window(data):
     else:
         dtminauto_chk.setCheckState(QtCore.Qt.Unchecked)
 
-    def on_dtminauto_check(): #Controls if user selected auto b or not enabling/disablen b custom value
-                              #introduction
+    def on_dtminauto_check():  # Controls if user selected auto b or not enabling/disablen b custom value
+        # introduction
         if dtminauto_chk.isChecked():
             dtmin_input.setEnabled(False)
         else:
@@ -692,7 +691,7 @@ def def_execparams_window(data):
     dtmin_layout = QtGui.QHBoxLayout()
     dtmin_label = QtGui.QLabel("Minimium time step: ")
     dtmin_input = QtGui.QLineEdit()
-    dtmin_input.setMaxLength(10)    
+    dtmin_input.setMaxLength(10)
     dtmin_input.setText(str(data['dtmin']))
     dtmin_label2 = QtGui.QLabel("seconds")
     dtmin_layout.addWidget(dtmin_label)
@@ -700,7 +699,7 @@ def def_execparams_window(data):
     dtmin_layout.addWidget(dtmin_label2)
     on_dtminauto_check()
 
-    #Fixed DT file
+    # Fixed DT file
     dtfixed_layout = QtGui.QHBoxLayout()
     dtfixed_label = QtGui.QLabel("Fixed DT file: ")
     dtfixed_input = QtGui.QLineEdit()
@@ -710,82 +709,82 @@ def def_execparams_window(data):
     dtfixed_layout.addWidget(dtfixed_input)
     dtfixed_layout.addWidget(dtfixed_label2)
 
-    #Velocity of particles
+    # Velocity of particles
     dtallparticles_layout = QtGui.QHBoxLayout()
     dtallparticles_label = QtGui.QLabel("Velocity of particles: ")
     dtallparticles_input = QtGui.QLineEdit()
-    dtallparticles_input.setMaxLength(1)    
+    dtallparticles_input.setMaxLength(1)
     dtallparticles_validator = QtGui.QIntValidator(0, 1, dtallparticles_input)
     dtallparticles_input.setText(str(data['dtallparticles']))
     dtallparticles_input.setValidator(dtallparticles_validator)
     dtallparticles_label2 = QtGui.QLabel("[0,1]")
     dtallparticles_layout.addWidget(dtallparticles_label)
     dtallparticles_layout.addWidget(dtallparticles_input)
-    dtallparticles_layout.addWidget(dtallparticles_label2)        
+    dtallparticles_layout.addWidget(dtallparticles_label2)
 
-    #Time of simulation
+    # Time of simulation
     timemax_layout = QtGui.QHBoxLayout()
     timemax_label = QtGui.QLabel("Time of simulation: ")
     timemax_input = QtGui.QLineEdit()
-    timemax_input.setMaxLength(10)    
+    timemax_input.setMaxLength(10)
     timemax_input.setText(str(data['timemax']))
     timemax_label2 = QtGui.QLabel("seconds")
     timemax_layout.addWidget(timemax_label)
     timemax_layout.addWidget(timemax_input)
     timemax_layout.addWidget(timemax_label2)
 
-    #Time out data
+    # Time out data
     timeout_layout = QtGui.QHBoxLayout()
     timeout_label = QtGui.QLabel("Time out data: ")
     timeout_input = QtGui.QLineEdit()
-    timeout_input.setMaxLength(10)    
+    timeout_input.setMaxLength(10)
     timeout_input.setText(str(data['timeout']))
     timeout_label2 = QtGui.QLabel("seconds")
     timeout_layout.addWidget(timeout_label)
     timeout_layout.addWidget(timeout_input)
     timeout_layout.addWidget(timeout_label2)
 
-    #Increase of Z+
+    # Increase of Z+
     incz_layout = QtGui.QHBoxLayout()
     incz_label = QtGui.QLabel("Increase of Z+: ")
     incz_input = QtGui.QLineEdit()
-    incz_input.setMaxLength(10)    
+    incz_input.setMaxLength(10)
     incz_input.setText(str(data['incz']))
     incz_layout.addWidget(incz_label)
     incz_layout.addWidget(incz_input)
 
-    #Max parts out allowed
+    # Max parts out allowed
     partsoutmax_layout = QtGui.QHBoxLayout()
     partsoutmax_label = QtGui.QLabel("Max parts out allowed: ")
     partsoutmax_input = QtGui.QLineEdit()
-    partsoutmax_input.setMaxLength(10)    
+    partsoutmax_input.setMaxLength(10)
     partsoutmax_input.setText(str(data['partsoutmax']))
     partsoutmax_layout.addWidget(partsoutmax_label)
     partsoutmax_layout.addWidget(partsoutmax_input)
 
-    #Minimum rhop valid
+    # Minimum rhop valid
     rhopoutmin_layout = QtGui.QHBoxLayout()
     rhopoutmin_label = QtGui.QLabel("Minimum rhop valid: ")
     rhopoutmin_input = QtGui.QLineEdit()
-    rhopoutmin_input.setMaxLength(10)    
+    rhopoutmin_input.setMaxLength(10)
     rhopoutmin_input.setText(str(data['rhopoutmin']))
     rhopoutmin_label2 = QtGui.QLabel("kg/m<span style='vertical-align:super'>3</span>")
     rhopoutmin_layout.addWidget(rhopoutmin_label)
     rhopoutmin_layout.addWidget(rhopoutmin_input)
     rhopoutmin_layout.addWidget(rhopoutmin_label2)
 
-    #Maximum rhop valid
+    # Maximum rhop valid
     rhopoutmax_layout = QtGui.QHBoxLayout()
     rhopoutmax_label = QtGui.QLabel("Maximum rhop valid: ")
     rhopoutmax_input = QtGui.QLineEdit()
-    rhopoutmax_input.setMaxLength(10)    
+    rhopoutmax_input.setMaxLength(10)
     rhopoutmax_input.setText(str(data['rhopoutmax']))
     rhopoutmax_label2 = QtGui.QLabel("kg/m<span style='vertical-align:super'>3</span>")
     rhopoutmax_layout.addWidget(rhopoutmax_label)
     rhopoutmax_layout.addWidget(rhopoutmax_input)
-    rhopoutmax_layout.addWidget(rhopoutmax_label2)    
+    rhopoutmax_layout.addWidget(rhopoutmax_label2)
 
-    #------------ Button behaviour definition --------------
+    # ------------ Button behaviour definition --------------
     def on_ok():
         data['posdouble'] = posdouble_input.text()
         data['stepalgorithm'] = stepalgorithm_input.text()
@@ -822,13 +821,13 @@ def def_execparams_window(data):
 
     ok_button.clicked.connect(on_ok)
     cancel_button.clicked.connect(on_cancel)
-    #Button layout definition
+    # Button layout definition
     ep_button_layout = QtGui.QHBoxLayout()
     ep_button_layout.addStretch(1)
     ep_button_layout.addWidget(ok_button)
     ep_button_layout.addWidget(cancel_button)
 
-    #START Main layout definition and composition.
+    # START Main layout definition and composition.
     ep_main_layout = QtGui.QVBoxLayout()
     ep_main_layout.addLayout(posdouble_layout)
     ep_main_layout.addLayout(stepalgorithm_layout)
@@ -848,7 +847,7 @@ def def_execparams_window(data):
     ep_main_layout.addLayout(dtini_layout)
     ep_main_layout.addLayout(dtminauto_layout)
     ep_main_layout.addLayout(dtmin_layout)
-    #ep_main_layout.addLayout(dtallparticles_layout)
+    # ep_main_layout.addLayout(dtallparticles_layout)
     ep_main_layout.addLayout(timemax_layout)
     ep_main_layout.addLayout(timeout_layout)
     ep_main_layout.addLayout(incz_layout)
@@ -861,25 +860,26 @@ def def_execparams_window(data):
     ep_groupbox = QtGui.QGroupBox("Execution Parameters")
     ep_groupbox.setLayout(ep_main_layout)
     execparams_window_layout = QtGui.QVBoxLayout()
-    execparams_window_layout.addWidget(ep_groupbox)    
+    execparams_window_layout.addWidget(ep_groupbox)
     execparams_window_layout.addLayout(ep_button_layout)
     execparams_window.setLayout(execparams_window_layout)
-    #END Main layout definition and composition.
+    # END Main layout definition and composition.
 
-    execparams_window.resize(600,400)
+    execparams_window.resize(600, 400)
     ret_val = execparams_window.exec_()
+
 
 def def_setup_window(data):
     """Defines the setup window.
     Modifies data dictionary passed as parameter."""
 
-    #Creates a dialog and 2 main buttons
+    # Creates a dialog and 2 main buttons
     setup_window = QtGui.QDialog()
     setup_window.setWindowTitle("DSPH Setup")
     ok_button = QtGui.QPushButton("Ok")
     cancel_button = QtGui.QPushButton("Cancel")
 
-    #GenCase path
+    # GenCase path
     gencasepath_layout = QtGui.QHBoxLayout()
     gencasepath_label = QtGui.QLabel("GenCase Path: ")
     gencasepath_input = QtGui.QLineEdit()
@@ -891,7 +891,7 @@ def def_setup_window(data):
     gencasepath_layout.addWidget(gencasepath_input)
     gencasepath_layout.addWidget(gencasepath_browse)
 
-    #DualSPHyisics path
+    # DualSPHyisics path
     dsphpath_layout = QtGui.QHBoxLayout()
     dsphpath_label = QtGui.QLabel("DualSPHysics Path: ")
     dsphpath_input = QtGui.QLineEdit()
@@ -903,7 +903,7 @@ def def_setup_window(data):
     dsphpath_layout.addWidget(dsphpath_input)
     dsphpath_layout.addWidget(dsphpath_browse)
 
-    #PartVTK4 path
+    # PartVTK4 path
     partvtk4path_layout = QtGui.QHBoxLayout()
     partvtk4path_label = QtGui.QLabel("PartVTK4 Path: ")
     partvtk4path_input = QtGui.QLineEdit()
@@ -915,7 +915,7 @@ def def_setup_window(data):
     partvtk4path_layout.addWidget(partvtk4path_input)
     partvtk4path_layout.addWidget(partvtk4path_browse)
 
-    #------------ Button behaviour definition --------------
+    # ------------ Button behaviour definition --------------
     def on_ok():
         data['gencase_path'] = gencasepath_input.text()
         data['dsphysics_path'] = dsphpath_input.text()
@@ -923,7 +923,8 @@ def def_setup_window(data):
         picklefile = open(FreeCAD.getUserAppDataDir() + '/dsph_data.dsphdata', 'wb')
         pickle.dump(data, picklefile)
         utils.log("Setup changed. Saved to " + FreeCAD.getUserAppDataDir() + "/dsph_data.dsphdata")
-        data['gencase_path'], data['dsphysics_path'], data['partvtk4_path'], state = utils.check_executables(data['gencase_path'], data['dsphysics_path'], data['partvtk4_path'])
+        data['gencase_path'], data['dsphysics_path'], data['partvtk4_path'], state = utils.check_executables(
+            data['gencase_path'], data['dsphysics_path'], data['partvtk4_path'])
         if not state:
             ex_selector_combo.setEnabled(False)
             ex_button.setEnabled(False)
@@ -938,7 +939,7 @@ def def_setup_window(data):
         filedialog = QtGui.QFileDialog()
         fileName, _ = filedialog.getOpenFileName(setup_window, "Select GenCase path", QtCore.QDir.homePath())
         if fileName != "":
-            #Verify if exe is indeed gencase
+            # Verify if exe is indeed gencase
             process = QtCore.QProcess(FreeCADGui.getMainWindow())
             process.start(fileName)
             process.waitForFinished()
@@ -954,7 +955,7 @@ def def_setup_window(data):
         filedialog = QtGui.QFileDialog()
         fileName, _ = filedialog.getOpenFileName(setup_window, "Select DualSPHysics path", QtCore.QDir.homePath())
         if fileName != "":
-            #Verify if exe is indeed dualsphysics
+            # Verify if exe is indeed dualsphysics
             process = QtCore.QProcess(FreeCADGui.getMainWindow())
             process.start(fileName)
             process.waitForFinished()
@@ -970,7 +971,7 @@ def def_setup_window(data):
         filedialog = QtGui.QFileDialog()
         fileName, _ = filedialog.getOpenFileName(setup_window, "Select PartVTK4 path", QtCore.QDir.homePath())
         if fileName != "":
-            #Verify if exe is indeed dualsphysics
+            # Verify if exe is indeed dualsphysics
             process = QtCore.QProcess(FreeCADGui.getMainWindow())
             process.start(fileName)
             process.waitForFinished()
@@ -987,13 +988,13 @@ def def_setup_window(data):
     gencasepath_browse.clicked.connect(on_gencase_browse)
     dsphpath_browse.clicked.connect(on_dualsphysics_browse)
     partvtk4path_browse.clicked.connect(on_partvtk4_browse)
-    #Button layout definition
+    # Button layout definition
     stp_button_layout = QtGui.QHBoxLayout()
     stp_button_layout.addStretch(1)
     stp_button_layout.addWidget(ok_button)
     stp_button_layout.addWidget(cancel_button)
 
-    #START Main layout definition and composition.
+    # START Main layout definition and composition.
     stp_main_layout = QtGui.QVBoxLayout()
     stp_main_layout.addLayout(gencasepath_layout)
     stp_main_layout.addLayout(dsphpath_layout)
@@ -1003,13 +1004,14 @@ def def_setup_window(data):
     stp_groupbox = QtGui.QGroupBox("Setup parameters")
     stp_groupbox.setLayout(stp_main_layout)
     setup_window_layout = QtGui.QVBoxLayout()
-    setup_window_layout.addWidget(stp_groupbox)    
+    setup_window_layout.addWidget(stp_groupbox)
     setup_window_layout.addLayout(stp_button_layout)
     setup_window.setLayout(setup_window_layout)
-    #END Main layout definition and composition.
+    # END Main layout definition and composition.
 
-    setup_window.resize(600,400)
+    setup_window.resize(600, 400)
     ret_val = setup_window.exec_()
+
 
 def widget_state_config(widgets, config):
     """ Takes an widget dictionary and a config string to
@@ -1060,7 +1062,7 @@ def widget_state_config(widgets, config):
     elif config == "simulation not done":
         widgets["export_button"].setEnabled(False)
         widgets["exportopts_button"].setEnabled(False)
-    elif config == "execs not correct": 
+    elif config == "execs not correct":
         widgets["ex_selector_combo"].setEnabled(False)
         widgets["ex_button"].setEnabled(False)
         widgets["ex_additional"].setEnabled(False)
