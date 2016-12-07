@@ -8,6 +8,15 @@ a dictionary.
 
 """
 
+import FreeCAD
+import FreeCADGui
+import Mesh
+import json
+import sys
+import utils
+import xmltodict
+import xml.etree.ElementTree as ElementTree
+
 """
 Copyright (C) 2016 - Andrés Vieira (anvieiravazquez@gmail.com)
 EPHYSLAB Environmental Physics Laboratory, Universidade de Vigo
@@ -37,24 +46,12 @@ __maintainer__ = "Andrés Vieira"
 __email__ = "anvieiravazquez@gmail.com"
 __status__ = "Development"
 
-import FreeCAD
-import FreeCADGui
-import Mesh
-import json
-import sys
-
-sys.path.append(FreeCAD.getUserAppDataDir() + "Macro/dsphfc")
-import xmltodict
-import xml.etree.ElementTree as ET
-import utils
-
 
 def import_xml_file(filename):
     """ Returns data dictionary with values found
         in a GenCase/DSPH compatible XML file and a
        list of objects to add to simulation """
 
-    r = dict()  # Dictionary to return
     target_file = open(filename, "rb")
     target_xml = target_file.read().replace('\n', '')
     target_file.close()
@@ -120,26 +117,26 @@ def filter_data(raw):
     fil['mkfluidused'] = []
     try:
         mkbounds = raw['case']['casedef']['geometry']['commands']['mainlist']['setmkbound']
-        if type(mkbounds) == type(dict()):
+        if isinstance(mkbounds, dict):
             # Only one mkfluid statement
             fil['mkboundused'].append(int(mkbounds['@mk']))
         else:
             # Multiple mkfluids
             for setmkbound in mkbounds:
                 fil['mkboundused'].append(int(setmkbound['@mk']))
-    except KeyError as e:
+    except KeyError:
         # No mkbounds found
         pass
     try:
         mkfluids = raw['case']['casedef']['geometry']['commands']['mainlist']['setmkfluid']
-        if type(mkfluids) == type(dict()):
+        if isinstance(mkfluids, dict):
             # Only one mkfluid statement
             fil['mkfluidused'].append(int(mkfluids['@mk']))
         else:
             # Multiple mkfluids
             for setmkfluid in mkfluids:
                 fil['mkfluidused'].append(int(setmkfluid['@mk']))
-    except KeyError as e:
+    except KeyError:
         # No mkfluids found
         pass
 
@@ -155,9 +152,9 @@ def create_fc_objects(f, path):
     mk = ("void", "0")
     drawmode = "full"
     elementnum = 0
-    toAddDSPH = dict()
+    to_add_dsph = dict()
 
-    root = ET.fromstring(f)
+    root = ElementTree.fromstring(f)
     mainlist = root.findall("./casedef/geometry/commands/mainlist/*")
     for command in mainlist:
         if command.tag == "matrixreset":
@@ -186,7 +183,7 @@ def create_fc_objects(f, path):
                     boxfill = subcommand.text
                 elif subcommand.tag == "point":
                     point = (
-                    float(subcommand.attrib["x"]), float(subcommand.attrib["y"]), float(subcommand.attrib["z"]))
+                        float(subcommand.attrib["x"]), float(subcommand.attrib["y"]), float(subcommand.attrib["z"]))
                 elif subcommand.tag == "size":
                     size = (float(subcommand.attrib["x"]), float(subcommand.attrib["y"]), float(subcommand.attrib["z"]))
                 else:
@@ -204,9 +201,8 @@ def create_fc_objects(f, path):
             FreeCAD.ActiveDocument.getObject("Box" + str(elementnum)).Height = str(size[2]) + ' m'
             # Suscribe Box for creation in DSPH Objects
             # Structure: [name] = [mknumber, type, fill]
-            toAddDSPH["Box" + str(elementnum)] = [int(mk[1]), mk[0], drawmode]
+            to_add_dsph["Box" + str(elementnum)] = [int(mk[1]), mk[0], drawmode]
         elif command.tag == "drawcylinder":
-            radius = 1.0
             point = [0, 0, 0]
             top_point = [0, 0, 0]
             radius = float(command.attrib["radius"])
@@ -234,9 +230,8 @@ def create_fc_objects(f, path):
             FreeCAD.ActiveDocument.getObject("Cylinder" + str(elementnum)).Height = (top_point[2] - point[2]) * 1000
             # Suscribe Cylinder for creation in DSPH Objects
             # Structure: [name] = [mknumber, type, fill]
-            toAddDSPH["Cylinder" + str(elementnum)] = [int(mk[1]), mk[0], drawmode]
+            to_add_dsph["Cylinder" + str(elementnum)] = [int(mk[1]), mk[0], drawmode]
         elif command.tag == "drawsphere":
-            radius = 1
             point = [0, 0, 0]
             radius = float(command.attrib["radius"])
             for subcommand in command:
@@ -253,10 +248,9 @@ def create_fc_objects(f, path):
             FreeCAD.ActiveDocument.getObject("Sphere" + str(elementnum)).Radius = str(radius) + ' m'
             # Suscribe Sphere for creation in DSPH Objects
             # Structure: [name] = [mknumber, type, fill]
-            toAddDSPH["Sphere" + str(elementnum)] = [int(mk[1]), mk[0], drawmode]
+            to_add_dsph["Sphere" + str(elementnum)] = [int(mk[1]), mk[0], drawmode]
         elif command.tag == "drawfilestl":
             # Imports the stl file as good as it can
-            stl_path = ""
             stl_path = path + "/" + command.attrib["file"]
             Mesh.insert(stl_path, "DSPH_Case")
             # TODO: Find a way to reference the mesh imported for adding it to sim.  For now it can't
@@ -270,4 +264,4 @@ def create_fc_objects(f, path):
 
     FreeCAD.ActiveDocument.recompute()
     FreeCADGui.SendMsgToActiveView("ViewFit")
-    return toAddDSPH
+    return to_add_dsph
