@@ -152,6 +152,9 @@ def main():
                     shutil.copytree("./resource/DSPH_Images", dest_folder + '/DSPH_Images')
                     shutil.copytree("./resource/dsphfc", dest_folder + '/dsphfc')
 
+                    # Make shortcuts
+                    # TODO: Make shortcuts
+
                     # Installation completed
                     install_button.setText('Installed!')
                     install_success_dialog = QtGui.QMessageBox()

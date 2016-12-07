@@ -461,8 +461,8 @@ def on_import_xml():
         for key, value in objects.iteritems():
             add_object_to_sim(key)
             data["simobjects"][key] = value
-            on_tree_item_selection_change()
             # TODO: Change objects appearance to match properties.
+            on_tree_item_selection_change()
 
 
 # Connect case control buttons
@@ -956,84 +956,85 @@ property_widget_layout.addWidget(removefromdsph_button)
 properties_scaff_widget.setLayout(property_widget_layout)
 
 properties_widget.setWidget(properties_scaff_widget)
-propertylabel1 = QtGui.QLabel("   MKGroup")
-propertylabel1.setToolTip("Establishes the object group.")
-propertylabel2 = QtGui.QLabel("   Type of object")
-propertylabel2.setToolTip("Establishes the object type, fluid or bound")
-propertylabel3 = QtGui.QLabel("   Fill mode")
-propertylabel3.setToolTip(
+mkgroup_label = QtGui.QLabel("   MKGroup")
+mkgroup_label.setToolTip("Establishes the object group.")
+objtype_label = QtGui.QLabel("   Type of object")
+objtype_label.setToolTip("Establishes the object type, fluid or bound")
+fillmode_label = QtGui.QLabel("   Fill mode")
+fillmode_label.setToolTip(
     "Sets fill mode.\nFull: generates filling and external mesh."
     "\nSolid: generates only filling.\nFace: generates only external mesh."
     "\nWire: generates only external mesh polygon edges.")
-propertylabel4 = QtGui.QLabel("   Float state")
-propertylabel4.setToolTip("Sets floating state for this object MK.")
-propertylabel5 = QtGui.QLabel("   Initials")
-propertylabel5.setToolTip("Sets initials options for this object")
-propertylabel1.setAlignment(QtCore.Qt.AlignLeft)
-propertylabel2.setAlignment(QtCore.Qt.AlignLeft)
-propertylabel3.setAlignment(QtCore.Qt.AlignLeft)
-propertylabel4.setAlignment(QtCore.Qt.AlignLeft)
-propertylabel5.setAlignment(QtCore.Qt.AlignLeft)
-property_table.setCellWidget(0, 0, propertylabel1)
-property_table.setCellWidget(1, 0, propertylabel2)
-property_table.setCellWidget(2, 0, propertylabel3)
-property_table.setCellWidget(3, 0, propertylabel4)
-property_table.setCellWidget(4, 0, propertylabel5)
+floatstate_label = QtGui.QLabel("   Float state")
+floatstate_label.setToolTip("Sets floating state for this object MK.")
+initials_label = QtGui.QLabel("   Initials")
+initials_label.setToolTip("Sets initials options for this object")
+# TODO: Add Material edition.
+mkgroup_label.setAlignment(QtCore.Qt.AlignLeft)
+objtype_label.setAlignment(QtCore.Qt.AlignLeft)
+fillmode_label.setAlignment(QtCore.Qt.AlignLeft)
+floatstate_label.setAlignment(QtCore.Qt.AlignLeft)
+initials_label.setAlignment(QtCore.Qt.AlignLeft)
+property_table.setCellWidget(0, 0, mkgroup_label)
+property_table.setCellWidget(1, 0, objtype_label)
+property_table.setCellWidget(2, 0, fillmode_label)
+property_table.setCellWidget(3, 0, floatstate_label)
+property_table.setCellWidget(4, 0, initials_label)
 
 
-def property1_change(value):
+def mkgroup_change(value):
     """Defines what happens when MKGroup is changed."""
     selection = FreeCADGui.Selection.getSelection()[0]
     data['simobjects'][selection.Name][0] = value
 
 
-def property2_change(index):
+def objtype_change(index):
     """Defines what happens when type of object is changed"""
     selection = FreeCADGui.Selection.getSelection()[0]
     selectiongui = FreeCADGui.getDocument("DSPH_Case").getObject(selection.Name)
-    data['simobjects'][selection.Name][1] = property2.itemText(index)
+    data['simobjects'][selection.Name][1] = objtype_prop.itemText(index)
     if "fillbox" in selection.Name.lower():
         return
-    if property2.itemText(index).lower() == "bound":
-        property1.setRange(0, 240)
+    if objtype_prop.itemText(index).lower() == "bound":
+        mkgroup_prop.setRange(0, 240)
         selectiongui.ShapeColor = (0.80, 0.80, 0.80)
         selectiongui.Transparency = 0
-        property4.setEnabled(True)
-        property5.setEnabled(False)
-        propertylabel1.setText("   MKBound")
-    elif property2.itemText(index).lower() == "fluid":
-        property1.setRange(0, 10)
+        floatstate_prop.setEnabled(True)
+        initials_prop.setEnabled(False)
+        mkgroup_label.setText("   MKBound")
+    elif objtype_prop.itemText(index).lower() == "fluid":
+        mkgroup_prop.setRange(0, 10)
         selectiongui.ShapeColor = (0.00, 0.45, 1.00)
         selectiongui.Transparency = 30
         if str(str(data['simobjects'][selection.Name][0])) in data["floating_mks"].keys():
             data["floating_mks"].pop(str(data['simobjects'][selection.Name][0]), None)
-        property4.setEnabled(False)
-        property5.setEnabled(True)
-        propertylabel1.setText("   MKFluid")
+        floatstate_prop.setEnabled(False)
+        initials_prop.setEnabled(True)
+        mkgroup_label.setText("   MKFluid")
 
 
-def property3_change(index):
+def fillmode_change(index):
     """Defines what happens when fill mode is changed"""
     selection = FreeCADGui.Selection.getSelection()[0]
     selectiongui = FreeCADGui.getDocument("DSPH_Case").getObject(selection.Name)
-    data['simobjects'][selection.Name][2] = property3.itemText(index)
-    if property3.itemText(index).lower() == "full":
-        if property2.itemText(property2.currentIndex()).lower() == "fluid":
+    data['simobjects'][selection.Name][2] = fillmode_prop.itemText(index)
+    if fillmode_prop.itemText(index).lower() == "full":
+        if objtype_prop.itemText(objtype_prop.currentIndex()).lower() == "fluid":
             selectiongui.Transparency = 30
-        elif property2.itemText(property2.currentIndex()).lower() == "bound":
+        elif objtype_prop.itemText(objtype_prop.currentIndex()).lower() == "bound":
             selectiongui.Transparency = 0
-    elif property3.itemText(index).lower() == "solid":
-        if property2.itemText(property2.currentIndex()).lower() == "fluid":
+    elif fillmode_prop.itemText(index).lower() == "solid":
+        if objtype_prop.itemText(objtype_prop.currentIndex()).lower() == "fluid":
             selectiongui.Transparency = 30
-        elif property2.itemText(property2.currentIndex()).lower() == "bound":
+        elif objtype_prop.itemText(objtype_prop.currentIndex()).lower() == "bound":
             selectiongui.Transparency = 0
-    elif property3.itemText(index).lower() == "face":
+    elif fillmode_prop.itemText(index).lower() == "face":
         selectiongui.Transparency = 80
-    elif property3.itemText(index).lower() == "wire":
+    elif fillmode_prop.itemText(index).lower() == "wire":
         selectiongui.Transparency = 85
 
 
-def property4_configure():
+def floatstate_change():
     """Defines a window with floating properties."""
     floatings_window = QtGui.QDialog()
     floatings_window.setWindowTitle("Floating configuration")
@@ -1300,7 +1301,7 @@ def property4_configure():
     floatings_window.exec_()
 
 
-def property5_configure():
+def initials_change():
     """Defines a window with initials properties."""
     initials_window = QtGui.QDialog()
     initials_window.setWindowTitle("Initials configuration")
@@ -1402,24 +1403,24 @@ def property5_configure():
 
 
 # Property change widgets
-property1 = QtGui.QSpinBox()
-property2 = QtGui.QComboBox()
-property3 = QtGui.QComboBox()
-property4 = QtGui.QPushButton("Configure")
-property5 = QtGui.QPushButton("Configure")
-property1.setRange(0, 240)
-property2.insertItems(0, ["Fluid", "Bound"])
-property3.insertItems(1, ["Full", "Solid", "Face", "Wire"])
-property1.valueChanged.connect(property1_change)
-property2.currentIndexChanged.connect(property2_change)
-property3.currentIndexChanged.connect(property3_change)
-property4.clicked.connect(property4_configure)
-property5.clicked.connect(property5_configure)
-property_table.setCellWidget(0, 1, property1)
-property_table.setCellWidget(1, 1, property2)
-property_table.setCellWidget(2, 1, property3)
-property_table.setCellWidget(3, 1, property4)
-property_table.setCellWidget(4, 1, property5)
+mkgroup_prop = QtGui.QSpinBox()
+objtype_prop = QtGui.QComboBox()
+fillmode_prop = QtGui.QComboBox()
+floatstate_prop = QtGui.QPushButton("Configure")
+initials_prop = QtGui.QPushButton("Configure")
+mkgroup_prop.setRange(0, 240)
+objtype_prop.insertItems(0, ["Fluid", "Bound"])
+fillmode_prop.insertItems(1, ["Full", "Solid", "Face", "Wire"])
+mkgroup_prop.valueChanged.connect(mkgroup_change)
+objtype_prop.currentIndexChanged.connect(objtype_change)
+fillmode_prop.currentIndexChanged.connect(fillmode_change)
+floatstate_prop.clicked.connect(floatstate_change)
+initials_prop.clicked.connect(initials_change)
+property_table.setCellWidget(0, 1, mkgroup_prop)
+property_table.setCellWidget(1, 1, objtype_prop)
+property_table.setCellWidget(2, 1, fillmode_prop)
+property_table.setCellWidget(3, 1, floatstate_prop)
+property_table.setCellWidget(4, 1, initials_prop)
 
 # Dock the widget to the left side of screen
 fc_main_window.addDockWidget(QtCore.Qt.LeftDockWidgetArea, properties_widget)
@@ -1526,12 +1527,12 @@ def on_tree_item_selection_change():
                     to_change.setEnabled(True)
                     if data['simobjects'][selection[0].Name][1].lower() == "fluid":
                         to_change.setCurrentIndex(0)
-                        property1.setRange(0, 10)
-                        propertylabel1.setText("   MKFluid")
+                        mkgroup_prop.setRange(0, 10)
+                        mkgroup_label.setText("   MKFluid")
                     elif data['simobjects'][selection[0].Name][1].lower() == "bound":
                         to_change.setCurrentIndex(1)
-                        property1.setRange(0, 240)
-                        propertylabel1.setText("   MKBound")
+                        mkgroup_prop.setRange(0, 240)
+                        mkgroup_label.setText("   MKBound")
                 elif selection[0].TypeId == "App::DocumentObjectGroup" and "fillbox" in selection[0].Name.lower():
                     to_change.setEnabled(False)
                     to_change.setCurrentIndex(0)
