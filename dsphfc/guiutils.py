@@ -7,6 +7,13 @@ operations in DesignSPHysics.
 
 """
 
+import FreeCAD
+import FreeCADGui
+import pickle
+import sys
+import utils
+from PySide import QtGui, QtCore
+
 """
 Copyright (C) 2016 - Andrés Vieira (anvieiravazquez@gmail.com)
 EPHYSLAB Environmental Physics Laboratory, Universidade de Vigo
@@ -35,16 +42,6 @@ __version__ = "v0.1 BETA SNAPSHOT.01"
 __maintainer__ = "Andrés Vieira"
 __email__ = "anvieiravazquez@gmail.com"
 __status__ = "Development"
-
-import FreeCAD
-import FreeCADGui
-import sys
-import pickle
-
-from PySide import QtGui, QtCore
-
-sys.path.append(FreeCAD.getUserAppDataDir() + "Macro/dsphfc")
-import utils
 
 
 def warning_dialog(warn_text):
@@ -77,12 +74,12 @@ def info_dialog(info_text):
 def ok_cancel_dialog(title, text):
     """Spawns an okay/cancel dialog with the title and text passed"""
 
-    openConfirmDialog = QtGui.QMessageBox()
-    openConfirmDialog.setText(title)
-    openConfirmDialog.setInformativeText(text)
-    openConfirmDialog.setStandardButtons(QtGui.QMessageBox.Ok | QtGui.QMessageBox.Cancel)
-    openConfirmDialog.setDefaultButton(QtGui.QMessageBox.Ok)
-    return openConfirmDialog.exec_()
+    open_confirm_dialog = QtGui.QMessageBox()
+    open_confirm_dialog.setText(title)
+    open_confirm_dialog.setInformativeText(text)
+    open_confirm_dialog.setStandardButtons(QtGui.QMessageBox.Ok | QtGui.QMessageBox.Cancel)
+    open_confirm_dialog.setDefaultButton(QtGui.QMessageBox.Ok)
+    return open_confirm_dialog.exec_()
 
 
 def def_constants_window(data):
@@ -463,7 +460,7 @@ def def_constants_window(data):
 
     # Constant definition window behaviour and general composing
     constants_window.resize(600, 400)
-    ret_val = constants_window.exec_()
+    constants_window.exec_()
 
 
 def def_execparams_window(data):
@@ -866,7 +863,7 @@ def def_execparams_window(data):
     # END Main layout definition and composition.
 
     execparams_window.resize(600, 400)
-    ret_val = execparams_window.exec_()
+    execparams_window.exec_()
 
 
 def def_setup_window(data):
@@ -937,48 +934,51 @@ def def_setup_window(data):
 
     def on_gencase_browse():
         filedialog = QtGui.QFileDialog()
-        fileName, _ = filedialog.getOpenFileName(setup_window, "Select GenCase path", QtCore.QDir.homePath())
-        if fileName != "":
+        # noinspection PyArgumentList
+        file_name, _ = filedialog.getOpenFileName(setup_window, "Select GenCase path", QtCore.QDir.homePath())
+        if file_name != "":
             # Verify if exe is indeed gencase
             process = QtCore.QProcess(FreeCADGui.getMainWindow())
-            process.start(fileName)
+            process.start(file_name)
             process.waitForFinished()
             output = str(process.readAllStandardOutput())
 
             if "gencase" in output[0:15].lower():
-                gencasepath_input.setText(fileName)
+                gencasepath_input.setText(file_name)
             else:
                 utils.error("I can't recognize GenCase in that exe!")
                 warning_dialog("I can't recognize GenCase in that exe!")
 
     def on_dualsphysics_browse():
         filedialog = QtGui.QFileDialog()
-        fileName, _ = filedialog.getOpenFileName(setup_window, "Select DualSPHysics path", QtCore.QDir.homePath())
-        if fileName != "":
+        # noinspection PyArgumentList
+        file_name, _ = filedialog.getOpenFileName(setup_window, "Select DualSPHysics path", QtCore.QDir.homePath())
+        if file_name != "":
             # Verify if exe is indeed dualsphysics
             process = QtCore.QProcess(FreeCADGui.getMainWindow())
-            process.start(fileName)
+            process.start(file_name)
             process.waitForFinished()
             output = str(process.readAllStandardOutput())
 
             if "dualsphysics" in output[0:20].lower():
-                dsphpath_input.setText(fileName)
+                dsphpath_input.setText(file_name)
             else:
                 utils.error("I can't recognize DualSPHysics in that exe!")
                 warning_dialog("I can't recognize DualSPHysics in that exe!")
 
     def on_partvtk4_browse():
         filedialog = QtGui.QFileDialog()
-        fileName, _ = filedialog.getOpenFileName(setup_window, "Select PartVTK4 path", QtCore.QDir.homePath())
-        if fileName != "":
+        # noinspection PyArgumentList
+        file_name, _ = filedialog.getOpenFileName(setup_window, "Select PartVTK4 path", QtCore.QDir.homePath())
+        if file_name != "":
             # Verify if exe is indeed dualsphysics
             process = QtCore.QProcess(FreeCADGui.getMainWindow())
-            process.start(fileName)
+            process.start(file_name)
             process.waitForFinished()
             output = str(process.readAllStandardOutput())
 
             if "partvtk4" in output[0:20].lower():
-                partvtk4path_input.setText(fileName)
+                partvtk4path_input.setText(file_name)
             else:
                 utils.error("I can't recognize PartVTK4 in that exe!")
                 warning_dialog("I can't recognize PartVTK4 in that exe!")
@@ -1010,7 +1010,7 @@ def def_setup_window(data):
     # END Main layout definition and composition.
 
     setup_window.resize(600, 400)
-    ret_val = setup_window.exec_()
+    setup_window.exec_()
 
 
 def widget_state_config(widgets, config):

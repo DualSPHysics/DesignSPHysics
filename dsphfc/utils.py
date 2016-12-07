@@ -10,6 +10,19 @@ meant to use with FreeCAD.
 
 """
 
+import FreeCAD
+import FreeCADGui
+import Mesh
+import math
+import sys
+import os
+import pickle
+import traceback
+import webbrowser
+from datetime import datetime
+from PySide import QtGui, QtCore
+import guiutils
+
 """
 Copyright (C) 2016 - Andrés Vieira (anvieiravazquez@gmail.com)
 EPHYSLAB Environmental Physics Laboratory, Universidade de Vigo
@@ -39,20 +52,6 @@ __maintainer__ = "Andrés Vieira"
 __email__ = "anvieiravazquez@gmail.com"
 __status__ = "Development"
 
-import FreeCAD
-import FreeCADGui
-import Mesh
-import sys
-import os
-import pickle
-import math
-import webbrowser
-import traceback
-from PySide import QtGui, QtCore
-from datetime import datetime
-
-sys.path.append(FreeCAD.getUserAppDataDir() + "Macro/dsphfc")
-import guiutils
 
 # ------ CONSTANTS DEFINITION ------
 FREECAD_MIN_VERSION = "016"
@@ -260,8 +259,8 @@ def get_default_data():
     temp_data['total_export_parts'] = -1
     temp_data['supported_types'] = ["Part::Box", "Part::Sphere", "Part::Cylinder"]
 
-    """ Try to load saved paths. This way the user does not need
-        to introduce the software paths every time"""
+    # Try to load saved paths. This way the user does not need
+    # to introduce the software paths every time
     if os.path.isfile(FreeCAD.getUserAppDataDir() + '/dsph_data.dsphdata'):
         try:
             picklefile = open(FreeCAD.getUserAppDataDir() + '/dsph_data.dsphdata', 'rb')
@@ -269,7 +268,7 @@ def get_default_data():
             data['gencase_path'] = disk_data['gencase_path']
             data['dsphysics_path'] = disk_data['dsphysics_path']
             data['partvtk4_path'] = disk_data['partvtk4_path']
-        except:
+        except (UnpicklingError, IOError):
             traceback.print_exc()
             data['gencase_path'] = ""
             data['dsphysics_path'] = ""
@@ -327,7 +326,8 @@ def prompt_close_all_documents():
         If accepted, close all the current documents and
         return True, else returns False. """
     user_selection = guiutils.ok_cancel_dialog(APP_NAME,
-                                               "To do this you must close all current documents. Close all the documents?")
+                                               "To do this you must close all current documents."
+                                               " Close all the documents?")
     if user_selection == QtGui.QMessageBox.Ok:
         # Close all current documents.
         log("Closing all current documents")
@@ -358,9 +358,6 @@ def create_dsph_document():
     FreeCAD.ActiveDocument.getObject("Case_Limits").Length = '15 mm'
     FreeCAD.ActiveDocument.getObject("Case_Limits").Width = '15 mm'
     FreeCAD.ActiveDocument.getObject("Case_Limits").Height = '15 mm'
-    FreeCAD.ActiveDocument.getObject("Case_Limits").Placement = FreeCAD.Placement(FreeCAD.Vector(0, 0, 0),
-                                                                                  FreeCAD.Rotation(
-                                                                                      FreeCAD.Vector(0, 0, 1), 0))
     FreeCADGui.ActiveDocument.getObject("Case_Limits").DisplayMode = "Wireframe"
     FreeCADGui.ActiveDocument.getObject("Case_Limits").LineColor = (1.00, 0.00, 0.00)
     FreeCADGui.ActiveDocument.getObject("Case_Limits").LineWidth = 2.00
@@ -386,16 +383,18 @@ def dump_to_xml(data, save_name):
         data['gravity'][2]) + '" comment="Gravitational acceleration" units_comment="m/s^2" />\n')
     f.write('\t\t\t<rhop0 value="' + str(
         data['rhop0']) + '" comment="Reference density of the fluid" units_comment="kg/m^3" />\n')
-    f.write('\t\t\t<hswl value="' + str(data['hswl']) + '" auto="' + str(data[
-                                                                             'hswl_auto']).lower() + '" comment="Maximum still water level to calculate speedofsound using coefsound" units_comment="metres (m)"  />\n')
+    f.write('\t\t\t<hswl value="' + str(data['hswl']) + '" auto="' + str(data['hswl_auto']).lower() +
+            '" comment="Maximum still water level to calculate speedofsound using coefsound" '
+            'units_comment="metres (m)"  />\n')
     f.write('\t\t\t<gamma value="' + str(
         data['gamma']) + '" comment="Polytropic constant for water used in the state equation" />\n')
-    f.write('\t\t\t<speedsystem value="' + str(data['speedsystem']) + '" auto="' + str(data[
-                                                                                           'speedsystem_auto']).lower() + '" comment="Maximum system speed (by default the dam-break propagation is used)" />\n')
+    f.write('\t\t\t<speedsystem value="' + str(data['speedsystem']) + '" auto="' + str(data['speedsystem_auto']).lower()
+            + '" comment="Maximum system speed (by default the dam-break propagation is used)" />\n')
     f.write(
         '\t\t\t<coefsound value="' + str(data['coefsound']) + '" comment="Coefficient to multiply speedsystem" />\n')
-    f.write('\t\t\t<speedsound value="' + str(data['speedsound']) + '" auto="' + str(data[
-                                                                                         'speedsound_auto']).lower() + '" comment="Speed of sound to use in the simulation (by default speedofsound=coefsound*speedsystem)" />\n')
+    f.write('\t\t\t<speedsound value="' + str(data['speedsound']) + '" auto="' + str(data['speedsound_auto']).lower()
+            + '" comment="Speed of sound to use in the simulation '
+              '(by default speedofsound=coefsound*speedsystem)" />\n')
     f.write('\t\t\t<coefh value="' + str(
         data['coefh']) + '" comment="Coefficient to calculate the smoothing length (h=coefh*sqrt(3*dp^2) in 3D)" />\n')
     f.write('\t\t\t<cflnumber value="' + str(data['cflnumber']) + '" comment="Coefficient to multiply dt" />\n')
@@ -430,7 +429,7 @@ def dump_to_xml(data, save_name):
         valuelist = data["simobjects"][name]
         o = FreeCAD.getDocument("DSPH_Case").getObject(name)
         # Ignores case limits
-        if (name != "Case_Limits"):
+        if name != "Case_Limits":
             # Sets MKfluid or bound depending on object properties and resets
             # the matrix
             f.write('\t\t\t\t\t<matrixreset />\n')
@@ -509,7 +508,7 @@ def dump_to_xml(data, save_name):
                         continue
                 else:
                     # Not a xml parametric object.  Needs exporting
-                    __objs__ = []
+                    __objs__ = list()
                     __objs__.append(o)
                     Mesh.export(__objs__, save_name + "/" + o.Name + ".stl")
                     f.write('\t\t\t\t\t<drawfilestl file="' + o.Name + ".stl" + '" >\n')
@@ -555,8 +554,9 @@ def dump_to_xml(data, save_name):
     f.write('\t<execution>\n')
     f.write('\t\t<parameters>\n')
     # Writes parameters as user introduced
-    f.write('\t\t\t<parameter key="PosDouble" value="' + str(data[
-                                                                 'posdouble']) + '" comment="Precision in particle interaction 0:Simple, 1:Double, 2:Uses and saves double (default=0)" />\n')
+    f.write('\t\t\t<parameter key="PosDouble" value="' + str(data['posdouble']) +
+            '" comment="Precision in particle interaction '
+            '0:Simple, 1:Double, 2:Uses and saves double (default=0)" />\n')
     f.write('\t\t\t<parameter key="StepAlgorithm" value="' + str(
         data['stepalgorithm']) + '" comment="Step Algorithm 1:Verlet, 2:Symplectic (default=1)" />\n')
     f.write('\t\t\t<parameter key="VerletSteps" value="' + str(
@@ -565,8 +565,9 @@ def dump_to_xml(data, save_name):
         data['kernel']) + '" comment="Interaction Kernel 1:Cubic Spline, 2:Wendland (default=2)" />\n')
     f.write('\t\t\t<parameter key="ViscoTreatment" value="' + str(
         data['viscotreatment']) + '" comment="Viscosity formulation 1:Artificial, 2:Laminar+SPS (default=1)" />\n')
-    f.write('\t\t\t<parameter key="Visco" value="' + str(data[
-                                                             'visco']) + '" comment="Viscosity value" /> % Note alpha can depend on the resolution. A value of 0.01 is recommended for near irrotational flows.\n')
+    f.write('\t\t\t<parameter key="Visco" value="' + str(data['visco']) +
+            '" comment="Viscosity value" /> % Note alpha can depend on the resolution. '
+            'A value of 0.01 is recommended for near irrotational flows.\n')
     f.write('\t\t\t<parameter key="ViscoBoundFactor" value="' + str(
         data['viscoboundfactor']) + '" comment="Multiply viscosity value with boundary (default=1)" />\n')
     f.write('\t\t\t<parameter key="DeltaSPH" value="' + str(
@@ -575,22 +576,21 @@ def dump_to_xml(data, save_name):
         data['shifting']) + '" comment="Shifting mode 0:None, 1:Ignore bound, 2:Ignore fixed, 3:Full (default=0)" />\n')
     f.write('\t\t\t<parameter key="#ShiftCoef" value="' + str(
         data['shiftcoef']) + '" comment="Coefficient for shifting computation (default=-2)" />\n')
-    f.write('\t\t\t<parameter key="#ShiftTFS" value="' + str(data[
-                                                                 'shifttfs']) + '" comment="Threshold to detect free surface. Typically 1.5 for 2D and 2.75 for 3D (default=0)" />\n')
+    f.write('\t\t\t<parameter key="#ShiftTFS" value="' + str(data['shifttfs']) +
+            '" comment="Threshold to detect free surface. Typically 1.5 for 2D and 2.75 for 3D (default=0)" />\n')
     f.write('\t\t\t<parameter key="RigidAlgorithm" value="' + str(
         data['rigidalgorithm']) + '" comment="Rigid Algorithm 1:SPH, 2:DEM (default=1)" />\n')
-    f.write('\t\t\t<parameter key="FtPause" value="' + str(data[
-                                                               'ftpause']) + '" comment="Time to freeze the floatings at simulation start (warmup) (default=0)" units_comment="seconds" />\n')
-    f.write('\t\t\t<parameter key="CoefDtMin" value="' + str(data[
-                                                                 'coefdtmin']) + '" comment="Coefficient to calculate minimum time step dtmin=coefdtmin*h/speedsound (default=0.05)" />\n')
-    comment = ""
+    f.write('\t\t\t<parameter key="FtPause" value="' + str(data['ftpause']) +
+            '" comment="Time to freeze the floatings at simulation start'
+            ' (warmup) (default=0)" units_comment="seconds" />\n')
+    f.write('\t\t\t<parameter key="CoefDtMin" value="' + str(data['coefdtmin']) +
+            '" comment="Coefficient to calculate minimum time step dtmin=coefdtmin*h/speedsound (default=0.05)" />\n')
     if data["dtini_auto"]:
         comment = "#"
     else:
         comment = ""
     f.write('\t\t\t<parameter key="' + comment + 'DtIni" value="' + str(
         data['dtini']) + '" comment="Initial time step (default=h/speedsound)" units_comment="seconds" />\n')
-    comment = ""
     if data["dtmin_auto"]:
         comment = "#"
     else:
@@ -599,16 +599,17 @@ def dump_to_xml(data, save_name):
         data['dtmin']) + '" comment="Minimum time step (default=coefdtmin*h/speedsound)" units_comment="seconds" />\n')
     # f.write('\t\t\t<parameter key="#DtFixed" value="'+str(data['dtfixed'])+'"
     # comment="Dt values are loaded from file (default=disabled)" />\n')
-    f.write('\t\t\t<parameter key="DtAllParticles" value="' + str(data[
-                                                                      'dtallparticles']) + '" comment="Velocity of particles used to calculate DT. 1:All, 0:Only fluid/floating (default=0)" />\n')
+    f.write('\t\t\t<parameter key="DtAllParticles" value="' + str(data['dtallparticles']) +
+            '" comment="Velocity of particles used to calculate DT. 1:All, 0:Only fluid/floating (default=0)" />\n')
     f.write('\t\t\t<parameter key="TimeMax" value="' + str(
         data['timemax']) + '" comment="Time of simulation" units_comment="seconds" />\n')
     f.write('\t\t\t<parameter key="TimeOut" value="' + str(
         data['timeout']) + '" comment="Time out data" units_comment="seconds" />\n')
     f.write('\t\t\t<parameter key="IncZ" value="' + str(
         data['incz']) + '" comment="Increase of Z+" units_comment="decimal" />\n')
-    f.write('\t\t\t<parameter key="PartsOutMax" value="' + str(data[
-                                                                   'partsoutmax']) + '" comment="%/100 of fluid particles allowed to be excluded from domain (default=1)" units_comment="decimal" />\n')
+    f.write('\t\t\t<parameter key="PartsOutMax" value="' + str(data['partsoutmax']) +
+            '" comment="%/100 of fluid particles allowed to be excluded from domain '
+            '(default=1)" units_comment="decimal" />\n')
     f.write('\t\t\t<parameter key="RhopOutMin" value="' + str(
         data['rhopoutmin']) + '" comment="Minimum rhop valid (default=700)" units_comment="kg/m^3" />\n')
     f.write('\t\t\t<parameter key="RhopOutMax" value="' + str(
@@ -619,5 +620,5 @@ def dump_to_xml(data, save_name):
     f.close()
 
 
-def getNumberOfDocuments():
+def get_number_of_documents():
     return len(FreeCAD.listDocuments())
