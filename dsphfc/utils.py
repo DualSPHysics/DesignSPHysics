@@ -227,13 +227,7 @@ def get_default_data():
     data["mkfluidused"] = []
 
     """ Dictionary that defines floatings. 
-        Keys are mks enabled (ONLY BOUNDS) and values are a list containing:
-        {'mkbound': [massrhop, center, inertia, velini, omegaini]}
-        massrhop = [selectedOption (index), value]
-        center = [auto (bool), x,y,z]
-        inertia = [auto (bool), x,y,z]
-        velini = [auto (bool), x,y,z]
-        omegaini = [auto (bool), x,y,z]"""
+        Structure: {mk: FloatProperty} """
     data['floating_mks'] = dict()
 
     """Dictionary that defines initials. 

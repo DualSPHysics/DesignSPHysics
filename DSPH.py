@@ -20,7 +20,10 @@ import sys
 import time
 import pickle
 import threading
+
 from PySide import QtGui, QtCore
+
+from dsphfc.FloatProperty import FloatProperty
 
 sys.path.append(FreeCAD.getUserAppDataDir() + "Macro/")
 from dsphfc import utils, guiutils, xmlimporter
@@ -53,46 +56,66 @@ __maintainer__ = "Andrés Vieira"
 __email__ = "anvieiravazquez@gmail.com"
 __status__ = "Development"
 
-""" Special vars """
+# General To-Do to use with PyCharm
+# TODO: 0.1Beta - Migrate to Object Oriented Programming for properties
+# General properties : not done
+# Floatings : done
+# Initials : not done
+# Material : not done
+
+# TODO: 0.1Beta - Create Material data structure
+# TODO: 0.1Beta - Include case examples
+# TODO: 0.1Beta - Finish Import XML
+# TODO: 0.1Beta - Create Shortcuts with installer
+# TODO: 0.1Beta - Material creator and assigner
+
+# TODO: 0.2Beta - Refector all code
+# TODO: 0.2Beta - Documentation of the code
+# TODO: 0.2Beta - Custom import (STL)
+# TODO: 0.2Beta - STL Scaling
+# TODO: 0.2Beta - Object Motion
+# End general To-Do
+
+# Special vars
 utils.print_license()
 
-""" Version check. This script is only compatible with FreeCAD 0.16 or higher """
+# Version check. This script is only compatible with FreeCAD 0.16 or higher
 is_compatible = utils.is_compatible_version()
 if not is_compatible:
     raise EnvironmentError("This FreeCAD version is not compatible. Please update FreeCAD to version 0.16 or higher.")
 
-""" Main data structure """
+# Main data structure
 data = dict()  # Used to save on disk case parameters and related data
 temp_data = dict()  # Used to store temporal useful items (like processes)
 widget_state_elements = dict()  # Used to store widgets that will be disabled/enabled, so they are centralized
-""" Establishing references for the different elements that
-    the script will use later. """
+# Establishing references for the different elements that
+# the script will use later.
 fc_main_window = FreeCADGui.getMainWindow()  # FreeCAD main window
 dsph_main_dock = QtGui.QDockWidget()  # DSPH main dock
 dsph_main_dock_scaff_widget = QtGui.QWidget()  # Scaffolding widget, only useful to apply to the dsph_dock widget
-""" Executes the default data function the first time
-    and merges results with current data structure. """
+# Executes the default data function the first time
+# and merges results with current data structure.
 default_data, default_temp_data = utils.get_default_data()
 data.update(default_data)
 temp_data.update(default_temp_data)
 
-""" The script needs only one document open, called DSHP_Case.
-    This section tries to close all the current documents. """
+# The script needs only one document open, called DSHP_Case.
+# This section tries to close all the current documents.
 if utils.document_count() > 0:
     success = utils.prompt_close_all_documents()
     if not success:
         quit()
 
-""" If the script is executed even when a previous DSHP Dock is created
-    it makes sure that it's deleted before. """
+# If the script is executed even when a previous DSHP Dock is created
+# it makes sure that it's deleted before.
 previous_dock = fc_main_window.findChild(QtGui.QDockWidget, "DSPH Widget")
 if previous_dock:
     previous_dock.setParent(None)
     previous_dock = None
 
-""" Creation of the DSPH Widget.
-    Creates a widget with a series of layouts added, to apply
-    to the DSPH dock at the end. """
+# Creation of the DSPH Widget.
+# Creates a widget with a series of layouts added, to apply
+# to the DSPH dock at the end.
 dsph_main_dock.setObjectName("DSPH Widget")
 dsph_main_dock.setWindowTitle(utils.APP_NAME + " " + str(__version__))
 main_layout = QtGui.QVBoxLayout()  # Main Widget layout.  Vertical ordering
@@ -101,8 +124,8 @@ main_layout = QtGui.QVBoxLayout()  # Main Widget layout.  Vertical ordering
 logo_layout = QtGui.QHBoxLayout()
 intro_layout = QtGui.QVBoxLayout()
 
-""" DSPH dock first section.
-    Includes constant definition, help, etc. """
+# DSPH dock first section.
+# Includes constant definition, help, etc.
 constants_label = QtGui.QLabel(
     "\nConstant Definition and Execution Parameters: \nYou can modify values to customize the simulation."
     " If not set, the parameters would be at default values.")
@@ -158,8 +181,8 @@ dp_layout.addWidget(dp_label)
 dp_layout.addWidget(dp_input)
 dp_layout.addWidget(dp_label2)
 
-""" Case control definition.
-    Includes things like New Case, Save, etc... """
+# Case control definition.
+# Includes things like New Case, Save, etc...
 cc_layout = QtGui.QVBoxLayout()
 cclabel_layout = QtGui.QHBoxLayout()
 ccfilebuttons_layout = QtGui.QHBoxLayout()
@@ -242,7 +265,7 @@ def on_save_case():
 
         utils.dump_to_xml(data, save_name)  # Dumps all the case data to an XML file.
 
-        # GENERATE BAT TO EXECUTE EASELY
+        # Generate batch file in disk
         if (data["gencase_path"] == "") or (data["dsphysics_path"] == "") or (data["partvtk4_path"] == ""):
             utils.warning("Can't create executable bat file! One or more of the paths in plugin setup is not set")
         else:
@@ -407,7 +430,7 @@ def on_load_case():
 
 
 def on_add_fillbox():
-    """Add fillbox group. It consists
+    """ Add fillbox group. It consists
     in a group with 2 objects inside: a point and a box.
     The point represents the fill seed and the box sets
     the bounds for the filling"""
@@ -426,7 +449,7 @@ def on_add_fillbox():
 
 
 def on_add_stl():
-    """Add STL file. Opens a file opener and allows
+    """ Add STL file. Opens a file opener and allows
     the user to set parameters for the import process"""
     # For now disabled
     filedialog = QtGui.QFileDialog()
@@ -462,6 +485,16 @@ def on_import_xml():
             add_object_to_sim(key)
             data["simobjects"][key] = value
             # TODO: Change objects appearance to match properties.
+            # Change properties based on fill mode
+            if "full" in value[2]:
+                pass
+            elif "solid" in value[2]:
+                pass
+            elif "face" in value[2]:
+                pass
+            elif "wire" in value[2]:
+                pass
+            # Change properties based on bound or fluid
             on_tree_item_selection_change()
 
 
@@ -917,9 +950,9 @@ main_layout.addStretch(1)
 # Default disabled widgets
 guiutils.widget_state_config(widget_state_elements, "no case")
 
-"""You can't apply layouts to a QDockWidget, 
-so creating a standard widget, applying the layouts, 
-and then setting it as the QDockWidget"""
+# You can't apply layouts to a QDockWidget, 
+# so creating a standard widget, applying the layouts, 
+# and then setting it as the QDockWidget
 dsph_main_dock_scaff_widget.setLayout(main_layout)
 dsph_main_dock.setWidget(dsph_main_dock_scaff_widget)
 
@@ -941,7 +974,7 @@ properties_widget.setObjectName("DSPH_Properties")
 properties_widget.setWindowTitle("DSPH Object Properties")
 properties_scaff_widget = QtGui.QWidget()  # Scaffolding widget, only useful to apply to the properties_dock widget
 property_widget_layout = QtGui.QVBoxLayout()
-property_table = QtGui.QTableWidget(5, 2)
+property_table = QtGui.QTableWidget(6, 2)
 property_table.setHorizontalHeaderLabels(["Property Name", "Value"])
 property_table.verticalHeader().setVisible(False)
 property_table.horizontalHeader().setResizeMode(QtGui.QHeaderView.Stretch)
@@ -969,8 +1002,10 @@ floatstate_label = QtGui.QLabel("   Float state")
 floatstate_label.setToolTip("Sets floating state for this object MK.")
 initials_label = QtGui.QLabel("   Initials")
 initials_label.setToolTip("Sets initials options for this object")
-# TODO: Add Material edition.
+material_label = QtGui.QLabel("   Material")
+material_label.setToolTip("Sets material for this object")
 mkgroup_label.setAlignment(QtCore.Qt.AlignLeft)
+material_label.setAlignment(QtCore.Qt.AlignLeft)
 objtype_label.setAlignment(QtCore.Qt.AlignLeft)
 fillmode_label.setAlignment(QtCore.Qt.AlignLeft)
 floatstate_label.setAlignment(QtCore.Qt.AlignLeft)
@@ -980,6 +1015,7 @@ property_table.setCellWidget(1, 0, objtype_label)
 property_table.setCellWidget(2, 0, fillmode_label)
 property_table.setCellWidget(3, 0, floatstate_label)
 property_table.setCellWidget(4, 0, initials_label)
+property_table.setCellWidget(5, 0, material_label)
 
 
 def mkgroup_change(value):
@@ -1051,16 +1087,48 @@ def floatstate_change():
         else:
             # Floating true
             # Structure: 'mk': [massrhop, center, inertia, velini, omegaini]
-            data["floating_mks"][str(target_mk)] = [
-                [floating_props_massrhop_selector.currentIndex(), float(floating_props_massrhop_input.text())],
-                [floating_center_auto.isChecked(), float(floating_center_input_x.text()),
-                 float(floating_center_input_y.text()), float(floating_center_input_z.text())],
-                [floating_inertia_auto.isChecked(), float(floating_inertia_input_x.text()),
-                 float(floating_inertia_input_y.text()), float(floating_inertia_input_z.text())],
-                [floating_velini_auto.isChecked(), float(floating_velini_input_x.text()),
-                 float(floating_velini_input_y.text()), float(floating_velini_input_z.text())],
-                [floating_omegaini_auto.isChecked(), float(floating_omegaini_input_x.text()),
-                 float(floating_omegaini_input_y.text()), float(floating_omegaini_input_z.text())]]
+            # Structure: 'mk': FloatProperty
+            fp = FloatProperty()  # FloatProperty to be inserted
+            fp.mk = target_mk
+            fp.mass_density_type = floating_props_massrhop_selector.currentIndex()
+            fp.mass_density_value = float(floating_props_massrhop_input.text())
+
+            if floating_center_auto.isChecked():
+                fp.gravity_center = list()
+            else:
+                fp.gravity_center = [float(floating_center_input_x.text()),
+                                     float(floating_center_input_y.text()),
+                                     float(floating_center_input_z.text())]
+
+            if floating_center_auto.isChecked():
+                fp.gravity_center = list()
+            else:
+                fp.gravity_center = [float(floating_center_input_x.text()),
+                                     float(floating_center_input_y.text()),
+                                     float(floating_center_input_z.text())]
+
+            if floating_inertia_auto.isChecked():
+                fp.inertia = list()
+            else:
+                fp.inertia = [float(floating_inertia_input_x.text()),
+                              float(floating_inertia_input_y.text()),
+                              float(floating_inertia_input_z.text())]
+
+            if floating_velini_auto.isChecked():
+                fp.initial_linear_velocity = list()
+            else:
+                fp.initial_linear_velocity = [float(floating_velini_input_x.text()),
+                                              float(floating_velini_input_y.text()),
+                                              float(floating_velini_input_z.text())]
+
+            if floating_omegaini_auto.isChecked():
+                fp.initial_angular_velocity = list()
+            else:
+                fp.initial_angular_velocity = [float(floating_omegaini_input_x.text()),
+                                               float(floating_omegaini_input_y.text()),
+                                               float(floating_omegaini_input_z.text())]
+
+            data["floating_mks"][str(target_mk)] = fp
 
         floatings_window.accept()
 
@@ -1251,28 +1319,56 @@ def floatstate_change():
         is_floating_selector.setCurrentIndex(0)
         on_floating_change(0)
         floating_props_group.setEnabled(True)
-        floating_props_massrhop_selector.setCurrentIndex(data["floating_mks"][str(target_mk)][0][0])
-        floating_props_massrhop_input.setText(str(data["floating_mks"][str(target_mk)][0][1]))
-        floating_center_input_x.setText(str(data["floating_mks"][str(target_mk)][1][1]))
-        floating_center_input_y.setText(str(data["floating_mks"][str(target_mk)][1][2]))
-        floating_center_input_z.setText(str(data["floating_mks"][str(target_mk)][1][3]))
-        floating_inertia_input_x.setText(str(data["floating_mks"][str(target_mk)][2][1]))
-        floating_inertia_input_y.setText(str(data["floating_mks"][str(target_mk)][2][2]))
-        floating_inertia_input_z.setText(str(data["floating_mks"][str(target_mk)][2][3]))
-        floating_velini_input_x.setText(str(data["floating_mks"][str(target_mk)][3][1]))
-        floating_velini_input_y.setText(str(data["floating_mks"][str(target_mk)][3][2]))
-        floating_velini_input_z.setText(str(data["floating_mks"][str(target_mk)][3][3]))
-        floating_omegaini_input_x.setText(str(data["floating_mks"][str(target_mk)][4][1]))
-        floating_omegaini_input_y.setText(str(data["floating_mks"][str(target_mk)][4][2]))
-        floating_omegaini_input_z.setText(str(data["floating_mks"][str(target_mk)][4][3]))
+        floating_props_massrhop_selector.setCurrentIndex(data["floating_mks"][str(target_mk)].mass_density_type)
+        floating_props_massrhop_input.setText(str(data["floating_mks"][str(target_mk)].mass_density_value))
+        if len(data["floating_mks"][str(target_mk)].gravity_center) == 0:
+            floating_center_input_x.setText("0")
+            floating_center_input_y.setText("0")
+            floating_center_input_z.setText("0")
+        else:
+            floating_center_input_x.setText(str(data["floating_mks"][str(target_mk)].gravity_center[0]))
+            floating_center_input_y.setText(str(data["floating_mks"][str(target_mk)].gravity_center[1]))
+            floating_center_input_z.setText(str(data["floating_mks"][str(target_mk)].gravity_center[2]))
+
+        if len(data["floating_mks"][str(target_mk)].inertia) == 0:
+            floating_inertia_input_x.setText("0")
+            floating_inertia_input_y.setText("0")
+            floating_inertia_input_z.setText("0")
+        else:
+            floating_inertia_input_x.setText(str(data["floating_mks"][str(target_mk)].inertia[0]))
+            floating_inertia_input_y.setText(str(data["floating_mks"][str(target_mk)].inertia[1]))
+            floating_inertia_input_z.setText(str(data["floating_mks"][str(target_mk)].inertia[2]))
+
+        if len(data["floating_mks"][str(target_mk)].initial_linear_velocity) == 0:
+            floating_velini_input_x.setText("0")
+            floating_velini_input_y.setText("0")
+            floating_velini_input_z.setText("0")
+        else:
+            floating_velini_input_x.setText(str(data["floating_mks"][str(target_mk)].initial_linear_velocity[0]))
+            floating_velini_input_y.setText(str(data["floating_mks"][str(target_mk)].initial_linear_velocity[1]))
+            floating_velini_input_z.setText(str(data["floating_mks"][str(target_mk)].initial_linear_velocity[2]))
+
+        if len(data["floating_mks"][str(target_mk)].initial_angular_velocity) == 0:
+            floating_omegaini_input_x.setText("0")
+            floating_omegaini_input_y.setText("0")
+            floating_omegaini_input_z.setText("0")
+        else:
+            floating_omegaini_input_x.setText(str(data["floating_mks"][str(target_mk)].initial_angular_velocity[0]))
+            floating_omegaini_input_y.setText(str(data["floating_mks"][str(target_mk)].initial_angular_velocity[1]))
+            floating_omegaini_input_z.setText(str(data["floating_mks"][str(target_mk)].initial_angular_velocity[2]))
+
         floating_center_auto.setCheckState(
-            QtCore.Qt.Checked if data["floating_mks"][str(target_mk)][1][0] else QtCore.Qt.Unchecked)
+            QtCore.Qt.Checked if len(data["floating_mks"][str(target_mk)].gravity_center) == 0
+            else QtCore.Qt.Unchecked)
         floating_inertia_auto.setCheckState(
-            QtCore.Qt.Checked if data["floating_mks"][str(target_mk)][2][0] else QtCore.Qt.Unchecked)
+            QtCore.Qt.Checked if len(data["floating_mks"][str(target_mk)].inertia) == 0
+            else QtCore.Qt.Unchecked)
         floating_velini_auto.setCheckState(
-            QtCore.Qt.Checked if data["floating_mks"][str(target_mk)][3][0] else QtCore.Qt.Unchecked)
+            QtCore.Qt.Checked if len(data["floating_mks"][str(target_mk)].initial_linear_velocity) == 0
+            else QtCore.Qt.Unchecked)
         floating_omegaini_auto.setCheckState(
-            QtCore.Qt.Checked if data["floating_mks"][str(target_mk)][4][0] else QtCore.Qt.Unchecked)
+            QtCore.Qt.Checked if len(data["floating_mks"][str(target_mk)].initial_angular_velocity) == 0
+            else QtCore.Qt.Unchecked)
     else:
         is_floating_selector.setCurrentIndex(1)
         on_floating_change(1)
@@ -1402,12 +1498,75 @@ def initials_change():
     initials_window.exec_()
 
 
+def material_change():
+    """Defines a window with initials properties."""
+    material_window = QtGui.QDialog()
+    material_window.setWindowTitle("Initials configuration")
+    ok_button = QtGui.QPushButton("Ok")
+    cancel_button = QtGui.QPushButton("Cancel")
+    target_mk = int(data["simobjects"][FreeCADGui.Selection.getSelection()[0].Name][0])
+
+    def on_ok():
+        guiutils.info_dialog("This will apply the material properties to all objects with mkbound = " + str(target_mk))
+        if has_material_selector.currentIndex() == 1:
+            # Material default
+            # TODO: set default material
+            pass
+        else:
+            # Material custom
+            # TODO: set custom material
+            pass
+
+        materials_window.accept()
+
+    def on_cancel():
+        materials_window.reject()
+
+    def on_material_change():
+        # TODO: set what happens when changing if it has material or not.
+        pass
+
+    ok_button.clicked.connect(on_ok)
+    cancel_button.clicked.connect(on_cancel)
+
+    has_material_layout = QtGui.QHBoxLayout()
+    has_material_label = QtGui.QLabel("Set material: ")
+    has_material_label.setToolTip("Sets the current material.")
+    has_material_selector = QtGui.QComboBox()
+    has_material_selector.insertItems(0, ["Default", "Custom"])
+    has_material_selector.currentIndexChanged.connect(on_material_change)
+    has_material_targetlabel = QtGui.QLabel("Target MKGroup: " + str(target_mk))
+    has_material_layout.addWidget(has_material_label)
+    has_material_layout.addWidget(has_material_selector)
+    has_material_layout.addStretch(1)
+    has_material_layout.addWidget(has_material_targetlabel)
+
+    material_props_group = QtGui.QGroupBox("Material properties")
+
+    buttons_layout = QtGui.QHBoxLayout()
+    buttons_layout.addStretch(1)
+    buttons_layout.addWidget(ok_button)
+    buttons_layout.addWidget(cancel_button)
+
+    material_window_layout = QtGui.QVBoxLayout()
+    material_window_layout.addLayout(has_material_layout)
+    material_window_layout.addWidget(material_props_group)
+    material_window_layout.addLayout(buttons_layout)
+
+    material_window.setLayout(material_window_layout)
+
+    # TODO: Populate material if it already has one
+
+    material_window.exec_()
+
+
 # Property change widgets
 mkgroup_prop = QtGui.QSpinBox()
 objtype_prop = QtGui.QComboBox()
 fillmode_prop = QtGui.QComboBox()
 floatstate_prop = QtGui.QPushButton("Configure")
 initials_prop = QtGui.QPushButton("Configure")
+material_prop = QtGui.QPushButton("Material")
 mkgroup_prop.setRange(0, 240)
 objtype_prop.insertItems(0, ["Fluid", "Bound"])
 fillmode_prop.insertItems(1, ["Full", "Solid", "Face", "Wire"])
@@ -1416,11 +1575,13 @@ objtype_prop.currentIndexChanged.connect(objtype_change)
 fillmode_prop.currentIndexChanged.connect(fillmode_change)
 floatstate_prop.clicked.connect(floatstate_change)
 initials_prop.clicked.connect(initials_change)
+material_prop.clicked.connect(material_change)
 property_table.setCellWidget(0, 1, mkgroup_prop)
 property_table.setCellWidget(1, 1, objtype_prop)
 property_table.setCellWidget(2, 1, fillmode_prop)
 property_table.setCellWidget(3, 1, floatstate_prop)
 property_table.setCellWidget(4, 1, initials_prop)
+property_table.setCellWidget(5, 1, material_prop)
 
 # Dock the widget to the left side of screen
 fc_main_window.addDockWidget(QtCore.Qt.LeftDockWidgetArea, properties_widget)
@@ -1573,6 +1734,10 @@ def on_tree_item_selection_change():
                     to_change.setEnabled(False)
                 if selection[0].TypeId == "App::DocumentObjectGroup" and "fillbox" in selection[0].Name.lower():
                     to_change.setEnabled(True)
+
+                    # initials restrictions
+                    # to_change = property_table.cellWidget(5, 1)
+                    # No restrictions for now
 
             else:
                 if selection[0].InList == list():
