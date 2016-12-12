@@ -35,15 +35,6 @@ from PySide import QtGui, QtCore
 # You should have received a copy of the GNU General Public License
 # along with DesignSPHysics.  If not, see <http://www.gnu.org/licenses/>.
 
-__author__ = "Andrés Vieira"
-__copyright__ = "Copyright 2016, DualSHPysics Team"
-__credits__ = ["Andrés Vieira"]
-__license__ = "GPL"
-__version__ = "v0.1 BETA"
-__maintainer__ = "Andrés Vieira"
-__email__ = "anvieiravazquez@gmail.com"
-__status__ = "Development"
-
 print "Copyright (C) 2016 - Andrés Vieira"
 print "EPHYSLAB Environmental Physics Laboratory, Universidade de Vigo"
 
@@ -151,9 +142,6 @@ def main():
                     shutil.copy("./resource/LICENSE", dest_folder)
                     shutil.copytree("./resource/DSPH_Images", dest_folder + '/DSPH_Images')
                     shutil.copytree("./resource/dsphfc", dest_folder + '/dsphfc')
-
-                    # Make shortcuts
-                    # TODO: Make shortcuts
 
                     # Installation completed
                     install_button.setText('Installed!')

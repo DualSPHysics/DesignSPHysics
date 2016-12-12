@@ -22,8 +22,7 @@ import pickle
 import threading
 
 from PySide import QtGui, QtCore
-
-from dsphfc.FloatProperty import FloatProperty
+from dsphfc.properties import FloatProperty, InitialsProperty
 
 sys.path.append(FreeCAD.getUserAppDataDir() + "Macro/")
 from dsphfc import utils, guiutils, xmlimporter
@@ -57,31 +56,25 @@ __email__ = "anvieiravazquez@gmail.com"
 __status__ = "Development"
 
 # General To-Do to use with PyCharm
-# TODO: 0.1Beta - Migrate to Object Oriented Programming for properties
-# General properties : not done
-# Floatings : done
-# Initials : not done
-# Material : not done
-
-# TODO: 0.1Beta - Create Material data structure
-# TODO: 0.1Beta - Include case examples
 # TODO: 0.1Beta - Finish Import XML
-# TODO: 0.1Beta - Create Shortcuts with installer
-# TODO: 0.1Beta - Material creator and assigner
+# TODO: 0.1Beta - Include case examples
 
 # TODO: 0.2Beta - Refector all code
 # TODO: 0.2Beta - Documentation of the code
-# TODO: 0.2Beta - Custom import (STL)
+# TODO: 0.2Beta - STL Import
 # TODO: 0.2Beta - STL Scaling
 # TODO: 0.2Beta - Object Motion
+# TODO: 0.2Beta - Create Material support
+# TODO: 0.1Beta - Material creator and assigner
 # End general To-Do
 
-# Special vars
+# Print license at macro start
 utils.print_license()
 
 # Version check. This script is only compatible with FreeCAD 0.16 or higher
 is_compatible = utils.is_compatible_version()
 if not is_compatible:
+    guiutils.error_dialog("This FreeCAD version is not compatible. Please update FreeCAD to version 0.16 or higher.")
     raise EnvironmentError("This FreeCAD version is not compatible. Please update FreeCAD to version 0.16 or higher.")
 
 # Main data structure
@@ -99,14 +92,14 @@ default_data, default_temp_data = utils.get_default_data()
 data.update(default_data)
 temp_data.update(default_temp_data)
 
-# The script needs only one document open, called DSHP_Case.
+# The script needs only one document open, called DSPH_Case.
 # This section tries to close all the current documents.
 if utils.document_count() > 0:
     success = utils.prompt_close_all_documents()
     if not success:
         quit()
 
-# If the script is executed even when a previous DSHP Dock is created
+# If the script is executed even when a previous DSPH Dock is created
 # it makes sure that it's deleted before.
 previous_dock = fc_main_window.findChild(QtGui.QDockWidget, "DSPH Widget")
 if previous_dock:
@@ -478,13 +471,13 @@ def on_import_xml():
             on_new_case()
         config, objects = xmlimporter.import_xml_file(import_name)
         # Set Config
-        # TODO: Set constants an parameters
+        # TODO: (XML Import) Set constants an parameters
         data.update(config)
         # Add results to DSPH objects
         for key, value in objects.iteritems():
             add_object_to_sim(key)
             data["simobjects"][key] = value
-            # TODO: Change objects appearance to match properties.
+            # TODO: (XML Import) Change objects appearance to match properties.
             # Change properties based on fill mode
             if "full" in value[2]:
                 pass
@@ -512,7 +505,7 @@ ccfilebuttons_layout.addWidget(casecontrols_bt_newdoc)
 ccfilebuttons_layout.addWidget(casecontrols_bt_savedoc)
 ccfilebuttons_layout.addWidget(casecontrols_bt_loaddoc)
 ccaddbuttons_layout.addWidget(casecontrols_bt_addfillbox)
-# TODO: Add custom STL Import
+# TODO: (STL Import) Add custom STL Import
 # ccaddbuttons_layout.addWidget(casecontrols_bt_addstl)
 ccaddbuttons_layout.addWidget(casecontrols_bt_importxml)
 cc_layout.addLayout(cclabel_layout)
@@ -1413,10 +1406,11 @@ def initials_change():
                 data["initials_mks"].pop(str(target_mk), None)
         else:
             # Initials true
-            # Structure: {'mkfluid': [x, y, z]}
-            data["initials_mks"][str(target_mk)] = [float(initials_vector_input_x.text()),
-                                                    float(initials_vector_input_y.text()),
-                                                    float(initials_vector_input_z.text())]
+            # Structure: InitialsProperty Object
+            data["initials_mks"][str(target_mk)] = InitialsProperty(mk=target_mk,
+                                                                    force=[float(initials_vector_input_x.text()),
+                                                                           float(initials_vector_input_y.text()),
+                                                                           float(initials_vector_input_z.text())])
         initials_window.accept()
 
     def on_cancel():
@@ -1483,9 +1477,9 @@ def initials_change():
         has_initials_selector.setCurrentIndex(0)
         on_initials_change(0)
         initials_props_group.setEnabled(True)
-        initials_vector_input_x.setText(str(data["initials_mks"][str(target_mk)][0]))
-        initials_vector_input_y.setText(str(data["initials_mks"][str(target_mk)][1]))
-        initials_vector_input_z.setText(str(data["initials_mks"][str(target_mk)][2]))
+        initials_vector_input_x.setText(str(data["initials_mks"][str(target_mk)].force[0]))
+        initials_vector_input_y.setText(str(data["initials_mks"][str(target_mk)].force[1]))
+        initials_vector_input_z.setText(str(data["initials_mks"][str(target_mk)].force[2]))
     else:
         has_initials_selector.setCurrentIndex(1)
         on_initials_change(1)
@@ -1506,15 +1500,14 @@ def material_change():
     cancel_button = QtGui.QPushButton("Cancel")
     target_mk = int(data["simobjects"][FreeCADGui.Selection.getSelection()[0].Name][0])
 
+    # TODO: (Material management) Material related code
     def on_ok():
         guiutils.info_dialog("This will apply the material properties to all objects with mkbound = " + str(target_mk))
         if has_material_selector.currentIndex() == 1:
             # Material default
-            # TODO: set default material
             pass
         else:
             # Material custom
-            # TODO: set custom material
             pass
 
         materials_window.accept()
@@ -1523,7 +1516,6 @@ def material_change():
         materials_window.reject()
 
     def on_material_change():
-        # TODO: set what happens when changing if it has material or not.
         pass
 
     ok_button.clicked.connect(on_ok)
