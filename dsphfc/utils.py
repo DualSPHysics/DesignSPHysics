@@ -43,16 +43,6 @@ You should have received a copy of the GNU General Public License
 along with DesignSPHysics.  If not, see <http://www.gnu.org/licenses/>.
 """
 
-__author__ = "Andrés Vieira"
-__copyright__ = "Copyright 2016, DualSHPysics Team"
-__credits__ = ["Andrés Vieira"]
-__license__ = "GPL"
-__version__ = "v0.1 BETA"
-__maintainer__ = "Andrés Vieira"
-__email__ = "anvieiravazquez@gmail.com"
-__status__ = "Development"
-
-
 # ------ CONSTANTS DEFINITION ------
 FREECAD_MIN_VERSION = "016"
 APP_NAME = "DesignSPHysics"
@@ -516,32 +506,37 @@ def dump_to_xml(data, save_name):
     if len(data["initials_mks"].keys()) > 0:
         f.write('\t\t<initials>\n')
         for key, value in data["initials_mks"].iteritems():
-            f.write('\t\t\t<velocity mkfluid="' + str(key) + '" x="' + str(value[0]) + '" y="' + str(
-                value[1]) + '" z="' + str(value[2]) + '"/>\n')
+            f.write('\t\t\t<velocity mkfluid="' + str(key) + '" x="' + str(value.force[0]) + '" y="' + str(
+                value.force[1]) + '" z="' + str(value.force[2]) + '"/>\n')
         f.write('\t\t</initials>\n')
     # Writes floatings
     if len(data["floating_mks"].keys()) > 0:
         f.write('\t\t<floatings>\n')
         for key, value in data["floating_mks"].iteritems():
-            if value[0][0] == 0:
+            if value[0].mass_density_type == 0:
                 # is massbody
                 f.write('\t\t\t<floating mkbound="' + str(key) + '">\n')
-                f.write('\t\t\t\t<massbody value="' + str(value[0][1]) + '" />\n')
+                f.write('\t\t\t\t<massbody value="' + str(value.mass_density_value) + '" />\n')
             else:
                 # is rhopbody
-                f.write('\t\t\t<floating mkbound="' + str(key) + '" rhopbody="' + str(value[0][1]) + '">\n')
-            if not value[1][0]:
-                f.write('\t\t\t\t<center x="' + str(value[1][1]) + '" y="' + str(value[1][2]) + '" z="' + str(
-                    value[1][3]) + '" />\n')
-            if not value[2][0]:
-                f.write('\t\t\t\t<inertia x="' + str(value[2][1]) + '" y="' + str(value[2][2]) + '" z="' + str(
-                    value[2][3]) + '" />\n')
-            if not value[3][0]:
-                f.write('\t\t\t\t<velini x="' + str(value[3][1]) + '" y="' + str(value[3][2]) + '" z="' + str(
-                    value[3][3]) + '" />\n')
-            if not value[4][0]:
-                f.write('\t\t\t\t<omegaini x="' + str(value[4][1]) + '" y="' + str(value[4][2]) + '" z="' + str(
-                    value[4][3]) + '" />\n')
+                f.write(
+                    '\t\t\t<floating mkbound="' + str(key) + '" rhopbody="' + str(value.mass_density_value) + '">\n')
+            if len(value.gravity_center) != 0:
+                f.write('\t\t\t\t<center x="' + str(value.gravity_center[0]) + '" y="' + str(
+                    value.gravity_center[1]) + '" z="' + str(
+                    value.gravity_center[2]) + '" />\n')
+            if len(value.inertia) != 0:
+                f.write(
+                    '\t\t\t\t<inertia x="' + str(value.inertia[0]) + '" y="' + str(value.inertia[1]) + '" z="' + str(
+                        value.inertia[2]) + '" />\n')
+            if len(value.initial_linear_velocity) != 0:
+                f.write('\t\t\t\t<velini x="' + str(value.initial_linear_velocity[0]) + '" y="' + str(
+                    value.initial_linear_velocity[1]) + '" z="' + str(
+                    value.initial_linear_velocity[2]) + '" />\n')
+            if len(value.initial_angular_velocity) != 0:
+                f.write('\t\t\t\t<omegaini x="' + str(value.initial_angular_velocity[0]) + '" y="' + str(
+                    value.initial_angular_velocity[1]) + '" z="' + str(
+                    value.initial_angular_velocity[2]) + '" />\n')
             f.write('\t\t\t</floating>\n')
         f.write('\t\t</floatings>\n')
     f.write('\t</casedef>\n')

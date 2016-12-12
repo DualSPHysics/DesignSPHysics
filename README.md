@@ -15,7 +15,7 @@ To install DesignSPHysics you have 2 options: Using an installer (release versio
 To install a release version go to the download section of the [official webpage](http://dual.sphysics.org/gui) and download the appropiate binary. Execute the installer (installer.exe on Windows and installer on GNU/Linux) to open the installer. Then press install and it will copy the needed scripts in FreeCAD's macro default folder.
 
 ### Installing a develompent build
-Clone this repository and copy DSHP.py and DSPH_Images to FreeCAD macro directory (%appdata%/FreeCAD/Macro on Windows; ~/.FreeCAD/Macro on GNU/Linux)
+Clone this repository and copy DSPH.py and DSPH_Images to FreeCAD macro directory (%appdata%/FreeCAD/Macro on Windows; ~/.FreeCAD/Macro on GNU/Linux)
 
 ## Where to get help
 You can check the [DesignSPHysics Wiki](http://dual.sphysics.org/gui/wiki) to get help.
