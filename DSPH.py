@@ -56,16 +56,16 @@ __email__ = "anvieiravazquez@gmail.com"
 __status__ = "Development"
 
 # General To-Do to use with PyCharm
-# TODO: 0.1Beta - Finish Import XML
 # TODO: 0.1Beta - Include case examples
 
+# TODO: 0.2Beta - Make DSPH Object Properties bigger by default
 # TODO: 0.2Beta - Refector all code
 # TODO: 0.2Beta - Documentation of the code
 # TODO: 0.2Beta - STL Import
 # TODO: 0.2Beta - STL Scaling
 # TODO: 0.2Beta - Object Motion
 # TODO: 0.2Beta - Create Material support
-# TODO: 0.1Beta - Material creator and assigner
+# TODO: 0.2Beta - Material creator and assigner
 # End general To-Do
 
 # Print license at macro start
@@ -481,6 +481,7 @@ def on_import_xml():
         dp_input.setText(str(config["dp"]))
         limits_point_min = config['limits_min']
         limits_point_max = config['limits_max']
+        # noinspection PyArgumentList
         FreeCAD.ActiveDocument.getObject('Case_Limits').Placement = FreeCAD.Placement(
             FreeCAD.Vector(limits_point_min[0] * 1000, limits_point_min[1] * 1000, limits_point_min[2] * 1000),
             FreeCAD.Rotation(FreeCAD.Vector(0, 0, 1),
@@ -489,15 +490,14 @@ def on_import_xml():
         FreeCAD.ActiveDocument.getObject("Case_Limits").Width = str(limits_point_max[1] - limits_point_min[1]) + ' m'
         FreeCAD.ActiveDocument.getObject("Case_Limits").Height = str(limits_point_max[2] - limits_point_min[2]) + ' m'
 
-        # TODO: (XML Import) Set constants and parameters
-        utils.debug(str(config))
+        # Merges and updates current data with the imported one.
         data.update(config)
 
         # Add results to DSPH objects
         for key, value in objects.iteritems():
             add_object_to_sim(key)
             data["simobjects"][key] = value
-            # Change properties based on fill mode
+            # Change visual properties based on fill mode and type
             target_object = FreeCADGui.ActiveDocument.getObject(key)
             if "bound" in value[1]:
                 if "full" in value[2]:
@@ -526,6 +526,7 @@ def on_import_xml():
                     target_object.ShapeColor = (0.00, 0.45, 1.00)
                     target_object.Transparency = 85
 
+            # Notify change to refresh UI elements related.
             on_tree_item_selection_change()
 
 
@@ -975,8 +976,6 @@ main_layout.addWidget(ex_separator)
 main_layout.addLayout(export_layout)
 main_layout.addWidget(export_separator)
 main_layout.addLayout(objectlist_layout)
-main_layout.addWidget(objectlist_separator)
-main_layout.addStretch(1)
 
 # Default disabled widgets
 guiutils.widget_state_config(widget_state_elements, "no case")
