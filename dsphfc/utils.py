@@ -19,9 +19,11 @@ import os
 import pickle
 import traceback
 import webbrowser
+import json
+import guiutils
+from properties import *
 from datetime import datetime
 from PySide import QtGui, QtCore
-import guiutils
 
 """
 Copyright (C) 2016 - Andrés Vieira (anvieiravazquez@gmail.com)
@@ -140,6 +142,44 @@ def check_executables(gencase_path, dsphysics_path, partvtk4_path):
     return gencase_path, dsphysics_path, partvtk4_path, execs_correct
 
 
+def float_list_to_float_property(floating_mks):
+    to_ret = dict()
+    for key, value in floating_mks.iteritems():
+        if isinstance(value, list):
+            # Is in old mode. Change to OOP
+            fp = FloatProperty(mk=float(key),
+                               mass_density_type=int(value[0][0]),
+                               mass_density_value=float(value[0][1]))
+            if not value[1][0]:  # Gravity center is not auto
+                fp.gravity_center = value[1][1:]
+            if not value[2][0]:  # Inertia is not auto
+                fp.inertia = value[2][1:]
+            if not value[3][0]:  # Initial linear velocity is not auto
+                fp.initial_linear_velocity = value[3][1:]
+            if not value[4][0]:  # Initial angular velocity is not auto
+                fp.initial_angular_velocity = value[4][1:]
+
+            to_ret[key] = fp
+        else:
+            # Is in OOP mode, appending
+            to_ret[key] = value
+    return to_ret
+
+
+def initials_list_to_initials_property(initials_mks):
+    to_ret = dict()
+    for key, value in initials_mks.iteritems():
+        if isinstance(value, list):
+            # Is in old mode. Change to OOP
+            ip = InitialsProperty(mk=int(key),
+                                  force=value)
+            to_ret[key] = ip
+        else:
+            # Is in OOP mode, appending
+            to_ret[key] = value
+    return to_ret
+
+
 def get_default_data():
     """ Sets default data at start of the macro.
         Returns data and temp_data dict with default values.
@@ -216,11 +256,11 @@ def get_default_data():
     data["mkboundused"] = []
     data["mkfluidused"] = []
 
-    """ Dictionary that defines floatings. 
+    """ Dictionary that defines floatings.
         Structure: {mk: FloatProperty} """
     data['floating_mks'] = dict()
 
-    """Dictionary that defines initials. 
+    """Dictionary that defines initials.
     Keys are mks enabled (ONLY FLUIDS) and values are a list containing:
     {'mkfluid': [x, y, z]}"""
     data['initials_mks'] = dict()
