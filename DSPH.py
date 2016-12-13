@@ -497,17 +497,35 @@ def on_import_xml():
         for key, value in objects.iteritems():
             add_object_to_sim(key)
             data["simobjects"][key] = value
-            # TODO: (XML Import) Change objects appearance to match properties.
             # Change properties based on fill mode
-            if "full" in value[2]:
-                pass
-            elif "solid" in value[2]:
-                pass
-            elif "face" in value[2]:
-                pass
-            elif "wire" in value[2]:
-                pass
-            # Change properties based on bound or fluid
+            target_object = FreeCADGui.ActiveDocument.getObject(key)
+            if "bound" in value[1]:
+                if "full" in value[2]:
+                    target_object.ShapeColor = (0.80, 0.80, 0.80)
+                    target_object.Transparency = 0
+                elif "solid" in value[2]:
+                    target_object.ShapeColor = (0.80, 0.80, 0.80)
+                    target_object.Transparency = 0
+                elif "face" in value[2]:
+                    target_object.ShapeColor = (0.80, 0.80, 0.80)
+                    target_object.Transparency = 80
+                elif "wire" in value[2]:
+                    target_object.ShapeColor = (0.80, 0.80, 0.80)
+                    target_object.Transparency = 85
+            if "fluid" in value[1]:
+                if "full" in value[2]:
+                    target_object.ShapeColor = (0.00, 0.45, 1.00)
+                    target_object.Transparency = 30
+                elif "solid" in value[2]:
+                    target_object.ShapeColor = (0.00, 0.45, 1.00)
+                    target_object.Transparency = 30
+                elif "face" in value[2]:
+                    target_object.ShapeColor = (0.00, 0.45, 1.00)
+                    target_object.Transparency = 80
+                elif "wire" in value[2]:
+                    target_object.ShapeColor = (0.00, 0.45, 1.00)
+                    target_object.Transparency = 85
+
             on_tree_item_selection_change()
 
 
