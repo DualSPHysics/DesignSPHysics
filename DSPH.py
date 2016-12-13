@@ -402,6 +402,12 @@ def on_load_case():
 
     data["project_path"] = load_path_project_folder
     data["project_name"] = load_path_project_folder.split("/")[-1]
+
+    # Compatibility code. Transform content from previous version to this one.
+    # Make FloatProperty compatible
+    data["floating_mks"] = utils.float_list_to_float_property(data["floating_mks"])
+    data["initials_mks"] = utils.initials_list_to_initials_property(data["initials_mks"])
+
     guiutils.widget_state_config(widget_state_elements, "load base")
     if data["gencase_done"]:
         guiutils.widget_state_config(widget_state_elements, "gencase done")
@@ -470,9 +476,23 @@ def on_import_xml():
         else:
             on_new_case()
         config, objects = xmlimporter.import_xml_file(import_name)
+
         # Set Config
-        # TODO: (XML Import) Set constants an parameters
+        dp_input.setText(str(config["dp"]))
+        limits_point_min = config['limits_min']
+        limits_point_max = config['limits_max']
+        FreeCAD.ActiveDocument.getObject('Case_Limits').Placement = FreeCAD.Placement(
+            FreeCAD.Vector(limits_point_min[0] * 1000, limits_point_min[1] * 1000, limits_point_min[2] * 1000),
+            FreeCAD.Rotation(FreeCAD.Vector(0, 0, 1),
+                             0))
+        FreeCAD.ActiveDocument.getObject("Case_Limits").Length = str(limits_point_max[0] - limits_point_min[0]) + ' m'
+        FreeCAD.ActiveDocument.getObject("Case_Limits").Width = str(limits_point_max[1] - limits_point_min[1]) + ' m'
+        FreeCAD.ActiveDocument.getObject("Case_Limits").Height = str(limits_point_max[2] - limits_point_min[2]) + ' m'
+
+        # TODO: (XML Import) Set constants and parameters
+        utils.debug(str(config))
         data.update(config)
+
         # Add results to DSPH objects
         for key, value in objects.iteritems():
             add_object_to_sim(key)
@@ -1546,8 +1566,6 @@ def material_change():
     material_window_layout.addLayout(buttons_layout)
 
     material_window.setLayout(material_window_layout)
-
-    # TODO: Populate material if it already has one
 
     material_window.exec_()
 

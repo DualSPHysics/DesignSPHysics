@@ -94,6 +94,14 @@ def filter_data(raw):
     # Getting dp
     fil['dp'] = float(raw['case']['casedef']['geometry']['definition']['@dp'])
 
+    # Getting case limits
+    fil['limits_min'] = [float(raw['case']['casedef']['geometry']['definition']['pointmin']['@x']),
+                         float(raw['case']['casedef']['geometry']['definition']['pointmin']['@y']),
+                         float(raw['case']['casedef']['geometry']['definition']['pointmin']['@z'])]
+    fil['limits_max'] = [float(raw['case']['casedef']['geometry']['definition']['pointmax']['@x']),
+                         float(raw['case']['casedef']['geometry']['definition']['pointmax']['@y']),
+                         float(raw['case']['casedef']['geometry']['definition']['pointmax']['@z'])]
+
     # Execution parameters related code
     execution_parameters = raw['case']['execution']['parameters']['parameter']
     for parameter in execution_parameters:
