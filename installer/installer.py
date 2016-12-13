@@ -49,7 +49,6 @@ def main():
     app = QtGui.QApplication(sys.argv)
 
     w = QtGui.QDialog()
-    # noinspection PyCallByClass
     QtCore.QTextCodec.setCodecForCStrings(QtCore.QTextCodec.codecForName('UTF-8'))
     w.setFixedSize(400, 500)
 

@@ -175,11 +175,10 @@ def create_fc_objects(f, path):
                         float(command.attrib["z"]))
         elif command.tag == "drawbox":
             for subcommand in command:
-                boxfill = "full"
                 point = (0.0, 0.0, 0.0)
                 size = (1.0, 1.0, 1.0)
                 if subcommand.tag == "boxfill":
-                    boxfill = subcommand.text
+                    pass
                 elif subcommand.tag == "point":
                     point = (
                         float(subcommand.attrib["x"]), float(subcommand.attrib["y"]), float(subcommand.attrib["z"]))
@@ -191,6 +190,7 @@ def create_fc_objects(f, path):
             # Box creation in FreeCAD
             FreeCAD.ActiveDocument.addObject("Part::Box", "Box" + str(elementnum))
             FreeCAD.ActiveDocument.ActiveObject.Label = "Box" + str(elementnum)
+            # noinspection PyArgumentList
             FreeCAD.ActiveDocument.getObject("Box" + str(elementnum)).Placement = FreeCAD.Placement(
                 FreeCAD.Vector((point[0] + movement[0]) * 1000, (point[1] + movement[1]) * 1000,
                                (point[2] + movement[2]) * 1000),
@@ -221,6 +221,7 @@ def create_fc_objects(f, path):
             # Cylinder creation in FreeCAD
             FreeCAD.ActiveDocument.addObject("Part::Cylinder", "Cylinder" + str(elementnum))
             FreeCAD.ActiveDocument.ActiveObject.Label = "Cylinder" + str(elementnum)
+            # noinspection PyArgumentList
             FreeCAD.ActiveDocument.getObject("Cylinder" + str(elementnum)).Placement = FreeCAD.Placement(
                 FreeCAD.Vector((point[0] + movement[0]) * 1000, (point[1] + movement[1]) * 1000,
                                (point[2] + movement[2]) * 1000),
@@ -240,6 +241,7 @@ def create_fc_objects(f, path):
             # Sphere creation in FreeCAD
             FreeCAD.ActiveDocument.addObject("Part::Sphere", "Sphere" + str(elementnum))
             FreeCAD.ActiveDocument.ActiveObject.Label = "Sphere" + str(elementnum)
+            # noinspection PyArgumentList
             FreeCAD.ActiveDocument.getObject("Sphere" + str(elementnum)).Placement = FreeCAD.Placement(
                 FreeCAD.Vector((point[0] + movement[0]) * 1000, (point[1] + movement[1]) * 1000,
                                (point[2] + movement[2]) * 1000),
