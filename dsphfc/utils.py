@@ -553,7 +553,7 @@ def dump_to_xml(data, save_name):
     if len(data["floating_mks"].keys()) > 0:
         f.write('\t\t<floatings>\n')
         for key, value in data["floating_mks"].iteritems():
-            if value[0].mass_density_type == 0:
+            if value.mass_density_type == 0:
                 # is massbody
                 f.write('\t\t\t<floating mkbound="' + str(key) + '">\n')
                 f.write('\t\t\t\t<massbody value="' + str(value.mass_density_value) + '" />\n')
