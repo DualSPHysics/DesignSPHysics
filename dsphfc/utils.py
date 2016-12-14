@@ -49,6 +49,7 @@ along with DesignSPHysics.  If not, see <http://www.gnu.org/licenses/>.
 FREECAD_MIN_VERSION = "016"
 APP_NAME = "DesignSPHysics"
 DEBUGGING = True
+PICKLE_PROTOCOL = 1  # Binary mode
 
 
 # ------ END CONSTANTS DEFINITION ------

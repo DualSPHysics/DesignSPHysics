@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" ?>
-<case app="dam-break" date="15-11-2016 13:53:18">
+<case app="dam-break" date="14-12-2016 12:37:57">
 	<casedef>
 		<constantsdef>
 			<lattice bound="1" fluid="1" />
@@ -44,7 +44,7 @@
 					<drawbox>
 						<boxfill>solid</boxfill>
 						<point x="0" y="0" z="0" />
-						<size x="0.01" y="0.5" z="0.5" />
+						<size x="1.0" y="0.01" z="0.5" />
 					</drawbox>
 					<matrixreset />
 					<setmkbound mk="0"/>
@@ -59,12 +59,12 @@
 					<matrixreset />
 					<setmkbound mk="0"/>
 					<setdrawmode mode="full"/>
-					<move x="0.99" y="0.0" z="0.0" />
+					<move x="0.0" y="0.49" z="0.0" />
 					<rotate ang="0.0" x="-0.0" y="-0.0" z="-1.0" />
 					<drawbox>
 						<boxfill>solid</boxfill>
 						<point x="0" y="0" z="0" />
-						<size x="0.01" y="0.5" z="0.5" />
+						<size x="1.0" y="0.01" z="0.5" />
 					</drawbox>
 					<matrixreset />
 					<setmkbound mk="0"/>
@@ -74,17 +74,17 @@
 					<drawbox>
 						<boxfill>solid</boxfill>
 						<point x="0" y="0" z="0" />
-						<size x="1.0" y="0.01" z="0.5" />
+						<size x="0.01" y="0.5" z="0.5" />
 					</drawbox>
 					<matrixreset />
 					<setmkbound mk="0"/>
 					<setdrawmode mode="full"/>
-					<move x="0.0" y="0.49" z="0.0" />
+					<move x="0.99" y="0.0" z="0.0" />
 					<rotate ang="0.0" x="-0.0" y="-0.0" z="-1.0" />
 					<drawbox>
 						<boxfill>solid</boxfill>
 						<point x="0" y="0" z="0" />
-						<size x="1.0" y="0.01" z="0.5" />
+						<size x="0.01" y="0.5" z="0.5" />
 					</drawbox>
 				</mainlist>
 			</commands>
