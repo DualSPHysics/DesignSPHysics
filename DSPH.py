@@ -45,7 +45,6 @@ from dsphfc import utils, guiutils, xmlimporter
 # You should have received a copy of the GNU General Public License
 # along with DesignSPHysics.  If not, see <http://www.gnu.org/licenses/>.
 
-
 __author__ = "Andrés Vieira"
 __copyright__ = "Copyright 2016, DualSHPysics Team"
 __credits__ = ["Andrés Vieira", "Alejandro Jacobo Cabrera Crespo", "Orlando García Feal"]
@@ -361,7 +360,7 @@ def on_save_case():
 
         # Save data array on disk
         picklefile = open(save_name + "/casedata.dsphdata", 'wb')
-        pickle.dump(data, picklefile)
+        pickle.dump(data, picklefile, utils.PICKLE_PROTOCOL)
 
     else:
         utils.log("Saving cancelled.")
@@ -394,12 +393,20 @@ def on_load_case():
 
     # Loads own file and sets data and button behaviour
     load_picklefile = open(load_name, 'rb')
-    load_disk_data = pickle.load(load_picklefile)
     global data
-    data.update(load_disk_data)
     global dp_input
-    dp_input.setText(str(data['dp']))
+    try:
+        # Previous versions of DesignSPHysics saved the data on disk in an ASCII way (pickle protocol 0), so sometimes
+        # due to OS changes files would be corrupted. Now it is saved in binary mode so that wouldn't happen. This bit
+        # of code is to open files which have an error (or corrupted binary files!).
+        load_disk_data = pickle.load(load_picklefile)
+        data.update(load_disk_data)
+    except (EOFError, ValueError):
+        guiutils.error_dialog("There was an error importing the case properties. You probably need to set them again."
+                              "\n\nThis could be caused due to file corruption, caused by operating system based line "
+                              "endings or ends-of-file, or other related aspects.")
 
+    dp_input.setText(str(data['dp']))
     data["project_path"] = load_path_project_folder
     data["project_name"] = load_path_project_folder.split("/")[-1]
 
@@ -528,6 +535,8 @@ def on_import_xml():
 
             # Notify change to refresh UI elements related.
             on_tree_item_selection_change()
+    guiutils.info_dialog("Importing successful. Note that some objects may not be automatically added to the case,"
+                         " and other may not have its properties correctly applied.")
 
 
 # Connect case control buttons
