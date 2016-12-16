@@ -68,7 +68,10 @@ __status__ = "Development"
 # End general To-Do
 
 # Print license at macro start
-utils.print_license()
+try:
+    utils.print_license()
+except EnvironmentError:
+    guiutils.warning_dialog("LICENSE file could not be found. Are you sure you didn't delete it?")
 
 # Version check. This script is only compatible with FreeCAD 0.16 or higher
 is_compatible = utils.is_compatible_version()
@@ -1445,7 +1448,7 @@ def initials_change():
     target_mk = int(data["simobjects"][FreeCADGui.Selection.getSelection()[0].Name][0])
 
     def on_ok():
-        guiutils.info_dialog("This will apply the initials properties to all objects with mkbound = " + str(target_mk))
+        guiutils.info_dialog("This will apply the initials properties to all objects with mkfluid = " + str(target_mk))
         if has_initials_selector.currentIndex() == 1:
             # Initials false
             if str(target_mk) in data["initials_mks"].keys():

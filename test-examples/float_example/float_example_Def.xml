@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" ?>
-<case app="dam-break" date="16-12-2016 10:56:09">
+<case app="float_example" date="16-12-2016 10:59:03">
 	<casedef>
 		<constantsdef>
 			<lattice bound="1" fluid="1" />
@@ -20,21 +20,21 @@
 		<mkconfig boundcount="240" fluidcount="10">
 		</mkconfig>
 		<geometry>
-			<definition dp="0.025" comment="Initial inter-particle distance" units_comment="metres (m)">
-				<pointmin x="-0.25" y="-0.25" z="-0.25" />
-				<pointmax x="1.25" y="0.75" z="0.95" />
+			<definition dp="0.04" comment="Initial inter-particle distance" units_comment="metres (m)">
+				<pointmin x="-0.5" y="-0.45" z="-0.425" />
+				<pointmax x="1.5" y="0.95" z="1.375" />
 			</definition>
 			<commands>
 				<mainlist>
 					<matrixreset />
 					<setmkfluid mk="0"/>
 					<setdrawmode mode="full"/>
-					<move x="0.0" y="0.2" z="0.0" />
+					<move x="0.0" y="0.01" z="0.0" />
 					<rotate ang="0.0" x="-0.0" y="-0.0" z="-1.0" />
 					<drawbox>
 						<boxfill>solid</boxfill>
 						<point x="0" y="0" z="0" />
-						<size x="0.3" y="0.3" z="0.3" />
+						<size x="1.0" y="0.49" z="0.2" />
 					</drawbox>
 					<matrixreset />
 					<setmkbound mk="0"/>
@@ -49,17 +49,37 @@
 					<matrixreset />
 					<setmkbound mk="0"/>
 					<setdrawmode mode="full"/>
-					<move x="0.0" y="0.0" z="0.0" />
+					<move x="1.0" y="0.0" z="0.0" />
 					<rotate ang="0.0" x="-0.0" y="-0.0" z="-1.0" />
 					<drawbox>
 						<boxfill>solid</boxfill>
 						<point x="0" y="0" z="0" />
-						<size x="1.0" y="0.5" z="0.01" />
+						<size x="0.01" y="0.51" z="0.5" />
 					</drawbox>
 					<matrixreset />
 					<setmkbound mk="0"/>
 					<setdrawmode mode="full"/>
-					<move x="0.0" y="0.49" z="0.0" />
+					<move x="-0.01" y="0.0" z="0.0" />
+					<rotate ang="0.0" x="-0.0" y="-0.0" z="-1.0" />
+					<drawbox>
+						<boxfill>solid</boxfill>
+						<point x="0" y="0" z="0" />
+						<size x="0.01" y="0.51" z="0.5" />
+					</drawbox>
+					<matrixreset />
+					<setmkbound mk="0"/>
+					<setdrawmode mode="full"/>
+					<move x="0.0" y="0.01" z="0.0" />
+					<rotate ang="0.0" x="-0.0" y="-0.0" z="-1.0" />
+					<drawbox>
+						<boxfill>solid</boxfill>
+						<point x="0" y="0" z="0" />
+						<size x="1.0" y="0.49" z="0.01" />
+					</drawbox>
+					<matrixreset />
+					<setmkbound mk="0"/>
+					<setdrawmode mode="full"/>
+					<move x="0.0" y="0.5" z="0.0" />
 					<rotate ang="0.0" x="-0.0" y="-0.0" z="-1.0" />
 					<drawbox>
 						<boxfill>solid</boxfill>
@@ -67,28 +87,23 @@
 						<size x="1.0" y="0.01" z="0.5" />
 					</drawbox>
 					<matrixreset />
-					<setmkbound mk="0"/>
+					<setmkbound mk="1"/>
 					<setdrawmode mode="full"/>
-					<move x="0.0" y="0.0" z="0.0" />
+					<move x="0.5" y="0.2" z="0.5" />
 					<rotate ang="0.0" x="-0.0" y="-0.0" z="-1.0" />
 					<drawbox>
 						<boxfill>solid</boxfill>
 						<point x="0" y="0" z="0" />
-						<size x="0.01" y="0.5" z="0.5" />
-					</drawbox>
-					<matrixreset />
-					<setmkbound mk="0"/>
-					<setdrawmode mode="full"/>
-					<move x="0.99" y="0.0" z="0.0" />
-					<rotate ang="0.0" x="-0.0" y="-0.0" z="-1.0" />
-					<drawbox>
-						<boxfill>solid</boxfill>
-						<point x="0" y="0" z="0" />
-						<size x="0.01" y="0.5" z="0.5" />
+						<size x="0.1" y="0.1" z="0.1" />
 					</drawbox>
 				</mainlist>
 			</commands>
 		</geometry>
+		<floatings>
+			<floating mkbound="1">
+				<massbody value="10.0" />
+			</floating>
+		</floatings>
 	</casedef>
 	<execution>
 		<parameters>
