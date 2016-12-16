@@ -1606,6 +1606,8 @@ fillmode_prop = QtGui.QComboBox()
 floatstate_prop = QtGui.QPushButton("Configure")
 initials_prop = QtGui.QPushButton("Configure")
 material_prop = QtGui.QPushButton("Material")
+# TODO: Enable material.
+material_prop.setEnabled(False)
 mkgroup_prop.setRange(0, 240)
 objtype_prop.insertItems(0, ["Fluid", "Bound"])
 fillmode_prop.insertItems(1, ["Full", "Solid", "Face", "Wire"])
