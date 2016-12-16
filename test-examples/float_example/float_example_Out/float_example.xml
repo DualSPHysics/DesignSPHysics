@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" ?>
-<case app="GenCase4 v4.0.025 (15-04-2016)" date="16-12-2016 10:59:03">
+<case app="GenCase4 v4.0.025 (15-04-2016)" date="16-12-2016 12:52:40">
     <casedef>
         <constantsdef>
             <lattice bound="1" fluid="1" />
@@ -19,9 +19,9 @@
         </constantsdef>
         <mkconfig boundcount="240" fluidcount="10" />
         <geometry>
-            <definition dp="0.04" comment="Initial inter-particle distance" units_comment="metres (m)">
-                <pointmin x="-0.5" y="-0.45" z="-0.425" />
-                <pointmax x="1.5" y="0.95" z="1.375" />
+            <definition dp="0.025" comment="Initial inter-particle distance" units_comment="metres (m)">
+                <pointmin x="-0.35" y="-0.3" z="-0.275" />
+                <pointmax x="1.35" y="0.8" z="1.225" />
             </definition>
             <commands>
                 <mainlist>
@@ -130,26 +130,26 @@
             <parameter key="RhopOutMin" value="700" comment="Minimum rhop valid (default=700)" units_comment="kg/m^3" />
             <parameter key="RhopOutMax" value="1300" comment="Maximum rhop valid (default=1300)" units_comment="kg/m^3" />
         </parameters>
-        <particles np="3130" nb="1810" nbf="1746" mkboundfirst="11" mkfluidfirst="1">
-            <fixed mkbound="0" mk="11" begin="0" count="1746" />
-            <floating mkbound="1" mk="12" begin="1746" count="64">
+        <particles np="9314" nb="3386" nbf="3261" mkboundfirst="11" mkfluidfirst="1">
+            <fixed mkbound="0" mk="11" begin="0" count="3261" />
+            <floating mkbound="1" mk="12" begin="3261" count="125">
                 <massbody value="10" units_comment="kg" />
-                <masspart value="0.15625" units_comment="kg" />
-                <center x="0.56" y="0.25" z="0.555" units_comment="metres (m)" />
-                <inertia x="0.04" y="0.04" z="0.04" units_comment="kg*m^2" />
+                <masspart value="0.08" units_comment="kg" />
+                <center x="0.55" y="0.25" z="0.55" units_comment="metres (m)" />
+                <inertia x="0.025" y="0.025" z="0.025" units_comment="kg*m^2" />
             </floating>
-            <fluid mkfluid="0" mk="1" begin="1810" count="1320" />
+            <fluid mkfluid="0" mk="1" begin="3386" count="5928" />
         </particles>
         <constants>
             <gravity x="0" y="0" z="-9.81" units_comment="m/s^2" />
             <cflnumber value="0.2" />
             <gamma value="7" />
             <rhop0 value="1000" units_comment="kg/m^3" />
-            <dp value="0.04" units_comment="metres (m)" />
-            <h value="6.9282032303E-002" units_comment="metres (m)" />
-            <b value="8.9691428571E+004" units_comment="metres (m)" />
-            <massbound value="6.4000000000E-002" units_comment="kg" />
-            <massfluid value="6.4000000000E-002" units_comment="kg" />
+            <dp value="0.025" units_comment="metres (m)" />
+            <h value="4.3301270189E-002" units_comment="metres (m)" />
+            <b value="9.8100000000E+004" units_comment="metres (m)" />
+            <massbound value="1.5625000000E-002" units_comment="kg" />
+            <massfluid value="1.5625000000E-002" units_comment="kg" />
         </constants>
         <motion />
     </execution>
