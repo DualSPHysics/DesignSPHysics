@@ -14,16 +14,19 @@ import FreeCAD
 import FreeCADGui
 import Mesh
 import math
-import sys
 import os
 import pickle
 import traceback
 import webbrowser
-import json
-import guiutils
-from properties import *
+import random
 from datetime import datetime
+
 from PySide import QtGui, QtCore
+
+import guiutils
+import stl
+import tempfile
+from properties import *
 
 """
 Copyright (C) 2016 - Andrés Vieira (anvieiravazquez@gmail.com)
@@ -48,7 +51,7 @@ along with DesignSPHysics.  If not, see <http://www.gnu.org/licenses/>.
 # ------ CONSTANTS DEFINITION ------
 FREECAD_MIN_VERSION = "016"
 APP_NAME = "DesignSPHysics"
-DEBUGGING = False
+DEBUGGING = True
 PICKLE_PROTOCOL = 1  # Binary mode
 
 
@@ -651,4 +654,28 @@ def dump_to_xml(data, save_name):
 
 
 def get_number_of_documents():
+    """ Returns the number of documents currently
+    opened in FreeCAD. """
     return len(FreeCAD.listDocuments())
+
+
+def import_stl(filename=None, scale=1):
+    """ Opens a STL file, preprocesses it and saves it
+    int temp files to load with FreeCAD. """
+    if scale <= 0:
+        scale = 1
+    if not filename:
+        raise RuntimeError("STL Import: file cannot be None")
+    try:
+        target = stl.Mesh.from_file(filename)
+    except Exception as e:
+        raise e
+
+    target.x *= scale
+    target.y *= scale
+    target.z *= scale
+    temp_file_name = tempfile.gettempdir() + "/" + str(random.randrange(100, 1000, 1)) + ".stl"
+    target.save(temp_file_name)
+
+    Mesh.insert(temp_file_name, FreeCAD.activeDocument().Name)
+    FreeCADGui.SendMsgToActiveView("ViewFit")

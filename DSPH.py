@@ -55,16 +55,20 @@ __email__ = "anvieiravazquez@gmail.com"
 __status__ = "Development"
 
 # General To-Do to use with PyCharm
-# TODO: 0.1Beta - Include case examples
-
+# TODO: 0.2Beta - STL Preprocessor with scaling
+# - Interface to set options: Source file, scale factor (x,y,z), object name.
+# TODO: 0.2Beta - Simple language support
 # TODO: 0.2Beta - Make DSPH Object Properties bigger by default
-# TODO: 0.2Beta - Refector all code
-# TODO: 0.2Beta - Documentation of the code
-# TODO: 0.2Beta - STL Import
-# TODO: 0.2Beta - STL Scaling
-# TODO: 0.2Beta - Object Motion
+# TODO: 0.2Beta - Toolbox (Fillbox, wave, periodicity, imports...) to clean the UI
+# TODO: 0.2Beta - Wave generator
+# - Show plane to represent wave generator
+# TODO: 0.2Beta - Periodicity support
+# - Show arrows (bounds) to show periodicity
 # TODO: 0.2Beta - Create Material support
 # TODO: 0.2Beta - Material creator and assigner
+# TODO: 0.2Beta - Object Motion
+# TODO: 0.2Beta - Refactor all code
+# TODO: 0.2Beta - Documentation of the code
 # End general To-Do
 
 # Print license at macro start
@@ -461,11 +465,11 @@ def on_add_fillbox():
 def on_add_stl():
     """ Add STL file. Opens a file opener and allows
     the user to set parameters for the import process"""
-    # For now disabled
     filedialog = QtGui.QFileDialog()
     # noinspection PyArgumentList
     file_name, _ = filedialog.getOpenFileName(fc_main_window, "Select STL to import", QtCore.QDir.homePath(),
                                               "STL Files (*.stl)")
+    utils.import_stl(filename=file_name, scale=2)
 
 
 def on_import_xml():
@@ -557,8 +561,7 @@ ccfilebuttons_layout.addWidget(casecontrols_bt_newdoc)
 ccfilebuttons_layout.addWidget(casecontrols_bt_savedoc)
 ccfilebuttons_layout.addWidget(casecontrols_bt_loaddoc)
 ccaddbuttons_layout.addWidget(casecontrols_bt_addfillbox)
-# TODO: (STL Import) Add custom STL Import
-# ccaddbuttons_layout.addWidget(casecontrols_bt_addstl)
+ccaddbuttons_layout.addWidget(casecontrols_bt_addstl)
 ccaddbuttons_layout.addWidget(casecontrols_bt_importxml)
 cc_layout.addLayout(cclabel_layout)
 cc_layout.addLayout(ccfilebuttons_layout)
@@ -1922,3 +1925,4 @@ monitor_thread.start()
 
 FreeCADGui.activateWorkbench("PartWorkbench")
 utils.log("Done loading data.")
+
