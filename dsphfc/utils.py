@@ -16,16 +16,17 @@ import Mesh
 import math
 import os
 import pickle
+import random
+import tempfile
 import traceback
 import webbrowser
-import random
+import json
 from datetime import datetime
 
 from PySide import QtGui, QtCore
 
 import guiutils
 import stl
-import tempfile
 from properties import *
 
 """
@@ -52,6 +53,7 @@ along with DesignSPHysics.  If not, see <http://www.gnu.org/licenses/>.
 FREECAD_MIN_VERSION = "016"
 APP_NAME = "DesignSPHysics"
 DEBUGGING = True
+DIVIDER = 1000
 PICKLE_PROTOCOL = 1  # Binary mode
 
 
@@ -83,6 +85,27 @@ def error(message):
 def debug(message):
     if DEBUGGING:
         print "[" + APP_NAME + "] " + "[<<<<DEBUG>>>>]" + ": " + str(message)
+
+
+def __(text):
+    """ Translation helper. Takes a string and
+    tries to return its translation to the current
+    FreeCAD locale.
+    If the translation is missing or the file does
+    not exists, return default english string. """
+
+    # Get FreeCAD current language
+    freecad_locale = FreeCADGui.getLocale().lower().replace(", ", "-").replace(" ", "-")
+    # Find dsphfc directory
+    utils_dir = os.path.dirname(os.path.abspath(__file__))
+    # Open translation file and print the matching string, if it's defined.
+    filename = "{utils_dir}/lang/{locale}.json".format(utils_dir=utils_dir, locale=freecad_locale)
+    if not os.path.isfile(filename):
+        filename = "{utils_dir}/lang/{locale}.json".format(utils_dir=utils_dir, locale="english")
+    with open(filename, "rb") as f:
+        translation = json.load(f)
+        # Tries to return the translation. It it does not exist, returns the original string
+        return translation.get(text, text)
 
 
 def check_executables(gencase_path, dsphysics_path, partvtk4_path):
@@ -196,7 +219,7 @@ def get_default_data():
     data['lattice_bound'] = 1
     data['lattice_fluid'] = 1
     data['gravity'] = [0, 0, -9.81]
-    data['rhop0'] = 1000
+    data['rhop0'] = DIVIDER
     data['hswl'] = 0
     data['hswl_auto'] = True
     data['gamma'] = 7
@@ -442,12 +465,13 @@ def dump_to_xml(data, save_name):
         data['dp']) + '" comment="Initial inter-particle distance" units_comment="metres (m)">\n')
     min_point = FreeCAD.ActiveDocument.getObject("Case_Limits").Placement.Base
     max_point = FreeCAD.ActiveDocument.getObject("Case_Limits")
-    f.write('\t\t\t\t<pointmin x="' + str((min_point.x / 1000) - (data['dp'] * 10)) + '" y="' + str(
-        (min_point.y / 1000) - (data['dp'] * 10)) + '" z="' + str((min_point.z / 1000) - (data['dp'] * 10)) + '" />\n')
+    f.write('\t\t\t\t<pointmin x="' + str((min_point.x / DIVIDER) - (data['dp'] * 10)) + '" y="' + str(
+        (min_point.y / DIVIDER) - (data['dp'] * 10)) + '" z="' + str(
+        (min_point.z / DIVIDER) - (data['dp'] * 10)) + '" />\n')
     f.write('\t\t\t\t<pointmax x="' + str(
-        (min_point.x / 1000 + max_point.Length.Value / 1000) + (data['dp'] * 10)) + '" y="' + str(
-        (min_point.y / 1000 + max_point.Width.Value / 1000) + (data['dp'] * 10)) + '" z="' + str(
-        (min_point.z / 1000 + max_point.Height.Value / 1000) + (data['dp']) * 10) + '" />\n')
+        (min_point.x / DIVIDER + max_point.Length.Value / DIVIDER) + (data['dp'] * 10)) + '" y="' + str(
+        (min_point.y / DIVIDER + max_point.Width.Value / DIVIDER) + (data['dp'] * 10)) + '" z="' + str(
+        (min_point.z / DIVIDER + max_point.Height.Value / DIVIDER) + (data['dp']) * 10) + '" />\n')
     f.write('\t\t\t</definition>\n')
     f.write('\t\t\t<commands>\n')
     f.write('\t\t\t\t<mainlist>\n')
@@ -470,35 +494,35 @@ def dump_to_xml(data, save_name):
             If specal objects are found, exported in an specific manner (p.e FillBox)
             The rest of the things are exported in STL format."""
             if o.TypeId == "Part::Box":
-                f.write('\t\t\t\t\t<move x="' + str(o.Placement.Base.x / 1000) + '" y="' + str(
-                    o.Placement.Base.y / 1000) + '" z="' + str(o.Placement.Base.z / 1000) + '" />\n')
+                f.write('\t\t\t\t\t<move x="' + str(o.Placement.Base.x / DIVIDER) + '" y="' + str(
+                    o.Placement.Base.y / DIVIDER) + '" z="' + str(o.Placement.Base.z / DIVIDER) + '" />\n')
                 f.write('\t\t\t\t\t<rotate ang="' + str(math.degrees(o.Placement.Rotation.Angle)) + '" x="' + str(
                     -o.Placement.Rotation.Axis.x) + '" y="' + str(-o.Placement.Rotation.Axis.y) + '" z="' + str(
                     -o.Placement.Rotation.Axis.z) + '" />\n')
                 f.write('\t\t\t\t\t<drawbox>\n')
                 f.write('\t\t\t\t\t\t<boxfill>solid</boxfill>\n')
                 f.write('\t\t\t\t\t\t<point x="0" y="0" z="0" />\n')
-                f.write('\t\t\t\t\t\t<size x="' + str(o.Length.Value / 1000) + '" y="' + str(
-                    o.Width.Value / 1000) + '" z="' + str(o.Height.Value / 1000) + '" />\n')
+                f.write('\t\t\t\t\t\t<size x="' + str(o.Length.Value / DIVIDER) + '" y="' + str(
+                    o.Width.Value / DIVIDER) + '" z="' + str(o.Height.Value / DIVIDER) + '" />\n')
                 f.write('\t\t\t\t\t</drawbox>\n')
             elif o.TypeId == "Part::Sphere":
-                f.write('\t\t\t\t\t<move x="' + str(o.Placement.Base.x / 1000) + '" y="' + str(
-                    o.Placement.Base.y / 1000) + '" z="' + str(o.Placement.Base.z / 1000) + '" />\n')
+                f.write('\t\t\t\t\t<move x="' + str(o.Placement.Base.x / DIVIDER) + '" y="' + str(
+                    o.Placement.Base.y / DIVIDER) + '" z="' + str(o.Placement.Base.z / DIVIDER) + '" />\n')
                 f.write('\t\t\t\t\t<rotate ang="' + str(math.degrees(o.Placement.Rotation.Angle)) + '" x="' + str(
                     -o.Placement.Rotation.Axis.x) + '" y="' + str(-o.Placement.Rotation.Axis.y) + '" z="' + str(
                     -o.Placement.Rotation.Axis.z) + '" />\n')
-                f.write('\t\t\t\t\t<drawsphere radius="' + str(o.Radius.Value / 1000) + '">\n')
+                f.write('\t\t\t\t\t<drawsphere radius="' + str(o.Radius.Value / DIVIDER) + '">\n')
                 f.write('\t\t\t\t\t\t<point x="0" y="0" z="0" />\n')
                 f.write('\t\t\t\t\t</drawsphere>\n')
             elif o.TypeId == "Part::Cylinder":
-                f.write('\t\t\t\t\t<move x="' + str(o.Placement.Base.x / 1000) + '" y="' + str(
-                    o.Placement.Base.y / 1000) + '" z="' + str(o.Placement.Base.z / 1000) + '" />\n')
+                f.write('\t\t\t\t\t<move x="' + str(o.Placement.Base.x / DIVIDER) + '" y="' + str(
+                    o.Placement.Base.y / DIVIDER) + '" z="' + str(o.Placement.Base.z / DIVIDER) + '" />\n')
                 f.write('\t\t\t\t\t<rotate ang="' + str(math.degrees(o.Placement.Rotation.Angle)) + '" x="' + str(
                     -o.Placement.Rotation.Axis.x) + '" y="' + str(-o.Placement.Rotation.Axis.y) + '" z="' + str(
                     -o.Placement.Rotation.Axis.z) + '" />\n')
-                f.write('\t\t\t\t\t<drawcylinder radius="' + str(o.Radius.Value / 1000) + '">\n')
+                f.write('\t\t\t\t\t<drawcylinder radius="' + str(o.Radius.Value / DIVIDER) + '">\n')
                 f.write('\t\t\t\t\t\t<point x="0" y="0" z="0" />\n')
-                f.write('\t\t\t\t\t\t<point x="0" y="0" z="' + str((0 + o.Height.Value) / 1000) + '" />\n')
+                f.write('\t\t\t\t\t\t<point x="0" y="0" z="' + str((0 + o.Height.Value) / DIVIDER) + '" />\n')
                 f.write('\t\t\t\t\t</drawcylinder>\n')
             else:
                 # Watch if it is a fillbox group
@@ -511,22 +535,23 @@ def dump_to_xml(data, save_name):
                         elif "fillpoint" in element.Name.lower():
                             fillpoint = element
                     if filllimits and fillpoint:
-                        f.write('\t\t\t\t\t<move x="' + str(filllimits.Placement.Base.x / 1000) + '" y="' + str(
-                            filllimits.Placement.Base.y / 1000) + '" z="' + str(
-                            filllimits.Placement.Base.z / 1000) + '" />\n')
+                        f.write('\t\t\t\t\t<move x="' + str(filllimits.Placement.Base.x / DIVIDER) + '" y="' + str(
+                            filllimits.Placement.Base.y / DIVIDER) + '" z="' + str(
+                            filllimits.Placement.Base.z / DIVIDER) + '" />\n')
                         f.write('\t\t\t\t\t<rotate ang="' + str(
                             math.degrees(filllimits.Placement.Rotation.Angle)) + '" x="' + str(
                             -filllimits.Placement.Rotation.Axis.x) + '" y="' + str(
                             -filllimits.Placement.Rotation.Axis.y) + '" z="' + str(
                             -filllimits.Placement.Rotation.Axis.z) + '" />\n')
                         f.write('\t\t\t\t\t<fillbox x="' + str(
-                            (fillpoint.Placement.Base.x - filllimits.Placement.Base.x) / 1000) + '" y="' + str(
-                            (fillpoint.Placement.Base.y - filllimits.Placement.Base.y) / 1000) + '" z="' + str(
-                            (fillpoint.Placement.Base.z - filllimits.Placement.Base.z) / 1000) + '">\n')
+                            (fillpoint.Placement.Base.x - filllimits.Placement.Base.x) / DIVIDER) + '" y="' + str(
+                            (fillpoint.Placement.Base.y - filllimits.Placement.Base.y) / DIVIDER) + '" z="' + str(
+                            (fillpoint.Placement.Base.z - filllimits.Placement.Base.z) / DIVIDER) + '">\n')
                         f.write('\t\t\t\t\t\t<modefill>void</modefill>\n')
                         f.write('\t\t\t\t\t\t<point x="0" y="0" z="0" />\n')
-                        f.write('\t\t\t\t\t\t<size x="' + str(filllimits.Length.Value / 1000) + '" y="' + str(
-                            filllimits.Width.Value / 1000) + '" z="' + str(filllimits.Height.Value / 1000) + '" />\n')
+                        f.write('\t\t\t\t\t\t<size x="' + str(filllimits.Length.Value / DIVIDER) + '" y="' + str(
+                            filllimits.Width.Value / DIVIDER) + '" z="' + str(
+                            filllimits.Height.Value / DIVIDER) + '" />\n')
                         f.write('\t\t\t\t\t\t<matrixreset />\n')
                         f.write('\t\t\t\t\t</fillbox>\n')
                     else:
