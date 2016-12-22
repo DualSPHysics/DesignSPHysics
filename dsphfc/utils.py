@@ -659,11 +659,16 @@ def get_number_of_documents():
     return len(FreeCAD.listDocuments())
 
 
-def import_stl(filename=None, scale=1):
+def import_stl(filename=None, scale_x=1, scale_y=1, scale_z=1, name=None):
     """ Opens a STL file, preprocesses it and saves it
     int temp files to load with FreeCAD. """
-    if scale <= 0:
-        scale = 1
+    if scale_x <= 0:
+        scale_x = 1
+    if scale_y <= 0:
+        scale_y = 1
+    if scale_z <= 0:
+        scale_z = 1
+
     if not filename:
         raise RuntimeError("STL Import: file cannot be None")
     try:
@@ -671,10 +676,14 @@ def import_stl(filename=None, scale=1):
     except Exception as e:
         raise e
 
-    target.x *= scale
-    target.y *= scale
-    target.z *= scale
-    temp_file_name = tempfile.gettempdir() + "/" + str(random.randrange(100, 1000, 1)) + ".stl"
+    target.x *= scale_x
+    target.y *= scale_y
+    target.z *= scale_z
+    if not name:
+        temp_file_name = tempfile.gettempdir() + "/" + str(random.randrange(100, 1000, 1)) + ".stl"
+    else:
+        temp_file_name = tempfile.gettempdir() + "/" + name + ".stl"
+
     target.save(temp_file_name)
 
     Mesh.insert(temp_file_name, FreeCAD.activeDocument().Name)

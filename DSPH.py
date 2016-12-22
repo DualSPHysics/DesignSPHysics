@@ -469,7 +469,86 @@ def on_add_stl():
     # noinspection PyArgumentList
     file_name, _ = filedialog.getOpenFileName(fc_main_window, "Select STL to import", QtCore.QDir.homePath(),
                                               "STL Files (*.stl)")
-    utils.import_stl(filename=file_name, scale=2)
+    # Defines import stl dialog
+    stl_dialog = QtGui.QDialog()
+    stl_dialog.setModal(True)
+    stl_dialog.setWindowTitle("Import STL")
+    stl_dialog_layout = QtGui.QVBoxLayout()
+    stl_group = QtGui.QGroupBox("Import STL options")
+    stl_group_layout = QtGui.QVBoxLayout()
+
+    # STL File selection
+    stl_file_layout = QtGui.QHBoxLayout()
+    stl_file_label = QtGui.QLabel("STL File: ")
+    stl_file_path = QtGui.QLineEdit()
+    stl_file_path.setText(file_name)
+    stl_file_browse = QtGui.QPushButton("Browse")
+    [stl_file_layout.addWidget(x) for x in [stl_file_label, stl_file_path, stl_file_browse]]
+    # END STL File selection
+
+    # Scaling factor
+    stl_scaling_layout = QtGui.QHBoxLayout()
+    stl_scaling_label = QtGui.QLabel("Scaling factor: ")
+    stl_scaling_x_l = QtGui.QLabel("X: ")
+    stl_scaling_x_e = QtGui.QLineEdit("1")
+    stl_scaling_y_l = QtGui.QLabel("Y: ")
+    stl_scaling_y_e = QtGui.QLineEdit("1")
+    stl_scaling_z_l = QtGui.QLabel("Z: ")
+    stl_scaling_z_e = QtGui.QLineEdit("1")
+    [stl_scaling_layout.addWidget(x) for x in
+     [stl_scaling_label, stl_scaling_x_l, stl_scaling_x_e, stl_scaling_y_l, stl_scaling_y_e,
+      stl_scaling_z_l, stl_scaling_z_e, ]]
+    # END Scaling factor
+
+    # Import object name
+    stl_objname_layout = QtGui.QHBoxLayout()
+    stl_objname_label = QtGui.QLabel("Import object name: ")
+    stl_objname_text = QtGui.QLineEdit("ImportedSTL")
+    [stl_objname_layout.addWidget(x) for x in [stl_objname_label, stl_objname_text]]
+    # End object name
+
+    # Add component layouts to group layout
+    [stl_group_layout.addLayout(x) for x in [stl_file_layout, stl_scaling_layout, stl_objname_layout]]
+    stl_group_layout.addStretch(1)
+    stl_group.setLayout(stl_group_layout)
+
+    # Create button layout
+    stl_button_layout = QtGui.QHBoxLayout()
+    stl_button_ok = QtGui.QPushButton("Import")
+    stl_button_cancel = QtGui.QPushButton("Cancel")
+    stl_button_cancel.clicked.connect(lambda: stl_dialog.reject())
+    stl_button_layout.addStretch(1)
+    stl_button_layout.addWidget(stl_button_cancel)
+    stl_button_layout.addWidget(stl_button_ok)
+
+    # Compose main window layout
+    stl_dialog_layout.addWidget(stl_group)
+    stl_dialog_layout.addStretch(1)
+    stl_dialog_layout.addLayout(stl_button_layout)
+
+    stl_dialog.setLayout(stl_dialog_layout)
+
+    # STL Dialog function definition and connections
+    def stl_ok_clicked():
+        utils.import_stl(filename=str(stl_file_path.text()),
+                         scale_x=int(stl_scaling_x_e.text()),
+                         scale_y=int(stl_scaling_y_e.text()),
+                         scale_z=int(stl_scaling_z_e.text()),
+                         name=str(stl_objname_text.text()))
+        stl_dialog.accept()
+
+    def stl_dialog_browse():
+        file_name_temp, _ = filedialog.getOpenFileName(fc_main_window, "Select STL to import", QtCore.QDir.homePath(),
+                                                       "STL Files (*.stl)")
+        stl_file_path.setText(file_name_temp)
+        stl_dialog.raise_()
+        stl_dialog.activateWindow()
+
+    stl_button_cancel.clicked.connect(lambda: stl_dialog.reject())
+    stl_button_ok.clicked.connect(stl_ok_clicked)
+    stl_file_browse.clicked.connect(stl_dialog_browse)
+
+    stl_dialog.exec_()
 
 
 def on_import_xml():
@@ -1925,4 +2004,3 @@ monitor_thread.start()
 
 FreeCADGui.activateWorkbench("PartWorkbench")
 utils.log("Done loading data.")
-
