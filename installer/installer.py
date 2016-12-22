@@ -87,7 +87,7 @@ def main():
             is pressed. """
 
         def threadfunc():
-            """ Thread that verifies and copies files to the 
+            """ Thread that verifies and copies files to the
                 installation folder. """
             install_button.setEnabled(False)
             install_button.setText('Installing...')
