@@ -135,12 +135,18 @@ def main():
                     except OSError:
                         # Directory does not exists.  Ignoring
                         pass
+                    try:
+                        shutil.rmtree(dest_folder + '/test-examples')
+                    except OSError:
+                        # Directory does not exists.  Ignoring
+                        pass
 
                     # Copy new files
                     shutil.copy("./resource/DSPH.py", dest_folder)
                     shutil.copy("./resource/LICENSE", dest_folder)
                     shutil.copytree("./resource/DSPH_Images", dest_folder + '/DSPH_Images')
                     shutil.copytree("./resource/dsphfc", dest_folder + '/dsphfc')
+                    shutil.copytree("./resource/test-examples", dest_folder + '/test-examples')
 
                     # Installation completed
                     install_button.setText('Installed!')

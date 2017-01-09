@@ -9,6 +9,7 @@ cp ../DSPH.py ./resource/
 cp ../LICENSE ./resource/
 cp -rf ../DSPH_Images/ ./resource/
 cp -rf ../dsphfc/ ./resource/
+cp -rf ../test-examples/ ./resource/
 rm ./installer.spec
 rm -rf ./build
 rm -rf ./dist
