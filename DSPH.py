@@ -47,7 +47,7 @@ from dsphfc.utils import __
 
 __author__ = "Andrés Vieira"
 __copyright__ = "Copyright 2016, DualSHPysics Team"
-__credits__ = ['Andrés Vieira", "Alejandro Jacobo Cabrera Crespo", "Orlando García Feal']
+__credits__ = ["Andrés Vieira", "Alejandro Jacobo Cabrera Crespo", "Orlando García Feal"]
 __license__ = "GPL"
 __version__ = "v0.1 BETA"
 __maintainer__ = "Andrés Vieira"
@@ -59,8 +59,6 @@ __status__ = "Development"
 # TODO: High priority - Try to pack all in one executable for installing
 # TODO: High priority - Close installer at finish
 # TODO: High priority - Fix setup dialog not closing on ok
-# TODO: High priority - Fix wiki to include link to continue post-install
-
 
 # TODO: 0.2Beta - Make DSPH Object Properties bigger by default
 # TODO: 0.2Beta - Toolbox (Fillbox, wave, periodicity, imports...) to clean the UI
@@ -420,9 +418,11 @@ def on_load_case():
         load_disk_data = pickle.load(load_picklefile)
         data.update(load_disk_data)
     except (EOFError, ValueError):
-        guiutils.error_dialog(__("There was an error importing the case properties. You probably need to set them again."
-                              "\n\nThis could be caused due to file corruption, caused by operating system based line "
-                              "endings or ends-of-file, or other related aspects."))
+        guiutils.error_dialog(__("There was an error importing the case properties. "
+                                 "You probably need to set them again."
+                                 "\n\nThis could be caused due to file corruption, "
+                                 "caused by operating system based line "
+                                 "endings or ends-of-file, or other related aspects."))
 
     dp_input.setText(str(data['dp']))
     data['project_path'] = load_path_project_folder
@@ -548,7 +548,8 @@ def on_add_stl():
         stl_dialog.accept()
 
     def stl_dialog_browse():
-        file_name_temp, _ = filedialog.getOpenFileName(fc_main_window, __("Select STL to import"), QtCore.QDir.homePath(),
+        file_name_temp, _ = filedialog.getOpenFileName(fc_main_window, __("Select STL to import"),
+                                                       QtCore.QDir.homePath(),
                                                        "STL Files (*.stl)")
         stl_file_path.setText(file_name_temp)
         stl_dialog.raise_()
@@ -633,7 +634,7 @@ def on_import_xml():
             # Notify change to refresh UI elements related.
             on_tree_item_selection_change()
     guiutils.info_dialog(__("Importing successful. Note that some objects may not be automatically added to the case,"
-                         " and other may not have its properties correctly applied."))
+                            " and other may not have its properties correctly applied."))
 
 
 # Connect case control buttons
@@ -1213,7 +1214,8 @@ def floatstate_change():
     target_mk = int(data['simobjects'][FreeCADGui.Selection.getSelection()[0].Name][0])
 
     def on_ok():
-        guiutils.info_dialog(__("This will apply the floating properties to all objects with mkbound = ") + str(target_mk))
+        guiutils.info_dialog(
+            __("This will apply the floating properties to all objects with mkbound = ") + str(target_mk))
         if is_floating_selector.currentIndex() == 1:
             # Floating false
             if str(target_mk) in data['floating_mks'].keys():
@@ -1540,7 +1542,8 @@ def initials_change():
     target_mk = int(data['simobjects'][FreeCADGui.Selection.getSelection()[0].Name][0])
 
     def on_ok():
-        guiutils.info_dialog(__("This will apply the initials properties to all objects with mkfluid = ") + str(target_mk))
+        guiutils.info_dialog(
+            __("This will apply the initials properties to all objects with mkfluid = ") + str(target_mk))
         if has_initials_selector.currentIndex() == 1:
             # Initials false
             if str(target_mk) in data['initials_mks'].keys():
@@ -1643,7 +1646,8 @@ def material_change():
 
     # TODO: (Material management) Material related code
     def on_ok():
-        guiutils.info_dialog(__("This will apply the material properties to all objects with mkbound = ") + str(target_mk))
+        guiutils.info_dialog(
+            __("This will apply the material properties to all objects with mkbound = ") + str(target_mk))
         if has_material_selector.currentIndex() == 1:
             # Material default
             pass

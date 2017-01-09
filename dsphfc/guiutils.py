@@ -909,7 +909,7 @@ def def_setup_window(data):
         data['dsphysics_path'] = dsphpath_input.text()
         data['partvtk4_path'] = partvtk4path_input.text()
         picklefile = open(FreeCAD.getUserAppDataDir() + '/dsph_data.dsphdata', 'wb')
-        pickle.dump(data, picklefile, PICKLE_PROTOCOL)
+        pickle.dump(data, picklefile, utils.PICKLE_PROTOCOL)
         utils.log("Setup changed. Saved to " + FreeCAD.getUserAppDataDir() + "/dsph_data.dsphdata")
         data['gencase_path'], data['dsphysics_path'], data['partvtk4_path'], state = utils.check_executables(
             data['gencase_path'], data['dsphysics_path'], data['partvtk4_path'])
