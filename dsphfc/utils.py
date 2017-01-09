@@ -104,8 +104,15 @@ def __(text):
         filename = "{utils_dir}/lang/{locale}.json".format(utils_dir=utils_dir, locale="english")
     with open(filename, "rb") as f:
         translation = json.load(f)
-        # Tries to return the translation. It it does not exist, returns the original string
-        return translation.get(text, text)
+    # Tries to return the translation. It it does not exist, creates it
+    to_ret = translation.get(text, None)
+    if not to_ret:
+        translation[text] = text
+        with open(filename, "wb") as f:
+            json.dump(translation, f, indent=4)
+        return text
+    else:
+        return to_ret
 
 
 def check_executables(gencase_path, dsphysics_path, partvtk4_path):
@@ -319,7 +326,7 @@ def get_default_data():
             data['gencase_path'] = disk_data['gencase_path']
             data['dsphysics_path'] = disk_data['dsphysics_path']
             data['partvtk4_path'] = disk_data['partvtk4_path']
-        except (UnpicklingError, IOError):
+        except (pickle.PickleError, IOError):
             traceback.print_exc()
             data['gencase_path'] = ""
             data['dsphysics_path'] = ""
