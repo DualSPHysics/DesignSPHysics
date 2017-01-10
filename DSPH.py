@@ -56,9 +56,8 @@ __status__ = "Development"
 
 # General To-Do to use with PyCharm
 # TODO: High priority - Try to pack all in one executable for installing
+# TODO: Save AS - Save button dropdown
 
-
-# TODO: 0.2Beta - Make DSPH Object Properties bigger by default
 # TODO: 0.2Beta - Toolbox (Fillbox, wave, periodicity, imports...) to clean the UI
 # TODO: 0.2Beta - Wave generator
 # - Show plane to represent wave generator
@@ -199,7 +198,18 @@ casecontrols_bt_savedoc.setToolTip(__(
     "Saves the case and executes GenCase over.\nIf GenCase fails or is not set up, only the case\nwill be saved."))
 casecontrols_bt_savedoc.setIcon(QtGui.QIcon(FreeCAD.getUserAppDataDir() + "Macro/DSPH_Images/save.png"))
 casecontrols_bt_savedoc.setIconSize(QtCore.QSize(28, 28))
+
+# casecontrols_bt_savedoc = QtGui.QToolButton()
+# casecontrols_bt_savedoc.setPopupMode(QtGui.QToolButton.MenuButtonPopup)
+# casecontrols_bt_savedoc.setButton
+# casecontrols_bt_savedoc.setText("  " + __("Save\n  Case"))
+# casecontrols_bt_savedoc.setToolTip(__(
+#     "Saves the case and executes GenCase over.\nIf GenCase fails or is not set up, only the case\nwill be saved."))
+# casecontrols_bt_savedoc.setIcon(QtGui.QIcon(FreeCAD.getUserAppDataDir() + "Macro/DSPH_Images/save.png"))
+# casecontrols_bt_savedoc.setIconSize(QtCore.QSize(28, 28))
 widget_state_elements['casecontrols_bt_savedoc'] = casecontrols_bt_savedoc
+
+
 casecontrols_bt_loaddoc = QtGui.QPushButton("  " + __("Load\n  Case"))
 casecontrols_bt_loaddoc.setToolTip(__("Loads a case from disk. All the current documents\nwill be closed."))
 casecontrols_bt_loaddoc.setIcon(QtGui.QIcon(FreeCAD.getUserAppDataDir() + "Macro/DSPH_Images/load.png"))
