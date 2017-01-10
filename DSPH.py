@@ -953,7 +953,7 @@ def on_export():
     export_process = QtCore.QProcess(dsph_main_dock)
     export_process.finished.connect(on_export_finished)
     static_params_exp = ['-dirin ' + data['project_path'] + '/' + data['project_name'] + '_Out/',
-                         '-savevtk' + data['project_path'] + '/' + data['project_name'] + '_Out/PartAll']
+                         '-savevtk ' + data['project_path'] + '/' + data['project_name'] + '_Out/PartAll']
     if len(data['export_options']) < 2:
         additional_params_exp = list()
     else:
@@ -966,7 +966,10 @@ def on_export():
     def on_stdout_ready():
         # update progress bar
         current_output = str(temp_data['current_export_process'].readAllStandardOutput())
-        current_part = int(current_output.split("PartAll_")[1].split(".vtk")[0])
+        try:
+            current_part = int(current_output.split("PartAll_")[1].split(".vtk")[0])
+        except IndexError:
+            current_part = export_progbar_bar.value()
         export_progbar_bar.setValue(current_part)
         export_dialog.setWindowTitle(
             __("Export to VTK: ") + str(current_part) + "/" + str(temp_data['total_export_parts']))
