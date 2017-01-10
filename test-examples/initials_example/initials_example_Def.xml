@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" ?>
-<case app="initials_example" date="21-12-2016 13:21:54">
+<case app="initials_example" date="10-01-2017 10:11:43">
 	<casedef>
 		<constantsdef>
 			<lattice bound="1" fluid="1" />
