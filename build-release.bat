@@ -9,7 +9,7 @@ xcopy ..\DSPH.py .\resource /Y
 xcopy ..\LICENSE .\resource /Y
 xcopy ..\DSPH_Images .\resource\DSPH_Images\ /S /E /Y
 xcopy ..\dsphfc .\resource\dsphfc\ /S /E /Y
-xcopy ..\test-examples .\resource\dsphfc\ /S /E /Y
+xcopy ..\test-examples .\resource\test-examples\ /S /E /Y
 del .\installer.spec /Q
 rmdir .\build /S /Q
 rmdir .\dist /S /Q

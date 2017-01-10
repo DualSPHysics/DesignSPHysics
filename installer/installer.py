@@ -154,7 +154,7 @@ def main():
                     install_success_dialog.setText("DesignSPHysics installed correctly.")
                     install_success_dialog.setIcon(QtGui.QMessageBox.Information)
                     install_success_dialog.exec_()
-                    sys.exit(0)
+                    os._exit(0)
                 else:
                     raise Exception('DSPH_Images or DSPH.py are not in the resource folder.')
             except Exception as e:
@@ -167,7 +167,7 @@ def main():
                     "Exception " + str(e.__class__.__name__) + " encountered.\nError message: " + str(e))
                 install_failed_dialog.setIcon(QtGui.QMessageBox.Critical)
                 install_failed_dialog.exec_()
-                sys.exit(0)
+                os._exit(0)
 
         installthread = threading.Thread(target=threadfunc)
         installthread.start()  # Begins installing on a thread
@@ -177,7 +177,8 @@ def main():
     main_layout.addLayout(install_layout)
     w.setLayout(main_layout)
     w.show()
-    sys.exit(app.exec_())
+    app.exec_()
+    sys.exit(0)
 
 
 if __name__ == '__main__':
