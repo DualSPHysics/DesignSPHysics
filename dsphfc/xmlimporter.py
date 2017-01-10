@@ -43,9 +43,8 @@ def import_xml_file(filename):
         in a GenCase/DSPH compatible XML file and a
        list of objects to add to simulation """
 
-    target_file = open(filename, "rb")
-    target_xml = target_file.read().replace('\n', '')
-    target_file.close()
+    with open(filename, "rb") as target_file:
+        target_xml = target_file.read().replace('\n', '')
 
     # Path to xml folder
     path = "/".join(filename.split("/")[0:-1])

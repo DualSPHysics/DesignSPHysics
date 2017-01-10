@@ -321,13 +321,16 @@ def get_default_data():
     # to introduce the software paths every time
     if os.path.isfile(FreeCAD.getUserAppDataDir() + '/dsph_data.dsphdata'):
         try:
-            picklefile = open(FreeCAD.getUserAppDataDir() + '/dsph_data.dsphdata', 'rb')
-            disk_data = pickle.load(picklefile)
-            data['gencase_path'] = disk_data['gencase_path']
-            data['dsphysics_path'] = disk_data['dsphysics_path']
-            data['partvtk4_path'] = disk_data['partvtk4_path']
-        except (pickle.PickleError, IOError):
-            traceback.print_exc()
+            with open(FreeCAD.getUserAppDataDir() + '/dsph_data.dsphdata', 'rb') as picklefile:
+                disk_data = pickle.load(picklefile)
+                data['gencase_path'] = disk_data['gencase_path']
+                data['dsphysics_path'] = disk_data['dsphysics_path']
+                data['partvtk4_path'] = disk_data['partvtk4_path']
+        except Exception:
+            # traceback.print_exc()
+            warning(__("The main settings file is corrupted. Deleting..."))
+            picklefile.close()
+            os.remove(picklefile.name)
             data['gencase_path'] = ""
             data['dsphysics_path'] = ""
             data['partvtk4_path'] = ""

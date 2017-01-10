@@ -55,10 +55,10 @@ __email__ = "anvieiravazquez@gmail.com"
 __status__ = "Development"
 
 # General To-Do to use with PyCharm
-# TODO: High priority - Fix installer reporting compatibility issues
 # TODO: High priority - Try to pack all in one executable for installing
-# TODO: High priority - Close installer at finish
-# TODO: High priority - Fix setup dialog not closing on ok
+# TODO: High priority - Delete settings file if cannot be loaded
+# TODO: High priority - Simulation buttons not triggering on when saving
+
 
 # TODO: 0.2Beta - Make DSPH Object Properties bigger by default
 # TODO: 0.2Beta - Toolbox (Fillbox, wave, periodicity, imports...) to clean the UI
@@ -371,12 +371,16 @@ def on_save_case():
                 gencase_failed_dialog.setDetailedText(
                     gencase_out_file.read().split("================================")[1])
                 gencase_failed_dialog.setIcon(QtGui.QMessageBox.Critical)
+                gencase_out_file.close()
                 gencase_failed_dialog.exec_()
                 utils.warning(__("GenCase Failed. Probably because nothing is in the scene."))
 
         # Save data array on disk
-        picklefile = open(save_name + "/casedata.dsphdata", 'wb')
-        pickle.dump(data, picklefile, utils.PICKLE_PROTOCOL)
+        try:
+            with open(save_name + "/casedata.dsphdata", 'wb') as picklefile:
+                pickle.dump(data, picklefile, utils.PICKLE_PROTOCOL)
+        except Exception:
+            guiutils.error_dialog(__("There was a problem saving the DSPH information file (casedata.dsphdata)."))
 
     else:
         utils.log(__("Saving cancelled."))
@@ -408,14 +412,14 @@ def on_load_case():
     FreeCAD.open(load_path_project_folder + "/DSPH_Case.FCStd")
 
     # Loads own file and sets data and button behaviour
-    load_picklefile = open(load_name, 'rb')
     global data
     global dp_input
     try:
         # Previous versions of DesignSPHysics saved the data on disk in an ASCII way (pickle protocol 0), so sometimes
         # due to OS changes files would be corrupted. Now it is saved in binary mode so that wouldn't happen. This bit
         # of code is to open files which have an error (or corrupted binary files!).
-        load_disk_data = pickle.load(load_picklefile)
+        with open(load_name, 'rb') as load_picklefile:
+            load_disk_data = pickle.load(load_picklefile)
         data.update(load_disk_data)
     except (EOFError, ValueError):
         guiutils.error_dialog(__("There was an error importing the case properties. "
