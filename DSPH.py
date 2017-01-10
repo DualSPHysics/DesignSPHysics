@@ -56,8 +56,6 @@ __status__ = "Development"
 
 # General To-Do to use with PyCharm
 # TODO: High priority - Try to pack all in one executable for installing
-# TODO: High priority - Delete settings file if cannot be loaded
-# TODO: High priority - Simulation buttons not triggering on when saving
 
 
 # TODO: 0.2Beta - Make DSPH Object Properties bigger by default
