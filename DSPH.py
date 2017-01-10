@@ -340,6 +340,7 @@ def on_save_case():
             error_in_gen_case = False
             if str(process.exitCode()) == "0":
                 try:
+                    utils.debug(output)
                     total_particles_text = output[output.index("Total particles: "):output.index(" (bound=")]
                     total_particles = int(total_particles_text[total_particles_text.index(": ") + 2:])
                     data['total_particles'] = total_particles
@@ -354,8 +355,8 @@ def on_save_case():
                     elif total_particles > 200000:
                         utils.warning(__(
                             "Number of particles is pretty high ({}) and "
-                            "it could take a lot of time to simulate.")).format(
-                            str(total_particles))
+                            "it could take a lot of time to simulate.").format(
+                            str(total_particles)))
                     data['gencase_done'] = True
                     guiutils.widget_state_config(widget_state_elements, "gencase done")
                     gencase_infosave_dialog = QtGui.QMessageBox()
