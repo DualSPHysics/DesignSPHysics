@@ -56,7 +56,6 @@ __status__ = "Development"
 
 # General To-Do to use with PyCharm
 # TODO: High priority - Try to pack all in one executable for installing
-# TODO: Save AS - Save button dropdown
 
 # TODO: 0.2Beta - Toolbox (Fillbox, wave, periodicity, imports...) to clean the UI
 # TODO: 0.2Beta - Wave generator
@@ -189,31 +188,36 @@ cclabel_layout = QtGui.QHBoxLayout()
 ccfilebuttons_layout = QtGui.QHBoxLayout()
 ccaddbuttons_layout = QtGui.QHBoxLayout()
 casecontrols_label = QtGui.QLabel("<b>" + __("File and GenCase tools") + "<b>")
-casecontrols_bt_newdoc = QtGui.QPushButton("  " + __("New\n  Case"))
+casecontrols_bt_newdoc = QtGui.QToolButton()
+casecontrols_bt_newdoc.setToolButtonStyle(QtCore.Qt.ToolButtonTextBesideIcon)
+casecontrols_bt_newdoc.setText("  " + __("New\n  Case"))
 casecontrols_bt_newdoc.setToolTip(__("Creates a new case. \nThe current documents opened will be closed."))
 casecontrols_bt_newdoc.setIcon(QtGui.QIcon(FreeCAD.getUserAppDataDir() + "Macro/DSPH_Images/new.png"))
 casecontrols_bt_newdoc.setIconSize(QtCore.QSize(28, 28))
-casecontrols_bt_savedoc = QtGui.QPushButton("  " + __("Save\n  Case"))
+
+casecontrols_bt_savedoc = QtGui.QToolButton()
+casecontrols_bt_savedoc.setPopupMode(QtGui.QToolButton.MenuButtonPopup)
+casecontrols_bt_savedoc.setToolButtonStyle(QtCore.Qt.ToolButtonTextBesideIcon)
+casecontrols_bt_savedoc.setText("  " + __("Save\n  Case"))
 casecontrols_bt_savedoc.setToolTip(__(
     "Saves the case and executes GenCase over.\nIf GenCase fails or is not set up, only the case\nwill be saved."))
 casecontrols_bt_savedoc.setIcon(QtGui.QIcon(FreeCAD.getUserAppDataDir() + "Macro/DSPH_Images/save.png"))
 casecontrols_bt_savedoc.setIconSize(QtCore.QSize(28, 28))
-
-# casecontrols_bt_savedoc = QtGui.QToolButton()
-# casecontrols_bt_savedoc.setPopupMode(QtGui.QToolButton.MenuButtonPopup)
-# casecontrols_bt_savedoc.setButton
-# casecontrols_bt_savedoc.setText("  " + __("Save\n  Case"))
-# casecontrols_bt_savedoc.setToolTip(__(
-#     "Saves the case and executes GenCase over.\nIf GenCase fails or is not set up, only the case\nwill be saved."))
-# casecontrols_bt_savedoc.setIcon(QtGui.QIcon(FreeCAD.getUserAppDataDir() + "Macro/DSPH_Images/save.png"))
-# casecontrols_bt_savedoc.setIconSize(QtCore.QSize(28, 28))
+casecontrols_menu_savemenu = QtGui.QMenu()
+casecontrols_menu_savemenu.addAction(QtGui.QIcon(FreeCAD.getUserAppDataDir() + "Macro/DSPH_Images/save.png"),
+                                     __("Save Case"))
+casecontrols_menu_savemenu.addAction(QtGui.QIcon(FreeCAD.getUserAppDataDir() + "Macro/DSPH_Images/save.png"),
+                                     __("Save as..."))
+casecontrols_bt_savedoc.setMenu(casecontrols_menu_savemenu)
 widget_state_elements['casecontrols_bt_savedoc'] = casecontrols_bt_savedoc
 
-
-casecontrols_bt_loaddoc = QtGui.QPushButton("  " + __("Load\n  Case"))
+casecontrols_bt_loaddoc = QtGui.QToolButton()
+casecontrols_bt_loaddoc.setToolButtonStyle(QtCore.Qt.ToolButtonTextBesideIcon)
+casecontrols_bt_loaddoc.setText("  " + __("Load\n  Case"))
 casecontrols_bt_loaddoc.setToolTip(__("Loads a case from disk. All the current documents\nwill be closed."))
 casecontrols_bt_loaddoc.setIcon(QtGui.QIcon(FreeCAD.getUserAppDataDir() + "Macro/DSPH_Images/load.png"))
 casecontrols_bt_loaddoc.setIconSize(QtCore.QSize(28, 28))
+
 casecontrols_bt_addfillbox = QtGui.QPushButton(__("Add fillbox"))
 casecontrols_bt_addfillbox.setToolTip(__(
     "Adds a FillBox. A FillBox is able to fill an empty space\n"
@@ -247,13 +251,13 @@ def on_new_case():
     on_tree_item_selection_change()
 
 
-def on_save_case():
+def on_save_case(save_as=None):
     """Defines what happens when save case button is clicked.
     Saves a freecad scene definition, a dump of dsph data useful for this macro
     and tries to generate a case with gencase."""
 
     # Watch if save path is available.  Prompt the user if not.
-    if data['project_path'] == "" and data['project_name'] == "":
+    if (data['project_path'] == "" and data['project_name'] == "") or save_as:
         # noinspection PyArgumentList
         save_name, _ = QtGui.QFileDialog.getSaveFileName(dsph_main_dock, __("Save Case"), QtCore.QDir.homePath())
     else:
@@ -393,6 +397,13 @@ def on_save_case():
 
     else:
         utils.log(__("Saving cancelled."))
+
+
+def on_save_menu(action):
+    if __("Save Case") in action.text():
+        on_save_case()
+    if __("Save as...") in action.text():
+        on_save_case(save_as=True)
 
 
 def on_load_case():
@@ -653,6 +664,7 @@ def on_import_xml():
 # Connect case control buttons
 casecontrols_bt_newdoc.clicked.connect(on_new_case)
 casecontrols_bt_savedoc.clicked.connect(on_save_case)
+casecontrols_menu_savemenu.triggered.connect(on_save_menu)
 casecontrols_bt_loaddoc.clicked.connect(on_load_case)
 casecontrols_bt_addfillbox.clicked.connect(on_add_fillbox)
 casecontrols_bt_addstl.clicked.connect(on_add_stl)
