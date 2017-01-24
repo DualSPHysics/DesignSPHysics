@@ -1,3 +1,12 @@
+#!/usr/bin/env python
+# -*- coding: utf-8 -*-
+"""DesignSPHysics Properties.
+
+This file contains a collection of Properties to add
+in a DSPH related case.
+
+"""
+# Copyright (C) 2016 - Andrés Vieira (anvieiravazquez@gmail.com)
 # EPHYSLAB Environmental Physics Laboratory, Universidade de Vigo
 #
 # This file is part of DesignSPHysics.
@@ -39,7 +48,6 @@ class FloatProperty(object):
         self.inertia = inertia
         self.initial_linear_velocity = initial_linear_velocity
         self.initial_angular_velocity = initial_angular_velocity
-        pass
 
 
 class InitialsProperty(object):
@@ -53,7 +61,6 @@ class InitialsProperty(object):
     def __init__(self, mk=-1, force=list()):
         self.mk = mk
         self.force = force
-        pass
 
 
 class Material(object):
@@ -65,4 +72,80 @@ class Material(object):
 
     def __init__(self, mk=list()):
         self.bound_mk = mk
-        pass
+
+
+class Movement(object):
+    """ DualSPHysics compatible movement.
+        It includes a list of different motions to represent an entire simulation
+        movement.
+
+        Attributes:
+            name: Name for this motion given by the user
+            motion_list: List of motion objects in order
+        """
+
+    def __init__(self, name="New Movement", motion_list=None):
+        self.name = name
+        if not motion_list:
+            motion_list = list()
+        self.motion_list = motion_list
+
+    def add_motion(self, motion):
+        if isinstance(motion, BaseMotion):
+            self.motion_list.append(motion)
+        else:
+            raise TypeError("You are trying to append a non-motion object to a movement list.")
+
+    def remove_motion(self, position):
+        self.motion_list.pop(position)
+
+    def __str__(self):
+        to_ret = "Movement <{}>".format(self.name) + "\n"
+        to_ret += "Motion List:\n"
+        for motion in self.motion_list:
+            to_ret += str(motion) + "\n"
+        return to_ret
+
+
+class BaseMotion(object):
+    """ Base motion class to inherit by others.
+
+        Attributes:
+            duration: Movement duration in seconds
+        """
+
+    def __init__(self, duration=1):
+        self.duration = duration
+
+    def __str__(self):
+        return "BaseMotion [Duration: {}]".format(self.duration)
+
+
+class RectMotion(BaseMotion):
+    """ DualSPHysics rectilinear motion.
+
+        Attributes:
+            velocity: Velocity vector that defines the movement
+        """
+
+    def __init__(self, duration=1, velocity=None):
+        if velocity is None:
+            velocity = [0, 0, 0]
+        BaseMotion.__init__(self, duration)
+        self.velocity = velocity
+
+    def __str__(self):
+        return "RectMotion [Duration: {} ; Velocity: {}]".format(self.duration, self.velocity)
+
+
+class WaitMotion(BaseMotion):
+    """ DualSPHysics rectilinear motion.
+
+        Attributes inherited from superclass.
+        """
+
+    def __init__(self, duration=1):
+        BaseMotion.__init__(self, duration)
+
+    def __str__(self):
+        return "WaitMotion [Duration: {}]".format(self.duration)

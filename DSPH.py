@@ -21,10 +21,10 @@ import time
 import pickle
 import threading
 from PySide import QtGui, QtCore
-from dsphfc.properties import FloatProperty, InitialsProperty
+from dsphfc.properties import *
 
 sys.path.append(FreeCAD.getUserAppDataDir() + "Macro/")
-from dsphfc import utils, guiutils, xmlimporter
+from dsphfc import utils, guiutils, xmlimporter, dsphwidgets
 from dsphfc.utils import __
 
 # Copyright (C) 2016 - Andrés Vieira (anvieiravazquez@gmail.com)
@@ -55,18 +55,20 @@ __email__ = "anvieiravazquez@gmail.com"
 __status__ = "Development"
 
 # General To-Do to use with PyCharm
-# TODO: High priority - Try to pack all in one executable for installing
-
-# TODO: 0.2Beta - Toolbox (Fillbox, wave, periodicity, imports...) to clean the UI
+# TODO: 0.2Beta - Implement GetIcon method and replace icon getters
+# TODO: 0.2Beta - Object Motion (custom or from file)
 # TODO: 0.2Beta - Wave generator
-# - Show plane to represent wave generator
-# TODO: 0.2Beta - Periodicity support
+# - Type of motion. Applied to an MK
+# TODO: 0.2Beta - Work on installer. Bundle DualSPHysics and preconfigure (?)
+# TODO: 0.2Beta - Try to pack all in one executable for installing
+
+# TODO: 0.3Beta - Periodicity support
 # - Show arrows (bounds) to show periodicity
-# TODO: 0.2Beta - Create Material support
-# TODO: 0.2Beta - Material creator and assigner
-# TODO: 0.2Beta - Object Motion
-# TODO: 0.2Beta - Refactor all code
-# TODO: 0.2Beta - Documentation of the code
+# TODO: 0.3Beta - Toolbox (Fillbox, wave, periodicity, imports...) to clean the UI
+# TODO: 0.3Beta - Create Material support
+# TODO: 0.3Beta - Material creator and assigner
+# TODO: 0.4Beta - Refactor all code
+# TODO: 0.4Beta - Documentation of the code
 # End general To-Do
 
 # Print license at macro start
@@ -249,6 +251,17 @@ def on_new_case():
     guiutils.widget_state_config(widget_state_elements, "new case")
     data['simobjects']['Case_Limits'] = ["mkspecial", "typespecial", "fillspecial"]
     on_tree_item_selection_change()
+
+    # TODO: Remove this
+    # Add a few motions to the case to test things
+    m1 = Movement("Test Movement 1")
+    m1.add_motion(RectMotion(duration=2.5, velocity=[2, 3, 4]))
+    m1.add_motion(WaitMotion(duration=5))
+    m2 = Movement("Test Movement 2")
+    m2.add_motion(WaitMotion(duration=2))
+    m2.add_motion(RectMotion(duration=1.5, velocity=[3, 3, 3]))
+    data["global_movements"].append(m1)
+    data["global_movements"].append(m2)
 
 
 def on_save_case(save_as=None):
@@ -1075,7 +1088,6 @@ objectlist_table.setToolTip(__(
 objectlist_table.setObjectName("DSPH Objects")
 objectlist_table.verticalHeader().setVisible(False)
 objectlist_table.setHorizontalHeaderLabels([__("Object Name"), __("Order up"), __("Order down")])
-objectlist_table.horizontalHeader().setResizeMode(QtGui.QHeaderView.Stretch)
 widget_state_elements['objectlist_table'] = objectlist_table
 temp_data['objectlist_table'] = objectlist_table
 objectlist_layout.addWidget(objectlist_label)
@@ -1137,7 +1149,7 @@ properties_widget.setObjectName("DSPH_Properties")
 properties_widget.setWindowTitle(__("DSPH Object Properties"))
 properties_scaff_widget = QtGui.QWidget()  # Scaffolding widget, only useful to apply to the properties_dock widget
 property_widget_layout = QtGui.QVBoxLayout()
-property_table = QtGui.QTableWidget(6, 2)
+property_table = QtGui.QTableWidget(7, 2)
 property_table.setHorizontalHeaderLabels([__("Property Name"), __("Value")])
 property_table.verticalHeader().setVisible(False)
 property_table.horizontalHeader().setResizeMode(QtGui.QHeaderView.Stretch)
@@ -1167,18 +1179,22 @@ initials_label = QtGui.QLabel("   " + __("Initials"))
 initials_label.setToolTip(__("Sets initials options for this object"))
 material_label = QtGui.QLabel("   " + __("Material"))
 material_label.setToolTip(__("Sets material for this object"))
+motion_label = QtGui.QLabel("   " + __("Motion"))
+motion_label.setToolTip(__("Sets motion for this object"))
 mkgroup_label.setAlignment(QtCore.Qt.AlignLeft)
 material_label.setAlignment(QtCore.Qt.AlignLeft)
 objtype_label.setAlignment(QtCore.Qt.AlignLeft)
 fillmode_label.setAlignment(QtCore.Qt.AlignLeft)
 floatstate_label.setAlignment(QtCore.Qt.AlignLeft)
 initials_label.setAlignment(QtCore.Qt.AlignLeft)
+motion_label.setAlignment(QtCore.Qt.AlignLeft)
 property_table.setCellWidget(0, 0, mkgroup_label)
 property_table.setCellWidget(1, 0, objtype_label)
 property_table.setCellWidget(2, 0, fillmode_label)
 property_table.setCellWidget(3, 0, floatstate_label)
 property_table.setCellWidget(4, 0, initials_label)
 property_table.setCellWidget(5, 0, material_label)
+property_table.setCellWidget(6, 0, motion_label)
 
 
 def mkgroup_change(value):
@@ -1723,13 +1739,147 @@ def material_change():
     material_window.exec_()
 
 
+def motion_change():
+    """Defines a window with motion properties."""
+    motion_window = QtGui.QDialog()
+    motion_window.setWindowTitle(__("Motion configuration"))
+    ok_button = QtGui.QPushButton(__("Ok"))
+    cancel_button = QtGui.QPushButton(__("Cancel"))
+    target_mk = int(data['simobjects'][FreeCADGui.Selection.getSelection()[0].Name][0])
+
+    def on_ok():
+        motion_window.accept()
+
+    def on_cancel():
+        motion_window.reject()
+
+    def on_motion_change(index):
+        if index == 0:
+            motion_features_layout.setEnabled(True)
+        else:
+            motion_features_layout.setEnabled(False)
+
+    ok_button.clicked.connect(on_ok)
+    cancel_button.clicked.connect(on_cancel)
+
+    has_motion_layout = QtGui.QHBoxLayout()
+    has_motion_label = QtGui.QLabel(__("Set motion: "))
+    has_motion_label.setToolTip(__("Enables motion for the selected MKBound"))
+    has_motion_selector = QtGui.QComboBox()
+    has_motion_selector.insertItems(0, ["True", "False"])
+    has_motion_selector.currentIndexChanged.connect(on_motion_change)
+    has_motion_targetlabel = QtGui.QLabel(__("Target MKBound: ") + str(target_mk))
+    has_motion_layout.addWidget(has_motion_label)
+    has_motion_layout.addWidget(has_motion_selector)
+    has_motion_layout.addStretch(1)
+    has_motion_layout.addWidget(has_motion_targetlabel)
+
+    motion_features_layout = QtGui.QHBoxLayout()
+
+    movement_list_groupbox = QtGui.QGroupBox(__("Motions"))
+    movement_list_groupbox_layout = QtGui.QVBoxLayout()
+
+    movement_list_table = QtGui.QTableWidget(5, 2)
+    movement_list_table.horizontalHeader().setResizeMode(QtGui.QHeaderView.Stretch)
+    movement_list_table.verticalHeader().setVisible(False)
+    movement_list_table.horizontalHeader().setVisible(False)
+
+    movement_list_groupbox_layout.addWidget(movement_list_table)
+    movement_list_groupbox.setLayout(movement_list_groupbox_layout)
+
+    timeline_groupbox = QtGui.QGroupBox(__("Timeline"))
+    timeline_groupbox_layout = QtGui.QVBoxLayout()
+
+    timeline_list_table = QtGui.QTableWidget(5, 1)
+    timeline_list_table.horizontalHeader().setResizeMode(QtGui.QHeaderView.Stretch)
+    timeline_list_table.verticalHeader().setVisible(False)
+    timeline_list_table.horizontalHeader().setVisible(False)
+
+    timeline_groupbox_layout.addWidget(timeline_list_table)
+    timeline_groupbox.setLayout(timeline_groupbox_layout)
+
+    actions_groupbox = QtGui.QGroupBox(__("Actions"))
+    actions_groupbox_layout = QtGui.QVBoxLayout()
+
+    actions_groupbox_table = QtGui.QTableWidget(5, 1)
+    actions_groupbox_table.horizontalHeader().setResizeMode(QtGui.QHeaderView.Stretch)
+    actions_groupbox_table.verticalHeader().setVisible(False)
+    actions_groupbox_table.horizontalHeader().setVisible(False)
+
+    actions_groupbox_layout.addWidget(actions_groupbox_table)
+    actions_groupbox.setLayout(actions_groupbox_layout)
+
+    motion_features_layout.addWidget(movement_list_groupbox)
+    motion_features_layout.addWidget(timeline_groupbox)
+    motion_features_layout.addWidget(actions_groupbox)
+
+    buttons_layout = QtGui.QHBoxLayout()
+    buttons_layout.addStretch(1)
+    buttons_layout.addWidget(ok_button)
+    buttons_layout.addWidget(cancel_button)
+
+    motion_window_layout = QtGui.QVBoxLayout()
+    motion_window_layout.addLayout(has_motion_layout)
+    motion_window_layout.addLayout(motion_features_layout)
+    motion_window_layout.addLayout(buttons_layout)
+
+    motion_window.setLayout(motion_window_layout)
+
+    # Movements table actions
+    def on_check_movement(index):
+        utils.debug("checking movement {}".format(index))
+        pass
+
+    def on_delete_movement(index):
+        utils.debug("deleting movement {}".format(index))
+        pass
+
+    # Populate case defined movements
+    def refresh_movements_table():
+        movement_list_table.setRowCount(len(data["global_movements"]) + 1)
+        current_row = 0
+        for movement in data["global_movements"]:
+            movement_list_table.setCellWidget(current_row, 0, QtGui.QLabel("  " + movement.name))
+
+            movement_actions = dsphwidgets.MovementActions(current_row)
+            movement_actions.delete.connect(on_delete_movement)
+            movement_actions.use.connect(on_check_movement)
+            movement_list_table.setCellWidget(current_row, 1, movement_actions)
+
+            current_row += 1
+        movement_list_table.setCellWidget(current_row, 1, QtGui.QPushButton(__("Create New")))
+
+    refresh_movements_table()
+
+    # Possible actions for adding motions to a movement
+    def on_add_delay():
+        utils.debug("adding delay")
+
+    def on_add_rectilinear():
+        utils.debug("adding rectilinear motion")
+
+    actions_groupbox_table.setRowCount(2)
+    bt_to_add = QtGui.QPushButton(QtGui.QIcon(FreeCAD.getUserAppDataDir() + "Macro/DSPH_Images/save.png"),
+                                  __("Add a delay"))
+    bt_to_add.setStyleSheet("text-align: left")
+    bt_to_add.clicked.connect(on_add_delay)
+    actions_groupbox_table.setCellWidget(0, 0, bt_to_add)
+    bt_to_add = QtGui.QPushButton(QtGui.QIcon(FreeCAD.getUserAppDataDir() + "Macro/DSPH_Images/save.png"),
+                                  __("Add a rectilinear motion"))
+    bt_to_add.setStyleSheet("text-align: left")
+    bt_to_add.clicked.connect(on_add_rectilinear)
+    actions_groupbox_table.setCellWidget(1, 0, bt_to_add)
+    motion_window.exec_()
+
+
 # Property change widgets
 mkgroup_prop = QtGui.QSpinBox()
 objtype_prop = QtGui.QComboBox()
 fillmode_prop = QtGui.QComboBox()
 floatstate_prop = QtGui.QPushButton(__("Configure"))
 initials_prop = QtGui.QPushButton(__("Configure"))
-material_prop = QtGui.QPushButton(__("Material"))
+material_prop = QtGui.QPushButton(__("Configure"))
+motion_prop = QtGui.QPushButton(__("Configure"))
 # TODO: Enable material.
 material_prop.setEnabled(False)
 mkgroup_prop.setRange(0, 240)
@@ -1741,12 +1891,14 @@ fillmode_prop.currentIndexChanged.connect(fillmode_change)
 floatstate_prop.clicked.connect(floatstate_change)
 initials_prop.clicked.connect(initials_change)
 material_prop.clicked.connect(material_change)
+motion_prop.clicked.connect(motion_change)
 property_table.setCellWidget(0, 1, mkgroup_prop)
 property_table.setCellWidget(1, 1, objtype_prop)
 property_table.setCellWidget(2, 1, fillmode_prop)
 property_table.setCellWidget(3, 1, floatstate_prop)
 property_table.setCellWidget(4, 1, initials_prop)
 property_table.setCellWidget(5, 1, material_prop)
+property_table.setCellWidget(6, 1, motion_prop)
 
 # Dock the widget to the left side of screen
 fc_main_window.addDockWidget(QtCore.Qt.LeftDockWidgetArea, properties_widget)
