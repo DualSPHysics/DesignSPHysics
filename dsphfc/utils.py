@@ -310,6 +310,10 @@ def get_default_data():
     # Keys of simobjects.  Ordered.
     data['export_order'] = []
 
+    """ Global movement list.
+    It stores all the movements created in this case. """
+    data['global_movements'] = list()
+
     # Temporal data dict to control execution features.
     temp_data['current_process'] = None
     temp_data['stored_selection'] = []

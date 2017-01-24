@@ -466,8 +466,6 @@ class EnumMeta(type):
             classdict['_order_'] = ' '.join(_order_)
         enum_class = metacls.__new__(metacls, class_name, bases, classdict)
 
-        # TODO: replace the frame hack if a blessed way to know the calling
-        # module is ever developed
         if module is None:
             try:
                 module = _sys._getframe(2).f_globals['__name__']
