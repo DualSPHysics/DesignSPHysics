@@ -1755,9 +1755,13 @@ def motion_change():
 
     def on_motion_change(index):
         if index == 0:
-            motion_features_layout.setEnabled(True)
+            movement_list_groupbox.setEnabled(True)
+            timeline_groupbox.setEnabled(True)
+            actions_groupbox.setEnabled(True)
         else:
-            motion_features_layout.setEnabled(False)
+            movement_list_groupbox.setEnabled(False)
+            timeline_groupbox.setEnabled(False)
+            actions_groupbox.setEnabled(False)
 
     ok_button.clicked.connect(on_ok)
     cancel_button.clicked.connect(on_cancel)
@@ -1779,8 +1783,13 @@ def motion_change():
     movement_list_groupbox = QtGui.QGroupBox(__("Motions"))
     movement_list_groupbox_layout = QtGui.QVBoxLayout()
 
-    movement_list_table = QtGui.QTableWidget(5, 2)
+    movement_list_table = QtGui.QTableWidget(1, 2)
+    movement_list_table.setSelectionBehavior(QtGui.QAbstractItemView.SelectItems)
+    movement_list_table.setSelectionMode(QtGui.QAbstractItemView.SingleSelection)
     movement_list_table.horizontalHeader().setResizeMode(QtGui.QHeaderView.Stretch)
+    movement_list_table.horizontalHeader().setResizeMode(0, QtGui.QHeaderView.Stretch)
+    movement_list_table.horizontalHeader().setResizeMode(1, QtGui.QHeaderView.ResizeToContents)
+
     movement_list_table.verticalHeader().setVisible(False)
     movement_list_table.horizontalHeader().setVisible(False)
 
@@ -1790,7 +1799,7 @@ def motion_change():
     timeline_groupbox = QtGui.QGroupBox(__("Timeline"))
     timeline_groupbox_layout = QtGui.QVBoxLayout()
 
-    timeline_list_table = QtGui.QTableWidget(5, 1)
+    timeline_list_table = QtGui.QTableWidget(0, 1)
     timeline_list_table.horizontalHeader().setResizeMode(QtGui.QHeaderView.Stretch)
     timeline_list_table.verticalHeader().setVisible(False)
     timeline_list_table.horizontalHeader().setVisible(False)
@@ -1801,7 +1810,7 @@ def motion_change():
     actions_groupbox = QtGui.QGroupBox(__("Actions"))
     actions_groupbox_layout = QtGui.QVBoxLayout()
 
-    actions_groupbox_table = QtGui.QTableWidget(5, 1)
+    actions_groupbox_table = QtGui.QTableWidget(0, 1)
     actions_groupbox_table.horizontalHeader().setResizeMode(QtGui.QHeaderView.Stretch)
     actions_groupbox_table.verticalHeader().setVisible(False)
     actions_groupbox_table.horizontalHeader().setVisible(False)
@@ -1831,15 +1840,45 @@ def motion_change():
         pass
 
     def on_delete_movement(index):
-        utils.debug("deleting movement {}".format(index))
-        pass
+        data["global_movements"].pop(index)
+        refresh_movements_table()
+
+    def on_new_movement():
+        data["global_movements"].append(Movement())
+        refresh_movements_table()
+
+    def on_movement_name_change(row, column):
+        target_item = movement_list_table.item(row, column)
+        if target_item is not None:
+            data["global_movements"][row].name = target_item.text()
+
+    def on_movement_selected(row, _):
+        try:
+            target_movement = data["global_movements"][row]
+        except IndexError:
+            timeline_list_table.clearContents()
+            timeline_list_table.setRowCount(0)
+            return
+        timeline_list_table.clearContents()
+        timeline_list_table.setRowCount(len(target_movement.motion_list))
+        current_row = 0
+        for motion in target_movement.motion_list:
+            if str(motion.__class__.__name__) is "RectMotion":
+                timeline_list_table.setCellWidget(current_row, 0, dsphwidgets.RectilinearMotionTimeline(motion))
+            elif str(motion.__class__.__name__) is "WaitMotion":
+                timeline_list_table.setCellWidget(current_row, 0, dsphwidgets.WaitMotionTimeline(motion))
+            else:
+                raise NotImplementedError("The type of movement: {} is not implemented.".format(
+                    str(motion.__class__.__name__)))
+            current_row += 1
 
     # Populate case defined movements
     def refresh_movements_table():
+        movement_list_table.clearContents()
         movement_list_table.setRowCount(len(data["global_movements"]) + 1)
         current_row = 0
         for movement in data["global_movements"]:
-            movement_list_table.setCellWidget(current_row, 0, QtGui.QLabel("  " + movement.name))
+            movement_list_table.setItem(current_row, 0, QtGui.QTableWidgetItem(movement.name))
 
             movement_actions = dsphwidgets.MovementActions(current_row)
             movement_actions.delete.connect(on_delete_movement)
@@ -1847,9 +1886,14 @@ def motion_change():
             movement_list_table.setCellWidget(current_row, 1, movement_actions)
 
             current_row += 1
-        movement_list_table.setCellWidget(current_row, 1, QtGui.QPushButton(__("Create New")))
+        create_new_movement_button = QtGui.QPushButton(__("Create New"))
+        create_new_movement_button.clicked.connect(on_new_movement)
+        movement_list_table.setCellWidget(current_row, 1, create_new_movement_button)
+        movement_list_table.setCellWidget(current_row, 0, QtGui.QWidget())
 
     refresh_movements_table()
+    movement_list_table.cellChanged.connect(on_movement_name_change)
+    movement_list_table.cellClicked.connect(on_movement_selected)
 
     # Possible actions for adding motions to a movement
     def on_add_delay():
@@ -1859,12 +1903,12 @@ def motion_change():
         utils.debug("adding rectilinear motion")
 
     actions_groupbox_table.setRowCount(2)
-    bt_to_add = QtGui.QPushButton(QtGui.QIcon(FreeCAD.getUserAppDataDir() + "Macro/DSPH_Images/save.png"),
+    bt_to_add = QtGui.QPushButton(QtGui.QIcon(FreeCAD.getUserAppDataDir() + "Macro/DSPH_Images/left-arrow.png"),
                                   __("Add a delay"))
     bt_to_add.setStyleSheet("text-align: left")
     bt_to_add.clicked.connect(on_add_delay)
     actions_groupbox_table.setCellWidget(0, 0, bt_to_add)
-    bt_to_add = QtGui.QPushButton(QtGui.QIcon(FreeCAD.getUserAppDataDir() + "Macro/DSPH_Images/save.png"),
+    bt_to_add = QtGui.QPushButton(QtGui.QIcon(FreeCAD.getUserAppDataDir() + "Macro/DSPH_Images/left-arrow.png"),
                                   __("Add a rectilinear motion"))
     bt_to_add.setStyleSheet("text-align: left")
     bt_to_add.clicked.connect(on_add_rectilinear)
