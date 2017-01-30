@@ -255,11 +255,11 @@ def on_new_case():
     # TODO: Remove this
     # Add a few motions to the case to test things
     m1 = Movement("Test Movement 1")
-    m1.add_motion(RectMotion(duration=2.5, velocity=[2, 3, 4]))
-    m1.add_motion(WaitMotion(duration=5))
+    m1.add_motion(RectMotion(duration=2.5, velocity=[2, 3, 4], parent_movement=m1))
+    m1.add_motion(WaitMotion(duration=5, parent_movement=m1))
     m2 = Movement("Test Movement 2")
-    m2.add_motion(WaitMotion(duration=2))
-    m2.add_motion(RectMotion(duration=1.5, velocity=[3, 3, 3]))
+    m2.add_motion(WaitMotion(duration=2, parent_movement=m2))
+    m2.add_motion(RectMotion(duration=1.5, velocity=[3, 3, 3], parent_movement=m2))
     data["global_movements"].append(m1)
     data["global_movements"].append(m2)
 
@@ -1742,12 +1742,23 @@ def material_change():
 def motion_change():
     """Defines a window with motion properties."""
     motion_window = QtGui.QDialog()
+    motion_window.setMinimumSize(1200, 600)
     motion_window.setWindowTitle(__("Motion configuration"))
     ok_button = QtGui.QPushButton(__("Ok"))
     cancel_button = QtGui.QPushButton(__("Cancel"))
     target_mk = int(data['simobjects'][FreeCADGui.Selection.getSelection()[0].Name][0])
+    movements_selected = list(data["motion_mks"].get(target_mk, list()))
 
     def on_ok():
+        if has_motion_selector.currentIndex() == 0:
+            # True has been selected
+            # Reinstance the list and copy every movement selected to avoid referencing problems.
+            data["motion_mks"][target_mk] = list()
+            for movement in movements_selected:
+                data["motion_mks"][target_mk].append(movement)
+        elif has_motion_selector.currentIndex() == 1:
+            # False has been selected
+            data["motion_mks"].pop(target_mk, None)
         motion_window.accept()
 
     def on_cancel():
@@ -1835,9 +1846,11 @@ def motion_change():
     motion_window.setLayout(motion_window_layout)
 
     # Movements table actions
-    def on_check_movement(index):
-        utils.debug("checking movement {}".format(index))
-        pass
+    def on_check_movement(index, checked):
+        if checked:
+            movements_selected.append(data["global_movements"][index])
+        else:
+            movements_selected.remove(data["global_movements"][index])
 
     def on_delete_movement(index):
         data["global_movements"].pop(index)
@@ -1852,6 +1865,16 @@ def motion_change():
         if target_item is not None:
             data["global_movements"][row].name = target_item.text()
 
+    def on_timeline_item_change(index, motion_object):
+        if motion_object.__class__.__name__ is "WaitMotion":
+            motion_object.parent_movement.motion_list[index] = motion_object
+        elif motion_object.__class__.__name__ is "RectMotion":
+            motion_object.parent_movement.motion_list[index] = motion_object
+
+    def on_timeline_item_delete(index, motion_object):
+        motion_object.parent_movement.motion_list.pop(index)
+        on_movement_selected(movement_list_table.selectedIndexes()[0].row(), None)
+
     def on_movement_selected(row, _):
         try:
             target_movement = data["global_movements"][row]
@@ -1864,9 +1887,15 @@ def motion_change():
         current_row = 0
         for motion in target_movement.motion_list:
             if str(motion.__class__.__name__) is "RectMotion":
-                timeline_list_table.setCellWidget(current_row, 0, dsphwidgets.RectilinearMotionTimeline(motion))
+                target_to_put = dsphwidgets.RectilinearMotionTimeline(current_row, motion)
+                target_to_put.changed.connect(on_timeline_item_change)
+                target_to_put.deleted.connect(on_timeline_item_delete)
+                timeline_list_table.setCellWidget(current_row, 0, target_to_put)
             elif str(motion.__class__.__name__) is "WaitMotion":
-                timeline_list_table.setCellWidget(current_row, 0, dsphwidgets.WaitMotionTimeline(motion))
+                target_to_put = dsphwidgets.WaitMotionTimeline(current_row, motion)
+                target_to_put.changed.connect(on_timeline_item_change)
+                target_to_put.deleted.connect(on_timeline_item_delete)
+                timeline_list_table.setCellWidget(current_row, 0, target_to_put)
             else:
                 raise NotImplementedError("The type of movement: {} is not implemented.".format(
                     str(motion.__class__.__name__)))
@@ -1880,7 +1909,7 @@ def motion_change():
         for movement in data["global_movements"]:
             movement_list_table.setItem(current_row, 0, QtGui.QTableWidgetItem(movement.name))
 
-            movement_actions = dsphwidgets.MovementActions(current_row)
+            movement_actions = dsphwidgets.MovementActions(current_row, movement in movements_selected)
             movement_actions.delete.connect(on_delete_movement)
             movement_actions.use.connect(on_check_movement)
             movement_list_table.setCellWidget(current_row, 1, movement_actions)
@@ -1913,6 +1942,13 @@ def motion_change():
     bt_to_add.setStyleSheet("text-align: left")
     bt_to_add.clicked.connect(on_add_rectilinear)
     actions_groupbox_table.setCellWidget(1, 0, bt_to_add)
+
+    # Set motion suscription for this mk
+    if data["motion_mks"].get(target_mk, None) is None:
+        has_motion_selector.setCurrentIndex(1)
+    else:
+        has_motion_selector.setCurrentIndex(0)
+
     motion_window.exec_()
 
 

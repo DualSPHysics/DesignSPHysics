@@ -114,8 +114,9 @@ class BaseMotion(object):
             duration: Movement duration in seconds
         """
 
-    def __init__(self, duration=1):
+    def __init__(self, duration=1, parent_movement=None):
         self.duration = duration
+        self.parent_movement = parent_movement
 
     def __str__(self):
         return "BaseMotion [Duration: {}]".format(self.duration)
@@ -128,10 +129,11 @@ class RectMotion(BaseMotion):
             velocity: Velocity vector that defines the movement
         """
 
-    def __init__(self, duration=1, velocity=None):
+    def __init__(self, duration=1, velocity=None, parent_movement=None):
         if velocity is None:
             velocity = [0, 0, 0]
         BaseMotion.__init__(self, duration)
+        self.parent_movement = parent_movement
         self.velocity = velocity
 
     def __str__(self):
@@ -144,8 +146,9 @@ class WaitMotion(BaseMotion):
         Attributes inherited from superclass.
         """
 
-    def __init__(self, duration=1):
+    def __init__(self, duration=1, parent_movement=None):
         BaseMotion.__init__(self, duration)
+        self.parent_movement = parent_movement
 
     def __str__(self):
         return "WaitMotion [Duration: {}]".format(self.duration)

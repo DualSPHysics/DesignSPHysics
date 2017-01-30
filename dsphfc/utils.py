@@ -217,7 +217,7 @@ def initials_list_to_initials_property(initials_mks):
 def get_default_data():
     """ Sets default data at start of the macro.
         Returns data and temp_data dict with default values.
-        If there is data saved on disk, tries to load it."""
+        If there is data saved on disk, tries to load it. """
 
     data = dict()
     temp_data = dict()
@@ -226,7 +226,7 @@ def get_default_data():
     data['lattice_bound'] = 1
     data['lattice_fluid'] = 1
     data['gravity'] = [0, 0, -9.81]
-    data['rhop0'] = DIVIDER
+    data['rhop0'] = 1000
     data['hswl'] = 0
     data['hswl_auto'] = True
     data['gamma'] = 7
@@ -313,6 +313,11 @@ def get_default_data():
     """ Global movement list.
     It stores all the movements created in this case. """
     data['global_movements'] = list()
+
+    """ Object movement mapping.
+    Dictionary with a list of movements attached..
+    {'mkgroup': [movement1, movement2, ...]} """
+    data['motion_mks'] = dict()
 
     # Temporal data dict to control execution features.
     temp_data['current_process'] = None
