@@ -11,6 +11,7 @@ import FreeCAD
 import FreeCADGui
 import pickle
 import sys
+import os
 import utils
 from PySide import QtGui, QtCore
 
@@ -71,6 +72,16 @@ def ok_cancel_dialog(title, text):
     open_confirm_dialog.setStandardButtons(QtGui.QMessageBox.Ok | QtGui.QMessageBox.Cancel)
     open_confirm_dialog.setDefaultButton(QtGui.QMessageBox.Ok)
     return open_confirm_dialog.exec_()
+
+
+def get_icon(file_name):
+    """ Returns a QIcon to use with DesignSPHysics.
+    Retrieves a file with filename (like image.png) from the DSPH_Images folder. """
+    file_to_load = FreeCAD.getUserAppDataDir() + "Macro/DSPH_Images/{}".format(file_name)
+    if os.path.isfile(file_to_load):
+        return QtGui.QIcon(file_to_load)
+    else:
+        raise IOError("File {} not found in DSPH_Images folder".format(file_name))
 
 
 def def_constants_window(data):
