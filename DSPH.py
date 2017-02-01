@@ -194,7 +194,7 @@ casecontrols_bt_newdoc = QtGui.QToolButton()
 casecontrols_bt_newdoc.setToolButtonStyle(QtCore.Qt.ToolButtonTextBesideIcon)
 casecontrols_bt_newdoc.setText("  " + __("New\n  Case"))
 casecontrols_bt_newdoc.setToolTip(__("Creates a new case. \nThe current documents opened will be closed."))
-casecontrols_bt_newdoc.setIcon(QtGui.QIcon(FreeCAD.getUserAppDataDir() + "Macro/DSPH_Images/new.png"))
+casecontrols_bt_newdoc.setIcon(guiutils.get_icon("new.png"))
 casecontrols_bt_newdoc.setIconSize(QtCore.QSize(28, 28))
 
 casecontrols_bt_savedoc = QtGui.QToolButton()
@@ -203,13 +203,11 @@ casecontrols_bt_savedoc.setToolButtonStyle(QtCore.Qt.ToolButtonTextBesideIcon)
 casecontrols_bt_savedoc.setText("  " + __("Save\n  Case"))
 casecontrols_bt_savedoc.setToolTip(__(
     "Saves the case and executes GenCase over.\nIf GenCase fails or is not set up, only the case\nwill be saved."))
-casecontrols_bt_savedoc.setIcon(QtGui.QIcon(FreeCAD.getUserAppDataDir() + "Macro/DSPH_Images/save.png"))
+casecontrols_bt_savedoc.setIcon(guiutils.get_icon("save.png"))
 casecontrols_bt_savedoc.setIconSize(QtCore.QSize(28, 28))
 casecontrols_menu_savemenu = QtGui.QMenu()
-casecontrols_menu_savemenu.addAction(QtGui.QIcon(FreeCAD.getUserAppDataDir() + "Macro/DSPH_Images/save.png"),
-                                     __("Save Case"))
-casecontrols_menu_savemenu.addAction(QtGui.QIcon(FreeCAD.getUserAppDataDir() + "Macro/DSPH_Images/save.png"),
-                                     __("Save as..."))
+casecontrols_menu_savemenu.addAction(guiutils.get_icon("save.png"), __("Save Case"))
+casecontrols_menu_savemenu.addAction(guiutils.get_icon("save.png"), __("Save as..."))
 casecontrols_bt_savedoc.setMenu(casecontrols_menu_savemenu)
 widget_state_elements['casecontrols_bt_savedoc'] = casecontrols_bt_savedoc
 
@@ -217,7 +215,7 @@ casecontrols_bt_loaddoc = QtGui.QToolButton()
 casecontrols_bt_loaddoc.setToolButtonStyle(QtCore.Qt.ToolButtonTextBesideIcon)
 casecontrols_bt_loaddoc.setText("  " + __("Load\n  Case"))
 casecontrols_bt_loaddoc.setToolTip(__("Loads a case from disk. All the current documents\nwill be closed."))
-casecontrols_bt_loaddoc.setIcon(QtGui.QIcon(FreeCAD.getUserAppDataDir() + "Macro/DSPH_Images/load.png"))
+casecontrols_bt_loaddoc.setIcon(guiutils.get_icon("load.png"))
 casecontrols_bt_loaddoc.setIconSize(QtCore.QSize(28, 28))
 
 casecontrols_bt_addfillbox = QtGui.QPushButton(__("Add fillbox"))
@@ -251,17 +249,6 @@ def on_new_case():
     guiutils.widget_state_config(widget_state_elements, "new case")
     data['simobjects']['Case_Limits'] = ["mkspecial", "typespecial", "fillspecial"]
     on_tree_item_selection_change()
-
-    # TODO: Remove this
-    # Add a few motions to the case to test things
-    m1 = Movement("Test Movement 1")
-    m1.add_motion(RectMotion(duration=2.5, velocity=[2, 3, 4], parent_movement=m1))
-    m1.add_motion(WaitMotion(duration=5, parent_movement=m1))
-    m2 = Movement("Test Movement 2")
-    m2.add_motion(WaitMotion(duration=2, parent_movement=m2))
-    m2.add_motion(RectMotion(duration=1.5, velocity=[3, 3, 3], parent_movement=m2))
-    data["global_movements"].append(m1)
-    data["global_movements"].append(m2)
 
 
 def on_save_case(save_as=None):
@@ -1742,7 +1729,7 @@ def material_change():
 def motion_change():
     """Defines a window with motion properties."""
     motion_window = QtGui.QDialog()
-    motion_window.setMinimumSize(1200, 600)
+    motion_window.setMinimumSize(1300, 600)
     motion_window.setWindowTitle(__("Motion configuration"))
     ok_button = QtGui.QPushButton(__("Ok"))
     cancel_button = QtGui.QPushButton(__("Cancel"))
@@ -1765,6 +1752,8 @@ def motion_change():
         motion_window.reject()
 
     def on_motion_change(index):
+        """ Set motion action. Enables or disables parts of the window depending
+        on what option was selected. """
         if index == 0:
             movement_list_groupbox.setEnabled(True)
             timeline_groupbox.setEnabled(True)
@@ -1847,35 +1836,53 @@ def motion_change():
 
     # Movements table actions
     def on_check_movement(index, checked):
+        """ Add or delete a movement from the temporal list of selected movements. """
         if checked:
             movements_selected.append(data["global_movements"][index])
         else:
             movements_selected.remove(data["global_movements"][index])
 
     def on_delete_movement(index):
+        """ Remove a movement from the project. """
         data["global_movements"].pop(index)
         refresh_movements_table()
+        on_movement_selected(timeline_list_table.rowCount() - 1, None)
 
     def on_new_movement():
+        """ Creates a movement on the project. """
         data["global_movements"].append(Movement())
         refresh_movements_table()
 
     def on_movement_name_change(row, column):
+        """ Changes the name of a movement on the project. """
         target_item = movement_list_table.item(row, column)
         if target_item is not None:
             data["global_movements"][row].name = target_item.text()
 
     def on_timeline_item_change(index, motion_object):
+        """ Changes the values of an item on the timeline. """
         if motion_object.__class__.__name__ is "WaitMotion":
             motion_object.parent_movement.motion_list[index] = motion_object
         elif motion_object.__class__.__name__ is "RectMotion":
             motion_object.parent_movement.motion_list[index] = motion_object
 
     def on_timeline_item_delete(index, motion_object):
+        """ Deletes an item from the timeline. """
         motion_object.parent_movement.motion_list.pop(index)
         on_movement_selected(movement_list_table.selectedIndexes()[0].row(), None)
 
+    def on_timeline_item_order_up(index):
+        movement = data["global_movements"][movement_list_table.selectedIndexes()[0].row()]
+        movement.motion_list.insert(index - 1, movement.motion_list.pop(index))
+        on_movement_selected(movement_list_table.selectedIndexes()[0].row(), None)
+
+    def on_timeline_item_order_down(index):
+        movement = data["global_movements"][movement_list_table.selectedIndexes()[0].row()]
+        movement.motion_list.insert(index + 1, movement.motion_list.pop(index))
+        on_movement_selected(movement_list_table.selectedIndexes()[0].row(), None)
+
     def on_movement_selected(row, _):
+        """ Shows the timeline for the selected movement. """
         try:
             target_movement = data["global_movements"][row]
         except IndexError:
@@ -1888,21 +1895,29 @@ def motion_change():
         for motion in target_movement.motion_list:
             if str(motion.__class__.__name__) is "RectMotion":
                 target_to_put = dsphwidgets.RectilinearMotionTimeline(current_row, motion)
-                target_to_put.changed.connect(on_timeline_item_change)
-                target_to_put.deleted.connect(on_timeline_item_delete)
-                timeline_list_table.setCellWidget(current_row, 0, target_to_put)
             elif str(motion.__class__.__name__) is "WaitMotion":
                 target_to_put = dsphwidgets.WaitMotionTimeline(current_row, motion)
-                target_to_put.changed.connect(on_timeline_item_change)
-                target_to_put.deleted.connect(on_timeline_item_delete)
-                timeline_list_table.setCellWidget(current_row, 0, target_to_put)
             else:
                 raise NotImplementedError("The type of movement: {} is not implemented.".format(
                     str(motion.__class__.__name__)))
+                continue
+
+            target_to_put.changed.connect(on_timeline_item_change)
+            target_to_put.deleted.connect(on_timeline_item_delete)
+            target_to_put.order_up.connect(on_timeline_item_order_up)
+            target_to_put.order_down.connect(on_timeline_item_order_down)
+            timeline_list_table.setCellWidget(current_row, 0, target_to_put)
+
+            if current_row is 0:
+                target_to_put.disable_order_up_button()
+            elif current_row is len(target_movement.motion_list) - 1:
+                target_to_put.disable_order_down_button()
+
             current_row += 1
 
     # Populate case defined movements
     def refresh_movements_table():
+        """ Refreshes the movement table. """
         movement_list_table.clearContents()
         movement_list_table.setRowCount(len(data["global_movements"]) + 1)
         current_row = 0
@@ -1926,19 +1941,25 @@ def motion_change():
 
     # Possible actions for adding motions to a movement
     def on_add_delay():
-        utils.debug("adding delay")
+        """ Adds a WaitMotion to the timeline of the selected movement. """
+        if len(movement_list_table.selectedIndexes()) > 0:
+            if movement_list_table.selectedIndexes()[0].row() is not len(data["global_movements"]):
+                data["global_movements"][movement_list_table.selectedIndexes()[0].row()].add_motion(WaitMotion())
+                on_movement_selected(movement_list_table.selectedIndexes()[0].row(), None)
 
     def on_add_rectilinear():
-        utils.debug("adding rectilinear motion")
+        """ Adds a RectMotion to the timeline of the selected movement. """
+        if len(movement_list_table.selectedIndexes()) > 0:
+            if movement_list_table.selectedIndexes()[0].row() is not len(data["global_movements"]):
+                data["global_movements"][movement_list_table.selectedIndexes()[0].row()].add_motion(RectMotion())
+                on_movement_selected(movement_list_table.selectedIndexes()[0].row(), None)
 
     actions_groupbox_table.setRowCount(2)
-    bt_to_add = QtGui.QPushButton(QtGui.QIcon(FreeCAD.getUserAppDataDir() + "Macro/DSPH_Images/left-arrow.png"),
-                                  __("Add a delay"))
+    bt_to_add = QtGui.QPushButton(guiutils.get_icon("left-arrow.png"), __("Add a delay"))
     bt_to_add.setStyleSheet("text-align: left")
     bt_to_add.clicked.connect(on_add_delay)
     actions_groupbox_table.setCellWidget(0, 0, bt_to_add)
-    bt_to_add = QtGui.QPushButton(QtGui.QIcon(FreeCAD.getUserAppDataDir() + "Macro/DSPH_Images/left-arrow.png"),
-                                  __("Add a rectilinear motion"))
+    bt_to_add = QtGui.QPushButton(guiutils.get_icon("left-arrow.png"), __("Add a rectilinear motion"))
     bt_to_add.setStyleSheet("text-align: left")
     bt_to_add.clicked.connect(on_add_rectilinear)
     actions_groupbox_table.setCellWidget(1, 0, bt_to_add)

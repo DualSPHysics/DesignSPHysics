@@ -92,6 +92,7 @@ class Movement(object):
 
     def add_motion(self, motion):
         if isinstance(motion, BaseMotion):
+            motion.parent_movement = self
             self.motion_list.append(motion)
         else:
             raise TypeError("You are trying to append a non-motion object to a movement list.")
