@@ -627,6 +627,40 @@ def dump_to_xml(data, save_name):
                     value.initial_angular_velocity[2]) + '" />\n')
             f.write('\t\t\t</floating>\n')
         f.write('\t\t</floatings>\n')
+
+    # Writes motions
+    if len(data["motion_mks"]) > 0:
+        f.write('\t\t<motion>\n')
+        mov_counter = 1
+        mot_counter = 1
+        for key, value in data["motion_mks"].iteritems():
+            f.write('\t\t\t<objreal ref="' + str(key) + '">\n')
+            for movement in value:
+                f.write('\t\t\t\t<!-- Movement Name: {} -->\n'.format(movement.name))
+                f.write('\t\t\t\t<begin mov="{}" start="0"/>\n'.format(mov_counter))
+                for motion_index, motion in enumerate(movement.motion_list):
+                    if motion.__class__.__name__ is "RectMotion":
+                        if motion_index is len(movement.motion_list) - 1:
+                            f.write('\t\t\t\t<mvrect id="{}" duration="{}">\n'
+                                    .format(mot_counter, motion.duration))
+                        else:
+                            f.write('\t\t\t\t<mvrect id="{}" duration="{}" next="{}">\n'
+                                    .format(mot_counter, motion.duration, mot_counter + 1))
+
+                        f.write('\t\t\t\t\t<vel x="{}" y="{}" z="{}"/>\n'
+                                .format(motion.velocity[0], motion.velocity[1], motion.velocity[2]))
+                        f.write('\t\t\t\t</mvrect>\n')
+                    elif motion.__class__.__name__ is "WaitMotion":
+                        if motion_index is len(movement.motion_list) - 1:
+                            f.write('\t\t\t\t<wait id="{}" duration="{}"/>\n'
+                                    .format(mot_counter, motion.duration))
+                        else:
+                            f.write('\t\t\t\t<wait id="{}" duration="{}" next="{}"/>\n'
+                                    .format(mot_counter, motion.duration, mot_counter + 1))
+                    mot_counter += 1
+                mov_counter += 1
+            f.write('\t\t\t</objreal>\n')
+        f.write('\t\t</motion>\n')
     f.write('\t</casedef>\n')
     f.write('\t<execution>\n')
     f.write('\t\t<parameters>\n')

@@ -55,7 +55,6 @@ __email__ = "anvieiravazquez@gmail.com"
 __status__ = "Development"
 
 # General To-Do to use with PyCharm
-# TODO: 0.2Beta - Implement GetIcon method and replace icon getters
 # TODO: 0.2Beta - Object Motion (custom or from file)
 # TODO: 0.2Beta - Wave generator
 # - Type of motion. Applied to an MK
@@ -1780,7 +1779,7 @@ def motion_change():
 
     motion_features_layout = QtGui.QHBoxLayout()
 
-    movement_list_groupbox = QtGui.QGroupBox(__("Motions"))
+    movement_list_groupbox = QtGui.QGroupBox(__("Global Movements"))
     movement_list_groupbox_layout = QtGui.QVBoxLayout()
 
     movement_list_table = QtGui.QTableWidget(1, 2)
@@ -1796,7 +1795,7 @@ def motion_change():
     movement_list_groupbox_layout.addWidget(movement_list_table)
     movement_list_groupbox.setLayout(movement_list_groupbox_layout)
 
-    timeline_groupbox = QtGui.QGroupBox(__("Timeline"))
+    timeline_groupbox = QtGui.QGroupBox(__("Timeline for the selected movement"))
     timeline_groupbox_layout = QtGui.QVBoxLayout()
 
     timeline_list_table = QtGui.QTableWidget(0, 1)
@@ -1807,7 +1806,7 @@ def motion_change():
     timeline_groupbox_layout.addWidget(timeline_list_table)
     timeline_groupbox.setLayout(timeline_groupbox_layout)
 
-    actions_groupbox = QtGui.QGroupBox(__("Actions"))
+    actions_groupbox = QtGui.QGroupBox(__("Available actions"))
     actions_groupbox_layout = QtGui.QVBoxLayout()
 
     actions_groupbox_table = QtGui.QTableWidget(0, 1)
@@ -1955,11 +1954,11 @@ def motion_change():
                 on_movement_selected(movement_list_table.selectedIndexes()[0].row(), None)
 
     actions_groupbox_table.setRowCount(2)
-    bt_to_add = QtGui.QPushButton(guiutils.get_icon("left-arrow.png"), __("Add a delay"))
+    bt_to_add = QtGui.QPushButton(guiutils.get_icon("left-arrow.png"), __("Add a delay to the timeline"))
     bt_to_add.setStyleSheet("text-align: left")
     bt_to_add.clicked.connect(on_add_delay)
     actions_groupbox_table.setCellWidget(0, 0, bt_to_add)
-    bt_to_add = QtGui.QPushButton(guiutils.get_icon("left-arrow.png"), __("Add a rectilinear motion"))
+    bt_to_add = QtGui.QPushButton(guiutils.get_icon("left-arrow.png"), __("Add a rectilinear motion to the timeline"))
     bt_to_add.setStyleSheet("text-align: left")
     bt_to_add.clicked.connect(on_add_rectilinear)
     actions_groupbox_table.setCellWidget(1, 0, bt_to_add)
