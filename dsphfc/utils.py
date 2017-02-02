@@ -638,11 +638,20 @@ def dump_to_xml(data, save_name):
             for movement in value:
                 f.write('\t\t\t\t<!-- Movement Name: {} -->\n'.format(movement.name))
                 f.write('\t\t\t\t<begin mov="{}" start="0"/>\n'.format(mov_counter))
+                first_series_motion = mot_counter
                 for motion_index, motion in enumerate(movement.motion_list):
                     if motion.__class__.__name__ is "RectMotion":
                         if motion_index is len(movement.motion_list) - 1:
-                            f.write('\t\t\t\t<mvrect id="{}" duration="{}">\n'
-                                    .format(mot_counter, motion.duration))
+                            try:
+                                is_looping = movement.loop
+                            except AttributeError:
+                                is_looping = False
+                            if is_looping:
+                                f.write('\t\t\t\t<mvrect id="{}" duration="{}" next="{}">\n'
+                                        .format(mot_counter, motion.duration, first_series_motion))
+                            else:
+                                f.write('\t\t\t\t<mvrect id="{}" duration="{}">\n'
+                                        .format(mot_counter, motion.duration))
                         else:
                             f.write('\t\t\t\t<mvrect id="{}" duration="{}" next="{}">\n'
                                     .format(mot_counter, motion.duration, mot_counter + 1))
@@ -652,8 +661,12 @@ def dump_to_xml(data, save_name):
                         f.write('\t\t\t\t</mvrect>\n')
                     elif motion.__class__.__name__ is "WaitMotion":
                         if motion_index is len(movement.motion_list) - 1:
-                            f.write('\t\t\t\t<wait id="{}" duration="{}"/>\n'
-                                    .format(mot_counter, motion.duration))
+                            if movement.loop:
+                                f.write('\t\t\t\t<wait id="{}" duration="{}" next="{}"/>\n'
+                                        .format(mot_counter, motion.duration, first_series_motion))
+                            else:
+                                f.write('\t\t\t\t<wait id="{}" duration="{}"/>\n'
+                                        .format(mot_counter, motion.duration))
                         else:
                             f.write('\t\t\t\t<wait id="{}" duration="{}" next="{}"/>\n'
                                     .format(mot_counter, motion.duration, mot_counter + 1))
