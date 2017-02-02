@@ -13,6 +13,7 @@ in QT by default.
 import FreeCAD
 import FreeCADGui
 from PySide import QtCore, QtGui
+import utils
 from utils import __
 import guiutils
 from properties import *
@@ -41,27 +42,35 @@ class MovementActions(QtGui.QWidget):
     """ A set of movement actions (use and delete) with its custom signals"""
     delete = QtCore.Signal(int)
     use = QtCore.Signal(int, bool)
+    loop = QtCore.Signal(int, bool)
 
-    def __init__(self, index, checked):
+    def __init__(self, index, use_checked, loop_checked):
         super(MovementActions, self).__init__()
         self.index = index
         self.use_checkbox = QtGui.QCheckBox(__("Use"))
-        self.use_checkbox.setChecked(checked)
+        self.use_checkbox.setChecked(use_checked)
         self.use_checkbox.stateChanged.connect(self.on_use)
+        self.loop_checkbox = QtGui.QCheckBox(__("Loop"))
+        self.loop_checkbox.setChecked(loop_checked)
+        self.loop_checkbox.stateChanged.connect(self.on_loop)
         self.delete_button = QtGui.QPushButton(guiutils.get_icon("trash.png"), None)
         self.delete_button.clicked.connect(self.on_delete)
         self.setContentsMargins(0, 0, 0, 0)
-        temp_layout = QtGui.QHBoxLayout()
-        temp_layout.setContentsMargins(10, 0, 10, 0)
-        temp_layout.addWidget(self.use_checkbox)
-        temp_layout.addWidget(self.delete_button)
-        self.setLayout(temp_layout)
+        main_layout = QtGui.QHBoxLayout()
+        main_layout.setContentsMargins(10, 0, 10, 0)
+        main_layout.addWidget(self.use_checkbox)
+        main_layout.addWidget(self.loop_checkbox)
+        main_layout.addWidget(self.delete_button)
+        self.setLayout(main_layout)
 
     def on_delete(self):
         self.delete.emit(self.index)
 
     def on_use(self):
         self.use.emit(self.index, self.use_checkbox.isChecked())
+
+    def on_loop(self):
+        self.loop.emit(self.index, self.loop_checkbox.isChecked())
 
 
 class RectilinearMotionTimeline(QtGui.QWidget):
@@ -84,25 +93,20 @@ class RectilinearMotionTimeline(QtGui.QWidget):
         self.main_layout.setContentsMargins(10, 0, 10, 0)
 
         self.parent_movement = rect_motion.parent_movement
-        self.double_validator = QtGui.QDoubleValidator(2, 0.00, 999.999)
         self.label = QtGui.QLabel("Rect  ")
         self.velocity_label = QtGui.QLabel("Vel: ")
         self.x_input = QtGui.QLineEdit()
-        self.x_input.setValidator(self.double_validator)
         self.x_label = QtGui.QLabel("X ")
         self.x_input.setStyleSheet("width: 5px;")
         self.y_input = QtGui.QLineEdit()
-        self.y_input.setValidator(self.double_validator)
         self.y_label = QtGui.QLabel("Y ")
         self.y_input.setStyleSheet("width: 5px;")
         self.z_input = QtGui.QLineEdit()
-        self.z_input.setValidator(self.double_validator)
-        self.z_input.setStyleSheet("width: 5px;")
         self.z_label = QtGui.QLabel("Z")
+        self.z_input.setStyleSheet("width: 5px;")
         self.time_icon = QtGui.QPushButton(guiutils.get_icon("clock.png"), None)
         self.time_icon.setEnabled(False)
         self.time_input = QtGui.QLineEdit()
-        self.time_input.setValidator(self.double_validator)
         self.time_input.setStyleSheet("width: 5px;")
         self.delete_button = QtGui.QPushButton(guiutils.get_icon("trash.png"), None)
         self.order_button_layout = QtGui.QVBoxLayout()

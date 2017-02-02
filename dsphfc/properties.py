@@ -82,13 +82,15 @@ class Movement(object):
         Attributes:
             name: Name for this motion given by the user
             motion_list: List of motion objects in order
+            loop: Boolean indicating if it is a loop
         """
 
-    def __init__(self, name="New Movement", motion_list=None):
+    def __init__(self, name="New Movement", motion_list=None, loop=False):
         self.name = name
         if not motion_list:
             motion_list = list()
         self.motion_list = motion_list
+        self.loop = loop
 
     def add_motion(self, motion):
         if isinstance(motion, BaseMotion):
@@ -96,6 +98,12 @@ class Movement(object):
             self.motion_list.append(motion)
         else:
             raise TypeError("You are trying to append a non-motion object to a movement list.")
+
+    def set_loop(self, state):
+        if isinstance(state, bool):
+            self.loop = state
+        else:
+            raise TypeError("Tried to set a boolean with an {}".format(state.__class__.__name__))
 
     def remove_motion(self, position):
         self.motion_list.pop(position)

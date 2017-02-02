@@ -63,6 +63,7 @@ __status__ = "Development"
 
 # TODO: 0.3Beta - Periodicity support
 # - Show arrows (bounds) to show periodicity
+# TODO: 0.3Beta - Add postprocessing tools
 # TODO: 0.3Beta - Toolbox (Fillbox, wave, periodicity, imports...) to clean the UI
 # TODO: 0.3Beta - Create Material support
 # TODO: 0.3Beta - Material creator and assigner
@@ -1207,11 +1208,19 @@ def objtype_change(index):
         mkgroup_prop.setRange(0, 10)
         selectiongui.ShapeColor = (0.00, 0.45, 1.00)
         selectiongui.Transparency = 30
-        if str(str(data['simobjects'][selection.Name][0])) in data['floating_mks'].keys():
+        # Remove floating properties if it is changed to fluid
+        if str(data['simobjects'][selection.Name][0]) in data['floating_mks'].keys():
             data['floating_mks'].pop(str(data['simobjects'][selection.Name][0]), None)
+        # Remove motion properties if it is changed to fluid
+        utils.debug(data['motion_mks'].keys())
+        if data['simobjects'][selection.Name][0] in data['motion_mks'].keys():
+            utils.debug("Im in")
+            data['motion_mks'].pop(data['simobjects'][selection.Name][0], None)
+        utils.debug(data['motion_mks'].keys())
         floatstate_prop.setEnabled(False)
         initials_prop.setEnabled(True)
         mkgroup_label.setText("   " + __("MKFluid"))
+    on_tree_item_selection_change()
 
 
 def fillmode_change(index):
@@ -1736,6 +1745,8 @@ def motion_change():
     movements_selected = list(data["motion_mks"].get(target_mk, list()))
 
     def on_ok():
+        guiutils.info_dialog(
+            __("This will apply the motion properties to all objects with mkbound = ") + str(target_mk))
         if has_motion_selector.currentIndex() == 0:
             # True has been selected
             # Reinstance the list and copy every movement selected to avoid referencing problems.
@@ -1841,8 +1852,17 @@ def motion_change():
         else:
             movements_selected.remove(data["global_movements"][index])
 
+    def on_loop_movement(index, checked):
+        """ Make a movement loop itself """
+        data["global_movements"][index].set_loop(checked)
+
     def on_delete_movement(index):
         """ Remove a movement from the project. """
+        try:
+            movements_selected.remove(data["global_movements"][index])
+        except ValueError:
+            # Movement wasn't selected
+            pass
         data["global_movements"].pop(index)
         refresh_movements_table()
         on_movement_selected(timeline_list_table.rowCount() - 1, None)
@@ -1922,10 +1942,14 @@ def motion_change():
         current_row = 0
         for movement in data["global_movements"]:
             movement_list_table.setItem(current_row, 0, QtGui.QTableWidgetItem(movement.name))
-
-            movement_actions = dsphwidgets.MovementActions(current_row, movement in movements_selected)
+            try:
+                has_loop = movement.loop
+            except AttributeError:
+                has_loop = False
+            movement_actions = dsphwidgets.MovementActions(current_row, movement in movements_selected, has_loop)
             movement_actions.delete.connect(on_delete_movement)
             movement_actions.use.connect(on_check_movement)
+            movement_actions.loop.connect(on_loop_movement)
             movement_list_table.setCellWidget(current_row, 1, movement_actions)
 
             current_row += 1
@@ -2156,9 +2180,15 @@ def on_tree_item_selection_change():
                 if selection[0].TypeId == "App::DocumentObjectGroup" and "fillbox" in selection[0].Name.lower():
                     to_change.setEnabled(True)
 
-                    # initials restrictions
-                    # to_change = property_table.cellWidget(5, 1)
-                    # No restrictions for now
+                # motion restrictions
+                to_change = property_table.cellWidget(6, 1)
+                if selection[0].TypeId in temp_data['supported_types']:
+                    if data['simobjects'][selection[0].Name][1].lower() == "fluid":
+                        to_change.setEnabled(False)
+                    else:
+                        to_change.setEnabled(True)
+                elif selection[0].TypeId == "App::DocumentObjectGroup" and "fillbox" in selection[0].Name.lower():
+                    to_change.setEnabled(False)
 
             else:
                 properties_widget.setMinimumHeight(100)
