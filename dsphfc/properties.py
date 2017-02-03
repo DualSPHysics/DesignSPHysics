@@ -6,6 +6,8 @@ This file contains a collection of Properties to add
 in a DSPH related case.
 
 """
+
+
 # Copyright (C) 2016 - Andrés Vieira (anvieiravazquez@gmail.com)
 # EPHYSLAB Environmental Physics Laboratory, Universidade de Vigo
 #
@@ -147,6 +149,29 @@ class RectMotion(BaseMotion):
 
     def __str__(self):
         return "RectMotion [Duration: {} ; Velocity: {}]".format(self.duration, self.velocity)
+
+
+class AccRectMotion(BaseMotion):
+    """ DualSPHysics accelerated ectilinear motion.
+
+        Attributes:
+            velocity: Velocity vector that defines the movement
+            acceleration: Acceleration vector that defines the aceleration
+        """
+
+    def __init__(self, duration=1, velocity=None, acceleration=None, parent_movement=None):
+        if velocity is None:
+            velocity = [0, 0, 0]
+        if acceleration is None:
+            acceleration = [0, 0, 0]
+        BaseMotion.__init__(self, duration)
+        self.parent_movement = parent_movement
+        self.velocity = velocity
+        self.acceleration = acceleration
+
+    def __str__(self):
+        return "RectMotion [Duration: {} ; Velocity: {} ; Acceleration: {}]" \
+            .format(self.duration, self.velocity, self.acceleration)
 
 
 class WaitMotion(BaseMotion):
