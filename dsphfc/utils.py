@@ -670,6 +670,28 @@ def dump_to_xml(data, save_name):
                         else:
                             f.write('\t\t\t\t<wait id="{}" duration="{}" next="{}"/>\n'
                                     .format(mot_counter, motion.duration, mot_counter + 1))
+                    elif motion.__class__.__name__ is "AccRectMotion":
+                        if motion_index is len(movement.motion_list) - 1:
+                            try:
+                                is_looping = movement.loop
+                            except AttributeError:
+                                is_looping = False
+                            if is_looping:
+                                f.write('\t\t\t\t<mvrectace id="{}" duration="{}" next="{}">\n'
+                                        .format(mot_counter, motion.duration, first_series_motion))
+                            else:
+                                f.write('\t\t\t\t<mvrectace id="{}" duration="{}">\n'
+                                        .format(mot_counter, motion.duration))
+                        else:
+                            f.write('\t\t\t\t<mvrectace id="{}" duration="{}" next="{}">\n'
+                                    .format(mot_counter, motion.duration, mot_counter + 1))
+
+                        f.write('\t\t\t\t\t<vel x="{}" y="{}" z="{}"/>\n'
+                                .format(motion.velocity[0], motion.velocity[1], motion.velocity[2]))
+                        f.write('\t\t\t\t\t<ace x="{}" y="{}" z="{}"/>\n'
+                                .format(motion.acceleration[0], motion.acceleration[1], motion.acceleration[2]))
+                        f.write('\t\t\t\t</mvrectace>\n')
+
                     mot_counter += 1
                 mov_counter += 1
             f.write('\t\t\t</objreal>\n')
