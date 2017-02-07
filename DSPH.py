@@ -56,6 +56,7 @@ __status__ = "Development"
 
 # General To-Do to use with PyCharm
 # TODO: 0.2Beta - Object Motion (custom or from file)
+# TODO: 0.2Beta - View details on execution (out file). Let user open it at finish.
 # TODO: 0.2Beta - Wave generator
 # - Type of motion. Applied to an MK
 # TODO: 0.2Beta - Work on installer. Bundle DualSPHysics and preconfigure (?)
@@ -1791,6 +1792,7 @@ def motion_change():
     motion_features_layout = QtGui.QHBoxLayout()
 
     movement_list_groupbox = QtGui.QGroupBox(__("Global Movements"))
+    movement_list_groupbox.setMaximumWidth(310)
     movement_list_groupbox_layout = QtGui.QVBoxLayout()
 
     movement_list_table = QtGui.QTableWidget(1, 2)
@@ -1820,6 +1822,7 @@ def motion_change():
     timeline_groupbox.setLayout(timeline_groupbox_layout)
 
     actions_groupbox = QtGui.QGroupBox(__("Available actions"))
+    actions_groupbox.setMaximumWidth(310)
     actions_groupbox_layout = QtGui.QVBoxLayout()
 
     actions_groupbox_table = QtGui.QTableWidget(0, 1)
@@ -1882,12 +1885,7 @@ def motion_change():
 
     def on_timeline_item_change(index, motion_object):
         """ Changes the values of an item on the timeline. """
-        if motion_object.__class__.__name__ is "WaitMotion":
-            motion_object.parent_movement.motion_list[index] = motion_object
-        elif motion_object.__class__.__name__ is "RectMotion":
-            motion_object.parent_movement.motion_list[index] = motion_object
-        elif motion_object.__class__.__name__ is "AccRectMotion":
-            motion_object.parent_movement.motion_list[index] = motion_object
+        motion_object.parent_movement.motion_list[index] = motion_object
 
     def on_timeline_item_delete(index, motion_object):
         """ Deletes an item from the timeline. """
@@ -1922,10 +1920,15 @@ def motion_change():
                 target_to_put = dsphwidgets.WaitMotionTimeline(current_row, motion)
             elif str(motion.__class__.__name__) is "AccRectMotion":
                 target_to_put = dsphwidgets.AccRectilinearMotionTimeline(current_row, motion)
+            elif str(motion.__class__.__name__) is "RotMotion":
+                target_to_put = dsphwidgets.RotationalMotionTimeline(current_row, motion)
+            elif str(motion.__class__.__name__) is "AccRotMotion":
+                target_to_put = dsphwidgets.AccRotationalMotionTimeline(current_row, motion)
+            elif str(motion.__class__.__name__) is "AccCirMotion":
+                target_to_put = dsphwidgets.AccCircularMotionTimeline(current_row, motion)
             else:
                 raise NotImplementedError("The type of movement: {} is not implemented.".format(
                     str(motion.__class__.__name__)))
-                continue
 
             target_to_put.changed.connect(on_timeline_item_change)
             target_to_put.deleted.connect(on_timeline_item_delete)
@@ -1990,22 +1993,58 @@ def motion_change():
                 data["global_movements"][movement_list_table.selectedIndexes()[0].row()].add_motion(AccRectMotion())
                 on_movement_selected(movement_list_table.selectedIndexes()[0].row(), None)
 
-    actions_groupbox_table.setRowCount(3)
+    def on_add_rotational():
+        """ Adds a RotMotion to the timeline of the selected movement. """
+        if len(movement_list_table.selectedIndexes()) > 0:
+            if movement_list_table.selectedIndexes()[0].row() is not len(data["global_movements"]):
+                data["global_movements"][movement_list_table.selectedIndexes()[0].row()].add_motion(RotMotion())
+                on_movement_selected(movement_list_table.selectedIndexes()[0].row(), None)
+
+    def on_add_acc_rotational():
+        """ Adds a AccRotMotion to the timeline of the selected movement. """
+        if len(movement_list_table.selectedIndexes()) > 0:
+            if movement_list_table.selectedIndexes()[0].row() is not len(data["global_movements"]):
+                data["global_movements"][movement_list_table.selectedIndexes()[0].row()].add_motion(AccRotMotion())
+                on_movement_selected(movement_list_table.selectedIndexes()[0].row(), None)
+
+    def on_add_acc_circular():
+        """ Adds a AccCirMotion to the timeline of the selected movement. """
+        if len(movement_list_table.selectedIndexes()) > 0:
+            if movement_list_table.selectedIndexes()[0].row() is not len(data["global_movements"]):
+                data["global_movements"][movement_list_table.selectedIndexes()[0].row()].add_motion(AccCirMotion())
+                on_movement_selected(movement_list_table.selectedIndexes()[0].row(), None)
+
+    actions_groupbox_table.setRowCount(6)
     bt_to_add = QtGui.QPushButton(guiutils.get_icon("left-arrow.png"),
-                                  __("Add a delay to the timeline"))
+                                  __("Add a delay"))
     bt_to_add.setStyleSheet("text-align: left")
     bt_to_add.clicked.connect(on_add_delay)
     actions_groupbox_table.setCellWidget(0, 0, bt_to_add)
     bt_to_add = QtGui.QPushButton(guiutils.get_icon("left-arrow.png"),
-                                  __("Add a rectilinear motion to the timeline"))
+                                  __("Add a rectilinear motion"))
     bt_to_add.setStyleSheet("text-align: left")
     bt_to_add.clicked.connect(on_add_rectilinear)
     actions_groupbox_table.setCellWidget(1, 0, bt_to_add)
     bt_to_add = QtGui.QPushButton(guiutils.get_icon("left-arrow.png"),
-                                  __("Add an accelerated rectilinear motion to the timeline"))
+                                  __("Add an accelerated rectilinear motion"))
     bt_to_add.setStyleSheet("text-align: left")
     bt_to_add.clicked.connect(on_add_accrectilinear)
     actions_groupbox_table.setCellWidget(2, 0, bt_to_add)
+    bt_to_add = QtGui.QPushButton(guiutils.get_icon("left-arrow.png"),
+                                  __("Add a rotational motion"))
+    bt_to_add.setStyleSheet("text-align: left")
+    bt_to_add.clicked.connect(on_add_rotational)
+    actions_groupbox_table.setCellWidget(3, 0, bt_to_add)
+    bt_to_add = QtGui.QPushButton(guiutils.get_icon("left-arrow.png"),
+                                  __("Add an accelerated rotational motion"))
+    bt_to_add.setStyleSheet("text-align: left")
+    bt_to_add.clicked.connect(on_add_acc_rotational)
+    actions_groupbox_table.setCellWidget(4, 0, bt_to_add)
+    bt_to_add = QtGui.QPushButton(guiutils.get_icon("left-arrow.png"),
+                                  __("Add an accelerated circular motion"))
+    bt_to_add.setStyleSheet("text-align: left")
+    bt_to_add.clicked.connect(on_add_acc_circular)
+    actions_groupbox_table.setCellWidget(5, 0, bt_to_add)
 
     # Set motion suscription for this mk
     if data["motion_mks"].get(target_mk, None) is None:
