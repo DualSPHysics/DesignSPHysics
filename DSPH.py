@@ -1738,7 +1738,7 @@ def material_change():
 def motion_change():
     """Defines a window with motion properties."""
     motion_window = QtGui.QDialog()
-    motion_window.setMinimumSize(1300, 600)
+    motion_window.setMinimumSize(1400, 600)
     motion_window.setWindowTitle(__("Motion configuration"))
     ok_button = QtGui.QPushButton(__("Ok"))
     cancel_button = QtGui.QPushButton(__("Cancel"))
@@ -1926,6 +1926,12 @@ def motion_change():
                 target_to_put = dsphwidgets.AccRotationalMotionTimeline(current_row, motion)
             elif str(motion.__class__.__name__) is "AccCirMotion":
                 target_to_put = dsphwidgets.AccCircularMotionTimeline(current_row, motion)
+            elif str(motion.__class__.__name__) is "RotSinuMotion":
+                target_to_put = dsphwidgets.RotSinuMotionTimeline(current_row, motion)
+            elif str(motion.__class__.__name__) is "CirSinuMotion":
+                target_to_put = dsphwidgets.CirSinuMotionTimeline(current_row, motion)
+            elif str(motion.__class__.__name__) is "RectSinuMotion":
+                target_to_put = dsphwidgets.RectSinuMotionTimeline(current_row, motion)
             else:
                 raise NotImplementedError("The type of movement: {} is not implemented.".format(
                     str(motion.__class__.__name__)))
@@ -2014,7 +2020,28 @@ def motion_change():
                 data["global_movements"][movement_list_table.selectedIndexes()[0].row()].add_motion(AccCirMotion())
                 on_movement_selected(movement_list_table.selectedIndexes()[0].row(), None)
 
-    actions_groupbox_table.setRowCount(6)
+    def on_add_sinu_rot():
+        """ Adds a RotSinuMotion to the timeline of the selected movement. """
+        if len(movement_list_table.selectedIndexes()) > 0:
+            if movement_list_table.selectedIndexes()[0].row() is not len(data["global_movements"]):
+                data["global_movements"][movement_list_table.selectedIndexes()[0].row()].add_motion(RotSinuMotion())
+                on_movement_selected(movement_list_table.selectedIndexes()[0].row(), None)
+
+    def on_add_sinu_cir():
+        """ Adds a CirSinuMotion to the timeline of the selected movement. """
+        if len(movement_list_table.selectedIndexes()) > 0:
+            if movement_list_table.selectedIndexes()[0].row() is not len(data["global_movements"]):
+                data["global_movements"][movement_list_table.selectedIndexes()[0].row()].add_motion(CirSinuMotion())
+                on_movement_selected(movement_list_table.selectedIndexes()[0].row(), None)
+
+    def on_add_sinu_rect():
+        """ Adds a RectSinuMotion to the timeline of the selected movement. """
+        if len(movement_list_table.selectedIndexes()) > 0:
+            if movement_list_table.selectedIndexes()[0].row() is not len(data["global_movements"]):
+                data["global_movements"][movement_list_table.selectedIndexes()[0].row()].add_motion(RectSinuMotion())
+                on_movement_selected(movement_list_table.selectedIndexes()[0].row(), None)
+
+    actions_groupbox_table.setRowCount(9)
     bt_to_add = QtGui.QPushButton(guiutils.get_icon("left-arrow.png"),
                                   __("Add a delay"))
     bt_to_add.setStyleSheet("text-align: left")
@@ -2045,6 +2072,21 @@ def motion_change():
     bt_to_add.setStyleSheet("text-align: left")
     bt_to_add.clicked.connect(on_add_acc_circular)
     actions_groupbox_table.setCellWidget(5, 0, bt_to_add)
+    bt_to_add = QtGui.QPushButton(guiutils.get_icon("left-arrow.png"),
+                                  __("Add an sinusoidal rotational motion"))
+    bt_to_add.setStyleSheet("text-align: left")
+    bt_to_add.clicked.connect(on_add_sinu_rot)
+    actions_groupbox_table.setCellWidget(6, 0, bt_to_add)
+    bt_to_add = QtGui.QPushButton(guiutils.get_icon("left-arrow.png"),
+                                  __("Add an sinusoidal circular motion"))
+    bt_to_add.setStyleSheet("text-align: left")
+    bt_to_add.clicked.connect(on_add_sinu_cir)
+    actions_groupbox_table.setCellWidget(7, 0, bt_to_add)
+    bt_to_add = QtGui.QPushButton(guiutils.get_icon("left-arrow.png"),
+                                  __("Add an sinusoidal rectilinear motion"))
+    bt_to_add.setStyleSheet("text-align: left")
+    bt_to_add.clicked.connect(on_add_sinu_rect)
+    actions_groupbox_table.setCellWidget(8, 0, bt_to_add)
 
     # Set motion suscription for this mk
     if data["motion_mks"].get(target_mk, None) is None:

@@ -264,8 +264,8 @@ class AccCirMotion(BaseMotion):
         self.ang_acc = ang_acc
 
     def __str__(self):
-        return "AccRotMotion [Duration: {} ; AngVelocity: {} ; AngAccel: {} ; Axis: [{}, {}]]" \
-            .format(self.duration, self.ang_vel, self.ang_acc, self.axis1, self.axis2)
+        return "AccCirMotion [Duration: {} ; AngVelocity: {} ; AngAccel: {} ; Reference: {} ; Axis: [{}, {}]]" \
+            .format(self.duration, self.ang_vel, self.ang_acc, self.reference, self.axis1, self.axis2)
 
 
 class WaitMotion(BaseMotion):
@@ -280,3 +280,106 @@ class WaitMotion(BaseMotion):
 
     def __str__(self):
         return "WaitMotion [Duration: {}]".format(self.duration)
+
+
+class RotSinuMotion(BaseMotion):
+    """ DualSPHysics sinusoidal rotational motion.
+
+        Attributes:
+            axis1: Starting point of the vector that defines the rotation axis
+            axis2: Finishing point of the vector that defines the rotation axis
+            freq: Frequency
+            ampl: Amplitude
+            phase: Phase
+        """
+
+    def __init__(self, duration=1, axis1=None, axis2=None, freq=None, ampl=None, phase=None, parent_movement=None):
+        if axis1 is None:
+            axis1 = [0, 0, 0]
+        if axis2 is None:
+            axis2 = [0, 0, 0]
+        if freq is None:
+            freq = 0
+        if ampl is None:
+            ampl = 0
+        if phase is None:
+            phase = 0
+        BaseMotion.__init__(self, duration)
+        self.parent_movement = parent_movement
+        self.axis1 = axis1
+        self.axis2 = axis2
+        self.freq = freq
+        self.ampl = ampl
+        self.phase = phase
+
+    def __str__(self):
+        return "RotSinuMotion [Duration: {} ; Frequency: {} ; Amplitude: {} ; Phase: {} ; Axis: [{}, {}]]" \
+            .format(self.duration, self.freq, self.ampl, self.phase, self.axis1, self.axis2)
+
+
+class CirSinuMotion(BaseMotion):
+    """ DualSPHysics sinusoidal circular motion.
+
+        Attributes:
+            reference: Point of the object that rotates with the axis
+            axis1: Starting point of the vector that defines the rotation axis
+            axis2: Finishing point of the vector that defines the rotation axis
+            freq: Frequency
+            ampl: Amplitude
+            phase: Phase
+        """
+
+    def __init__(self, reference=None, duration=1, axis1=None, axis2=None, freq=None, ampl=None, phase=None,
+                 parent_movement=None):
+        if reference is None:
+            reference = [0, 0, 0]
+        if axis1 is None:
+            axis1 = [0, 0, 0]
+        if axis2 is None:
+            axis2 = [0, 0, 0]
+        if freq is None:
+            freq = 0
+        if ampl is None:
+            ampl = 0
+        if phase is None:
+            phase = 0
+        BaseMotion.__init__(self, duration)
+        self.parent_movement = parent_movement
+        self.reference = reference
+        self.axis1 = axis1
+        self.axis2 = axis2
+        self.freq = freq
+        self.ampl = ampl
+        self.phase = phase
+
+    def __str__(self):
+        return "CirSinuMotion [Duration: {} ; Frequency: {} ; Amplitude: {} ; " \
+               "Phase: {} ; Reference: {} ; Axis: [{}, {}]]" \
+            .format(self.duration, self.freq, self.ampl, self.phase, self.reference, self.axis1, self.axis2)
+
+
+class RectSinuMotion(BaseMotion):
+    """ DualSPHysics sinusoidal rectilinear motion.
+
+        Attributes:
+            freq: Frequency (vector)
+            ampl: Amplitude (vector)
+            phase: Phase (vector)
+        """
+
+    def __init__(self, duration=1, freq=None, ampl=None, phase=None, parent_movement=None):
+        if freq is None:
+            freq = [0, 0, 0]
+        if ampl is None:
+            ampl = [0, 0, 0]
+        if phase is None:
+            phase = [0, 0, 0]
+        BaseMotion.__init__(self, duration)
+        self.parent_movement = parent_movement
+        self.freq = freq
+        self.ampl = ampl
+        self.phase = phase
+
+    def __str__(self):
+        return "RectSinuMotion [Duration: {} ; Frequency: {} ; Amplitude: {} ; Phase: {}" \
+            .format(self.duration, self.freq, self.ampl, self.phase)

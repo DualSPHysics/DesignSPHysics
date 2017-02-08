@@ -958,6 +958,450 @@ class AccCircularMotionTimeline(QtGui.QWidget):
         self.time_input.setText(self.time_input.text().replace(",", "."))
 
 
+class RotSinuMotionTimeline(QtGui.QWidget):
+    """ An sinusoidal rotational motion graphical representation for a table-based timeline """
+
+    changed = QtCore.Signal(int, RotSinuMotion)
+    deleted = QtCore.Signal(int, RotSinuMotion)
+    order_up = QtCore.Signal(int)
+    order_down = QtCore.Signal(int)
+
+    def __init__(self, index, rot_sinu_motion):
+        if not isinstance(rot_sinu_motion, RotSinuMotion):
+            raise TypeError("You tried to spawn an sinusoidal rotational "
+                            "motion widget in the timeline with a wrong object")
+        if rot_sinu_motion is None:
+            raise TypeError("You tried to spawn an sinusoidal rotational "
+                            "motion widget in the timeline without a motion object")
+        super(RotSinuMotionTimeline, self).__init__()
+        self.index = index
+        self.setContentsMargins(0, 0, 0, 0)
+        self.main_layout = QtGui.QHBoxLayout()
+        self.main_layout.setContentsMargins(10, 0, 10, 0)
+
+        self.parent_movement = rot_sinu_motion.parent_movement
+        self.label = QtGui.QLabel("SRot ")
+        self.axis_label = QtGui.QLabel("Axis: ")
+        self.axis_layout = QtGui.QVBoxLayout()
+        self.axis_first_row_layout = QtGui.QHBoxLayout()
+        self.axis_second_row_layout = QtGui.QHBoxLayout()
+        self.x1_input = QtGui.QLineEdit()
+        self.x1_label = QtGui.QLabel("X ")
+        self.x1_input.setStyleSheet("width: 5px;")
+        self.y1_input = QtGui.QLineEdit()
+        self.y1_label = QtGui.QLabel("Y ")
+        self.y1_input.setStyleSheet("width: 5px;")
+        self.z1_input = QtGui.QLineEdit()
+        self.z1_label = QtGui.QLabel("Z")
+        self.z1_input.setStyleSheet("width: 5px;")
+        self.x2_input = QtGui.QLineEdit()
+        self.x2_label = QtGui.QLabel("X ")
+        self.x2_input.setStyleSheet("width: 5px;")
+        self.y2_input = QtGui.QLineEdit()
+        self.y2_label = QtGui.QLabel("Y ")
+        self.y2_input.setStyleSheet("width: 5px;")
+        self.z2_input = QtGui.QLineEdit()
+        self.z2_label = QtGui.QLabel("Z")
+        self.z2_input.setStyleSheet("width: 5px;")
+
+        self.freq_label = QtGui.QLabel("Freq ")
+        self.freq_input = QtGui.QLineEdit()
+        self.freq_input.setStyleSheet("width: 5px;")
+
+        self.ampl_label = QtGui.QLabel("Ampl ")
+        self.ampl_input = QtGui.QLineEdit()
+        self.ampl_input.setStyleSheet("width: 5px;")
+
+        self.phase_label = QtGui.QLabel("Phase ")
+        self.phase_input = QtGui.QLineEdit()
+        self.phase_input.setStyleSheet("width: 5px;")
+
+        self.time_icon = QtGui.QPushButton(guiutils.get_icon("clock.png"), None)
+        self.time_icon.setEnabled(False)
+        self.time_input = QtGui.QLineEdit()
+        self.time_input.setStyleSheet("width: 5px;")
+        self.delete_button = QtGui.QPushButton(guiutils.get_icon("trash.png"), None)
+        self.order_button_layout = QtGui.QVBoxLayout()
+        self.order_button_layout.setContentsMargins(0, 0, 0, 0)
+        self.order_button_layout.setSpacing(0)
+        self.order_up_button = QtGui.QPushButton(guiutils.get_icon("up_arrow.png"), None)
+        self.order_down_button = QtGui.QPushButton(guiutils.get_icon("down_arrow.png"), None)
+
+        self.order_button_layout.addWidget(self.order_up_button)
+        self.order_button_layout.addWidget(self.order_down_button)
+        self.main_layout.addWidget(self.label)
+        self.main_layout.addWidget(self.axis_label)
+        self.axis_first_row_layout.addWidget(self.x1_input)
+        self.axis_first_row_layout.addWidget(self.x1_label)
+        self.axis_first_row_layout.addWidget(self.y1_input)
+        self.axis_first_row_layout.addWidget(self.y1_label)
+        self.axis_first_row_layout.addWidget(self.z1_input)
+        self.axis_first_row_layout.addWidget(self.z1_label)
+        self.axis_second_row_layout.addWidget(self.x2_input)
+        self.axis_second_row_layout.addWidget(self.x2_label)
+        self.axis_second_row_layout.addWidget(self.y2_input)
+        self.axis_second_row_layout.addWidget(self.y2_label)
+        self.axis_second_row_layout.addWidget(self.z2_input)
+        self.axis_second_row_layout.addWidget(self.z2_label)
+        self.axis_layout.addLayout(self.axis_first_row_layout)
+        self.axis_layout.addLayout(self.axis_second_row_layout)
+        self.main_layout.addLayout(self.axis_layout)
+        self.main_layout.addWidget(self.freq_label)
+        self.main_layout.addWidget(self.freq_input)
+        self.main_layout.addWidget(self.ampl_label)
+        self.main_layout.addWidget(self.ampl_input)
+        self.main_layout.addWidget(self.phase_label)
+        self.main_layout.addWidget(self.phase_input)
+        self.main_layout.addStretch(1)
+        self.main_layout.addWidget(self.time_icon)
+        self.main_layout.addWidget(self.time_input)
+        self.main_layout.addWidget(self.delete_button)
+        self.main_layout.addLayout(self.order_button_layout)
+
+        self.setLayout(self.main_layout)
+        self.fill_values(rot_sinu_motion)
+        self._init_connections()
+
+    def fill_values(self, rot_sinu_motion):
+        self.x1_input.setText(str(rot_sinu_motion.axis1[0]))
+        self.y1_input.setText(str(rot_sinu_motion.axis1[1]))
+        self.z1_input.setText(str(rot_sinu_motion.axis1[2]))
+        self.x2_input.setText(str(rot_sinu_motion.axis2[0]))
+        self.y2_input.setText(str(rot_sinu_motion.axis2[1]))
+        self.z2_input.setText(str(rot_sinu_motion.axis2[2]))
+        self.freq_input.setText(str(rot_sinu_motion.freq))
+        self.ampl_input.setText(str(rot_sinu_motion.ampl))
+        self.phase_input.setText(str(rot_sinu_motion.phase))
+        self.time_input.setText(str(rot_sinu_motion.duration))
+
+    def _init_connections(self):
+        self.x1_input.textChanged.connect(self.on_change)
+        self.y1_input.textChanged.connect(self.on_change)
+        self.z1_input.textChanged.connect(self.on_change)
+        self.x2_input.textChanged.connect(self.on_change)
+        self.y2_input.textChanged.connect(self.on_change)
+        self.z2_input.textChanged.connect(self.on_change)
+        self.freq_input.textChanged.connect(self.on_change)
+        self.ampl_input.textChanged.connect(self.on_change)
+        self.phase_input.textChanged.connect(self.on_change)
+        self.time_input.textChanged.connect(self.on_change)
+        self.delete_button.clicked.connect(self.on_delete)
+        self.order_up_button.clicked.connect(self.on_order_up)
+        self.order_down_button.clicked.connect(self.on_order_down)
+
+    def disable_order_up_button(self):
+        self.order_up_button.setEnabled(False)
+
+    def disable_order_down_button(self):
+        self.order_down_button.setEnabled(False)
+
+    def on_order_up(self):
+        self.order_up.emit(self.index)
+
+    def on_order_down(self):
+        self.order_down.emit(self.index)
+
+    def on_change(self):
+        self._sanitize_input()
+        try:
+            self.changed.emit(self.index, self.construct_motion_object())
+        except ValueError:
+            utils.debug("Introduced an invalid value for a float number.")
+
+    def construct_motion_object(self):
+        return RotSinuMotion(
+            axis1=[float(self.x1_input.text()),
+                   float(self.y1_input.text()),
+                   float(self.z1_input.text())],
+            axis2=[float(self.x2_input.text()),
+                   float(self.y2_input.text()),
+                   float(self.z2_input.text())],
+            duration=float(self.time_input.text()), freq=float(self.freq_input.text()),
+            ampl=float(self.ampl_input.text()), phase=float(self.phase_input.text()),
+            parent_movement=self.parent_movement)
+
+    def on_delete(self):
+        self.deleted.emit(self.index, self.construct_motion_object())
+
+    def _sanitize_input(self):
+        if len(self.x1_input.text()) is 0:
+            self.x1_input.setText("0")
+        if len(self.y1_input.text()) is 0:
+            self.y1_input.setText("0")
+        if len(self.z1_input.text()) is 0:
+            self.z1_input.setText("0")
+        if len(self.x2_input.text()) is 0:
+            self.x2_input.setText("0")
+        if len(self.y2_input.text()) is 0:
+            self.y2_input.setText("0")
+        if len(self.z2_input.text()) is 0:
+            self.z2_input.setText("0")
+        if len(self.freq_input.text()) is 0:
+            self.freq_input.setText("0")
+        if len(self.ampl_input.text()) is 0:
+            self.ampl_input.setText("0")
+        if len(self.phase_input.text()) is 0:
+            self.phase_input.setText("0")
+        if len(self.time_input.text()) is 0:
+            self.time_input.setText("0")
+
+        self.x1_input.setText(self.x1_input.text().replace(",", "."))
+        self.y1_input.setText(self.y1_input.text().replace(",", "."))
+        self.z1_input.setText(self.z1_input.text().replace(",", "."))
+        self.x2_input.setText(self.x2_input.text().replace(",", "."))
+        self.y2_input.setText(self.y2_input.text().replace(",", "."))
+        self.z2_input.setText(self.z2_input.text().replace(",", "."))
+        self.freq_input.setText(self.freq_input.text().replace(",", "."))
+        self.ampl_input.setText(self.ampl_input.text().replace(",", "."))
+        self.phase_input.setText(self.phase_input.text().replace(",", "."))
+        self.time_input.setText(self.time_input.text().replace(",", "."))
+
+
+class CirSinuMotionTimeline(QtGui.QWidget):
+    """ An sinusoidal circular motion graphical representation for a table-based timeline """
+
+    changed = QtCore.Signal(int, CirSinuMotion)
+    deleted = QtCore.Signal(int, CirSinuMotion)
+    order_up = QtCore.Signal(int)
+    order_down = QtCore.Signal(int)
+
+    def __init__(self, index, cir_sinu_motion):
+        if not isinstance(cir_sinu_motion, CirSinuMotion):
+            raise TypeError("You tried to spawn an sinusoidal circular "
+                            "motion widget in the timeline with a wrong object")
+        if cir_sinu_motion is None:
+            raise TypeError("You tried to spawn an sinusoidal circular "
+                            "motion widget in the timeline without a motion object")
+        super(CirSinuMotionTimeline, self).__init__()
+        self.index = index
+        self.setContentsMargins(0, 0, 0, 0)
+        self.main_layout = QtGui.QHBoxLayout()
+        self.main_layout.setContentsMargins(10, 0, 10, 0)
+
+        self.parent_movement = cir_sinu_motion.parent_movement
+        self.label = QtGui.QLabel("SCir ")
+        self.axis_label = QtGui.QLabel("Axis: ")
+        self.axis_layout = QtGui.QVBoxLayout()
+        self.axis_first_row_layout = QtGui.QHBoxLayout()
+        self.axis_second_row_layout = QtGui.QHBoxLayout()
+        self.x1_input = QtGui.QLineEdit()
+        self.x1_label = QtGui.QLabel("X ")
+        self.x1_input.setStyleSheet("width: 5px;")
+        self.y1_input = QtGui.QLineEdit()
+        self.y1_label = QtGui.QLabel("Y ")
+        self.y1_input.setStyleSheet("width: 5px;")
+        self.z1_input = QtGui.QLineEdit()
+        self.z1_label = QtGui.QLabel("Z")
+        self.z1_input.setStyleSheet("width: 5px;")
+        self.x2_input = QtGui.QLineEdit()
+        self.x2_label = QtGui.QLabel("X ")
+        self.x2_input.setStyleSheet("width: 5px;")
+        self.y2_input = QtGui.QLineEdit()
+        self.y2_label = QtGui.QLabel("Y ")
+        self.y2_input.setStyleSheet("width: 5px;")
+        self.z2_input = QtGui.QLineEdit()
+        self.z2_label = QtGui.QLabel("Z")
+        self.z2_input.setStyleSheet("width: 5px;")
+
+        self.ref_layout = QtGui.QVBoxLayout()
+        self.ref_first_row = QtGui.QHBoxLayout()
+        self.ref_second_row = QtGui.QHBoxLayout()
+        self.freq_label = QtGui.QLabel("Freq ")
+        self.freq_input = QtGui.QLineEdit()
+        self.freq_input.setStyleSheet("width: 5px;")
+
+        self.ampl_label = QtGui.QLabel("Ampl ")
+        self.ampl_input = QtGui.QLineEdit()
+        self.ampl_input.setStyleSheet("width: 5px;")
+
+        self.phase_label = QtGui.QLabel("Phase ")
+        self.phase_input = QtGui.QLineEdit()
+        self.phase_input.setStyleSheet("width: 5px;")
+
+        self.reference_label = QtGui.QLabel("Ref ")
+        self.reference_x_input = QtGui.QLineEdit()
+        self.reference_x_input.setStyleSheet("width: 5px;")
+        self.reference_x_label = QtGui.QLabel("X ")
+        self.reference_y_input = QtGui.QLineEdit()
+        self.reference_y_input.setStyleSheet("width: 5px;")
+        self.reference_y_label = QtGui.QLabel("Y ")
+        self.reference_z_input = QtGui.QLineEdit()
+        self.reference_z_input.setStyleSheet("width: 5px;")
+        self.reference_z_label = QtGui.QLabel("Z")
+
+        self.time_icon = QtGui.QPushButton(guiutils.get_icon("clock.png"), None)
+        self.time_icon.setEnabled(False)
+        self.time_input = QtGui.QLineEdit()
+        self.time_input.setStyleSheet("width: 5px;")
+        self.delete_button = QtGui.QPushButton(guiutils.get_icon("trash.png"), None)
+        self.order_button_layout = QtGui.QVBoxLayout()
+        self.order_button_layout.setContentsMargins(0, 0, 0, 0)
+        self.order_button_layout.setSpacing(0)
+        self.order_up_button = QtGui.QPushButton(guiutils.get_icon("up_arrow.png"), None)
+        self.order_down_button = QtGui.QPushButton(guiutils.get_icon("down_arrow.png"), None)
+
+        self.order_button_layout.addWidget(self.order_up_button)
+        self.order_button_layout.addWidget(self.order_down_button)
+        self.main_layout.addWidget(self.label)
+        self.main_layout.addWidget(self.axis_label)
+        self.axis_first_row_layout.addWidget(self.x1_input)
+        self.axis_first_row_layout.addWidget(self.x1_label)
+        self.axis_first_row_layout.addWidget(self.y1_input)
+        self.axis_first_row_layout.addWidget(self.y1_label)
+        self.axis_first_row_layout.addWidget(self.z1_input)
+        self.axis_first_row_layout.addWidget(self.z1_label)
+        self.axis_second_row_layout.addWidget(self.x2_input)
+        self.axis_second_row_layout.addWidget(self.x2_label)
+        self.axis_second_row_layout.addWidget(self.y2_input)
+        self.axis_second_row_layout.addWidget(self.y2_label)
+        self.axis_second_row_layout.addWidget(self.z2_input)
+        self.axis_second_row_layout.addWidget(self.z2_label)
+        self.axis_layout.addLayout(self.axis_first_row_layout)
+        self.axis_layout.addLayout(self.axis_second_row_layout)
+        self.main_layout.addLayout(self.axis_layout)
+
+        self.ref_first_row.addWidget(self.freq_label)
+        self.ref_first_row.addWidget(self.freq_input)
+        self.ref_first_row.addWidget(self.ampl_label)
+        self.ref_first_row.addWidget(self.ampl_input)
+        self.ref_first_row.addWidget(self.phase_label)
+        self.ref_first_row.addWidget(self.phase_input)
+
+        self.ref_second_row.addWidget(self.reference_label)
+        self.ref_second_row.addWidget(self.reference_x_input)
+        self.ref_second_row.addWidget(self.reference_x_label)
+        self.ref_second_row.addWidget(self.reference_y_input)
+        self.ref_second_row.addWidget(self.reference_y_label)
+        self.ref_second_row.addWidget(self.reference_z_input)
+        self.ref_second_row.addWidget(self.reference_z_label)
+
+        self.ref_layout.addLayout(self.ref_first_row)
+        self.ref_layout.addLayout(self.ref_second_row)
+
+        self.main_layout.addLayout(self.ref_layout)
+        self.main_layout.addStretch(1)
+        self.main_layout.addWidget(self.time_icon)
+        self.main_layout.addWidget(self.time_input)
+        self.main_layout.addWidget(self.delete_button)
+        self.main_layout.addLayout(self.order_button_layout)
+
+        self.setLayout(self.main_layout)
+        self.fill_values(cir_sinu_motion)
+        self._init_connections()
+
+    def fill_values(self, cir_sinu_motion):
+        self.x1_input.setText(str(cir_sinu_motion.axis1[0]))
+        self.y1_input.setText(str(cir_sinu_motion.axis1[1]))
+        self.z1_input.setText(str(cir_sinu_motion.axis1[2]))
+        self.x2_input.setText(str(cir_sinu_motion.axis2[0]))
+        self.y2_input.setText(str(cir_sinu_motion.axis2[1]))
+        self.z2_input.setText(str(cir_sinu_motion.axis2[2]))
+        self.reference_x_input.setText(str(cir_sinu_motion.reference[0]))
+        self.reference_y_input.setText(str(cir_sinu_motion.reference[1]))
+        self.reference_z_input.setText(str(cir_sinu_motion.reference[2]))
+        self.freq_input.setText(str(cir_sinu_motion.freq))
+        self.ampl_input.setText(str(cir_sinu_motion.ampl))
+        self.phase_input.setText(str(cir_sinu_motion.phase))
+        self.time_input.setText(str(cir_sinu_motion.duration))
+
+    def _init_connections(self):
+        self.x1_input.textChanged.connect(self.on_change)
+        self.y1_input.textChanged.connect(self.on_change)
+        self.z1_input.textChanged.connect(self.on_change)
+        self.x2_input.textChanged.connect(self.on_change)
+        self.y2_input.textChanged.connect(self.on_change)
+        self.z2_input.textChanged.connect(self.on_change)
+        self.reference_x_input.textChanged.connect(self.on_change)
+        self.reference_y_input.textChanged.connect(self.on_change)
+        self.reference_z_input.textChanged.connect(self.on_change)
+        self.freq_input.textChanged.connect(self.on_change)
+        self.ampl_input.textChanged.connect(self.on_change)
+        self.phase_input.textChanged.connect(self.on_change)
+        self.time_input.textChanged.connect(self.on_change)
+        self.delete_button.clicked.connect(self.on_delete)
+        self.order_up_button.clicked.connect(self.on_order_up)
+        self.order_down_button.clicked.connect(self.on_order_down)
+
+    def disable_order_up_button(self):
+        self.order_up_button.setEnabled(False)
+
+    def disable_order_down_button(self):
+        self.order_down_button.setEnabled(False)
+
+    def on_order_up(self):
+        self.order_up.emit(self.index)
+
+    def on_order_down(self):
+        self.order_down.emit(self.index)
+
+    def on_change(self):
+        self._sanitize_input()
+        try:
+            self.changed.emit(self.index, self.construct_motion_object())
+        except ValueError:
+            utils.debug("Introduced an invalid value for a float number.")
+
+    def construct_motion_object(self):
+        return CirSinuMotion(
+            axis1=[float(self.x1_input.text()),
+                   float(self.y1_input.text()),
+                   float(self.z1_input.text())],
+            axis2=[float(self.x2_input.text()),
+                   float(self.y2_input.text()),
+                   float(self.z2_input.text())],
+            reference=[float(self.reference_x_input.text()),
+                       float(self.reference_y_input.text()),
+                       float(self.reference_z_input.text())],
+            duration=float(self.time_input.text()), freq=float(self.freq_input.text()),
+            ampl=float(self.ampl_input.text()), phase=float(self.phase_input.text()),
+            parent_movement=self.parent_movement)
+
+    def on_delete(self):
+        self.deleted.emit(self.index, self.construct_motion_object())
+
+    def _sanitize_input(self):
+        if len(self.x1_input.text()) is 0:
+            self.x1_input.setText("0")
+        if len(self.y1_input.text()) is 0:
+            self.y1_input.setText("0")
+        if len(self.z1_input.text()) is 0:
+            self.z1_input.setText("0")
+        if len(self.x2_input.text()) is 0:
+            self.x2_input.setText("0")
+        if len(self.y2_input.text()) is 0:
+            self.y2_input.setText("0")
+        if len(self.z2_input.text()) is 0:
+            self.z2_input.setText("0")
+        if len(self.reference_x_input.text()) is 0:
+            self.reference_x_input.setText("0")
+        if len(self.reference_y_input.text()) is 0:
+            self.reference_y_input.setText("0")
+        if len(self.reference_z_input.text()) is 0:
+            self.reference_z_input.setText("0")
+        if len(self.freq_input.text()) is 0:
+            self.freq_input.setText("0")
+        if len(self.ampl_input.text()) is 0:
+            self.ampl_input.setText("0")
+        if len(self.phase_input.text()) is 0:
+            self.phase_input.setText("0")
+        if len(self.time_input.text()) is 0:
+            self.time_input.setText("0")
+
+        self.x1_input.setText(self.x1_input.text().replace(",", "."))
+        self.y1_input.setText(self.y1_input.text().replace(",", "."))
+        self.z1_input.setText(self.z1_input.text().replace(",", "."))
+        self.x2_input.setText(self.x2_input.text().replace(",", "."))
+        self.y2_input.setText(self.y2_input.text().replace(",", "."))
+        self.z2_input.setText(self.z2_input.text().replace(",", "."))
+        self.reference_x_input.setText(self.reference_x_input.text().replace(",", "."))
+        self.reference_y_input.setText(self.reference_y_input.text().replace(",", "."))
+        self.reference_z_input.setText(self.reference_z_input.text().replace(",", "."))
+        self.freq_input.setText(self.freq_input.text().replace(",", "."))
+        self.ampl_input.setText(self.ampl_input.text().replace(",", "."))
+        self.phase_input.setText(self.phase_input.text().replace(",", "."))
+        self.time_input.setText(self.time_input.text().replace(",", "."))
+
+
 class WaitMotionTimeline(QtGui.QWidget):
     """ A wait motion graphical representation for a table-based timeline """
 
@@ -1039,3 +1483,204 @@ class WaitMotionTimeline(QtGui.QWidget):
 
     def on_delete(self):
         self.deleted.emit(self.index, self.construct_motion_object())
+
+
+class RectSinuMotionTimeline(QtGui.QWidget):
+    """ An sinusoidal rectilinear motion graphical representation for a table-based timeline """
+
+    changed = QtCore.Signal(int, RectSinuMotion)
+    deleted = QtCore.Signal(int, RectSinuMotion)
+    order_up = QtCore.Signal(int)
+    order_down = QtCore.Signal(int)
+
+    def __init__(self, index, rect_sinu_motion):
+        if not isinstance(rect_sinu_motion, RectSinuMotion):
+            raise TypeError("You tried to spawn an accelerated circular "
+                            "motion widget in the timeline with a wrong object")
+        if rect_sinu_motion is None:
+            raise TypeError("You tried to spawn an accelerated circular "
+                            "motion widget in the timeline without a motion object")
+        super(RectSinuMotionTimeline, self).__init__()
+        self.index = index
+        self.setContentsMargins(0, 0, 0, 0)
+        self.main_layout = QtGui.QHBoxLayout()
+        self.main_layout.setContentsMargins(10, 0, 10, 0)
+
+        self.parent_movement = rect_sinu_motion.parent_movement
+        self.label = QtGui.QLabel("SRect ")
+        self.freq_amp_layout = QtGui.QVBoxLayout()
+        self.freq_amp_first_row_layout = QtGui.QHBoxLayout()
+        self.freq_amp_second_row_layout = QtGui.QHBoxLayout()
+        self.freq_label = QtGui.QLabel("Freq: ")
+        self.amp_label = QtGui.QLabel("Amp: ")
+        self.freq_x_input = QtGui.QLineEdit()
+        self.freq_x_label = QtGui.QLabel("X ")
+        self.freq_x_input.setStyleSheet("width: 5px;")
+        self.freq_y_input = QtGui.QLineEdit()
+        self.freq_y_label = QtGui.QLabel("Y ")
+        self.freq_y_input.setStyleSheet("width: 5px;")
+        self.freq_z_input = QtGui.QLineEdit()
+        self.freq_z_label = QtGui.QLabel("Z")
+        self.freq_z_input.setStyleSheet("width: 5px;")
+        self.amp_x_input = QtGui.QLineEdit()
+        self.amp_x_label = QtGui.QLabel("X ")
+        self.amp_x_input.setStyleSheet("width: 5px;")
+        self.amp_y_input = QtGui.QLineEdit()
+        self.amp_y_label = QtGui.QLabel("Y ")
+        self.amp_y_input.setStyleSheet("width: 5px;")
+        self.amp_z_input = QtGui.QLineEdit()
+        self.amp_z_label = QtGui.QLabel("Z")
+        self.amp_z_input.setStyleSheet("width: 5px;")
+
+        self.phase_label = QtGui.QLabel("Phase ")
+        self.phase_x_input = QtGui.QLineEdit()
+        self.phase_x_input.setStyleSheet("width: 5px;")
+        self.phase_x_label = QtGui.QLabel("X ")
+        self.phase_y_input = QtGui.QLineEdit()
+        self.phase_y_input.setStyleSheet("width: 5px;")
+        self.phase_y_label = QtGui.QLabel("Y ")
+        self.phase_z_input = QtGui.QLineEdit()
+        self.phase_z_input.setStyleSheet("width: 5px;")
+        self.phase_z_label = QtGui.QLabel("Z")
+
+        self.time_icon = QtGui.QPushButton(guiutils.get_icon("clock.png"), None)
+        self.time_icon.setEnabled(False)
+        self.time_input = QtGui.QLineEdit()
+        self.time_input.setStyleSheet("width: 5px;")
+        self.delete_button = QtGui.QPushButton(guiutils.get_icon("trash.png"), None)
+        self.order_button_layout = QtGui.QVBoxLayout()
+        self.order_button_layout.setContentsMargins(0, 0, 0, 0)
+        self.order_button_layout.setSpacing(0)
+        self.order_up_button = QtGui.QPushButton(guiutils.get_icon("up_arrow.png"), None)
+        self.order_down_button = QtGui.QPushButton(guiutils.get_icon("down_arrow.png"), None)
+
+        self.order_button_layout.addWidget(self.order_up_button)
+        self.order_button_layout.addWidget(self.order_down_button)
+        self.main_layout.addWidget(self.label)
+        self.main_layout.addWidget(self.freq_label)
+        self.freq_amp_first_row_layout.addWidget(self.freq_x_input)
+        self.freq_amp_first_row_layout.addWidget(self.freq_x_label)
+        self.freq_amp_first_row_layout.addWidget(self.freq_y_input)
+        self.freq_amp_first_row_layout.addWidget(self.freq_y_label)
+        self.freq_amp_first_row_layout.addWidget(self.freq_z_input)
+        self.freq_amp_first_row_layout.addWidget(self.freq_z_label)
+        self.freq_amp_second_row_layout.addWidget(self.amp_x_input)
+        self.freq_amp_second_row_layout.addWidget(self.amp_x_label)
+        self.freq_amp_second_row_layout.addWidget(self.amp_y_input)
+        self.freq_amp_second_row_layout.addWidget(self.amp_y_label)
+        self.freq_amp_second_row_layout.addWidget(self.amp_z_input)
+        self.freq_amp_second_row_layout.addWidget(self.amp_z_label)
+        self.freq_amp_layout.addLayout(self.freq_amp_first_row_layout)
+        self.freq_amp_layout.addLayout(self.freq_amp_second_row_layout)
+        self.main_layout.addLayout(self.freq_amp_layout)
+        self.main_layout.addWidget(self.phase_label)
+        self.main_layout.addWidget(self.phase_x_input)
+        self.main_layout.addWidget(self.phase_x_label)
+        self.main_layout.addWidget(self.phase_y_input)
+        self.main_layout.addWidget(self.phase_y_label)
+        self.main_layout.addWidget(self.phase_z_input)
+        self.main_layout.addWidget(self.phase_z_label)
+        self.main_layout.addStretch(1)
+        self.main_layout.addWidget(self.time_icon)
+        self.main_layout.addWidget(self.time_input)
+        self.main_layout.addWidget(self.delete_button)
+        self.main_layout.addLayout(self.order_button_layout)
+
+        self.setLayout(self.main_layout)
+        self.fill_values(rect_sinu_motion)
+        self._init_connections()
+
+    def fill_values(self, rect_sinu_motion):
+        self.freq_x_input.setText(str(rect_sinu_motion.freq[0]))
+        self.freq_y_input.setText(str(rect_sinu_motion.freq[1]))
+        self.freq_z_input.setText(str(rect_sinu_motion.freq[2]))
+        self.amp_x_input.setText(str(rect_sinu_motion.ampl[0]))
+        self.amp_y_input.setText(str(rect_sinu_motion.ampl[1]))
+        self.amp_z_input.setText(str(rect_sinu_motion.ampl[2]))
+        self.phase_x_input.setText(str(rect_sinu_motion.phase[0]))
+        self.phase_y_input.setText(str(rect_sinu_motion.phase[1]))
+        self.phase_z_input.setText(str(rect_sinu_motion.phase[2]))
+        self.time_input.setText(str(rect_sinu_motion.duration))
+
+    def _init_connections(self):
+        self.freq_x_input.textChanged.connect(self.on_change)
+        self.freq_y_input.textChanged.connect(self.on_change)
+        self.freq_z_input.textChanged.connect(self.on_change)
+        self.phase_x_input.textChanged.connect(self.on_change)
+        self.phase_y_input.textChanged.connect(self.on_change)
+        self.phase_z_input.textChanged.connect(self.on_change)
+        self.amp_x_input.textChanged.connect(self.on_change)
+        self.amp_y_input.textChanged.connect(self.on_change)
+        self.amp_z_input.textChanged.connect(self.on_change)
+        self.time_input.textChanged.connect(self.on_change)
+        self.delete_button.clicked.connect(self.on_delete)
+        self.order_up_button.clicked.connect(self.on_order_up)
+        self.order_down_button.clicked.connect(self.on_order_down)
+
+    def disable_order_up_button(self):
+        self.order_up_button.setEnabled(False)
+
+    def disable_order_down_button(self):
+        self.order_down_button.setEnabled(False)
+
+    def on_order_up(self):
+        self.order_up.emit(self.index)
+
+    def on_order_down(self):
+        self.order_down.emit(self.index)
+
+    def on_change(self):
+        self._sanitize_input()
+        try:
+            self.changed.emit(self.index, self.construct_motion_object())
+        except ValueError:
+            utils.debug("Introduced an invalid value for a float number.")
+
+    def construct_motion_object(self):
+        return RectSinuMotion(
+            phase=[float(self.phase_x_input.text()),
+                   float(self.phase_y_input.text()),
+                   float(self.phase_z_input.text())],
+            freq=[float(self.freq_x_input.text()),
+                  float(self.freq_y_input.text()),
+                  float(self.freq_z_input.text())],
+            ampl=[float(self.amp_x_input.text()),
+                  float(self.amp_y_input.text()),
+                  float(self.amp_z_input.text())],
+            duration=float(self.time_input.text()), parent_movement=self.parent_movement)
+
+    def on_delete(self):
+        self.deleted.emit(self.index, self.construct_motion_object())
+
+    def _sanitize_input(self):
+        if len(self.freq_x_input.text()) is 0:
+            self.freq_x_input.setText("0")
+        if len(self.freq_y_input.text()) is 0:
+            self.freq_y_input.setText("0")
+        if len(self.freq_z_input.text()) is 0:
+            self.freq_z_input.setText("0")
+        if len(self.amp_x_input.text()) is 0:
+            self.amp_x_input.setText("0")
+        if len(self.amp_y_input.text()) is 0:
+            self.amp_y_input.setText("0")
+        if len(self.amp_z_input.text()) is 0:
+            self.amp_z_input.setText("0")
+        if len(self.phase_x_input.text()) is 0:
+            self.phase_x_input.setText("0")
+        if len(self.phase_y_input.text()) is 0:
+            self.phase_y_input.setText("0")
+        if len(self.phase_z_input.text()) is 0:
+            self.phase_z_input.setText("0")
+        if len(self.time_input.text()) is 0:
+            self.time_input.setText("0")
+
+        self.freq_x_input.setText(self.freq_x_input.text().replace(",", "."))
+        self.freq_y_input.setText(self.freq_y_input.text().replace(",", "."))
+        self.freq_z_input.setText(self.freq_z_input.text().replace(",", "."))
+        self.amp_x_input.setText(self.amp_x_input.text().replace(",", "."))
+        self.amp_y_input.setText(self.amp_y_input.text().replace(",", "."))
+        self.amp_z_input.setText(self.amp_z_input.text().replace(",", "."))
+        self.phase_x_input.setText(self.phase_x_input.text().replace(",", "."))
+        self.phase_y_input.setText(self.phase_y_input.text().replace(",", "."))
+        self.phase_z_input.setText(self.phase_z_input.text().replace(",", "."))
+        self.time_input.setText(self.time_input.text().replace(",", "."))
