@@ -55,8 +55,6 @@ __email__ = "anvieiravazquez@gmail.com"
 __status__ = "Development"
 
 # General To-Do to use with PyCharm
-# TODO: 0.2Beta - Object Motion (custom or from file)
-# TODO: 0.2Beta - View details on execution (out file). Let user open it at finish.
 # TODO: 0.2Beta - Wave generator
 # - Type of motion. Applied to an MK
 # TODO: 0.2Beta - Work on installer. Bundle DualSPHysics and preconfigure (?)
@@ -67,6 +65,7 @@ __status__ = "Development"
 # TODO: 0.3Beta - Add postprocessing tools
 # TODO: 0.3Beta - Toolbox (Fillbox, wave, periodicity, imports...) to clean the UI
 # TODO: 0.3Beta - Create Material support
+# TODO: 0.3Beta - Object Motion from file
 # TODO: 0.3Beta - Material creator and assigner
 # TODO: 0.4Beta - Refactor all code
 # TODO: 0.4Beta - Documentation of the code
@@ -717,8 +716,10 @@ run_progbar_bar.setTextVisible(False)
 run_progbar_layout.addWidget(run_progbar_bar)
 
 run_button_layout = QtGui.QHBoxLayout()
+run_button_details = QtGui.QPushButton(__("Toggle Details"))
 run_button_cancel = QtGui.QPushButton(__("Cancel Simulation"))
 run_button_layout.addStretch(1)
+run_button_layout.addWidget(run_button_details)
 run_button_layout.addWidget(run_button_cancel)
 
 run_dialog_layout.addWidget(run_group)
@@ -727,9 +728,21 @@ run_dialog_layout.addLayout(run_button_layout)
 
 run_dialog.setLayout(run_dialog_layout)
 
+# Defines run details
+run_details = QtGui.QDialog(None, QtCore.Qt.CustomizeWindowHint | QtCore.Qt.WindowTitleHint)
+run_details.setModal(False)
+run_details.setWindowTitle(__("Simulation details"))
+run_details.setFixedSize(550, 273)
+run_details_layout = QtGui.QVBoxLayout()
+
+run_details_text = QtGui.QTextEdit()
+run_details_text.setReadOnly(True)
+run_details_layout.addWidget(run_details_text)
+
+run_details.setLayout(run_details_layout)
 
 def on_ex_simulate():
-    """Defines what happens on simulation button press.
+    """ Defines what happens on simulation button press.
     It shows the run window and starts a background process
     with dualsphysics running. Updates the window with useful info."""
     run_progbar_bar.setValue(0)
@@ -748,9 +761,19 @@ def on_ex_simulate():
         if temp_data['current_process'] is not None:
             temp_data['current_process'].kill()
         run_dialog.hide()
+        run_details.hide()
         guiutils.widget_state_config(widget_state_elements, "sim cancel")
 
     run_button_cancel.clicked.connect(on_cancel)
+
+    def on_details():
+        if run_details.isVisible():
+            run_details.hide()
+        else:
+            run_details.show()
+            run_details.move(run_dialog.x() - run_details.width() - 15, run_dialog.y())
+
+    run_button_details.clicked.connect(on_details)
 
     # Launch simulation and watch filesystem to monitor simulation
     filelist = [f for f in os.listdir(data['project_path'] + '/' + data['project_name'] + "_Out/") if
@@ -805,6 +828,10 @@ def on_ex_simulate():
             run_file.close()
         except Exception as e:
             utils.debug(e)
+
+        # Fill details window
+        run_details_text.setText("\n".join(run_file_data))
+        run_details_text.moveCursor(QtGui.QTextCursor.End)
 
         # Set percentage scale based on timemax
         for l in run_file_data:
