@@ -3,7 +3,7 @@ DesignSPHysics is a module intended for use with the simulator [DualSPHysics](ht
 
 Check the [Official Webpage](http://design.sphysics.org)
 
-![DesignSPHysics Screenshot](http://design.sphysics.org/img/screenshot.png)
+![Screenshot](http://design.sphysics.org/img/github-shot.png)
 
 ## Description
 DSPH for FreeCAD enables the user to create cases with solids and fluids and exports it to DualSPHysics compatbile format. In addition, it does the hard work for the user, generating the case automatically, simulating, and exporting, all inside FreeCAD.
