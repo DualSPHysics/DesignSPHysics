@@ -55,9 +55,6 @@ __email__ = "anvieiravazquez@gmail.com"
 __status__ = "Development"
 
 # region General To-Do to use with PyCharm
-# ------------------------------- 0.2 BETA -------------------------------
-# TODO: 0.2Beta - Work on installer. Bundle DualSPHysics and preconfigure (?)
-# TODO: 0.2Beta - Try to pack all in one executable for installing
 # ------------------------------- 0.3 BETA -------------------------------
 # TODO: 0.3Beta - Rework Simulation object order table
 # TODO: 0.3Beta - Add units here and there.
