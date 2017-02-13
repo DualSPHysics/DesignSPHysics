@@ -122,6 +122,10 @@ def check_executables(gencase_path, dsphysics_path, partvtk4_path):
         empty string and False. """
 
     execs_correct = True
+    debug("Paths to check:\n"
+          "{}\n"
+          "{}\n"
+          "{}\n".format(gencase_path, dsphysics_path, partvtk4_path))
     # Tries to identify gencase
     if os.path.isfile(gencase_path):
         process = QtCore.QProcess(FreeCADGui.getMainWindow())
