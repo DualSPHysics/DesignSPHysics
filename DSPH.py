@@ -49,29 +49,29 @@ __author__ = "Andrés Vieira"
 __copyright__ = "Copyright 2016, DualSHPysics Team"
 __credits__ = ["Andrés Vieira", "Alejandro Jacobo Cabrera Crespo", "Orlando García Feal"]
 __license__ = "GPL"
-__version__ = "v0.2"
+__version__ = utils.VERSION
 __maintainer__ = "Andrés Vieira"
 __email__ = "anvieiravazquez@gmail.com"
 __status__ = "Development"
 
 # region General To-Do to use with PyCharm
 # ------------------------------- 0.3 BETA -------------------------------
-# TODO: 0.3Beta - Rework Simulation object order table
-# TODO: 0.3Beta - Add units here and there.
+# TODO: 0.2.5Beta - Wave generator - Type of motion. Applied to an MK
+# TODO: 0.2.5Beta - Rework Simulation object order table
+# TODO: 0.2.5Beta - Add units here and there.
+# TODO: 0.2.5Beta - Change batch file generation to be more autodocumented and clear.
+# TODO: 0.2.5Beta - Warn user about experimental XML import
+# ------------------------------- 0.3 BETA -------------------------------
 # TODO: 0.3Beta - Implement global case info summary.
 # TODO: 0.3Beta - Change [0,1] values for selectors.
-# TODO: 0.3Beta - Change batch file generation to be more autodocumented and clear.
-# TODO: 0.3Beta - Change app attribute in XML to show app name, not case name. (put info in comments)
 # TODO: 0.3Beta - Remove % increment in case limits
 # TODO: 0.3Beta - Let STL be fluid but only face
-# TODO: 0.3Beta - Warn user about experimental XML import
 # TODO: 0.3Beta - Movement brief explanation
 # TODO: 0.3Beta - Periodicity support - Show arrows (bounds) to show periodicity
 # TODO: 0.3Beta - Add postprocessing tools
 # TODO: 0.3Beta - Toolbox (Fillbox, wave, periodicity, imports...) to clean the UI
 # TODO: 0.3Beta - Create Material support
 # TODO: 0.3Beta - Object Motion from file
-# TODO: 0.3Beta - Wave generator - Type of motion. Applied to an MK
 # TODO: 0.3Beta - Material creator and assigner
 # ------------------------------- 0.4 BETA -------------------------------
 # TODO: 0.4Beta - Refactor all code

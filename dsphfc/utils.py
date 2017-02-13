@@ -52,12 +52,13 @@ along with DesignSPHysics.  If not, see <http://www.gnu.org/licenses/>.
 # ------ CONSTANTS DEFINITION ------
 FREECAD_MIN_VERSION = "016"
 APP_NAME = "DesignSPHysics"
-DEBUGGING = False
+DEBUGGING = True
 DIVIDER = 1000
 PICKLE_PROTOCOL = 1  # Binary mode
-
-
+VERSION = "0.2.5"
 # ------ END CONSTANTS DEFINITION ------
+
+
 def is_compatible_version():
     """ Checks if the current FreeCAD version is suitable
         for this macro. """
@@ -449,7 +450,8 @@ def dump_to_xml(data, save_name):
     FreeCADGui.SendMsgToActiveView("Save")
     f = open(save_name + "/" + save_name.split('/')[-1] + "_Def.xml", 'w')
     f.write('<?xml version="1.0" encoding="UTF-8" ?>\n')
-    f.write('<case app="' + data["project_name"] + '" date="' + datetime.now().strftime('%d-%m-%Y %H:%M:%S') + '">\n')
+    f.write('<!-- Case name: {} -->\n'.format(data["project_name"]))
+    f.write('<case app="{} v{}" date="{}">\n'.format(APP_NAME, VERSION, datetime.now().strftime('%d-%m-%Y %H:%M:%S')))
     f.write('\t<casedef>\n')
     f.write('\t\t<constantsdef>\n')
     f.write('\t\t\t<lattice bound="' + str(data['lattice_bound']) + '" fluid="' + str(data['lattice_fluid']) + '" />\n')
