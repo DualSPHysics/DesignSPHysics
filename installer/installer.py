@@ -15,6 +15,7 @@ import threading
 import shutil
 import platform
 import os
+import pickle
 from PySide import QtGui, QtCore
 
 # Copyright (C) 2016 - Andrés Vieira (anvieiravazquez@gmail.com)
@@ -73,8 +74,11 @@ def main():
     credits_label.setStyleSheet("font: 7pt;")
     install_button_layout = QtGui.QHBoxLayout()
     install_button = QtGui.QPushButton('Install')
+    installopts_selector = QtGui.QComboBox()
+    installopts_selector.addItems(["Complete (With DualSPHysics)", "DesignSPHysics only"])
     install_button_layout.addStretch(1)
     install_button_layout.addWidget(install_button)
+    install_button_layout.addWidget(installopts_selector)
     install_button_layout.addStretch(1)
 
     install_layout.addWidget(description_label)
@@ -98,8 +102,12 @@ def main():
                     # Set the directory depending on the system.
                     if 'windows' in system.lower():
                         dest_folder = os.getenv('APPDATA') + '/FreeCAD/Macro'
+                        fc_folder = os.getenv('APPDATA') + '/FreeCAD'
+                        extension = "_win64.exe"
                     elif 'linux' in system.lower():
                         dest_folder = os.path.expanduser('~') + '/.FreeCAD/Macro'
+                        fc_folder = os.path.expanduser('~') + '/.FreeCAD'
+                        extension = "_linux64"
                     else:
                         # Operating system not supported
                         install_button.setText('ERROR :(')
@@ -147,6 +155,20 @@ def main():
                     shutil.copytree("./resource/DSPH_Images", dest_folder + '/DSPH_Images')
                     shutil.copytree("./resource/dsphfc", dest_folder + '/dsphfc')
                     shutil.copytree("./resource/test-examples", dest_folder + '/test-examples')
+
+                    if installopts_selector.currentIndex() is 0:
+                        try:
+                            shutil.rmtree(dest_folder + '/dualsphysics')
+                        except OSError:
+                            # Directory does not exists.  Ignoring
+                            pass
+                        shutil.copytree("./resource/dualsphysics", dest_folder + '/dualsphysics')
+                        data = dict()
+                        data['gencase_path'] = dest_folder + "/dualsphysics/EXECS/GenCase4" + extension
+                        data['dsphysics_path'] = dest_folder + "/dualsphysics/EXECS/DualSPHysics4" + extension
+                        data['partvtk4_path'] = dest_folder + "/dualsphysics/EXECS/PartVTK4" + extension
+                        with open(fc_folder + '/dsph_data.dsphdata', 'wb') as picklefile:
+                            pickle.dump(data, picklefile, 1)
 
                     # Installation completed
                     install_button.setText('Installed!')

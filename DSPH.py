@@ -49,27 +49,41 @@ __author__ = "Andrés Vieira"
 __copyright__ = "Copyright 2016, DualSHPysics Team"
 __credits__ = ["Andrés Vieira", "Alejandro Jacobo Cabrera Crespo", "Orlando García Feal"]
 __license__ = "GPL"
-__version__ = "v0.1 BETA-10J17"
+__version__ = "v0.2"
 __maintainer__ = "Andrés Vieira"
 __email__ = "anvieiravazquez@gmail.com"
 __status__ = "Development"
 
-# General To-Do to use with PyCharm
-# TODO: 0.2Beta - Wave generator
-# - Type of motion. Applied to an MK
+# region General To-Do to use with PyCharm
+# ------------------------------- 0.2 BETA -------------------------------
 # TODO: 0.2Beta - Work on installer. Bundle DualSPHysics and preconfigure (?)
 # TODO: 0.2Beta - Try to pack all in one executable for installing
-
-# TODO: 0.3Beta - Periodicity support
-# - Show arrows (bounds) to show periodicity
+# ------------------------------- 0.3 BETA -------------------------------
+# TODO: 0.3Beta - Rework Simulation object order table
+# TODO: 0.3Beta - Add units here and there.
+# TODO: 0.3Beta - Implement global case info summary.
+# TODO: 0.3Beta - Change [0,1] values for selectors.
+# TODO: 0.3Beta - Change batch file generation to be more autodocumented and clear.
+# TODO: 0.3Beta - Change app attribute in XML to show app name, not case name. (put info in comments)
+# TODO: 0.3Beta - Remove % increment in case limits
+# TODO: 0.3Beta - Let STL be fluid but only face
+# TODO: 0.3Beta - Warn user about experimental XML import
+# TODO: 0.3Beta - Movement brief explanation
+# TODO: 0.3Beta - Periodicity support - Show arrows (bounds) to show periodicity
 # TODO: 0.3Beta - Add postprocessing tools
 # TODO: 0.3Beta - Toolbox (Fillbox, wave, periodicity, imports...) to clean the UI
 # TODO: 0.3Beta - Create Material support
 # TODO: 0.3Beta - Object Motion from file
+# TODO: 0.3Beta - Wave generator - Type of motion. Applied to an MK
 # TODO: 0.3Beta - Material creator and assigner
+# ------------------------------- 0.4 BETA -------------------------------
 # TODO: 0.4Beta - Refactor all code
-# TODO: 0.4Beta - Documentation of the code
-# End general To-Do
+# TODO: 0.4Beta - Rework constants window (default parameters, better scaffolding, help...)
+# TODO: 0.4Beta - Study uses with latest DSPH and spaces in folder names etc
+# TODO: 0.4Beta - Change rotation procedure. Try not to use matrixreset, delete null rotations... etc
+# TODO: 0.4Beta - Redesign
+# TODO: 0.4Beta - Revisit and complete documentation of the code
+# endregion general To-Do
 
 # Print license at macro start
 try:
