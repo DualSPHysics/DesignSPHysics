@@ -75,8 +75,12 @@ __status__ = "Development"
 # TODO: 0.3Beta - Material creator and assigner
 # ------------------------------- 0.4 BETA -------------------------------
 # TODO: 0.4Beta - Refactor all code
+# TODO: 0.4Beta - 'Pythonize' code and delete redundant code
+# TODO: 0.4Beta - Revisit all strings to translate and make some translations.
+# TODO: 0.4Beta - Make some kind of a translation platform.
 # TODO: 0.4Beta - Rework constants window (default parameters, better scaffolding, help...)
 # TODO: 0.4Beta - Study uses with latest DSPH and spaces in folder names etc
+# TODO: 0.4Beta - Test and fix all possible things.
 # TODO: 0.4Beta - Change rotation procedure. Try not to use matrixreset, delete null rotations... etc
 # TODO: 0.4Beta - Redesign
 # TODO: 0.4Beta - Revisit and complete documentation of the code
@@ -296,6 +300,7 @@ def on_save_case(save_as=None):
         if (data['gencase_path'] == "") or (data['dsphysics_path'] == "") or (data['partvtk4_path'] == ""):
             utils.warning(__("Can't create executable bat file! One or more of the paths in plugin setup is not set"))
         else:
+            # Windows Batch file
             bat_file = open(save_name + "/run.bat", 'w')
             utils.log(__("Creating ") + save_name + "/run.bat")
             bat_file.write("@echo off\n")
@@ -319,6 +324,7 @@ def on_save_case(save_as=None):
             bat_file.write('pause\n')
             bat_file.close()
 
+            # GNU/Linux Bash script
             bat_file = open(save_name + "/run.sh", 'w')
             utils.log("Creating " + save_name + "/run.sh")
             bat_file.write('echo "------- Autoexported by ' + utils.APP_NAME + ' -------"\n')
@@ -751,6 +757,7 @@ run_details_text.setReadOnly(True)
 run_details_layout.addWidget(run_details_text)
 
 run_details.setLayout(run_details_layout)
+
 
 def on_ex_simulate():
     """ Defines what happens on simulation button press.
@@ -1890,10 +1897,21 @@ def motion_change():
     # Movements table actions
     def on_check_movement(index, checked):
         """ Add or delete a movement from the temporal list of selected movements. """
+        target_movement = data["global_movements"][index]
         if checked:
-            movements_selected.append(data["global_movements"][index])
+            # Wave generators are exclusive
+            if isinstance(target_movement, WaveMovement):
+                del movements_selected[:]
+                movements_selected.append("function modified!")
+                pass
+            elif isinstance(target_movement, Movement):
+                for index, ms in enumerate(movements_selected):
+                    movements_selected.pop(index) if isinstance(ms, WaveMovement) else None
+
+            movements_selected.append(target_movement)
         else:
-            movements_selected.remove(data["global_movements"][index])
+            movements_selected.remove(target_movement)
+        refresh_movements_table()
 
     def on_loop_movement(index, checked):
         """ Make a movement loop itself """
@@ -1913,6 +1931,17 @@ def motion_change():
     def on_new_movement():
         """ Creates a movement on the project. """
         data["global_movements"].append(Movement())
+        refresh_movements_table()
+
+    def on_new_wave_generator(action):
+        """ Creates a movement on the project. """
+        if __("Regular wave generator") in action.text():
+            utils.debug("Generating regular wave")
+            data["global_movements"].append(WaveMovement(wave_gen=RegularWaveGen()))
+        if __("Irregular wave generator") in action.text():
+            utils.debug("Generating irregular wave")
+            data["global_movements"].append(WaveMovement(wave_gen=IrregularWaveGen()))
+
         refresh_movements_table()
 
     def on_movement_name_change(row, column):
@@ -1949,43 +1978,56 @@ def motion_change():
             timeline_list_table.setRowCount(0)
             return
         timeline_list_table.clearContents()
-        timeline_list_table.setRowCount(len(target_movement.motion_list))
-        current_row = 0
-        for motion in target_movement.motion_list:
-            if str(motion.__class__.__name__) is "RectMotion":
-                target_to_put = dsphwidgets.RectilinearMotionTimeline(current_row, motion)
-            elif str(motion.__class__.__name__) is "WaitMotion":
-                target_to_put = dsphwidgets.WaitMotionTimeline(current_row, motion)
-            elif str(motion.__class__.__name__) is "AccRectMotion":
-                target_to_put = dsphwidgets.AccRectilinearMotionTimeline(current_row, motion)
-            elif str(motion.__class__.__name__) is "RotMotion":
-                target_to_put = dsphwidgets.RotationalMotionTimeline(current_row, motion)
-            elif str(motion.__class__.__name__) is "AccRotMotion":
-                target_to_put = dsphwidgets.AccRotationalMotionTimeline(current_row, motion)
-            elif str(motion.__class__.__name__) is "AccCirMotion":
-                target_to_put = dsphwidgets.AccCircularMotionTimeline(current_row, motion)
-            elif str(motion.__class__.__name__) is "RotSinuMotion":
-                target_to_put = dsphwidgets.RotSinuMotionTimeline(current_row, motion)
-            elif str(motion.__class__.__name__) is "CirSinuMotion":
-                target_to_put = dsphwidgets.CirSinuMotionTimeline(current_row, motion)
-            elif str(motion.__class__.__name__) is "RectSinuMotion":
-                target_to_put = dsphwidgets.RectSinuMotionTimeline(current_row, motion)
-            else:
-                raise NotImplementedError("The type of movement: {} is not implemented.".format(
-                    str(motion.__class__.__name__)))
 
+        if isinstance(target_movement, Movement):
+            timeline_list_table.setRowCount(len(target_movement.motion_list))
+            actions_groupbox_table.setEnabled(True)
+
+            current_row = 0
+            for motion in target_movement.motion_list:
+                if isinstance(motion, RectMotion):
+                    target_to_put = dsphwidgets.RectilinearMotionTimeline(current_row, motion)
+                elif isinstance(motion, WaitMotion):
+                    target_to_put = dsphwidgets.WaitMotionTimeline(current_row, motion)
+                elif isinstance(motion, AccRectMotion):
+                    target_to_put = dsphwidgets.AccRectilinearMotionTimeline(current_row, motion)
+                elif isinstance(motion, RotMotion):
+                    target_to_put = dsphwidgets.RotationalMotionTimeline(current_row, motion)
+                elif isinstance(motion, AccRotMotion):
+                    target_to_put = dsphwidgets.AccRotationalMotionTimeline(current_row, motion)
+                elif isinstance(motion, AccCirMotion):
+                    target_to_put = dsphwidgets.AccCircularMotionTimeline(current_row, motion)
+                elif isinstance(motion, RotSinuMotion):
+                    target_to_put = dsphwidgets.RotSinuMotionTimeline(current_row, motion)
+                elif isinstance(motion, CirSinuMotion):
+                    target_to_put = dsphwidgets.CirSinuMotionTimeline(current_row, motion)
+                elif isinstance(motion, RectSinuMotion):
+                    target_to_put = dsphwidgets.RectSinuMotionTimeline(current_row, motion)
+                else:
+                    raise NotImplementedError("The type of movement: {} is not implemented.".format(
+                        str(motion.__class__.__name__)))
+
+                target_to_put.changed.connect(on_timeline_item_change)
+                target_to_put.deleted.connect(on_timeline_item_delete)
+                target_to_put.order_up.connect(on_timeline_item_order_up)
+                target_to_put.order_down.connect(on_timeline_item_order_down)
+                timeline_list_table.setCellWidget(current_row, 0, target_to_put)
+
+                if current_row is 0:
+                    target_to_put.disable_order_up_button()
+                elif current_row is len(target_movement.motion_list) - 1:
+                    target_to_put.disable_order_down_button()
+
+                current_row += 1
+        elif isinstance(target_movement, WaveMovement):
+            timeline_list_table.setRowCount(1)
+            actions_groupbox_table.setEnabled(False)
+            if isinstance(target_movement.wave_gen, RegularWaveGen):
+                target_to_put = dsphwidgets.RegularWaveMotionTimeline(target_movement.wave_gen)
+            elif isinstance(target_movement.wave_gen, IrregularWaveGen):
+                target_to_put = dsphwidgets.IrregularWaveMotionTimeline(target_movement.wave_gen)
             target_to_put.changed.connect(on_timeline_item_change)
-            target_to_put.deleted.connect(on_timeline_item_delete)
-            target_to_put.order_up.connect(on_timeline_item_order_up)
-            target_to_put.order_down.connect(on_timeline_item_order_down)
-            timeline_list_table.setCellWidget(current_row, 0, target_to_put)
-
-            if current_row is 0:
-                target_to_put.disable_order_up_button()
-            elif current_row is len(target_movement.motion_list) - 1:
-                target_to_put.disable_order_down_button()
-
-            current_row += 1
+            timeline_list_table.setCellWidget(0, 0, target_to_put)
 
     # Populate case defined movements
     def refresh_movements_table():
@@ -1999,15 +2041,26 @@ def motion_change():
                 has_loop = movement.loop
             except AttributeError:
                 has_loop = False
-            movement_actions = dsphwidgets.MovementActions(current_row, movement in movements_selected, has_loop)
+            if isinstance(movement, Movement):
+                movement_actions = dsphwidgets.MovementActions(current_row, movement in movements_selected, has_loop)
+                movement_actions.loop.connect(on_loop_movement)
+            elif isinstance(movement, WaveMovement):
+                movement_actions = dsphwidgets.WaveMovementActions(current_row, movement in movements_selected)
+
             movement_actions.delete.connect(on_delete_movement)
             movement_actions.use.connect(on_check_movement)
-            movement_actions.loop.connect(on_loop_movement)
             movement_list_table.setCellWidget(current_row, 1, movement_actions)
 
             current_row += 1
-        create_new_movement_button = QtGui.QPushButton(__("Create New"))
+        create_new_movement_button = QtGui.QToolButton()
+        create_new_movement_button.setPopupMode(QtGui.QToolButton.MenuButtonPopup)
+        create_new_movement_button.setText(__("Create New"))
+        create_new_movement_menu = QtGui.QMenu()
+        create_new_movement_menu.addAction(guiutils.get_icon("regular_wave.png"), __("Regular wave generator"))
+        create_new_movement_menu.addAction(guiutils.get_icon("irregular_wave.png"), __("Irregular wave generator"))
+        create_new_movement_button.setMenu(create_new_movement_menu)
         create_new_movement_button.clicked.connect(on_new_movement)
+        create_new_movement_menu.triggered.connect(on_new_wave_generator)
         movement_list_table.setCellWidget(current_row, 1, create_new_movement_button)
         movement_list_table.setCellWidget(current_row, 0, QtGui.QWidget())
 

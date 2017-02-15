@@ -7,6 +7,8 @@ in a DSPH related case.
 
 """
 
+import random
+from propenums import *
 
 # Copyright (C) 2016 - Andrés Vieira (anvieiravazquez@gmail.com)
 # EPHYSLAB Environmental Physics Laboratory, Universidade de Vigo
@@ -116,6 +118,105 @@ class Movement(object):
         for motion in self.motion_list:
             to_ret += str(motion) + "\n"
         return to_ret
+
+
+class WaveMovement(object):
+    """ DualSPHysics compatible wave movement.
+        It includes a an regular or irregular wave generator.
+
+        Attributes:
+            name: Name for this motion given by the user
+            wave_gen: Wave generator assigned
+        """
+
+    def __init__(self, name="New WaveGen", wave_gen=None):
+        self.name = name
+        if not wave_gen:
+            wave_gen = None
+        self.wave_gen = wave_gen
+
+    def set_wavegen(self, wave_gen):
+        if isinstance(wave_gen, WaveGen):
+            wave_gen.parent_movement = self
+            self.wave_gen = wave_gen
+        else:
+            raise TypeError("You are trying to set a non-wave object.")
+
+    def __str__(self):
+        to_ret = "WaveMovement <{}> with an {}".format(self.name, self.wave_gen.__class__.__name__) + "\n"
+        return to_ret
+
+
+class WaveGen(object):
+    """ Base Wave Generator. It holds properties common to Regular and Irregular waves.
+
+    Attributes:
+        parent_movement: The movement in which this property is contained
+        mk_bound: Particle MK (for bounds) to which this property will be applied
+        wave_order: Order wave generation (def 1, [1,2])
+        start: Start time (def 0)
+        duration: Movement duration, 0 means until simulation end
+        depth: Fluid depth (def 0)
+        fixed_depth: Fluid depth without paddle (def 0)
+        piston_dir: Movement direction (def [1,0,0])
+        wave_height: Wave height (def 0.5)
+        wave_period: Wave period (def 1)
+    """
+
+    def __init__(self, parent_movement=None, mk_bound=None, wave_order=1, start=0, duration=0, depth=0, fixed_depth=0,
+                 piston_dir=None, wave_height=0.5, wave_period=1):
+        super(WaveGen, self).__init__()
+        self.parent_movement = parent_movement
+        self.mk_bound = mk_bound
+        self.wave_order = wave_order
+        self.start = start
+        self.duration = duration
+        self.depth = depth
+        self.fixed_depth = fixed_depth
+        self.piston_dir = [1, 0, 0] if piston_dir is None else piston_dir
+        self.wave_height = wave_height
+        self.wave_period = wave_period
+
+
+class RegularWaveGen(WaveGen):
+    """ Regular Wave Generator.
+
+    Attributes:
+        phase: Initial wave phase in function of PI
+        ramp: Periods of ramp
+    """
+
+    def __init__(self, phase=0, ramp=0):
+        super(RegularWaveGen, self).__init__()
+        self.phase = phase
+        self.ramp = ramp
+
+
+class IrregularWaveGen(WaveGen):
+    """ Regular Wave Generator.
+
+    Attributes:
+        spectrum: Spectrum type selected for the generation
+        discretization: Type of discretization for the spectrum
+        peak_coef: Peak enhancement coefficient
+        waves: Number of waves to create irregular waves
+        randomseed: Random seed to initialize RNG
+        serieini: Initial time in irregular wave serie
+        ramptime: Time of ramp
+    """
+
+    def __init__(self, spectrum=IrregularSpectrum.JONSWAP, discretization=IrregularSpectrumDiscretization.STRETCHED,
+                 peak_coef=0.1, waves=50, randomseed=random.randint(0, 9999), serieini=0, ramptime=0,
+                 serieini_autofit=True):
+        super(IrregularWaveGen, self).__init__()
+        self.spectrum = spectrum
+        self.discretization = discretization
+        self.peak_coef = peak_coef
+        self.waves = waves
+        self.randomseed = randomseed
+        self.serieini = serieini
+        self.serieini_autofit = serieini_autofit
+        self.ramptime = ramptime
 
 
 class BaseMotion(object):

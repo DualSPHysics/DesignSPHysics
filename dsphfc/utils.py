@@ -645,215 +645,219 @@ def dump_to_xml(data, save_name):
                 f.write('\t\t\t\t<!-- Movement Name: {} -->\n'.format(movement.name))
                 f.write('\t\t\t\t<begin mov="{}" start="0"/>\n'.format(mov_counter))
                 first_series_motion = mot_counter
-                for motion_index, motion in enumerate(movement.motion_list):
-                    if motion.__class__.__name__ is "RectMotion":
-                        if motion_index is len(movement.motion_list) - 1:
-                            try:
-                                is_looping = movement.loop
-                            except AttributeError:
-                                is_looping = False
-                            if is_looping:
+                if isinstance(movement, Movement):
+                    for motion_index, motion in enumerate(movement.motion_list):
+                        if isinstance(motion, RectMotion):
+                            if motion_index is len(movement.motion_list) - 1:
+                                try:
+                                    is_looping = movement.loop
+                                except AttributeError:
+                                    is_looping = False
+                                if is_looping:
+                                    f.write('\t\t\t\t<mvrect id="{}" duration="{}" next="{}">\n'
+                                            .format(mot_counter, motion.duration, first_series_motion))
+                                else:
+                                    f.write('\t\t\t\t<mvrect id="{}" duration="{}">\n'
+                                            .format(mot_counter, motion.duration))
+                            else:
                                 f.write('\t\t\t\t<mvrect id="{}" duration="{}" next="{}">\n'
-                                        .format(mot_counter, motion.duration, first_series_motion))
-                            else:
-                                f.write('\t\t\t\t<mvrect id="{}" duration="{}">\n'
-                                        .format(mot_counter, motion.duration))
-                        else:
-                            f.write('\t\t\t\t<mvrect id="{}" duration="{}" next="{}">\n'
-                                    .format(mot_counter, motion.duration, mot_counter + 1))
+                                        .format(mot_counter, motion.duration, mot_counter + 1))
 
-                        f.write('\t\t\t\t\t<vel x="{}" y="{}" z="{}"/>\n'
-                                .format(motion.velocity[0], motion.velocity[1], motion.velocity[2]))
-                        f.write('\t\t\t\t</mvrect>\n')
-                    elif motion.__class__.__name__ is "WaitMotion":
-                        if motion_index is len(movement.motion_list) - 1:
-                            if movement.loop:
+                            f.write('\t\t\t\t\t<vel x="{}" y="{}" z="{}"/>\n'
+                                    .format(motion.velocity[0], motion.velocity[1], motion.velocity[2]))
+                            f.write('\t\t\t\t</mvrect>\n')
+                        elif isinstance(motion, WaitMotion):
+                            if motion_index is len(movement.motion_list) - 1:
+                                if movement.loop:
+                                    f.write('\t\t\t\t<wait id="{}" duration="{}" next="{}"/>\n'
+                                            .format(mot_counter, motion.duration, first_series_motion))
+                                else:
+                                    f.write('\t\t\t\t<wait id="{}" duration="{}"/>\n'
+                                            .format(mot_counter, motion.duration))
+                            else:
                                 f.write('\t\t\t\t<wait id="{}" duration="{}" next="{}"/>\n'
-                                        .format(mot_counter, motion.duration, first_series_motion))
+                                        .format(mot_counter, motion.duration, mot_counter + 1))
+                        elif isinstance(motion, AccRectMotion):
+                            if motion_index is len(movement.motion_list) - 1:
+                                try:
+                                    is_looping = movement.loop
+                                except AttributeError:
+                                    is_looping = False
+                                if is_looping:
+                                    f.write('\t\t\t\t<mvrectace id="{}" duration="{}" next="{}">\n'
+                                            .format(mot_counter, motion.duration, first_series_motion))
+                                else:
+                                    f.write('\t\t\t\t<mvrectace id="{}" duration="{}">\n'
+                                            .format(mot_counter, motion.duration))
                             else:
-                                f.write('\t\t\t\t<wait id="{}" duration="{}"/>\n'
-                                        .format(mot_counter, motion.duration))
-                        else:
-                            f.write('\t\t\t\t<wait id="{}" duration="{}" next="{}"/>\n'
-                                    .format(mot_counter, motion.duration, mot_counter + 1))
-                    elif motion.__class__.__name__ is "AccRectMotion":
-                        if motion_index is len(movement.motion_list) - 1:
-                            try:
-                                is_looping = movement.loop
-                            except AttributeError:
-                                is_looping = False
-                            if is_looping:
                                 f.write('\t\t\t\t<mvrectace id="{}" duration="{}" next="{}">\n'
-                                        .format(mot_counter, motion.duration, first_series_motion))
-                            else:
-                                f.write('\t\t\t\t<mvrectace id="{}" duration="{}">\n'
-                                        .format(mot_counter, motion.duration))
-                        else:
-                            f.write('\t\t\t\t<mvrectace id="{}" duration="{}" next="{}">\n'
-                                    .format(mot_counter, motion.duration, mot_counter + 1))
+                                        .format(mot_counter, motion.duration, mot_counter + 1))
 
-                        f.write('\t\t\t\t\t<vel x="{}" y="{}" z="{}"/>\n'
-                                .format(motion.velocity[0], motion.velocity[1], motion.velocity[2]))
-                        f.write('\t\t\t\t\t<ace x="{}" y="{}" z="{}"/>\n'
-                                .format(motion.acceleration[0], motion.acceleration[1], motion.acceleration[2]))
-                        f.write('\t\t\t\t</mvrectace>\n')
-                    elif motion.__class__.__name__ is "RotMotion":
-                        if motion_index is len(movement.motion_list) - 1:
-                            try:
-                                is_looping = movement.loop
-                            except AttributeError:
-                                is_looping = False
-                            if is_looping:
+                            f.write('\t\t\t\t\t<vel x="{}" y="{}" z="{}"/>\n'
+                                    .format(motion.velocity[0], motion.velocity[1], motion.velocity[2]))
+                            f.write('\t\t\t\t\t<ace x="{}" y="{}" z="{}"/>\n'
+                                    .format(motion.acceleration[0], motion.acceleration[1], motion.acceleration[2]))
+                            f.write('\t\t\t\t</mvrectace>\n')
+                        elif isinstance(motion, RotMotion):
+                            if motion_index is len(movement.motion_list) - 1:
+                                try:
+                                    is_looping = movement.loop
+                                except AttributeError:
+                                    is_looping = False
+                                if is_looping:
+                                    f.write('\t\t\t\t<mvrot id="{}" duration="{}" next="{}">\n'
+                                            .format(mot_counter, motion.duration, first_series_motion))
+                                else:
+                                    f.write('\t\t\t\t<mvrot id="{}" duration="{}">\n'
+                                            .format(mot_counter, motion.duration))
+                            else:
                                 f.write('\t\t\t\t<mvrot id="{}" duration="{}" next="{}">\n'
-                                        .format(mot_counter, motion.duration, first_series_motion))
-                            else:
-                                f.write('\t\t\t\t<mvrot id="{}" duration="{}">\n'
-                                        .format(mot_counter, motion.duration))
-                        else:
-                            f.write('\t\t\t\t<mvrot id="{}" duration="{}" next="{}">\n'
-                                    .format(mot_counter, motion.duration, mot_counter + 1))
+                                        .format(mot_counter, motion.duration, mot_counter + 1))
 
-                        f.write('\t\t\t\t\t<vel ang="{}"/>\n'
-                                .format(motion.ang_vel))
-                        f.write('\t\t\t\t\t<axisp1 x="{}" y="{}" z="{}"/>\n'
-                                .format(motion.axis1[0], motion.axis1[1], motion.axis1[2]))
-                        f.write('\t\t\t\t\t<axisp2 x="{}" y="{}" z="{}"/>\n'
-                                .format(motion.axis2[0], motion.axis2[1], motion.axis2[2]))
-                        f.write('\t\t\t\t</mvrot>\n')
-                    elif motion.__class__.__name__ is "AccRotMotion":
-                        if motion_index is len(movement.motion_list) - 1:
-                            try:
-                                is_looping = movement.loop
-                            except AttributeError:
-                                is_looping = False
-                            if is_looping:
+                            f.write('\t\t\t\t\t<vel ang="{}"/>\n'
+                                    .format(motion.ang_vel))
+                            f.write('\t\t\t\t\t<axisp1 x="{}" y="{}" z="{}"/>\n'
+                                    .format(motion.axis1[0], motion.axis1[1], motion.axis1[2]))
+                            f.write('\t\t\t\t\t<axisp2 x="{}" y="{}" z="{}"/>\n'
+                                    .format(motion.axis2[0], motion.axis2[1], motion.axis2[2]))
+                            f.write('\t\t\t\t</mvrot>\n')
+                        elif isinstance(motion, AccRotMotion):
+                            if motion_index is len(movement.motion_list) - 1:
+                                try:
+                                    is_looping = movement.loop
+                                except AttributeError:
+                                    is_looping = False
+                                if is_looping:
+                                    f.write('\t\t\t\t<mvrotace id="{}" duration="{}" next="{}">\n'
+                                            .format(mot_counter, motion.duration, first_series_motion))
+                                else:
+                                    f.write('\t\t\t\t<mvrotace id="{}" duration="{}">\n'
+                                            .format(mot_counter, motion.duration))
+                            else:
                                 f.write('\t\t\t\t<mvrotace id="{}" duration="{}" next="{}">\n'
-                                        .format(mot_counter, motion.duration, first_series_motion))
-                            else:
-                                f.write('\t\t\t\t<mvrotace id="{}" duration="{}">\n'
-                                        .format(mot_counter, motion.duration))
-                        else:
-                            f.write('\t\t\t\t<mvrotace id="{}" duration="{}" next="{}">\n'
-                                    .format(mot_counter, motion.duration, mot_counter + 1))
+                                        .format(mot_counter, motion.duration, mot_counter + 1))
 
-                        f.write('\t\t\t\t\t<ace ang="{}"/>\n'
-                                .format(motion.ang_acc))
-                        f.write('\t\t\t\t\t<velini ang="{}"/>\n'
-                                .format(motion.ang_vel))
-                        f.write('\t\t\t\t\t<axisp1 x="{}" y="{}" z="{}"/>\n'
-                                .format(motion.axis1[0], motion.axis1[1], motion.axis1[2]))
-                        f.write('\t\t\t\t\t<axisp2 x="{}" y="{}" z="{}"/>\n'
-                                .format(motion.axis2[0], motion.axis2[1], motion.axis2[2]))
-                        f.write('\t\t\t\t</mvrotace>\n')
-                    elif motion.__class__.__name__ is "AccCirMotion":
-                        if motion_index is len(movement.motion_list) - 1:
-                            try:
-                                is_looping = movement.loop
-                            except AttributeError:
-                                is_looping = False
-                            if is_looping:
+                            f.write('\t\t\t\t\t<ace ang="{}"/>\n'
+                                    .format(motion.ang_acc))
+                            f.write('\t\t\t\t\t<velini ang="{}"/>\n'
+                                    .format(motion.ang_vel))
+                            f.write('\t\t\t\t\t<axisp1 x="{}" y="{}" z="{}"/>\n'
+                                    .format(motion.axis1[0], motion.axis1[1], motion.axis1[2]))
+                            f.write('\t\t\t\t\t<axisp2 x="{}" y="{}" z="{}"/>\n'
+                                    .format(motion.axis2[0], motion.axis2[1], motion.axis2[2]))
+                            f.write('\t\t\t\t</mvrotace>\n')
+                        elif isinstance(motion, AccCirMotion):
+                            if motion_index is len(movement.motion_list) - 1:
+                                try:
+                                    is_looping = movement.loop
+                                except AttributeError:
+                                    is_looping = False
+                                if is_looping:
+                                    f.write('\t\t\t\t<mvcirace id="{}" duration="{}" next="{}">\n'
+                                            .format(mot_counter, motion.duration, first_series_motion))
+                                else:
+                                    f.write('\t\t\t\t<mvcirace id="{}" duration="{}">\n'
+                                            .format(mot_counter, motion.duration))
+                            else:
                                 f.write('\t\t\t\t<mvcirace id="{}" duration="{}" next="{}">\n'
-                                        .format(mot_counter, motion.duration, first_series_motion))
-                            else:
-                                f.write('\t\t\t\t<mvcirace id="{}" duration="{}">\n'
-                                        .format(mot_counter, motion.duration))
-                        else:
-                            f.write('\t\t\t\t<mvcirace id="{}" duration="{}" next="{}">\n'
-                                    .format(mot_counter, motion.duration, mot_counter + 1))
+                                        .format(mot_counter, motion.duration, mot_counter + 1))
 
-                        f.write('\t\t\t\t\t<ace ang="{}"/>\n'
-                                .format(motion.ang_acc))
-                        f.write('\t\t\t\t\t<velini ang="{}"/>\n'
-                                .format(motion.ang_vel))
-                        f.write('\t\t\t\t\t<ref x="{}" y="{}" z="{}"/>\n'
-                                .format(motion.reference[0], motion.reference[1], motion.reference[2]))
-                        f.write('\t\t\t\t\t<axisp1 x="{}" y="{}" z="{}"/>\n'
-                                .format(motion.axis1[0], motion.axis1[1], motion.axis1[2]))
-                        f.write('\t\t\t\t\t<axisp2 x="{}" y="{}" z="{}"/>\n'
-                                .format(motion.axis2[0], motion.axis2[1], motion.axis2[2]))
-                        f.write('\t\t\t\t</mvcirace>\n')
-                    elif motion.__class__.__name__ is "RotSinuMotion":
-                        if motion_index is len(movement.motion_list) - 1:
-                            try:
-                                is_looping = movement.loop
-                            except AttributeError:
-                                is_looping = False
-                            if is_looping:
+                            f.write('\t\t\t\t\t<ace ang="{}"/>\n'
+                                    .format(motion.ang_acc))
+                            f.write('\t\t\t\t\t<velini ang="{}"/>\n'
+                                    .format(motion.ang_vel))
+                            f.write('\t\t\t\t\t<ref x="{}" y="{}" z="{}"/>\n'
+                                    .format(motion.reference[0], motion.reference[1], motion.reference[2]))
+                            f.write('\t\t\t\t\t<axisp1 x="{}" y="{}" z="{}"/>\n'
+                                    .format(motion.axis1[0], motion.axis1[1], motion.axis1[2]))
+                            f.write('\t\t\t\t\t<axisp2 x="{}" y="{}" z="{}"/>\n'
+                                    .format(motion.axis2[0], motion.axis2[1], motion.axis2[2]))
+                            f.write('\t\t\t\t</mvcirace>\n')
+                        elif isinstance(motion, RotSinuMotion):
+                            if motion_index is len(movement.motion_list) - 1:
+                                try:
+                                    is_looping = movement.loop
+                                except AttributeError:
+                                    is_looping = False
+                                if is_looping:
+                                    f.write('\t\t\t\t<mvrotsinu id="{}" duration="{}" next="{}">\n'
+                                            .format(mot_counter, motion.duration, first_series_motion))
+                                else:
+                                    f.write('\t\t\t\t<mvrotsinu id="{}" duration="{}">\n'
+                                            .format(mot_counter, motion.duration))
+                            else:
                                 f.write('\t\t\t\t<mvrotsinu id="{}" duration="{}" next="{}">\n'
-                                        .format(mot_counter, motion.duration, first_series_motion))
-                            else:
-                                f.write('\t\t\t\t<mvrotsinu id="{}" duration="{}">\n'
-                                        .format(mot_counter, motion.duration))
-                        else:
-                            f.write('\t\t\t\t<mvrotsinu id="{}" duration="{}" next="{}">\n'
-                                    .format(mot_counter, motion.duration, mot_counter + 1))
+                                        .format(mot_counter, motion.duration, mot_counter + 1))
 
-                        f.write('\t\t\t\t\t<freq v="{}"/>\n'
-                                .format(motion.freq))
-                        f.write('\t\t\t\t\t<ampl v="{}"/>\n'
-                                .format(motion.ampl))
-                        f.write('\t\t\t\t\t<phase v="{}"/>\n'
-                                .format(motion.phase))
-                        f.write('\t\t\t\t\t<axisp1 x="{}" y="{}" z="{}"/>\n'
-                                .format(motion.axis1[0], motion.axis1[1], motion.axis1[2]))
-                        f.write('\t\t\t\t\t<axisp2 x="{}" y="{}" z="{}"/>\n'
-                                .format(motion.axis2[0], motion.axis2[1], motion.axis2[2]))
-                        f.write('\t\t\t\t</mvrotsinu>\n')
-                    elif motion.__class__.__name__ is "CirSinuMotion":
-                        if motion_index is len(movement.motion_list) - 1:
-                            try:
-                                is_looping = movement.loop
-                            except AttributeError:
-                                is_looping = False
-                            if is_looping:
+                            f.write('\t\t\t\t\t<freq v="{}"/>\n'
+                                    .format(motion.freq))
+                            f.write('\t\t\t\t\t<ampl v="{}"/>\n'
+                                    .format(motion.ampl))
+                            f.write('\t\t\t\t\t<phase v="{}"/>\n'
+                                    .format(motion.phase))
+                            f.write('\t\t\t\t\t<axisp1 x="{}" y="{}" z="{}"/>\n'
+                                    .format(motion.axis1[0], motion.axis1[1], motion.axis1[2]))
+                            f.write('\t\t\t\t\t<axisp2 x="{}" y="{}" z="{}"/>\n'
+                                    .format(motion.axis2[0], motion.axis2[1], motion.axis2[2]))
+                            f.write('\t\t\t\t</mvrotsinu>\n')
+                        elif isinstance(motion, CirSinuMotion):
+                            if motion_index is len(movement.motion_list) - 1:
+                                try:
+                                    is_looping = movement.loop
+                                except AttributeError:
+                                    is_looping = False
+                                if is_looping:
+                                    f.write('\t\t\t\t<mvcirsinu id="{}" duration="{}" next="{}">\n'
+                                            .format(mot_counter, motion.duration, first_series_motion))
+                                else:
+                                    f.write('\t\t\t\t<mvcirsinu id="{}" duration="{}">\n'
+                                            .format(mot_counter, motion.duration))
+                            else:
                                 f.write('\t\t\t\t<mvcirsinu id="{}" duration="{}" next="{}">\n'
-                                        .format(mot_counter, motion.duration, first_series_motion))
-                            else:
-                                f.write('\t\t\t\t<mvcirsinu id="{}" duration="{}">\n'
-                                        .format(mot_counter, motion.duration))
-                        else:
-                            f.write('\t\t\t\t<mvcirsinu id="{}" duration="{}" next="{}">\n'
-                                    .format(mot_counter, motion.duration, mot_counter + 1))
+                                        .format(mot_counter, motion.duration, mot_counter + 1))
 
-                        f.write('\t\t\t\t\t<freq v="{}"/>\n'
-                                .format(motion.freq))
-                        f.write('\t\t\t\t\t<ampl v="{}"/>\n'
-                                .format(motion.ampl))
-                        f.write('\t\t\t\t\t<phase v="{}"/>\n'
-                                .format(motion.phase))
-                        f.write('\t\t\t\t\t<ref x="{}" y="{}" z="{}"/>\n'
-                                .format(motion.reference[0], motion.reference[1], motion.reference[2]))
-                        f.write('\t\t\t\t\t<axisp1 x="{}" y="{}" z="{}"/>\n'
-                                .format(motion.axis1[0], motion.axis1[1], motion.axis1[2]))
-                        f.write('\t\t\t\t\t<axisp2 x="{}" y="{}" z="{}"/>\n'
-                                .format(motion.axis2[0], motion.axis2[1], motion.axis2[2]))
-                        f.write('\t\t\t\t</mvcirsinu>\n')
-                    elif motion.__class__.__name__ is "RectSinuMotion":
-                        if motion_index is len(movement.motion_list) - 1:
-                            try:
-                                is_looping = movement.loop
-                            except AttributeError:
-                                is_looping = False
-                            if is_looping:
+                            f.write('\t\t\t\t\t<freq v="{}"/>\n'
+                                    .format(motion.freq))
+                            f.write('\t\t\t\t\t<ampl v="{}"/>\n'
+                                    .format(motion.ampl))
+                            f.write('\t\t\t\t\t<phase v="{}"/>\n'
+                                    .format(motion.phase))
+                            f.write('\t\t\t\t\t<ref x="{}" y="{}" z="{}"/>\n'
+                                    .format(motion.reference[0], motion.reference[1], motion.reference[2]))
+                            f.write('\t\t\t\t\t<axisp1 x="{}" y="{}" z="{}"/>\n'
+                                    .format(motion.axis1[0], motion.axis1[1], motion.axis1[2]))
+                            f.write('\t\t\t\t\t<axisp2 x="{}" y="{}" z="{}"/>\n'
+                                    .format(motion.axis2[0], motion.axis2[1], motion.axis2[2]))
+                            f.write('\t\t\t\t</mvcirsinu>\n')
+                        elif isinstance(motion, RectSinuMotion):
+                            if motion_index is len(movement.motion_list) - 1:
+                                try:
+                                    is_looping = movement.loop
+                                except AttributeError:
+                                    is_looping = False
+                                if is_looping:
+                                    f.write('\t\t\t\t<mvrectsinu id="{}" duration="{}" next="{}">\n'
+                                            .format(mot_counter, motion.duration, first_series_motion))
+                                else:
+                                    f.write('\t\t\t\t<mvrectsinu id="{}" duration="{}">\n'
+                                            .format(mot_counter, motion.duration))
+                            else:
                                 f.write('\t\t\t\t<mvrectsinu id="{}" duration="{}" next="{}">\n'
-                                        .format(mot_counter, motion.duration, first_series_motion))
-                            else:
-                                f.write('\t\t\t\t<mvrectsinu id="{}" duration="{}">\n'
-                                        .format(mot_counter, motion.duration))
-                        else:
-                            f.write('\t\t\t\t<mvrectsinu id="{}" duration="{}" next="{}">\n'
-                                    .format(mot_counter, motion.duration, mot_counter + 1))
+                                        .format(mot_counter, motion.duration, mot_counter + 1))
 
-                        f.write('\t\t\t\t\t<freq x="{}" y="{}" z="{}"/>\n'
-                                .format(motion.freq[0], motion.freq[1], motion.freq[2]))
-                        f.write('\t\t\t\t\t<ampl x="{}" y="{}" z="{}"/>\n'
-                                .format(motion.ampl[0], motion.ampl[1], motion.ampl[2]))
-                        f.write('\t\t\t\t\t<phase x="{}" y="{}" z="{}"/>\n'
-                                .format(motion.phase[0], motion.phase[1], motion.phase[2]))
-                        f.write('\t\t\t\t</mvrectsinu>\n')
+                            f.write('\t\t\t\t\t<freq x="{}" y="{}" z="{}"/>\n'
+                                    .format(motion.freq[0], motion.freq[1], motion.freq[2]))
+                            f.write('\t\t\t\t\t<ampl x="{}" y="{}" z="{}"/>\n'
+                                    .format(motion.ampl[0], motion.ampl[1], motion.ampl[2]))
+                            f.write('\t\t\t\t\t<phase x="{}" y="{}" z="{}"/>\n'
+                                    .format(motion.phase[0], motion.phase[1], motion.phase[2]))
+                            f.write('\t\t\t\t</mvrectsinu>\n')
 
-                    mot_counter += 1
-                mov_counter += 1
+                        mot_counter += 1
+                    mov_counter += 1
+                elif isinstance(movement, WaveMovement):
+                    # TODO Implement wave movement exporters
+                    pass
             f.write('\t\t\t</objreal>\n')
         f.write('\t\t</motion>\n')
     f.write('\t</casedef>\n')
