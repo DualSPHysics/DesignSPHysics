@@ -18,7 +18,6 @@ from utils import __
 import guiutils
 from properties import *
 
-
 # Copyright (C) 2016 - Andrés Vieira (anvieiravazquez@gmail.com)
 # EPHYSLAB Environmental Physics Laboratory, Universidade de Vigo
 #
@@ -71,6 +70,33 @@ class MovementActions(QtGui.QWidget):
 
     def on_loop(self):
         self.loop.emit(self.index, self.loop_checkbox.isChecked())
+
+
+class WaveMovementActions(QtGui.QWidget):
+    """ A set of wave movement actions (use and delete) with its custom signals"""
+    delete = QtCore.Signal(int)
+    use = QtCore.Signal(int, bool)
+
+    def __init__(self, index, use_checked):
+        super(WaveMovementActions, self).__init__()
+        self.index = index
+        self.use_checkbox = QtGui.QCheckBox(__("Use"))
+        self.use_checkbox.setChecked(use_checked)
+        self.use_checkbox.stateChanged.connect(self.on_use)
+        self.delete_button = QtGui.QPushButton(guiutils.get_icon("trash.png"), None)
+        self.delete_button.clicked.connect(self.on_delete)
+        self.setContentsMargins(0, 0, 0, 0)
+        main_layout = QtGui.QHBoxLayout()
+        main_layout.setContentsMargins(10, 0, 10, 0)
+        main_layout.addWidget(self.use_checkbox)
+        main_layout.addWidget(self.delete_button)
+        self.setLayout(main_layout)
+
+    def on_delete(self):
+        self.delete.emit(self.index)
+
+    def on_use(self):
+        self.use.emit(self.index, self.use_checkbox.isChecked())
 
 
 class RectilinearMotionTimeline(QtGui.QWidget):
@@ -1684,3 +1710,37 @@ class RectSinuMotionTimeline(QtGui.QWidget):
         self.phase_y_input.setText(self.phase_y_input.text().replace(",", "."))
         self.phase_z_input.setText(self.phase_z_input.text().replace(",", "."))
         self.time_input.setText(self.time_input.text().replace(",", "."))
+
+
+class RegularWaveMotionTimeline(QtGui.QWidget):
+    """ A Regular Wave motion graphical representation for a table-based timeline """
+
+    changed = QtCore.Signal(int, RegularWaveGen)
+
+    def __init__(self, reg_wave_gen):
+        if not isinstance(reg_wave_gen, RegularWaveGen):
+            raise TypeError("You tried to spawn a regular wave generator "
+                            "motion widget in the timeline with a wrong object")
+        if reg_wave_gen is None:
+            raise TypeError("You tried to spawn a regular wave generator "
+                            "motion widget in the timeline without a motion object")
+        super(RegularWaveMotionTimeline, self).__init__()
+        self.main_layout = QtGui.QVBoxLayout()
+        self.setLayout(self.main_layout)
+
+
+class IrregularWaveMotionTimeline(QtGui.QWidget):
+    """ An Irregular Wave motion graphical representation for a table-based timeline """
+
+    changed = QtCore.Signal(int, IrregularWaveGen)
+
+    def __init__(self, irreg_wave_gen):
+        if not isinstance(irreg_wave_gen, IrregularWaveGen):
+            raise TypeError("You tried to spawn an irregular wave generator "
+                            "motion widget in the timeline with a wrong object")
+        if irreg_wave_gen is None:
+            raise TypeError("You tried to spawn an irregular wave generator "
+                            "motion widget in the timeline without a motion object")
+        super(IrregularWaveMotionTimeline, self).__init__()
+        self.main_layout = QtGui.QVBoxLayout()
+        self.setLayout(self.main_layout)
