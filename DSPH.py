@@ -20,6 +20,7 @@ import sys
 import time
 import pickle
 import threading
+import traceback
 from PySide import QtGui, QtCore
 from dsphfc.properties import *
 
@@ -409,7 +410,8 @@ def on_save_case(save_as=None):
         try:
             with open(save_name + "/casedata.dsphdata", 'wb') as picklefile:
                 pickle.dump(data, picklefile, utils.PICKLE_PROTOCOL)
-        except Exception:
+        except Exception as e:
+            traceback.print_exc()
             guiutils.error_dialog(__("There was a problem saving the DSPH information file (casedata.dsphdata)."))
 
     else:
@@ -1902,8 +1904,6 @@ def motion_change():
             # Wave generators are exclusive
             if isinstance(target_movement, WaveMovement):
                 del movements_selected[:]
-                movements_selected.append("function modified!")
-                pass
             elif isinstance(target_movement, Movement):
                 for index, ms in enumerate(movements_selected):
                     movements_selected.pop(index) if isinstance(ms, WaveMovement) else None
@@ -1937,10 +1937,14 @@ def motion_change():
         """ Creates a movement on the project. """
         if __("Regular wave generator") in action.text():
             utils.debug("Generating regular wave")
-            data["global_movements"].append(WaveMovement(wave_gen=RegularWaveGen()))
+            to_add = WaveMovement(wave_gen=RegularWaveGen())
+            to_add.wave_gen.parent_movement = to_add
+            data["global_movements"].append(to_add)
         if __("Irregular wave generator") in action.text():
             utils.debug("Generating irregular wave")
-            data["global_movements"].append(WaveMovement(wave_gen=IrregularWaveGen()))
+            to_add = WaveMovement(wave_gen=IrregularWaveGen())
+            to_add.wave_gen.parent_movement = to_add
+            data["global_movements"].append(to_add)
 
         refresh_movements_table()
 
@@ -1952,7 +1956,10 @@ def motion_change():
 
     def on_timeline_item_change(index, motion_object):
         """ Changes the values of an item on the timeline. """
-        motion_object.parent_movement.motion_list[index] = motion_object
+        if isinstance(motion_object, WaveGen):
+            motion_object.parent_movement.set_wavegen(motion_object)
+        else:
+            motion_object.parent_movement.motion_list[index] = motion_object
 
     def on_timeline_item_delete(index, motion_object):
         """ Deletes an item from the timeline. """

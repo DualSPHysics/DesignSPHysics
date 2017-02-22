@@ -10,6 +10,7 @@ in a DSPH related case.
 import random
 from propenums import *
 
+
 # Copyright (C) 2016 - Andrés Vieira (anvieiravazquez@gmail.com)
 # EPHYSLAB Environmental Physics Laboratory, Universidade de Vigo
 #
@@ -163,11 +164,10 @@ class WaveGen(object):
         wave_period: Wave period (def 1)
     """
 
-    def __init__(self, parent_movement=None, mk_bound=None, wave_order=1, start=0, duration=0, depth=0, fixed_depth=0,
+    def __init__(self, parent_movement=None, wave_order=1, start=0, duration=0, depth=0, fixed_depth=0,
                  piston_dir=None, wave_height=0.5, wave_period=1):
         super(WaveGen, self).__init__()
         self.parent_movement = parent_movement
-        self.mk_bound = mk_bound
         self.wave_order = wave_order
         self.start = start
         self.duration = duration
@@ -186,8 +186,10 @@ class RegularWaveGen(WaveGen):
         ramp: Periods of ramp
     """
 
-    def __init__(self, phase=0, ramp=0):
-        super(RegularWaveGen, self).__init__()
+    def __init__(self, parent_movement=None, wave_order=1, start=0, duration=0, depth=0, fixed_depth=0,
+                 piston_dir=None, wave_height=0.5, wave_period=1, phase=0, ramp=0):
+        super(RegularWaveGen, self).__init__(parent_movement, wave_order, start, duration, depth, fixed_depth,
+                                             piston_dir, wave_height, wave_period)
         self.phase = phase
         self.ramp = ramp
 
@@ -205,10 +207,13 @@ class IrregularWaveGen(WaveGen):
         ramptime: Time of ramp
     """
 
-    def __init__(self, spectrum=IrregularSpectrum.JONSWAP, discretization=IrregularSpectrumDiscretization.STRETCHED,
+    def __init__(self, parent_movement=None, wave_order=1, start=0, duration=0, depth=0, fixed_depth=0,
+                 piston_dir=None, wave_height=0.5, wave_period=1, spectrum=IrregularSpectrum.JONSWAP,
+                 discretization=IrregularDiscretization.STRETCHED,
                  peak_coef=0.1, waves=50, randomseed=random.randint(0, 9999), serieini=0, ramptime=0,
                  serieini_autofit=True):
-        super(IrregularWaveGen, self).__init__()
+        super(IrregularWaveGen, self).__init__(parent_movement, wave_order, start, duration, depth, fixed_depth,
+                                               piston_dir, wave_height, wave_period)
         self.spectrum = spectrum
         self.discretization = discretization
         self.peak_coef = peak_coef
