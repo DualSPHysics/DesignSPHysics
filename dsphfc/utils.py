@@ -56,6 +56,8 @@ DEBUGGING = True
 DIVIDER = 1000
 PICKLE_PROTOCOL = 1  # Binary mode
 VERSION = "0.2.5"
+
+
 # ------ END CONSTANTS DEFINITION ------
 
 
@@ -854,14 +856,74 @@ def dump_to_xml(data, save_name):
                             f.write('\t\t\t\t</mvrectsinu>\n')
 
                         mot_counter += 1
-                    mov_counter += 1
                 elif isinstance(movement, WaveMovement):
-                    # TODO Implement wave movement exporters
-                    pass
+                    f.write('\t\t\t\t<mvnull id="{}" />\n'.format(mov_counter))
+
+                mov_counter += 1
             f.write('\t\t\t</objreal>\n')
         f.write('\t\t</motion>\n')
     f.write('\t</casedef>\n')
     f.write('\t<execution>\n')
+    for mk, motlist in data["motion_mks"].iteritems():
+        if isinstance(motlist[0], WaveMovement):
+            mot = motlist[0].wave_gen
+            f.write('\t\t\t<special>\n')
+            f.write('\t\t\t\t<wavepaddles>\n')
+            if isinstance(mot, RegularWaveGen):
+                f.write('\t\t\t\t\t<piston>\n')
+                f.write('\t\t\t\t\t\t<mkbound value="{}" comment="Mk-Bound of selected particles" />\n'.format(mk))
+                f.write('\t\t\t\t\t\t<waveorder value="{}" '
+                        'comment="Order wave generation 1:1st order, 2:2nd order (def=1)" />\n'.format(mot.wave_order))
+                f.write('\t\t\t\t\t\t<start value="{}" comment="Start time (def=0)" />\n'.format(mot.start))
+                f.write('\t\t\t\t\t\t<duration value="{}" '
+                        'comment="Movement duration, Zero is the end of simulation (def=0)" />\n'.format(mot.duration))
+                f.write('\t\t\t\t\t\t<depth value="{}" comment="Fluid depth (def=0)" />\n'.format(mot.depth))
+                f.write('\t\t\t\t\t\t<fixeddepth value="{}" '
+                        'comment="Fluid depth without paddle (def=0)" />\n'.format(mot.fixed_depth))
+                f.write('\t\t\t\t\t\t<pistondir x="{}" y="{}" z="{}" '
+                        'comment="Movement direction (def=(1,0,0))" />\n'.format(*mot.piston_dir))
+                f.write('\t\t\t\t\t\t<waveheight value="{}" comment="Wave height" />\n'.format(mot.wave_height))
+                f.write('\t\t\t\t\t\t<waveperiod value="{}" comment="Wave period" />\n'.format(mot.wave_period))
+                f.write('\t\t\t\t\t\t<phase value="{}" '
+                        'comment="Initial wave phase in function of PI (def=0)" />\n'.format(mot.phase))
+                f.write('\t\t\t\t\t\t<ramp value="{}" comment="Periods of ramp (def=0)" />\n'.format(mot.ramp))
+                f.write('\t\t\t\t\t</piston>\n')
+            elif isinstance(mot, IrregularWaveGen):
+                f.write('\t\t\t\t\t<piston_spectrum>\n')
+                f.write('\t\t\t\t\t\t<mkbound value="{}" comment="Mk-Bound of selected particles" />\n'.format(mk))
+                f.write('\t\t\t\t\t\t<waveorder value="{}" '
+                        'comment="Order wave generation 1:1st order, 2:2nd order (def=1)" />\n'.format(mot.wave_order))
+                f.write('\t\t\t\t\t\t<start value="{}" comment="Start time (def=0)" />\n'.format(mot.start))
+                f.write('\t\t\t\t\t\t<duration value="{}" '
+                        'comment="Movement duration, Zero is the end of simulation (def=0)" />\n'.format(mot.duration))
+                f.write('\t\t\t\t\t\t<depth value="{}" comment="Fluid depth (def=0)" />\n'.format(mot.depth))
+                f.write('\t\t\t\t\t\t<fixeddepth value="{}" '
+                        'comment="Fluid depth without paddle (def=0)" />\n'.format(mot.fixed_depth))
+                f.write('\t\t\t\t\t\t<pistondir x="{}" y="{}" z="{}" '
+                        'comment="Movement direction (def=(1,0,0))" />\n'.format(*mot.piston_dir))
+                f.write('\t\t\t\t\t\t<spectrum value="{}" '
+                        'comment="Spectrum type: jonswap,pierson-moskowitz" />\n'
+                        .format(['jonswap', 'pierson-moskowitz'][mot.spectrum]))
+                f.write('\t\t\t\t\t\t<discretization value="{}" '
+                        'comment="Spectrum discretization: regular,random,stretched,cosstretched '
+                        '(def=stretched)" />\n'
+                        .format(['regular', 'random', 'stretched', 'cosstretched'][mot.discretization]))
+                f.write('\t\t\t\t\t\t<waveheight value="{}" comment="Wave height" />\n'.format(mot.wave_height))
+                f.write('\t\t\t\t\t\t<waveperiod value="{}" comment="Wave period" />\n'.format(mot.wave_period))
+                f.write('\t\t\t\t\t\t<peakcoef value="{}" comment="Peak enhancement coefficient (def=3.3)" />\n'
+                        .format(mot.peak_coef))
+                f.write('\t\t\t\t\t\t<waves value="{}" '
+                        'comment="Number of waves to create irregular waves (def=50)" />\n'.format(mot.waves))
+                f.write('\t\t\t\t\t\t<randomseed value="{}" '
+                        'comment="Random seed to initialize a pseudorandom number generator" />\n'
+                        .format(mot.randomseed))
+                f.write('\t\t\t\t\t\t<serieini value="{}" autofit="{}" '
+                        'comment="Initial time in irregular wave serie (default=0 and autofit=false)" />\n'
+                        .format(mot.serieini, str(mot.serieini_autofit).lower()))
+                f.write('\t\t\t\t\t\t<ramptime value="{}" comment="Time of ramp (def=0)" />\n'.format(mot.ramptime))
+                f.write('\t\t\t\t\t</piston_spectrum>\n')
+            f.write('\t\t\t\t</wavepaddles>\n')
+            f.write('\t\t\t</special>\n')
     f.write('\t\t<parameters>\n')
     # Writes parameters as user introduced
     f.write('\t\t\t<parameter key="PosDouble" value="' + str(data['posdouble']) +

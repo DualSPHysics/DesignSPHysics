@@ -35,7 +35,7 @@ class IrregularSpectrum:
         pass
 
 
-class IrregularSpectrumDiscretization:
+class IrregularDiscretization:
     """ Types of supported spectrum discretization. """
     REGULAR = 0
     RANDOM = 1

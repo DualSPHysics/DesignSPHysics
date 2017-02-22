@@ -36,6 +36,20 @@ along with DesignSPHysics.  If not, see <http://www.gnu.org/licenses/>.
 """
 
 
+def h_line_generator():
+    to_ret = QtGui.QFrame()
+    to_ret.setFrameShape(QtGui.QFrame.HLine)
+    to_ret.setFrameShadow(QtGui.QFrame.Sunken)
+    return to_ret
+
+
+def v_line_generator():
+    to_ret = QtGui.QFrame()
+    to_ret.setFrameShape(QtGui.QFrame.VLine)
+    to_ret.setFrameShadow(QtGui.QFrame.Sunken)
+    return to_ret
+
+
 def warning_dialog(warn_text):
     """Spawns a warning dialog with the text passed."""
 

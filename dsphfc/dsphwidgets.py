@@ -18,6 +18,7 @@ from utils import __
 import guiutils
 from properties import *
 
+
 # Copyright (C) 2016 - Andrés Vieira (anvieiravazquez@gmail.com)
 # EPHYSLAB Environmental Physics Laboratory, Universidade de Vigo
 #
@@ -1725,8 +1726,141 @@ class RegularWaveMotionTimeline(QtGui.QWidget):
             raise TypeError("You tried to spawn a regular wave generator "
                             "motion widget in the timeline without a motion object")
         super(RegularWaveMotionTimeline, self).__init__()
+        self.setContentsMargins(0, 0, 0, 0)
         self.main_layout = QtGui.QVBoxLayout()
+        self.main_layout.setContentsMargins(10, 10, 10, 10)
+        self.parent_movement = reg_wave_gen.parent_movement
+
+        self.root_label = QtGui.QLabel(__("Regular wave generator"))
+
+        self.duration_label = QtGui.QLabel(__("Duration"))
+        self.duration_input = QtGui.QLineEdit()
+        self.duration_units_label = QtGui.QLabel(__("s"))
+
+        self.wave_order_label = QtGui.QLabel(__("Wave Order"))
+        self.wave_order_selector = QtGui.QComboBox()
+        self.wave_order_selector.insertItems(0, [__("1st Order"), __("2nd Order")])
+
+        self.depth_label = QtGui.QLabel(__("Depth"))
+        self.depth_input = QtGui.QLineEdit()
+        self.depth_units_label = QtGui.QLabel(__("m"))
+
+        self.fixed_depth_label = QtGui.QLabel(__("Fixed depth"))
+        self.fixed_depth_input = QtGui.QLineEdit()
+        self.fixed_depth_units_label = QtGui.QLabel(__("m"))
+
+        self.piston_dir_label = QtGui.QLabel(__("Piston direction"))
+        self.piston_dir_x = QtGui.QLineEdit()
+        self.piston_dir_x_label = QtGui.QLabel(__("X"))
+        self.piston_dir_y = QtGui.QLineEdit()
+        self.piston_dir_y_label = QtGui.QLabel(__("Y"))
+        self.piston_dir_z = QtGui.QLineEdit()
+        self.piston_dir_z_label = QtGui.QLabel(__("Z"))
+
+        self.wave_height_label = QtGui.QLabel(__("Wave height"))
+        self.wave_height_input = QtGui.QLineEdit()
+        self.wave_height_units_label = QtGui.QLabel(__("m"))
+
+        self.wave_period_label = QtGui.QLabel(__("Wave period"))
+        self.wave_period_input = QtGui.QLineEdit()
+        self.wave_period_units_label = QtGui.QLabel(__("m"))
+
+        self.phase_label = QtGui.QLabel(__("Phase"))
+        self.phase_input = QtGui.QLineEdit()
+        self.phase_units_label = QtGui.QLabel(__("rad"))
+
+        self.ramp_label = QtGui.QLabel(__("Ramp"))
+        self.ramp_input = QtGui.QLineEdit()
+        self.ramp_units_label = QtGui.QLabel(__("m"))
+
+        self.root_layout = QtGui.QHBoxLayout()
+        self.root_layout.addWidget(self.root_label)
+        self.root_layout.addStretch(1)
+        [self.root_layout.addWidget(x) for x in [self.duration_label, self.duration_input, self.duration_units_label]]
+
+        self.first_row_layout = QtGui.QHBoxLayout()
+        [self.first_row_layout.addWidget(x) for x in [self.wave_order_label, self.wave_order_selector,
+                                                      self.depth_label, self.depth_input, self.depth_units_label,
+                                                      self.fixed_depth_label, self.fixed_depth_input,
+                                                      self.fixed_depth_units_label]]
+
+        self.second_row_layout = QtGui.QHBoxLayout()
+        [self.second_row_layout.addWidget(x) for x in [self.piston_dir_label,
+                                                       self.piston_dir_x, self.piston_dir_x_label,
+                                                       self.piston_dir_y, self.piston_dir_y_label,
+                                                       self.piston_dir_z, self.piston_dir_z_label]]
+
+        self.third_row_layout = QtGui.QHBoxLayout()
+        [self.third_row_layout.addWidget(x) for x in [self.wave_height_label, self.wave_height_input,
+                                                      self.wave_height_units_label, self.wave_period_label,
+                                                      self.wave_period_input, self.wave_period_units_label]]
+
+        self.fourth_row_layout = QtGui.QHBoxLayout()
+        [self.fourth_row_layout.addWidget(x) for x in [self.phase_label, self.phase_input, self.phase_units_label,
+                                                       self.ramp_label, self.ramp_input, self.ramp_units_label]]
+
+        self.main_layout.addLayout(self.root_layout)
+        self.main_layout.addWidget(guiutils.h_line_generator())
+        [self.main_layout.addLayout(x) for x in [self.first_row_layout, self.second_row_layout,
+                                                 self.third_row_layout, self.fourth_row_layout]]
+
         self.setLayout(self.main_layout)
+        self.fill_values(reg_wave_gen)
+        self._init_connections()
+
+    def fill_values(self, reg_wave_gen):
+        self.duration_input.setText(str(reg_wave_gen.duration))
+        self.wave_order_selector.setCurrentIndex(int(reg_wave_gen.wave_order) - 1)
+        self.depth_input.setText(str(reg_wave_gen.depth))
+        self.fixed_depth_input.setText(str(reg_wave_gen.fixed_depth))
+        self.piston_dir_x.setText(str(reg_wave_gen.piston_dir[0]))
+        self.piston_dir_y.setText(str(reg_wave_gen.piston_dir[1]))
+        self.piston_dir_z.setText(str(reg_wave_gen.piston_dir[2]))
+        self.wave_height_input.setText(str(reg_wave_gen.wave_height))
+        self.wave_period_input.setText(str(reg_wave_gen.wave_period))
+        self.phase_input.setText(str(reg_wave_gen.phase))
+        self.ramp_input.setText(str(reg_wave_gen.ramp))
+
+    def _init_connections(self):
+        self.wave_order_selector.currentIndexChanged.connect(self.on_change)
+        [x.textChanged.connect(self.on_change) for x in [self.duration_input, self.depth_input,
+                                                         self.fixed_depth_input, self.piston_dir_x,
+                                                         self.piston_dir_y, self.piston_dir_z,
+                                                         self.wave_height_input, self.wave_period_input,
+                                                         self.ramp_input, self.phase_input]]
+
+    def on_change(self):
+        self._sanitize_input()
+        try:
+            self.changed.emit(0, self.construct_motion_object())
+        except ValueError:
+            utils.debug("Introduced an invalid value for a float number.")
+
+    def construct_motion_object(self):
+        return RegularWaveGen(parent_movement=self.parent_movement,
+                              wave_order=self.wave_order_selector.currentIndex() + 1, start=0,
+                              duration=float(self.duration_input.text()), depth=float(self.depth_input.text()),
+                              fixed_depth=float(self.fixed_depth_input.text()),
+                              piston_dir=[float(self.piston_dir_x.text()),
+                                          float(self.piston_dir_y.text()),
+                                          float(self.piston_dir_z.text())],
+                              wave_height=float(self.wave_height_input.text()),
+                              wave_period=float(self.wave_period_input.text()),
+                              phase=float(self.phase_input.text()),
+                              ramp=float(self.ramp_input.text()))
+
+    def on_delete(self):
+        self.deleted.emit(self.index, self.construct_motion_object())
+
+    def _sanitize_input(self):
+        [x.setText("0")
+         if len(x.text()) is 0
+         else x.setText(x.text().replace(",", "."))
+         for x in [self.duration_input, self.depth_input,
+                   self.fixed_depth_input, self.piston_dir_x,
+                   self.piston_dir_y, self.piston_dir_z,
+                   self.wave_height_input, self.wave_period_input,
+                   self.ramp_input, self.phase_input]]
 
 
 class IrregularWaveMotionTimeline(QtGui.QWidget):
@@ -1742,5 +1876,194 @@ class IrregularWaveMotionTimeline(QtGui.QWidget):
             raise TypeError("You tried to spawn an irregular wave generator "
                             "motion widget in the timeline without a motion object")
         super(IrregularWaveMotionTimeline, self).__init__()
+        self.setContentsMargins(0, 0, 0, 0)
         self.main_layout = QtGui.QVBoxLayout()
+        self.main_layout.setContentsMargins(10, 10, 10, 10)
+        self.parent_movement = irreg_wave_gen.parent_movement
+
+        self.root_label = QtGui.QLabel(__("Irregular wave generator"))
+
+        self.duration_label = QtGui.QLabel(__("Duration"))
+        self.duration_input = QtGui.QLineEdit()
+        self.duration_units_label = QtGui.QLabel(__("s"))
+
+        self.wave_order_label = QtGui.QLabel(__("Wave Order"))
+        self.wave_order_selector = QtGui.QComboBox()
+        self.wave_order_selector.insertItems(0, [__("1st Order"), __("2nd Order")])
+
+        self.depth_label = QtGui.QLabel(__("Depth"))
+        self.depth_input = QtGui.QLineEdit()
+        self.depth_units_label = QtGui.QLabel(__("m"))
+
+        self.fixed_depth_label = QtGui.QLabel(__("Fixed depth"))
+        self.fixed_depth_input = QtGui.QLineEdit()
+        self.fixed_depth_units_label = QtGui.QLabel(__("m"))
+
+        self.piston_dir_label = QtGui.QLabel(__("Piston direction"))
+        self.piston_dir_x = QtGui.QLineEdit()
+        self.piston_dir_x_label = QtGui.QLabel(__("X"))
+        self.piston_dir_y = QtGui.QLineEdit()
+        self.piston_dir_y_label = QtGui.QLabel(__("Y"))
+        self.piston_dir_z = QtGui.QLineEdit()
+        self.piston_dir_z_label = QtGui.QLabel(__("Z"))
+
+        self.wave_height_label = QtGui.QLabel(__("Wave height"))
+        self.wave_height_input = QtGui.QLineEdit()
+        self.wave_height_units_label = QtGui.QLabel(__("m"))
+
+        self.wave_period_label = QtGui.QLabel(__("Wave period"))
+        self.wave_period_input = QtGui.QLineEdit()
+        self.wave_period_units_label = QtGui.QLabel(__("m"))
+
+        self.spectrum_label = QtGui.QLabel(__("Spectrum"))
+        self.spectrum_selector = QtGui.QComboBox()
+        # Index numbers match IrregularSpectrum static values
+        self.spectrum_selector.insertItems(0, ["Jonswap", "Pierson-Moskowitz"])
+
+        self.discretization_label = QtGui.QLabel(__("Discretization"))
+        self.discretization_selector = QtGui.QComboBox()
+        # Index numbers match IrregularDiscretization static values
+        self.discretization_selector.insertItems(0, ["Regular", "Random", "Stretched", "Crosstreched"])
+
+        self.peak_coef_label = QtGui.QLabel(__("Peak Coeff"))
+        self.peak_coef_input = QtGui.QLineEdit()
+        self.peak_coef_units_label = QtGui.QLabel(__("m"))
+
+        self.waves_label = QtGui.QLabel(__("Number of waves"))
+        self.waves_input = QtGui.QLineEdit()
+        self.waves_units_label = QtGui.QLabel(__("m"))
+
+        self.randomseed_label = QtGui.QLabel(__("Random Seed"))
+        self.randomseed_input = QtGui.QLineEdit()
+        self.randomseed_units_label = QtGui.QLabel(__("m"))
+
+        self.serieini_label = QtGui.QLabel(__("Initial time in wave serie"))
+        self.serieini_input = QtGui.QLineEdit()
+        self.serieini_units_label = QtGui.QLabel(__("m"))
+
+        self.serieini_autofit = QtGui.QCheckBox("Auto fit")
+
+        self.ramptime_label = QtGui.QLabel(__("Time of ramp"))
+        self.ramptime_input = QtGui.QLineEdit()
+        self.ramptime_units_label = QtGui.QLabel(__("m"))
+
+        self.root_layout = QtGui.QHBoxLayout()
+        self.root_layout.addWidget(self.root_label)
+        self.root_layout.addStretch(1)
+        [self.root_layout.addWidget(x) for x in [self.duration_label, self.duration_input, self.duration_units_label]]
+
+        self.first_row_layout = QtGui.QHBoxLayout()
+        [self.first_row_layout.addWidget(x) for x in [self.wave_order_label, self.wave_order_selector,
+                                                      self.depth_label, self.depth_input, self.depth_units_label,
+                                                      self.fixed_depth_label, self.fixed_depth_input,
+                                                      self.fixed_depth_units_label]]
+
+        self.second_row_layout = QtGui.QHBoxLayout()
+        [self.second_row_layout.addWidget(x) for x in [self.piston_dir_label,
+                                                       self.piston_dir_x, self.piston_dir_x_label,
+                                                       self.piston_dir_y, self.piston_dir_y_label,
+                                                       self.piston_dir_z, self.piston_dir_z_label]]
+
+        self.third_row_layout = QtGui.QHBoxLayout()
+        [self.third_row_layout.addWidget(x) for x in [self.wave_height_label, self.wave_height_input,
+                                                      self.wave_height_units_label, self.wave_period_label,
+                                                      self.wave_period_input, self.wave_period_units_label]]
+
+        self.fourth_row_layout = QtGui.QHBoxLayout()
+        [self.fourth_row_layout.addWidget(x) for x in [self.spectrum_label, self.spectrum_selector,
+                                                       self.discretization_label, self.discretization_selector,
+                                                       self.peak_coef_label, self.peak_coef_input,
+                                                       self.peak_coef_units_label]]
+
+        self.fifth_row_layout = QtGui.QHBoxLayout()
+        [self.fifth_row_layout.addWidget(x) for x in [self.waves_label, self.waves_input, self.waves_units_label,
+                                                      self.randomseed_label, self.randomseed_input,
+                                                      self.randomseed_units_label]]
+
+        self.sixth_row_layout = QtGui.QHBoxLayout()
+        [self.sixth_row_layout.addWidget(x) for x in [self.serieini_label, self.serieini_input,
+                                                      self.serieini_units_label, self.serieini_autofit]]
+
+        self.seventh_row_layout = QtGui.QHBoxLayout()
+        [self.seventh_row_layout.addWidget(x) for x in [self.ramptime_label, self.ramptime_input,
+                                                        self.ramptime_units_label]]
+
+        self.main_layout.addLayout(self.root_layout)
+        self.main_layout.addWidget(guiutils.h_line_generator())
+        [self.main_layout.addLayout(x) for x in [self.first_row_layout, self.second_row_layout, self.third_row_layout,
+                                                 self.fourth_row_layout, self.fifth_row_layout, self.sixth_row_layout,
+                                                 self.seventh_row_layout]]
+
         self.setLayout(self.main_layout)
+        self.fill_values(irreg_wave_gen)
+        self._init_connections()
+
+    def fill_values(self, irreg_wave_gen):
+        self.duration_input.setText(str(irreg_wave_gen.duration))
+        self.wave_order_selector.setCurrentIndex(int(irreg_wave_gen.wave_order) - 1)
+        self.depth_input.setText(str(irreg_wave_gen.depth))
+        self.fixed_depth_input.setText(str(irreg_wave_gen.fixed_depth))
+        self.piston_dir_x.setText(str(irreg_wave_gen.piston_dir[0]))
+        self.piston_dir_y.setText(str(irreg_wave_gen.piston_dir[1]))
+        self.piston_dir_z.setText(str(irreg_wave_gen.piston_dir[2]))
+        self.wave_height_input.setText(str(irreg_wave_gen.wave_height))
+        self.wave_period_input.setText(str(irreg_wave_gen.wave_period))
+        self.spectrum_selector.setCurrentIndex(int(irreg_wave_gen.spectrum))
+        self.discretization_selector.setCurrentIndex(int(irreg_wave_gen.discretization))
+        self.peak_coef_input.setText(str(irreg_wave_gen.peak_coef))
+        self.waves_input.setText(str(irreg_wave_gen.waves))
+        self.randomseed_input.setText(str(irreg_wave_gen.randomseed))
+        self.serieini_input.setText(str(irreg_wave_gen.serieini))
+        self.serieini_autofit.setChecked(irreg_wave_gen.serieini_autofit)
+        self.ramptime_input.setText(str(irreg_wave_gen.ramptime))
+
+    def _init_connections(self):
+        self.serieini_autofit.stateChanged.connect(self.on_change)
+        [x.currentIndexChanged.connect(self.on_change) for x in [self.wave_order_selector, self.spectrum_selector,
+                                                                 self.discretization_selector]]
+
+        [x.textChanged.connect(self.on_change) for x in [self.peak_coef_input, self.waves_input, self.randomseed_input,
+                                                         self.serieini_input, self.ramptime_input, self.duration_input,
+                                                         self.depth_input, self.fixed_depth_input, self.piston_dir_x,
+                                                         self.piston_dir_y, self.piston_dir_z, self.wave_height_input,
+                                                         self.wave_period_input]]
+
+    def on_change(self):
+        self._sanitize_input()
+        try:
+            self.changed.emit(0, self.construct_motion_object())
+        except ValueError:
+            utils.debug("Introduced an invalid value for a float number.")
+
+    def construct_motion_object(self):
+        return IrregularWaveGen(parent_movement=self.parent_movement,
+                                wave_order=self.wave_order_selector.currentIndex() + 1, start=0,
+                                duration=float(self.duration_input.text()), depth=float(self.depth_input.text()),
+                                fixed_depth=float(self.fixed_depth_input.text()),
+                                piston_dir=[float(self.piston_dir_x.text()),
+                                            float(self.piston_dir_y.text()),
+                                            float(self.piston_dir_z.text())],
+                                wave_height=float(self.wave_height_input.text()),
+                                wave_period=float(self.wave_period_input.text()),
+                                spectrum=self.spectrum_selector.currentIndex(),
+                                discretization=self.discretization_selector.currentIndex(),
+                                peak_coef=float(self.peak_coef_input.text()),
+                                waves=float(self.waves_input.text()),
+                                randomseed=float(self.randomseed_input.text()),
+                                serieini=float(self.serieini_input.text()),
+                                ramptime=float(self.ramptime_input.text()),
+                                serieini_autofit=self.serieini_autofit.isChecked())
+
+    def on_delete(self):
+        self.deleted.emit(self.index, self.construct_motion_object())
+
+    def _sanitize_input(self):
+        [x.setText("0")
+         if len(x.text()) is 0
+         else x.setText(x.text().replace(",", "."))
+         for x in [self.duration_input, self.depth_input,
+                   self.fixed_depth_input, self.piston_dir_x,
+                   self.piston_dir_y, self.piston_dir_z,
+                   self.wave_height_input, self.wave_period_input,
+                   self.peak_coef_input, self.randomseed_input,
+                   self.serieini_input, self.ramptime_input]]
