@@ -57,11 +57,9 @@ __status__ = "Development"
 
 # region General To-Do to use with PyCharm
 # ------------------------------- 0.3 BETA -------------------------------
-# TODO: 0.2.5Beta - Wave generator - Type of motion. Applied to an MK
 # TODO: 0.2.5Beta - Rework Simulation object order table
 # TODO: 0.2.5Beta - Add units here and there.
 # TODO: 0.2.5Beta - Change batch file generation to be more autodocumented and clear.
-# TODO: 0.2.5Beta - Warn user about experimental XML import
 # ------------------------------- 0.3 BETA -------------------------------
 # TODO: 0.3Beta - Implement global case info summary.
 # TODO: 0.3Beta - Change [0,1] values for selectors.
@@ -608,6 +606,10 @@ def on_add_stl():
 def on_import_xml():
     """ Imports an already created GenCase/DSPH compatible
     file and loads it in the scene. """
+
+    guiutils.warning_dialog(__("This feature is experimental. It's meant to help to build a case importing bits from"
+                               "previous, non DesignSPHysics code. This is not intended neither to import all objects "
+                               "nor its properties."))
 
     # noinspection PyArgumentList
     import_name, _ = QtGui.QFileDialog.getOpenFileName(dsph_main_dock, __("Import XML"), QtCore.QDir.homePath(),
