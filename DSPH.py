@@ -60,6 +60,7 @@ __status__ = "Development"
 # TODO: 0.2.5Beta - Rework Simulation object order table
 # TODO: 0.2.5Beta - Add units here and there.
 # TODO: 0.2.5Beta - Change batch file generation to be more autodocumented and clear.
+# TODO: 0.2.5Beta - Add 2D case limits
 # ------------------------------- 0.3 BETA -------------------------------
 # TODO: 0.3Beta - Implement global case info summary.
 # TODO: 0.3Beta - Change [0,1] values for selectors.
@@ -1118,13 +1119,14 @@ export_separator.setFrameStyle(QtGui.QFrame.HLine)
 objectlist_layout = QtGui.QVBoxLayout()
 objectlist_label = QtGui.QLabel("<b>" + __("Simulation object order") + "</b>")
 objectlist_label.setWordWrap(True)
-objectlist_table = QtGui.QTableWidget(0, 3)
-objectlist_table.setToolTip(__(
-    "Press 'Move up' to move an object up in the hirearchy."
-    "\nPress 'Move down' to move an object down in the hirearchy."))
+objectlist_table = QtGui.QTableWidget(0, 1)
+# objectlist_table.setToolTip(__(
+#     "Press the up arrow to move an object up in the order."
+#     "\nPress the down arrow to move an object down in the order."))
 objectlist_table.setObjectName("DSPH Objects")
 objectlist_table.verticalHeader().setVisible(False)
-objectlist_table.setHorizontalHeaderLabels([__("Object Name"), __("Order up"), __("Order down")])
+objectlist_table.horizontalHeader().setVisible(False)
+objectlist_table.horizontalHeader().setResizeMode(0, QtGui.QHeaderView.Stretch)
 widget_state_elements['objectlist_table'] = objectlist_table
 temp_data['objectlist_table'] = objectlist_table
 objectlist_layout.addWidget(objectlist_label)
@@ -2033,7 +2035,7 @@ def motion_change():
             actions_groupbox_table.setEnabled(False)
             if isinstance(target_movement.wave_gen, RegularWaveGen):
                 target_to_put = dsphwidgets.RegularWaveMotionTimeline(target_movement.wave_gen)
-            elif isinstance(target_movement.wave_gen, IrregularWaveGen):
+            else:
                 target_to_put = dsphwidgets.IrregularWaveMotionTimeline(target_movement.wave_gen)
             target_to_put.changed.connect(on_timeline_item_change)
             timeline_list_table.setCellWidget(0, 0, target_to_put)
@@ -2289,6 +2291,44 @@ for item in fc_main_window.findChildren(QtGui.QTreeWidget):
         trees.append(item)
 
 
+def on_up_objectorder(index):
+    new_order = list()
+
+    # order up
+    curr_elem = data['export_order'][index]
+    prev_elem = data['export_order'][index - 1]
+
+    data['export_order'].remove(curr_elem)
+
+    for element in data['export_order']:
+        if element == prev_elem:
+            new_order.append(curr_elem)
+        new_order.append(element)
+
+    data['export_order'] = new_order
+
+    on_tree_item_selection_change()
+
+
+def on_down_objectorder(index):
+    new_order = list()
+
+    # order down
+    curr_elem = data['export_order'][index]
+    next_elem = data['export_order'][index + 1]
+
+    data['export_order'].remove(curr_elem)
+
+    for element in data['export_order']:
+        new_order.append(element)
+        if element == next_elem:
+            new_order.append(curr_elem)
+
+    data['export_order'] = new_order
+
+    on_tree_item_selection_change()
+
+
 def on_tree_item_selection_change():
     selection = FreeCADGui.Selection.getSelection()
     object_names = list()
@@ -2417,8 +2457,7 @@ def on_tree_item_selection_change():
     if len(data['export_order']) == 0:
         data['export_order'] = data['simobjects'].keys()
     # Substract one that represent case limits object
-    objectlist_table.setRowCount(len(data['export_order']) - 1)
-    objectlist_table.setHorizontalHeaderLabels([__('Object Name'), __('Order up'), __('Order down')])
+    objectlist_table.setRowCount(len(data['export_order']))
     current_row = 0
     objects_with_parent = list()
     for key in data['export_order']:
@@ -2431,23 +2470,22 @@ def on_tree_item_selection_change():
             continue
         if context_object.Name == "Case_Limits":
             continue
-        objectlist_table.setCellWidget(current_row, 0, QtGui.QLabel("   " + context_object.Label))
-        up = QtGui.QLabel("   " + __("Move Up"))
-        up.setAlignment(QtCore.Qt.AlignLeft)
-        up.setStyleSheet(
-            "QLabel { background-color : rgb(225,225,225); color : black; margin: 2px;}"
-            " QLabel:hover { background-color : rgb(215,215,255); color : black; }")
+        # TODO: Complete with correct mk.
+        # objectlist_table.setCellWidget(current_row, 0, QtGui.QLabel("   " + context_object.Label))
+        target_widget = dsphwidgets.ObjectOrderWidget(index=current_row,
+                                                      object_mk=data['simobjects'][context_object.Name][0],
+                                                      mktype=data['simobjects'][context_object.Name][1],
+                                                      object_name=context_object.Label)
 
-        down = QtGui.QLabel("   " + __("Move Down"))
-        down.setAlignment(QtCore.Qt.AlignLeft)
-        down.setStyleSheet(
-            "QLabel { background-color : rgb(225,225,225); color : black; margin: 2px;}"
-            " QLabel:hover { background-color : rgb(215,215,255); color : black; }")
+        target_widget.up.connect(on_up_objectorder)
+        target_widget.down.connect(on_down_objectorder)
 
-        if current_row != 0:
-            objectlist_table.setCellWidget(current_row, 1, up)
-        if (current_row + 2) != len(data['export_order']):
-            objectlist_table.setCellWidget(current_row, 2, down)
+        if current_row is 0:
+            target_widget.disable_up()
+        if (current_row + 1) is len(data['export_order']):
+            target_widget.disable_down()
+
+        objectlist_table.setCellWidget(current_row, 0, target_widget)
 
         current_row += 1
     for each in objects_with_parent:
@@ -2461,43 +2499,6 @@ def on_tree_item_selection_change():
 
 for item in trees:
     item.itemSelectionChanged.connect(on_tree_item_selection_change)
-
-
-def on_cell_click(row, column):
-    new_order = list()
-    if column == 1:
-        # order up
-        curr_elem = data['export_order'][row + 1]
-        prev_elem = data['export_order'][row]
-
-        data['export_order'].remove(curr_elem)
-
-        for element in data['export_order']:
-            if element == prev_elem:
-                new_order.append(curr_elem)
-            new_order.append(element)
-
-        data['export_order'] = new_order
-    elif column == 2:
-        # order down
-        curr_elem = data['export_order'][row + 1]
-        next_elem = data['export_order'][row + 2]
-
-        data['export_order'].remove(curr_elem)
-
-        for element in data['export_order']:
-            new_order.append(element)
-            if element == next_elem:
-                new_order.append(curr_elem)
-
-        data['export_order'] = new_order
-    else:
-        # ignore
-        pass
-    on_tree_item_selection_change()
-
-
-objectlist_table.cellClicked.connect(on_cell_click)
 
 
 # Watch if no object is selected and prevent fillbox rotations
