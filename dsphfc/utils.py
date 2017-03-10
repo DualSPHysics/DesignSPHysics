@@ -492,13 +492,13 @@ def dump_to_xml(data, save_name):
         data['dp']) + '" comment="Initial inter-particle distance" units_comment="metres (m)">\n')
     min_point = FreeCAD.ActiveDocument.getObject("Case_Limits").Placement.Base
     max_point = FreeCAD.ActiveDocument.getObject("Case_Limits")
-    f.write('\t\t\t\t<pointmin x="' + str((min_point.x / DIVIDER) - (data['dp'] * 10)) + '" y="' + str(
-        (min_point.y / DIVIDER) - (data['dp'] * 10)) + '" z="' + str(
-        (min_point.z / DIVIDER) - (data['dp'] * 10)) + '" />\n')
+    f.write('\t\t\t\t<pointmin x="' + str((min_point.x / DIVIDER)) + '" y="' + str(
+        (min_point.y / DIVIDER)) + '" z="' + str(
+        (min_point.z / DIVIDER)) + '" />\n')
     f.write('\t\t\t\t<pointmax x="' + str(
-        (min_point.x / DIVIDER + max_point.Length.Value / DIVIDER) + (data['dp'] * 10)) + '" y="' + str(
-        (min_point.y / DIVIDER + max_point.Width.Value / DIVIDER) + (data['dp'] * 10)) + '" z="' + str(
-        (min_point.z / DIVIDER + max_point.Height.Value / DIVIDER) + (data['dp']) * 10) + '" />\n')
+        (min_point.x / DIVIDER + max_point.Length.Value / DIVIDER)) + '" y="' + str(
+        (min_point.y / DIVIDER + max_point.Width.Value / DIVIDER)) + '" z="' + str(
+        (min_point.z / DIVIDER + max_point.Height.Value / DIVIDER)) + '" />\n')
     f.write('\t\t\t</definition>\n')
     f.write('\t\t\t<commands>\n')
     f.write('\t\t\t\t<mainlist>\n')

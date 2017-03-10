@@ -57,8 +57,6 @@ __status__ = "Development"
 
 # region General To-Do to use with PyCharm
 # ------------------------------- 0.3 BETA -------------------------------
-# TODO: 0.2.5Beta - Rework Simulation object order table
-# TODO: 0.2.5Beta - Add units here and there.
 # TODO: 0.2.5Beta - Change batch file generation to be more autodocumented and clear.
 # TODO: 0.2.5Beta - Add 2D case limits
 # ------------------------------- 0.3 BETA -------------------------------
@@ -371,8 +369,8 @@ def on_save_case(save_as=None):
                         utils.warning(__(
                             "Are you sure all the parameters are set right? "
                             "The number of particles is very low ({}). "
-                            "Lower the DP to increase number of particles")).format(
-                            str(total_particles))
+                            "Lower the DP to increase number of particles").format(
+                            str(total_particles)))
                     elif total_particles > 200000:
                         utils.warning(__(
                             "Number of particles is pretty high ({}) and "
@@ -1264,11 +1262,8 @@ def objtype_change(index):
         if str(data['simobjects'][selection.Name][0]) in data['floating_mks'].keys():
             data['floating_mks'].pop(str(data['simobjects'][selection.Name][0]), None)
         # Remove motion properties if it is changed to fluid
-        utils.debug(data['motion_mks'].keys())
         if data['simobjects'][selection.Name][0] in data['motion_mks'].keys():
-            utils.debug("Im in")
             data['motion_mks'].pop(data['simobjects'][selection.Name][0], None)
-        utils.debug(data['motion_mks'].keys())
         floatstate_prop.setEnabled(False)
         initials_prop.setEnabled(True)
         mkgroup_label.setText("   " + __("MKFluid"))
