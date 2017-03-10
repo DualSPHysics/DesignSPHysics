@@ -1584,13 +1584,14 @@ class RectSinuMotionTimeline(QtGui.QWidget):
         self.order_button_layout.addWidget(self.order_up_button)
         self.order_button_layout.addWidget(self.order_down_button)
         self.main_layout.addWidget(self.label)
-        self.main_layout.addWidget(self.freq_label)
+        self.freq_amp_first_row_layout.addWidget(self.freq_label)
         self.freq_amp_first_row_layout.addWidget(self.freq_x_input)
         self.freq_amp_first_row_layout.addWidget(self.freq_x_label)
         self.freq_amp_first_row_layout.addWidget(self.freq_y_input)
         self.freq_amp_first_row_layout.addWidget(self.freq_y_label)
         self.freq_amp_first_row_layout.addWidget(self.freq_z_input)
         self.freq_amp_first_row_layout.addWidget(self.freq_z_label)
+        self.freq_amp_second_row_layout.addWidget(self.amp_label)
         self.freq_amp_second_row_layout.addWidget(self.amp_x_input)
         self.freq_amp_second_row_layout.addWidget(self.amp_x_label)
         self.freq_amp_second_row_layout.addWidget(self.amp_y_input)
@@ -1763,7 +1764,7 @@ class RegularWaveMotionTimeline(QtGui.QWidget):
 
         self.wave_period_label = QtGui.QLabel(__("Wave period"))
         self.wave_period_input = QtGui.QLineEdit()
-        self.wave_period_units_label = QtGui.QLabel(__("m"))
+        self.wave_period_units_label = QtGui.QLabel(__("s"))
 
         self.phase_label = QtGui.QLabel(__("Phase"))
         self.phase_input = QtGui.QLineEdit()
@@ -1913,7 +1914,7 @@ class IrregularWaveMotionTimeline(QtGui.QWidget):
 
         self.wave_period_label = QtGui.QLabel(__("Wave period"))
         self.wave_period_input = QtGui.QLineEdit()
-        self.wave_period_units_label = QtGui.QLabel(__("m"))
+        self.wave_period_units_label = QtGui.QLabel(__("s"))
 
         self.spectrum_label = QtGui.QLabel(__("Spectrum"))
         self.spectrum_selector = QtGui.QComboBox()
@@ -1927,25 +1928,25 @@ class IrregularWaveMotionTimeline(QtGui.QWidget):
 
         self.peak_coef_label = QtGui.QLabel(__("Peak Coeff"))
         self.peak_coef_input = QtGui.QLineEdit()
-        self.peak_coef_units_label = QtGui.QLabel(__("m"))
+        self.peak_coef_units_label = QtGui.QLabel(__(""))
 
         self.waves_label = QtGui.QLabel(__("Number of waves"))
         self.waves_input = QtGui.QLineEdit()
-        self.waves_units_label = QtGui.QLabel(__("m"))
+        self.waves_units_label = QtGui.QLabel(__(""))
 
         self.randomseed_label = QtGui.QLabel(__("Random Seed"))
         self.randomseed_input = QtGui.QLineEdit()
-        self.randomseed_units_label = QtGui.QLabel(__("m"))
+        self.randomseed_units_label = QtGui.QLabel(__(""))
 
         self.serieini_label = QtGui.QLabel(__("Initial time in wave serie"))
         self.serieini_input = QtGui.QLineEdit()
-        self.serieini_units_label = QtGui.QLabel(__("m"))
+        self.serieini_units_label = QtGui.QLabel(__("s"))
 
         self.serieini_autofit = QtGui.QCheckBox("Auto fit")
 
         self.ramptime_label = QtGui.QLabel(__("Time of ramp"))
         self.ramptime_input = QtGui.QLineEdit()
-        self.ramptime_units_label = QtGui.QLabel(__("m"))
+        self.ramptime_units_label = QtGui.QLabel(__("s"))
 
         self.root_layout = QtGui.QHBoxLayout()
         self.root_layout.addWidget(self.root_label)
