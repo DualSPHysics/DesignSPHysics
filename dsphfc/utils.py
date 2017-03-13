@@ -998,6 +998,34 @@ def get_number_of_documents():
     return len(FreeCAD.listDocuments())
 
 
+def batch_generator(full_path, case_name, gcpath, dsphpath, pvtkpath, exec_params, lib_path):
+    """ Loads a windows & linux template for batch files and saves them formatted to disk. """
+    lib_folder = os.path.dirname(os.path.realpath(__file__))
+    with open('{}/template.bat'.format(lib_folder), 'r') as content_file:
+        win_template = content_file.read().format(app_name=APP_NAME,
+                                                  case_name=case_name,
+                                                  gcpath=gcpath,
+                                                  dsphpath=dsphpath,
+                                                  pvtkpath=pvtkpath,
+                                                  exec_params=exec_params)
+    with open('{}/template.sh'.format(lib_folder), 'r') as content_file:
+        linux_template = content_file.read().format(app_name=APP_NAME,
+                                                    case_name=case_name,
+                                                    gcpath=gcpath,
+                                                    dsphpath=dsphpath,
+                                                    pvtkpath=pvtkpath,
+                                                    exec_params=exec_params,
+                                                    lib_path=lib_path,
+                                                    name="name")
+
+    with open(full_path + "/run.bat", 'w') as bat_file:
+        log(__("Creating ") + full_path + "/run.bat")
+        bat_file.write(win_template)
+    with open(full_path + "/run.sh", 'w') as bat_file:
+        log(__("Creating ") + full_path + "/run.sh")
+        bat_file.write(linux_template)
+
+
 def import_stl(filename=None, scale_x=1, scale_y=1, scale_z=1, name=None):
     """ Opens a STL file, preprocesses it and saves it
     int temp files to load with FreeCAD. """
