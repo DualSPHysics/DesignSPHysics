@@ -52,7 +52,11 @@ def import_xml_file(filename):
     # Converts XML in python dictionary
     raw_data = json.loads(json.dumps(xmltodict.parse(target_xml)))
 
-    config = filter_data(raw_data)
+    try:
+        config = filter_data(raw_data)
+    except:
+        config = dict()
+
     objects = create_fc_objects(target_xml, path)
 
     return config, objects

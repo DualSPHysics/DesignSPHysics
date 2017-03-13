@@ -57,10 +57,9 @@ __status__ = "Development"
 
 # region General To-Do to use with PyCharm
 # ------------------------------- 0.3 BETA -------------------------------
-# TODO: 0.2.5Beta - Change batch file generation to be more autodocumented and clear.
-# TODO: 0.2.5Beta - Add 2D case limits
-# ------------------------------- 0.3 BETA -------------------------------
+# TODO: 0.3Beta - Add 2D case limits with a plane
 # TODO: 0.3Beta - Implement global case info summary.
+# TODO: 0.3Beta - Add wave saving features to wave generators.
 # TODO: 0.3Beta - Change [0,1] values for selectors.
 # TODO: 0.3Beta - Remove % increment in case limits
 # TODO: 0.3Beta - Let STL be fluid but only face
@@ -265,7 +264,7 @@ def on_new_case():
 
 
 def on_save_case(save_as=None):
-    """Defines what happens when save case button is clicked.
+    """ Defines what happens when save case button is clicked.
     Saves a freecad scene definition, a dump of dsph data useful for this macro
     and tries to generate a case with gencase."""
 
@@ -298,53 +297,14 @@ def on_save_case(save_as=None):
         if (data['gencase_path'] == "") or (data['dsphysics_path'] == "") or (data['partvtk4_path'] == ""):
             utils.warning(__("Can't create executable bat file! One or more of the paths in plugin setup is not set"))
         else:
-            # Windows Batch file
-            bat_file = open(save_name + "/run.bat", 'w')
-            utils.log(__("Creating ") + save_name + "/run.bat")
-            bat_file.write("@echo off\n")
-            bat_file.write('echo "------- Autoexported by ' + utils.APP_NAME + ' -------"\n')
-            bat_file.write(
-                'echo "This script executes GenCase for the case saved, that generates output files in the *_Out dir.'
-                ' Then, executes a simulation on CPU of the case. Last, '
-                'it exports all the geometry generated in VTK files for viewing with ParaView."\n')
-            bat_file.write('pause\n')
-            bat_file.write('"' + data['gencase_path'] + '" ' + save_name + "/" + save_name.split('/')[
-                -1] + "_Def " + save_name + "/" + save_name.split('/')[-1] + "_Out/" + save_name.split('/')[
-                               -1] + ' -save:+all' + '\n')
-            bat_file.write('"' + data['dsphysics_path'] + '" ' + save_name + "/" + save_name.split('/')[-1] + "_Out/" +
-                           save_name.split('/')[-1] + ' ' + save_name + "/" + save_name.split('/')[
-                               -1] + "_Out" + ' -svres -' + str(ex_selector_combo.currentText()).lower() + '\n')
-            bat_file.write('"' + data['partvtk4_path'] + '" -dirin ' + save_name + "/" + save_name.split('/')[
-                -1] + "_Out -savevtk " + save_name + "/" + save_name.split('/')[-1] + "_Out/PartAll" + '\n')
-            bat_file.write(
-                'echo "------- Execution complete. If results were not the exepected ones check for errors.'
-                ' Make sure your case has a correct DP specification. -------"\n')
-            bat_file.write('pause\n')
-            bat_file.close()
-
-            # GNU/Linux Bash script
-            bat_file = open(save_name + "/run.sh", 'w')
-            utils.log("Creating " + save_name + "/run.sh")
-            bat_file.write('echo "------- Autoexported by ' + utils.APP_NAME + ' -------"\n')
-            bat_file.write(
-                'echo "This script executes GenCase for the case saved, that generates output files in the *_Out dir.'
-                ' Then, executes a simulation on CPU of the case. Last,'
-                ' it exports all the geometry generated in VTK files for viewing with ParaView."\n')
-            bat_file.write('read -rsp $"Press any key to continue..." -n 1 key\n')
-            bat_file.write('"' + data['gencase_path'] + '" ' + save_name + "/" + save_name.split('/')[
-                -1] + "_Def " + save_name + "/" + save_name.split('/')[-1] + "_Out/" + save_name.split('/')[
-                               -1] + ' -save:+all' + '\n')
-            bat_file.write('"' + data['dsphysics_path'] + '" ' + save_name + "/" + save_name.split('/')[-1] + "_Out/" +
-                           save_name.split('/')[-1] + ' ' + save_name + "/" + save_name.split('/')[
-                               -1] + "_Out" + ' -svres -' + str(ex_selector_combo.currentText()).lower() + '\n')
-            bat_file.write('"' + data['partvtk4_path'] + '" -dirin ' + save_name + "/" + save_name.split('/')[
-                -1] + "_Out -savevtk " + save_name + "/" + save_name.split('/')[-1] + "_Out/PartAll" + '\n')
-            bat_file.write(
-                'echo "------- Execution complete.'
-                ' If results were not the exepected ones check for errors.'
-                ' Make sure your case has a correct DP specification. -------"\n')
-            bat_file.write('read -rsp $"Press any key to continue..." -n 1 key\n')
-            bat_file.close()
+            # Export batch files
+            utils.batch_generator(full_path=save_name,
+                                  case_name=save_name.split('/')[-1],
+                                  gcpath=data['gencase_path'],
+                                  dsphpath=data['dsphysics_path'],
+                                  pvtkpath=data['partvtk4_path'],
+                                  exec_params="-{}".format(str(ex_selector_combo.currentText()).lower()),
+                                  lib_path='/'.join(data['gencase_path'].split('/')[:-1]))
 
         data['gencase_done'] = False
         # Use gencase if possible to generate the case final definition
@@ -1788,6 +1748,8 @@ def motion_change():
     motion_window.setWindowTitle(__("Motion configuration"))
     ok_button = QtGui.QPushButton(__("Ok"))
     cancel_button = QtGui.QPushButton(__("Cancel"))
+    notice_label = QtGui.QLabel("")
+    notice_label.setStyleSheet("QLabel { color : red; }")
     target_mk = int(data['simobjects'][FreeCADGui.Selection.getSelection()[0].Name][0])
     movements_selected = list(data["motion_mks"].get(target_mk, list()))
 
@@ -1884,6 +1846,7 @@ def motion_change():
     motion_features_layout.addWidget(actions_groupbox)
 
     buttons_layout = QtGui.QHBoxLayout()
+    buttons_layout.addWidget(notice_label)
     buttons_layout.addStretch(1)
     buttons_layout.addWidget(ok_button)
     buttons_layout.addWidget(cancel_button)
@@ -1902,11 +1865,14 @@ def motion_change():
         if checked:
             # Wave generators are exclusive
             if isinstance(target_movement, WaveMovement):
+                notice_label.setText("Notice: Wave generators are exclusive. "
+                                     "All movements are disabled when using one.")
                 del movements_selected[:]
             elif isinstance(target_movement, Movement):
                 for index, ms in enumerate(movements_selected):
-                    movements_selected.pop(index) if isinstance(ms, WaveMovement) else None
-
+                    if isinstance(ms, WaveMovement):
+                        movements_selected.pop(index)
+                        notice_label.setText("Notice: Regular movements are not compatible with wave generators.")
             movements_selected.append(target_movement)
         else:
             movements_selected.remove(target_movement)
@@ -2512,6 +2478,10 @@ def selection_monitor():
                         if subelem.Placement.Rotation.Angle != 0.0:
                             subelem.Placement.Rotation.Angle = 0.0
                             utils.error(__("Can't change fillbox contents rotation!"))
+                if "case_limits" in o.Name.lower():
+                    if o.Placement.Rotation.Angle != 0.0:
+                        o.Placement.Rotation.Angle = 0.0
+                        utils.error(__("Can't change Case Limits rotation!"))
         except NameError:
             # DSPH Case not opened, disable things
             guiutils.widget_state_config(widget_state_elements, "no case")
