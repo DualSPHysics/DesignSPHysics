@@ -57,6 +57,7 @@ __status__ = "Development"
 
 # region General To-Do to use with PyCharm
 # ------------------------------- 0.3 BETA -------------------------------
+# TODO: 0.3Beta - Don't load DSPH execs paths from a case if user has correct ones.
 # TODO: 0.3Beta - Add 2D case limits with a plane
 # TODO: 0.3Beta - Implement global case info summary.
 # TODO: 0.3Beta - Add wave saving features to wave generators.
@@ -539,12 +540,23 @@ def on_add_stl():
 
     # STL Dialog function definition and connections
     def stl_ok_clicked():
-        utils.import_stl(filename=str(stl_file_path.text()),
-                         scale_x=int(stl_scaling_x_e.text()),
-                         scale_y=int(stl_scaling_y_e.text()),
-                         scale_z=int(stl_scaling_z_e.text()),
-                         name=str(stl_objname_text.text()))
-        stl_dialog.accept()
+        [stl_scaling_edit.setText(stl_scaling_edit.text().replace(",", ".")) for stl_scaling_edit in [
+            stl_scaling_x_e,
+            stl_scaling_y_e,
+            stl_scaling_z_e
+        ]]
+        try:
+            utils.import_stl(filename=str(stl_file_path.text()),
+                             scale_x=float(stl_scaling_x_e.text()),
+                             scale_y=float(stl_scaling_y_e.text()),
+                             scale_z=float(stl_scaling_z_e.text()),
+                             name=str(stl_objname_text.text()))
+            stl_dialog.accept()
+        except:
+            utils.error(__("There was an error. "
+                           "Are you sure you wrote correct float values in the sacaling factor?"))
+            guiutils.error_dialog(__("There was an error. "
+                                     "Are you sure you wrote correct float values in the sacaling factor?"))
 
     def stl_dialog_browse():
         file_name_temp, _ = filedialog.getOpenFileName(fc_main_window, __("Select STL to import"),
@@ -2416,8 +2428,12 @@ def on_tree_item_selection_change():
     objectlist_table.setEnabled(True)
     if len(data['export_order']) == 0:
         data['export_order'] = data['simobjects'].keys()
+
     # Substract one that represent case limits object
+    if "Case_Limits" in data['export_order']: data['export_order'].remove("Case_Limits")
+
     objectlist_table.setRowCount(len(data['export_order']))
+    utils.debug(data['export_order'])
     current_row = 0
     objects_with_parent = list()
     for key in data['export_order']:
@@ -2430,7 +2446,6 @@ def on_tree_item_selection_change():
             continue
         if context_object.Name == "Case_Limits":
             continue
-        # TODO: Complete with correct mk.
         # objectlist_table.setCellWidget(current_row, 0, QtGui.QLabel("   " + context_object.Label))
         target_widget = dsphwidgets.ObjectOrderWidget(index=current_row,
                                                       object_mk=data['simobjects'][context_object.Name][0],

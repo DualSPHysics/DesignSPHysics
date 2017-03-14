@@ -13,6 +13,7 @@ import pickle
 import sys
 import os
 import utils
+from sys import platform
 from PySide import QtGui, QtCore
 
 """
@@ -968,10 +969,13 @@ def def_setup_window(data):
         if file_name != "":
             # Verify if exe is indeed dualsphysics
             process = QtCore.QProcess(FreeCADGui.getMainWindow())
-            process.start(file_name)
+            if platform == "linux" or platform == "linux2":
+                os.environ["LD_LIBRARY_PATH"] = "{}/".format("/".join(file_name.split("/")[:-1]))
+                process.start(file_name)
+            else:
+                process.start(file_name)
             process.waitForFinished()
             output = str(process.readAllStandardOutput())
-
             if "dualsphysics" in output[0:20].lower():
                 dsphpath_input.setText(file_name)
             else:
