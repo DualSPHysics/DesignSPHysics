@@ -21,6 +21,7 @@ import tempfile
 import traceback
 import webbrowser
 import json
+from sys import platform
 from datetime import datetime
 
 from PySide import QtGui, QtCore
@@ -52,7 +53,7 @@ along with DesignSPHysics.  If not, see <http://www.gnu.org/licenses/>.
 # ------ CONSTANTS DEFINITION ------
 FREECAD_MIN_VERSION = "016"
 APP_NAME = "DesignSPHysics"
-DEBUGGING = False
+DEBUGGING = True
 DIVIDER = 1000
 PICKLE_PROTOCOL = 1  # Binary mode
 VERSION = "0.2.5"
@@ -147,7 +148,12 @@ def check_executables(gencase_path, dsphysics_path, partvtk4_path):
         # Tries to identify dualsphysics
     if os.path.isfile(dsphysics_path):
         process = QtCore.QProcess(FreeCADGui.getMainWindow())
-        process.start(dsphysics_path)
+        if platform == "linux" or platform == "linux2":
+            os.environ["LD_LIBRARY_PATH"] = "/".join(dsphysics_path.split("/")[:-1])
+            process.start(dsphysics_path)
+        else:
+            process.start(dsphysics_path)
+
         process.waitForFinished()
         output = str(process.readAllStandardOutput())
         if "dualsphysics" in output[0:20].lower():
