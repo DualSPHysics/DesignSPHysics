@@ -61,7 +61,6 @@ __status__ = "Development"
 # TODO: 0.3Beta - Implement global case info summary.
 # TODO: 0.3Beta - Add wave saving features to wave generators.
 # TODO: 0.3Beta - Change [0,1] values for selectors.
-# TODO: 0.3Beta - Remove % increment in case limits
 # TODO: 0.3Beta - Let STL be fluid but only face
 # TODO: 0.3Beta - Movement brief explanation
 # TODO: 0.3Beta - Periodicity support - Show arrows (bounds) to show periodicity
