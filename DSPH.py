@@ -61,7 +61,6 @@ __status__ = "Development"
 # TODO: 0.3Beta - Implement global case info summary.
 # TODO: 0.3Beta - Add wave saving features to wave generators.
 # TODO: 0.3Beta - Change [0,1] values for selectors.
-# TODO: 0.3Beta - Let STL be fluid but only face
 # TODO: 0.3Beta - Movement brief explanation
 # TODO: 0.3Beta - Periodicity support - Show arrows (bounds) to show periodicity
 # TODO: 0.3Beta - Add postprocessing tools
@@ -2349,8 +2348,10 @@ def on_tree_item_selection_change():
                 to_change = property_table.cellWidget(0, 1)
                 to_change.setValue(data['simobjects'][selection[0].Name][0])
 
+                # type config
                 to_change = property_table.cellWidget(1, 1)
-                if selection[0].TypeId in temp_data['supported_types']:
+                utils.debug("STL TYPE IS: {}".format(str(selection[0].TypeId)))
+                if selection[0].TypeId in temp_data['supported_types'] or "Mesh::Feature" in str(selection[0].TypeId):
                     to_change.setEnabled(True)
                     if data['simobjects'][selection[0].Name][1].lower() == "fluid":
                         to_change.setCurrentIndex(0)
@@ -2367,6 +2368,7 @@ def on_tree_item_selection_change():
                     to_change.setCurrentIndex(1)
                     to_change.setEnabled(False)
 
+                # fill mode config
                 to_change = property_table.cellWidget(2, 1)
                 if selection[0].TypeId in temp_data['supported_types']:
                     to_change.setEnabled(True)
