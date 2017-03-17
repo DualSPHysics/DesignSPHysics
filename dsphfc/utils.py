@@ -56,7 +56,7 @@ APP_NAME = "DesignSPHysics"
 DEBUGGING = True
 DIVIDER = 1000
 PICKLE_PROTOCOL = 1  # Binary mode
-VERSION = "0.2.5"
+VERSION = "0.3-dev"
 
 
 # ------ END CONSTANTS DEFINITION ------

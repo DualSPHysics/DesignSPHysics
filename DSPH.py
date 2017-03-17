@@ -57,7 +57,6 @@ __status__ = "Development"
 
 # region General To-Do to use with PyCharm
 # ------------------------------- 0.3 BETA -------------------------------
-# TODO: 0.3Beta - Don't load DSPH execs paths from a case if user has correct ones.
 # TODO: 0.3Beta - Add 2D case limits with a plane
 # TODO: 0.3Beta - Implement global case info summary.
 # TODO: 0.3Beta - Add wave saving features to wave generators.
@@ -319,7 +318,6 @@ def on_save_case(save_as=None):
             error_in_gen_case = False
             if str(process.exitCode()) == "0":
                 try:
-                    utils.debug(output)
                     total_particles_text = output[output.index("Total particles: "):output.index(" (bound=")]
                     total_particles = int(total_particles_text[total_particles_text.index(": ") + 2:])
                     data['total_particles'] = total_particles
@@ -416,6 +414,15 @@ def on_load_case():
         # of code is to open files which have an error (or corrupted binary files!).
         with open(load_name, 'rb') as load_picklefile:
             load_disk_data = pickle.load(load_picklefile)
+
+        # Remove exec paths from loaded data if user have already correct ones.
+        _, _, _, already_correct = utils.check_executables(data['gencase_path'],
+                                                           data['dsphysics_path'],
+                                                           data['partvtk4_path'])
+
+        if already_correct:
+            [load_disk_data.pop(x, None) for x in ['gencase_path', 'dsphysics_path', 'partvtk4_path']]
+
         data.update(load_disk_data)
     except (EOFError, ValueError):
         guiutils.error_dialog(__("There was an error importing the case properties. "
@@ -754,7 +761,10 @@ def on_ex_simulate():
             temp_data['current_process'].kill()
         run_dialog.hide()
         run_details.hide()
-        guiutils.widget_state_config(widget_state_elements, "sim cancel")
+        if data['simulation_done']:
+            guiutils.widget_state_config(widget_state_elements, "sim cancel")
+        else:
+            guiutils.widget_state_config(widget_state_elements, "sim error")
 
     run_button_cancel.clicked.connect(on_cancel)
 
@@ -819,7 +829,7 @@ def on_ex_simulate():
             run_file_data = run_file.readlines()
             run_file.close()
         except Exception as e:
-            utils.debug(e)
+            pass
 
         # Fill details window
         run_details_text.setText("\n".join(run_file_data))
@@ -1912,12 +1922,10 @@ def motion_change():
     def on_new_wave_generator(action):
         """ Creates a movement on the project. """
         if __("Regular wave generator") in action.text():
-            utils.debug("Generating regular wave")
             to_add = WaveMovement(wave_gen=RegularWaveGen())
             to_add.wave_gen.parent_movement = to_add
             data["global_movements"].append(to_add)
         if __("Irregular wave generator") in action.text():
-            utils.debug("Generating irregular wave")
             to_add = WaveMovement(wave_gen=IrregularWaveGen())
             to_add.wave_gen.parent_movement = to_add
             data["global_movements"].append(to_add)
@@ -2430,10 +2438,10 @@ def on_tree_item_selection_change():
         data['export_order'] = data['simobjects'].keys()
 
     # Substract one that represent case limits object
-    if "Case_Limits" in data['export_order']: data['export_order'].remove("Case_Limits")
+    if "Case_Limits" in data['export_order']:
+        data['export_order'].remove("Case_Limits")
 
     objectlist_table.setRowCount(len(data['export_order']))
-    utils.debug(data['export_order'])
     current_row = 0
     objects_with_parent = list()
     for key in data['export_order']:
