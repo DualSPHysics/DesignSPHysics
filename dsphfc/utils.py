@@ -427,6 +427,14 @@ def document_count():
     return len(FreeCAD.listDocuments().keys())
 
 
+def valid_document_environment():
+    """ Returns a boolean if a correct document environment is found.
+    A correct document environment is defined if only a DSPH_Case document
+    is currently opened in FreeCAD. """
+
+    return True if document_count() is 1 and 'dsph_case' in FreeCAD.listDocuments().keys()[0].lower() else False
+
+
 def create_dsph_document():
     """ Creates a new DSPH compatible document in FreeCAD.
         It includes the case limits and a compatible name. """

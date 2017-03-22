@@ -99,6 +99,10 @@ def get_icon(file_name):
         raise IOError("File {} not found in DSPH_Images folder".format(file_name))
 
 
+def get_fc_main_window():
+    return FreeCADGui.getMainWindow()
+
+
 def def_constants_window(data):
     """Defines the constants window creation and functonality.
     Modifies the passed data dictionary to update data if ok is pressed."""
@@ -1045,6 +1049,7 @@ def widget_state_config(widgets, config):
         widgets["exportopts_button"].setEnabled(False)
         widgets["objectlist_table"].setEnabled(False)
         widgets["dp_input"].setEnabled(False)
+        widgets["summary_bt"].setEnabled(False)
     elif config == "new case":
         widgets["constants_button"].setEnabled(True)
         widgets["execparams_button"].setEnabled(True)
@@ -1057,6 +1062,7 @@ def widget_state_config(widgets, config):
         widgets["exportopts_button"].setEnabled(False)
         widgets["casecontrols_bt_addfillbox"].setEnabled(True)
         widgets["casecontrols_bt_addstl"].setEnabled(True)
+        widgets["summary_bt"].setEnabled(True)
     elif config == "gencase done":
         widgets["ex_selector_combo"].setEnabled(True)
         widgets["ex_button"].setEnabled(True)
@@ -1072,6 +1078,7 @@ def widget_state_config(widgets, config):
         widgets["dp_input"].setEnabled(True)
         widgets["casecontrols_bt_addfillbox"].setEnabled(True)
         widgets["casecontrols_bt_addstl"].setEnabled(True)
+        widgets["summary_bt"].setEnabled(True)
     elif config == "simulation done":
         widgets["export_button"].setEnabled(True)
         widgets["exportopts_button"].setEnabled(True)
@@ -1110,3 +1117,38 @@ def widget_state_config(widgets, config):
     elif config == "export finished":
         widgets["export_button"].setEnabled(True)
         widgets["exportopts_button"].setEnabled(True)
+
+
+def case_summary(orig_data):
+    """ Displays a dialog with a summary of the current opened case. """
+
+    if not utils.valid_document_environment():
+        return
+
+    data = dict(orig_data)
+    # Preprocess data to show in data copy
+    data['gravity'] = "({}, {}, {})".format(*data['gravity'])
+
+    for x in ['hswl', 'speedsystem', 'speedsound', 'h', 'b', 'massfluid', 'massbound']:
+        data[x] = '<u>Automatic</u>' if data[x + '_auto'] else data[x]
+
+    data["objects_info"] = "<i>Still in development</i>"
+    data["movement_info"] = "<i>Still in development</i>"
+
+    main_window = QtGui.QDialog()
+    main_layout = QtGui.QVBoxLayout()
+    info = QtGui.QTextEdit()
+
+    lib_folder = os.path.dirname(os.path.realpath(__file__))
+    info_text = ""
+    with open("{}/case_summary_template.txt".format(lib_folder), "r") as input_template:
+        info_text = input_template.read().format(**data)
+
+    info.setText(info_text)
+    info.setReadOnly(True)
+
+    main_layout.addWidget(info)
+    main_window.setLayout(main_layout)
+    main_window.setModal(True)
+    main_window.setMinimumSize(500, 650)
+    main_window.exec_()

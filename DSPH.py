@@ -198,6 +198,7 @@ dp_layout.addWidget(dp_label2)
 cc_layout = QtGui.QVBoxLayout()
 cclabel_layout = QtGui.QHBoxLayout()
 ccfilebuttons_layout = QtGui.QHBoxLayout()
+ccsecondrow = QtGui.QHBoxLayout()
 ccaddbuttons_layout = QtGui.QHBoxLayout()
 casecontrols_label = QtGui.QLabel("<b>" + __("File and GenCase tools") + "<b>")
 casecontrols_bt_newdoc = QtGui.QToolButton()
@@ -242,6 +243,10 @@ widget_state_elements['casecontrols_bt_addstl'] = casecontrols_bt_addstl
 casecontrols_bt_importxml = QtGui.QPushButton(__("Import XML"))
 casecontrols_bt_importxml.setToolTip(__("Imports an already created XML case from disk."))
 casecontrols_bt_importxml.setEnabled(True)
+
+summary_bt = QtGui.QPushButton(__("Case summary"))
+widget_state_elements['summary_bt'] = summary_bt
+summary_bt.setEnabled(False)
 
 
 def on_new_case():
@@ -658,6 +663,9 @@ def on_import_xml():
                             " and other may not have its properties correctly applied."))
 
 
+def on_summary():
+    guiutils.case_summary(data)
+
 # Connect case control buttons
 casecontrols_bt_newdoc.clicked.connect(on_new_case)
 casecontrols_bt_savedoc.clicked.connect(on_save_case)
@@ -666,6 +674,7 @@ casecontrols_bt_loaddoc.clicked.connect(on_load_case)
 casecontrols_bt_addfillbox.clicked.connect(on_add_fillbox)
 casecontrols_bt_addstl.clicked.connect(on_add_stl)
 casecontrols_bt_importxml.clicked.connect(on_import_xml)
+summary_bt.clicked.connect(on_summary)
 
 # Defines case control scaffolding
 cclabel_layout.addWidget(casecontrols_label)
@@ -675,9 +684,11 @@ ccfilebuttons_layout.addWidget(casecontrols_bt_loaddoc)
 ccaddbuttons_layout.addWidget(casecontrols_bt_addfillbox)
 ccaddbuttons_layout.addWidget(casecontrols_bt_addstl)
 ccaddbuttons_layout.addWidget(casecontrols_bt_importxml)
+ccsecondrow.addWidget(summary_bt)
 cc_layout.addLayout(cclabel_layout)
 cc_layout.addLayout(ccfilebuttons_layout)
 cc_layout.addLayout(ccaddbuttons_layout)
+cc_layout.addLayout(ccsecondrow)
 cc_separator = QtGui.QFrame()
 cc_separator.setFrameStyle(QtGui.QFrame.HLine)
 
@@ -2350,7 +2361,6 @@ def on_tree_item_selection_change():
 
                 # type config
                 to_change = property_table.cellWidget(1, 1)
-                utils.debug("STL TYPE IS: {}".format(str(selection[0].TypeId)))
                 if selection[0].TypeId in temp_data['supported_types'] or "Mesh::Feature" in str(selection[0].TypeId):
                     to_change.setEnabled(True)
                     if data['simobjects'][selection[0].Name][1].lower() == "fluid":
