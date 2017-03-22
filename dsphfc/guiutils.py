@@ -1139,32 +1139,45 @@ def case_summary(orig_data):
     data['objects_info'] = ""
     if len(data['simobjects']) > 1:
         data['objects_info'] += "<ul>"
-
-    # data['simobjects'] is a dict with format
-    # {'key': ['mk', 'type', 'fill']} where key is an internal name.
-    for key, value in data['simobjects'].iteritems():
-        if key.lower() == 'case_limits':
-            continue
-        fc_object = utils.get_fc_object(key)
-        data['objects_info'] += "<li><b>{label}</b> (<i>{iname}</i>): <br/>" \
-                                "Type: {type} (MK{type}: {mk})<br/>" \
-                                "Fill mode: {fillmode}</li><br/>".format(label=fc_object.Label, iname=key,
-                                                                         type=value[1].title(), mk=value[0],
-                                                                         fillmode=value[2].title())
-    if len(data['simobjects']) > 1:
+        # data['simobjects'] is a dict with format
+        # {'key': ['mk', 'type', 'fill']} where key is an internal name.
+        for key, value in data['simobjects'].iteritems():
+            if key.lower() == 'case_limits':
+                continue
+            fc_object = utils.get_fc_object(key)
+            data['objects_info'] += "<li><b>{label}</b> (<i>{iname}</i>): <br/>" \
+                                    "Type: {type} (MK{type}: {mk})<br/>" \
+                                    "Fill mode: {fillmode}</li><br/>".format(label=fc_object.Label, iname=key,
+                                                                             type=value[1].title(), mk=value[0],
+                                                                             fillmode=value[2].title())
         data['objects_info'] += "</ul>"
+    else:
+        data['objects_info'] += "No objects were added to the simulation yet."
     # endregion Formatting objects info
 
     # region Formatting movement info
     data['movement_info'] = ""
     if len(data['simobjects']) > 1:
         data['movement_info'] += "<ul>"
+        for mov in data['global_movements']:
+            try:
+                movtype = mov.type
+            except AttributeError:
+                movtype = mov.__class__.__name__
 
-    for mov in data['global_movements']:
-        data['movement_info'] += "<li>{}</li><br/>".format(str(mov))
+            mklist = list()
+            for key, value in data['motion_mks'].iteritems():
+                if mov in value:
+                    mklist.append(str(key))
 
-    if len(data['simobjects']) > 1:
+            data['movement_info'] += "<li>{movtype} <u>{movname}</u><br/>" \
+                                     "Applied to mks: {mklist}</li><br/>".format(movtype=movtype, movname=mov.name,
+                                                                                 mklist=', '.join(mklist))
+
         data['movement_info'] += "</ul>"
+    else:
+        data['movement_info'] += "No movements were defined in this case."
+
     # endregion Formatting movement info
 
     # Dialog creation and template filling

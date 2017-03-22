@@ -2415,7 +2415,7 @@ def on_tree_item_selection_change():
 
                 # motion restrictions
                 to_change = property_table.cellWidget(6, 1)
-                if selection[0].TypeId in temp_data['supported_types']:
+                if selection[0].TypeId in temp_data['supported_types'] or "Mesh::Feature" in str(selection[0].TypeId):
                     if data['simobjects'][selection[0].Name][1].lower() == "fluid":
                         to_change.setEnabled(False)
                     else:

@@ -653,10 +653,10 @@ def dump_to_xml(data, save_name):
     # Writes motions
     if len(data["motion_mks"]) > 0:
         f.write('\t\t<motion>\n')
-        mov_counter = 1
-        mot_counter = 1
         for key, value in data["motion_mks"].iteritems():
             f.write('\t\t\t<objreal ref="' + str(key) + '">\n')
+            mov_counter = 1
+            mot_counter = 1
             for movement in value:
                 f.write('\t\t\t\t<!-- Movement Name: {} -->\n'.format(movement.name))
                 f.write('\t\t\t\t<begin mov="{}" start="0"/>\n'.format(mov_counter))
