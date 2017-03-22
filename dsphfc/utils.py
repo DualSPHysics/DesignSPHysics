@@ -879,6 +879,9 @@ def dump_to_xml(data, save_name):
     f.write('\t</casedef>\n')
     f.write('\t<execution>\n')
     for mk, motlist in data["motion_mks"].iteritems():
+        # Check if object has motion enabled but no motions selected
+        if len(motlist) < 1:
+            continue
         if isinstance(motlist[0], WaveMovement):
             mot = motlist[0].wave_gen
             f.write('\t\t\t<special>\n')
@@ -1069,3 +1072,8 @@ def import_stl(filename=None, scale_x=1, scale_y=1, scale_z=1, name=None):
 
     Mesh.insert(temp_file_name, FreeCAD.activeDocument().Name)
     FreeCADGui.SendMsgToActiveView("ViewFit")
+
+
+def get_fc_object(internal_name):
+    """ Returns a FreeCAD internal object by a name. """
+    return FreeCAD.getDocument("DSPH_Case").getObject(internal_name)

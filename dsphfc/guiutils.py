@@ -1125,24 +1125,61 @@ def case_summary(orig_data):
     if not utils.valid_document_environment():
         return
 
+    # Data copy to avoid referencing issues
     data = dict(orig_data)
+
     # Preprocess data to show in data copy
     data['gravity'] = "({}, {}, {})".format(*data['gravity'])
 
+    # Setting certain values to automatic
     for x in ['hswl', 'speedsystem', 'speedsound', 'h', 'b', 'massfluid', 'massbound']:
         data[x] = '<u>Automatic</u>' if data[x + '_auto'] else data[x]
 
-    data["objects_info"] = "<i>Still in development</i>"
-    data["movement_info"] = "<i>Still in development</i>"
+    # region Formatting objects info
+    data['objects_info'] = ""
+    if len(data['simobjects']) > 1:
+        data['objects_info'] += "<ul>"
 
+    # data['simobjects'] is a dict with format
+    # {'key': ['mk', 'type', 'fill']} where key is an internal name.
+    for key, value in data['simobjects'].iteritems():
+        if key.lower() == 'case_limits':
+            continue
+        fc_object = utils.get_fc_object(key)
+        data['objects_info'] += "<li><b>{label}</b> (<i>{iname}</i>): <br/>" \
+                                "Type: {type} (MK{type}: {mk})<br/>" \
+                                "Fill mode: {fillmode}</li><br/>".format(label=fc_object.Label, iname=key,
+                                                                         type=value[1].title(), mk=value[0],
+                                                                         fillmode=value[2].title())
+    if len(data['simobjects']) > 1:
+        data['objects_info'] += "</ul>"
+    # endregion Formatting objects info
+
+    # region Formatting movement info
+    data['movement_info'] = ""
+    if len(data['simobjects']) > 1:
+        data['movement_info'] += "<ul>"
+
+    for mov in data['global_movements']:
+        data['movement_info'] += "<li>{}</li><br/>".format(str(mov))
+
+    if len(data['simobjects']) > 1:
+        data['movement_info'] += "</ul>"
+    # endregion Formatting movement info
+
+    # Dialog creation and template filling
     main_window = QtGui.QDialog()
     main_layout = QtGui.QVBoxLayout()
     info = QtGui.QTextEdit()
 
     lib_folder = os.path.dirname(os.path.realpath(__file__))
-    info_text = ""
-    with open("{}/case_summary_template.txt".format(lib_folder), "r") as input_template:
-        info_text = input_template.read().format(**data)
+
+    try:
+        with open("{}/templates/case_summary_template.html".format(lib_folder), "r") as input_template:
+            info_text = input_template.read().format(**data)
+    except:
+        error_dialog("An error ocurred trying to load the template file and format it.")
+        return
 
     info.setText(info_text)
     info.setReadOnly(True)
