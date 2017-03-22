@@ -92,6 +92,7 @@ class Movement(object):
 
     def __init__(self, name="New Movement", motion_list=None, loop=False):
         self.name = name
+        self.type = "Movement"
         if not motion_list:
             motion_list = list()
         self.motion_list = motion_list
@@ -132,6 +133,7 @@ class WaveMovement(object):
 
     def __init__(self, name="New WaveGen", wave_gen=None):
         self.name = name
+        self.type = "Wave Movement"
         if not wave_gen:
             wave_gen = None
         self.wave_gen = wave_gen
@@ -168,6 +170,7 @@ class WaveGen(object):
                  piston_dir=None, wave_height=0.5, wave_period=1):
         super(WaveGen, self).__init__()
         self.parent_movement = parent_movement
+        self.type = "Base Wave Generator"
         self.wave_order = wave_order
         self.start = start
         self.duration = duration
@@ -190,6 +193,7 @@ class RegularWaveGen(WaveGen):
                  piston_dir=None, wave_height=0.5, wave_period=1, phase=0, ramp=0):
         super(RegularWaveGen, self).__init__(parent_movement, wave_order, start, duration, depth, fixed_depth,
                                              piston_dir, wave_height, wave_period)
+        self.type = "Regular Wave Generator"
         self.phase = phase
         self.ramp = ramp
 
@@ -214,6 +218,7 @@ class IrregularWaveGen(WaveGen):
                  serieini_autofit=True):
         super(IrregularWaveGen, self).__init__(parent_movement, wave_order, start, duration, depth, fixed_depth,
                                                piston_dir, wave_height, wave_period)
+        self.type = "Irregular Wave Generator"
         self.spectrum = spectrum
         self.discretization = discretization
         self.peak_coef = peak_coef
@@ -233,6 +238,7 @@ class BaseMotion(object):
 
     def __init__(self, duration=1, parent_movement=None):
         self.duration = duration
+        self.type = "Base Motion"
         self.parent_movement = parent_movement
 
     def __str__(self):
@@ -251,6 +257,7 @@ class RectMotion(BaseMotion):
             velocity = [0, 0, 0]
         BaseMotion.__init__(self, duration)
         self.parent_movement = parent_movement
+        self.type = "Rectilinear Motion"
         self.velocity = velocity
 
     def __str__(self):
@@ -271,6 +278,7 @@ class AccRectMotion(BaseMotion):
         if acceleration is None:
             acceleration = [0, 0, 0]
         BaseMotion.__init__(self, duration)
+        self.type = "Accelerated Rectilinear motion"
         self.parent_movement = parent_movement
         self.velocity = velocity
         self.acceleration = acceleration
@@ -297,6 +305,7 @@ class RotMotion(BaseMotion):
         if ang_vel is None:
             ang_vel = 0
         BaseMotion.__init__(self, duration)
+        self.type = "Rotational Motion"
         self.parent_movement = parent_movement
         self.axis1 = axis1
         self.axis2 = axis2
@@ -327,6 +336,7 @@ class AccRotMotion(BaseMotion):
         if ang_acc is None:
             ang_acc = 0
         BaseMotion.__init__(self, duration)
+        self.type = "Accelerated Rotational Motion"
         self.parent_movement = parent_movement
         self.axis1 = axis1
         self.axis2 = axis2
@@ -362,6 +372,7 @@ class AccCirMotion(BaseMotion):
         if reference is None:
             reference = [0, 0, 0]
         BaseMotion.__init__(self, duration)
+        self.type = "Circular Motion"
         self.parent_movement = parent_movement
         self.reference = reference
         self.axis1 = axis1
@@ -383,6 +394,7 @@ class WaitMotion(BaseMotion):
     def __init__(self, duration=1, parent_movement=None):
         BaseMotion.__init__(self, duration)
         self.parent_movement = parent_movement
+        self.type = "Wait Interval"
 
     def __str__(self):
         return "WaitMotion [Duration: {}]".format(self.duration)
@@ -411,6 +423,7 @@ class RotSinuMotion(BaseMotion):
         if phase is None:
             phase = 0
         BaseMotion.__init__(self, duration)
+        self.type = "Sinusoidal Rotational Motion"
         self.parent_movement = parent_movement
         self.axis1 = axis1
         self.axis2 = axis2
@@ -450,6 +463,7 @@ class CirSinuMotion(BaseMotion):
         if phase is None:
             phase = 0
         BaseMotion.__init__(self, duration)
+        self.type = "Sinusoidal Circular Motion"
         self.parent_movement = parent_movement
         self.reference = reference
         self.axis1 = axis1
@@ -481,6 +495,7 @@ class RectSinuMotion(BaseMotion):
         if phase is None:
             phase = [0, 0, 0]
         BaseMotion.__init__(self, duration)
+        self.type = "Sinusoidal Rectilinear Motion"
         self.parent_movement = parent_movement
         self.freq = freq
         self.ampl = ampl
