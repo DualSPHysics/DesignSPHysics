@@ -62,7 +62,6 @@ __status__ = "Development"
 # ------------------------------- 0.3 BETA -------------------------------
 # TODO: 0.3Beta - Add 2D case limits with a plane
 # TODO: 0.3Beta - Add wave saving features to wave generators.
-# TODO: 0.3Beta - Change [0,1] values for selectors.
 # TODO: 0.3Beta - Movement brief explanation
 # TODO: 0.3Beta - Periodicity support - Show arrows (bounds) to show periodicity
 # TODO: 0.3Beta - Add postprocessing tools

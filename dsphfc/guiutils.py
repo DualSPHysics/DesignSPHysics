@@ -116,30 +116,24 @@ def def_constants_window(data):
     # Lattice for boundaries layout and components
     lattice_layout = QtGui.QHBoxLayout()
     lattice_label = QtGui.QLabel("Lattice for Boundaries: ")
-    lattice_input = QtGui.QLineEdit()
-    lattice_input.setMaxLength(1)
-    lattice_validator = QtGui.QIntValidator(1, 2, lattice_input)
-    lattice_input.setText(str(data['lattice_bound']))
-    lattice_input.setValidator(lattice_validator)
-    lattice_label2 = QtGui.QLabel("units")
+    lattice_input = QtGui.QComboBox()
+    lattice_input.insertItems(0, ['Lattice 1', 'Lattice 2'])
+    lattice_input.setCurrentIndex(int(data['lattice_bound']) - 1)
 
     lattice_layout.addWidget(lattice_label)
     lattice_layout.addWidget(lattice_input)
-    lattice_layout.addWidget(lattice_label2)
+    lattice_layout.addStretch(1)
 
     # Lattice for fluids layout and components
     lattice2_layout = QtGui.QHBoxLayout()
     lattice2_label = QtGui.QLabel("Lattice for Fluids: ")
-    lattice2_input = QtGui.QLineEdit()
-    lattice2_input.setMaxLength(1)
-    lattice2_validator = QtGui.QIntValidator(1, 2, lattice2_input)
-    lattice2_input.setText(str(data['lattice_bound']))
-    lattice2_input.setValidator(lattice2_validator)
-    lattice2_label2 = QtGui.QLabel("units")
+    lattice2_input = QtGui.QComboBox()
+    lattice2_input.insertItems(0, ['Lattice 1', 'Lattice 2'])
+    lattice2_input.setCurrentIndex(int(data['lattice_fluid']) - 1)
 
     lattice2_layout.addWidget(lattice2_label)
     lattice2_layout.addWidget(lattice2_input)
-    lattice2_layout.addWidget(lattice2_label2)
+    lattice2_layout.addStretch(1)
 
     # Gravity
     gravity_layout = QtGui.QHBoxLayout()
@@ -414,8 +408,8 @@ def def_constants_window(data):
 
     # ------------ Button behaviour definition --------------
     def on_ok():
-        data['lattice_bound'] = lattice_input.text()
-        data['lattice_fluid'] = lattice2_input.text()
+        data['lattice_bound'] = str(lattice_input.currentIndex() + 1)
+        data['lattice_fluid'] = str(lattice2_input.currentIndex() + 1)
         data['gravity'] = [gravityx_input.text(), gravityy_input.text(), gravityz_input.text()]
         data['rhop0'] = rhop0_input.text()
         data['hswl'] = hswl_input.text()
@@ -497,30 +491,24 @@ def def_execparams_window(data):
     # Precision in particle interaction
     posdouble_layout = QtGui.QHBoxLayout()
     posdouble_label = QtGui.QLabel("Precision in particle interaction: ")
-    posdouble_input = QtGui.QLineEdit()
-    posdouble_input.setMaxLength(1)
-    posdouble_validator = QtGui.QIntValidator(0, 2, posdouble_input)
-    posdouble_input.setText(str(data['posdouble']))
-    posdouble_input.setValidator(posdouble_validator)
-    posdouble_label2 = QtGui.QLabel("[0,2]")
+    posdouble_input = QtGui.QComboBox()
+    posdouble_input.insertItems(0, ['Simple', 'Double', 'Uses and saves double'])
+    posdouble_input.setCurrentIndex(int(data['posdouble']))
 
     posdouble_layout.addWidget(posdouble_label)
     posdouble_layout.addWidget(posdouble_input)
-    posdouble_layout.addWidget(posdouble_label2)
+    posdouble_layout.addStretch(1)
 
     # Step Algorithm
     stepalgorithm_layout = QtGui.QHBoxLayout()
     stepalgorithm_label = QtGui.QLabel("Step Algorithm: ")
-    stepalgorithm_input = QtGui.QLineEdit()
-    stepalgorithm_input.setMaxLength(1)
-    stepalgorithm_validator = QtGui.QIntValidator(0, 2, stepalgorithm_input)
-    stepalgorithm_input.setText(str(data['stepalgorithm']))
-    stepalgorithm_input.setValidator(stepalgorithm_validator)
-    stepalgorithm_label2 = QtGui.QLabel("[1,2]")
+    stepalgorithm_input = QtGui.QComboBox()
+    stepalgorithm_input.insertItems(0, ['Verlet', 'Symplectic'])
+    stepalgorithm_input.setCurrentIndex(int(data['stepalgorithm']) - 1)
 
     stepalgorithm_layout.addWidget(stepalgorithm_label)
     stepalgorithm_layout.addWidget(stepalgorithm_input)
-    stepalgorithm_layout.addWidget(stepalgorithm_label2)
+    stepalgorithm_layout.addStretch(1)
 
     # Verlet steps
     verletsteps_layout = QtGui.QHBoxLayout()
@@ -537,37 +525,28 @@ def def_execparams_window(data):
     # Kernel
     kernel_layout = QtGui.QHBoxLayout()
     kernel_label = QtGui.QLabel("Interaction kernel: ")
-    kernel_input = QtGui.QLineEdit()
-    kernel_input.setMaxLength(1)
-    kernel_validator = QtGui.QIntValidator(0, 2, kernel_input)
-    kernel_input.setText(str(data['kernel']))
-    kernel_input.setValidator(kernel_validator)
-    kernel_label2 = QtGui.QLabel("[1,2]")
+    kernel_input = QtGui.QComboBox()
+    kernel_input.insertItems(0, ['Cubic spline', 'Wendland'])
+    kernel_input.setCurrentIndex(int(data['kernel']) - 1)
 
     kernel_layout.addWidget(kernel_label)
     kernel_layout.addWidget(kernel_input)
-    kernel_layout.addWidget(kernel_label2)
+    kernel_layout.addStretch(1)
 
     # Viscosity formulation
-    def on_viscotreatment_change():
-        if viscotreatment_input.text() == "1":
-            visco_input.setText("0.01")
-
-        elif viscotreatment_input.text() == "2":
-            visco_input.setText("0.000001")
+    def on_viscotreatment_change(index):
+        visco_input.setText("0.01" if index == 0 else "0.000001")
 
     viscotreatment_layout = QtGui.QHBoxLayout()
     viscotreatment_label = QtGui.QLabel("Viscosity Formulation: ")
-    viscotreatment_input = QtGui.QLineEdit()
-    viscotreatment_input.setMaxLength(1)
-    viscotreatment_validator = QtGui.QIntValidator(0, 2, viscotreatment_input)
-    viscotreatment_input.setText(str(data['viscotreatment']))
-    viscotreatment_input.setValidator(viscotreatment_validator)
-    viscotreatment_input.textChanged.connect(on_viscotreatment_change)
-    viscotreatment_label2 = QtGui.QLabel("[1,2]")
+    viscotreatment_input = QtGui.QComboBox()
+    viscotreatment_input.insertItems(0, ['Artificial', 'Laminar + SPS'])
+    viscotreatment_input.setCurrentIndex(int(data['viscotreatment']) - 1)
+    viscotreatment_input.currentIndexChanged.connect(on_viscotreatment_change)
+
     viscotreatment_layout.addWidget(viscotreatment_label)
     viscotreatment_layout.addWidget(viscotreatment_input)
-    viscotreatment_layout.addWidget(viscotreatment_label2)
+    viscotreatment_layout.addStretch(1)
 
     # Viscosity value
     visco_layout = QtGui.QHBoxLayout()
@@ -600,15 +579,13 @@ def def_execparams_window(data):
     # Shifting mode
     shifting_layout = QtGui.QHBoxLayout()
     shifting_label = QtGui.QLabel("Shifting mode: ")
-    shifting_input = QtGui.QLineEdit()
-    shifting_input.setMaxLength(1)
-    shifting_validator = QtGui.QIntValidator(1, 3, shifting_input)
-    shifting_input.setText(str(data['shifting']))
-    shifting_input.setValidator(shifting_validator)
-    shifting_label2 = QtGui.QLabel("[1,3]")
+    shifting_input = QtGui.QComboBox()
+    shifting_input.insertItems(0, ['None', 'Ignore bound', 'Ignore fixed', 'Full'])
+    shifting_input.setCurrentIndex(int(data['shifting']))
+
     shifting_layout.addWidget(shifting_label)
     shifting_layout.addWidget(shifting_input)
-    shifting_layout.addWidget(shifting_label2)
+    shifting_layout.addStretch(1)
 
     # Coefficient for shifting
     shiftcoef_layout = QtGui.QHBoxLayout()
@@ -631,15 +608,13 @@ def def_execparams_window(data):
     # Rigid algorithm
     rigidalgorithm_layout = QtGui.QHBoxLayout()
     rigidalgorithm_label = QtGui.QLabel("Rigid algorithm: ")
-    rigidalgorithm_input = QtGui.QLineEdit()
-    rigidalgorithm_input.setMaxLength(1)
-    rigidalgorithm_validator = QtGui.QIntValidator(1, 2, rigidalgorithm_input)
-    rigidalgorithm_input.setText(str(data['rigidalgorithm']))
-    rigidalgorithm_input.setValidator(rigidalgorithm_validator)
-    rigidalgorithm_label2 = QtGui.QLabel("[1,2]")
+    rigidalgorithm_input = QtGui.QComboBox()
+    rigidalgorithm_input.insertItems(0, ['SPH', 'DEM'])
+    rigidalgorithm_input.setCurrentIndex(int(data['rigidalgorithm']) - 1)
+
     rigidalgorithm_layout.addWidget(rigidalgorithm_label)
     rigidalgorithm_layout.addWidget(rigidalgorithm_input)
-    rigidalgorithm_layout.addWidget(rigidalgorithm_label2)
+    rigidalgorithm_layout.addStretch(1)
 
     # Sim start freeze time
     ftpause_layout = QtGui.QHBoxLayout()
@@ -804,18 +779,18 @@ def def_execparams_window(data):
 
     # ------------ Button behaviour definition --------------
     def on_ok():
-        data['posdouble'] = posdouble_input.text()
-        data['stepalgorithm'] = stepalgorithm_input.text()
+        data['posdouble'] = str(posdouble_input.currentIndex())
+        data['stepalgorithm'] = str(stepalgorithm_input.currentIndex() + 1)
         data['verletsteps'] = verletsteps_input.text()
-        data['kernel'] = kernel_input.text()
-        data['viscotreatment'] = viscotreatment_input.text()
+        data['kernel'] = str(kernel_input.currentIndex() + 1)
+        data['viscotreatment'] = viscotreatment_input.currentIndex() + 1
         data['visco'] = visco_input.text()
         data['viscoboundfactor'] = viscoboundfactor_input.text()
         data['deltasph'] = deltasph_input.text()
-        data['shifting'] = shifting_input.text()
+        data['shifting'] = str(shifting_input.currentIndex())
         data['shiftcoef'] = shiftcoef_input.text()
         data['shifttfs'] = shifttfs_input.text()
-        data['rigidalgorithm'] = rigidalgorithm_input.text()
+        data['rigidalgorithm'] = str(rigidalgorithm_input.currentIndex() + 1)
         data['ftpause'] = ftpause_input.text()
         data['coefdtmin'] = coefdtmin_input.text()
         data['dtini'] = dtini_input.text()

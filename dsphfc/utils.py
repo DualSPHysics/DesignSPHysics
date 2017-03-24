@@ -261,7 +261,7 @@ def get_default_data():
     data['dp'] = 0.0005
 
     # Data relative to execution parameters
-    data['posdouble'] = 1
+    data['posdouble'] = 0
     data['stepalgorithm'] = 1
     data['verletsteps'] = 40
     data['kernel'] = 2
@@ -271,7 +271,7 @@ def get_default_data():
     data['deltasph'] = 0
     data['shifting'] = 0
     data['shiftcoef'] = -2
-    data['shifttfs'] = 1.5
+    data['shifttfs'] = 0
     data['rigidalgorithm'] = 1
     data['ftpause'] = 0.0
     data['coefdtmin'] = 0.05
@@ -961,11 +961,11 @@ def dump_to_xml(data, save_name):
         data['viscoboundfactor']) + '" comment="Multiply viscosity value with boundary (default=1)" />\n')
     f.write('\t\t\t<parameter key="DeltaSPH" value="' + str(
         data['deltasph']) + '" comment="DeltaSPH value, 0.1 is the typical value, with 0 disabled (default=0)" />\n')
-    f.write('\t\t\t<parameter key="#Shifting" value="' + str(
+    f.write('\t\t\t<parameter key="Shifting" value="' + str(
         data['shifting']) + '" comment="Shifting mode 0:None, 1:Ignore bound, 2:Ignore fixed, 3:Full (default=0)" />\n')
-    f.write('\t\t\t<parameter key="#ShiftCoef" value="' + str(
+    f.write('\t\t\t<parameter key="ShiftCoef" value="' + str(
         data['shiftcoef']) + '" comment="Coefficient for shifting computation (default=-2)" />\n')
-    f.write('\t\t\t<parameter key="#ShiftTFS" value="' + str(data['shifttfs']) +
+    f.write('\t\t\t<parameter key="ShiftTFS" value="' + str(data['shifttfs']) +
             '" comment="Threshold to detect free surface. Typically 1.5 for 2D and 2.75 for 3D (default=0)" />\n')
     f.write('\t\t\t<parameter key="RigidAlgorithm" value="' + str(
         data['rigidalgorithm']) + '" comment="Rigid Algorithm 1:SPH, 2:DEM (default=1)" />\n')
