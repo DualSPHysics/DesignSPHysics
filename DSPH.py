@@ -56,9 +56,11 @@ __email__ = "anvieiravazquez@gmail.com"
 __status__ = "Development"
 
 # region General To-Do to use with PyCharm
+# -------------------------------   WIKI   -------------------------------
+# TODO: Wiki - Add motion section
+# TODO: Wiki - Add case summary
 # ------------------------------- 0.3 BETA -------------------------------
 # TODO: 0.3Beta - Add 2D case limits with a plane
-# TODO: 0.3Beta - Implement global case info summary.
 # TODO: 0.3Beta - Add wave saving features to wave generators.
 # TODO: 0.3Beta - Change [0,1] values for selectors.
 # TODO: 0.3Beta - Movement brief explanation

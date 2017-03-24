@@ -1130,6 +1130,17 @@ def case_summary(orig_data):
 
     # Preprocess data to show in data copy
     data['gravity'] = "({}, {}, {})".format(*data['gravity'])
+    if data['project_name'] == "":
+        data['project_name'] = "<i>{}</i>".format(utils.__("Not yet saved"))
+
+    if data['project_path'] == "":
+        data['project_path'] = "<i>{}</i>".format(utils.__("Not yet saved"))
+
+    for k in ['gencase_path', 'dsphysics_path', 'partvtk4_path']:
+        if data[k] == "":
+            data[k] = "<i>{}</i>".format(utils.__("Executable not correctly set"))
+
+    data['stepalgorithm'] = {'1': 'Verlet', '2': 'Symplectic'}[str(data['stepalgorithm'])]
 
     # Setting certain values to automatic
     for x in ['hswl', 'speedsystem', 'speedsound', 'h', 'b', 'massfluid', 'massbound']:
@@ -1145,14 +1156,22 @@ def case_summary(orig_data):
             if key.lower() == 'case_limits':
                 continue
             fc_object = utils.get_fc_object(key)
+            is_floating = utils.__('Yes') if str(value[0]) in data['floating_mks'].keys() else utils.__('No')
+            is_floating = utils.__('Not applicable') if value[1].lower() == "fluid" else is_floating
+            has_initials = utils.__('Yes') if str(value[0]) in data['initials_mks'].keys() else utils.__('No')
+            has_initials = utils.__('Not applicable') if value[1].lower() == "bound" else has_initials
             data['objects_info'] += "<li><b>{label}</b> (<i>{iname}</i>): <br/>" \
                                     "Type: {type} (MK{type}: {mk})<br/>" \
-                                    "Fill mode: {fillmode}</li><br/>".format(label=fc_object.Label, iname=key,
-                                                                             type=value[1].title(), mk=value[0],
-                                                                             fillmode=value[2].title())
+                                    "Fill mode: {fillmode}<br/>" \
+                                    "Floats: {floats}<br/>" \
+                                    "Has initials: {initials}</li><br/>".format(label=fc_object.Label, iname=key,
+                                                                                type=value[1].title(), mk=value[0],
+                                                                                fillmode=value[2].title(),
+                                                                                floats=is_floating,
+                                                                                initials=has_initials)
         data['objects_info'] += "</ul>"
     else:
-        data['objects_info'] += "No objects were added to the simulation yet."
+        data['objects_info'] += utils.__("No objects were added to the simulation yet.")
     # endregion Formatting objects info
 
     # region Formatting movement info
