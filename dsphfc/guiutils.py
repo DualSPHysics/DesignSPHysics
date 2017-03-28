@@ -1025,6 +1025,7 @@ def widget_state_config(widgets, config):
         widgets["objectlist_table"].setEnabled(False)
         widgets["dp_input"].setEnabled(False)
         widgets["summary_bt"].setEnabled(False)
+        widgets["toggle3dbutton"].setEnabled(False)
     elif config == "new case":
         widgets["constants_button"].setEnabled(True)
         widgets["execparams_button"].setEnabled(True)
@@ -1038,6 +1039,7 @@ def widget_state_config(widgets, config):
         widgets["casecontrols_bt_addfillbox"].setEnabled(True)
         widgets["casecontrols_bt_addstl"].setEnabled(True)
         widgets["summary_bt"].setEnabled(True)
+        widgets["toggle3dbutton"].setEnabled(True)
     elif config == "gencase done":
         widgets["ex_selector_combo"].setEnabled(True)
         widgets["ex_button"].setEnabled(True)
@@ -1054,6 +1056,7 @@ def widget_state_config(widgets, config):
         widgets["casecontrols_bt_addfillbox"].setEnabled(True)
         widgets["casecontrols_bt_addstl"].setEnabled(True)
         widgets["summary_bt"].setEnabled(True)
+        widgets["toggle3dbutton"].setEnabled(True)
     elif config == "simulation done":
         widgets["export_button"].setEnabled(True)
         widgets["exportopts_button"].setEnabled(True)
@@ -1116,6 +1119,7 @@ def case_summary(orig_data):
             data[k] = "<i>{}</i>".format(utils.__("Executable not correctly set"))
 
     data['stepalgorithm'] = {'1': 'Verlet', '2': 'Symplectic'}[str(data['stepalgorithm'])]
+    data['project_mode'] = '3D' if data['3dmode'] else '2D'
 
     # Setting certain values to automatic
     for x in ['hswl', 'speedsystem', 'speedsound', 'h', 'b', 'massfluid', 'massbound']:
@@ -1196,3 +1200,8 @@ def case_summary(orig_data):
     main_window.setModal(True)
     main_window.setMinimumSize(500, 650)
     main_window.exec_()
+
+
+def get_fc_view_object(internal_name):
+    """ Returns a FreeCADGui View provider object by a name. """
+    return FreeCADGui.getDocument("DSPH_Case").getObject(internal_name)

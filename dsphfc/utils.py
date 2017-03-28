@@ -57,7 +57,7 @@ DEBUGGING = True
 DIVIDER = 1000
 PICKLE_PROTOCOL = 1  # Binary mode
 VERSION = "0.3-dev"
-
+WIDTH_2D = 0.001
 
 # ------ END CONSTANTS DEFINITION ------
 
@@ -293,6 +293,9 @@ def get_default_data():
     data['dsphysics_path'] = ""
     data['partvtk4_path'] = ""
 
+    # Case mode
+    data['3dmode'] = True
+
     # Stores project path and name for future script needs
     data['project_path'] = ""
     data['project_name'] = ""
@@ -445,7 +448,7 @@ def create_dsph_document():
     FreeCADGui.activateWorkbench("PartWorkbench")
     FreeCADGui.activeDocument().activeView().viewAxonometric()
     FreeCAD.ActiveDocument.addObject("Part::Box", "Case_Limits")
-    FreeCAD.ActiveDocument.getObject("Case_Limits").Label = "Case_Limits"
+    FreeCAD.ActiveDocument.getObject("Case_Limits").Label = "Case Limits (3D)"
     FreeCAD.ActiveDocument.getObject("Case_Limits").Length = '15 mm'
     FreeCAD.ActiveDocument.getObject("Case_Limits").Width = '15 mm'
     FreeCAD.ActiveDocument.getObject("Case_Limits").Height = '15 mm'
@@ -509,10 +512,16 @@ def dump_to_xml(data, save_name):
     f.write('\t\t\t\t<pointmin x="' + str((min_point.x / DIVIDER)) + '" y="' + str(
         (min_point.y / DIVIDER)) + '" z="' + str(
         (min_point.z / DIVIDER)) + '" />\n')
-    f.write('\t\t\t\t<pointmax x="' + str(
-        (min_point.x / DIVIDER + max_point.Length.Value / DIVIDER)) + '" y="' + str(
-        (min_point.y / DIVIDER + max_point.Width.Value / DIVIDER)) + '" z="' + str(
-        (min_point.z / DIVIDER + max_point.Height.Value / DIVIDER)) + '" />\n')
+    if data['3dmode']:
+        f.write('\t\t\t\t<pointmax x="' + str(
+            (min_point.x / DIVIDER + max_point.Length.Value / DIVIDER)) + '" y="' + str(
+            (min_point.y / DIVIDER + max_point.Width.Value / DIVIDER)) + '" z="' + str(
+            (min_point.z / DIVIDER + max_point.Height.Value / DIVIDER)) + '" />\n')
+    else:
+        f.write('\t\t\t\t<pointmax x="' + str(
+            (min_point.x / DIVIDER + max_point.Length.Value / DIVIDER)) + '" y="' + str(
+            (min_point.y / DIVIDER)) + '" z="' + str(
+            (min_point.z / DIVIDER + max_point.Height.Value / DIVIDER)) + '" />\n')
     f.write('\t\t\t</definition>\n')
     f.write('\t\t\t<commands>\n')
     f.write('\t\t\t\t<mainlist>\n')
