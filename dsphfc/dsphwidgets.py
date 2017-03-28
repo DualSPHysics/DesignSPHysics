@@ -1774,6 +1774,16 @@ class RegularWaveMotionTimeline(QtGui.QWidget):
         self.ramp_input = QtGui.QLineEdit()
         self.ramp_units_label = QtGui.QLabel(__("m"))
 
+        self.disksave_label = QtGui.QLabel(__("Save to disk"))
+        self.disksave_periods = QtGui.QLineEdit()
+        self.disksave_periods_label = QtGui.QLabel(__("periods"))
+        self.disksave_periodsteps = QtGui.QLineEdit()
+        self.disksave_periodsteps_label = QtGui.QLabel(__("period steps"))
+        self.disksave_xpos = QtGui.QLineEdit()
+        self.disksave_xpos_label = QtGui.QLabel(__("xpos"))
+        self.disksave_zpos = QtGui.QLineEdit()
+        self.disksave_zpos_label = QtGui.QLabel(__("zpos"))
+
         self.root_layout = QtGui.QHBoxLayout()
         self.root_layout.addWidget(self.root_label)
         self.root_layout.addStretch(1)
@@ -1800,10 +1810,18 @@ class RegularWaveMotionTimeline(QtGui.QWidget):
         [self.fourth_row_layout.addWidget(x) for x in [self.phase_label, self.phase_input, self.phase_units_label,
                                                        self.ramp_label, self.ramp_input, self.ramp_units_label]]
 
+        self.fifth_row_layout = QtGui.QHBoxLayout()
+        [self.fifth_row_layout.addWidget(x) for x in [self.disksave_label, self.disksave_periods,
+                                                      self.disksave_periods_label, self.disksave_periodsteps,
+                                                      self.disksave_periodsteps_label, self.disksave_xpos,
+                                                      self.disksave_xpos_label, self.disksave_zpos,
+                                                      self.disksave_zpos_label]]
+
         self.main_layout.addLayout(self.root_layout)
         self.main_layout.addWidget(guiutils.h_line_generator())
         [self.main_layout.addLayout(x) for x in [self.first_row_layout, self.second_row_layout,
-                                                 self.third_row_layout, self.fourth_row_layout]]
+                                                 self.third_row_layout, self.fourth_row_layout,
+                                                 self.fifth_row_layout]]
 
         self.setLayout(self.main_layout)
         self.fill_values(reg_wave_gen)
@@ -1821,6 +1839,10 @@ class RegularWaveMotionTimeline(QtGui.QWidget):
         self.wave_period_input.setText(str(reg_wave_gen.wave_period))
         self.phase_input.setText(str(reg_wave_gen.phase))
         self.ramp_input.setText(str(reg_wave_gen.ramp))
+        self.disksave_periods.setText(str(reg_wave_gen.disksave_periods))
+        self.disksave_periodsteps.setText(str(reg_wave_gen.disksave_periodsteps))
+        self.disksave_xpos.setText(str(reg_wave_gen.disksave_xpos))
+        self.disksave_zpos.setText(str(reg_wave_gen.disksave_zpos))
 
     def _init_connections(self):
         self.wave_order_selector.currentIndexChanged.connect(self.on_change)
@@ -1828,7 +1850,9 @@ class RegularWaveMotionTimeline(QtGui.QWidget):
                                                          self.fixed_depth_input, self.piston_dir_x,
                                                          self.piston_dir_y, self.piston_dir_z,
                                                          self.wave_height_input, self.wave_period_input,
-                                                         self.ramp_input, self.phase_input]]
+                                                         self.ramp_input, self.phase_input, self.disksave_periods,
+                                                         self.disksave_periodsteps, self.disksave_xpos,
+                                                         self.disksave_zpos]]
 
     def on_change(self):
         self._sanitize_input()
@@ -1848,7 +1872,11 @@ class RegularWaveMotionTimeline(QtGui.QWidget):
                               wave_height=float(self.wave_height_input.text()),
                               wave_period=float(self.wave_period_input.text()),
                               phase=float(self.phase_input.text()),
-                              ramp=float(self.ramp_input.text()))
+                              ramp=float(self.ramp_input.text()),
+                              disksave_periods=float(self.disksave_periods.text()),
+                              disksave_periodsteps=float(self.disksave_periodsteps.text()),
+                              disksave_xpos=float(self.disksave_xpos.text()),
+                              disksave_zpos=float(self.disksave_zpos.text()))
 
     def on_delete(self):
         self.deleted.emit(self.index, self.construct_motion_object())
@@ -1861,7 +1889,9 @@ class RegularWaveMotionTimeline(QtGui.QWidget):
                    self.fixed_depth_input, self.piston_dir_x,
                    self.piston_dir_y, self.piston_dir_z,
                    self.wave_height_input, self.wave_period_input,
-                   self.ramp_input, self.phase_input]]
+                   self.ramp_input, self.phase_input, self.disksave_periods,
+                   self.disksave_periodsteps, self.disksave_xpos,
+                   self.disksave_zpos]]
 
 
 class IrregularWaveMotionTimeline(QtGui.QWidget):
