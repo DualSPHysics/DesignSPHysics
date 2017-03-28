@@ -1978,6 +1978,34 @@ class IrregularWaveMotionTimeline(QtGui.QWidget):
         self.ramptime_input = QtGui.QLineEdit()
         self.ramptime_units_label = QtGui.QLabel(__("s"))
 
+        self.savemotion_label = QtGui.QLabel(__("Motion saving"))
+        self.savemotion_time_input = QtGui.QLineEdit()
+        self.savemotion_time_label = QtGui.QLabel(__("time"))
+        self.savemotion_timedt_input = QtGui.QLineEdit()
+        self.savemotion_timedt_label = QtGui.QLabel(__("timedt"))
+        self.savemotion_xpos_input = QtGui.QLineEdit()
+        self.savemotion_xpos_label = QtGui.QLabel(__("xpos"))
+        self.savemotion_zpos_input = QtGui.QLineEdit()
+        self.savemotion_zpos_label = QtGui.QLabel(__("zpos"))
+
+        self.saveserie_label = QtGui.QLabel(__("Serie saving"))
+        self.saveserie_timemin_input = QtGui.QLineEdit()
+        self.saveserie_timemin_label = QtGui.QLabel(__("timemin"))
+        self.saveserie_timemax_input = QtGui.QLineEdit()
+        self.saveserie_timemax_label = QtGui.QLabel(__("timemax"))
+        self.saveserie_timedt_input = QtGui.QLineEdit()
+        self.saveserie_timedt_label = QtGui.QLabel(__("timedt"))
+        self.saveserie_xpos_input = QtGui.QLineEdit()
+        self.saveserie_xpos_label = QtGui.QLabel(__("xpos"))
+
+        self.saveseriewaves_label = QtGui.QLabel(__("Serie waves saving"))
+        self.saveseriewaves_timemin_input = QtGui.QLineEdit()
+        self.saveseriewaves_timemin_label = QtGui.QLabel(__("timemin"))
+        self.saveseriewaves_timemax_input = QtGui.QLineEdit()
+        self.saveseriewaves_timemax_label = QtGui.QLabel(__("timemax"))
+        self.saveseriewaves_xpos_input = QtGui.QLineEdit()
+        self.saveseriewaves_xpos_label = QtGui.QLabel(__("xpos"))
+
         self.root_layout = QtGui.QHBoxLayout()
         self.root_layout.addWidget(self.root_label)
         self.root_layout.addStretch(1)
@@ -2019,11 +2047,32 @@ class IrregularWaveMotionTimeline(QtGui.QWidget):
         [self.seventh_row_layout.addWidget(x) for x in [self.ramptime_label, self.ramptime_input,
                                                         self.ramptime_units_label]]
 
+        self.eighth_row_layout = QtGui.QHBoxLayout()
+        [self.eighth_row_layout.addWidget(x) for x in [self.savemotion_label, self.savemotion_time_input,
+                                                       self.savemotion_time_label, self.savemotion_timedt_input,
+                                                       self.savemotion_timedt_label, self.savemotion_xpos_input,
+                                                       self.savemotion_xpos_label, self.savemotion_zpos_input,
+                                                       self.savemotion_zpos_label]]
+        self.ninth_row_layout = QtGui.QHBoxLayout()
+        [self.ninth_row_layout.addWidget(x) for x in [self.saveserie_label, self.saveserie_timemin_input,
+                                                      self.saveserie_timemin_label, self.saveserie_timemax_input,
+                                                      self.saveserie_timemax_label, self.saveserie_timedt_input,
+                                                      self.saveserie_timedt_label, self.saveserie_xpos_input,
+                                                      self.saveserie_xpos_label]]
+
+        self.tenth_row_layout = QtGui.QHBoxLayout()
+        [self.tenth_row_layout.addWidget(x) for x in [self.saveseriewaves_label, self.saveseriewaves_timemin_input,
+                                                      self.saveseriewaves_timemin_label,
+                                                      self.saveseriewaves_timemax_input,
+                                                      self.saveseriewaves_timemax_label,
+                                                      self.saveseriewaves_xpos_input, self.saveseriewaves_xpos_label]]
+
         self.main_layout.addLayout(self.root_layout)
         self.main_layout.addWidget(guiutils.h_line_generator())
         [self.main_layout.addLayout(x) for x in [self.first_row_layout, self.second_row_layout, self.third_row_layout,
                                                  self.fourth_row_layout, self.fifth_row_layout, self.sixth_row_layout,
-                                                 self.seventh_row_layout]]
+                                                 self.seventh_row_layout, self.eighth_row_layout, self.ninth_row_layout,
+                                                 self.tenth_row_layout]]
 
         self.setLayout(self.main_layout)
         self.fill_values(irreg_wave_gen)
@@ -2047,6 +2096,17 @@ class IrregularWaveMotionTimeline(QtGui.QWidget):
         self.serieini_input.setText(str(irreg_wave_gen.serieini))
         self.serieini_autofit.setChecked(irreg_wave_gen.serieini_autofit)
         self.ramptime_input.setText(str(irreg_wave_gen.ramptime))
+        self.savemotion_time_input.setText(str(irreg_wave_gen.savemotion_time))
+        self.savemotion_timedt_input.setText(str(irreg_wave_gen.savemotion_timedt))
+        self.savemotion_xpos_input.setText(str(irreg_wave_gen.savemotion_xpos))
+        self.savemotion_zpos_input.setText(str(irreg_wave_gen.savemotion_zpos))
+        self.saveserie_timemin_input.setText(str(irreg_wave_gen.saveserie_timemin))
+        self.saveserie_timemax_input.setText(str(irreg_wave_gen.saveserie_timemax))
+        self.saveserie_timedt_input.setText(str(irreg_wave_gen.saveserie_timedt))
+        self.saveserie_xpos_input.setText(str(irreg_wave_gen.saveserie_xpos))
+        self.saveseriewaves_timemin_input.setText(str(irreg_wave_gen.saveseriewaves_timemin))
+        self.saveseriewaves_timemax_input.setText(str(irreg_wave_gen.saveseriewaves_timemax))
+        self.saveseriewaves_xpos_input.setText(str(irreg_wave_gen.saveseriewaves_xpos))
 
     def _init_connections(self):
         self.serieini_autofit.stateChanged.connect(self.on_change)
@@ -2057,7 +2117,13 @@ class IrregularWaveMotionTimeline(QtGui.QWidget):
                                                          self.serieini_input, self.ramptime_input, self.duration_input,
                                                          self.depth_input, self.fixed_depth_input, self.piston_dir_x,
                                                          self.piston_dir_y, self.piston_dir_z, self.wave_height_input,
-                                                         self.wave_period_input]]
+                                                         self.wave_period_input, self.savemotion_time_input,
+                                                         self.savemotion_timedt_input, self.savemotion_xpos_input,
+                                                         self.savemotion_zpos_input, self.saveserie_timemin_input,
+                                                         self.saveserie_timemax_input, self.saveserie_timedt_input,
+                                                         self.saveserie_xpos_input, self.saveseriewaves_timemin_input,
+                                                         self.saveseriewaves_timemax_input,
+                                                         self.saveseriewaves_xpos_input]]
 
     def on_change(self):
         self._sanitize_input()
@@ -2083,7 +2149,18 @@ class IrregularWaveMotionTimeline(QtGui.QWidget):
                                 randomseed=float(self.randomseed_input.text()),
                                 serieini=float(self.serieini_input.text()),
                                 ramptime=float(self.ramptime_input.text()),
-                                serieini_autofit=self.serieini_autofit.isChecked())
+                                serieini_autofit=self.serieini_autofit.isChecked(),
+                                savemotion_time=str(self.savemotion_time_input.text()),
+                                savemotion_timedt=str(self.savemotion_timedt_input.text()),
+                                savemotion_xpos=str(self.savemotion_xpos_input.text()),
+                                savemotion_zpos=str(self.savemotion_zpos_input.text()),
+                                saveserie_timemin=str(self.saveserie_timemin_input.text()),
+                                saveserie_timemax=str(self.saveserie_timemax_input.text()),
+                                saveserie_timedt=str(self.saveserie_timedt_input.text()),
+                                saveserie_xpos=str(self.saveserie_xpos_input.text()),
+                                saveseriewaves_timemin=str(self.saveseriewaves_timemin_input.text()),
+                                saveseriewaves_timemax=str(self.saveseriewaves_timemax_input.text()),
+                                saveseriewaves_xpos=str(self.saveseriewaves_xpos_input.text()))
 
     def on_delete(self):
         self.deleted.emit(self.index, self.construct_motion_object())
@@ -2097,7 +2174,13 @@ class IrregularWaveMotionTimeline(QtGui.QWidget):
                    self.piston_dir_y, self.piston_dir_z,
                    self.wave_height_input, self.wave_period_input,
                    self.peak_coef_input, self.randomseed_input,
-                   self.serieini_input, self.ramptime_input]]
+                   self.serieini_input, self.ramptime_input,
+                   self.savemotion_time_input, self.savemotion_timedt_input,
+                   self.savemotion_xpos_input, self.savemotion_zpos_input,
+                   self.saveserie_timemin_input, self.saveserie_timemax_input,
+                   self.saveserie_timedt_input, self.saveserie_xpos_input,
+                   self.saveseriewaves_timemin_input, self.saveseriewaves_timemax_input,
+                   self.saveseriewaves_xpos_input]]
 
 
 class ObjectOrderWidget(QtGui.QWidget):

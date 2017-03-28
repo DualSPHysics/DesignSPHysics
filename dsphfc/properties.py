@@ -220,7 +220,9 @@ class IrregularWaveGen(WaveGen):
                  piston_dir=None, wave_height=0.5, wave_period=1, spectrum=IrregularSpectrum.JONSWAP,
                  discretization=IrregularDiscretization.STRETCHED,
                  peak_coef=0.1, waves=50, randomseed=random.randint(0, 9999), serieini=0, ramptime=0,
-                 serieini_autofit=True):
+                 serieini_autofit=True, savemotion_time=30, savemotion_timedt=0.05, savemotion_xpos=2,
+                 savemotion_zpos=-0.15, saveserie_timemin=0, saveserie_timemax=1300, saveserie_timedt=0.05,
+                 saveserie_xpos=0, saveseriewaves_timemin=0, saveseriewaves_timemax=1000, saveseriewaves_xpos=2):
         super(IrregularWaveGen, self).__init__(parent_movement, wave_order, start, duration, depth, fixed_depth,
                                                piston_dir, wave_height, wave_period)
         self.type = "Irregular Wave Generator"
@@ -232,6 +234,17 @@ class IrregularWaveGen(WaveGen):
         self.serieini = serieini
         self.serieini_autofit = serieini_autofit
         self.ramptime = ramptime
+        self.savemotion_time = savemotion_time
+        self.savemotion_timedt = savemotion_timedt
+        self.savemotion_xpos = savemotion_xpos
+        self.savemotion_zpos = savemotion_zpos
+        self.saveserie_timemin = saveserie_timemin
+        self.saveserie_timemax = saveserie_timemax
+        self.saveserie_timedt = saveserie_timedt
+        self.saveserie_xpos = saveserie_xpos
+        self.saveseriewaves_timemin = saveseriewaves_timemin
+        self.saveseriewaves_timemax = saveseriewaves_timemax
+        self.saveseriewaves_xpos = saveseriewaves_xpos
 
 
 class BaseMotion(object):
