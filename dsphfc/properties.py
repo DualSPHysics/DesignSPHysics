@@ -190,12 +190,17 @@ class RegularWaveGen(WaveGen):
     """
 
     def __init__(self, parent_movement=None, wave_order=1, start=0, duration=0, depth=0, fixed_depth=0,
-                 piston_dir=None, wave_height=0.5, wave_period=1, phase=0, ramp=0):
+                 piston_dir=None, wave_height=0.5, wave_period=1, phase=0, ramp=0, disksave_periods=24,
+                 disksave_periodsteps=20, disksave_xpos=2, disksave_zpos=-0.15):
         super(RegularWaveGen, self).__init__(parent_movement, wave_order, start, duration, depth, fixed_depth,
                                              piston_dir, wave_height, wave_period)
         self.type = "Regular Wave Generator"
         self.phase = phase
         self.ramp = ramp
+        self.disksave_periods = disksave_periods
+        self.disksave_periodsteps = disksave_periodsteps
+        self.disksave_xpos = disksave_xpos
+        self.disksave_zpos = disksave_zpos
 
 
 class IrregularWaveGen(WaveGen):

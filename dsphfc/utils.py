@@ -59,6 +59,7 @@ PICKLE_PROTOCOL = 1  # Binary mode
 VERSION = "0.3-dev"
 WIDTH_2D = 0.001
 
+
 # ------ END CONSTANTS DEFINITION ------
 
 
@@ -913,6 +914,12 @@ def dump_to_xml(data, save_name):
                 f.write('\t\t\t\t\t\t<phase value="{}" '
                         'comment="Initial wave phase in function of PI (def=0)" />\n'.format(mot.phase))
                 f.write('\t\t\t\t\t\t<ramp value="{}" comment="Periods of ramp (def=0)" />\n'.format(mot.ramp))
+                f.write('\t\t\t\t\t\t<savemotion periods="{}" periodsteps="{}" xpos="{}" zpos="{}" '
+                        'comment="Saves motion data. xpos and zpos are optional. '
+                        'zpos=-depth of the measuring point" />\n'.format(mot.disksave_periods,
+                                                                          mot.disksave_periodsteps,
+                                                                          mot.disksave_xpos,
+                                                                          mot.disksave_zpos))
                 f.write('\t\t\t\t\t</piston>\n')
             elif isinstance(mot, IrregularWaveGen):
                 f.write('\t\t\t\t\t<piston_spectrum>\n')
