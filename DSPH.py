@@ -60,7 +60,6 @@ __status__ = "Development"
 # TODO: Wiki - Add motion section
 # TODO: Wiki - Add case summary
 # ------------------------------- 0.3 BETA -------------------------------
-# TODO: 0.3Beta - Add 2D case limits with a plane
 # TODO: 0.3Beta - Add wave saving features to wave generators.
 # TODO: 0.3Beta - Movement brief explanation
 # TODO: 0.3Beta - Periodicity support - Show arrows (bounds) to show periodicity
@@ -246,7 +245,9 @@ casecontrols_bt_importxml.setToolTip(__("Imports an already created XML case fro
 casecontrols_bt_importxml.setEnabled(True)
 
 summary_bt = QtGui.QPushButton(__("Case summary"))
+toggle3dbutton = QtGui.QPushButton(__("Toggle 3D/2D"))
 widget_state_elements['summary_bt'] = summary_bt
+widget_state_elements['toggle3dbutton'] = toggle3dbutton
 summary_bt.setEnabled(False)
 
 
@@ -667,6 +668,29 @@ def on_import_xml():
 def on_summary():
     guiutils.case_summary(data)
 
+
+def on_2d_toggle():
+    if utils.valid_document_environment():
+        if data['3dmode']:
+            # Change to 2D
+            utils.get_fc_object('Case_Limits').Width.Value = utils.WIDTH_2D
+            guiutils.get_fc_view_object('Case_Limits').DisplayMode = 'Flat Lines'
+            guiutils.get_fc_view_object('Case_Limits').ShapeColor = (1.00, 0.00, 0.00)
+            guiutils.get_fc_view_object('Case_Limits').Transparency = 90
+        else:
+            # Change to 3D
+            utils.get_fc_object('Case_Limits').Width = utils.get_fc_object('Case_Limits').Length
+            guiutils.get_fc_view_object('Case_Limits').DisplayMode = 'Wireframe'
+            guiutils.get_fc_view_object('Case_Limits').ShapeColor = (0.80, 0.80, 0.80)
+            guiutils.get_fc_view_object('Case_Limits').Transparency = 0
+
+        # Toggle 3D Mode and change name
+        data['3dmode'] = not data['3dmode']
+        utils.get_fc_object('Case_Limits').Label = "Case Limits (3D)" if data['3dmode'] else "Case Limits (2D)"
+    else:
+        utils.error("Not a valid case environment")
+
+
 # Connect case control buttons
 casecontrols_bt_newdoc.clicked.connect(on_new_case)
 casecontrols_bt_savedoc.clicked.connect(on_save_case)
@@ -676,6 +700,7 @@ casecontrols_bt_addfillbox.clicked.connect(on_add_fillbox)
 casecontrols_bt_addstl.clicked.connect(on_add_stl)
 casecontrols_bt_importxml.clicked.connect(on_import_xml)
 summary_bt.clicked.connect(on_summary)
+toggle3dbutton.clicked.connect(on_2d_toggle)
 
 # Defines case control scaffolding
 cclabel_layout.addWidget(casecontrols_label)
@@ -686,6 +711,7 @@ ccaddbuttons_layout.addWidget(casecontrols_bt_addfillbox)
 ccaddbuttons_layout.addWidget(casecontrols_bt_addstl)
 ccaddbuttons_layout.addWidget(casecontrols_bt_importxml)
 ccsecondrow.addWidget(summary_bt)
+ccsecondrow.addWidget(toggle3dbutton)
 cc_layout.addLayout(cclabel_layout)
 cc_layout.addLayout(ccfilebuttons_layout)
 cc_layout.addLayout(ccaddbuttons_layout)
@@ -2517,6 +2543,9 @@ def selection_monitor():
                     if o.Placement.Rotation.Angle != 0.0:
                         o.Placement.Rotation.Angle = 0.0
                         utils.error(__("Can't change Case Limits rotation!"))
+                    if not data['3dmode'] and o.Width.Value != utils.WIDTH_2D:
+                        o.Width.Value = utils.WIDTH_2D
+                        utils.error(__("Can't change width if the case is in 2D Mode!"))
         except NameError:
             # DSPH Case not opened, disable things
             guiutils.widget_state_config(widget_state_elements, "no case")
