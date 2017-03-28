@@ -60,7 +60,6 @@ __status__ = "Development"
 # TODO: Wiki - Add motion section
 # TODO: Wiki - Add case summary
 # ------------------------------- 0.3 BETA -------------------------------
-# TODO: 0.3Beta - Add wave saving features to wave generators.
 # TODO: 0.3Beta - Movement brief explanation
 # TODO: 0.3Beta - Periodicity support - Show arrows (bounds) to show periodicity
 # TODO: 0.3Beta - Add postprocessing tools

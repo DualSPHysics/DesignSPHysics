@@ -954,6 +954,19 @@ def dump_to_xml(data, save_name):
                         'comment="Initial time in irregular wave serie (default=0 and autofit=false)" />\n'
                         .format(mot.serieini, str(mot.serieini_autofit).lower()))
                 f.write('\t\t\t\t\t\t<ramptime value="{}" comment="Time of ramp (def=0)" />\n'.format(mot.ramptime))
+                f.write('\t\t\t\t\t\t<savemotion time="{}" timedt="{}" xpos="{}" zpos="{}" '
+                        'comment="Saves motion data. xpos and zpos are optional. '
+                        'zpos=-depth of the measuring point" />\n'.format(mot.savemotion_time, mot.savemotion_timedt,
+                                                                          mot.savemotion_xpos, mot.savemotion_zpos))
+                f.write('\t\t\t\t\t\t<saveserie timemin="{}" timemax="{}" timedt="{}" xpos="{}"'
+                        ' comment="Saves serie data (optional)" />\n'.format(mot.saveserie_timemin,
+                                                                             mot.saveserie_timemax,
+                                                                             mot.saveserie_timedt,
+                                                                             mot.saveserie_xpos))
+                f.write('\t\t\t\t\t\t<saveseriewaves timemin="{}" timemax="{}" xpos="{}" '
+                        'comment="Saves serie heights" />\n'.format(mot.saveseriewaves_timemin,
+                                                                    mot.saveseriewaves_timemax,
+                                                                    mot.saveseriewaves_xpos))
                 f.write('\t\t\t\t\t</piston_spectrum>\n')
             f.write('\t\t\t\t</wavepaddles>\n')
             f.write('\t\t\t</special>\n')
