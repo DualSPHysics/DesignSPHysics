@@ -13,6 +13,7 @@ meant to use with FreeCAD.
 import FreeCAD
 import FreeCADGui
 import Mesh
+import Draft
 import math
 import os
 import pickle
@@ -457,8 +458,67 @@ def create_dsph_document():
     FreeCADGui.ActiveDocument.getObject("Case_Limits").LineColor = (1.00, 0.00, 0.00)
     FreeCADGui.ActiveDocument.getObject("Case_Limits").LineWidth = 2.00
     FreeCADGui.ActiveDocument.getObject("Case_Limits").Selectable = False
+
+    create_periodicity_helpers()
+
     FreeCAD.ActiveDocument.recompute()
     FreeCADGui.SendMsgToActiveView("ViewFit")
+
+
+def create_periodicity_helpers(data):
+    """ Creates periodicity helper arrows in the case.
+        Also, stores their names to further reference them in the data dict. """
+    group = FreeCAD.activeDocument().addObject("App::DocumentObjectGroup", "Helpers_internal_")
+    group.Label = "Case Helpers"
+
+    y1h = Draft.makeWire([FreeCAD.Vector(0.0, 0.0, 0.0), FreeCAD.Vector(0.0, 1.0, 0.0)], closed=False, face=False,
+                         support=None)
+    y1h.Label = "Y Start Helper"
+    y1h.ViewObject.EndArrow = True
+    y1h.ViewObject.ArrowType = "Arrow"
+    y1h.ViewObject.Visibility = False
+
+    y2h = Draft.makeWire([FreeCAD.Vector(0.0, 1.0, 0.0), FreeCAD.Vector(0.0, 0.0, 0.0)], closed=False, face=False,
+                         support=None)
+    # y2h.Name = "y2h"
+    y2h.Label = "Y End Helper"
+    y2h.ViewObject.EndArrow = True
+    y2h.ViewObject.ArrowType = "Arrow"
+    y2h.ViewObject.Visibility = False
+
+    x1h = Draft.makeWire([FreeCAD.Vector(0.0, 0.0, 0.0), FreeCAD.Vector(1.0, 0.0, 0.0)], closed=False, face=False,
+                         support=None)
+    # x1h.Name = "x1h"
+    x1h.Label = "X Start Helper"
+    x1h.ViewObject.EndArrow = True
+    x1h.ViewObject.ArrowType = "Arrow"
+    x1h.ViewObject.Visibility = False
+
+    x2h = Draft.makeWire([FreeCAD.Vector(1.0, 0.0, 0.0), FreeCAD.Vector(0.0, 0.0, 0.0)], closed=False, face=False,
+                         support=None)
+    # x2h.Name = "x2h"
+    x2h.Label = "X End Helper"
+    x2h.ViewObject.EndArrow = True
+    x2h.ViewObject.ArrowType = "Arrow"
+    x2h.ViewObject.Visibility = False
+
+    # Add it to helpers group in FreeCAD
+    [FreeCAD.ActiveDocument.getObject("Helpers_internal_").addObject(x) for x in [y1h, y2h, x1h, x2h]]
+    # Store names in data dictionary to save references.
+    data["periodicity_helpers"] = {'y1': y1h.Name, 'y2': y2h.Name, 'x1': x1h.Name, 'x2': x2h.Name}
+
+
+def valid_periodicity_helpers(data):
+    """ Returns true if periodicity helpers exist and are valid in the case"""
+    if 'periodicity_helpers' not in data.keys():
+        return False
+    elif 'x1' not in data['periodicity_helpers'].keys() or 'x2' not in data['periodicity_helpers'].keys() or 'y1' not in \
+            data['periodicity_helpers'].keys() or 'y2' not in data['periodicity_helpers'].keys():
+        return False
+    elif None in [get_fc_object(x) for x in data['periodicity_helpers'].values()]:
+        return False
+    else:
+        return True
 
 
 def dump_to_xml(data, save_name):
@@ -881,7 +941,10 @@ def dump_to_xml(data, save_name):
 
                         mot_counter += 1
                 elif isinstance(movement, WaveMovement):
-                    f.write('\t\t\t\t<mvnull id="{}" />\n'.format(mov_counter))
+                    if isinstance(movement.wave_gen, FileWaveGen):
+                        f.write('\t\t\t\t<mvnull id="{}" /><!-- FILE MOVEMENT -->\n '.format(mov_counter))
+                    else:
+                        f.write('\t\t\t\t<mvnull id="{}" />\n'.format(mov_counter))
 
                 mov_counter += 1
             f.write('\t\t\t</objreal>\n')
@@ -894,6 +957,8 @@ def dump_to_xml(data, save_name):
             continue
         if isinstance(motlist[0], WaveMovement):
             mot = motlist[0].wave_gen
+            if isinstance(mot, FileWaveGen):
+                continue
             f.write('\t\t\t<special>\n')
             f.write('\t\t\t\t<wavepaddles>\n')
             if isinstance(mot, RegularWaveGen):

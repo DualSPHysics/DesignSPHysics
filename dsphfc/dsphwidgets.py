@@ -2183,6 +2183,113 @@ class IrregularWaveMotionTimeline(QtGui.QWidget):
                    self.saveseriewaves_xpos_input]]
 
 
+class FileWaveMotionTimeline(QtGui.QWidget):
+    """ A File Wave motion graphical representation for a table-based timeline """
+
+    changed = QtCore.Signal(int, FileWaveGen)
+
+    def __init__(self, file_wave_gen):
+        if not isinstance(file_wave_gen, FileWaveGen):
+            raise TypeError("You tried to spawn a regular wave generator "
+                            "motion widget in the timeline with a wrong object")
+        if file_wave_gen is None:
+            raise TypeError("You tried to spawn a regular wave generator "
+                            "motion widget in the timeline without a motion object")
+        super(FileWaveMotionTimeline, self).__init__()
+        self.setContentsMargins(0, 0, 0, 0)
+        self.main_layout = QtGui.QVBoxLayout()
+        self.main_layout.setContentsMargins(10, 10, 10, 10)
+        self.parent_movement = file_wave_gen.parent_movement
+
+        self.root_label = QtGui.QLabel(__("File wave generator"))
+
+        self.filename_label = QtGui.QLabel(__("File name"))
+        self.filename_input = QtGui.QLineEdit()
+
+        self.fields_label = QtGui.QLabel(__("Number of fields"))
+        self.fields_input = QtGui.QLineEdit()
+
+        self.fieldtime_label = QtGui.QLabel(__("Column with time"))
+        self.fieldtime_input = QtGui.QLineEdit()
+
+        self.fieldx_label = QtGui.QLabel(__("X positions column"))
+        self.fieldx_input = QtGui.QLineEdit()
+
+        self.fieldy_label = QtGui.QLabel(__("Y positions column"))
+        self.fieldy_input = QtGui.QLineEdit()
+
+        self.fieldz_label = QtGui.QLabel(__("Z positions column"))
+        self.fieldz_input = QtGui.QLineEdit()
+
+        self.root_layout = QtGui.QHBoxLayout()
+        self.root_layout.addWidget(self.root_label)
+        self.root_layout.addStretch(1)
+
+        self.first_row_layout = QtGui.QHBoxLayout()
+        self.first_row_layout.addWidget(self.filename_label)
+        self.first_row_layout.addWidget(self.filename_input)
+
+        self.second_row_layout = QtGui.QHBoxLayout()
+        self.second_row_layout.addWidget(self.fields_label)
+        self.second_row_layout.addWidget(self.fields_input)
+
+        self.third_row_layout = QtGui.QHBoxLayout()
+        self.third_row_layout.addWidget(self.fieldtime_label)
+        self.third_row_layout.addWidget(self.fieldtime_input)
+
+        self.fourth_row_layout = QtGui.QHBoxLayout()
+        [self.fourth_row_layout.addWidget(x) for x in [self.fieldx_label, self.fieldx_input, self.fieldy_label,
+                                                       self.fieldy_input, self.fieldz_label, self.fieldz_input]]
+
+        self.main_layout.addLayout(self.root_layout)
+        self.main_layout.addWidget(guiutils.h_line_generator())
+        [self.main_layout.addLayout(x) for x in [self.first_row_layout, self.second_row_layout,
+                                                 self.third_row_layout, self.fourth_row_layout]]
+
+        self.setLayout(self.main_layout)
+        self.fill_values(file_wave_gen)
+        self._init_connections()
+
+    def fill_values(self, file_wave_gen):
+        self.filename_input.setText(str(file_wave_gen.filename))
+        self.fields_input.setText(str(file_wave_gen.fields))
+        self.fieldtime_input.setText(str(file_wave_gen.fieldtime))
+        self.fieldx_input.setText(str(file_wave_gen.fieldx))
+        self.fieldy_input.setText(str(file_wave_gen.fieldy))
+        self.fieldz_input.setText(str(file_wave_gen.fieldz))
+
+    def _init_connections(self):
+        [x.textChanged.connect(self.on_change) for x in [self.filename_input, self.fields_input,
+                                                         self.fieldtime_input, self.fieldx_input,
+                                                         self.fieldy_input, self.fieldz_input]]
+
+    def on_change(self):
+        self._sanitize_input()
+        try:
+            self.changed.emit(0, self.construct_motion_object())
+        except ValueError:
+            utils.debug("Introduced an invalid value for a float number.")
+
+    def construct_motion_object(self):
+        return FileWaveGen(parent_movement=self.parent_movement,
+                           filename=str(self.filename_input.text()),
+                           fields=str(self.fields_input.text()),
+                           fieldtime=str(self.fieldtime_input.text()),
+                           fieldx=str(self.fieldx_input.text()),
+                           fieldy=str(self.fieldx_input.text()),
+                           fieldz=str(self.fieldx_input.text()))
+
+    def on_delete(self):
+        self.deleted.emit(self.index, self.construct_motion_object())
+
+    def _sanitize_input(self):
+        [x.setText("0")
+         if len(x.text()) is 0
+         else x.setText(x.text().replace(",", "."))
+         for x in [self.fields_input, self.fieldtime_input, self.fieldx_input,
+                   self.fieldx_input, self.fieldx_input]]
+
+
 class ObjectOrderWidget(QtGui.QWidget):
     """ A widget representing the object order. """
 
