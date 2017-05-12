@@ -60,12 +60,15 @@ __status__ = "Development"
 # TODO: Wiki - Add motion section
 # TODO: Wiki - Add case summary
 # ------------------------------- 0.3 BETA -------------------------------
+# TODO: 0.3Beta - Object Motion from file
+# TODO: 0.3Beta - Improve PartVTK (more options and open vtk in paraview if present)
+# TODO: 0.3Beta - Add ComputeForces (read xml and generate csv)
+# TODO: 0.3Beta - Add FloatingInfo (read xml and generate csv)
+# TODO: 0.3Beta - Add MeasureTool (reads xml and txt; generates csv)
 # TODO: 0.3Beta - Movement brief explanation
 # TODO: 0.3Beta - Periodicity support - Show arrows (bounds) to show periodicity
-# TODO: 0.3Beta - Add postprocessing tools
 # TODO: 0.3Beta - Toolbox (Fillbox, wave, periodicity, imports...) to clean the UI
 # TODO: 0.3Beta - Create Material support
-# TODO: 0.3Beta - Object Motion from file
 # TODO: 0.3Beta - Material creator and assigner
 # ------------------------------- 0.4 BETA -------------------------------
 # TODO: 0.4Beta - Refactor all code
@@ -198,7 +201,8 @@ cc_layout = QtGui.QVBoxLayout()
 cclabel_layout = QtGui.QHBoxLayout()
 ccfilebuttons_layout = QtGui.QHBoxLayout()
 ccsecondrow = QtGui.QHBoxLayout()
-ccaddbuttons_layout = QtGui.QHBoxLayout()
+ccthirdrow_layout = QtGui.QHBoxLayout()
+ccfourthrow_layout = QtGui.QHBoxLayout()
 casecontrols_label = QtGui.QLabel("<b>" + __("File and GenCase tools") + "<b>")
 casecontrols_bt_newdoc = QtGui.QToolButton()
 casecontrols_bt_newdoc.setToolButtonStyle(QtCore.Qt.ToolButtonTextBesideIcon)
@@ -248,6 +252,9 @@ toggle3dbutton = QtGui.QPushButton(__("Toggle 3D/2D"))
 widget_state_elements['summary_bt'] = summary_bt
 widget_state_elements['toggle3dbutton'] = toggle3dbutton
 summary_bt.setEnabled(False)
+
+y_period_bt = QtGui.QPushButton("Toggle Y Periodicity")
+x_period_bt = QtGui.QPushButton("Toggle Y Periodicity")
 
 
 def on_new_case():
@@ -690,6 +697,28 @@ def on_2d_toggle():
         utils.error("Not a valid case environment")
 
 
+def on_y_per_toggle():
+    if not utils.valid_periodicity_helpers(data):
+        utils.create_periodicity_helpers(data)
+
+    y1 = guiutils.get_fc_view_object(data['periodicity_helpers']['y1'])
+    y2 = guiutils.get_fc_view_object(data['periodicity_helpers']['y2'])
+
+    y1.Visibility = not y1.Visibility
+    y2.Visibility = not y2.Visibility
+
+
+def on_x_per_toggle():
+    if not utils.valid_periodicity_helpers(data):
+        utils.create_periodicity_helpers(data)
+
+    x1 = guiutils.get_fc_view_object(data['periodicity_helpers']['x1'])
+    x2 = guiutils.get_fc_view_object(data['periodicity_helpers']['x2'])
+
+    x1.Visibility = not x1.Visibility
+    x2.Visibility = not x2.Visibility
+
+
 # Connect case control buttons
 casecontrols_bt_newdoc.clicked.connect(on_new_case)
 casecontrols_bt_savedoc.clicked.connect(on_save_case)
@@ -700,20 +729,26 @@ casecontrols_bt_addstl.clicked.connect(on_add_stl)
 casecontrols_bt_importxml.clicked.connect(on_import_xml)
 summary_bt.clicked.connect(on_summary)
 toggle3dbutton.clicked.connect(on_2d_toggle)
+y_period_bt.clicked.connect(on_y_per_toggle)
+x_period_bt.clicked.connect(on_x_per_toggle)
 
 # Defines case control scaffolding
 cclabel_layout.addWidget(casecontrols_label)
 ccfilebuttons_layout.addWidget(casecontrols_bt_newdoc)
 ccfilebuttons_layout.addWidget(casecontrols_bt_savedoc)
 ccfilebuttons_layout.addWidget(casecontrols_bt_loaddoc)
-ccaddbuttons_layout.addWidget(casecontrols_bt_addfillbox)
-ccaddbuttons_layout.addWidget(casecontrols_bt_addstl)
-ccaddbuttons_layout.addWidget(casecontrols_bt_importxml)
+ccthirdrow_layout.addWidget(casecontrols_bt_addfillbox)
+ccthirdrow_layout.addWidget(casecontrols_bt_addstl)
+ccthirdrow_layout.addWidget(casecontrols_bt_importxml)
+# TODO: Enable this
+# ccfourthrow_layout.addWidget(y_period_bt)
+# ccfourthrow_layout.addWidget(x_period_bt)
 ccsecondrow.addWidget(summary_bt)
 ccsecondrow.addWidget(toggle3dbutton)
 cc_layout.addLayout(cclabel_layout)
 cc_layout.addLayout(ccfilebuttons_layout)
-cc_layout.addLayout(ccaddbuttons_layout)
+cc_layout.addLayout(ccthirdrow_layout)
+cc_layout.addLayout(ccfourthrow_layout)
 cc_layout.addLayout(ccsecondrow)
 cc_separator = QtGui.QFrame()
 cc_separator.setFrameStyle(QtGui.QFrame.HLine)
@@ -1965,6 +2000,10 @@ def motion_change():
             to_add = WaveMovement(wave_gen=IrregularWaveGen())
             to_add.wave_gen.parent_movement = to_add
             data["global_movements"].append(to_add)
+        if __("Use motion from file") in action.text():
+            to_add = WaveMovement(wave_gen=FileWaveGen())
+            to_add.wave_gen.parent_movement = to_add
+            data["global_movements"].append(to_add)
 
         refresh_movements_table()
 
@@ -2051,8 +2090,10 @@ def motion_change():
             actions_groupbox_table.setEnabled(False)
             if isinstance(target_movement.wave_gen, RegularWaveGen):
                 target_to_put = dsphwidgets.RegularWaveMotionTimeline(target_movement.wave_gen)
-            else:
+            elif isinstance(target_movement.wave_gen, IrregularWaveGen):
                 target_to_put = dsphwidgets.IrregularWaveMotionTimeline(target_movement.wave_gen)
+            elif isinstance(target_movement.wave_gen, FileWaveGen):
+                target_to_put = dsphwidgets.FileWaveMotionTimeline(target_movement.wave_gen)
             target_to_put.changed.connect(on_timeline_item_change)
             timeline_list_table.setCellWidget(0, 0, target_to_put)
 
@@ -2085,6 +2126,7 @@ def motion_change():
         create_new_movement_menu = QtGui.QMenu()
         create_new_movement_menu.addAction(guiutils.get_icon("regular_wave.png"), __("Regular wave generator"))
         create_new_movement_menu.addAction(guiutils.get_icon("irregular_wave.png"), __("Irregular wave generator"))
+        create_new_movement_menu.addAction(guiutils.get_icon("irregular_wave.png"), __("Use motion from file"))
         create_new_movement_button.setMenu(create_new_movement_menu)
         create_new_movement_button.clicked.connect(on_new_movement)
         create_new_movement_menu.triggered.connect(on_new_wave_generator)
@@ -2262,7 +2304,7 @@ def add_object_to_sim(name=None):
         selection.append(FreeCAD.ActiveDocument.getObject(name))
 
     for each in selection:
-        if each.Name == "Case_Limits":
+        if each.Name == "Case_Limits" or "_internal_" in each.Name:
             continue
         if len(each.InList) > 0:
             continue
@@ -2368,7 +2410,7 @@ def on_tree_item_selection_change():
             pass
         else:
             # One object selected
-            if selection[0].Name == "Case_Limits":
+            if selection[0].Name == "Case_Limits" or "_internal_" in selection[0].Name:
                 property_table.hide()
                 addtodsph_button.hide()
                 removefromdsph_button.hide()
@@ -2530,6 +2572,31 @@ def selection_monitor():
             property_table.hide()
             addtodsph_button.hide()
             removefromdsph_button.hide()
+        # Ensure helpers are positioned correctly
+        if utils.valid_periodicity_helpers(data):
+            utils.get_fc_object(data['periodicity_helpers']['x1']).Start = utils.get_fc_object(
+                'Case_Limits').Placement.Base
+            utils.get_fc_object(data['periodicity_helpers']['x2']).End = utils.get_fc_object(
+                'Case_Limits').Placement.Base
+
+            utils.get_fc_object(data['periodicity_helpers']['y1']).Start = utils.get_fc_object(
+                'Case_Limits').Placement.Base
+            utils.get_fc_object(data['periodicity_helpers']['y2']).End = utils.get_fc_object(
+                'Case_Limits').Placement.Base
+
+            utils.get_fc_object(data['periodicity_helpers']['x1']).End = utils.get_fc_object(
+                'Case_Limits').Placement.Base + FreeCAD.Vector(utils.get_fc_object(
+                'Case_Limits').Width.Value, 0.0, 0.0)
+            utils.get_fc_object(data['periodicity_helpers']['x2']).Start = utils.get_fc_object(
+                'Case_Limits').Placement.Base + FreeCAD.Vector(utils.get_fc_object(
+                'Case_Limits').Width.Value, 0.0, 0.0)
+
+            utils.get_fc_object(data['periodicity_helpers']['y1']).End = utils.get_fc_object(
+                'Case_Limits').Placement.Base + FreeCAD.Vector(0.0, utils.get_fc_object(
+                'Case_Limits').Length.Value, 0.0)
+            utils.get_fc_object(data['periodicity_helpers']['y2']).Start = utils.get_fc_object(
+                'Case_Limits').Placement.Base + FreeCAD.Vector(0.0, utils.get_fc_object(
+                'Case_Limits').Length.Value, 0.0)
         # watch fillbox rotations and prevent them
         try:
             for o in FreeCAD.getDocument("DSPH_Case").Objects:

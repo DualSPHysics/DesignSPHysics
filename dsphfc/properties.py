@@ -247,6 +247,29 @@ class IrregularWaveGen(WaveGen):
         self.saveseriewaves_xpos = saveseriewaves_xpos
 
 
+class FileWaveGen(WaveGen):
+    """ File Wave Generator. Loads movements from file
+
+    Attributes:
+        filename: File path to use
+        fields: Number of columns of the file
+        fieldtime: Column with time
+        fieldx: Column with X-position
+        fieldy: Column with Y-position
+        fieldz: Column with Z-position
+    """
+
+    def __init__(self, parent_movement=None, filename="", fields=0, fieldtime=0, fieldx=0, fieldy=0, fieldz=0):
+        super(FileWaveGen, self).__init__(parent_movement)
+        self.name = "File Wave Generator"
+        self.filename = filename
+        self.fields = fields
+        self.fieldtime = fieldtime
+        self.fieldx = fieldx
+        self.fieldy = fieldy
+        self.fieldz = fieldz
+
+
 class BaseMotion(object):
     """ Base motion class to inherit by others.
 
