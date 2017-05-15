@@ -409,14 +409,15 @@ def print_license():
         raise EnvironmentError("LICENSE file could not be found. Are you sure you didn't delete it?")
 
 
-def prompt_close_all_documents():
+def prompt_close_all_documents(prompt=True):
     """ Shows a dialog to close all the current documents.
         If accepted, close all the current documents and
         return True, else returns False. """
-    user_selection = guiutils.ok_cancel_dialog(APP_NAME,
-                                               "To do this you must close all current documents."
-                                               " Close all the documents?")
-    if user_selection == QtGui.QMessageBox.Ok:
+    if prompt:
+        user_selection = guiutils.ok_cancel_dialog(APP_NAME,
+                                                   "To do this you must close all current documents."
+                                                   " Close all the documents?")
+    if not prompt or user_selection == QtGui.QMessageBox.Ok:
         # Close all current documents.
         log("Closing all current documents")
         for doc in FreeCAD.listDocuments().keys():
@@ -459,7 +460,8 @@ def create_dsph_document():
     FreeCADGui.ActiveDocument.getObject("Case_Limits").LineWidth = 2.00
     FreeCADGui.ActiveDocument.getObject("Case_Limits").Selectable = False
 
-    create_periodicity_helpers()
+    # TODO: use this
+    # create_periodicity_helpers()
 
     FreeCAD.ActiveDocument.recompute()
     FreeCADGui.SendMsgToActiveView("ViewFit")
@@ -940,9 +942,26 @@ def dump_to_xml(data, save_name):
                             f.write('\t\t\t\t</mvrectsinu>\n')
 
                         mot_counter += 1
-                elif isinstance(movement, WaveMovement):
-                    if isinstance(movement.wave_gen, FileWaveGen):
-                        f.write('\t\t\t\t<mvnull id="{}" /><!-- FILE MOVEMENT -->\n '.format(mov_counter))
+                elif isinstance(movement, SpecialMovement):
+                    if isinstance(movement.generator, FileGen):
+                        f.write('\t\t\t\t<mvfile id="{}" duration="{}">\n '.format(
+                            mov_counter, movement.generator.duration)
+                        )
+                        f.write('\t\t\t\t\t<file name="{}" fields="{}" fieldtime="{}" '
+                                'fieldx="{}" fieldy="{}" />\n '.format(movement.generator.filename,
+                                                                       movement.generator.fields,
+                                                                       movement.generator.fieldtime,
+                                                                       movement.generator.fieldx,
+                                                                       movement.generator.fieldy))
+                        f.write('\t\t\t\t</mvfile>\n ')
+                    elif isinstance(movement.generator, RotationFileGen):
+                        f.write('\t\t\t\t<mvrotfile id="{}" duration="{}" anglesunits="{}">\n '.format(
+                            mov_counter, movement.generator.duration, movement.generator.anglesunits)
+                        )
+                        f.write('\t\t\t\t\t<file name="{}" />\n '.format(movement.generator.filename))
+                        f.write('\t\t\t\t\t<axisp1 x="{}" y="{}" z="{}" />\n '.format(*movement.generator.axisp1))
+                        f.write('\t\t\t\t\t<axisp2 x="{}" y="{}" z="{}" />\n '.format(*movement.generator.axisp2))
+                        f.write('\t\t\t\t</mvrotfile>\n ')
                     else:
                         f.write('\t\t\t\t<mvnull id="{}" />\n'.format(mov_counter))
 
@@ -955,9 +974,9 @@ def dump_to_xml(data, save_name):
         # Check if object has motion enabled but no motions selected
         if len(motlist) < 1:
             continue
-        if isinstance(motlist[0], WaveMovement):
-            mot = motlist[0].wave_gen
-            if isinstance(mot, FileWaveGen):
+        if isinstance(motlist[0], SpecialMovement):
+            mot = motlist[0].generator
+            if isinstance(mot, FileGen):
                 continue
             f.write('\t\t\t<special>\n')
             f.write('\t\t\t\t<wavepaddles>\n')

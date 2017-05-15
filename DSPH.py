@@ -257,11 +257,11 @@ y_period_bt = QtGui.QPushButton("Toggle Y Periodicity")
 x_period_bt = QtGui.QPushButton("Toggle Y Periodicity")
 
 
-def on_new_case():
+def on_new_case(prompt=True):
     """ Defines what happens when new case is clicked. Closes all documents
         if possible and creates a FreeCAD document with Case Limits object. """
     if utils.document_count() > 0:
-        new_case_success = utils.prompt_close_all_documents()
+        new_case_success = utils.prompt_close_all_documents(prompt)
         if not new_case_success:
             return
 
@@ -371,7 +371,7 @@ def on_save_case(save_as=None):
                 gencase_failed_dialog.setIcon(QtGui.QMessageBox.Critical)
                 gencase_out_file.close()
                 gencase_failed_dialog.exec_()
-                utils.warning(__("GenCase Failed. Probably because nothing is in the scene."))
+                utils.warning(__("GenCase Failed."))
 
         # Save data array on disk
         try:
@@ -425,7 +425,13 @@ def on_load_case():
         # due to OS changes files would be corrupted. Now it is saved in binary mode so that wouldn't happen. This bit
         # of code is to open files which have an error (or corrupted binary files!).
         with open(load_name, 'rb') as load_picklefile:
-            load_disk_data = pickle.load(load_picklefile)
+            try:
+                load_disk_data = pickle.load(load_picklefile)
+            except AttributeError:
+                guiutils.error_dialog(__("There was an error trying to load the case. This can be due to the project "
+                                         "being from another version or an error while saving the case."))
+                on_new_case(prompt=False)
+                return
 
         # Remove exec paths from loaded data if user have already correct ones.
         _, _, _, already_correct = utils.check_executables(data['gencase_path'],
@@ -1956,13 +1962,13 @@ def motion_change():
         target_movement = data["global_movements"][index]
         if checked:
             # Wave generators are exclusive
-            if isinstance(target_movement, WaveMovement):
+            if isinstance(target_movement, SpecialMovement):
                 notice_label.setText("Notice: Wave generators are exclusive. "
                                      "All movements are disabled when using one.")
                 del movements_selected[:]
             elif isinstance(target_movement, Movement):
                 for index, ms in enumerate(movements_selected):
-                    if isinstance(ms, WaveMovement):
+                    if isinstance(ms, SpecialMovement):
                         movements_selected.pop(index)
                         notice_label.setText("Notice: Regular movements are not compatible with wave generators.")
             movements_selected.append(target_movement)
@@ -1993,16 +1999,20 @@ def motion_change():
     def on_new_wave_generator(action):
         """ Creates a movement on the project. """
         if __("Regular wave generator") in action.text():
-            to_add = WaveMovement(wave_gen=RegularWaveGen())
-            to_add.wave_gen.parent_movement = to_add
+            to_add = SpecialMovement(generator=RegularWaveGen())
+            to_add.generator.parent_movement = to_add
             data["global_movements"].append(to_add)
         if __("Irregular wave generator") in action.text():
-            to_add = WaveMovement(wave_gen=IrregularWaveGen())
-            to_add.wave_gen.parent_movement = to_add
+            to_add = SpecialMovement(generator=IrregularWaveGen())
+            to_add.generator.parent_movement = to_add
             data["global_movements"].append(to_add)
-        if __("Use motion from file") in action.text():
-            to_add = WaveMovement(wave_gen=FileWaveGen())
-            to_add.wave_gen.parent_movement = to_add
+        if __("Motion from file") in action.text():
+            to_add = SpecialMovement(generator=FileGen())
+            to_add.generator.parent_movement = to_add
+            data["global_movements"].append(to_add)
+        if __("Rotation from file") in action.text():
+            to_add = SpecialMovement(generator=RotationFileGen())
+            to_add.generator.parent_movement = to_add
             data["global_movements"].append(to_add)
 
         refresh_movements_table()
@@ -2085,15 +2095,17 @@ def motion_change():
                     target_to_put.disable_order_down_button()
 
                 current_row += 1
-        elif isinstance(target_movement, WaveMovement):
+        elif isinstance(target_movement, SpecialMovement):
             timeline_list_table.setRowCount(1)
             actions_groupbox_table.setEnabled(False)
-            if isinstance(target_movement.wave_gen, RegularWaveGen):
-                target_to_put = dsphwidgets.RegularWaveMotionTimeline(target_movement.wave_gen)
-            elif isinstance(target_movement.wave_gen, IrregularWaveGen):
-                target_to_put = dsphwidgets.IrregularWaveMotionTimeline(target_movement.wave_gen)
-            elif isinstance(target_movement.wave_gen, FileWaveGen):
-                target_to_put = dsphwidgets.FileWaveMotionTimeline(target_movement.wave_gen)
+            if isinstance(target_movement.generator, RegularWaveGen):
+                target_to_put = dsphwidgets.RegularWaveMotionTimeline(target_movement.generator)
+            elif isinstance(target_movement.generator, IrregularWaveGen):
+                target_to_put = dsphwidgets.IrregularWaveMotionTimeline(target_movement.generator)
+            elif isinstance(target_movement.generator, FileGen):
+                target_to_put = dsphwidgets.FileMotionTimeline(target_movement.generator)
+            elif isinstance(target_movement.generator, RotationFileGen):
+                target_to_put = dsphwidgets.RotationFileMotionTimeline(target_movement.generator)
             target_to_put.changed.connect(on_timeline_item_change)
             timeline_list_table.setCellWidget(0, 0, target_to_put)
 
@@ -2112,7 +2124,7 @@ def motion_change():
             if isinstance(movement, Movement):
                 movement_actions = dsphwidgets.MovementActions(current_row, movement in movements_selected, has_loop)
                 movement_actions.loop.connect(on_loop_movement)
-            elif isinstance(movement, WaveMovement):
+            elif isinstance(movement, SpecialMovement):
                 movement_actions = dsphwidgets.WaveMovementActions(current_row, movement in movements_selected)
 
             movement_actions.delete.connect(on_delete_movement)
@@ -2126,7 +2138,8 @@ def motion_change():
         create_new_movement_menu = QtGui.QMenu()
         create_new_movement_menu.addAction(guiutils.get_icon("regular_wave.png"), __("Regular wave generator"))
         create_new_movement_menu.addAction(guiutils.get_icon("irregular_wave.png"), __("Irregular wave generator"))
-        create_new_movement_menu.addAction(guiutils.get_icon("irregular_wave.png"), __("Use motion from file"))
+        create_new_movement_menu.addAction(guiutils.get_icon("irregular_wave.png"), __("Motion from file"))
+        create_new_movement_menu.addAction(guiutils.get_icon("irregular_wave.png"), __("Rotation from file"))
         create_new_movement_button.setMenu(create_new_movement_menu)
         create_new_movement_button.clicked.connect(on_new_movement)
         create_new_movement_menu.triggered.connect(on_new_wave_generator)
