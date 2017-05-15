@@ -2183,25 +2183,29 @@ class IrregularWaveMotionTimeline(QtGui.QWidget):
                    self.saveseriewaves_xpos_input]]
 
 
-class FileWaveMotionTimeline(QtGui.QWidget):
-    """ A File Wave motion graphical representation for a table-based timeline """
+class FileMotionTimeline(QtGui.QWidget):
+    """ A File motion graphical representation for a table-based timeline """
 
-    changed = QtCore.Signal(int, FileWaveGen)
+    changed = QtCore.Signal(int, FileGen)
 
     def __init__(self, file_wave_gen):
-        if not isinstance(file_wave_gen, FileWaveGen):
+        if not isinstance(file_wave_gen, FileGen):
             raise TypeError("You tried to spawn a regular wave generator "
                             "motion widget in the timeline with a wrong object")
         if file_wave_gen is None:
             raise TypeError("You tried to spawn a regular wave generator "
                             "motion widget in the timeline without a motion object")
-        super(FileWaveMotionTimeline, self).__init__()
+        super(FileMotionTimeline, self).__init__()
         self.setContentsMargins(0, 0, 0, 0)
         self.main_layout = QtGui.QVBoxLayout()
         self.main_layout.setContentsMargins(10, 10, 10, 10)
         self.parent_movement = file_wave_gen.parent_movement
 
-        self.root_label = QtGui.QLabel(__("File wave generator"))
+        self.root_label = QtGui.QLabel(__("File movement"))
+
+        self.duration_label = QtGui.QLabel(__("Duration"))
+        self.duration_input = QtGui.QLineEdit()
+        self.duration_units_label = QtGui.QLabel(__("s"))
 
         self.filename_label = QtGui.QLabel(__("File name"))
         self.filename_input = QtGui.QLineEdit()
@@ -2224,6 +2228,9 @@ class FileWaveMotionTimeline(QtGui.QWidget):
         self.root_layout = QtGui.QHBoxLayout()
         self.root_layout.addWidget(self.root_label)
         self.root_layout.addStretch(1)
+        self.root_layout.addWidget(self.duration_label)
+        self.root_layout.addWidget(self.duration_input)
+        self.root_layout.addWidget(self.duration_units_label)
 
         self.first_row_layout = QtGui.QHBoxLayout()
         self.first_row_layout.addWidget(self.filename_label)
@@ -2251,6 +2258,7 @@ class FileWaveMotionTimeline(QtGui.QWidget):
         self._init_connections()
 
     def fill_values(self, file_wave_gen):
+        self.duration_input.setText(str(file_wave_gen.duration))
         self.filename_input.setText(str(file_wave_gen.filename))
         self.fields_input.setText(str(file_wave_gen.fields))
         self.fieldtime_input.setText(str(file_wave_gen.fieldtime))
@@ -2259,7 +2267,7 @@ class FileWaveMotionTimeline(QtGui.QWidget):
         self.fieldz_input.setText(str(file_wave_gen.fieldz))
 
     def _init_connections(self):
-        [x.textChanged.connect(self.on_change) for x in [self.filename_input, self.fields_input,
+        [x.textChanged.connect(self.on_change) for x in [self.duration_input, self.filename_input, self.fields_input,
                                                          self.fieldtime_input, self.fieldx_input,
                                                          self.fieldy_input, self.fieldz_input]]
 
@@ -2271,13 +2279,14 @@ class FileWaveMotionTimeline(QtGui.QWidget):
             utils.debug("Introduced an invalid value for a float number.")
 
     def construct_motion_object(self):
-        return FileWaveGen(parent_movement=self.parent_movement,
-                           filename=str(self.filename_input.text()),
-                           fields=str(self.fields_input.text()),
-                           fieldtime=str(self.fieldtime_input.text()),
-                           fieldx=str(self.fieldx_input.text()),
-                           fieldy=str(self.fieldx_input.text()),
-                           fieldz=str(self.fieldx_input.text()))
+        return FileGen(parent_movement=self.parent_movement,
+                       duration=float(self.duration_input.text()),
+                       filename=str(self.filename_input.text()),
+                       fields=str(self.fields_input.text()),
+                       fieldtime=str(self.fieldtime_input.text()),
+                       fieldx=str(self.fieldx_input.text()),
+                       fieldy=str(self.fieldx_input.text()),
+                       fieldz=str(self.fieldx_input.text()))
 
     def on_delete(self):
         self.deleted.emit(self.index, self.construct_motion_object())
@@ -2286,8 +2295,136 @@ class FileWaveMotionTimeline(QtGui.QWidget):
         [x.setText("0")
          if len(x.text()) is 0
          else x.setText(x.text().replace(",", "."))
-         for x in [self.fields_input, self.fieldtime_input, self.fieldx_input,
+         for x in [self.duration_input, self.fields_input, self.fieldtime_input, self.fieldx_input,
                    self.fieldx_input, self.fieldx_input]]
+
+
+class RotationFileMotionTimeline(QtGui.QWidget):
+    """ A rotation file motion graphical representation for a table-based timeline """
+
+    changed = QtCore.Signal(int, RotationFileGen)
+
+    def __init__(self, rot_file_wave_gen):
+        if not isinstance(rot_file_wave_gen, RotationFileGen):
+            raise TypeError("You tried to spawn a rotation file generator "
+                            "motion widget in the timeline with a wrong object")
+        if rot_file_wave_gen is None:
+            raise TypeError("You tried to spawn a rotation file generator "
+                            "motion widget in the timeline without a motion object")
+        super(RotationFileMotionTimeline, self).__init__()
+        self.setContentsMargins(0, 0, 0, 0)
+        self.main_layout = QtGui.QVBoxLayout()
+        self.main_layout.setContentsMargins(10, 10, 10, 10)
+        self.parent_movement = rot_file_wave_gen.parent_movement
+
+        self.root_label = QtGui.QLabel(__("Rotation file movement"))
+
+        self.duration_label = QtGui.QLabel(__("Duration"))
+        self.duration_input = QtGui.QLineEdit()
+        self.duration_units_label = QtGui.QLabel(__("s"))
+
+        self.filename_label = QtGui.QLabel(__("File name"))
+        self.filename_input = QtGui.QLineEdit()
+
+        self.anglesunits_label = QtGui.QLabel(__("Angle Units"))
+        self.anglesunits_selector = QtGui.QComboBox()
+        self.anglesunits_selector.insertItems(0, [__("Degrees"), __("Radians")])
+
+        self.axisp1x_label = QtGui.QLabel(__("Axis Point 1 X"))
+        self.axisp1x_input = QtGui.QLineEdit()
+
+        self.axisp1y_label = QtGui.QLabel(__("Axis Point 1 Y"))
+        self.axisp1y_input = QtGui.QLineEdit()
+
+        self.axisp1z_label = QtGui.QLabel(__("Axis Point 1 Z"))
+        self.axisp1z_input = QtGui.QLineEdit()
+
+        self.axisp2x_label = QtGui.QLabel(__("Axis Point 2 X"))
+        self.axisp2x_input = QtGui.QLineEdit()
+
+        self.axisp2y_label = QtGui.QLabel(__("Axis Point 2 Y"))
+        self.axisp2y_input = QtGui.QLineEdit()
+
+        self.axisp2z_label = QtGui.QLabel(__("Axis Point 2 Z"))
+        self.axisp2z_input = QtGui.QLineEdit()
+
+        self.root_layout = QtGui.QHBoxLayout()
+        self.root_layout.addWidget(self.root_label)
+        self.root_layout.addStretch(1)
+        self.root_layout.addWidget(self.anglesunits_label)
+        self.root_layout.addWidget(self.anglesunits_selector)
+        self.root_layout.addWidget(self.duration_label)
+        self.root_layout.addWidget(self.duration_input)
+        self.root_layout.addWidget(self.duration_units_label)
+
+        self.first_row_layout = QtGui.QHBoxLayout()
+        self.first_row_layout.addWidget(self.filename_label)
+        self.first_row_layout.addWidget(self.filename_input)
+
+        self.second_row_layout = QtGui.QHBoxLayout()
+        [self.second_row_layout.addWidget(x) for x in [self.axisp1x_label, self.axisp1x_input,
+                                                       self.axisp1y_label, self.axisp1y_input,
+                                                       self.axisp1z_label, self.axisp1z_input]]
+
+        self.third_row_layout = QtGui.QHBoxLayout()
+        [self.third_row_layout.addWidget(x) for x in [self.axisp2x_label, self.axisp2x_input,
+                                                      self.axisp2y_label, self.axisp2y_input,
+                                                      self.axisp2z_label, self.axisp2z_input]]
+
+        self.main_layout.addLayout(self.root_layout)
+        self.main_layout.addWidget(guiutils.h_line_generator())
+        [self.main_layout.addLayout(x) for x in [self.first_row_layout, self.second_row_layout,
+                                                 self.third_row_layout]]
+
+        self.setLayout(self.main_layout)
+        self.fill_values(rot_file_wave_gen)
+        self._init_connections()
+
+    def fill_values(self, rot_file_wave_gen):
+        self.anglesunits_selector.setCurrentIndex(0 if rot_file_wave_gen.anglesunits == "degrees" else 1)
+        self.duration_input.setText(str(rot_file_wave_gen.duration))
+        self.filename_input.setText(str(rot_file_wave_gen.filename))
+        self.axisp1x_input.setText(str(rot_file_wave_gen.axisp1[0]))
+        self.axisp1y_input.setText(str(rot_file_wave_gen.axisp1[1]))
+        self.axisp1z_input.setText(str(rot_file_wave_gen.axisp1[2]))
+        self.axisp2x_input.setText(str(rot_file_wave_gen.axisp2[0]))
+        self.axisp2y_input.setText(str(rot_file_wave_gen.axisp2[1]))
+        self.axisp2z_input.setText(str(rot_file_wave_gen.axisp2[2]))
+
+    def _init_connections(self):
+        [x.textChanged.connect(self.on_change) for x in [self.duration_input, self.filename_input,
+                                                         self.axisp1x_input, self.axisp1y_input, self.axisp1z_input,
+                                                         self.axisp2x_input, self.axisp2y_input, self.axisp2z_input]]
+        self.anglesunits_selector.currentIndexChanged.connect(self.on_change)
+
+    def on_change(self):
+        self._sanitize_input()
+        try:
+            self.changed.emit(0, self.construct_motion_object())
+        except ValueError:
+            utils.debug("Introduced an invalid value for a float number.")
+
+    def construct_motion_object(self):
+        return RotationFileGen(parent_movement=self.parent_movement,
+                               duration=float(self.duration_input.text()),
+                               filename=str(self.filename_input.text()),
+                               anglesunits=str(self.anglesunits_selector.currentText().lower()),
+                               axisp1=[float(self.axisp1x_input.text()),
+                                       float(self.axisp1y_input.text()),
+                                       float(self.axisp1z_input.text())],
+                               axisp2=[float(self.axisp2x_input.text()),
+                                       float(self.axisp2y_input.text()),
+                                       float(self.axisp2z_input.text())])
+
+    def on_delete(self):
+        self.deleted.emit(self.index, self.construct_motion_object())
+
+    def _sanitize_input(self):
+        [x.setText("0")
+         if len(x.text()) is 0
+         else x.setText(x.text().replace(",", "."))
+         for x in [self.duration_input, self.axisp1x_input, self.axisp1y_input, self.axisp1z_input,
+                   self.axisp2x_input, self.axisp2y_input, self.axisp2z_input]]
 
 
 class ObjectOrderWidget(QtGui.QWidget):

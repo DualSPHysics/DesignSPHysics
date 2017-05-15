@@ -122,31 +122,31 @@ class Movement(object):
         return to_ret
 
 
-class WaveMovement(object):
-    """ DualSPHysics compatible wave movement.
-        It includes a an regular or irregular wave generator.
+class SpecialMovement(object):
+    """ DualSPHysics compatible special movement.
+        It includes regular/irregular wave generators and file movements
 
         Attributes:
             name: Name for this motion given by the user
-            wave_gen: Wave generator assigned
+            generator: Generator assigned
         """
 
-    def __init__(self, name="New WaveGen", wave_gen=None):
+    def __init__(self, name="New Movement", generator=None):
         self.name = name
         self.type = "Wave Movement"
-        if not wave_gen:
-            wave_gen = None
-        self.wave_gen = wave_gen
+        if not generator:
+            generator = None
+        self.generator = generator
 
-    def set_wavegen(self, wave_gen):
-        if isinstance(wave_gen, WaveGen):
-            wave_gen.parent_movement = self
-            self.wave_gen = wave_gen
+    def set_wavegen(self, generator):
+        if isinstance(generator, WaveGen):
+            generator.parent_movement = self
+            self.generator = generator
         else:
-            raise TypeError("You are trying to set a non-wave object.")
+            raise TypeError("You are trying to set a non-generator object.")
 
     def __str__(self):
-        to_ret = "WaveMovement <{}> with an {}".format(self.name, self.wave_gen.__class__.__name__) + "\n"
+        to_ret = "SpecialMovement <{}> with an {}".format(self.name, self.generator.__class__.__name__) + "\n"
         return to_ret
 
 
@@ -247,10 +247,11 @@ class IrregularWaveGen(WaveGen):
         self.saveseriewaves_xpos = saveseriewaves_xpos
 
 
-class FileWaveGen(WaveGen):
-    """ File Wave Generator. Loads movements from file
+class FileGen(WaveGen):
+    """ File Generator. Loads movements from file
 
     Attributes:
+        duration: Duration in seconds
         filename: File path to use
         fields: Number of columns of the file
         fieldtime: Column with time
@@ -259,8 +260,9 @@ class FileWaveGen(WaveGen):
         fieldz: Column with Z-position
     """
 
-    def __init__(self, parent_movement=None, filename="", fields=0, fieldtime=0, fieldx=0, fieldy=0, fieldz=0):
-        super(FileWaveGen, self).__init__(parent_movement)
+    def __init__(self, parent_movement=None, duration=0, filename="", fields=0, fieldtime=0, fieldx=0, fieldy=0, fieldz=0):
+        super(FileGen, self).__init__(parent_movement)
+        self.duration = duration
         self.name = "File Wave Generator"
         self.filename = filename
         self.fields = fields
@@ -268,6 +270,31 @@ class FileWaveGen(WaveGen):
         self.fieldx = fieldx
         self.fieldy = fieldy
         self.fieldz = fieldz
+
+
+class RotationFileGen(WaveGen):
+    """ Rotation File Generator. Loads rotation movements from file
+
+    Attributes:
+        duration: Duration in seconds
+        anglesunits: Units of the file (degrees, radians)
+        filename: File path to use
+        axisp1: Point 1 of the axis
+        axisp2: Point 2 of the axis
+    """
+
+    def __init__(self, parent_movement=None, duration=0, filename="", anglesunits="degrees", axisp1=None, axisp2=None):
+        super(RotationFileGen, self).__init__(parent_movement)
+        if axisp1 is None:
+            axisp1 = [0, 0, 0]
+        if axisp2 is None:
+            axisp2 = [0, 0, 0]
+        self.duration = duration
+        self.name = "File Wave Generator"
+        self.anglesunits = anglesunits
+        self.filename = filename
+        self.axisp1 = axisp1
+        self.axisp2 = axisp2
 
 
 class BaseMotion(object):
