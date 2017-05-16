@@ -60,7 +60,6 @@ __status__ = "Development"
 # TODO: Wiki - Add motion section
 # TODO: Wiki - Add case summary
 # ------------------------------- 0.3 BETA -------------------------------
-# TODO: 0.3Beta - Object Motion from file
 # TODO: 0.3Beta - Improve PartVTK (more options and open vtk in paraview if present)
 # TODO: 0.3Beta - Add ComputeForces (read xml and generate csv)
 # TODO: 0.3Beta - Add FloatingInfo (read xml and generate csv)
@@ -746,7 +745,7 @@ ccfilebuttons_layout.addWidget(casecontrols_bt_loaddoc)
 ccthirdrow_layout.addWidget(casecontrols_bt_addfillbox)
 ccthirdrow_layout.addWidget(casecontrols_bt_addstl)
 ccthirdrow_layout.addWidget(casecontrols_bt_importxml)
-# TODO: Enable this
+# TODO: Periodicty <- Enable this
 # ccfourthrow_layout.addWidget(y_period_bt)
 # ccfourthrow_layout.addWidget(x_period_bt)
 ccsecondrow.addWidget(summary_bt)
@@ -1147,26 +1146,70 @@ def on_exportopts():
     export_options_window.exec_()
 
 
+def on_partvtk():
+    utils.debug("Launching PartVTK tool")
+
+
+def on_computeforces():
+    utils.debug("Launching ComputeForces tool")
+
+
+def on_floatinginfo():
+    utils.debug("Launching FloatingInfo tool")
+
+
+def on_measuretool():
+    utils.debug("Launching MeasureTool tool")
+
+
 # Export to VTK section scaffolding
 export_layout = QtGui.QVBoxLayout()
 export_label = QtGui.QLabel(
-    "<b>" + __("Export and visualization") + "</b>")
+    "<b>" + __("Post Proccessing") + "</b>")
+# TODO: Create buttons for each post-processing tools
 export_label.setWordWrap(True)
-export_buttons_layout = QtGui.QHBoxLayout()
-export_button = QtGui.QPushButton(__("Export data to VTK"))
-widget_state_elements['export_button'] = export_button
-exportopts_button = QtGui.QPushButton(__("Options"))
-exportopts_button.setToolTip(__("Sets additional parameters for exporting."))
-widget_state_elements['exportopts_button'] = exportopts_button
-export_button.setToolTip(__("Exports the simulation data to VTK format."))
-export_button.clicked.connect(on_export)
-exportopts_button.clicked.connect(on_exportopts)
-temp_data['export_button'] = export_button
-temp_data['exportopts_button'] = exportopts_button
+export_first_row_layout = QtGui.QHBoxLayout()
+export_second_row_layout = QtGui.QHBoxLayout()
+
+post_proc_partvtk_button = QtGui.QPushButton(__("PartVTK"))
+post_proc_computeforces_button = QtGui.QPushButton(__("ComputeForces"))
+post_proc_floatinginfo_button = QtGui.QPushButton(__("FloatingInfo"))
+post_proc_measuretool_button = QtGui.QPushButton(__("MeasureTool"))
+
+post_proc_partvtk_button.setToolTip(__("Opens the PartVTK exporting tool."))
+post_proc_computeforces_button.setToolTip(__("Opens the ComputeForces exporting tool."))
+post_proc_floatinginfo_button.setToolTip(__("Opens the FloatingInfo exporting tool."))
+post_proc_measuretool_button.setToolTip(__("Opens the MeasureTool exporting tool."))
+
+widget_state_elements['post_proc_partvtk_button'] = post_proc_partvtk_button
+widget_state_elements['post_proc_computeforces_button'] = post_proc_computeforces_button
+widget_state_elements['post_proc_floatinginfo_button'] = post_proc_floatinginfo_button
+widget_state_elements['post_proc_measuretool_button'] = post_proc_measuretool_button
+
+post_proc_partvtk_button.clicked.connect(on_partvtk)
+post_proc_computeforces_button.clicked.connect(on_computeforces)
+post_proc_floatinginfo_button.clicked.connect(on_floatinginfo)
+post_proc_measuretool_button.clicked.connect(on_measuretool)
+
+# export_button = QtGui.QPushButton(__("Export data to VTK"))
+# widget_state_elements['export_button'] = export_button
+# exportopts_button = QtGui.QPushButton(__("Options"))
+# exportopts_button.setToolTip(__("Sets additional parameters for exporting."))
+# widget_state_elements['exportopts_button'] = exportopts_button
+# export_button.setToolTip(__("Exports the simulation data to VTK format."))
+
+# export_button.clicked.connect(on_export)
+# exportopts_button.clicked.connect(on_exportopts)
+# temp_data['export_button'] = export_button
+# temp_data['exportopts_button'] = exportopts_button
+
 export_layout.addWidget(export_label)
-export_buttons_layout.addWidget(export_button)
-export_buttons_layout.addWidget(exportopts_button)
-export_layout.addLayout(export_buttons_layout)
+export_first_row_layout.addWidget(post_proc_partvtk_button)
+export_first_row_layout.addWidget(post_proc_computeforces_button)
+export_second_row_layout.addWidget(post_proc_floatinginfo_button)
+export_second_row_layout.addWidget(post_proc_measuretool_button)
+export_layout.addLayout(export_first_row_layout)
+export_layout.addLayout(export_second_row_layout)
 
 export_separator = QtGui.QFrame()
 export_separator.setFrameStyle(QtGui.QFrame.HLine)

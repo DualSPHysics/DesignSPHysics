@@ -460,7 +460,7 @@ def create_dsph_document():
     FreeCADGui.ActiveDocument.getObject("Case_Limits").LineWidth = 2.00
     FreeCADGui.ActiveDocument.getObject("Case_Limits").Selectable = False
 
-    # TODO: use this
+    # TODO: Peroidicty <- enable this
     # create_periodicity_helpers()
 
     FreeCAD.ActiveDocument.recompute()
