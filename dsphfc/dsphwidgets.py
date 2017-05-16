@@ -2209,6 +2209,7 @@ class FileMotionTimeline(QtGui.QWidget):
 
         self.filename_label = QtGui.QLabel(__("File name"))
         self.filename_input = QtGui.QLineEdit()
+        self.filename_browse = QtGui.QPushButton(__("Browse"))
 
         self.fields_label = QtGui.QLabel(__("Number of fields"))
         self.fields_input = QtGui.QLineEdit()
@@ -2235,6 +2236,7 @@ class FileMotionTimeline(QtGui.QWidget):
         self.first_row_layout = QtGui.QHBoxLayout()
         self.first_row_layout.addWidget(self.filename_label)
         self.first_row_layout.addWidget(self.filename_input)
+        self.first_row_layout.addWidget(self.filename_browse)
 
         self.second_row_layout = QtGui.QHBoxLayout()
         self.second_row_layout.addWidget(self.fields_label)
@@ -2270,6 +2272,12 @@ class FileMotionTimeline(QtGui.QWidget):
         [x.textChanged.connect(self.on_change) for x in [self.duration_input, self.filename_input, self.fields_input,
                                                          self.fieldtime_input, self.fieldx_input,
                                                          self.fieldy_input, self.fieldz_input]]
+        self.filename_browse.clicked.connect(self.on_file_browse)
+
+    def on_file_browse(self):
+        # noinspection PyArgumentList
+        filename, _ = QtGui.QFileDialog.getOpenFileName(self, __("Open file"), QtCore.QDir.homePath())
+        self.filename_input.setText(filename)
 
     def on_change(self):
         self._sanitize_input()
@@ -2304,18 +2312,18 @@ class RotationFileMotionTimeline(QtGui.QWidget):
 
     changed = QtCore.Signal(int, RotationFileGen)
 
-    def __init__(self, rot_file_wave_gen):
-        if not isinstance(rot_file_wave_gen, RotationFileGen):
+    def __init__(self, rot_file_gen):
+        if not isinstance(rot_file_gen, RotationFileGen):
             raise TypeError("You tried to spawn a rotation file generator "
                             "motion widget in the timeline with a wrong object")
-        if rot_file_wave_gen is None:
+        if rot_file_gen is None:
             raise TypeError("You tried to spawn a rotation file generator "
                             "motion widget in the timeline without a motion object")
         super(RotationFileMotionTimeline, self).__init__()
         self.setContentsMargins(0, 0, 0, 0)
         self.main_layout = QtGui.QVBoxLayout()
         self.main_layout.setContentsMargins(10, 10, 10, 10)
-        self.parent_movement = rot_file_wave_gen.parent_movement
+        self.parent_movement = rot_file_gen.parent_movement
 
         self.root_label = QtGui.QLabel(__("Rotation file movement"))
 
@@ -2325,6 +2333,7 @@ class RotationFileMotionTimeline(QtGui.QWidget):
 
         self.filename_label = QtGui.QLabel(__("File name"))
         self.filename_input = QtGui.QLineEdit()
+        self.filename_browse = QtGui.QPushButton(__("Browse"))
 
         self.anglesunits_label = QtGui.QLabel(__("Angle Units"))
         self.anglesunits_selector = QtGui.QComboBox()
@@ -2360,6 +2369,7 @@ class RotationFileMotionTimeline(QtGui.QWidget):
         self.first_row_layout = QtGui.QHBoxLayout()
         self.first_row_layout.addWidget(self.filename_label)
         self.first_row_layout.addWidget(self.filename_input)
+        self.first_row_layout.addWidget(self.filename_browse)
 
         self.second_row_layout = QtGui.QHBoxLayout()
         [self.second_row_layout.addWidget(x) for x in [self.axisp1x_label, self.axisp1x_input,
@@ -2377,7 +2387,7 @@ class RotationFileMotionTimeline(QtGui.QWidget):
                                                  self.third_row_layout]]
 
         self.setLayout(self.main_layout)
-        self.fill_values(rot_file_wave_gen)
+        self.fill_values(rot_file_gen)
         self._init_connections()
 
     def fill_values(self, rot_file_wave_gen):
@@ -2396,6 +2406,12 @@ class RotationFileMotionTimeline(QtGui.QWidget):
                                                          self.axisp1x_input, self.axisp1y_input, self.axisp1z_input,
                                                          self.axisp2x_input, self.axisp2y_input, self.axisp2z_input]]
         self.anglesunits_selector.currentIndexChanged.connect(self.on_change)
+        self.filename_browse.clicked.connect(self.on_file_browse)
+
+    def on_file_browse(self):
+        # noinspection PyArgumentList
+        filename, _ = QtGui.QFileDialog.getOpenFileName(self, __("Open file"), QtCore.QDir.homePath())
+        self.filename_input.setText(filename)
 
     def on_change(self):
         self._sanitize_input()
