@@ -2277,7 +2277,8 @@ class FileMotionTimeline(QtGui.QWidget):
     def on_file_browse(self):
         # noinspection PyArgumentList
         filename, _ = QtGui.QFileDialog.getOpenFileName(self, __("Open file"), QtCore.QDir.homePath())
-        self.filename_input.setText(filename)
+        if len(filename) > 1:
+            self.filename_input.setText(filename)
 
     def on_change(self):
         self._sanitize_input()
@@ -2411,7 +2412,8 @@ class RotationFileMotionTimeline(QtGui.QWidget):
     def on_file_browse(self):
         # noinspection PyArgumentList
         filename, _ = QtGui.QFileDialog.getOpenFileName(self, __("Open file"), QtCore.QDir.homePath())
-        self.filename_input.setText(filename)
+        if len(filename) > 1:
+            self.filename_input.setText(filename)
 
     def on_change(self):
         self._sanitize_input()
