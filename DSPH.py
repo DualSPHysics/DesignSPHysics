@@ -1029,7 +1029,7 @@ ex_separator.setFrameStyle(QtGui.QFrame.HLine)
 export_dialog = QtGui.QDialog(None, QtCore.Qt.CustomizeWindowHint | QtCore.Qt.WindowTitleHint)
 
 export_dialog.setModal(False)
-export_dialog.setWindowTitle(__("Export to VTK: {}%").format("0"))
+export_dialog.setWindowTitle(__("Exporting: {}%").format("0"))
 export_dialog.setFixedSize(550, 143)
 export_dialog_layout = QtGui.QVBoxLayout()
 
@@ -1146,8 +1146,179 @@ def on_exportopts():
     export_options_window.exec_()
 
 
+def partvtk_export(export_parameters):
+    """Export VTK button behaviour.
+    Launches a process while disabling the button."""
+    guiutils.widget_state_config(widget_state_elements, "export start")
+    widget_state_elements['post_proc_partvtk_button'].setText("Exporting...")
+
+    # Find total export parts
+    partfiles = glob.glob(data['project_path'] + '/' + data['project_name'] + "_Out/" + "Part_*.bi4")
+    for filename in partfiles:
+        temp_data['total_export_parts'] = max(int(filename.split("Part_")[1].split(".bi4")[0]),
+                                              temp_data['total_export_parts'])
+    export_progbar_bar.setRange(0, temp_data['total_export_parts'])
+    export_progbar_bar.setValue(0)
+
+    export_dialog.show()
+
+    def on_cancel():
+        utils.log(__("Stopping export"))
+        if temp_data['current_export_process'] is not None:
+            temp_data['current_export_process'].kill()
+        temp_data['export_button'].setText(__("Export data to VTK"))
+        guiutils.widget_state_config(widget_state_elements, "export cancel")
+        export_dialog.hide()
+
+    export_button_cancel.clicked.connect(on_cancel)
+
+    def on_export_finished():
+        widget_state_elements['post_proc_partvtk_button'].setText(__("PartVTK"))
+        guiutils.widget_state_config(widget_state_elements, "export finished")
+        export_dialog.hide()
+
+    export_process = QtCore.QProcess(dsph_main_dock)
+    export_process.finished.connect(on_export_finished)
+    save_mode = '-savevtk '
+    if export_parameters['save_mode'] == 0:
+        save_mode = '-savevtk '
+    elif export_parameters['save_mode'] == 1:
+        save_mode = '-savecsv '
+    elif export_parameters['save_mode'] == 2:
+        save_mode = '-saveascii '
+
+    static_params_exp = ['-dirin ' + data['project_path'] + '/' + data['project_name'] + '_Out/',
+                         save_mode + data['project_path'] + '/' + data['project_name'] + '_Out/ExportedPart',
+                         '-onlytype:' + export_parameters['save_types']]
+
+    export_process.start(data['partvtk4_path'], static_params_exp)
+    temp_data['current_export_process'] = export_process
+
+    def on_stdout_ready():
+        # update progress bar
+        current_output = str(temp_data['current_export_process'].readAllStandardOutput())
+        try:
+            current_part = current_output.split("ExportedPart_")[1]
+            if export_parameters['save_mode'] == 0:
+                current_part = int(current_part.split(".vtk")[0])
+            elif export_parameters['save_mode'] == 1:
+                current_part = int(current_part.split(".csv")[0])
+            elif export_parameters['save_mode'] == 2:
+                current_part = int(current_part.split(".asc")[0])
+        except IndexError:
+            current_part = export_progbar_bar.value()
+        export_progbar_bar.setValue(current_part)
+        export_dialog.setWindowTitle(
+            __("Exporting: ") + str(current_part) + "/" + str(temp_data['total_export_parts']))
+
+    temp_data['current_export_process'].readyReadStandardOutput.connect(on_stdout_ready)
+
+
 def on_partvtk():
-    utils.debug("Launching PartVTK tool")
+    partvtk_tool_dialog = QtGui.QDialog()
+
+    partvtk_tool_dialog.setModal(False)
+    partvtk_tool_dialog.setWindowTitle(__("PartVTK Tool"))
+    partvtk_tool_layout = QtGui.QVBoxLayout()
+
+    pvtk_format_layout = QtGui.QHBoxLayout()
+    pvtk_types_groupbox = QtGui.QGroupBox(__("Types to export"))
+    pvtk_buttons_layout = QtGui.QHBoxLayout()
+
+    outformat_label = QtGui.QLabel(__("Output format"))
+    outformat_combobox = QtGui.QComboBox()
+    outformat_combobox.insertItems(0, ["VTK", "CSV", "ASCII"])
+    pvtk_format_layout.addWidget(outformat_label)
+    pvtk_format_layout.addStretch(1)
+    pvtk_format_layout.addWidget(outformat_combobox)
+
+    pvtk_types_groupbox_layout = QtGui.QVBoxLayout()
+    pvtk_types_chk_all = QtGui.QCheckBox(__("All"))
+    pvtk_types_chk_bound = QtGui.QCheckBox(__("Bound"))
+    pvtk_types_chk_fluid = QtGui.QCheckBox(__("Fluid"))
+    pvtk_types_chk_fixed = QtGui.QCheckBox(__("Fixed"))
+    pvtk_types_chk_moving = QtGui.QCheckBox(__("Moving"))
+    pvtk_types_chk_floating = QtGui.QCheckBox(__("Floating"))
+    [pvtk_types_groupbox_layout.addWidget(x) for x in [pvtk_types_chk_all, pvtk_types_chk_bound, pvtk_types_chk_fluid,
+                                                       pvtk_types_chk_fixed, pvtk_types_chk_moving,
+                                                       pvtk_types_chk_floating]]
+    pvtk_types_groupbox.setLayout(pvtk_types_groupbox_layout)
+
+    pvtk_export_button = QtGui.QPushButton(__("Export"))
+    pvtk_cancel_button = QtGui.QPushButton(__("Cancel"))
+    pvtk_buttons_layout.addWidget(pvtk_export_button)
+    pvtk_buttons_layout.addWidget(pvtk_cancel_button)
+
+    partvtk_tool_layout.addLayout(pvtk_format_layout)
+    partvtk_tool_layout.addWidget(pvtk_types_groupbox)
+    partvtk_tool_layout.addStretch(1)
+    partvtk_tool_layout.addLayout(pvtk_buttons_layout)
+
+    partvtk_tool_dialog.setLayout(partvtk_tool_layout)
+
+    def on_pvtk_cancel():
+        partvtk_tool_dialog.reject()
+
+    def on_pvtk_export():
+        export_parameters = dict()
+        export_parameters['save_mode'] = outformat_combobox.currentIndex()
+        export_parameters['save_types'] = '-all'
+        if pvtk_types_chk_all.isChecked():
+            export_parameters['save_types'] = '+all'
+        else:
+            if pvtk_types_chk_bound.isChecked():
+                export_parameters['save_types'] += ',+bound'
+            if pvtk_types_chk_fluid.isChecked():
+                export_parameters['save_types'] += ',+fluid'
+            if pvtk_types_chk_fixed.isChecked():
+                export_parameters['save_types'] += ',+fixed'
+            if pvtk_types_chk_moving.isChecked():
+                export_parameters['save_types'] += ',+moving'
+            if pvtk_types_chk_floating.isChecked():
+                export_parameters['save_types'] += ',+floating'
+
+        if export_parameters['save_types'] == '-all':
+            export_parameters['save_types'] = '+all'
+        partvtk_export(export_parameters)
+        partvtk_tool_dialog.accept()
+
+    def on_pvtk_type_all_change(state):
+        if state == QtCore.Qt.Checked:
+            [x.setCheckState(QtCore.Qt.Unchecked) for x in [pvtk_types_chk_bound,
+                                                            pvtk_types_chk_fluid,
+                                                            pvtk_types_chk_fixed,
+                                                            pvtk_types_chk_moving,
+                                                            pvtk_types_chk_floating]]
+
+    def on_pvtk_type_bound_change(state):
+        if state == QtCore.Qt.Checked:
+            pvtk_types_chk_all.setCheckState(QtCore.Qt.Unchecked)
+
+    def on_pvtk_type_fluid_change(state):
+        if state == QtCore.Qt.Checked:
+            pvtk_types_chk_all.setCheckState(QtCore.Qt.Unchecked)
+
+    def on_pvtk_type_fixed_change(state):
+        if state == QtCore.Qt.Checked:
+            pvtk_types_chk_all.setCheckState(QtCore.Qt.Unchecked)
+
+    def on_pvtk_type_moving_change(state):
+        if state == QtCore.Qt.Checked:
+            pvtk_types_chk_all.setCheckState(QtCore.Qt.Unchecked)
+
+    def on_pvtk_type_floating_change(state):
+        if state == QtCore.Qt.Checked:
+            pvtk_types_chk_all.setCheckState(QtCore.Qt.Unchecked)
+
+    pvtk_types_chk_all.stateChanged.connect(on_pvtk_type_all_change)
+    pvtk_types_chk_bound.stateChanged.connect(on_pvtk_type_bound_change)
+    pvtk_types_chk_fluid.stateChanged.connect(on_pvtk_type_fluid_change)
+    pvtk_types_chk_fixed.stateChanged.connect(on_pvtk_type_fixed_change)
+    pvtk_types_chk_moving.stateChanged.connect(on_pvtk_type_moving_change)
+    pvtk_types_chk_floating.stateChanged.connect(on_pvtk_type_floating_change)
+    pvtk_export_button.clicked.connect(on_pvtk_export)
+    pvtk_cancel_button.clicked.connect(on_pvtk_cancel)
+    partvtk_tool_dialog.exec_()
 
 
 def on_computeforces():
