@@ -21,6 +21,7 @@ import time
 import pickle
 import threading
 import traceback
+import subprocess
 from PySide import QtGui, QtCore
 from dsphfc.properties import *
 
@@ -1050,102 +1051,6 @@ export_dialog_layout.addLayout(export_button_layout)
 export_dialog.setLayout(export_dialog_layout)
 
 
-def on_export():
-    """Export VTK button behaviour.
-    Launches a process while disabling the button."""
-    guiutils.widget_state_config(widget_state_elements, "export start")
-    temp_data['export_button'].setText("Exporting...")
-
-    # Find total export parts
-    partfiles = glob.glob(data['project_path'] + '/' + data['project_name'] + "_Out/" + "Part_*.bi4")
-    for filename in partfiles:
-        temp_data['total_export_parts'] = max(int(filename.split("Part_")[1].split(".bi4")[0]),
-                                              temp_data['total_export_parts'])
-    export_progbar_bar.setRange(0, temp_data['total_export_parts'])
-    export_progbar_bar.setValue(0)
-
-    export_dialog.show()
-
-    def on_cancel():
-        utils.log(__("Stopping export"))
-        if temp_data['current_export_process'] is not None:
-            temp_data['current_export_process'].kill()
-        temp_data['export_button'].setText(__("Export data to VTK"))
-        guiutils.widget_state_config(widget_state_elements, "export cancel")
-        export_dialog.hide()
-
-    export_button_cancel.clicked.connect(on_cancel)
-
-    def on_export_finished():
-        temp_data['export_button'].setText(__("Export data to VTK"))
-        guiutils.widget_state_config(widget_state_elements, "export finished")
-        export_dialog.hide()
-
-    export_process = QtCore.QProcess(dsph_main_dock)
-    export_process.finished.connect(on_export_finished)
-    static_params_exp = ['-dirin ' + data['project_path'] + '/' + data['project_name'] + '_Out/',
-                         '-savevtk ' + data['project_path'] + '/' + data['project_name'] + '_Out/PartAll']
-    if len(data['export_options']) < 2:
-        additional_params_exp = list()
-    else:
-        additional_params_exp = data['additional_parameters'].split(" ")
-
-    final_params_exp = static_params_exp + additional_params_exp
-    export_process.start(data['partvtk4_path'], final_params_exp)
-    temp_data['current_export_process'] = export_process
-
-    def on_stdout_ready():
-        # update progress bar
-        current_output = str(temp_data['current_export_process'].readAllStandardOutput())
-        try:
-            current_part = int(current_output.split("PartAll_")[1].split(".vtk")[0])
-        except IndexError:
-            current_part = export_progbar_bar.value()
-        export_progbar_bar.setValue(current_part)
-        export_dialog.setWindowTitle(
-            __("Export to VTK: ") + str(current_part) + "/" + str(temp_data['total_export_parts']))
-
-    temp_data['current_export_process'].readyReadStandardOutput.connect(on_stdout_ready)
-
-
-def on_exportopts():
-    export_options_window = QtGui.QDialog()
-    export_options_window.setWindowTitle(__("Export options"))
-    ok_button = QtGui.QPushButton(__("Ok"))
-    cancel_button = QtGui.QPushButton(__("Cancel"))
-
-    def on_ok():
-        data['export_options'] = export_params.text()
-        export_options_window.accept()
-
-    def on_cancel():
-        export_options_window.reject()
-
-    ok_button.clicked.connect(on_ok)
-    cancel_button.clicked.connect(on_cancel)
-    # Button layout definition
-    eo_button_layout = QtGui.QHBoxLayout()
-    eo_button_layout.addStretch(1)
-    eo_button_layout.addWidget(ok_button)
-    eo_button_layout.addWidget(cancel_button)
-
-    export_params_layout = QtGui.QHBoxLayout()
-    export_params_label = QtGui.QLabel(__("Export parameters: "))
-    export_params = QtGui.QLineEdit()
-    export_params.setText(data['export_options'])
-    export_params_layout.addWidget(export_params_label)
-    export_params_layout.addWidget(export_params)
-
-    export_options_layout = QtGui.QVBoxLayout()
-    export_options_layout.addLayout(export_params_layout)
-    export_options_layout.addStretch(1)
-    export_options_layout.addLayout(eo_button_layout)
-
-    export_options_window.setFixedSize(600, 110)
-    export_options_window.setLayout(export_options_layout)
-    export_options_window.exec_()
-
-
 def partvtk_export(export_parameters):
     """Export VTK button behaviour.
     Launches a process while disabling the button."""
@@ -1166,7 +1071,7 @@ def partvtk_export(export_parameters):
         utils.log(__("Stopping export"))
         if temp_data['current_export_process'] is not None:
             temp_data['current_export_process'].kill()
-        temp_data['export_button'].setText(__("Export data to VTK"))
+            widget_state_elements['post_proc_partvtk_button'].setText(__("PartVTK"))
         guiutils.widget_state_config(widget_state_elements, "export cancel")
         export_dialog.hide()
 
@@ -1175,6 +1080,49 @@ def partvtk_export(export_parameters):
     def on_export_finished():
         widget_state_elements['post_proc_partvtk_button'].setText(__("PartVTK"))
         guiutils.widget_state_config(widget_state_elements, "export finished")
+        if export_parameters['open_paraview']:
+            # Try to find paraview and open exported parts with it in each OS
+            found = False
+            formats = {0: "vtk", 1: "csv", 2: "asc"}
+            if "win" in utils.get_os():
+                if os.environ['PROCESSOR_ARCHITECTURE'].lower() == 'amd64':
+                    for f in os.listdir(os.environ['PROGRAMFILES']):
+                        if "paraview" in f.lower():
+                            # Paraview found, find binary
+                            try:
+                                subprocess.Popen(["{}\\{}\\bin\\paraview.exe".format(os.environ['PROGRAMFILES'], f),
+                                                  "--data={}\\ExportedPart_..{}".format(
+                                                      data['project_path'] + '\\' + data['project_name'] + '_Out',
+                                                      formats[export_parameters['save_mode']])],
+                                                 stdout=subprocess.PIPE)
+                                found = True
+                            except:
+                                # Error while executing command
+                                pass
+                elif os.environ['PROCESSOR_ARCHITECTURE'].lower() == 'x86':
+                    for f in os.listdir(os.environ['PROGRAMFILES(X86)']):
+                        if "paraview" in f.lower():
+                            # Paraview found, find binary
+                            try:
+                                subprocess.Popen(
+                                    ["{}\\{}\\bin\\paraview.exe".format(os.environ['PROGRAMFILES(X86)'], f),
+                                     "--data={}\\ExportedPart_..{}".format(
+                                         data['project_path'] + '\\' + data['project_name'] + '_Out'),
+                                     formats[export_parameters['save_mode']]],
+                                    stdout=subprocess.PIPE)
+                                found = True
+                            except:
+                                # Error while executing command
+                                pass
+            elif "linux" in utils.get_os():
+                subprocess.Popen(
+                    ["paraview", "--data={}/ExportedPart_..{}".format(
+                        data['project_path'] + '/' + data['project_name'] + '_Out'),
+                     formats[export_parameters['save_mode']]], stdout=subprocess.PIPE)
+                found = True
+            if not found:
+                guiutils.error_dialog("Paraview was not found in your system (Is it installed regularly?)."
+                                      "Please open the exported files manually")
         export_dialog.hide()
 
     export_process = QtCore.QProcess(dsph_main_dock)
@@ -1244,6 +1192,8 @@ def on_partvtk():
                                                        pvtk_types_chk_floating]]
     pvtk_types_groupbox.setLayout(pvtk_types_groupbox_layout)
 
+    pvtk_open_at_end = QtGui.QCheckBox("Open with ParaView at export end")
+
     pvtk_export_button = QtGui.QPushButton(__("Export"))
     pvtk_cancel_button = QtGui.QPushButton(__("Cancel"))
     pvtk_buttons_layout.addWidget(pvtk_export_button)
@@ -1252,6 +1202,7 @@ def on_partvtk():
     partvtk_tool_layout.addLayout(pvtk_format_layout)
     partvtk_tool_layout.addWidget(pvtk_types_groupbox)
     partvtk_tool_layout.addStretch(1)
+    partvtk_tool_layout.addWidget(pvtk_open_at_end)
     partvtk_tool_layout.addLayout(pvtk_buttons_layout)
 
     partvtk_tool_dialog.setLayout(partvtk_tool_layout)
@@ -1279,6 +1230,9 @@ def on_partvtk():
 
         if export_parameters['save_types'] == '-all':
             export_parameters['save_types'] = '+all'
+
+        export_parameters['open_paraview'] = pvtk_open_at_end.isChecked()
+
         partvtk_export(export_parameters)
         partvtk_tool_dialog.accept()
 
@@ -1323,6 +1277,7 @@ def on_partvtk():
 
 def on_computeforces():
     utils.debug("Launching ComputeForces tool")
+    utils.get_os()
 
 
 def on_floatinginfo():
@@ -1337,7 +1292,6 @@ def on_measuretool():
 export_layout = QtGui.QVBoxLayout()
 export_label = QtGui.QLabel(
     "<b>" + __("Post Proccessing") + "</b>")
-# TODO: Create buttons for each post-processing tools
 export_label.setWordWrap(True)
 export_first_row_layout = QtGui.QHBoxLayout()
 export_second_row_layout = QtGui.QHBoxLayout()
@@ -1361,18 +1315,6 @@ post_proc_partvtk_button.clicked.connect(on_partvtk)
 post_proc_computeforces_button.clicked.connect(on_computeforces)
 post_proc_floatinginfo_button.clicked.connect(on_floatinginfo)
 post_proc_measuretool_button.clicked.connect(on_measuretool)
-
-# export_button = QtGui.QPushButton(__("Export data to VTK"))
-# widget_state_elements['export_button'] = export_button
-# exportopts_button = QtGui.QPushButton(__("Options"))
-# exportopts_button.setToolTip(__("Sets additional parameters for exporting."))
-# widget_state_elements['exportopts_button'] = exportopts_button
-# export_button.setToolTip(__("Exports the simulation data to VTK format."))
-
-# export_button.clicked.connect(on_export)
-# exportopts_button.clicked.connect(on_exportopts)
-# temp_data['export_button'] = export_button
-# temp_data['exportopts_button'] = exportopts_button
 
 export_layout.addWidget(export_label)
 export_first_row_layout.addWidget(post_proc_partvtk_button)
@@ -2352,8 +2294,8 @@ def motion_change():
         create_new_movement_menu = QtGui.QMenu()
         create_new_movement_menu.addAction(guiutils.get_icon("regular_wave.png"), __("Regular wave generator"))
         create_new_movement_menu.addAction(guiutils.get_icon("irregular_wave.png"), __("Irregular wave generator"))
-        create_new_movement_menu.addAction(guiutils.get_icon("irregular_wave.png"), __("Motion from file"))
-        create_new_movement_menu.addAction(guiutils.get_icon("irregular_wave.png"), __("Rotation from file"))
+        create_new_movement_menu.addAction(guiutils.get_icon("file_mov.png"), __("Motion from file"))
+        create_new_movement_menu.addAction(guiutils.get_icon("file_mov.png"), __("Rotation from file"))
         create_new_movement_button.setMenu(create_new_movement_menu)
         create_new_movement_button.clicked.connect(on_new_movement)
         create_new_movement_menu.triggered.connect(on_new_wave_generator)

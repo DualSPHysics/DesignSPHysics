@@ -399,6 +399,11 @@ def open_help():
     webbrowser.open("http://design.sphysics.org/wiki/")
 
 
+def get_os():
+    """ Returns the current operating system """
+    return platform
+
+
 def print_license():
     """ Prints this software license. """
     licpath = os.path.abspath(__file__).split("dsphfc")[0] + "LICENSE"
