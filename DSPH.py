@@ -61,7 +61,6 @@ __status__ = "Development"
 # TODO: Wiki - Add motion section
 # TODO: Wiki - Add case summary
 # ------------------------------- 0.3 BETA -------------------------------
-# TODO: 0.3Beta - Improve PartVTK (more options and open vtk in paraview if present)
 # TODO: 0.3Beta - Add ComputeForces (read xml and generate csv)
 # TODO: 0.3Beta - Add FloatingInfo (read xml and generate csv)
 # TODO: 0.3Beta - Add MeasureTool (reads xml and txt; generates csv)
@@ -1276,16 +1275,132 @@ def on_partvtk():
 
 
 def on_computeforces():
-    utils.debug("Launching ComputeForces tool")
-    utils.get_os()
+    # TODO: Complete this (ComputeForces)
+    compforces_tool_dialog = QtGui.QDialog()
+
+    compforces_tool_dialog.setModal(False)
+    compforces_tool_dialog.setWindowTitle(__("ComputeForces Tool"))
+    compforces_tool_layout = QtGui.QVBoxLayout()
+
+    cfces_format_layout = QtGui.QHBoxLayout()
+    cfces_buttons_layout = QtGui.QHBoxLayout()
+
+    outformat_label = QtGui.QLabel(__("Output format"))
+    outformat_combobox = QtGui.QComboBox()
+    outformat_combobox.insertItems(0, ["VTK", "CSV", "ASCII"])
+    cfces_format_layout.addWidget(outformat_label)
+    cfces_format_layout.addStretch(1)
+    cfces_format_layout.addWidget(outformat_combobox)
+
+    cfces_export_button = QtGui.QPushButton(__("Export"))
+    cfces_cancel_button = QtGui.QPushButton(__("Cancel"))
+    cfces_buttons_layout.addWidget(cfces_export_button)
+    cfces_buttons_layout.addWidget(cfces_cancel_button)
+
+    compforces_tool_layout.addLayout(cfces_format_layout)
+    compforces_tool_layout.addStretch(1)
+    compforces_tool_layout.addLayout(cfces_buttons_layout)
+
+    compforces_tool_dialog.setLayout(compforces_tool_layout)
+
+    def on_cfces_cancel():
+        compforces_tool_dialog.reject()
+
+    def on_cfces_export():
+        export_parameters = dict()
+        export_parameters['save_mode'] = outformat_combobox.currentIndex()
+        # partvtk_export(export_parameters)
+        compforces_tool_dialog.accept()
+
+    cfces_export_button.clicked.connect(on_cfces_export)
+    cfces_cancel_button.clicked.connect(on_cfces_cancel)
+    compforces_tool_dialog.exec_()
 
 
 def on_floatinginfo():
-    utils.debug("Launching FloatingInfo tool")
+    # TODO: Complete this (FloatingInfo)
+    floatinfo_tool_dialog = QtGui.QDialog()
+
+    floatinfo_tool_dialog.setModal(False)
+    floatinfo_tool_dialog.setWindowTitle(__("FloatingInfo Tool"))
+    floatinfo_tool_layout = QtGui.QVBoxLayout()
+
+    finfo_format_layout = QtGui.QHBoxLayout()
+    finfo_buttons_layout = QtGui.QHBoxLayout()
+
+    outformat_label = QtGui.QLabel(__("Output format"))
+    outformat_combobox = QtGui.QComboBox()
+    outformat_combobox.insertItems(0, ["VTK", "CSV", "ASCII"])
+    finfo_format_layout.addWidget(outformat_label)
+    finfo_format_layout.addStretch(1)
+    finfo_format_layout.addWidget(outformat_combobox)
+
+    finfo_export_button = QtGui.QPushButton(__("Export"))
+    finfo_cancel_button = QtGui.QPushButton(__("Cancel"))
+    finfo_buttons_layout.addWidget(finfo_export_button)
+    finfo_buttons_layout.addWidget(finfo_cancel_button)
+
+    floatinfo_tool_layout.addLayout(finfo_format_layout)
+    floatinfo_tool_layout.addStretch(1)
+    floatinfo_tool_layout.addLayout(finfo_buttons_layout)
+
+    floatinfo_tool_dialog.setLayout(floatinfo_tool_layout)
+
+    def on_finfo_cancel():
+        floatinfo_tool_dialog.reject()
+
+    def on_finfo_export():
+        export_parameters = dict()
+        export_parameters['save_mode'] = outformat_combobox.currentIndex()
+        # partvtk_export(export_parameters)
+        floatinfo_tool_dialog.accept()
+
+    finfo_export_button.clicked.connect(on_finfo_export)
+    finfo_cancel_button.clicked.connect(on_finfo_cancel)
+    floatinfo_tool_dialog.exec_()
 
 
 def on_measuretool():
-    utils.debug("Launching MeasureTool tool")
+    # TODO: Complete this (MeasureTool)
+    measure_tool_dialog = QtGui.QDialog()
+
+    measure_tool_dialog.setModal(False)
+    measure_tool_dialog.setWindowTitle(__("MeasureTool"))
+    measure_tool_layout = QtGui.QVBoxLayout()
+
+    mtool_format_layout = QtGui.QHBoxLayout()
+    mtool_buttons_layout = QtGui.QHBoxLayout()
+
+    outformat_label = QtGui.QLabel(__("Output format"))
+    outformat_combobox = QtGui.QComboBox()
+    outformat_combobox.insertItems(0, ["VTK", "CSV", "ASCII"])
+    mtool_format_layout.addWidget(outformat_label)
+    mtool_format_layout.addStretch(1)
+    mtool_format_layout.addWidget(outformat_combobox)
+
+    mtool_export_button = QtGui.QPushButton(__("Export"))
+    mtool_cancel_button = QtGui.QPushButton(__("Cancel"))
+    mtool_buttons_layout.addWidget(mtool_export_button)
+    mtool_buttons_layout.addWidget(mtool_cancel_button)
+
+    measure_tool_layout.addLayout(mtool_format_layout)
+    measure_tool_layout.addStretch(1)
+    measure_tool_layout.addLayout(mtool_buttons_layout)
+
+    measure_tool_dialog.setLayout(measure_tool_layout)
+
+    def on_mtool_cancel():
+        measure_tool_dialog.reject()
+
+    def on_mtool_export():
+        export_parameters = dict()
+        export_parameters['save_mode'] = outformat_combobox.currentIndex()
+        # partvtk_export(export_parameters)
+        measure_tool_dialog.accept()
+
+    mtool_export_button.clicked.connect(on_mtool_export)
+    mtool_cancel_button.clicked.connect(on_mtool_cancel)
+    measure_tool_dialog.exec_()
 
 
 # Export to VTK section scaffolding
