@@ -60,26 +60,28 @@ __status__ = "Development"
 # -------------------------------   WIKI   -------------------------------
 # TODO: Wiki - Add motion section
 # TODO: Wiki - Add case summary
+# TODO: Wiki - Add error reporting procedure / viewing
 # ------------------------------- 0.3 BETA -------------------------------
 # TODO: 0.3Beta - Add ComputeForces (read xml and generate csv)
 # TODO: 0.3Beta - Add FloatingInfo (read xml and generate csv)
 # TODO: 0.3Beta - Add MeasureTool (reads xml and txt; generates csv)
-# TODO: 0.3Beta - Movement brief explanation
-# TODO: 0.3Beta - Periodicity support - Show arrows (bounds) to show periodicity
-# TODO: 0.3Beta - Toolbox (Fillbox, wave, periodicity, imports...) to clean the UI
-# TODO: 0.3Beta - Create Material support
-# TODO: 0.3Beta - Material creator and assigner
+# TODO: 0.4Beta - Movement brief explanation
+# TODO: 0.4Beta - Periodicity support - Show arrows (bounds) to show periodicity
+# TODO: 0.4Beta - Toolbox (Fillbox, wave, periodicity, imports...) to clean the UI
+# TODO: 0.4Beta - Create Material support
+# TODO: 0.4Beta - Material creator and assigner
 # ------------------------------- 0.4 BETA -------------------------------
-# TODO: 0.4Beta - Refactor all code
-# TODO: 0.4Beta - 'Pythonize' code and delete redundant code
-# TODO: 0.4Beta - Revisit all strings to translate and make some translations.
-# TODO: 0.4Beta - Make some kind of a translation platform.
-# TODO: 0.4Beta - Rework constants window (default parameters, better scaffolding, help...)
-# TODO: 0.4Beta - Study uses with latest DSPH and spaces in folder names etc
-# TODO: 0.4Beta - Test and fix all possible things.
-# TODO: 0.4Beta - Change rotation procedure. Try not to use matrixreset, delete null rotations... etc
-# TODO: 0.4Beta - Redesign
-# TODO: 0.4Beta - Revisit and complete documentation of the code
+# TODO: 0.5Beta - Refactor all code
+# TODO: 0.5Beta - 'Pythonize' code and delete redundant code
+# TODO: 0.5Beta - Improve debug messages and make GUI section to enable it
+# TODO: 0.5Beta - Revisit all strings to translate and make some translations.
+# TODO: 0.5Beta - Make some kind of a translation platform.
+# TODO: 0.5Beta - Rework constants window (default parameters, better scaffolding, help...)
+# TODO: 0.5Beta - Study uses with latest DSPH and spaces in folder names etc
+# TODO: 0.5Beta - Test and fix all possible things.
+# TODO: 0.5Beta - Change rotation procedure. Try not to use matrixreset, delete null rotations... etc
+# TODO: 0.5Beta - Redesign
+# TODO: 0.5Beta - Revisit and complete documentation of the code
 # endregion general To-Do
 
 # Print license at macro start
@@ -247,7 +249,10 @@ casecontrols_bt_importxml.setToolTip(__("Imports an already created XML case fro
 casecontrols_bt_importxml.setEnabled(True)
 
 summary_bt = QtGui.QPushButton(__("Case summary"))
+summary_bt.setToolTip(__("Shows a complete case summary with objects, configurations and settings in a brief view."))
 toggle3dbutton = QtGui.QPushButton(__("Toggle 3D/2D"))
+toggle3dbutton.setToolTip(__("Changes the case mode between 2D and 3D mode, switching the Case Limits between"
+                             " a plane or a cube"))
 widget_state_elements['summary_bt'] = summary_bt
 widget_state_elements['toggle3dbutton'] = toggle3dbutton
 summary_bt.setEnabled(False)
@@ -1090,10 +1095,10 @@ def partvtk_export(export_parameters):
                             # Paraview found, find binary
                             try:
                                 subprocess.Popen(["{}\\{}\\bin\\paraview.exe".format(os.environ['PROGRAMFILES'], f),
-                                                  "--data={}\\ExportedPart_..{}".format(
+                                                  "--data={}\\{}..{}".format(
                                                       data['project_path'] + '\\' + data['project_name'] + '_Out',
-                                                      formats[export_parameters['save_mode']])],
-                                                 stdout=subprocess.PIPE)
+                                                      export_parameters['file_name'],
+                                                      formats[export_parameters['save_mode']])], stdout=subprocess.PIPE)
                                 found = True
                             except:
                                 # Error while executing command
@@ -1105,9 +1110,9 @@ def partvtk_export(export_parameters):
                             try:
                                 subprocess.Popen(
                                     ["{}\\{}\\bin\\paraview.exe".format(os.environ['PROGRAMFILES(X86)'], f),
-                                     "--data={}\\ExportedPart_..{}".format(
-                                         data['project_path'] + '\\' + data['project_name'] + '_Out'),
-                                     formats[export_parameters['save_mode']]],
+                                     "--data={}\\{}_..{}".format(
+                                         data['project_path'] + '\\' + data['project_name'] + '_Out',
+                                         export_parameters['file_name'], formats[export_parameters['save_mode']])],
                                     stdout=subprocess.PIPE)
                                 found = True
                             except:
@@ -1115,8 +1120,8 @@ def partvtk_export(export_parameters):
                                 pass
             elif "linux" in utils.get_os():
                 subprocess.Popen(
-                    ["paraview", "--data={}/ExportedPart_..{}".format(
-                        data['project_path'] + '/' + data['project_name'] + '_Out'),
+                    ["paraview", "--data={}/{}_..{}".format(
+                        data['project_path'] + '/' + data['project_name'] + '_Out'), export_parameters['file_name'],
                      formats[export_parameters['save_mode']]], stdout=subprocess.PIPE)
                 found = True
             if not found:
@@ -1135,8 +1140,8 @@ def partvtk_export(export_parameters):
         save_mode = '-saveascii '
 
     static_params_exp = ['-dirin ' + data['project_path'] + '/' + data['project_name'] + '_Out/',
-                         save_mode + data['project_path'] + '/' + data['project_name'] + '_Out/ExportedPart',
-                         '-onlytype:' + export_parameters['save_types']]
+                         save_mode + data['project_path'] + '/' + data['project_name'] + '_Out/' + export_parameters[
+                             'file_name'], '-onlytype:' + export_parameters['save_types']]
 
     export_process.start(data['partvtk4_path'], static_params_exp)
     temp_data['current_export_process'] = export_process
@@ -1145,7 +1150,7 @@ def partvtk_export(export_parameters):
         # update progress bar
         current_output = str(temp_data['current_export_process'].readAllStandardOutput())
         try:
-            current_part = current_output.split("ExportedPart_")[1]
+            current_part = current_output.split("{}_".format(export_parameters['file_name']))[1]
             if export_parameters['save_mode'] == 0:
                 current_part = int(current_part.split(".vtk")[0])
             elif export_parameters['save_mode'] == 1:
@@ -1170,6 +1175,7 @@ def on_partvtk():
 
     pvtk_format_layout = QtGui.QHBoxLayout()
     pvtk_types_groupbox = QtGui.QGroupBox(__("Types to export"))
+    pvtk_filename_layout = QtGui.QHBoxLayout()
     pvtk_buttons_layout = QtGui.QHBoxLayout()
 
     outformat_label = QtGui.QLabel(__("Output format"))
@@ -1181,6 +1187,7 @@ def on_partvtk():
 
     pvtk_types_groupbox_layout = QtGui.QVBoxLayout()
     pvtk_types_chk_all = QtGui.QCheckBox(__("All"))
+    pvtk_types_chk_all.setCheckState(QtCore.Qt.Checked)
     pvtk_types_chk_bound = QtGui.QCheckBox(__("Bound"))
     pvtk_types_chk_fluid = QtGui.QCheckBox(__("Fluid"))
     pvtk_types_chk_fixed = QtGui.QCheckBox(__("Fixed"))
@@ -1190,6 +1197,11 @@ def on_partvtk():
                                                        pvtk_types_chk_fixed, pvtk_types_chk_moving,
                                                        pvtk_types_chk_floating]]
     pvtk_types_groupbox.setLayout(pvtk_types_groupbox_layout)
+
+    pvtk_file_name_label = QtGui.QLabel(__("File name"))
+    pvtk_file_name_text = QtGui.QLineEdit()
+    pvtk_filename_layout.addWidget(pvtk_file_name_label)
+    pvtk_filename_layout.addWidget(pvtk_file_name_text)
 
     pvtk_open_at_end = QtGui.QCheckBox("Open with ParaView at export end")
 
@@ -1201,6 +1213,7 @@ def on_partvtk():
     partvtk_tool_layout.addLayout(pvtk_format_layout)
     partvtk_tool_layout.addWidget(pvtk_types_groupbox)
     partvtk_tool_layout.addStretch(1)
+    partvtk_tool_layout.addLayout(pvtk_filename_layout)
     partvtk_tool_layout.addWidget(pvtk_open_at_end)
     partvtk_tool_layout.addLayout(pvtk_buttons_layout)
 
@@ -1231,6 +1244,11 @@ def on_partvtk():
             export_parameters['save_types'] = '+all'
 
         export_parameters['open_paraview'] = pvtk_open_at_end.isChecked()
+
+        if len(pvtk_file_name_text.text()) > 0:
+            export_parameters['file_name'] = pvtk_file_name_text.text()
+        else:
+            export_parameters['file_name'] = 'ExportedPart'
 
         partvtk_export(export_parameters)
         partvtk_tool_dialog.accept()
