@@ -14,6 +14,7 @@ import FreeCAD
 import FreeCADGui
 from PySide import QtCore, QtGui
 import utils
+import shutil
 from utils import __
 import guiutils
 from properties import *
@@ -2188,7 +2189,7 @@ class FileMotionTimeline(QtGui.QWidget):
 
     changed = QtCore.Signal(int, FileGen)
 
-    def __init__(self, file_wave_gen):
+    def __init__(self, file_wave_gen, project_folder_path):
         if not isinstance(file_wave_gen, FileGen):
             raise TypeError("You tried to spawn a regular wave generator "
                             "motion widget in the timeline with a wrong object")
@@ -2196,6 +2197,7 @@ class FileMotionTimeline(QtGui.QWidget):
             raise TypeError("You tried to spawn a regular wave generator "
                             "motion widget in the timeline without a motion object")
         super(FileMotionTimeline, self).__init__()
+        self.project_folder_path = project_folder_path  # Needed for copying movement file to root of the case.
         self.setContentsMargins(0, 0, 0, 0)
         self.main_layout = QtGui.QVBoxLayout()
         self.main_layout.setContentsMargins(10, 10, 10, 10)
@@ -2278,7 +2280,15 @@ class FileMotionTimeline(QtGui.QWidget):
         # noinspection PyArgumentList
         filename, _ = QtGui.QFileDialog.getOpenFileName(self, __("Open file"), QtCore.QDir.homePath())
         if len(filename) > 1:
-            self.filename_input.setText(filename)
+            utils.debug("Copying {} to {}".format(filename, self.project_folder_path))
+            try:
+                shutil.copy2(filename, self.project_folder_path)
+                self.filename_input.setText("{}/{}".format(self.project_folder_path, filename.split("/")[-1]))
+            except IOError:
+                utils.error("Unable to copy {} into {}".format(filename, self.project_folder_path))
+                guiutils.error_dialog("Unable to copy {} into {}. Check file and directory permissions".format(
+                    filename, self.project_folder_path))
+                self.filename_input.setText("")
 
     def on_change(self):
         self._sanitize_input()
@@ -2313,7 +2323,7 @@ class RotationFileMotionTimeline(QtGui.QWidget):
 
     changed = QtCore.Signal(int, RotationFileGen)
 
-    def __init__(self, rot_file_gen):
+    def __init__(self, rot_file_gen, project_folder_path):
         if not isinstance(rot_file_gen, RotationFileGen):
             raise TypeError("You tried to spawn a rotation file generator "
                             "motion widget in the timeline with a wrong object")
@@ -2321,6 +2331,7 @@ class RotationFileMotionTimeline(QtGui.QWidget):
             raise TypeError("You tried to spawn a rotation file generator "
                             "motion widget in the timeline without a motion object")
         super(RotationFileMotionTimeline, self).__init__()
+        self.project_folder_path = project_folder_path  # Needed for copying movement file to root of the case.
         self.setContentsMargins(0, 0, 0, 0)
         self.main_layout = QtGui.QVBoxLayout()
         self.main_layout.setContentsMargins(10, 10, 10, 10)
@@ -2413,7 +2424,15 @@ class RotationFileMotionTimeline(QtGui.QWidget):
         # noinspection PyArgumentList
         filename, _ = QtGui.QFileDialog.getOpenFileName(self, __("Open file"), QtCore.QDir.homePath())
         if len(filename) > 1:
-            self.filename_input.setText(filename)
+            utils.debug("Copying {} to {}".format(filename, self.project_folder_path))
+            try:
+                shutil.copy2(filename, self.project_folder_path)
+                self.filename_input.setText("{}/{}".format(self.project_folder_path, filename.split("/")[-1]))
+            except IOError:
+                utils.error("Unable to copy {} into {}".format(filename, self.project_folder_path))
+                guiutils.error_dialog("Unable to copy {} into {}. Check file and directory permissions".format(
+                    filename, self.project_folder_path))
+                self.filename_input.setText("")
 
     def on_change(self):
         self._sanitize_input()

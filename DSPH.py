@@ -1140,8 +1140,9 @@ def partvtk_export(export_parameters):
         save_mode = '-saveascii '
 
     static_params_exp = ['-dirin ' + data['project_path'] + '/' + data['project_name'] + '_Out/',
-                         save_mode + data['project_path'] + '/' + data['project_name'] + '_Out/' + export_parameters[
-                             'file_name'], '-onlytype:' + export_parameters['save_types']]
+                         save_mode + data['project_path'] + '/' + data['project_name'] + '_Out/' +
+                         export_parameters['file_name'], '-onlytype:' + export_parameters['save_types'] +
+                         export_parameters['additional_parameters']]
 
     export_process.start(data['partvtk4_path'], static_params_exp)
     temp_data['current_export_process'] = export_process
@@ -1176,6 +1177,7 @@ def on_partvtk():
     pvtk_format_layout = QtGui.QHBoxLayout()
     pvtk_types_groupbox = QtGui.QGroupBox(__("Types to export"))
     pvtk_filename_layout = QtGui.QHBoxLayout()
+    pvtk_parameters_layout = QtGui.QHBoxLayout()
     pvtk_buttons_layout = QtGui.QHBoxLayout()
 
     outformat_label = QtGui.QLabel(__("Output format"))
@@ -1200,8 +1202,14 @@ def on_partvtk():
 
     pvtk_file_name_label = QtGui.QLabel(__("File name"))
     pvtk_file_name_text = QtGui.QLineEdit()
+    pvtk_file_name_text.setText('ExportPart')
     pvtk_filename_layout.addWidget(pvtk_file_name_label)
     pvtk_filename_layout.addWidget(pvtk_file_name_text)
+
+    pvtk_parameters_label = QtGui.QLabel(__("Additional Parameters"))
+    pvtk_parameters_text = QtGui.QLineEdit()
+    pvtk_parameters_layout.addWidget(pvtk_parameters_label)
+    pvtk_parameters_layout.addWidget(pvtk_parameters_text)
 
     pvtk_open_at_end = QtGui.QCheckBox("Open with ParaView at export end")
 
@@ -1214,6 +1222,7 @@ def on_partvtk():
     partvtk_tool_layout.addWidget(pvtk_types_groupbox)
     partvtk_tool_layout.addStretch(1)
     partvtk_tool_layout.addLayout(pvtk_filename_layout)
+    partvtk_tool_layout.addLayout(pvtk_parameters_layout)
     partvtk_tool_layout.addWidget(pvtk_open_at_end)
     partvtk_tool_layout.addLayout(pvtk_buttons_layout)
 
@@ -1249,6 +1258,11 @@ def on_partvtk():
             export_parameters['file_name'] = pvtk_file_name_text.text()
         else:
             export_parameters['file_name'] = 'ExportedPart'
+
+        if len(pvtk_parameters_text.text()) > 0:
+            export_parameters['additional_parameters'] = pvtk_parameters_text.text()
+        else:
+            export_parameters['additional_parameters'] = ''
 
         partvtk_export(export_parameters)
         partvtk_tool_dialog.accept()
@@ -2392,9 +2406,9 @@ def motion_change():
             elif isinstance(target_movement.generator, IrregularWaveGen):
                 target_to_put = dsphwidgets.IrregularWaveMotionTimeline(target_movement.generator)
             elif isinstance(target_movement.generator, FileGen):
-                target_to_put = dsphwidgets.FileMotionTimeline(target_movement.generator)
+                target_to_put = dsphwidgets.FileMotionTimeline(target_movement.generator, data['project_path'])
             elif isinstance(target_movement.generator, RotationFileGen):
-                target_to_put = dsphwidgets.RotationFileMotionTimeline(target_movement.generator)
+                target_to_put = dsphwidgets.RotationFileMotionTimeline(target_movement.generator, data['project_path'])
             target_to_put.changed.connect(on_timeline_item_change)
             timeline_list_table.setCellWidget(0, 0, target_to_put)
 
