@@ -438,9 +438,7 @@ def on_load_case():
                 return
 
         # Remove exec paths from loaded data if user have already correct ones.
-        _, _, _, already_correct = utils.check_executables(data['gencase_path'],
-                                                           data['dsphysics_path'],
-                                                           data['partvtk4_path'])
+        _, already_correct = utils.check_executables(data)
 
         if already_correct:
             [load_disk_data.pop(x, None) for x in ['gencase_path', 'dsphysics_path', 'partvtk4_path']]
@@ -474,8 +472,7 @@ def on_load_case():
         guiutils.widget_state_config(widget_state_elements, "simulation not done")
 
     os.chdir(data['project_path'])
-    data['gencase_path'], data['dsphysics_path'], data['partvtk4_path'], correct_execs = utils.check_executables(
-        data['gencase_path'], data['dsphysics_path'], data['partvtk4_path'])
+    data, correct_execs = utils.check_executables(data)
     if not correct_execs:
         guiutils.widget_state_config(widget_state_elements, "execs not correct")
 
@@ -1308,8 +1305,6 @@ def on_partvtk():
 
 def floatinginfo_export(export_parameters):
     """ FloatingInfo tool export. """
-    data['floatinginfo_path'] = "C:\\DualSPHysics\\EXECS\\FloatingInfo4_win64.exe"  # TODO: Remove this!
-
     guiutils.widget_state_config(widget_state_elements, "export start")
     widget_state_elements['post_proc_floatinginfo_button'].setText("Exporting...")
 
@@ -1349,7 +1344,6 @@ def floatinginfo_export(export_parameters):
     if len(export_parameters['onlymk']) > 0:
         static_params_exp.append('-onlymk:' + export_parameters['onlymk'])
 
-    utils.debug("Launching FloatingInfo with parameters {}".format(" ".join(static_params_exp)))
     export_process.start(data['floatinginfo_path'], static_params_exp)
     temp_data['current_export_process'] = export_process
 
