@@ -1306,6 +1306,67 @@ def on_partvtk():
     partvtk_tool_dialog.exec_()
 
 
+def floatinginfo_export(export_parameters):
+    """ FloatingInfo tool export. """
+    data['floatinginfo_path'] = "C:\\DualSPHysics\\EXECS\\FloatingInfo4_win64.exe"  # TODO: Remove this!
+
+    guiutils.widget_state_config(widget_state_elements, "export start")
+    widget_state_elements['post_proc_floatinginfo_button'].setText("Exporting...")
+
+    # Find total export parts
+    partfiles = glob.glob(data['project_path'] + '/' + data['project_name'] + "_Out/" + "Part_*.bi4")
+    for filename in partfiles:
+        temp_data['total_export_parts'] = max(int(filename.split("Part_")[1].split(".bi4")[0]),
+                                              temp_data['total_export_parts'])
+    export_progbar_bar.setRange(0, temp_data['total_export_parts'])
+    export_progbar_bar.setValue(0)
+
+    export_dialog.show()
+
+    def on_cancel():
+        utils.log(__("Stopping export"))
+        if temp_data['current_export_process'] is not None:
+            temp_data['current_export_process'].kill()
+            widget_state_elements['post_proc_floatinginfo_button'].setText(__("FloatingInfo"))
+        guiutils.widget_state_config(widget_state_elements, "export cancel")
+        export_dialog.hide()
+
+    export_button_cancel.clicked.connect(on_cancel)
+
+    def on_export_finished():
+        widget_state_elements['post_proc_floatinginfo_button'].setText(__("FloatingInfo"))
+        guiutils.widget_state_config(widget_state_elements, "export finished")
+        export_dialog.hide()
+
+    export_process = QtCore.QProcess(dsph_main_dock)
+    export_process.finished.connect(on_export_finished)
+
+    static_params_exp = [
+        '-filexml ' + data['project_path'] + '/' + data['project_name'] + '_Out/' + data['project_name'] + '.xml',
+        '-savemotion',
+        '-savedata ' + data['project_path'] + '/' + data['project_name'] + '_Out/' + export_parameters['filename']]
+
+    if len(export_parameters['onlymk']) > 0:
+        static_params_exp.append('-onlymk:' + export_parameters['onlymk'])
+
+    utils.debug("Launching FloatingInfo with parameters {}".format(" ".join(static_params_exp)))
+    export_process.start(data['floatinginfo_path'], static_params_exp)
+    temp_data['current_export_process'] = export_process
+
+    def on_stdout_ready():
+        # update progress bar
+        current_output = str(temp_data['current_export_process'].readAllStandardOutput())
+        try:
+            current_part = current_output.split("Part_")[1].split("  ")[0]
+        except IndexError:
+            current_part = export_progbar_bar.value()
+        export_progbar_bar.setValue(int(current_part))
+        export_dialog.setWindowTitle(
+            __("Exporting: ") + str(current_part) + "/" + str(temp_data['total_export_parts']))
+
+    temp_data['current_export_process'].readyReadStandardOutput.connect(on_stdout_ready)
+
+
 def on_computeforces():
     # TODO: Complete this (ComputeForces)
     compforces_tool_dialog = QtGui.QDialog()
@@ -1357,22 +1418,29 @@ def on_floatinginfo():
     floatinfo_tool_dialog.setWindowTitle(__("FloatingInfo Tool"))
     floatinfo_tool_layout = QtGui.QVBoxLayout()
 
-    finfo_format_layout = QtGui.QHBoxLayout()
+    finfo_onlymk_layout = QtGui.QHBoxLayout()
     finfo_buttons_layout = QtGui.QHBoxLayout()
+    finfo_filename_layout = QtGui.QHBoxLayout()
 
-    outformat_label = QtGui.QLabel(__("Output format"))
-    outformat_combobox = QtGui.QComboBox()
-    outformat_combobox.insertItems(0, ["VTK", "CSV", "ASCII"])
-    finfo_format_layout.addWidget(outformat_label)
-    finfo_format_layout.addStretch(1)
-    finfo_format_layout.addWidget(outformat_combobox)
+    finfo_onlymk_label = QtGui.QLabel(__("MK's to process (blank for all)"))
+    finfo_onlymk_text = QtGui.QLineEdit()
+    finfo_onlymk_text.setPlaceholderText("1,2,3 or 1-30")
+    finfo_onlymk_layout.addWidget(finfo_onlymk_label)
+    finfo_onlymk_layout.addWidget(finfo_onlymk_text)
+
+    finfo_filename_label = QtGui.QLabel(__("File Name"))
+    finfo_filename_text = QtGui.QLineEdit()
+    finfo_filename_text.setText("FloatingMotion")
+    finfo_filename_layout.addWidget(finfo_filename_label)
+    finfo_filename_layout.addWidget(finfo_filename_text)
 
     finfo_export_button = QtGui.QPushButton(__("Export"))
     finfo_cancel_button = QtGui.QPushButton(__("Cancel"))
     finfo_buttons_layout.addWidget(finfo_export_button)
     finfo_buttons_layout.addWidget(finfo_cancel_button)
 
-    floatinfo_tool_layout.addLayout(finfo_format_layout)
+    floatinfo_tool_layout.addLayout(finfo_onlymk_layout)
+    floatinfo_tool_layout.addLayout(finfo_filename_layout)
     floatinfo_tool_layout.addStretch(1)
     floatinfo_tool_layout.addLayout(finfo_buttons_layout)
 
@@ -1383,12 +1451,14 @@ def on_floatinginfo():
 
     def on_finfo_export():
         export_parameters = dict()
-        export_parameters['save_mode'] = outformat_combobox.currentIndex()
-        # partvtk_export(export_parameters)
+        export_parameters['onlymk'] = finfo_onlymk_text.text()
+        export_parameters['filename'] = finfo_filename_text.text()
+        floatinginfo_export(export_parameters)
         floatinfo_tool_dialog.accept()
 
     finfo_export_button.clicked.connect(on_finfo_export)
     finfo_cancel_button.clicked.connect(on_finfo_cancel)
+    finfo_filename_text.setFocus()
     floatinfo_tool_dialog.exec_()
 
 

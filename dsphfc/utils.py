@@ -593,6 +593,7 @@ def dump_to_xml(data, save_name):
     f.write('\t\t\t</definition>\n')
     f.write('\t\t\t<commands>\n')
     f.write('\t\t\t\t<mainlist>\n')
+    f.write('\t\t\t\t\t<setshapemode>dp | bound</setshapemode>\n')
     # Export in strict order
     for key in data["export_order"]:
         name = key
@@ -686,6 +687,7 @@ def dump_to_xml(data, save_name):
                     f.write('\t\t\t\t\t\t<drawscale x="0.001" y="0.001" z="0.001" />\n')
                     f.write('\t\t\t\t\t</drawfilestl>\n')
                     del __objs__
+    f.write('\t\t\t\t\t<shapeout file="" />\n')
     f.write('\t\t\t\t</mainlist>\n')
     f.write('\t\t\t</commands>\n')
     f.write('\t\t</geometry>\n')
