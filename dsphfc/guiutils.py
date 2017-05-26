@@ -908,16 +908,64 @@ def def_setup_window(data):
     partvtk4path_layout.addWidget(partvtk4path_input)
     partvtk4path_layout.addWidget(partvtk4path_browse)
 
+    # ComputeForces path
+    computeforces_layout = QtGui.QHBoxLayout()
+    computeforces_label = QtGui.QLabel("ComputeForces Path: ")
+    computeforces_input = QtGui.QLineEdit()
+    try:
+        computeforces_input.setText(data["computeforces_path"])
+    except KeyError:
+        computeforces_input.setText("")
+    computeforces_input.setPlaceholderText("Put ComputeForces path here")
+    computeforces_browse = QtGui.QPushButton("...")
+
+    computeforces_layout.addWidget(computeforces_label)
+    computeforces_layout.addWidget(computeforces_input)
+    computeforces_layout.addWidget(computeforces_browse)
+
+    # FloatingInfo path
+    floatinginfo_layout = QtGui.QHBoxLayout()
+    floatinginfo_label = QtGui.QLabel("FloatingInfo Path: ")
+    floatinginfo_input = QtGui.QLineEdit()
+    try:
+        floatinginfo_input.setText(data["floatinginfo_path"])
+    except KeyError:
+        floatinginfo_input.setText("")
+    floatinginfo_input.setPlaceholderText("Put FloatingInfo path here")
+    floatinginfo_browse = QtGui.QPushButton("...")
+
+    floatinginfo_layout.addWidget(floatinginfo_label)
+    floatinginfo_layout.addWidget(floatinginfo_input)
+    floatinginfo_layout.addWidget(floatinginfo_browse)
+
+    # MeasureTool path
+    measuretool_layout = QtGui.QHBoxLayout()
+    measuretool_label = QtGui.QLabel("MeasureTool Path: ")
+    measuretool_input = QtGui.QLineEdit()
+    try:
+        measuretool_input.setText(data["measuretool_path"])
+    except KeyError:
+        measuretool_input.setText("")
+    measuretool_input.setPlaceholderText("Put MeasureTool path here")
+    measuretool_browse = QtGui.QPushButton("...")
+
+    measuretool_layout.addWidget(measuretool_label)
+    measuretool_layout.addWidget(measuretool_input)
+    measuretool_layout.addWidget(measuretool_browse)
+
     # ------------ Button behaviour definition --------------
     def on_ok():
         data['gencase_path'] = gencasepath_input.text()
         data['dsphysics_path'] = dsphpath_input.text()
         data['partvtk4_path'] = partvtk4path_input.text()
+        data['computeforces_path'] = computeforces_input.text()
+        data['floatinginfo_path'] = floatinginfo_input.text()
+        data['measuretool_path'] = measuretool_input.text()
         with open(FreeCAD.getUserAppDataDir() + '/dsph_data.dsphdata', 'wb') as picklefile:
             pickle.dump(data, picklefile, utils.PICKLE_PROTOCOL)
         utils.log("Setup changed. Saved to " + FreeCAD.getUserAppDataDir() + "/dsph_data.dsphdata")
-        data['gencase_path'], data['dsphysics_path'], data['partvtk4_path'], state = utils.check_executables(
-            data['gencase_path'], data['dsphysics_path'], data['partvtk4_path'])
+        data_to_merge, state = utils.check_executables(data)
+        data.update(data_to_merge)
         setup_window.accept()
 
     def on_cancel():
@@ -978,11 +1026,66 @@ def def_setup_window(data):
                 utils.error("I can't recognize PartVTK4 in that exe!")
                 warning_dialog("I can't recognize PartVTK4 in that exe!")
 
+    def on_computeforces_browse():
+        filedialog = QtGui.QFileDialog()
+        # noinspection PyArgumentList
+        file_name, _ = filedialog.getOpenFileName(setup_window, "Select ComputeForces path", QtCore.QDir.homePath())
+        if file_name != "":
+            # Verify if exe is indeed computeforces
+            process = QtCore.QProcess(FreeCADGui.getMainWindow())
+            process.start(file_name)
+            process.waitForFinished()
+            output = str(process.readAllStandardOutput())
+
+            if "computeforces" in output[0:22].lower():
+                computeforces_input.setText(file_name)
+            else:
+                utils.error("I can't recognize ComputeForces in that exe!")
+                warning_dialog("I can't recognize ComputeForces in that exe!")
+
+    def on_floatinginfo_browse():
+        filedialog = QtGui.QFileDialog()
+        # noinspection PyArgumentList
+        file_name, _ = filedialog.getOpenFileName(setup_window, "Select FloatingInfo path", QtCore.QDir.homePath())
+        if file_name != "":
+            # Verify if exe is indeed floatinginfo
+            process = QtCore.QProcess(FreeCADGui.getMainWindow())
+            process.start(file_name)
+            process.waitForFinished()
+            output = str(process.readAllStandardOutput())
+
+            if "floatinginfo" in output[0:22].lower():
+                floatinginfo_input.setText(file_name)
+            else:
+                utils.error("I can't recognize FloatingInfo in that exe!")
+                warning_dialog("I can't recognize FloatingInfo in that exe!")
+
+    def on_measuretool_browse():
+        filedialog = QtGui.QFileDialog()
+        # noinspection PyArgumentList
+        file_name, _ = filedialog.getOpenFileName(setup_window, "Select MeasureTool path", QtCore.QDir.homePath())
+        if file_name != "":
+            # Verify if exe is indeed measuretool
+            process = QtCore.QProcess(FreeCADGui.getMainWindow())
+            process.start(file_name)
+            process.waitForFinished()
+            output = str(process.readAllStandardOutput())
+
+            if "measuretool" in output[0:22].lower():
+                measuretool_input.setText(file_name)
+            else:
+                utils.error("I can't recognize MeasureTool in that exe!")
+                warning_dialog("I can't recognize MeasureTool in that exe!")
+
     ok_button.clicked.connect(on_ok)
     cancel_button.clicked.connect(on_cancel)
     gencasepath_browse.clicked.connect(on_gencase_browse)
     dsphpath_browse.clicked.connect(on_dualsphysics_browse)
     partvtk4path_browse.clicked.connect(on_partvtk4_browse)
+    computeforces_browse.clicked.connect(on_computeforces_browse)
+    floatinginfo_browse.clicked.connect(on_floatinginfo_browse)
+    measuretool_browse.clicked.connect(on_measuretool_browse)
+
     # Button layout definition
     stp_button_layout = QtGui.QHBoxLayout()
     stp_button_layout.addStretch(1)
@@ -994,6 +1097,9 @@ def def_setup_window(data):
     stp_main_layout.addLayout(gencasepath_layout)
     stp_main_layout.addLayout(dsphpath_layout)
     stp_main_layout.addLayout(partvtk4path_layout)
+    stp_main_layout.addLayout(computeforces_layout)
+    stp_main_layout.addLayout(floatinginfo_layout)
+    stp_main_layout.addLayout(measuretool_layout)
     stp_main_layout.addStretch(1)
 
     stp_groupbox = QtGui.QGroupBox("Setup parameters")

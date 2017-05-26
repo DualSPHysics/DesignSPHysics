@@ -121,74 +121,125 @@ def __(text):
         return to_ret
 
 
-def check_executables(gencase_path, dsphysics_path, partvtk4_path):
-    """ Checks the three needed executables for working with
-        this software. Returns 4 values: 3 string paths and a boolean.
-        If some path is not correct returns the respective
-        empty string and False. """
-
+def check_executables(data):
+    """ Checks the different executables used by DesignSPHysics. Returns the filtered data structure and a boolean
+    stating if all went correctly. """
     execs_correct = True
     debug("Paths to check:\n"
           "{}\n"
           "{}\n"
-          "{}\n".format(gencase_path, dsphysics_path, partvtk4_path))
+          "{}\n"
+          "{}\n"
+          "{}\n"
+          "{}\n".format(data['gencase_path'],
+                        data['dsphysics_path'],
+                        data['partvtk4_path'],
+                        data['computeforces_path'],
+                        data['floatinginfo_path'],
+                        data['measuretool_path']))
+
     # Tries to identify gencase
-    if os.path.isfile(gencase_path):
+    if os.path.isfile(data['gencase_path']):
         process = QtCore.QProcess(FreeCADGui.getMainWindow())
-        process.start(gencase_path)
+        process.start(data['gencase_path'])
         process.waitForFinished()
         output = str(process.readAllStandardOutput())
-        if "gencase" in output[0:15].lower():
+        if "gencase" in output[0:22].lower():
             log("Found correct GenCase.")
         else:
             execs_correct = False
-            gencase_path = ""
+            data['gencase_path'] = ""
     else:
         execs_correct = False
-        gencase_path = ""
+        data['gencase_path'] = ""
 
-        # Tries to identify dualsphysics
-    if os.path.isfile(dsphysics_path):
+    # Tries to identify dualsphysics
+    if os.path.isfile(data['dsphysics_path']):
         process = QtCore.QProcess(FreeCADGui.getMainWindow())
         if platform == "linux" or platform == "linux2":
-            os.environ["LD_LIBRARY_PATH"] = "/".join(dsphysics_path.split("/")[:-1])
-            process.start(dsphysics_path)
+            os.environ["LD_LIBRARY_PATH"] = "/".join(data['dsphysics_path'].split("/")[:-1])
+            process.start(data['dsphysics_path'])
         else:
-            process.start(dsphysics_path)
+            process.start(data['dsphysics_path'])
 
         process.waitForFinished()
         output = str(process.readAllStandardOutput())
-        if "dualsphysics" in output[0:20].lower():
+        if "dualsphysics" in output[0:22].lower():
             log("Found correct DualSPHysics.")
         else:
             execs_correct = False
-            dsphysics_path = ""
+            data['dsphysics_path'] = ""
     else:
         execs_correct = False
-        dsphysics_path = ""
+        data['dsphysics_path'] = ""
 
-        # Tries to identify partvtk4
-    if os.path.isfile(partvtk4_path):
+    # Tries to identify partvtk4
+    if os.path.isfile(data['partvtk4_path']):
         process = QtCore.QProcess(FreeCADGui.getMainWindow())
-        process.start(partvtk4_path)
+        process.start(data['partvtk4_path'])
         process.waitForFinished()
         output = str(process.readAllStandardOutput())
-        if "partvtk4" in output[0:20].lower():
+        if "partvtk4" in output[0:22].lower():
             log("Found correct PartVTK4.")
         else:
             execs_correct = False
-            partvtk4_path = ""
+            data['partvtk4_path'] = ""
     else:
         execs_correct = False
-        partvtk4_path = ""
+        data['partvtk4_path'] = ""
 
-        # Spawn warning dialog and return paths.
+    # Tries to identify computeforces
+    if os.path.isfile(data['computeforces_path']):
+        process = QtCore.QProcess(FreeCADGui.getMainWindow())
+        process.start(data['computeforces_path'])
+        process.waitForFinished()
+        output = str(process.readAllStandardOutput())
+        if "computeforces" in output[0:22].lower():
+            log("Found correct ComputeForces.")
+        else:
+            execs_correct = False
+            data['computeforces_path'] = ""
+    else:
+        execs_correct = False
+        data['computeforces_path'] = ""
+
+    # Tries to identify floatinginfo
+    if os.path.isfile(data['floatinginfo_path']):
+        process = QtCore.QProcess(FreeCADGui.getMainWindow())
+        process.start(data['floatinginfo_path'])
+        process.waitForFinished()
+        output = str(process.readAllStandardOutput())
+        if "floatinginfo" in output[0:22].lower():
+            log("Found correct FloatingInfo.")
+        else:
+            execs_correct = False
+            data['floatinginfo_path'] = ""
+    else:
+        execs_correct = False
+        data['floatinginfo_path'] = ""
+
+    # Tries to identify measuretool
+    if os.path.isfile(data['measuretool_path']):
+        process = QtCore.QProcess(FreeCADGui.getMainWindow())
+        process.start(data['measuretool_path'])
+        process.waitForFinished()
+        output = str(process.readAllStandardOutput())
+        if "measuretool" in output[0:22].lower():
+            log("Found correct MeasureTool.")
+        else:
+            execs_correct = False
+            data['measuretool_path'] = ""
+    else:
+        execs_correct = False
+        data['measuretool_path'] = ""
+
+    # Spawn warning dialog and return filtered data.
     if not execs_correct:
         warning(
             "One or more of the executables in the setup is not correct. Check plugin setup to fix missing binaries")
         guiutils.warning_dialog(
             "One or more of the executables in the setup is not correct. Check plugin setup to fix missing binaries.")
-    return gencase_path, dsphysics_path, partvtk4_path, execs_correct
+    return data, execs_correct
 
 
 def float_list_to_float_property(floating_mks):
@@ -294,6 +345,9 @@ def get_default_data():
     data['gencase_path'] = ""
     data['dsphysics_path'] = ""
     data['partvtk4_path'] = ""
+    data['floatinginfo_path'] = ""
+    data['computeforces_path'] = ""
+    data['measuretool_path'] = ""
 
     # Case mode
     data['3dmode'] = True
@@ -353,6 +407,9 @@ def get_default_data():
                 data['gencase_path'] = disk_data['gencase_path']
                 data['dsphysics_path'] = disk_data['dsphysics_path']
                 data['partvtk4_path'] = disk_data['partvtk4_path']
+                data['computeforces_path'] = disk_data['computeforces_path']
+                data['floatinginfo_path'] = disk_data['floatinginfo_path']
+                data['measuretool_path'] = disk_data['measuretool_path']
         except Exception:
             # traceback.print_exc()
             warning(__("The main settings file is corrupted. Deleting..."))
@@ -361,10 +418,12 @@ def get_default_data():
             data['gencase_path'] = ""
             data['dsphysics_path'] = ""
             data['partvtk4_path'] = ""
+            data['computeforces_path'] = ""
+            data['floatinginfo_path'] = ""
+            data['measuretool_path'] = ""
 
         log("Found data file. Loading data from disk.")
-        data['gencase_path'], data['dsphysics_path'], data['partvtk4_path'], state = check_executables(
-            data['gencase_path'], data['dsphysics_path'], data['partvtk4_path'])
+        data, state = check_executables(data)
     else:
         data["project_path"] = ""
         data["project_name"] = ""
