@@ -61,14 +61,13 @@ __status__ = "Development"
 # TODO: Wiki - Add motion section
 # TODO: Wiki - Add case summary
 # TODO: Wiki - Add error reporting procedure / viewing
-# ------------------------------- 0.3 BETA -------------------------------
-# TODO: 0.3Beta - Add MeasureTool (reads xml and txt; generates csv)
+# ------------------------------- 0.4 BETA -------------------------------
 # TODO: 0.4Beta - Movement brief explanation
 # TODO: 0.4Beta - Periodicity support - Show arrows (bounds) to show periodicity
 # TODO: 0.4Beta - Toolbox (Fillbox, wave, periodicity, imports...) to clean the UI
 # TODO: 0.4Beta - Create Material support
 # TODO: 0.4Beta - Material creator and assigner
-# ------------------------------- 0.4 BETA -------------------------------
+# ------------------------------- 0.5 BETA -------------------------------
 # TODO: 0.5Beta - Refactor all code
 # TODO: 0.5Beta - 'Pythonize' code and delete redundant code
 # TODO: 0.5Beta - Improve debug messages and make GUI section to enable it
@@ -1537,47 +1536,268 @@ def on_computeforces():
     compforces_tool_dialog.exec_()
 
 
-def on_measuretool():
-    # TODO: Complete this (MeasureTool)
-    measure_tool_dialog = QtGui.QDialog()
+def measuretool_export(export_parameters):
+    """ MeasureTool tool export. """
+    guiutils.widget_state_config(widget_state_elements, "export start")
+    widget_state_elements['post_proc_measuretool_button'].setText("Exporting...")
 
-    measure_tool_dialog.setModal(False)
-    measure_tool_dialog.setWindowTitle(__("MeasureTool"))
-    measure_tool_layout = QtGui.QVBoxLayout()
+    # Find total export parts
+    partfiles = glob.glob(data['project_path'] + '/' + data['project_name'] + "_Out/" + "Part_*.bi4")
+    for filename in partfiles:
+        temp_data['total_export_parts'] = max(int(filename.split("Part_")[1].split(".bi4")[0]),
+                                              temp_data['total_export_parts'])
+    export_progbar_bar.setRange(0, temp_data['total_export_parts'])
+    export_progbar_bar.setValue(0)
+
+    export_dialog.show()
+
+    def on_cancel():
+        utils.log(__("Stopping export"))
+        if temp_data['current_export_process'] is not None:
+            temp_data['current_export_process'].kill()
+            widget_state_elements['post_proc_measuretool_button'].setText(__("MeasureTool"))
+        guiutils.widget_state_config(widget_state_elements, "export cancel")
+        export_dialog.hide()
+
+    export_button_cancel.clicked.connect(on_cancel)
+
+    def on_export_finished():
+        widget_state_elements['post_proc_measuretool_button'].setText(__("MeasureTool"))
+        guiutils.widget_state_config(widget_state_elements, "export finished")
+        export_dialog.hide()
+
+    export_process = QtCore.QProcess(dsph_main_dock)
+    export_process.finished.connect(on_export_finished)
+
+    save_mode = '-savecsv '
+    if export_parameters['save_mode'] == 0:
+        save_mode = '-savevtk '
+    elif export_parameters['save_mode'] == 1:
+        save_mode = '-savecsv '
+    elif export_parameters['save_mode'] == 2:
+        save_mode = '-saveascii '
+
+    # Save points to disk to later use them as parameter
+    with open(data['project_path'] + '/' + 'points.txt', 'w') as f:
+        f.write("POINTS\n")
+        for curr_point in temp_data['measuretool_points']:
+            f.write("{}  {}  {}\n".format(*curr_point))
+
+    static_params_exp = [
+        '-dirin ' + data['project_path'] + '/' + data['project_name'] + '_Out/',
+        '-filexml ' + data['project_path'] + '/' + data['project_name'] + '_Out/' + data['project_name'] + '.xml',
+        save_mode + data['project_path'] + '/' + data['project_name'] + '_Out/' + export_parameters['filename'],
+        '-points ' + data['project_path'] + '/points.txt',
+        '-vars:' + export_parameters['save_vars'],
+        export_parameters['additional_parameters']
+    ]
+
+    export_process.start(data['measuretool_path'], static_params_exp)
+    temp_data['current_export_process'] = export_process
+
+    def on_stdout_ready():
+        # update progress bar
+        current_output = str(temp_data['current_export_process'].readAllStandardOutput())
+        try:
+            current_part = current_output.split("/Part_")[1].split(".bi4")[0]
+        except IndexError:
+            current_part = export_progbar_bar.value()
+        export_progbar_bar.setValue(int(current_part))
+        export_dialog.setWindowTitle(
+            __("Exporting: ") + str(current_part) + "/" + str(temp_data['total_export_parts']))
+
+    temp_data['current_export_process'].readyReadStandardOutput.connect(on_stdout_ready)
+
+
+def on_measuretool():
+    measuretool_tool_dialog = QtGui.QDialog()
+
+    measuretool_tool_dialog.setModal(False)
+    measuretool_tool_dialog.setWindowTitle(__("MeasureTool"))
+    measuretool_tool_layout = QtGui.QVBoxLayout()
 
     mtool_format_layout = QtGui.QHBoxLayout()
+    mtool_types_groupbox = QtGui.QGroupBox(__("Variables to export"))
+    mtool_filename_layout = QtGui.QHBoxLayout()
+    mtool_parameters_layout = QtGui.QHBoxLayout()
     mtool_buttons_layout = QtGui.QHBoxLayout()
 
     outformat_label = QtGui.QLabel(__("Output format"))
     outformat_combobox = QtGui.QComboBox()
     outformat_combobox.insertItems(0, ["VTK", "CSV", "ASCII"])
+    outformat_combobox.setCurrentIndex(1)
     mtool_format_layout.addWidget(outformat_label)
     mtool_format_layout.addStretch(1)
     mtool_format_layout.addWidget(outformat_combobox)
+
+    mtool_types_groupbox_layout = QtGui.QVBoxLayout()
+    mtool_types_chk_all = QtGui.QCheckBox(__("All"))
+    mtool_types_chk_all.setCheckState(QtCore.Qt.Checked)
+    mtool_types_chk_vel = QtGui.QCheckBox(__("Velocity"))
+    mtool_types_chk_rhop = QtGui.QCheckBox(__("Density"))
+    mtool_types_chk_press = QtGui.QCheckBox(__("Pressure"))
+    mtool_types_chk_mass = QtGui.QCheckBox(__("Mass"))
+    mtool_types_chk_vol = QtGui.QCheckBox(__("Volume"))
+    mtool_types_chk_idp = QtGui.QCheckBox(__("Particle ID"))
+    mtool_types_chk_ace = QtGui.QCheckBox(__("Acceleration"))
+    mtool_types_chk_vor = QtGui.QCheckBox(__("Vorticity"))
+    mtool_types_chk_kcorr = QtGui.QCheckBox(__("KCorr"))
+    [mtool_types_groupbox_layout.addWidget(x) for x in
+     [mtool_types_chk_all, mtool_types_chk_vel, mtool_types_chk_rhop, mtool_types_chk_press, mtool_types_chk_mass,
+      mtool_types_chk_vol, mtool_types_chk_idp, mtool_types_chk_ace, mtool_types_chk_vor, mtool_types_chk_kcorr]]
+    mtool_types_groupbox.setLayout(mtool_types_groupbox_layout)
+
+    mtool_set_points = QtGui.QPushButton("Set measure points")
+
+    mtool_file_name_label = QtGui.QLabel(__("File name"))
+    mtool_file_name_text = QtGui.QLineEdit()
+    mtool_file_name_text.setText('MeasurePart')
+    mtool_filename_layout.addWidget(mtool_file_name_label)
+    mtool_filename_layout.addWidget(mtool_file_name_text)
+
+    mtool_parameters_label = QtGui.QLabel(__("Additional Parameters"))
+    mtool_parameters_text = QtGui.QLineEdit()
+    mtool_parameters_layout.addWidget(mtool_parameters_label)
+    mtool_parameters_layout.addWidget(mtool_parameters_text)
 
     mtool_export_button = QtGui.QPushButton(__("Export"))
     mtool_cancel_button = QtGui.QPushButton(__("Cancel"))
     mtool_buttons_layout.addWidget(mtool_export_button)
     mtool_buttons_layout.addWidget(mtool_cancel_button)
 
-    measure_tool_layout.addLayout(mtool_format_layout)
-    measure_tool_layout.addStretch(1)
-    measure_tool_layout.addLayout(mtool_buttons_layout)
+    measuretool_tool_layout.addLayout(mtool_format_layout)
+    measuretool_tool_layout.addWidget(mtool_types_groupbox)
+    measuretool_tool_layout.addStretch(1)
+    measuretool_tool_layout.addWidget(mtool_set_points)
+    measuretool_tool_layout.addLayout(mtool_filename_layout)
+    measuretool_tool_layout.addLayout(mtool_parameters_layout)
+    measuretool_tool_layout.addLayout(mtool_buttons_layout)
 
-    measure_tool_dialog.setLayout(measure_tool_layout)
+    measuretool_tool_dialog.setLayout(measuretool_tool_layout)
 
     def on_mtool_cancel():
-        measure_tool_dialog.reject()
+        measuretool_tool_dialog.reject()
 
     def on_mtool_export():
         export_parameters = dict()
         export_parameters['save_mode'] = outformat_combobox.currentIndex()
-        # partvtk_export(export_parameters)
-        measure_tool_dialog.accept()
+        export_parameters['save_vars'] = '-all'
+        if mtool_types_chk_all.isChecked():
+            export_parameters['save_vars'] = '+all'
+        else:
+            if mtool_types_chk_vel.isChecked():
+                export_parameters['save_vars'] += ',+vel'
+            if mtool_types_chk_rhop.isChecked():
+                export_parameters['save_vars'] += ',+rhop'
+            if mtool_types_chk_press.isChecked():
+                export_parameters['save_vars'] += ',+press'
+            if mtool_types_chk_mass.isChecked():
+                export_parameters['save_vars'] += ',+mass'
+            if mtool_types_chk_vol.isChecked():
+                export_parameters['save_vars'] += ',+vol'
+            if mtool_types_chk_idp.isChecked():
+                export_parameters['save_vars'] += ',+idp'
+            if mtool_types_chk_ace.isChecked():
+                export_parameters['save_vars'] += ',+ace'
+            if mtool_types_chk_vor.isChecked():
+                export_parameters['save_vars'] += ',+vor'
+            if mtool_types_chk_kcorr.isChecked():
+                export_parameters['save_vars'] += ',+kcorr'
 
+        if export_parameters['save_vars'] == '-all':
+            export_parameters['save_vars'] = '+all'
+
+        if len(mtool_file_name_text.text()) > 0:
+            export_parameters['filename'] = mtool_file_name_text.text()
+        else:
+            export_parameters['filename'] = 'MeasurePart'
+
+        if len(mtool_parameters_text.text()) > 0:
+            export_parameters['additional_parameters'] = mtool_parameters_text.text()
+        else:
+            export_parameters['additional_parameters'] = ''
+
+        measuretool_export(export_parameters)
+        measuretool_tool_dialog.accept()
+
+    def on_mtool_measure_all_change(state):
+        if state == QtCore.Qt.Checked:
+            [x.setCheckState(QtCore.Qt.Unchecked) for x in [mtool_types_chk_vel,
+                                                            mtool_types_chk_rhop,
+                                                            mtool_types_chk_press,
+                                                            mtool_types_chk_mass,
+                                                            mtool_types_chk_vol,
+                                                            mtool_types_chk_idp,
+                                                            mtool_types_chk_ace,
+                                                            mtool_types_chk_vor,
+                                                            mtool_types_chk_kcorr]]
+
+    def on_mtool_measure_single_change(state):
+        if state == QtCore.Qt.Checked:
+            mtool_types_chk_all.setCheckState(QtCore.Qt.Unchecked)
+
+    def on_mtool_set_points():
+        measurepoints_tool_dialog = QtGui.QDialog()
+        measurepoints_tool_dialog.setModal(False)
+        measurepoints_tool_dialog.setWindowTitle(__("MeasureTool Points"))
+        measurepoints_tool_layout = QtGui.QVBoxLayout()
+        mpoints_table = QtGui.QTableWidget()
+        mpoints_table.setRowCount(100)
+        mpoints_table.setColumnCount(3)
+        mpoints_table.verticalHeader().setVisible(False)
+        mpoints_table.setHorizontalHeaderLabels(["X", "Y", "Z"])
+
+        for i, point in enumerate(temp_data['measuretool_points']):
+            mpoints_table.setItem(i, 0, QtGui.QTableWidgetItem(str(point[0])))
+            mpoints_table.setItem(i, 1, QtGui.QTableWidgetItem(str(point[1])))
+            mpoints_table.setItem(i, 2, QtGui.QTableWidgetItem(str(point[2])))
+
+        def on_mpoints_accept():
+            temp_data['measuretool_points'] = list()
+            for i in range(0, mpoints_table.rowCount()):
+                try:
+                    current_point = [float(mpoints_table.item(i, 0).text()),
+                                     float(mpoints_table.item(i, 1).text()),
+                                     float(mpoints_table.item(i, 2).text())]
+                    temp_data['measuretool_points'].append(current_point)
+                except (ValueError, AttributeError):
+                    pass
+
+            measurepoints_tool_dialog.accept()
+
+        def on_mpoints_cancel():
+            measurepoints_tool_dialog.reject()
+
+        mpoints_bt_layout = QtGui.QHBoxLayout()
+        mpoints_cancel = QtGui.QPushButton(__("Cancel"))
+        mpoints_accept = QtGui.QPushButton(__("OK"))
+        mpoints_accept.clicked.connect(on_mpoints_accept)
+        mpoints_cancel.clicked.connect(on_mpoints_cancel)
+
+        mpoints_bt_layout.addWidget(mpoints_accept)
+        mpoints_bt_layout.addWidget(mpoints_cancel)
+
+        measurepoints_tool_layout.addWidget(mpoints_table)
+        measurepoints_tool_layout.addLayout(mpoints_bt_layout)
+
+        measurepoints_tool_dialog.setLayout(measurepoints_tool_layout)
+        measurepoints_tool_dialog.resize(350, 400)
+        measurepoints_tool_dialog.exec_()
+
+    mtool_types_chk_all.stateChanged.connect(on_mtool_measure_all_change)
+    mtool_types_chk_vel.stateChanged.connect(on_mtool_measure_single_change)
+    mtool_types_chk_rhop.stateChanged.connect(on_mtool_measure_single_change)
+    mtool_types_chk_press.stateChanged.connect(on_mtool_measure_single_change)
+    mtool_types_chk_mass.stateChanged.connect(on_mtool_measure_single_change)
+    mtool_types_chk_vol.stateChanged.connect(on_mtool_measure_single_change)
+    mtool_types_chk_idp.stateChanged.connect(on_mtool_measure_single_change)
+    mtool_types_chk_ace.stateChanged.connect(on_mtool_measure_single_change)
+    mtool_types_chk_vor.stateChanged.connect(on_mtool_measure_single_change)
+    mtool_types_chk_kcorr.stateChanged.connect(on_mtool_measure_single_change)
+    mtool_set_points.clicked.connect(on_mtool_set_points)
     mtool_export_button.clicked.connect(on_mtool_export)
     mtool_cancel_button.clicked.connect(on_mtool_cancel)
-    measure_tool_dialog.exec_()
+    measuretool_tool_dialog.exec_()
 
 
 # Export to VTK section scaffolding

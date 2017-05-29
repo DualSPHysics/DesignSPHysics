@@ -396,6 +396,7 @@ def get_default_data():
     temp_data['stored_selection'] = []
     temp_data['export_numparts'] = ""
     temp_data['total_export_parts'] = -1
+    temp_data['measuretool_points'] = list()
     temp_data['supported_types'] = ["Part::Box", "Part::Sphere", "Part::Cylinder"]
 
     # Try to load saved paths. This way the user does not need
