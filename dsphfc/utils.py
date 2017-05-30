@@ -57,7 +57,7 @@ APP_NAME = "DesignSPHysics"
 DEBUGGING = True
 DIVIDER = 1000
 PICKLE_PROTOCOL = 1  # Binary mode
-VERSION = "0.3-dev"
+VERSION = "0.3"
 WIDTH_2D = 0.001
 
 
@@ -414,7 +414,6 @@ def get_default_data():
         except Exception:
             # traceback.print_exc()
             warning(__("The main settings file is corrupted. Deleting..."))
-            picklefile.close()
             os.remove(picklefile.name)
             data['gencase_path'] = ""
             data['dsphysics_path'] = ""
@@ -579,8 +578,10 @@ def valid_periodicity_helpers(data):
     """ Returns true if periodicity helpers exist and are valid in the case"""
     if 'periodicity_helpers' not in data.keys():
         return False
-    elif 'x1' not in data['periodicity_helpers'].keys() or 'x2' not in data['periodicity_helpers'].keys() or 'y1' not in \
-            data['periodicity_helpers'].keys() or 'y2' not in data['periodicity_helpers'].keys():
+    elif 'x1' not in data['periodicity_helpers'].keys() \
+            or 'x2' not in data['periodicity_helpers'].keys() \
+            or 'y1' not in data['periodicity_helpers'].keys() \
+            or 'y2' not in data['periodicity_helpers'].keys():
         return False
     elif None in [get_fc_object(x) for x in data['periodicity_helpers'].values()]:
         return False
