@@ -2023,7 +2023,7 @@ properties_widget.setWidget(properties_scaff_widget)
 
 mkgroup_label = QtGui.QLabel("   {}".format(__("MKGroup")))
 mkgroup_label.setToolTip(__("Establishes the object group."))
-objtype_label = QtGui.QLabel("   {}".fomart(__("Type of object")))
+objtype_label = QtGui.QLabel("   {}".format(__("Type of object")))
 objtype_label.setToolTip(__("Establishes the object type, fluid or bound"))
 fillmode_label = QtGui.QLabel("   {}".format(__("Fill mode")))
 fillmode_label.setToolTip(__(
@@ -3218,7 +3218,7 @@ def on_tree_item_selection_change():
 
                 # type config
                 to_change = property_table.cellWidget(1, 1)
-                if selection[0].TypeId in temp_data['supported_types'] or "Mesh::Feature" in str(selection[0].TypeId):
+                if selection[0].TypeId in temp_data['supported_types']:
                     to_change.setEnabled(True)
                     if data['simobjects'][selection[0].Name][1].lower() == "fluid":
                         to_change.setCurrentIndex(0)
