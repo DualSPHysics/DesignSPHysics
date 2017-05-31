@@ -77,7 +77,7 @@ def is_compatible_version():
 
 
 def log(message):
-    print "[" + APP_NAME + "] " + str(message)
+    print "[" + APP_NAME + "] " + message.encode('utf-8')
 
 
 def warning(message):
@@ -594,11 +594,11 @@ def dump_to_xml(data, save_name):
         to disk. Generates a GenCase compatible XML. """
     # Saves all the data in XML format.
     log("Saving data in " + data["project_path"] + ".")
-    FreeCAD.getDocument("DSPH_Case").saveAs(save_name + "/DSPH_Case.FCStd")
+    FreeCAD.getDocument("DSPH_Case").saveAs(save_name.encode('utf-8') + "/DSPH_Case.FCStd")
     FreeCADGui.SendMsgToActiveView("Save")
     f = open(save_name + "/" + save_name.split('/')[-1] + "_Def.xml", 'w')
     f.write('<?xml version="1.0" encoding="UTF-8" ?>\n')
-    f.write('<!-- Case name: {} -->\n'.format(data["project_name"]))
+    f.write('<!-- Case name: {} -->\n'.format(data["project_name"].encode('utf-8')))
     f.write('<case app="{} v{}" date="{}">\n'.format(APP_NAME, VERSION, datetime.now().strftime('%d-%m-%Y %H:%M:%S')))
     f.write('\t<casedef>\n')
     f.write('\t\t<constantsdef>\n')
@@ -1201,14 +1201,14 @@ def batch_generator(full_path, case_name, gcpath, dsphpath, pvtkpath, exec_param
     lib_folder = os.path.dirname(os.path.realpath(__file__))
     with open('{}/template.bat'.format(lib_folder), 'r') as content_file:
         win_template = content_file.read().format(app_name=APP_NAME,
-                                                  case_name=case_name,
+                                                  case_name=case_name.encode('utf-8'),
                                                   gcpath=gcpath,
                                                   dsphpath=dsphpath,
                                                   pvtkpath=pvtkpath,
                                                   exec_params=exec_params)
     with open('{}/template.sh'.format(lib_folder), 'r') as content_file:
         linux_template = content_file.read().format(app_name=APP_NAME,
-                                                    case_name=case_name,
+                                                    case_name=case_name.encode('utf-8'),
                                                     gcpath=gcpath,
                                                     dsphpath=dsphpath,
                                                     pvtkpath=pvtkpath,
