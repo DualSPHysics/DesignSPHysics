@@ -63,6 +63,7 @@ __status__ = "Development"
 # TODO: Wiki - Add error reporting procedure / viewing
 # ------------------------------- 0.3 BETA -------------------------------
 # TODO: 0.3Beta - Periodicity on execution parameters
+# TODO: 0.3Beta - Add point list in measure tool
 # TODO: 0.3Beta - Reformat some language strings
 # TODO: 0.3Beta - Fix 'Details' button on execution
 # TODO: 0.3Beta - Fix line spacing on 'Details' (Execution)

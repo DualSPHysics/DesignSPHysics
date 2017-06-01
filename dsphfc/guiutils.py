@@ -800,6 +800,129 @@ def def_execparams_window(data):
     rhopoutmax_layout.addWidget(rhopoutmax_input)
     rhopoutmax_layout.addWidget(rhopoutmax_label2)
 
+    # Periodicity in X
+    def on_period_x_chk():
+        if period_x_chk.isChecked():
+            period_x_inc_x_input.setEnabled(False)
+            period_x_inc_y_input.setEnabled(True)
+            period_x_inc_z_input.setEnabled(True)
+        else:
+            period_x_inc_x_input.setEnabled(False)
+            period_x_inc_y_input.setEnabled(False)
+            period_x_inc_z_input.setEnabled(False)
+
+    period_x_layout = QtGui.QVBoxLayout()
+    period_x_chk = QtGui.QCheckBox("Enable X periodicity")
+    period_x_inc_layout = QtGui.QHBoxLayout()
+    period_x_inc_x_label = QtGui.QLabel("X Increment")
+    period_x_inc_x_input = QtGui.QLineEdit("0")
+    period_x_inc_y_label = QtGui.QLabel("Y Increment")
+    period_x_inc_y_input = QtGui.QLineEdit("0")
+    period_x_inc_z_label = QtGui.QLabel("Z Increment")
+    period_x_inc_z_input = QtGui.QLineEdit("0")
+    period_x_inc_layout.addWidget(period_x_inc_x_label)
+    period_x_inc_layout.addWidget(period_x_inc_x_input)
+    period_x_inc_layout.addWidget(period_x_inc_y_label)
+    period_x_inc_layout.addWidget(period_x_inc_y_input)
+    period_x_inc_layout.addWidget(period_x_inc_z_label)
+    period_x_inc_layout.addWidget(period_x_inc_z_input)
+    period_x_layout.addWidget(period_x_chk)
+    period_x_layout.addLayout(period_x_inc_layout)
+    period_x_chk.stateChanged.connect(on_period_x_chk)
+
+    try:
+        period_x_chk.setChecked(data["period_x"][0])
+        period_x_inc_x_input.setText(str(data["period_x"][1]))
+        period_x_inc_y_input.setText(str(data["period_x"][2]))
+        period_x_inc_z_input.setText(str(data["period_x"][3]))
+    except:
+        pass
+
+    # Change the state of periodicity input on window open
+    on_period_x_chk()
+
+    # Periodicity in Y
+    def on_period_y_chk():
+        if period_y_chk.isChecked():
+            period_y_inc_x_input.setEnabled(True)
+            period_y_inc_y_input.setEnabled(False)
+            period_y_inc_z_input.setEnabled(True)
+        else:
+            period_y_inc_x_input.setEnabled(False)
+            period_y_inc_y_input.setEnabled(False)
+            period_y_inc_z_input.setEnabled(False)
+
+    period_y_layout = QtGui.QVBoxLayout()
+    period_y_chk = QtGui.QCheckBox("Enable Y periodicity")
+    period_y_inc_layout = QtGui.QHBoxLayout()
+    period_y_inc_x_label = QtGui.QLabel("X Increment")
+    period_y_inc_x_input = QtGui.QLineEdit("0")
+    period_y_inc_y_label = QtGui.QLabel("Y Increment")
+    period_y_inc_y_input = QtGui.QLineEdit("0")
+    period_y_inc_z_label = QtGui.QLabel("Z Increment")
+    period_y_inc_z_input = QtGui.QLineEdit("0")
+    period_y_inc_layout.addWidget(period_y_inc_x_label)
+    period_y_inc_layout.addWidget(period_y_inc_x_input)
+    period_y_inc_layout.addWidget(period_y_inc_y_label)
+    period_y_inc_layout.addWidget(period_y_inc_y_input)
+    period_y_inc_layout.addWidget(period_y_inc_z_label)
+    period_y_inc_layout.addWidget(period_y_inc_z_input)
+    period_y_layout.addWidget(period_y_chk)
+    period_y_layout.addLayout(period_y_inc_layout)
+    period_y_chk.stateChanged.connect(on_period_y_chk)
+
+    try:
+        period_y_chk.setChecked(data["period_y"][0])
+        period_y_inc_x_input.setText(str(data["period_y"][1]))
+        period_y_inc_y_input.setText(str(data["period_y"][2]))
+        period_y_inc_z_input.setText(str(data["period_y"][3]))
+    except:
+        pass
+
+    # Change the state of periodicity input on window open
+    on_period_y_chk()
+
+    # Periodicity in X
+    def on_period_z_chk():
+        if period_z_chk.isChecked():
+            period_z_inc_x_input.setEnabled(True)
+            period_z_inc_y_input.setEnabled(True)
+            period_z_inc_z_input.setEnabled(False)
+        else:
+            period_z_inc_x_input.setEnabled(False)
+            period_z_inc_y_input.setEnabled(False)
+            period_z_inc_z_input.setEnabled(False)
+
+    period_z_layout = QtGui.QVBoxLayout()
+    period_z_chk = QtGui.QCheckBox("Enable Z periodicity")
+    period_z_inc_layout = QtGui.QHBoxLayout()
+    period_z_inc_x_label = QtGui.QLabel("X Increment")
+    period_z_inc_x_input = QtGui.QLineEdit("0")
+    period_z_inc_y_label = QtGui.QLabel("Y Increment")
+    period_z_inc_y_input = QtGui.QLineEdit("0")
+    period_z_inc_z_label = QtGui.QLabel("Z Increment")
+    period_z_inc_z_input = QtGui.QLineEdit("0")
+    period_z_inc_layout.addWidget(period_z_inc_x_label)
+    period_z_inc_layout.addWidget(period_z_inc_x_input)
+    period_z_inc_layout.addWidget(period_z_inc_y_label)
+    period_z_inc_layout.addWidget(period_z_inc_y_input)
+    period_z_inc_layout.addWidget(period_z_inc_z_label)
+    period_z_inc_layout.addWidget(period_z_inc_z_input)
+    period_z_layout.addWidget(period_z_chk)
+    period_z_layout.addLayout(period_z_inc_layout)
+    period_z_chk.stateChanged.connect(on_period_z_chk)
+
+    try:
+        period_z_chk.setChecked(data["period_z"][0])
+        period_z_inc_x_input.setText(str(data["period_z"][1]))
+        period_z_inc_y_input.setText(str(data["period_z"][2]))
+        period_z_inc_z_input.setText(str(data["period_z"][3]))
+    except:
+        pass
+
+    # Change the state of periodicity input on window open
+    on_period_z_chk()
+
     # ------------ Button behaviour definition --------------
     def on_ok():
         data['posdouble'] = str(posdouble_input.currentIndex())
@@ -828,6 +951,18 @@ def def_execparams_window(data):
         data['partsoutmax'] = partsoutmax_input.text()
         data['rhopoutmin'] = rhopoutmin_input.text()
         data['rhopoutmax'] = rhopoutmax_input.text()
+        data['period_x'] = [period_x_chk.isChecked(),
+                            float(period_x_inc_x_input.text()),
+                            float(period_x_inc_y_input.text()),
+                            float(period_x_inc_z_input.text())]
+        data['period_y'] = [period_y_chk.isChecked(),
+                            float(period_y_inc_x_input.text()),
+                            float(period_y_inc_y_input.text()),
+                            float(period_y_inc_z_input.text())]
+        data['period_z'] = [period_z_chk.isChecked(),
+                            float(period_z_inc_x_input.text()),
+                            float(period_z_inc_y_input.text()),
+                            float(period_z_inc_z_input.text())]
         utils.log("Execution Parameters changed")
         execparams_window.accept()
 
@@ -870,6 +1005,9 @@ def def_execparams_window(data):
     ep_main_layout.addLayout(partsoutmax_layout)
     ep_main_layout.addLayout(rhopoutmin_layout)
     ep_main_layout.addLayout(rhopoutmax_layout)
+    ep_main_layout.addLayout(period_x_layout)
+    ep_main_layout.addLayout(period_y_layout)
+    ep_main_layout.addLayout(period_z_layout)
 
     ep_main_layout.addStretch(1)
 
