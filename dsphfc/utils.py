@@ -341,6 +341,11 @@ def get_default_data():
     data['rhopoutmin'] = 700
     data['rhopoutmax'] = 1300
 
+    # Periodicity data [enabled, x_inc, y_inc, z_inc]
+    data['period_x'] = [False, 0.0, 0.0, 0.0]
+    data['period_y'] = [False, 0.0, 0.0, 0.0]
+    data['period_z'] = [False, 0.0, 0.0, 0.0]
+
     # Stores paths to executables
     data['gencase_path'] = ""
     data['dsphysics_path'] = ""
@@ -1184,6 +1189,15 @@ def dump_to_xml(data, save_name):
         data['rhopoutmin']) + '" comment="Minimum rhop valid (default=700)" units_comment="kg/m^3" />\n')
     f.write('\t\t\t<parameter key="RhopOutMax" value="' + str(
         data['rhopoutmax']) + '" comment="Maximum rhop valid (default=1300)" units_comment="kg/m^3" />\n')
+    if data['period_x'][0]:
+        f.write('\t\t\t<parameter key="XPeriodicIncY" value="' + str(data['period_x'][2]) + '"/>\n')
+        f.write('\t\t\t<parameter key="XPeriodicIncZ" value="' + str(data['period_x'][3]) + '"/>\n')
+    if data['period_y'][0]:
+        f.write('\t\t\t<parameter key="YPeriodicIncX" value="' + str(data['period_y'][1]) + '"/>\n')
+        f.write('\t\t\t<parameter key="YPeriodicIncZ" value="' + str(data['period_y'][3]) + '"/>\n')
+    if data['period_z'][0]:
+        f.write('\t\t\t<parameter key="ZPeriodicIncX" value="' + str(data['period_z'][1]) + '"/>\n')
+        f.write('\t\t\t<parameter key="ZPeriodicIncY" value="' + str(data['period_z'][2]) + '"/>\n')
     f.write('\t\t</parameters>\n')
     f.write('\t</execution>\n')
     f.write('</case>\n')
@@ -1199,14 +1213,14 @@ def get_number_of_documents():
 def batch_generator(full_path, case_name, gcpath, dsphpath, pvtkpath, exec_params, lib_path):
     """ Loads a windows & linux template for batch files and saves them formatted to disk. """
     lib_folder = os.path.dirname(os.path.realpath(__file__))
-    with open('{}/template.bat'.format(lib_folder), 'r') as content_file:
+    with open('{}/templates/template.bat'.format(lib_folder), 'r') as content_file:
         win_template = content_file.read().format(app_name=APP_NAME,
                                                   case_name=case_name.encode('utf-8'),
                                                   gcpath=gcpath,
                                                   dsphpath=dsphpath,
                                                   pvtkpath=pvtkpath,
                                                   exec_params=exec_params)
-    with open('{}/template.sh'.format(lib_folder), 'r') as content_file:
+    with open('{}/templates/template.sh'.format(lib_folder), 'r') as content_file:
         linux_template = content_file.read().format(app_name=APP_NAME,
                                                     case_name=case_name.encode('utf-8'),
                                                     gcpath=gcpath,
