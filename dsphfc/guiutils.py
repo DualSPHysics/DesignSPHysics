@@ -444,8 +444,9 @@ def def_constants_window(data):
     # START Main layout definition and composition.
     cw_main_layout = QtGui.QVBoxLayout()
 
-    cw_main_layout.addLayout(lattice_layout)
-    cw_main_layout.addLayout(lattice2_layout)
+    # Lattice was removed on 0.3Beta - 1 of June
+    # cw_main_layout.addLayout(lattice_layout)
+    # cw_main_layout.addLayout(lattice2_layout)
     cw_main_layout.addLayout(gravity_layout)
     cw_main_layout.addLayout(rhop0_layout)
     cw_main_layout.addLayout(hswlauto_layout)
@@ -500,11 +501,18 @@ def def_execparams_window(data):
     posdouble_layout.addStretch(1)
 
     # Step Algorithm
+    def on_step_change(index):
+        if index == 0:
+            verletsteps_input.setEnabled(True)
+        else:
+            verletsteps_input.setEnabled(False)
+
     stepalgorithm_layout = QtGui.QHBoxLayout()
     stepalgorithm_label = QtGui.QLabel("Step Algorithm: ")
     stepalgorithm_input = QtGui.QComboBox()
     stepalgorithm_input.insertItems(0, ['Verlet', 'Symplectic'])
     stepalgorithm_input.setCurrentIndex(int(data['stepalgorithm']) - 1)
+    stepalgorithm_input.currentIndexChanged.connect(on_step_change)
 
     stepalgorithm_layout.addWidget(stepalgorithm_label)
     stepalgorithm_layout.addWidget(stepalgorithm_input)
@@ -518,6 +526,9 @@ def def_execparams_window(data):
     verletsteps_validator = QtGui.QIntValidator(0, 9999, verletsteps_input)
     verletsteps_input.setText(str(data['verletsteps']))
     verletsteps_input.setValidator(verletsteps_validator)
+
+    # Enable/Disable fields depending on selection
+    on_step_change(stepalgorithm_input.currentIndex())
 
     verletsteps_layout.addWidget(verletsteps_label)
     verletsteps_layout.addWidget(verletsteps_input)
@@ -577,11 +588,20 @@ def def_execparams_window(data):
     deltasph_layout.addWidget(deltasph_input)
 
     # Shifting mode
+    def on_shifting_change(index):
+        if index == 0:
+            shiftcoef_input.setEnabled(False)
+            shifttfs_input.setEnabled(False)
+        else:
+            shiftcoef_input.setEnabled(True)
+            shifttfs_input.setEnabled(True)
+
     shifting_layout = QtGui.QHBoxLayout()
     shifting_label = QtGui.QLabel("Shifting mode: ")
     shifting_input = QtGui.QComboBox()
     shifting_input.insertItems(0, ['None', 'Ignore bound', 'Ignore fixed', 'Full'])
     shifting_input.setCurrentIndex(int(data['shifting']))
+    shifting_input.currentIndexChanged.connect(on_shifting_change)
 
     shifting_layout.addWidget(shifting_label)
     shifting_layout.addWidget(shifting_input)
@@ -605,6 +625,9 @@ def def_execparams_window(data):
     shifttfs_layout.addWidget(shifttfs_label)
     shifttfs_layout.addWidget(shifttfs_input)
 
+    # Enable/Disable fields depending on Shifting mode on window creation.
+    on_shifting_change(shifting_input.currentIndex())
+
     # Rigid algorithm
     rigidalgorithm_layout = QtGui.QHBoxLayout()
     rigidalgorithm_label = QtGui.QLabel("Rigid algorithm: ")
@@ -618,7 +641,7 @@ def def_execparams_window(data):
 
     # Sim start freeze time
     ftpause_layout = QtGui.QHBoxLayout()
-    ftpause_label = QtGui.QLabel("Sim start freeze time: ")
+    ftpause_label = QtGui.QLabel("Floating freeze time: ")
     ftpause_input = QtGui.QLineEdit()
     ftpause_input.setMaxLength(10)
     ftpause_input.setText(str(data['ftpause']))

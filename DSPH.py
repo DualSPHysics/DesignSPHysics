@@ -61,6 +61,14 @@ __status__ = "Development"
 # TODO: Wiki - Add motion section
 # TODO: Wiki - Add case summary
 # TODO: Wiki - Add error reporting procedure / viewing
+# ------------------------------- 0.3 BETA -------------------------------
+# TODO: 0.3Beta - Periodicity on execution parameters
+# TODO: 0.3Beta - Reformat some language strings
+# TODO: 0.3Beta - Fix 'Details' button on execution
+# TODO: 0.3Beta - Fix line spacing on 'Details' (Execution)
+# TODO: 0.3Beta - Implement success dialog on post-proccessing finish
+# TODO: 0.3Beta - Save 3D dimensions when changing to 2D. Restore them on vice-versa
+# TODO: 0.3Beta - Fix bug when making a new case from a 2D one (case limits not working properly)
 # ------------------------------- 0.4 BETA -------------------------------
 # TODO: 0.4Beta - Movement brief explanation
 # TODO: 0.4Beta - Periodicity support - Show arrows (bounds) to show periodicity
@@ -204,7 +212,7 @@ ccfilebuttons_layout = QtGui.QHBoxLayout()
 ccsecondrow = QtGui.QHBoxLayout()
 ccthirdrow_layout = QtGui.QHBoxLayout()
 ccfourthrow_layout = QtGui.QHBoxLayout()
-casecontrols_label = QtGui.QLabel("<b>" + __("File and GenCase tools") + "<b>")
+casecontrols_label = QtGui.QLabel("<b>" + __("Preprocessing") + "<b>")
 
 # New Case button
 casecontrols_bt_newdoc = QtGui.QToolButton()
@@ -264,7 +272,7 @@ widget_state_elements['summary_bt'] = summary_bt
 summary_bt.setEnabled(False)
 
 # Toggle 3D/2D button
-toggle3dbutton = QtGui.QPushButton(__("Toggle 3D/2D"))
+toggle3dbutton = QtGui.QPushButton(__("Change between 3D and 2D"))
 toggle3dbutton.setToolTip(__("Changes the case mode between 2D and 3D mode, switching the Case Limits between"
                              " a plane or a cube"))
 widget_state_elements['toggle3dbutton'] = toggle3dbutton
@@ -832,7 +840,7 @@ run_progbar_layout.addWidget(run_progbar_bar)
 
 # Buttons
 run_button_layout = QtGui.QHBoxLayout()
-run_button_details = QtGui.QPushButton(__("Toggle Details"))
+run_button_details = QtGui.QPushButton(__("Details"))
 run_button_cancel = QtGui.QPushButton(__("Cancel Simulation"))
 run_button_layout.addStretch(1)
 run_button_layout.addWidget(run_button_details)
@@ -1286,6 +1294,7 @@ def on_partvtk():
     pvtk_parameters_layout.addWidget(pvtk_parameters_text)
 
     pvtk_open_at_end = QtGui.QCheckBox("Open with ParaView at export end")
+    pvtk_open_at_end.setEnabled(False)  # TODO: Remove this
 
     pvtk_export_button = QtGui.QPushButton(__("Export"))
     pvtk_cancel_button = QtGui.QPushButton(__("Cancel"))
@@ -1450,7 +1459,7 @@ def on_floatinginfo():
     finfo_filename_layout = QtGui.QHBoxLayout()
     finfo_buttons_layout = QtGui.QHBoxLayout()
 
-    finfo_onlymk_label = QtGui.QLabel(__("MK's to process (blank for all)"))
+    finfo_onlymk_label = QtGui.QLabel(__("MK to process (empty for all)"))
     finfo_onlymk_text = QtGui.QLineEdit()
     finfo_onlymk_text.setPlaceholderText("1,2,3 or 1-30")
     finfo_onlymk_layout.addWidget(finfo_onlymk_label)
@@ -1925,7 +1934,7 @@ export_separator.setFrameStyle(QtGui.QFrame.HLine)
 
 # Object list table scaffolding
 objectlist_layout = QtGui.QVBoxLayout()
-objectlist_label = QtGui.QLabel("<b>" + __("Simulation object order") + "</b>")
+objectlist_label = QtGui.QLabel("<b>" + __("Object order") + "</b>")
 objectlist_label.setWordWrap(True)
 objectlist_table = QtGui.QTableWidget(0, 1)
 objectlist_table.setObjectName("DSPH Objects")
@@ -2047,8 +2056,8 @@ floatstate_label.setAlignment(QtCore.Qt.AlignLeft)
 initials_label.setAlignment(QtCore.Qt.AlignLeft)
 motion_label.setAlignment(QtCore.Qt.AlignLeft)
 
-property_table.setCellWidget(0, 0, mkgroup_label)
-property_table.setCellWidget(1, 0, objtype_label)
+property_table.setCellWidget(0, 0, objtype_label)
+property_table.setCellWidget(1, 0, mkgroup_label)
 property_table.setCellWidget(2, 0, fillmode_label)
 property_table.setCellWidget(3, 0, floatstate_label)
 property_table.setCellWidget(4, 0, initials_label)
@@ -2422,7 +2431,7 @@ def floatstate_change():
         on_floating_change(1)
         floating_props_group.setEnabled(False)
         is_floating_selector.setCurrentIndex(1)
-        floating_props_massrhop_selector.setCurrentIndex(0)
+        floating_props_massrhop_selector.setCurrentIndex(1)
         floating_props_massrhop_input.setText("100")
         floating_center_input_x.setText("0")
         floating_center_input_y.setText("0")
@@ -3066,8 +3075,8 @@ floatstate_prop.clicked.connect(floatstate_change)
 initials_prop.clicked.connect(initials_change)
 material_prop.clicked.connect(material_change)
 motion_prop.clicked.connect(motion_change)
-property_table.setCellWidget(0, 1, mkgroup_prop)
-property_table.setCellWidget(1, 1, objtype_prop)
+property_table.setCellWidget(0, 1, objtype_prop)
+property_table.setCellWidget(1, 1, mkgroup_prop)
 property_table.setCellWidget(2, 1, fillmode_prop)
 property_table.setCellWidget(3, 1, floatstate_prop)
 property_table.setCellWidget(4, 1, initials_prop)
@@ -3213,11 +3222,9 @@ def on_tree_item_selection_change():
                 removefromdsph_button.show()
                 properties_widget.setMinimumHeight(300)
                 properties_widget.setMaximumHeight(300)
-                to_change = property_table.cellWidget(0, 1)
-                to_change.setValue(data['simobjects'][selection[0].Name][0])
 
                 # type config
-                to_change = property_table.cellWidget(1, 1)
+                to_change = property_table.cellWidget(0, 1)
                 if selection[0].TypeId in temp_data['supported_types']:
                     to_change.setEnabled(True)
                     if data['simobjects'][selection[0].Name][1].lower() == "fluid":
@@ -3234,6 +3241,10 @@ def on_tree_item_selection_change():
                 else:
                     to_change.setCurrentIndex(1)
                     to_change.setEnabled(False)
+
+                # MK config
+                to_change = property_table.cellWidget(1, 1)
+                to_change.setValue(data['simobjects'][selection[0].Name][0])
 
                 # fill mode config
                 to_change = property_table.cellWidget(2, 1)

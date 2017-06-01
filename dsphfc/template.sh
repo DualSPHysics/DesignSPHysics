@@ -22,7 +22,7 @@ path_so=$(pwd)
 cd $current
 export LD_LIBRARY_PATH=$path_so
 
-echo "This script executes GenCase for the case saved, that generates output files in the *_Out dir. Then, executes a simulation on CPU of the case. Last, it exports all the geometry generated in VTK files for viewing with ParaView."
+echo "This script executes GenCase for the case saved, that generates output files in the *_Out dir. Then, executes a simulation on CPU/GPU of the case. Last, it exports all the geometry generated in VTK files for viewing with ParaView."
 read -n1 -r -p "Press any key to continue..." key
 
 # "dirout" is created to store results or it is cleaned if it already exists
