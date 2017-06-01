@@ -62,8 +62,6 @@ __status__ = "Development"
 # TODO: Wiki - Add case summary
 # TODO: Wiki - Add error reporting procedure / viewing
 # ------------------------------- 0.3 BETA -------------------------------
-# TODO: 0.3Beta - Periodicity on execution parameters
-# TODO: 0.3Beta - Add point list in measure tool
 # TODO: 0.3Beta - Reformat some language strings
 # TODO: 0.3Beta - Fix 'Details' button on execution
 # TODO: 0.3Beta - Fix line spacing on 'Details' (Execution)
@@ -1670,10 +1668,19 @@ def measuretool_export(export_parameters):
         save_mode = '-saveascii '
 
     # Save points to disk to later use them as parameter
-    with open(data['project_path'] + '/' + 'points.txt', 'w') as f:
-        f.write("POINTS\n")
-        for curr_point in temp_data['measuretool_points']:
-            f.write("{}  {}  {}\n".format(*curr_point))
+    if len(temp_data['measuretool_points']) > len(temp_data['measuretool_grid']):
+        # Save points
+        with open(data['project_path'] + '/' + 'points.txt', 'w') as f:
+            f.write("POINTS\n")
+            for curr_point in temp_data['measuretool_points']:
+                f.write("{}  {}  {}\n".format(*curr_point))
+    else:
+        # Save grid
+        with open(data['project_path'] + '/' + 'points.txt', 'w') as f:
+            f.write("POINTSLIST\n")
+            for curr_point in temp_data['measuretool_grid']:
+                f.write("{}  {}  {}\n{}  {}  {}\n{}  {}  {}\n".format(*curr_point))
+
 
     static_params_exp = [
         '-dirin ' + data['project_path'] + '/' + data['project_name'] + '_Out/',
@@ -1740,7 +1747,11 @@ def on_measuretool():
       mtool_types_chk_vol, mtool_types_chk_idp, mtool_types_chk_ace, mtool_types_chk_vor, mtool_types_chk_kcorr]]
     mtool_types_groupbox.setLayout(mtool_types_groupbox_layout)
 
-    mtool_set_points = QtGui.QPushButton("Set measure points")
+    mtool_set_points_layout = QtGui.QHBoxLayout()
+    mtool_set_points = QtGui.QPushButton("List of points")
+    mtool_set_grid = QtGui.QPushButton("Grid of points")
+    mtool_set_points_layout.addWidget(mtool_set_points)
+    mtool_set_points_layout.addWidget(mtool_set_grid)
 
     mtool_file_name_label = QtGui.QLabel(__("File name"))
     mtool_file_name_text = QtGui.QLineEdit()
@@ -1761,7 +1772,7 @@ def on_measuretool():
     measuretool_tool_layout.addLayout(mtool_format_layout)
     measuretool_tool_layout.addWidget(mtool_types_groupbox)
     measuretool_tool_layout.addStretch(1)
-    measuretool_tool_layout.addWidget(mtool_set_points)
+    measuretool_tool_layout.addLayout(mtool_set_points_layout)
     measuretool_tool_layout.addLayout(mtool_filename_layout)
     measuretool_tool_layout.addLayout(mtool_parameters_layout)
     measuretool_tool_layout.addLayout(mtool_buttons_layout)
@@ -1847,15 +1858,17 @@ def on_measuretool():
 
         def on_mpoints_accept():
             temp_data['measuretool_points'] = list()
-            for i in range(0, mpoints_table.rowCount()):
+            for mtool_row in range(0, mpoints_table.rowCount()):
                 try:
-                    current_point = [float(mpoints_table.item(i, 0).text()),
-                                     float(mpoints_table.item(i, 1).text()),
-                                     float(mpoints_table.item(i, 2).text())]
+                    current_point = [float(mpoints_table.item(mtool_row, 0).text()),
+                                     float(mpoints_table.item(mtool_row, 1).text()),
+                                     float(mpoints_table.item(mtool_row, 2).text())]
                     temp_data['measuretool_points'].append(current_point)
                 except (ValueError, AttributeError):
                     pass
 
+            # Deletes the grid points (not compatible together)
+            temp_data['measuretool_grid'] = list()
             measurepoints_tool_dialog.accept()
 
         def on_mpoints_cancel():
@@ -1877,6 +1890,106 @@ def on_measuretool():
         measurepoints_tool_dialog.resize(350, 400)
         measurepoints_tool_dialog.exec_()
 
+    def on_mtool_set_grid():
+        measuregrid_tool_dialog = QtGui.QDialog()
+        measuregrid_tool_dialog.setModal(False)
+        measuregrid_tool_dialog.setWindowTitle(__("MeasureTool Points"))
+        measuregrid_tool_layout = QtGui.QVBoxLayout()
+        mgrid_table = QtGui.QTableWidget()
+        mgrid_table.setRowCount(100)
+        mgrid_table.setColumnCount(12)
+        mgrid_table.verticalHeader().setVisible(False)
+        mgrid_table.setHorizontalHeaderLabels(["BeginX", "BeginY", "BeginZ",
+                                               "StepX", "StepY", "StepZ",
+                                               "CountX", "CountY", "CountZ",
+                                               "FinalX", "FinalY", "FinalZ"])
+
+        for i, grid in enumerate(temp_data['measuretool_grid']):
+            for j in range(0, mgrid_table.columnCount() - 3):
+                mgrid_table.setItem(i, j, QtGui.QTableWidgetItem(str(grid[j])))
+
+        for mgrid_row in range(0, mgrid_table.rowCount()):
+            mgrid_table.setItem(mgrid_row, 9, QtGui.QTableWidgetItem(""))
+            mgrid_table.setItem(mgrid_row, 10, QtGui.QTableWidgetItem(""))
+            mgrid_table.setItem(mgrid_row, 11, QtGui.QTableWidgetItem(""))
+            mgrid_table.item(mgrid_row, 9).setFlags(QtCore.Qt.ItemIsSelectable | QtCore.Qt.ItemIsEnabled)
+            mgrid_table.item(mgrid_row, 10).setFlags(QtCore.Qt.ItemIsSelectable | QtCore.Qt.ItemIsEnabled)
+            mgrid_table.item(mgrid_row, 11).setFlags(QtCore.Qt.ItemIsSelectable | QtCore.Qt.ItemIsEnabled)
+
+        def on_mgrid_change(row, column):
+            if column > 8:
+                return
+            for mgrid_row in range(0, mgrid_table.rowCount()):
+                try:
+                    current_grid = [float(mgrid_table.item(mgrid_row, 0).text()),
+                                    float(mgrid_table.item(mgrid_row, 1).text()),
+                                    float(mgrid_table.item(mgrid_row, 2).text()),
+                                    float(mgrid_table.item(mgrid_row, 3).text()),
+                                    float(mgrid_table.item(mgrid_row, 4).text()),
+                                    float(mgrid_table.item(mgrid_row, 5).text()),
+                                    float(mgrid_table.item(mgrid_row, 6).text()),
+                                    float(mgrid_table.item(mgrid_row, 7).text()),
+                                    float(mgrid_table.item(mgrid_row, 8).text())]
+                    mgrid_table.setItem(mgrid_row, 9, QtGui.QTableWidgetItem(
+                        str(current_grid[0] + current_grid[3] * current_grid[6])
+                    ))
+                    mgrid_table.setItem(mgrid_row, 10, QtGui.QTableWidgetItem(
+                        str(current_grid[1] + current_grid[4] * current_grid[7])
+                    ))
+                    mgrid_table.setItem(mgrid_row, 11, QtGui.QTableWidgetItem(
+                        str(current_grid[2] + current_grid[5] * current_grid[8])
+                    ))
+                    mgrid_table.item(mgrid_row, 9).setFlags(QtCore.Qt.ItemIsSelectable | QtCore.Qt.ItemIsEnabled)
+                    mgrid_table.item(mgrid_row, 10).setFlags(QtCore.Qt.ItemIsSelectable | QtCore.Qt.ItemIsEnabled)
+                    mgrid_table.item(mgrid_row, 11).setFlags(QtCore.Qt.ItemIsSelectable | QtCore.Qt.ItemIsEnabled)
+                except (ValueError, AttributeError):
+                    pass
+
+        def on_mgrid_accept():
+            temp_data['measuretool_grid'] = list()
+            for mgrid_row in range(0, mgrid_table.rowCount()):
+                try:
+                    current_grid = [float(mgrid_table.item(mgrid_row, 0).text()),
+                                    float(mgrid_table.item(mgrid_row, 1).text()),
+                                    float(mgrid_table.item(mgrid_row, 2).text()),
+                                    float(mgrid_table.item(mgrid_row, 3).text()),
+                                    float(mgrid_table.item(mgrid_row, 4).text()),
+                                    float(mgrid_table.item(mgrid_row, 5).text()),
+                                    float(mgrid_table.item(mgrid_row, 6).text()),
+                                    float(mgrid_table.item(mgrid_row, 7).text()),
+                                    float(mgrid_table.item(mgrid_row, 8).text())]
+                    temp_data['measuretool_grid'].append(current_grid)
+                except (ValueError, AttributeError):
+                    pass
+
+            # Deletes the list of points (not compatible together)
+            temp_data['measuretool_points'] = list()
+            measuregrid_tool_dialog.accept()
+
+        def on_mgrid_cancel():
+            measuregrid_tool_dialog.reject()
+
+        # Compute possible final points
+        on_mgrid_change(0, 0)
+
+        mgrid_bt_layout = QtGui.QHBoxLayout()
+        mgrid_cancel = QtGui.QPushButton(__("Cancel"))
+        mgrid_accept = QtGui.QPushButton(__("OK"))
+        mgrid_accept.clicked.connect(on_mgrid_accept)
+        mgrid_cancel.clicked.connect(on_mgrid_cancel)
+
+        mgrid_bt_layout.addWidget(mgrid_accept)
+        mgrid_bt_layout.addWidget(mgrid_cancel)
+
+        mgrid_table.cellChanged.connect(on_mgrid_change)
+
+        measuregrid_tool_layout.addWidget(mgrid_table)
+        measuregrid_tool_layout.addLayout(mgrid_bt_layout)
+
+        measuregrid_tool_dialog.setLayout(measuregrid_tool_layout)
+        measuregrid_tool_dialog.resize(1250, 400)
+        measuregrid_tool_dialog.exec_()
+
     mtool_types_chk_all.stateChanged.connect(on_mtool_measure_all_change)
     mtool_types_chk_vel.stateChanged.connect(on_mtool_measure_single_change)
     mtool_types_chk_rhop.stateChanged.connect(on_mtool_measure_single_change)
@@ -1888,6 +2001,7 @@ def on_measuretool():
     mtool_types_chk_vor.stateChanged.connect(on_mtool_measure_single_change)
     mtool_types_chk_kcorr.stateChanged.connect(on_mtool_measure_single_change)
     mtool_set_points.clicked.connect(on_mtool_set_points)
+    mtool_set_grid.clicked.connect(on_mtool_set_grid)
     mtool_export_button.clicked.connect(on_mtool_export)
     mtool_cancel_button.clicked.connect(on_mtool_cancel)
     measuretool_tool_dialog.exec_()
