@@ -1426,12 +1426,14 @@ def case_summary(orig_data):
             is_floating = utils.__('Not applicable') if value[1].lower() == "fluid" else is_floating
             has_initials = utils.__('Yes') if str(value[0]) in data['initials_mks'].keys() else utils.__('No')
             has_initials = utils.__('Not applicable') if value[1].lower() == "bound" else has_initials
+            real_mk = value[0] + 11 if value[1].lower() == "bound" else value[0] + 1
             data['objects_info'] += "<li><b>{label}</b> (<i>{iname}</i>): <br/>" \
-                                    "Type: {type} (MK{type}: {mk})<br/>" \
+                                    "Type: {type} (MK{type}: {mk} ; MK: {real_mk})<br/>" \
                                     "Fill mode: {fillmode}<br/>" \
                                     "Floats: {floats}<br/>" \
                                     "Has initials: {initials}</li><br/>".format(label=fc_object.Label, iname=key,
                                                                                 type=value[1].title(), mk=value[0],
+                                                                                real_mk=str(real_mk),
                                                                                 fillmode=value[2].title(),
                                                                                 floats=is_floating,
                                                                                 initials=has_initials)
