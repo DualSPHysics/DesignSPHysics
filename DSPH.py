@@ -2994,9 +2994,6 @@ def motion_change():
             timeline_list_table.setRowCount(1)
             actions_groupbox_table.setEnabled(False)
 
-            # Just to assign an object to avoid NoneType exception
-            target_to_put = dsphwidgets.RegularWaveMotionTimeline(target_movement.generator)
-
             if isinstance(target_movement.generator, RegularWaveGen):
                 target_to_put = dsphwidgets.RegularWaveMotionTimeline(target_movement.generator)
             elif isinstance(target_movement.generator, IrregularWaveGen):
