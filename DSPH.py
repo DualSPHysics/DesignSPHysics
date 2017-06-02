@@ -171,7 +171,7 @@ constants_separator = guiutils.h_line_generator()
 crucialvars_separator = guiutils.h_line_generator()
 
 logo_label = QtGui.QLabel()
-logo_label.setPixmap(os.path.dirname(os.path.abspath(__file__)) + "/DSPH_Images/{}".format(logo.png))
+logo_label.setPixmap(os.path.dirname(os.path.abspath(__file__)) + "/DSPH_Images/{}".format("logo.png"))
 
 
 def on_dp_changed():
