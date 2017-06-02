@@ -92,7 +92,7 @@ def ok_cancel_dialog(title, text):
 def get_icon(file_name):
     """ Returns a QIcon to use with DesignSPHysics.
     Retrieves a file with filename (like image.png) from the DSPH_Images folder. """
-    file_to_load = FreeCAD.getUserAppDataDir() + "Macro/DSPH_Images/{}".format(file_name)
+    file_to_load = os.path.dirname(os.path.abspath(__file__)) + "/../DSPH_Images/{}".format(file_name)
     if os.path.isfile(file_to_load):
         return QtGui.QIcon(file_to_load)
     else:
@@ -812,7 +812,7 @@ def def_execparams_window(data):
             period_x_inc_z_input.setEnabled(False)
 
     period_x_layout = QtGui.QVBoxLayout()
-    period_x_chk = QtGui.QCheckBox("Enable X periodicity")
+    period_x_chk = QtGui.QCheckBox("X periodicity")
     period_x_inc_layout = QtGui.QHBoxLayout()
     period_x_inc_x_label = QtGui.QLabel("X Increment")
     period_x_inc_x_input = QtGui.QLineEdit("0")
@@ -853,7 +853,7 @@ def def_execparams_window(data):
             period_y_inc_z_input.setEnabled(False)
 
     period_y_layout = QtGui.QVBoxLayout()
-    period_y_chk = QtGui.QCheckBox("Enable Y periodicity")
+    period_y_chk = QtGui.QCheckBox("Y periodicity")
     period_y_inc_layout = QtGui.QHBoxLayout()
     period_y_inc_x_label = QtGui.QLabel("X Increment")
     period_y_inc_x_input = QtGui.QLineEdit("0")
@@ -894,7 +894,7 @@ def def_execparams_window(data):
             period_z_inc_z_input.setEnabled(False)
 
     period_z_layout = QtGui.QVBoxLayout()
-    period_z_chk = QtGui.QCheckBox("Enable Z periodicity")
+    period_z_chk = QtGui.QCheckBox("Z periodicity")
     period_z_inc_layout = QtGui.QHBoxLayout()
     period_z_inc_x_label = QtGui.QLabel("X Increment")
     period_z_inc_x_input = QtGui.QLineEdit("0")

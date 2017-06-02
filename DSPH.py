@@ -171,7 +171,7 @@ constants_separator = guiutils.h_line_generator()
 crucialvars_separator = guiutils.h_line_generator()
 
 logo_label = QtGui.QLabel()
-logo_label.setPixmap(FreeCAD.getUserAppDataDir() + "Macro/DSPH_Images/logo.png")
+logo_label.setPixmap(os.path.dirname(os.path.abspath(__file__)) + "/DSPH_Images/{}".format(logo.png))
 
 
 def on_dp_changed():
@@ -271,7 +271,7 @@ widget_state_elements['summary_bt'] = summary_bt
 summary_bt.setEnabled(False)
 
 # Toggle 3D/2D button
-toggle3dbutton = QtGui.QPushButton(__("Change between 3D and 2D"))
+toggle3dbutton = QtGui.QPushButton(__("Change 3D/2D"))
 toggle3dbutton.setToolTip(__("Changes the case mode between 2D and 3D mode, switching the Case Limits between"
                              " a plane or a cube"))
 widget_state_elements['toggle3dbutton'] = toggle3dbutton
