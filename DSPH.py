@@ -2829,6 +2829,13 @@ def motion_change():
             movement_list_groupbox.setEnabled(True)
             timeline_groupbox.setEnabled(True)
             actions_groupbox.setEnabled(True)
+            timeline_list_table.setEnabled(False)
+            actions_groupbox_table.setEnabled(False)
+
+            # Put a placeholder in the table
+            timeline_list_table.clearContents()
+            timeline_list_table.setRowCount(1)
+            timeline_list_table.setCellWidget(0, 0, dsphwidgets.MovementTimelinePlaceholder())
         else:
             movement_list_groupbox.setEnabled(False)
             timeline_groupbox.setEnabled(False)
@@ -3007,12 +3014,15 @@ def motion_change():
             target_movement = data["global_movements"][row]
         except IndexError:
             timeline_list_table.clearContents()
-            timeline_list_table.setRowCount(0)
+            timeline_list_table.setEnabled(False)
+            timeline_list_table.setRowCount(1)
+            timeline_list_table.setCellWidget(0, 0, dsphwidgets.MovementTimelinePlaceholder())
             return
         timeline_list_table.clearContents()
 
         if isinstance(target_movement, Movement):
             timeline_list_table.setRowCount(len(target_movement.motion_list))
+            timeline_list_table.setEnabled(True)
             actions_groupbox_table.setEnabled(True)
 
             current_row = 0
