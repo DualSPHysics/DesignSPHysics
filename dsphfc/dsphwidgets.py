@@ -1774,7 +1774,7 @@ class RegularWaveMotionTimeline(QtGui.QWidget):
 
         self.ramp_label = QtGui.QLabel(__("Ramp"))
         self.ramp_input = QtGui.QLineEdit()
-        self.ramp_units_label = QtGui.QLabel(__("m"))
+        self.ramp_units_label = QtGui.QLabel(__(""))
 
         self.disksave_label = QtGui.QLabel(__("Save to disk"))
         self.disksave_periods = QtGui.QLineEdit()
