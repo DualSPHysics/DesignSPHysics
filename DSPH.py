@@ -1159,9 +1159,17 @@ def partvtk_export(export_parameters):
     export_button_cancel.clicked.connect(on_cancel)
 
     # PartVTK export finish handler
-    def on_export_finished():
+    def on_export_finished(exit_code):
         widget_state_elements['post_proc_partvtk_button'].setText(__("PartVTK"))
         guiutils.widget_state_config(widget_state_elements, "export finished")
+
+        export_dialog.hide()
+
+        if exit_code == 0:
+            # Exported correctly
+            guiutils.info_dialog("Post-processing finished successfully.")
+        else:
+            guiutils.error_dialog("There was an error on the post-processing.")
 
         # Bit of code that tries to open ParaView if the option was selected.
         if export_parameters['open_paraview']:
@@ -1209,8 +1217,6 @@ def partvtk_export(export_parameters):
             if not found:
                 guiutils.error_dialog("Paraview was not found in your system (Is it installed regularly?)."
                                       "Please open the exported files manually")
-
-        export_dialog.hide()
 
     export_process = QtCore.QProcess(dsph_main_dock)
     export_process.finished.connect(on_export_finished)
@@ -1421,10 +1427,15 @@ def floatinginfo_export(export_parameters):
 
     export_button_cancel.clicked.connect(on_cancel)
 
-    def on_export_finished():
+    def on_export_finished(exit_code):
         widget_state_elements['post_proc_floatinginfo_button'].setText(__("FloatingInfo"))
         guiutils.widget_state_config(widget_state_elements, "export finished")
         export_dialog.hide()
+        if exit_code == 0:
+            # Exported correctly
+            guiutils.info_dialog("Post-processing finished successfully.")
+        else:
+            guiutils.error_dialog("There was an error on the post-processing.")
 
     export_process = QtCore.QProcess(dsph_main_dock)
     export_process.finished.connect(on_export_finished)
@@ -1541,10 +1552,15 @@ def computeforces_export(export_parameters):
 
     export_button_cancel.clicked.connect(on_cancel)
 
-    def on_export_finished():
+    def on_export_finished(exit_code):
         widget_state_elements['post_proc_computeforces_button'].setText(__("ComputeForces"))
         guiutils.widget_state_config(widget_state_elements, "export finished")
         export_dialog.hide()
+        if exit_code == 0:
+            # Exported correctly
+            guiutils.info_dialog("Post-processing finished successfully.")
+        else:
+            guiutils.error_dialog("There was an error on the post-processing.")
 
     export_process = QtCore.QProcess(dsph_main_dock)
     export_process.finished.connect(on_export_finished)
@@ -1679,10 +1695,15 @@ def measuretool_export(export_parameters):
 
     export_button_cancel.clicked.connect(on_cancel)
 
-    def on_export_finished():
+    def on_export_finished(exit_code):
         widget_state_elements['post_proc_measuretool_button'].setText(__("MeasureTool"))
         guiutils.widget_state_config(widget_state_elements, "export finished")
         export_dialog.hide()
+        if exit_code == 0:
+            # Exported correctly
+            guiutils.info_dialog("Post-processing finished successfully.")
+        else:
+            guiutils.error_dialog("There was an error on the post-processing.")
 
     export_process = QtCore.QProcess(dsph_main_dock)
     export_process.finished.connect(on_export_finished)
