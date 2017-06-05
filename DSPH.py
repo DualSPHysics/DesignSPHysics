@@ -63,7 +63,6 @@ __status__ = "Development"
 # TODO: Wiki - Add error reporting procedure / viewing
 # ------------------------------- 0.3 BETA -------------------------------
 # TODO: 0.3Beta - Reformat some language strings
-# TODO: 0.3Beta - Fix 'Details' button on execution
 # TODO: 0.3Beta - Fix line spacing on 'Details' (Execution)
 # TODO: 0.3Beta - Implement success dialog on post-proccessing finish
 # TODO: 0.3Beta - Save 3D dimensions when changing to 2D. Restore them on vice-versa
@@ -2948,25 +2947,27 @@ def motion_change():
 
     def on_new_movement():
         """ Creates a movement on the project. """
-        data["global_movements"].append(Movement())
+        data["global_movements"].append(Movement(name="New Movement"))
         refresh_movements_table()
 
     def on_new_wave_generator(action):
         """ Creates a movement on the project. """
+        if __("Movement") in action.text():
+            data["global_movements"].append(Movement(name="New Movement"))
         if __("Regular wave generator") in action.text():
-            to_add = SpecialMovement(generator=RegularWaveGen())
+            to_add = SpecialMovement(generator=RegularWaveGen(), name="Regular Wave Generator")
             to_add.generator.parent_movement = to_add
             data["global_movements"].append(to_add)
         if __("Irregular wave generator") in action.text():
-            to_add = SpecialMovement(generator=IrregularWaveGen())
+            to_add = SpecialMovement(generator=IrregularWaveGen(), name="Irregular Wave Generator")
             to_add.generator.parent_movement = to_add
             data["global_movements"].append(to_add)
         if __("Motion from file") in action.text():
-            to_add = SpecialMovement(generator=FileGen())
+            to_add = SpecialMovement(generator=FileGen(), name="Movement from file")
             to_add.generator.parent_movement = to_add
             data["global_movements"].append(to_add)
         if __("Rotation from file") in action.text():
-            to_add = SpecialMovement(generator=RotationFileGen())
+            to_add = SpecialMovement(generator=RotationFileGen(), name="Rotation from file")
             to_add.generator.parent_movement = to_add
             data["global_movements"].append(to_add)
 
@@ -3093,6 +3094,7 @@ def motion_change():
         create_new_movement_button.setPopupMode(QtGui.QToolButton.MenuButtonPopup)
         create_new_movement_button.setText(__("Create New"))
         create_new_movement_menu = QtGui.QMenu()
+        create_new_movement_menu.addAction(guiutils.get_icon("movement.png"), __("Movement"))
         create_new_movement_menu.addAction(guiutils.get_icon("regular_wave.png"), __("Regular wave generator"))
         create_new_movement_menu.addAction(guiutils.get_icon("irregular_wave.png"), __("Irregular wave generator"))
         create_new_movement_menu.addAction(guiutils.get_icon("file_mov.png"), __("Motion from file"))
