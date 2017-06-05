@@ -2467,7 +2467,7 @@ def floatstate_change():
     floating_props_massrhop_label = QtGui.QLabel(__("Mass/Density: "))
     floating_props_massrhop_label.setToolTip(__("Selects an mass/density calculation method and its value."))
     floating_props_massrhop_selector = QtGui.QComboBox()
-    floating_props_massrhop_selector.insertItems(0, ['massbody', 'rhopbody'])
+    floating_props_massrhop_selector.insertItems(0, ['massbody (kg)', 'rhopbody (kg/m^3)'])
     floating_props_massrhop_selector.currentIndexChanged.connect(on_massrhop_change)
     floating_props_massrhop_input = QtGui.QLineEdit()
     floating_props_massrhop_layout.addWidget(floating_props_massrhop_label)
@@ -2475,7 +2475,7 @@ def floatstate_change():
     floating_props_massrhop_layout.addWidget(floating_props_massrhop_input)
 
     floating_center_layout = QtGui.QHBoxLayout()
-    floating_center_label = QtGui.QLabel(__("Gravity center: "))
+    floating_center_label = QtGui.QLabel(__("Gravity center (m): "))
     floating_center_label.setToolTip(__("Sets the mk group gravity center."))
     floating_center_label_x = QtGui.QLabel("X")
     floating_center_input_x = QtGui.QLineEdit()
@@ -2495,7 +2495,7 @@ def floatstate_change():
     floating_center_layout.addWidget(floating_center_auto)
 
     floating_inertia_layout = QtGui.QHBoxLayout()
-    floating_inertia_label = QtGui.QLabel(__("Inertia: "))
+    floating_inertia_label = QtGui.QLabel(__("Inertia (kg*m<sup>2</sup>): "))
     floating_inertia_label.setToolTip(__("Sets the mk group inertia."))
     floating_inertia_label_x = QtGui.QLabel("X")
     floating_inertia_input_x = QtGui.QLineEdit()

@@ -8,6 +8,7 @@
     <list default="true" id="22d76f4b-310a-4afb-8788-a472c77b2c87" name="Default" comment="">
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/DSPH.py" afterPath="$PROJECT_DIR$/DSPH.py" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/dsphfc/lang/english.json" afterPath="$PROJECT_DIR$/dsphfc/lang/english.json" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="TRACKING_ENABLED" value="true" />
@@ -17,7 +18,7 @@
     <option name="LAST_RESOLUTION" value="IGNORE" />
   </component>
   <component name="CoverageDataManager">
-    <SUITE FILE_PATH="coverage/Macro$Reopen_FreeCAD_and_Execute.coverage" NAME="Reopen FreeCAD and Execute Coverage Results" MODIFIED="1496661891838" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$USER_HOME$/Documents/DSPH" />
+    <SUITE FILE_PATH="coverage/Macro$Reopen_FreeCAD_and_Execute.coverage" NAME="Reopen FreeCAD and Execute Coverage Results" MODIFIED="1496662562832" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$USER_HOME$/Documents/DSPH" />
   </component>
   <component name="CreatePatchCommitExecutor">
     <option name="PATCH_PATH" value="" />
@@ -40,8 +41,8 @@
       <file leaf-file-name="DSPH.py" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/DSPH.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="511">
-              <caret line="294" column="32" lean-forward="false" selection-start-line="294" selection-start-column="32" selection-end-line="294" selection-end-column="32" />
+            <state relative-caret-position="319">
+              <caret line="2469" column="87" lean-forward="false" selection-start-line="2469" selection-start-column="87" selection-end-line="2469" selection-end-column="87" />
               <folding>
                 <element signature="e#324#338#0" expanded="true" />
                 <element signature="e#25106#29456#0" expanded="false" />
@@ -58,9 +59,9 @@
                 <element signature="e#76006#79949#0" expanded="false" />
                 <element signature="e#79978#95405#0" expanded="false" />
                 <element signature="e#86600#88868#0" expanded="false" />
-                <element signature="e#123156#127912#0" expanded="false" />
-                <element signature="e#127942#130058#0" expanded="false" />
-                <element signature="e#135768#136736#0" expanded="false" />
+                <element signature="e#123193#127949#0" expanded="false" />
+                <element signature="e#127979#130095#0" expanded="false" />
+                <element signature="e#135805#136773#0" expanded="false" />
               </folding>
             </state>
           </provider>
@@ -226,7 +227,6 @@
   </component>
   <component name="FindInProjectRecents">
     <findStrings>
-      <find>Fixed</find>
       <find>Fi</find>
       <find>Fxe</find>
       <find>Fx</find>
@@ -256,6 +256,7 @@
       <find>Movement()</find>
       <find>Create new</find>
       <find>Change 3D</find>
+      <find>Mass/Den</find>
     </findStrings>
   </component>
   <component name="Git.Settings">
@@ -884,7 +885,6 @@
     <option name="myLimit" value="2678400000" />
   </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value="Implemented partvtk post-processing with options" />
     <MESSAGE value="Implemented automatic file opening with paraview at end of PartVTK usage. It searches paraview in the common installation folder and tries to open it with the output data." />
     <MESSAGE value="Started draft of ComputeForces, FloatingInfo and MeasureTool export windows." />
     <MESSAGE value="Added custom file names for PartVTK tool exporting. Changed roadmap a bit" />
@@ -909,7 +909,8 @@
     <MESSAGE value="Fixed double-spacing in simulation details pane" />
     <MESSAGE value="Implemented an success/error dialog on post-processing tools." />
     <MESSAGE value="Now on changing from 2D to 3D, if its possible, Width restores itself to its original 3D value." />
-    <option name="LAST_COMMIT_MESSAGE" value="Now on changing from 2D to 3D, if its possible, Width restores itself to its original 3D value." />
+    <MESSAGE value="Fixed an error when making a new case from a previous 2D one, that made the case limits' width to be 1 nanometer." />
+    <option name="LAST_COMMIT_MESSAGE" value="Fixed an error when making a new case from a previous 2D one, that made the case limits' width to be 1 nanometer." />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
@@ -1050,9 +1051,9 @@
             <element signature="e#76006#79949#0" expanded="false" />
             <element signature="e#79978#95405#0" expanded="false" />
             <element signature="e#86600#88868#0" expanded="false" />
-            <element signature="e#123156#127912#0" expanded="false" />
-            <element signature="e#127942#130058#0" expanded="false" />
-            <element signature="e#135768#136736#0" expanded="false" />
+            <element signature="e#123193#127949#0" expanded="false" />
+            <element signature="e#127979#130095#0" expanded="false" />
+            <element signature="e#135805#136773#0" expanded="false" />
           </folding>
         </state>
       </provider>
@@ -1207,9 +1208,9 @@
             <element signature="e#76006#79949#0" expanded="false" />
             <element signature="e#79978#95405#0" expanded="false" />
             <element signature="e#86600#88868#0" expanded="false" />
-            <element signature="e#123156#127912#0" expanded="false" />
-            <element signature="e#127942#130058#0" expanded="false" />
-            <element signature="e#135768#136736#0" expanded="false" />
+            <element signature="e#123193#127949#0" expanded="false" />
+            <element signature="e#127979#130095#0" expanded="false" />
+            <element signature="e#135805#136773#0" expanded="false" />
           </folding>
         </state>
       </provider>
@@ -1356,9 +1357,9 @@
             <element signature="e#76006#79949#0" expanded="false" />
             <element signature="e#79978#95405#0" expanded="false" />
             <element signature="e#86600#88868#0" expanded="false" />
-            <element signature="e#123156#127912#0" expanded="false" />
-            <element signature="e#127942#130058#0" expanded="false" />
-            <element signature="e#135768#136736#0" expanded="false" />
+            <element signature="e#123193#127949#0" expanded="false" />
+            <element signature="e#127979#130095#0" expanded="false" />
+            <element signature="e#135805#136773#0" expanded="false" />
           </folding>
         </state>
       </provider>
@@ -1505,9 +1506,9 @@
             <element signature="e#76006#79949#0" expanded="false" />
             <element signature="e#79978#95405#0" expanded="false" />
             <element signature="e#86600#88868#0" expanded="false" />
-            <element signature="e#123156#127912#0" expanded="false" />
-            <element signature="e#127942#130058#0" expanded="false" />
-            <element signature="e#135768#136736#0" expanded="false" />
+            <element signature="e#123193#127949#0" expanded="false" />
+            <element signature="e#127979#130095#0" expanded="false" />
+            <element signature="e#135805#136773#0" expanded="false" />
           </folding>
         </state>
       </provider>
@@ -1654,9 +1655,9 @@
             <element signature="e#76006#79949#0" expanded="false" />
             <element signature="e#79978#95405#0" expanded="false" />
             <element signature="e#86600#88868#0" expanded="false" />
-            <element signature="e#123156#127912#0" expanded="false" />
-            <element signature="e#127942#130058#0" expanded="false" />
-            <element signature="e#135768#136736#0" expanded="false" />
+            <element signature="e#123193#127949#0" expanded="false" />
+            <element signature="e#127979#130095#0" expanded="false" />
+            <element signature="e#135805#136773#0" expanded="false" />
           </folding>
         </state>
       </provider>
@@ -1803,9 +1804,9 @@
             <element signature="e#76006#79949#0" expanded="false" />
             <element signature="e#79978#95405#0" expanded="false" />
             <element signature="e#86600#88868#0" expanded="false" />
-            <element signature="e#123156#127912#0" expanded="false" />
-            <element signature="e#127942#130058#0" expanded="false" />
-            <element signature="e#135768#136736#0" expanded="false" />
+            <element signature="e#123193#127949#0" expanded="false" />
+            <element signature="e#127979#130095#0" expanded="false" />
+            <element signature="e#135805#136773#0" expanded="false" />
           </folding>
         </state>
       </provider>
@@ -1952,9 +1953,9 @@
             <element signature="e#76006#79949#0" expanded="false" />
             <element signature="e#79978#95405#0" expanded="false" />
             <element signature="e#86600#88868#0" expanded="false" />
-            <element signature="e#123156#127912#0" expanded="false" />
-            <element signature="e#127942#130058#0" expanded="false" />
-            <element signature="e#135768#136736#0" expanded="false" />
+            <element signature="e#123193#127949#0" expanded="false" />
+            <element signature="e#127979#130095#0" expanded="false" />
+            <element signature="e#135805#136773#0" expanded="false" />
           </folding>
         </state>
       </provider>
@@ -2101,9 +2102,9 @@
             <element signature="e#76006#79949#0" expanded="false" />
             <element signature="e#79978#95405#0" expanded="false" />
             <element signature="e#86600#88868#0" expanded="false" />
-            <element signature="e#123156#127912#0" expanded="false" />
-            <element signature="e#127942#130058#0" expanded="false" />
-            <element signature="e#135768#136736#0" expanded="false" />
+            <element signature="e#123193#127949#0" expanded="false" />
+            <element signature="e#127979#130095#0" expanded="false" />
+            <element signature="e#135805#136773#0" expanded="false" />
           </folding>
         </state>
       </provider>
@@ -2250,9 +2251,9 @@
             <element signature="e#76006#79949#0" expanded="false" />
             <element signature="e#79978#95405#0" expanded="false" />
             <element signature="e#86600#88868#0" expanded="false" />
-            <element signature="e#123156#127912#0" expanded="false" />
-            <element signature="e#127942#130058#0" expanded="false" />
-            <element signature="e#135768#136736#0" expanded="false" />
+            <element signature="e#123193#127949#0" expanded="false" />
+            <element signature="e#127979#130095#0" expanded="false" />
+            <element signature="e#135805#136773#0" expanded="false" />
           </folding>
         </state>
       </provider>
@@ -2399,9 +2400,9 @@
             <element signature="e#76006#79949#0" expanded="false" />
             <element signature="e#79978#95405#0" expanded="false" />
             <element signature="e#86600#88868#0" expanded="false" />
-            <element signature="e#123156#127912#0" expanded="false" />
-            <element signature="e#127942#130058#0" expanded="false" />
-            <element signature="e#135768#136736#0" expanded="false" />
+            <element signature="e#123193#127949#0" expanded="false" />
+            <element signature="e#127979#130095#0" expanded="false" />
+            <element signature="e#135805#136773#0" expanded="false" />
           </folding>
         </state>
       </provider>
@@ -2538,9 +2539,9 @@
             <element signature="e#76006#79949#0" expanded="false" />
             <element signature="e#79978#95405#0" expanded="false" />
             <element signature="e#86600#88868#0" expanded="false" />
-            <element signature="e#123156#127912#0" expanded="false" />
-            <element signature="e#127942#130058#0" expanded="false" />
-            <element signature="e#135768#136736#0" expanded="false" />
+            <element signature="e#123193#127949#0" expanded="false" />
+            <element signature="e#127979#130095#0" expanded="false" />
+            <element signature="e#135805#136773#0" expanded="false" />
           </folding>
         </state>
       </provider>
@@ -2890,8 +2891,8 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/DSPH.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="511">
-          <caret line="294" column="32" lean-forward="false" selection-start-line="294" selection-start-column="32" selection-end-line="294" selection-end-column="32" />
+        <state relative-caret-position="319">
+          <caret line="2469" column="87" lean-forward="false" selection-start-line="2469" selection-start-column="87" selection-end-line="2469" selection-end-column="87" />
           <folding>
             <element signature="e#324#338#0" expanded="true" />
             <element signature="e#25106#29456#0" expanded="false" />
@@ -2908,9 +2909,9 @@
             <element signature="e#76006#79949#0" expanded="false" />
             <element signature="e#79978#95405#0" expanded="false" />
             <element signature="e#86600#88868#0" expanded="false" />
-            <element signature="e#123156#127912#0" expanded="false" />
-            <element signature="e#127942#130058#0" expanded="false" />
-            <element signature="e#135768#136736#0" expanded="false" />
+            <element signature="e#123193#127949#0" expanded="false" />
+            <element signature="e#127979#130095#0" expanded="false" />
+            <element signature="e#135805#136773#0" expanded="false" />
           </folding>
         </state>
       </provider>
