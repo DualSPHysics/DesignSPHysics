@@ -1749,6 +1749,7 @@ class RegularWaveMotionTimeline(QtGui.QWidget):
 
         self.fixed_depth_label = QtGui.QLabel(__("Fixed depth"))
         self.fixed_depth_input = QtGui.QLineEdit()
+        self.fixed_depth_input.setEnabled(False)
         self.fixed_depth_units_label = QtGui.QLabel(__("m"))
 
         self.piston_dir_label = QtGui.QLabel(__("Piston direction"))
@@ -1929,6 +1930,7 @@ class IrregularWaveMotionTimeline(QtGui.QWidget):
 
         self.fixed_depth_label = QtGui.QLabel(__("Fixed depth"))
         self.fixed_depth_input = QtGui.QLineEdit()
+        self.fixed_depth_input.setEnabled(False)
         self.fixed_depth_units_label = QtGui.QLabel(__("m"))
 
         self.piston_dir_label = QtGui.QLabel(__("Piston direction"))

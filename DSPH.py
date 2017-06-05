@@ -211,7 +211,7 @@ ccfilebuttons_layout = QtGui.QHBoxLayout()
 ccsecondrow = QtGui.QHBoxLayout()
 ccthirdrow_layout = QtGui.QHBoxLayout()
 ccfourthrow_layout = QtGui.QHBoxLayout()
-casecontrols_label = QtGui.QLabel("<b>" + __("Preprocessing") + "<b>")
+casecontrols_label = QtGui.QLabel("<b>" + __("Pre-processing") + "<b>")
 
 # New Case button
 casecontrols_bt_newdoc = QtGui.QToolButton()
@@ -296,6 +296,7 @@ def on_new_case(prompt=True):
     temp_data.update(new_case_temp_data)
     guiutils.widget_state_config(widget_state_elements, "new case")
     data['simobjects']['Case_Limits'] = ["mkspecial", "typespecial", "fillspecial"]
+    dp_input.setText(str(data["dp"]))
     on_tree_item_selection_change()
 
 
@@ -1681,6 +1682,7 @@ def measuretool_export(export_parameters):
             for curr_point in temp_data['measuretool_grid']:
                 f.write("{}  {}  {}\n{}  {}  {}\n{}  {}  {}\n".format(*curr_point))
 
+    calculate_height = '-height' if export_parameters['calculate_water_elevation'] else ''
 
     static_params_exp = [
         '-dirin ' + data['project_path'] + '/' + data['project_name'] + '_Out/',
@@ -1688,6 +1690,7 @@ def measuretool_export(export_parameters):
         save_mode + data['project_path'] + '/' + data['project_name'] + '_Out/' + export_parameters['filename'],
         '-points ' + data['project_path'] + '/points.txt',
         '-vars:' + export_parameters['save_vars'],
+        calculate_height,
         export_parameters['additional_parameters']
     ]
 
@@ -1747,6 +1750,8 @@ def on_measuretool():
       mtool_types_chk_vol, mtool_types_chk_idp, mtool_types_chk_ace, mtool_types_chk_vor, mtool_types_chk_kcorr]]
     mtool_types_groupbox.setLayout(mtool_types_groupbox_layout)
 
+    mtool_calculate_elevation = QtGui.QCheckBox(__("Calculate water elevation"))
+
     mtool_set_points_layout = QtGui.QHBoxLayout()
     mtool_set_points = QtGui.QPushButton("List of points")
     mtool_set_grid = QtGui.QPushButton("Grid of points")
@@ -1772,6 +1777,7 @@ def on_measuretool():
     measuretool_tool_layout.addLayout(mtool_format_layout)
     measuretool_tool_layout.addWidget(mtool_types_groupbox)
     measuretool_tool_layout.addStretch(1)
+    measuretool_tool_layout.addWidget(mtool_calculate_elevation)
     measuretool_tool_layout.addLayout(mtool_set_points_layout)
     measuretool_tool_layout.addLayout(mtool_filename_layout)
     measuretool_tool_layout.addLayout(mtool_parameters_layout)
@@ -1810,6 +1816,8 @@ def on_measuretool():
 
         if export_parameters['save_vars'] == '-all':
             export_parameters['save_vars'] = '+all'
+
+        export_parameters['calculate_water_elevation'] = mtool_calculate_elevation.isChecked()
 
         if len(mtool_file_name_text.text()) > 0:
             export_parameters['filename'] = mtool_file_name_text.text()
@@ -1931,13 +1939,13 @@ def on_measuretool():
                                     float(mgrid_table.item(mgrid_row, 7).text()),
                                     float(mgrid_table.item(mgrid_row, 8).text())]
                     mgrid_table.setItem(mgrid_row, 9, QtGui.QTableWidgetItem(
-                        str(current_grid[0] + current_grid[3] * current_grid[6])
+                        str(current_grid[0] + current_grid[3] * current_grid[6] - 1)
                     ))
                     mgrid_table.setItem(mgrid_row, 10, QtGui.QTableWidgetItem(
-                        str(current_grid[1] + current_grid[4] * current_grid[7])
+                        str(current_grid[1] + current_grid[4] * current_grid[7] - 1)
                     ))
                     mgrid_table.setItem(mgrid_row, 11, QtGui.QTableWidgetItem(
-                        str(current_grid[2] + current_grid[5] * current_grid[8])
+                        str(current_grid[2] + current_grid[5] * current_grid[8] - 1)
                     ))
                     mgrid_table.item(mgrid_row, 9).setFlags(QtCore.Qt.ItemIsSelectable | QtCore.Qt.ItemIsEnabled)
                     mgrid_table.item(mgrid_row, 10).setFlags(QtCore.Qt.ItemIsSelectable | QtCore.Qt.ItemIsEnabled)
@@ -2010,7 +2018,7 @@ def on_measuretool():
 # Post processing section scaffolding
 export_layout = QtGui.QVBoxLayout()
 export_label = QtGui.QLabel(
-    "<b>" + __("Post Proccessing") + "</b>")
+    "<b>" + __("Post-processing") + "</b>")
 export_label.setWordWrap(True)
 export_first_row_layout = QtGui.QHBoxLayout()
 export_second_row_layout = QtGui.QHBoxLayout()
@@ -2227,18 +2235,42 @@ def fillmode_change(index):
 
     if fillmode_prop.itemText(index).lower() == "full":
         if objtype_prop.itemText(objtype_prop.currentIndex()).lower() == "fluid":
-            selectiongui.Transparency = 30
+            try:
+                selectiongui.Transparency = 30
+            except AttributeError:
+                # Cannot change transparency. Just ignore
+                pass
         elif objtype_prop.itemText(objtype_prop.currentIndex()).lower() == "bound":
-            selectiongui.Transparency = 0
+            try:
+                selectiongui.Transparency = 0
+            except AttributeError:
+                # Cannot change transparency. Just ignore
+                pass
     elif fillmode_prop.itemText(index).lower() == "solid":
         if objtype_prop.itemText(objtype_prop.currentIndex()).lower() == "fluid":
-            selectiongui.Transparency = 30
+            try:
+                selectiongui.Transparency = 30
+            except AttributeError:
+                # Cannot change transparency (fillbox?). Just ignore
+                pass
         elif objtype_prop.itemText(objtype_prop.currentIndex()).lower() == "bound":
-            selectiongui.Transparency = 0
+            try:
+                selectiongui.Transparency = 0
+            except AttributeError:
+                # Cannot change transparency (fillbox?). Just ignore
+                pass
     elif fillmode_prop.itemText(index).lower() == "face":
-        selectiongui.Transparency = 80
+        try:
+            selectiongui.Transparency = 80
+        except AttributeError:
+            # Cannot change transparency. Just ignore
+            pass
     elif fillmode_prop.itemText(index).lower() == "wire":
-        selectiongui.Transparency = 85
+        try:
+            selectiongui.Transparency = 85
+        except AttributeError:
+            # Cannot change transparency. Just ignore
+            pass
 
 
 def floatstate_change():
@@ -3223,7 +3255,7 @@ def add_object_to_sim(name=None):
                 mktoput = utils.get_first_mk_not_used("fluid", data)
                 if not mktoput:
                     mktoput = 0
-                data['simobjects'][each.Name] = [mktoput, 'fluid', 'full']
+                data['simobjects'][each.Name] = [mktoput, 'fluid', 'solid']
                 data['mkfluidused'].append(mktoput)
             else:
                 mktoput = utils.get_first_mk_not_used("bound", data)
@@ -3348,6 +3380,7 @@ def on_tree_item_selection_change():
                         mkgroup_prop.setRange(0, 240)
                         mkgroup_label.setText("   " + __("MKBound"))
                 elif selection[0].TypeId == "App::DocumentObjectGroup" and "fillbox" in selection[0].Name.lower():
+                    mkgroup_label.setText("   " + __("MKFluid"))
                     to_change.setEnabled(False)
                     to_change.setCurrentIndex(0)
                 else:
@@ -3361,6 +3394,7 @@ def on_tree_item_selection_change():
                 # fill mode config
                 to_change = property_table.cellWidget(2, 1)
                 if selection[0].TypeId in temp_data['supported_types']:
+                    # Object is a supported type. Fill with its type and enable selector.
                     to_change.setEnabled(True)
                     if data['simobjects'][selection[0].Name][2].lower() == "full":
                         to_change.setCurrentIndex(0)
@@ -3370,7 +3404,12 @@ def on_tree_item_selection_change():
                         to_change.setCurrentIndex(2)
                     elif data['simobjects'][selection[0].Name][2].lower() == "wire":
                         to_change.setCurrentIndex(3)
+                elif selection[0].TypeId == 'App::DocumentObjectGroup':
+                    # Is a fillbox. Set fill mode to solid and disable
+                    to_change.setCurrentIndex(1)
+                    to_change.setEnabled(False)
                 else:
+                    # Not supported. Probably face
                     to_change.setCurrentIndex(2)
                     to_change.setEnabled(False)
 

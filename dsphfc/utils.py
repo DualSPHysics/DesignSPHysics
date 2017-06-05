@@ -311,7 +311,7 @@ def get_default_data():
     data['massbound_auto'] = True
     data['massfluid'] = 0
     data['massfluid_auto'] = True
-    data['dp'] = 0.0005
+    data['dp'] = 0.01
 
     # Data relative to execution parameters
     data['posdouble'] = 0
@@ -522,9 +522,9 @@ def create_dsph_document():
     FreeCADGui.activeDocument().activeView().viewAxonometric()
     FreeCAD.ActiveDocument.addObject("Part::Box", "Case_Limits")
     FreeCAD.ActiveDocument.getObject("Case_Limits").Label = "Case Limits (3D)"
-    FreeCAD.ActiveDocument.getObject("Case_Limits").Length = '15 mm'
-    FreeCAD.ActiveDocument.getObject("Case_Limits").Width = '15 mm'
-    FreeCAD.ActiveDocument.getObject("Case_Limits").Height = '15 mm'
+    FreeCAD.ActiveDocument.getObject("Case_Limits").Length = '1000 mm'
+    FreeCAD.ActiveDocument.getObject("Case_Limits").Width = '1000 mm'
+    FreeCAD.ActiveDocument.getObject("Case_Limits").Height = '1000 mm'
     FreeCADGui.ActiveDocument.getObject("Case_Limits").DisplayMode = "Wireframe"
     FreeCADGui.ActiveDocument.getObject("Case_Limits").LineColor = (1.00, 0.00, 0.00)
     FreeCADGui.ActiveDocument.getObject("Case_Limits").LineWidth = 2.00

@@ -189,7 +189,7 @@ class RegularWaveGen(WaveGen):
         ramp: Periods of ramp
     """
 
-    def __init__(self, parent_movement=None, wave_order=1, start=0, duration=0, depth=0, fixed_depth=0,
+    def __init__(self, parent_movement=None, wave_order=2, start=0, duration=0, depth=0, fixed_depth=0,
                  piston_dir=None, wave_height=0.5, wave_period=1, phase=0, ramp=0, disksave_periods=24,
                  disksave_periodsteps=20, disksave_xpos=2, disksave_zpos=-0.15):
         super(RegularWaveGen, self).__init__(parent_movement, wave_order, start, duration, depth, fixed_depth,
