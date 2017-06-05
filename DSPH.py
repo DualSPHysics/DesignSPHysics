@@ -289,10 +289,10 @@ def on_new_case(prompt=True):
             return
 
     # Creates a new document and merges default data to the current data structure.
-    utils.create_dsph_document()
     new_case_default_data, new_case_temp_data = utils.get_default_data()
     data.update(new_case_default_data)
     temp_data.update(new_case_temp_data)
+    utils.create_dsph_document()
     guiutils.widget_state_config(widget_state_elements, "new case")
     data['simobjects']['Case_Limits'] = ["mkspecial", "typespecial", "fillspecial"]
     dp_input.setText(str(data["dp"]))
