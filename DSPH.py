@@ -973,7 +973,7 @@ def on_ex_simulate():
             pass
 
         # Fill details window
-        run_details_text.setText("\n".join(run_file_data))
+        run_details_text.setText("".join(run_file_data))
         run_details_text.moveCursor(QtGui.QTextCursor.End)
 
         # Set percentage scale based on timemax
