@@ -722,13 +722,20 @@ def on_2d_toggle():
     if utils.valid_document_environment():
         if data['3dmode']:
             # Change to 2D
+            temp_data['3d_width'] = utils.get_fc_object('Case_Limits').Width.Value
             utils.get_fc_object('Case_Limits').Width.Value = utils.WIDTH_2D
             guiutils.get_fc_view_object('Case_Limits').DisplayMode = 'Flat Lines'
             guiutils.get_fc_view_object('Case_Limits').ShapeColor = (1.00, 0.00, 0.00)
             guiutils.get_fc_view_object('Case_Limits').Transparency = 90
         else:
             # Change to 3D
-            utils.get_fc_object('Case_Limits').Width = utils.get_fc_object('Case_Limits').Length
+            try:
+                # Try to restore original Width.
+                utils.get_fc_object('Case_Limits').Width = temp_data['3d_width']
+            except:
+                # If its not saved just set it same as Length
+                utils.get_fc_object('Case_Limits').Width = utils.get_fc_object('Case_Limits').Length
+
             guiutils.get_fc_view_object('Case_Limits').DisplayMode = 'Wireframe'
             guiutils.get_fc_view_object('Case_Limits').ShapeColor = (0.80, 0.80, 0.80)
             guiutils.get_fc_view_object('Case_Limits').Transparency = 0
