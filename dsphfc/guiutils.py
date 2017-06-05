@@ -1465,6 +1465,18 @@ def case_summary(orig_data):
     else:
         data['movement_info'] += "No movements were defined in this case."
 
+    # Create a string with MK used (of each type)
+    data['mkboundused'] = list()
+    data['mkfluidused'] = list()
+    for element in data['simobjects'].values():
+        if element[1].lower() == 'bound':
+            data['mkboundused'].append(str(element[0]))
+        elif element[1].lower() == 'fluid':
+            data['mkfluidused'].append(str(element[0]))
+
+    data['mkboundused'] = ", ".join(data['mkboundused']) if len(data['mkboundused']) > 0 else "None"
+    data['mkfluidused'] = ", ".join(data['mkfluidused']) if len(data['mkfluidused']) > 0 else "None"
+
     # endregion Formatting movement info
 
     # Dialog creation and template filling
