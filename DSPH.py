@@ -899,10 +899,18 @@ def on_ex_simulate():
     # Details button handler
     def on_details():
         if run_details.isVisible():
+            utils.debug('Hiding details pane on execution')
             run_details.hide()
         else:
+            utils.debug('Showing details pane on execution')
             run_details.show()
             run_details.move(run_dialog.x() - run_details.width() - 15, run_dialog.y())
+
+    # Ensure run button has no connections
+    try:
+        run_button_details.clicked.disconnect()
+    except RuntimeError:
+        pass
 
     run_button_details.clicked.connect(on_details)
 
@@ -1425,7 +1433,9 @@ def floatinginfo_export(export_parameters):
     static_params_exp = [
         '-filexml ' + data['project_path'] + '/' + data['project_name'] + '_Out/' + data['project_name'] + '.xml',
         '-savemotion',
-        '-savedata ' + data['project_path'] + '/' + data['project_name'] + '_Out/' + export_parameters['filename']]
+        '-savedata ' + data['project_path'] + '/' + data['project_name'] + '_Out/' + export_parameters['filename'],
+        export_parameters['additional_parameters']
+        ]
 
     if len(export_parameters['onlymk']) > 0:
         static_params_exp.append('-onlymk:' + export_parameters['onlymk'])
@@ -1457,6 +1467,7 @@ def on_floatinginfo():
 
     finfo_onlymk_layout = QtGui.QHBoxLayout()
     finfo_filename_layout = QtGui.QHBoxLayout()
+    finfo_additional_parameters_layout = QtGui.QHBoxLayout()
     finfo_buttons_layout = QtGui.QHBoxLayout()
 
     finfo_onlymk_label = QtGui.QLabel(__("MK to process (empty for all)"))
@@ -1471,6 +1482,11 @@ def on_floatinginfo():
     finfo_filename_layout.addWidget(finfo_filename_label)
     finfo_filename_layout.addWidget(finfo_filename_text)
 
+    finfo_additional_parameters_label = QtGui.QLabel(__("Additional Parameters"))
+    finfo_additional_parameters_text = QtGui.QLineEdit()
+    finfo_additional_parameters_layout.addWidget(finfo_additional_parameters_label)
+    finfo_additional_parameters_layout.addWidget(finfo_additional_parameters_text)
+
     finfo_export_button = QtGui.QPushButton(__("Export"))
     finfo_cancel_button = QtGui.QPushButton(__("Cancel"))
     finfo_buttons_layout.addWidget(finfo_export_button)
@@ -1478,6 +1494,7 @@ def on_floatinginfo():
 
     floatinfo_tool_layout.addLayout(finfo_onlymk_layout)
     floatinfo_tool_layout.addLayout(finfo_filename_layout)
+    floatinfo_tool_layout.addLayout(finfo_additional_parameters_layout)
     floatinfo_tool_layout.addStretch(1)
     floatinfo_tool_layout.addLayout(finfo_buttons_layout)
 
@@ -1490,6 +1507,7 @@ def on_floatinginfo():
         export_parameters = dict()
         export_parameters['onlymk'] = finfo_onlymk_text.text()
         export_parameters['filename'] = finfo_filename_text.text()
+        export_parameters['additional_parameters'] = finfo_additional_parameters_text.text()
         floatinginfo_export(export_parameters)
         floatinfo_tool_dialog.accept()
 
@@ -1543,7 +1561,9 @@ def computeforces_export(export_parameters):
     static_params_exp = [
         '-dirin ' + data['project_path'] + '/' + data['project_name'] + '_Out/',
         '-filexml ' + data['project_path'] + '/' + data['project_name'] + '_Out/' + data['project_name'] + '.xml',
-        save_mode + data['project_path'] + '/' + data['project_name'] + '_Out/' + export_parameters['filename']]
+        save_mode + data['project_path'] + '/' + data['project_name'] + '_Out/' + export_parameters['filename'],
+        export_parameters['additional_parameters']
+    ]
 
     if len(export_parameters['onlymk']) > 0:
         static_params_exp.append('-onlymk:' + export_parameters['onlymk'])
@@ -1576,6 +1596,7 @@ def on_computeforces():
     cfces_format_layout = QtGui.QHBoxLayout()
     cfces_onlymk_layout = QtGui.QHBoxLayout()
     cfces_filename_layout = QtGui.QHBoxLayout()
+    cfces_additional_parameters_layout = QtGui.QHBoxLayout()
     cfces_buttons_layout = QtGui.QHBoxLayout()
 
     outformat_label = QtGui.QLabel(__("Output format"))
@@ -1598,6 +1619,11 @@ def on_computeforces():
     cfces_filename_layout.addWidget(cfces_filename_label)
     cfces_filename_layout.addWidget(cfces_filename_text)
 
+    cfces_additional_parameters_label = QtGui.QLabel(__("Additional Parameters"))
+    cfces_additional_parameters_text = QtGui.QLineEdit()
+    cfces_additional_parameters_layout.addWidget(cfces_additional_parameters_label)
+    cfces_additional_parameters_layout.addWidget(cfces_additional_parameters_text)
+
     cfces_export_button = QtGui.QPushButton(__("Export"))
     cfces_cancel_button = QtGui.QPushButton(__("Cancel"))
     cfces_buttons_layout.addWidget(cfces_export_button)
@@ -1606,6 +1632,7 @@ def on_computeforces():
     compforces_tool_layout.addLayout(cfces_format_layout)
     compforces_tool_layout.addLayout(cfces_onlymk_layout)
     compforces_tool_layout.addLayout(cfces_filename_layout)
+    compforces_tool_layout.addLayout(cfces_additional_parameters_layout)
     compforces_tool_layout.addStretch(1)
     compforces_tool_layout.addLayout(cfces_buttons_layout)
 
@@ -1619,6 +1646,7 @@ def on_computeforces():
         export_parameters['save_mode'] = outformat_combobox.currentIndex()
         export_parameters['onlymk'] = cfces_onlymk_text.text()
         export_parameters['filename'] = cfces_filename_text.text()
+        export_parameters['additional_parameters'] = cfces_additional_parameters_text.text()
         computeforces_export(export_parameters)
         compforces_tool_dialog.accept()
 
@@ -3370,6 +3398,7 @@ def on_tree_item_selection_change():
                 # type config
                 to_change = property_table.cellWidget(0, 1)
                 if selection[0].TypeId in temp_data['supported_types']:
+                    # Supported object
                     to_change.setEnabled(True)
                     if data['simobjects'][selection[0].Name][1].lower() == "fluid":
                         to_change.setCurrentIndex(0)
@@ -3380,10 +3409,23 @@ def on_tree_item_selection_change():
                         mkgroup_prop.setRange(0, 240)
                         mkgroup_label.setText("   " + __("MKBound"))
                 elif selection[0].TypeId == "App::DocumentObjectGroup" and "fillbox" in selection[0].Name.lower():
+                    # Fillbox
                     mkgroup_label.setText("   " + __("MKFluid"))
                     to_change.setEnabled(False)
                     to_change.setCurrentIndex(0)
+                elif selection[0].TypeId in ["Mesh::Feature", "Part::Cut"]:
+                    # Is an object that will be exported to STL
+                    to_change.setEnabled(True)
+                    if data['simobjects'][selection[0].Name][1].lower() == "fluid":
+                        to_change.setCurrentIndex(0)
+                        mkgroup_prop.setRange(0, 10)
+                        mkgroup_label.setText("   " + __("MKFluid"))
+                    elif data['simobjects'][selection[0].Name][1].lower() == "bound":
+                        to_change.setCurrentIndex(1)
+                        mkgroup_prop.setRange(0, 240)
+                        mkgroup_label.setText("   " + __("MKBound"))
                 else:
+                    # Everything else
                     to_change.setCurrentIndex(1)
                     to_change.setEnabled(False)
 
