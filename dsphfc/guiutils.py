@@ -51,30 +51,36 @@ def v_line_generator():
     return to_ret
 
 
-def warning_dialog(warn_text):
+def warning_dialog(warn_text, detailed_text=None):
     """Spawns a warning dialog with the text passed."""
 
     warning_messagebox = QtGui.QMessageBox()
     warning_messagebox.setText(warn_text)
     warning_messagebox.setIcon(QtGui.QMessageBox.Warning)
+    if detailed_text is not None:
+        warning_messagebox.setDetailedText(str(detailed_text))
     warning_messagebox.exec_()
 
 
-def error_dialog(error_text):
+def error_dialog(error_text, detailed_text=None):
     """Spawns an error dialog with the text passed."""
 
     error_messagebox = QtGui.QMessageBox()
     error_messagebox.setText(error_text)
     error_messagebox.setIcon(QtGui.QMessageBox.Critical)
+    if detailed_text is not None:
+        error_messagebox.setDetailedText(str(detailed_text))
     error_messagebox.exec_()
 
 
-def info_dialog(info_text):
+def info_dialog(info_text, detailed_text=None):
     """Spawns an info dialog with the text passed."""
 
     info_messagebox = QtGui.QMessageBox()
     info_messagebox.setText(info_text)
     info_messagebox.setIcon(QtGui.QMessageBox.Information)
+    if detailed_text is not None:
+        info_messagebox.setDetailedText(str(detailed_text))
     info_messagebox.exec_()
 
 
