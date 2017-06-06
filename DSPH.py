@@ -22,6 +22,7 @@ import pickle
 import threading
 import traceback
 import subprocess
+import shutil
 from PySide import QtGui, QtCore
 from dsphfc.properties import *
 
@@ -325,6 +326,21 @@ def on_save_case(save_as=None):
         # Create out folder for the case
         if not os.path.exists(save_name + "/" + save_name.split('/')[-1] + "_Out"):
             os.makedirs(save_name + "/" + save_name.split('/')[-1] + "_Out")
+
+        # Copy files from movements and change its paths to be inside the project.
+        for key, value in data["motion_mks"].iteritems():
+            for movement in value:
+                if isinstance(movement, SpecialMovement):
+                    if isinstance(movement.generator, FileGen) or isinstance(movement.generator, RotationFileGen):
+                        filename = movement.generator.filename
+                        utils.debug("Copying {} to {}".format(filename, save_name))
+                        try:
+                            shutil.copy2(filename, save_name)
+                            movement.generator.filename = "{}/{}".format(
+                                save_name, filename.split("/")[-1]
+                            )
+                        except IOError:
+                            utils.error("Unable to copy {} into {}".format(filename, save_name))
 
         utils.dump_to_xml(data, save_name)  # Dumps all the case data to an XML file.
 
@@ -890,10 +906,8 @@ def on_ex_simulate():
             temp_data['current_process'].kill()
         run_dialog.hide()
         run_details.hide()
-        if data['simulation_done']:
-            guiutils.widget_state_config(widget_state_elements, "sim cancel")
-        else:
-            guiutils.widget_state_config(widget_state_elements, "sim error")
+        data['simulation_done'] = False
+        guiutils.widget_state_config(widget_state_elements, "sim cancel")
 
     run_button_cancel.clicked.connect(on_cancel)
 
@@ -1083,7 +1097,8 @@ ex_selector_layout.addWidget(ex_selector_label)
 ex_selector_layout.addWidget(ex_selector_combo)
 
 # Simulate case button
-ex_button = QtGui.QPushButton(__("Simulate Case"))
+ex_button = QtGui.QPushButton(__("Run"))
+ex_button.setStyleSheet("QPushButton { color: green; font-weight: bold; }")
 ex_button.setToolTip(__(
     "Starts the case simulation. "
     "From the simulation\nwindow you can see the current progress and\nuseful information."))
@@ -2134,13 +2149,13 @@ main_layout.addLayout(intro_layout)
 main_layout.addWidget(guiutils.h_line_generator())
 main_layout.addLayout(dp_layout)
 main_layout.addWidget(guiutils.h_line_generator())
-main_layout.addLayout(objectlist_layout)
-main_layout.addWidget(guiutils.h_line_generator())
 main_layout.addLayout(cc_layout)
 main_layout.addWidget(guiutils.h_line_generator())
 main_layout.addLayout(ex_layout)
 main_layout.addWidget(guiutils.h_line_generator())
 main_layout.addLayout(export_layout)
+main_layout.addWidget(guiutils.h_line_generator())
+main_layout.addLayout(objectlist_layout)
 
 # Default disabled widgets
 guiutils.widget_state_config(widget_state_elements, "no case")
@@ -2931,21 +2946,24 @@ def motion_change():
 
     motion_window.setLayout(motion_window_layout)
 
+    def check_movement_compatibility(target_movement):
+        # Wave generators are exclusive
+        if isinstance(target_movement, SpecialMovement):
+            notice_label.setText("Notice: Wave generators are exclusive. "
+                                 "All movements are disabled when using one.")
+            del movements_selected[:]
+        elif isinstance(target_movement, Movement):
+            for index, ms in enumerate(movements_selected):
+                if isinstance(ms, SpecialMovement):
+                    movements_selected.pop(index)
+                    notice_label.setText("Notice: Regular movements are not compatible with wave generators.")
+
     # Movements table actions
     def on_check_movement(index, checked):
         """ Add or delete a movement from the temporal list of selected movements. """
         target_movement = data["global_movements"][index]
         if checked:
-            # Wave generators are exclusive
-            if isinstance(target_movement, SpecialMovement):
-                notice_label.setText("Notice: Wave generators are exclusive. "
-                                     "All movements are disabled when using one.")
-                del movements_selected[:]
-            elif isinstance(target_movement, Movement):
-                for index, ms in enumerate(movements_selected):
-                    if isinstance(ms, SpecialMovement):
-                        movements_selected.pop(index)
-                        notice_label.setText("Notice: Regular movements are not compatible with wave generators.")
+            check_movement_compatibility(target_movement)
             movements_selected.append(target_movement)
         else:
             movements_selected.remove(target_movement)
@@ -2968,29 +2986,32 @@ def motion_change():
 
     def on_new_movement():
         """ Creates a movement on the project. """
-        data["global_movements"].append(Movement(name="New Movement"))
+        to_add = Movement(name="New Movement")
+        data["global_movements"].append(to_add)
+        movements_selected.append(to_add)
+        check_movement_compatibility(to_add)
+
         refresh_movements_table()
 
     def on_new_wave_generator(action):
         """ Creates a movement on the project. """
+
         if __("Movement") in action.text():
-            data["global_movements"].append(Movement(name="New Movement"))
+            on_new_movement()
+            return
         if __("Regular wave generator") in action.text():
             to_add = SpecialMovement(generator=RegularWaveGen(), name="Regular Wave Generator")
-            to_add.generator.parent_movement = to_add
-            data["global_movements"].append(to_add)
         if __("Irregular wave generator") in action.text():
             to_add = SpecialMovement(generator=IrregularWaveGen(), name="Irregular Wave Generator")
-            to_add.generator.parent_movement = to_add
-            data["global_movements"].append(to_add)
-        if __("Motion from file") in action.text():
-            to_add = SpecialMovement(generator=FileGen(), name="Movement from file")
-            to_add.generator.parent_movement = to_add
-            data["global_movements"].append(to_add)
-        if __("Rotation from file") in action.text():
-            to_add = SpecialMovement(generator=RotationFileGen(), name="Rotation from file")
-            to_add.generator.parent_movement = to_add
-            data["global_movements"].append(to_add)
+        if __("Linear motion from a file") in action.text():
+            to_add = SpecialMovement(generator=FileGen(), name="Movement from a file")
+        if __("Rotation from a file") in action.text():
+            to_add = SpecialMovement(generator=RotationFileGen(), name="Rotation from a file")
+
+        to_add.generator.parent_movement = to_add
+        data["global_movements"].append(to_add)
+        check_movement_compatibility(to_add)
+        movements_selected.append(to_add)
 
         refresh_movements_table()
 
@@ -3122,8 +3143,8 @@ def motion_change():
         create_new_movement_menu.addAction(guiutils.get_icon("movement.png"), __("Movement"))
         create_new_movement_menu.addAction(guiutils.get_icon("regular_wave.png"), __("Regular wave generator"))
         create_new_movement_menu.addAction(guiutils.get_icon("irregular_wave.png"), __("Irregular wave generator"))
-        create_new_movement_menu.addAction(guiutils.get_icon("file_mov.png"), __("Motion from file"))
-        create_new_movement_menu.addAction(guiutils.get_icon("file_mov.png"), __("Rotation from file"))
+        create_new_movement_menu.addAction(guiutils.get_icon("file_mov.png"), __("Linear motion from a file"))
+        create_new_movement_menu.addAction(guiutils.get_icon("file_mov.png"), __("Rotation from a file"))
         create_new_movement_button.setMenu(create_new_movement_menu)
         create_new_movement_button.clicked.connect(on_new_movement)
         create_new_movement_menu.triggered.connect(on_new_wave_generator)
