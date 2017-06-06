@@ -259,7 +259,7 @@ def def_constants_window(data):
     speedsystem_validator = QtGui.QIntValidator(0, 10000, speedsystem_input)
     speedsystem_input.setText(str(data['speedsystem']))
     speedsystem_input.setValidator(speedsystem_validator)
-    speedsystem_label2 = QtGui.QLabel("m/s<span style='vertical-align:super'>2</span>")
+    speedsystem_label2 = QtGui.QLabel("m/s")
 
     speedsystem_layout.addWidget(speedsystem_label)
     speedsystem_layout.addWidget(speedsystem_input)
@@ -307,7 +307,7 @@ def def_constants_window(data):
     speedsound_validator = QtGui.QIntValidator(0, 10000, speedsound_input)
     speedsound_input.setText(str(data['speedsound']))
     speedsound_input.setValidator(speedsound_validator)
-    speedsound_label2 = QtGui.QLabel("m/s<span style='vertical-align:super'>2</span>")
+    speedsound_label2 = QtGui.QLabel("m/s")
 
     speedsound_layout.addWidget(speedsound_label)
     speedsound_layout.addWidget(speedsound_input)
@@ -403,7 +403,7 @@ def def_constants_window(data):
     b_validator = QtGui.QDoubleValidator(0, 100, 8, b_input)
     b_input.setText(str(data['b']))
     b_input.setValidator(b_validator)
-    b_label2 = QtGui.QLabel("metres")
+    b_label2 = QtGui.QLabel("")
 
     b_layout.addWidget(b_label)
     b_layout.addWidget(b_input)
@@ -576,7 +576,7 @@ def def_execparams_window(data):
 
     # Viscosity with boundary
     viscoboundfactor_layout = QtGui.QHBoxLayout()
-    viscoboundfactor_label = QtGui.QLabel("Viscosity with boundary: ")
+    viscoboundfactor_label = QtGui.QLabel("Viscosity factor with boundary: ")
     viscoboundfactor_input = QtGui.QLineEdit()
     viscoboundfactor_input.setMaxLength(10)
     viscoboundfactor_input.setText(str(data['viscoboundfactor']))
@@ -636,7 +636,7 @@ def def_execparams_window(data):
 
     # Rigid algorithm
     rigidalgorithm_layout = QtGui.QHBoxLayout()
-    rigidalgorithm_label = QtGui.QLabel("Rigid algorithm: ")
+    rigidalgorithm_label = QtGui.QLabel("Solid-solid interaction: ")
     rigidalgorithm_input = QtGui.QComboBox()
     rigidalgorithm_input.insertItems(0, ['SPH', 'DEM'])
     rigidalgorithm_input.setCurrentIndex(int(data['rigidalgorithm']) - 1)
@@ -658,7 +658,7 @@ def def_execparams_window(data):
 
     # Coefficient to calculate DT
     coefdtmin_layout = QtGui.QHBoxLayout()
-    coefdtmin_label = QtGui.QLabel("Coefficient to calculate DT: ")
+    coefdtmin_label = QtGui.QLabel("Coefficient for minimum time step: ")
     coefdtmin_input = QtGui.QLineEdit()
     coefdtmin_input.setMaxLength(10)
     coefdtmin_input.setText(str(data['coefdtmin']))
@@ -999,11 +999,11 @@ def def_execparams_window(data):
     ep_main_layout.addLayout(shifttfs_layout)
     ep_main_layout.addLayout(rigidalgorithm_layout)
     ep_main_layout.addLayout(ftpause_layout)
-    ep_main_layout.addLayout(coefdtmin_layout)
     ep_main_layout.addLayout(dtiniauto_layout)
     ep_main_layout.addLayout(dtini_layout)
     ep_main_layout.addLayout(dtminauto_layout)
     ep_main_layout.addLayout(dtmin_layout)
+    ep_main_layout.addLayout(coefdtmin_layout)
     # ep_main_layout.addLayout(dtallparticles_layout)
     ep_main_layout.addLayout(timemax_layout)
     ep_main_layout.addLayout(timeout_layout)
