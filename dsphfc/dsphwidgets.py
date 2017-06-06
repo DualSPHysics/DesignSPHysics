@@ -121,16 +121,14 @@ class RectilinearMotionTimeline(QtGui.QWidget):
         self.main_layout.setContentsMargins(10, 0, 10, 0)
 
         self.parent_movement = rect_motion.parent_movement
-        self.label = QtGui.QLabel("Rect  ")
-        self.velocity_label = QtGui.QLabel("Vel: ")
+        self.label = QtGui.QLabel("Rectilinear \nMotion  ")
+        self.label.setMinimumWidth(75)
+        self.velocity_label = QtGui.QLabel("Vel (X, Y, Z): ")
         self.x_input = QtGui.QLineEdit()
-        self.x_label = QtGui.QLabel("X ")
         self.x_input.setStyleSheet("width: 5px;")
         self.y_input = QtGui.QLineEdit()
-        self.y_label = QtGui.QLabel("Y ")
         self.y_input.setStyleSheet("width: 5px;")
         self.z_input = QtGui.QLineEdit()
-        self.z_label = QtGui.QLabel("Z")
         self.z_input.setStyleSheet("width: 5px;")
         self.time_icon = QtGui.QPushButton(guiutils.get_icon("clock.png"), None)
         self.time_icon.setEnabled(False)
@@ -148,11 +146,8 @@ class RectilinearMotionTimeline(QtGui.QWidget):
         self.main_layout.addWidget(self.label)
         self.main_layout.addWidget(self.velocity_label)
         self.main_layout.addWidget(self.x_input)
-        self.main_layout.addWidget(self.x_label)
         self.main_layout.addWidget(self.y_input)
-        self.main_layout.addWidget(self.y_label)
         self.main_layout.addWidget(self.z_input)
-        self.main_layout.addWidget(self.z_label)
         self.main_layout.addStretch(1)
         self.main_layout.addWidget(self.time_icon)
         self.main_layout.addWidget(self.time_input)
@@ -246,7 +241,8 @@ class AccRectilinearMotionTimeline(QtGui.QWidget):
         self.main_layout.setContentsMargins(10, 0, 10, 0)
 
         self.parent_movement = acc_rect_motion.parent_movement
-        self.label = QtGui.QLabel("ARect ")
+        self.label = QtGui.QLabel("Accelerated \nRectilinear \nMotion ")
+        self.label.setMinimumWidth(75)
         self.data_layout = QtGui.QVBoxLayout()
         self.data_layout.setContentsMargins(0, 0, 0, 0)
         self.data_velocity_layout = QtGui.QHBoxLayout()
@@ -254,39 +250,27 @@ class AccRectilinearMotionTimeline(QtGui.QWidget):
         self.data_acceleration_layout = QtGui.QHBoxLayout()
         self.data_acceleration_layout.setContentsMargins(0, 0, 0, 0)
 
-        self.velocity_label = QtGui.QLabel("Vel: ")
+        self.velocity_label = QtGui.QLabel("Vel (X, Y, Z): ")
         self.x_input = QtGui.QLineEdit()
-        self.x_label = QtGui.QLabel("X ")
         self.x_input.setStyleSheet("width: 5px;")
         self.y_input = QtGui.QLineEdit()
-        self.y_label = QtGui.QLabel("Y ")
         self.y_input.setStyleSheet("width: 5px;")
         self.z_input = QtGui.QLineEdit()
-        self.z_label = QtGui.QLabel("Z")
         self.z_input.setStyleSheet("width: 5px;")
 
-        self.acceleration_label = QtGui.QLabel("Acc: ")
+        self.acceleration_label = QtGui.QLabel("Acc (X, Y, Z): ")
         self.xa_input = QtGui.QLineEdit()
-        self.xa_label = QtGui.QLabel("X ")
         self.xa_input.setStyleSheet("width: 5px;")
         self.ya_input = QtGui.QLineEdit()
-        self.ya_label = QtGui.QLabel("Y ")
         self.ya_input.setStyleSheet("width: 5px;")
         self.za_input = QtGui.QLineEdit()
-        self.za_label = QtGui.QLabel("Z")
         self.za_input.setStyleSheet("width: 5px;")
 
         [self.data_velocity_layout.addWidget(x) for x in [
-            self.velocity_label,
-            self.x_input, self.x_label,
-            self.y_input, self.y_label,
-            self.z_input, self.z_label,
+            self.velocity_label, self.x_input, self.y_input, self.z_input
         ]]
         [self.data_acceleration_layout.addWidget(x) for x in [
-            self.acceleration_label,
-            self.xa_input, self.xa_label,
-            self.ya_input, self.ya_label,
-            self.za_input, self.za_label,
+            self.acceleration_label, self.xa_input, self.ya_input, self.za_input
         ]]
 
         self.data_layout.addLayout(self.data_velocity_layout)
@@ -415,31 +399,26 @@ class RotationalMotionTimeline(QtGui.QWidget):
         self.main_layout.setContentsMargins(10, 0, 10, 0)
 
         self.parent_movement = rot_motion.parent_movement
-        self.label = QtGui.QLabel("Rot  ")
+        self.label = QtGui.QLabel("Rotational \nMotion  ")
+        self.label.setMinimumWidth(75)
         self.velocity_label = QtGui.QLabel("Vel: ")
         self.velocity_input = QtGui.QLineEdit()
         self.velocity_input.setStyleSheet("width: 5px;")
-        self.axis_label = QtGui.QLabel("Axis: ")
+        self.axis_label = QtGui.QLabel("Axis 1 (X, Y, Z): \n\nAxis 2 (X, Y, Z): ")
         self.axis_layout = QtGui.QVBoxLayout()
         self.axis_first_row_layout = QtGui.QHBoxLayout()
         self.axis_second_row_layout = QtGui.QHBoxLayout()
         self.x1_input = QtGui.QLineEdit()
-        self.x1_label = QtGui.QLabel("X ")
         self.x1_input.setStyleSheet("width: 5px;")
         self.y1_input = QtGui.QLineEdit()
-        self.y1_label = QtGui.QLabel("Y ")
         self.y1_input.setStyleSheet("width: 5px;")
         self.z1_input = QtGui.QLineEdit()
-        self.z1_label = QtGui.QLabel("Z")
         self.z1_input.setStyleSheet("width: 5px;")
         self.x2_input = QtGui.QLineEdit()
-        self.x2_label = QtGui.QLabel("X ")
         self.x2_input.setStyleSheet("width: 5px;")
         self.y2_input = QtGui.QLineEdit()
-        self.y2_label = QtGui.QLabel("Y ")
         self.y2_input.setStyleSheet("width: 5px;")
         self.z2_input = QtGui.QLineEdit()
-        self.z2_label = QtGui.QLabel("Z")
         self.z2_input.setStyleSheet("width: 5px;")
         self.time_icon = QtGui.QPushButton(guiutils.get_icon("clock.png"), None)
         self.time_icon.setEnabled(False)
@@ -459,17 +438,11 @@ class RotationalMotionTimeline(QtGui.QWidget):
         self.main_layout.addWidget(self.velocity_input)
         self.main_layout.addWidget(self.axis_label)
         self.axis_first_row_layout.addWidget(self.x1_input)
-        self.axis_first_row_layout.addWidget(self.x1_label)
         self.axis_first_row_layout.addWidget(self.y1_input)
-        self.axis_first_row_layout.addWidget(self.y1_label)
         self.axis_first_row_layout.addWidget(self.z1_input)
-        self.axis_first_row_layout.addWidget(self.z1_label)
         self.axis_second_row_layout.addWidget(self.x2_input)
-        self.axis_second_row_layout.addWidget(self.x2_label)
         self.axis_second_row_layout.addWidget(self.y2_input)
-        self.axis_second_row_layout.addWidget(self.y2_label)
         self.axis_second_row_layout.addWidget(self.z2_input)
-        self.axis_second_row_layout.addWidget(self.z2_label)
         self.axis_layout.addLayout(self.axis_first_row_layout)
         self.axis_layout.addLayout(self.axis_second_row_layout)
         self.main_layout.addLayout(self.axis_layout)
@@ -589,7 +562,8 @@ class AccRotationalMotionTimeline(QtGui.QWidget):
         self.main_layout.setContentsMargins(10, 0, 10, 0)
 
         self.parent_movement = acc_rot_motion.parent_movement
-        self.label = QtGui.QLabel("ARot ")
+        self.label = QtGui.QLabel("Accelerated \nRotational \nMotion ")
+        self.label.setMinimumWidth(75)
         self.vel_and_acc_layout = QtGui.QVBoxLayout()
         self.vel_layout = QtGui.QHBoxLayout()
         self.acc_layout = QtGui.QHBoxLayout()
@@ -599,27 +573,21 @@ class AccRotationalMotionTimeline(QtGui.QWidget):
         self.acceleration_label = QtGui.QLabel("Acc: ")
         self.acceleration_input = QtGui.QLineEdit()
         self.acceleration_input.setStyleSheet("width: 5px;")
-        self.axis_label = QtGui.QLabel("Axis: ")
+        self.axis_label = QtGui.QLabel("Axis 1 (X, Y, Z): \n\nAxis 2 (X, Y, Z): ")
         self.axis_layout = QtGui.QVBoxLayout()
         self.axis_first_row_layout = QtGui.QHBoxLayout()
         self.axis_second_row_layout = QtGui.QHBoxLayout()
         self.x1_input = QtGui.QLineEdit()
-        self.x1_label = QtGui.QLabel("X ")
         self.x1_input.setStyleSheet("width: 5px;")
         self.y1_input = QtGui.QLineEdit()
-        self.y1_label = QtGui.QLabel("Y ")
         self.y1_input.setStyleSheet("width: 5px;")
         self.z1_input = QtGui.QLineEdit()
-        self.z1_label = QtGui.QLabel("Z")
         self.z1_input.setStyleSheet("width: 5px;")
         self.x2_input = QtGui.QLineEdit()
-        self.x2_label = QtGui.QLabel("X ")
         self.x2_input.setStyleSheet("width: 5px;")
         self.y2_input = QtGui.QLineEdit()
-        self.y2_label = QtGui.QLabel("Y ")
         self.y2_input.setStyleSheet("width: 5px;")
         self.z2_input = QtGui.QLineEdit()
-        self.z2_label = QtGui.QLabel("Z")
         self.z2_input.setStyleSheet("width: 5px;")
         self.time_icon = QtGui.QPushButton(guiutils.get_icon("clock.png"), None)
         self.time_icon.setEnabled(False)
@@ -644,17 +612,11 @@ class AccRotationalMotionTimeline(QtGui.QWidget):
         self.main_layout.addLayout(self.vel_and_acc_layout)
         self.main_layout.addWidget(self.axis_label)
         self.axis_first_row_layout.addWidget(self.x1_input)
-        self.axis_first_row_layout.addWidget(self.x1_label)
         self.axis_first_row_layout.addWidget(self.y1_input)
-        self.axis_first_row_layout.addWidget(self.y1_label)
         self.axis_first_row_layout.addWidget(self.z1_input)
-        self.axis_first_row_layout.addWidget(self.z1_label)
         self.axis_second_row_layout.addWidget(self.x2_input)
-        self.axis_second_row_layout.addWidget(self.x2_label)
         self.axis_second_row_layout.addWidget(self.y2_input)
-        self.axis_second_row_layout.addWidget(self.y2_label)
         self.axis_second_row_layout.addWidget(self.z2_input)
-        self.axis_second_row_layout.addWidget(self.z2_label)
         self.axis_layout.addLayout(self.axis_first_row_layout)
         self.axis_layout.addLayout(self.axis_second_row_layout)
         self.main_layout.addLayout(self.axis_layout)
@@ -780,7 +742,8 @@ class AccCircularMotionTimeline(QtGui.QWidget):
         self.main_layout.setContentsMargins(10, 0, 10, 0)
 
         self.parent_movement = acc_cir_motion.parent_movement
-        self.label = QtGui.QLabel("ACir ")
+        self.label = QtGui.QLabel("Accelerated \nCircular \nMotion ")
+        self.label.setMinimumWidth(75)
         self.vel_and_acc_layout = QtGui.QVBoxLayout()
         self.vel_layout = QtGui.QHBoxLayout()
         self.acc_layout = QtGui.QHBoxLayout()
@@ -790,39 +753,30 @@ class AccCircularMotionTimeline(QtGui.QWidget):
         self.acceleration_label = QtGui.QLabel("Acc: ")
         self.acceleration_input = QtGui.QLineEdit()
         self.acceleration_input.setStyleSheet("width: 5px;")
-        self.axis_label = QtGui.QLabel("Axis: ")
+        self.axis_label = QtGui.QLabel("Axis 1 (X, Y, Z): \n\nAxis 2 (X, Y, Z): ")
         self.axis_layout = QtGui.QVBoxLayout()
         self.axis_first_row_layout = QtGui.QHBoxLayout()
         self.axis_second_row_layout = QtGui.QHBoxLayout()
         self.x1_input = QtGui.QLineEdit()
-        self.x1_label = QtGui.QLabel("X ")
         self.x1_input.setStyleSheet("width: 5px;")
         self.y1_input = QtGui.QLineEdit()
-        self.y1_label = QtGui.QLabel("Y ")
         self.y1_input.setStyleSheet("width: 5px;")
         self.z1_input = QtGui.QLineEdit()
-        self.z1_label = QtGui.QLabel("Z")
         self.z1_input.setStyleSheet("width: 5px;")
         self.x2_input = QtGui.QLineEdit()
-        self.x2_label = QtGui.QLabel("X ")
         self.x2_input.setStyleSheet("width: 5px;")
         self.y2_input = QtGui.QLineEdit()
-        self.y2_label = QtGui.QLabel("Y ")
         self.y2_input.setStyleSheet("width: 5px;")
         self.z2_input = QtGui.QLineEdit()
-        self.z2_label = QtGui.QLabel("Z")
         self.z2_input.setStyleSheet("width: 5px;")
 
-        self.reference_label = QtGui.QLabel("Ref ")
+        self.reference_label = QtGui.QLabel("Ref (X, Y, Z): ")
         self.reference_x_input = QtGui.QLineEdit()
         self.reference_x_input.setStyleSheet("width: 5px;")
-        self.reference_x_label = QtGui.QLabel("X ")
         self.reference_y_input = QtGui.QLineEdit()
         self.reference_y_input.setStyleSheet("width: 5px;")
-        self.reference_y_label = QtGui.QLabel("Y ")
         self.reference_z_input = QtGui.QLineEdit()
         self.reference_z_input.setStyleSheet("width: 5px;")
-        self.reference_z_label = QtGui.QLabel("Z")
 
         self.time_icon = QtGui.QPushButton(guiutils.get_icon("clock.png"), None)
         self.time_icon.setEnabled(False)
@@ -847,27 +801,18 @@ class AccCircularMotionTimeline(QtGui.QWidget):
         self.main_layout.addLayout(self.vel_and_acc_layout)
         self.main_layout.addWidget(self.axis_label)
         self.axis_first_row_layout.addWidget(self.x1_input)
-        self.axis_first_row_layout.addWidget(self.x1_label)
         self.axis_first_row_layout.addWidget(self.y1_input)
-        self.axis_first_row_layout.addWidget(self.y1_label)
         self.axis_first_row_layout.addWidget(self.z1_input)
-        self.axis_first_row_layout.addWidget(self.z1_label)
         self.axis_second_row_layout.addWidget(self.x2_input)
-        self.axis_second_row_layout.addWidget(self.x2_label)
         self.axis_second_row_layout.addWidget(self.y2_input)
-        self.axis_second_row_layout.addWidget(self.y2_label)
         self.axis_second_row_layout.addWidget(self.z2_input)
-        self.axis_second_row_layout.addWidget(self.z2_label)
         self.axis_layout.addLayout(self.axis_first_row_layout)
         self.axis_layout.addLayout(self.axis_second_row_layout)
         self.main_layout.addLayout(self.axis_layout)
         self.main_layout.addWidget(self.reference_label)
         self.main_layout.addWidget(self.reference_x_input)
-        self.main_layout.addWidget(self.reference_x_label)
         self.main_layout.addWidget(self.reference_y_input)
-        self.main_layout.addWidget(self.reference_y_label)
         self.main_layout.addWidget(self.reference_z_input)
-        self.main_layout.addWidget(self.reference_z_label)
         self.main_layout.addStretch(1)
         self.main_layout.addWidget(self.time_icon)
         self.main_layout.addWidget(self.time_input)
@@ -987,7 +932,7 @@ class AccCircularMotionTimeline(QtGui.QWidget):
 
 
 class RotSinuMotionTimeline(QtGui.QWidget):
-    """ An sinusoidal rotational motion graphical representation for a table-based timeline """
+    """ A sinusoidal rotational motion graphical representation for a table-based timeline """
 
     changed = QtCore.Signal(int, RotSinuMotion)
     deleted = QtCore.Signal(int, RotSinuMotion)
@@ -996,10 +941,10 @@ class RotSinuMotionTimeline(QtGui.QWidget):
 
     def __init__(self, index, rot_sinu_motion):
         if not isinstance(rot_sinu_motion, RotSinuMotion):
-            raise TypeError("You tried to spawn an sinusoidal rotational "
+            raise TypeError("You tried to spawn a sinusoidal rotational "
                             "motion widget in the timeline with a wrong object")
         if rot_sinu_motion is None:
-            raise TypeError("You tried to spawn an sinusoidal rotational "
+            raise TypeError("You tried to spawn a sinusoidal rotational "
                             "motion widget in the timeline without a motion object")
         super(RotSinuMotionTimeline, self).__init__()
         self.index = index
@@ -1008,28 +953,23 @@ class RotSinuMotionTimeline(QtGui.QWidget):
         self.main_layout.setContentsMargins(10, 0, 10, 0)
 
         self.parent_movement = rot_sinu_motion.parent_movement
-        self.label = QtGui.QLabel("SRot ")
-        self.axis_label = QtGui.QLabel("Axis: ")
+        self.label = QtGui.QLabel("Sinusoidal \nRotational \nMotion ")
+        self.label.setMinimumWidth(75)
+        self.axis_label = QtGui.QLabel("Axis 1 (X, Y, Z): \n\nAxis2 (X, Y, Z): ")
         self.axis_layout = QtGui.QVBoxLayout()
         self.axis_first_row_layout = QtGui.QHBoxLayout()
         self.axis_second_row_layout = QtGui.QHBoxLayout()
         self.x1_input = QtGui.QLineEdit()
-        self.x1_label = QtGui.QLabel("X ")
         self.x1_input.setStyleSheet("width: 5px;")
         self.y1_input = QtGui.QLineEdit()
-        self.y1_label = QtGui.QLabel("Y ")
         self.y1_input.setStyleSheet("width: 5px;")
         self.z1_input = QtGui.QLineEdit()
-        self.z1_label = QtGui.QLabel("Z")
         self.z1_input.setStyleSheet("width: 5px;")
         self.x2_input = QtGui.QLineEdit()
-        self.x2_label = QtGui.QLabel("X ")
         self.x2_input.setStyleSheet("width: 5px;")
         self.y2_input = QtGui.QLineEdit()
-        self.y2_label = QtGui.QLabel("Y ")
         self.y2_input.setStyleSheet("width: 5px;")
         self.z2_input = QtGui.QLineEdit()
-        self.z2_label = QtGui.QLabel("Z")
         self.z2_input.setStyleSheet("width: 5px;")
 
         self.freq_label = QtGui.QLabel("Freq ")
@@ -1060,17 +1000,11 @@ class RotSinuMotionTimeline(QtGui.QWidget):
         self.main_layout.addWidget(self.label)
         self.main_layout.addWidget(self.axis_label)
         self.axis_first_row_layout.addWidget(self.x1_input)
-        self.axis_first_row_layout.addWidget(self.x1_label)
         self.axis_first_row_layout.addWidget(self.y1_input)
-        self.axis_first_row_layout.addWidget(self.y1_label)
         self.axis_first_row_layout.addWidget(self.z1_input)
-        self.axis_first_row_layout.addWidget(self.z1_label)
         self.axis_second_row_layout.addWidget(self.x2_input)
-        self.axis_second_row_layout.addWidget(self.x2_label)
         self.axis_second_row_layout.addWidget(self.y2_input)
-        self.axis_second_row_layout.addWidget(self.y2_label)
         self.axis_second_row_layout.addWidget(self.z2_input)
-        self.axis_second_row_layout.addWidget(self.z2_label)
         self.axis_layout.addLayout(self.axis_first_row_layout)
         self.axis_layout.addLayout(self.axis_second_row_layout)
         self.main_layout.addLayout(self.axis_layout)
@@ -1186,7 +1120,7 @@ class RotSinuMotionTimeline(QtGui.QWidget):
 
 
 class CirSinuMotionTimeline(QtGui.QWidget):
-    """ An sinusoidal circular motion graphical representation for a table-based timeline """
+    """ A sinusoidal circular motion graphical representation for a table-based timeline """
 
     changed = QtCore.Signal(int, CirSinuMotion)
     deleted = QtCore.Signal(int, CirSinuMotion)
@@ -1195,10 +1129,10 @@ class CirSinuMotionTimeline(QtGui.QWidget):
 
     def __init__(self, index, cir_sinu_motion):
         if not isinstance(cir_sinu_motion, CirSinuMotion):
-            raise TypeError("You tried to spawn an sinusoidal circular "
+            raise TypeError("You tried to spawn a sinusoidal circular "
                             "motion widget in the timeline with a wrong object")
         if cir_sinu_motion is None:
-            raise TypeError("You tried to spawn an sinusoidal circular "
+            raise TypeError("You tried to spawn a sinusoidal circular "
                             "motion widget in the timeline without a motion object")
         super(CirSinuMotionTimeline, self).__init__()
         self.index = index
@@ -1207,28 +1141,23 @@ class CirSinuMotionTimeline(QtGui.QWidget):
         self.main_layout.setContentsMargins(10, 0, 10, 0)
 
         self.parent_movement = cir_sinu_motion.parent_movement
-        self.label = QtGui.QLabel("SCir ")
-        self.axis_label = QtGui.QLabel("Axis: ")
+        self.label = QtGui.QLabel("Sinusoidal \nCircular \nMotion ")
+        self.label.setMinimumWidth(75)
+        self.axis_label = QtGui.QLabel("Axis 1 (X, Y, Z): \n\nAxis 2 (X, Y, Z): ")
         self.axis_layout = QtGui.QVBoxLayout()
         self.axis_first_row_layout = QtGui.QHBoxLayout()
         self.axis_second_row_layout = QtGui.QHBoxLayout()
         self.x1_input = QtGui.QLineEdit()
-        self.x1_label = QtGui.QLabel("X ")
         self.x1_input.setStyleSheet("width: 5px;")
         self.y1_input = QtGui.QLineEdit()
-        self.y1_label = QtGui.QLabel("Y ")
         self.y1_input.setStyleSheet("width: 5px;")
         self.z1_input = QtGui.QLineEdit()
-        self.z1_label = QtGui.QLabel("Z")
         self.z1_input.setStyleSheet("width: 5px;")
         self.x2_input = QtGui.QLineEdit()
-        self.x2_label = QtGui.QLabel("X ")
         self.x2_input.setStyleSheet("width: 5px;")
         self.y2_input = QtGui.QLineEdit()
-        self.y2_label = QtGui.QLabel("Y ")
         self.y2_input.setStyleSheet("width: 5px;")
         self.z2_input = QtGui.QLineEdit()
-        self.z2_label = QtGui.QLabel("Z")
         self.z2_input.setStyleSheet("width: 5px;")
 
         self.ref_layout = QtGui.QVBoxLayout()
@@ -1246,16 +1175,13 @@ class CirSinuMotionTimeline(QtGui.QWidget):
         self.phase_input = QtGui.QLineEdit()
         self.phase_input.setStyleSheet("width: 5px;")
 
-        self.reference_label = QtGui.QLabel("Ref ")
+        self.reference_label = QtGui.QLabel("Ref (X, Y, Z): ")
         self.reference_x_input = QtGui.QLineEdit()
         self.reference_x_input.setStyleSheet("width: 5px;")
-        self.reference_x_label = QtGui.QLabel("X ")
         self.reference_y_input = QtGui.QLineEdit()
         self.reference_y_input.setStyleSheet("width: 5px;")
-        self.reference_y_label = QtGui.QLabel("Y ")
         self.reference_z_input = QtGui.QLineEdit()
         self.reference_z_input.setStyleSheet("width: 5px;")
-        self.reference_z_label = QtGui.QLabel("Z")
 
         self.time_icon = QtGui.QPushButton(guiutils.get_icon("clock.png"), None)
         self.time_icon.setEnabled(False)
@@ -1273,17 +1199,11 @@ class CirSinuMotionTimeline(QtGui.QWidget):
         self.main_layout.addWidget(self.label)
         self.main_layout.addWidget(self.axis_label)
         self.axis_first_row_layout.addWidget(self.x1_input)
-        self.axis_first_row_layout.addWidget(self.x1_label)
         self.axis_first_row_layout.addWidget(self.y1_input)
-        self.axis_first_row_layout.addWidget(self.y1_label)
         self.axis_first_row_layout.addWidget(self.z1_input)
-        self.axis_first_row_layout.addWidget(self.z1_label)
         self.axis_second_row_layout.addWidget(self.x2_input)
-        self.axis_second_row_layout.addWidget(self.x2_label)
         self.axis_second_row_layout.addWidget(self.y2_input)
-        self.axis_second_row_layout.addWidget(self.y2_label)
         self.axis_second_row_layout.addWidget(self.z2_input)
-        self.axis_second_row_layout.addWidget(self.z2_label)
         self.axis_layout.addLayout(self.axis_first_row_layout)
         self.axis_layout.addLayout(self.axis_second_row_layout)
         self.main_layout.addLayout(self.axis_layout)
@@ -1297,11 +1217,8 @@ class CirSinuMotionTimeline(QtGui.QWidget):
 
         self.ref_second_row.addWidget(self.reference_label)
         self.ref_second_row.addWidget(self.reference_x_input)
-        self.ref_second_row.addWidget(self.reference_x_label)
         self.ref_second_row.addWidget(self.reference_y_input)
-        self.ref_second_row.addWidget(self.reference_y_label)
         self.ref_second_row.addWidget(self.reference_z_input)
-        self.ref_second_row.addWidget(self.reference_z_label)
 
         self.ref_layout.addLayout(self.ref_first_row)
         self.ref_layout.addLayout(self.ref_second_row)
@@ -1452,6 +1369,7 @@ class WaitMotionTimeline(QtGui.QWidget):
 
         self.parent_movement = wait_motion.parent_movement
         self.label = QtGui.QLabel("Wait")
+        self.label.setMinimumWidth(75)
         self.time_icon = QtGui.QPushButton(guiutils.get_icon("clock.png"), None)
         self.time_icon.setEnabled(False)
         self.time_input = QtGui.QLineEdit()
@@ -1514,7 +1432,7 @@ class WaitMotionTimeline(QtGui.QWidget):
 
 
 class RectSinuMotionTimeline(QtGui.QWidget):
-    """ An sinusoidal rectilinear motion graphical representation for a table-based timeline """
+    """ A sinusoidal rectilinear motion graphical representation for a table-based timeline """
 
     changed = QtCore.Signal(int, RectSinuMotion)
     deleted = QtCore.Signal(int, RectSinuMotion)
@@ -1535,41 +1453,33 @@ class RectSinuMotionTimeline(QtGui.QWidget):
         self.main_layout.setContentsMargins(10, 0, 10, 0)
 
         self.parent_movement = rect_sinu_motion.parent_movement
-        self.label = QtGui.QLabel("SRect ")
+        self.label = QtGui.QLabel("Sinusoidal \nRectilinear \nMotion ")
+        self.label.setMinimumWidth(75)
         self.freq_amp_layout = QtGui.QVBoxLayout()
         self.freq_amp_first_row_layout = QtGui.QHBoxLayout()
         self.freq_amp_second_row_layout = QtGui.QHBoxLayout()
-        self.freq_label = QtGui.QLabel("Freq: ")
-        self.amp_label = QtGui.QLabel("Amp: ")
+        self.freq_label = QtGui.QLabel("Freq (X, Y, Z): ")
+        self.amp_label = QtGui.QLabel("Amp (X, Y, Z): ")
         self.freq_x_input = QtGui.QLineEdit()
-        self.freq_x_label = QtGui.QLabel("X ")
         self.freq_x_input.setStyleSheet("width: 5px;")
         self.freq_y_input = QtGui.QLineEdit()
-        self.freq_y_label = QtGui.QLabel("Y ")
         self.freq_y_input.setStyleSheet("width: 5px;")
         self.freq_z_input = QtGui.QLineEdit()
-        self.freq_z_label = QtGui.QLabel("Z")
         self.freq_z_input.setStyleSheet("width: 5px;")
         self.amp_x_input = QtGui.QLineEdit()
-        self.amp_x_label = QtGui.QLabel("X ")
         self.amp_x_input.setStyleSheet("width: 5px;")
         self.amp_y_input = QtGui.QLineEdit()
-        self.amp_y_label = QtGui.QLabel("Y ")
         self.amp_y_input.setStyleSheet("width: 5px;")
         self.amp_z_input = QtGui.QLineEdit()
-        self.amp_z_label = QtGui.QLabel("Z")
         self.amp_z_input.setStyleSheet("width: 5px;")
 
-        self.phase_label = QtGui.QLabel("Phase ")
+        self.phase_label = QtGui.QLabel("Phase (X, Y, Z): ")
         self.phase_x_input = QtGui.QLineEdit()
         self.phase_x_input.setStyleSheet("width: 5px;")
-        self.phase_x_label = QtGui.QLabel("X ")
         self.phase_y_input = QtGui.QLineEdit()
         self.phase_y_input.setStyleSheet("width: 5px;")
-        self.phase_y_label = QtGui.QLabel("Y ")
         self.phase_z_input = QtGui.QLineEdit()
         self.phase_z_input.setStyleSheet("width: 5px;")
-        self.phase_z_label = QtGui.QLabel("Z")
 
         self.time_icon = QtGui.QPushButton(guiutils.get_icon("clock.png"), None)
         self.time_icon.setEnabled(False)
@@ -1587,28 +1497,19 @@ class RectSinuMotionTimeline(QtGui.QWidget):
         self.main_layout.addWidget(self.label)
         self.freq_amp_first_row_layout.addWidget(self.freq_label)
         self.freq_amp_first_row_layout.addWidget(self.freq_x_input)
-        self.freq_amp_first_row_layout.addWidget(self.freq_x_label)
         self.freq_amp_first_row_layout.addWidget(self.freq_y_input)
-        self.freq_amp_first_row_layout.addWidget(self.freq_y_label)
         self.freq_amp_first_row_layout.addWidget(self.freq_z_input)
-        self.freq_amp_first_row_layout.addWidget(self.freq_z_label)
         self.freq_amp_second_row_layout.addWidget(self.amp_label)
         self.freq_amp_second_row_layout.addWidget(self.amp_x_input)
-        self.freq_amp_second_row_layout.addWidget(self.amp_x_label)
         self.freq_amp_second_row_layout.addWidget(self.amp_y_input)
-        self.freq_amp_second_row_layout.addWidget(self.amp_y_label)
         self.freq_amp_second_row_layout.addWidget(self.amp_z_input)
-        self.freq_amp_second_row_layout.addWidget(self.amp_z_label)
         self.freq_amp_layout.addLayout(self.freq_amp_first_row_layout)
         self.freq_amp_layout.addLayout(self.freq_amp_second_row_layout)
         self.main_layout.addLayout(self.freq_amp_layout)
         self.main_layout.addWidget(self.phase_label)
         self.main_layout.addWidget(self.phase_x_input)
-        self.main_layout.addWidget(self.phase_x_label)
         self.main_layout.addWidget(self.phase_y_input)
-        self.main_layout.addWidget(self.phase_y_label)
         self.main_layout.addWidget(self.phase_z_input)
-        self.main_layout.addWidget(self.phase_z_label)
         self.main_layout.addStretch(1)
         self.main_layout.addWidget(self.time_icon)
         self.main_layout.addWidget(self.time_input)
