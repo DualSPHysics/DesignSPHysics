@@ -130,8 +130,7 @@ class RectilinearMotionTimeline(QtGui.QWidget):
         self.y_input.setStyleSheet("width: 5px;")
         self.z_input = QtGui.QLineEdit()
         self.z_input.setStyleSheet("width: 5px;")
-        self.time_icon = QtGui.QPushButton(guiutils.get_icon("clock.png"), None)
-        self.time_icon.setEnabled(False)
+        self.time_label = QtGui.QLabel(__("Duration (s): "))
         self.time_input = QtGui.QLineEdit()
         self.time_input.setStyleSheet("width: 5px;")
         self.delete_button = QtGui.QPushButton(guiutils.get_icon("trash.png"), None)
@@ -149,7 +148,7 @@ class RectilinearMotionTimeline(QtGui.QWidget):
         self.main_layout.addWidget(self.y_input)
         self.main_layout.addWidget(self.z_input)
         self.main_layout.addStretch(1)
-        self.main_layout.addWidget(self.time_icon)
+        self.main_layout.addWidget(self.time_label)
         self.main_layout.addWidget(self.time_input)
         self.main_layout.addWidget(self.delete_button)
         self.main_layout.addLayout(self.order_button_layout)
@@ -276,8 +275,7 @@ class AccRectilinearMotionTimeline(QtGui.QWidget):
         self.data_layout.addLayout(self.data_velocity_layout)
         self.data_layout.addLayout(self.data_acceleration_layout)
 
-        self.time_icon = QtGui.QPushButton(guiutils.get_icon("clock.png"), None)
-        self.time_icon.setEnabled(False)
+        self.time_label = QtGui.QLabel(__("Duration (s): "))
         self.time_input = QtGui.QLineEdit()
         self.time_input.setStyleSheet("width: 5px;")
         self.delete_button = QtGui.QPushButton(guiutils.get_icon("trash.png"), None)
@@ -292,7 +290,7 @@ class AccRectilinearMotionTimeline(QtGui.QWidget):
         self.main_layout.addWidget(self.label)
         self.main_layout.addLayout(self.data_layout)
         self.main_layout.addStretch(1)
-        self.main_layout.addWidget(self.time_icon)
+        self.main_layout.addWidget(self.time_label)
         self.main_layout.addWidget(self.time_input)
         self.main_layout.addWidget(self.delete_button)
         self.main_layout.addLayout(self.order_button_layout)
@@ -420,8 +418,7 @@ class RotationalMotionTimeline(QtGui.QWidget):
         self.y2_input.setStyleSheet("width: 5px;")
         self.z2_input = QtGui.QLineEdit()
         self.z2_input.setStyleSheet("width: 5px;")
-        self.time_icon = QtGui.QPushButton(guiutils.get_icon("clock.png"), None)
-        self.time_icon.setEnabled(False)
+        self.time_label = QtGui.QLabel(__("Duration (s): "))
         self.time_input = QtGui.QLineEdit()
         self.time_input.setStyleSheet("width: 5px;")
         self.delete_button = QtGui.QPushButton(guiutils.get_icon("trash.png"), None)
@@ -447,7 +444,7 @@ class RotationalMotionTimeline(QtGui.QWidget):
         self.axis_layout.addLayout(self.axis_second_row_layout)
         self.main_layout.addLayout(self.axis_layout)
         self.main_layout.addStretch(1)
-        self.main_layout.addWidget(self.time_icon)
+        self.main_layout.addWidget(self.time_label)
         self.main_layout.addWidget(self.time_input)
         self.main_layout.addWidget(self.delete_button)
         self.main_layout.addLayout(self.order_button_layout)
@@ -589,8 +586,7 @@ class AccRotationalMotionTimeline(QtGui.QWidget):
         self.y2_input.setStyleSheet("width: 5px;")
         self.z2_input = QtGui.QLineEdit()
         self.z2_input.setStyleSheet("width: 5px;")
-        self.time_icon = QtGui.QPushButton(guiutils.get_icon("clock.png"), None)
-        self.time_icon.setEnabled(False)
+        self.time_label = QtGui.QLabel(__("Duration (s): "))
         self.time_input = QtGui.QLineEdit()
         self.time_input.setStyleSheet("width: 5px;")
         self.delete_button = QtGui.QPushButton(guiutils.get_icon("trash.png"), None)
@@ -621,7 +617,7 @@ class AccRotationalMotionTimeline(QtGui.QWidget):
         self.axis_layout.addLayout(self.axis_second_row_layout)
         self.main_layout.addLayout(self.axis_layout)
         self.main_layout.addStretch(1)
-        self.main_layout.addWidget(self.time_icon)
+        self.main_layout.addWidget(self.time_label)
         self.main_layout.addWidget(self.time_input)
         self.main_layout.addWidget(self.delete_button)
         self.main_layout.addLayout(self.order_button_layout)
@@ -778,8 +774,7 @@ class AccCircularMotionTimeline(QtGui.QWidget):
         self.reference_z_input = QtGui.QLineEdit()
         self.reference_z_input.setStyleSheet("width: 5px;")
 
-        self.time_icon = QtGui.QPushButton(guiutils.get_icon("clock.png"), None)
-        self.time_icon.setEnabled(False)
+        self.time_label = QtGui.QLabel(__("Duration (s): "))
         self.time_input = QtGui.QLineEdit()
         self.time_input.setStyleSheet("width: 5px;")
         self.delete_button = QtGui.QPushButton(guiutils.get_icon("trash.png"), None)
@@ -814,7 +809,7 @@ class AccCircularMotionTimeline(QtGui.QWidget):
         self.main_layout.addWidget(self.reference_y_input)
         self.main_layout.addWidget(self.reference_z_input)
         self.main_layout.addStretch(1)
-        self.main_layout.addWidget(self.time_icon)
+        self.main_layout.addWidget(self.time_label)
         self.main_layout.addWidget(self.time_input)
         self.main_layout.addWidget(self.delete_button)
         self.main_layout.addLayout(self.order_button_layout)
@@ -955,7 +950,7 @@ class RotSinuMotionTimeline(QtGui.QWidget):
         self.parent_movement = rot_sinu_motion.parent_movement
         self.label = QtGui.QLabel("Sinusoidal \nRotational \nMotion ")
         self.label.setMinimumWidth(75)
-        self.axis_label = QtGui.QLabel("Axis 1 (X, Y, Z): \n\nAxis2 (X, Y, Z): ")
+        self.axis_label = QtGui.QLabel("Axis 1 (X, Y, Z): \n\nAxis 2 (X, Y, Z): ")
         self.axis_layout = QtGui.QVBoxLayout()
         self.axis_first_row_layout = QtGui.QHBoxLayout()
         self.axis_second_row_layout = QtGui.QHBoxLayout()
@@ -984,8 +979,7 @@ class RotSinuMotionTimeline(QtGui.QWidget):
         self.phase_input = QtGui.QLineEdit()
         self.phase_input.setStyleSheet("width: 5px;")
 
-        self.time_icon = QtGui.QPushButton(guiutils.get_icon("clock.png"), None)
-        self.time_icon.setEnabled(False)
+        self.time_label = QtGui.QLabel(__("Duration (s): "))
         self.time_input = QtGui.QLineEdit()
         self.time_input.setStyleSheet("width: 5px;")
         self.delete_button = QtGui.QPushButton(guiutils.get_icon("trash.png"), None)
@@ -1015,7 +1009,7 @@ class RotSinuMotionTimeline(QtGui.QWidget):
         self.main_layout.addWidget(self.phase_label)
         self.main_layout.addWidget(self.phase_input)
         self.main_layout.addStretch(1)
-        self.main_layout.addWidget(self.time_icon)
+        self.main_layout.addWidget(self.time_label)
         self.main_layout.addWidget(self.time_input)
         self.main_layout.addWidget(self.delete_button)
         self.main_layout.addLayout(self.order_button_layout)
@@ -1183,8 +1177,7 @@ class CirSinuMotionTimeline(QtGui.QWidget):
         self.reference_z_input = QtGui.QLineEdit()
         self.reference_z_input.setStyleSheet("width: 5px;")
 
-        self.time_icon = QtGui.QPushButton(guiutils.get_icon("clock.png"), None)
-        self.time_icon.setEnabled(False)
+        self.time_label = QtGui.QLabel(__("Duration (s): "))
         self.time_input = QtGui.QLineEdit()
         self.time_input.setStyleSheet("width: 5px;")
         self.delete_button = QtGui.QPushButton(guiutils.get_icon("trash.png"), None)
@@ -1225,7 +1218,7 @@ class CirSinuMotionTimeline(QtGui.QWidget):
 
         self.main_layout.addLayout(self.ref_layout)
         self.main_layout.addStretch(1)
-        self.main_layout.addWidget(self.time_icon)
+        self.main_layout.addWidget(self.time_label)
         self.main_layout.addWidget(self.time_input)
         self.main_layout.addWidget(self.delete_button)
         self.main_layout.addLayout(self.order_button_layout)
@@ -1370,8 +1363,7 @@ class WaitMotionTimeline(QtGui.QWidget):
         self.parent_movement = wait_motion.parent_movement
         self.label = QtGui.QLabel("Wait")
         self.label.setMinimumWidth(75)
-        self.time_icon = QtGui.QPushButton(guiutils.get_icon("clock.png"), None)
-        self.time_icon.setEnabled(False)
+        self.time_label = QtGui.QLabel(__("Duration (s): "))
         self.time_input = QtGui.QLineEdit()
         self.time_input.setStyleSheet("width: 5px;")
         self.delete_button = QtGui.QPushButton(guiutils.get_icon("trash.png"), None)
@@ -1385,7 +1377,7 @@ class WaitMotionTimeline(QtGui.QWidget):
         self.order_button_layout.addWidget(self.order_down_button)
         self.main_layout.addWidget(self.label)
         self.main_layout.addStretch(1)
-        self.main_layout.addWidget(self.time_icon)
+        self.main_layout.addWidget(self.time_label)
         self.main_layout.addWidget(self.time_input)
         self.main_layout.addWidget(self.delete_button)
         self.main_layout.addLayout(self.order_button_layout)
@@ -1481,8 +1473,7 @@ class RectSinuMotionTimeline(QtGui.QWidget):
         self.phase_z_input = QtGui.QLineEdit()
         self.phase_z_input.setStyleSheet("width: 5px;")
 
-        self.time_icon = QtGui.QPushButton(guiutils.get_icon("clock.png"), None)
-        self.time_icon.setEnabled(False)
+        self.time_label = QtGui.QLabel(__("Duration (s): "))
         self.time_input = QtGui.QLineEdit()
         self.time_input.setStyleSheet("width: 5px;")
         self.delete_button = QtGui.QPushButton(guiutils.get_icon("trash.png"), None)
@@ -1511,7 +1502,7 @@ class RectSinuMotionTimeline(QtGui.QWidget):
         self.main_layout.addWidget(self.phase_y_input)
         self.main_layout.addWidget(self.phase_z_input)
         self.main_layout.addStretch(1)
-        self.main_layout.addWidget(self.time_icon)
+        self.main_layout.addWidget(self.time_label)
         self.main_layout.addWidget(self.time_input)
         self.main_layout.addWidget(self.delete_button)
         self.main_layout.addLayout(self.order_button_layout)
@@ -1636,89 +1627,77 @@ class RegularWaveMotionTimeline(QtGui.QWidget):
 
         self.root_label = QtGui.QLabel(__("Regular wave generator"))
 
-        self.duration_label = QtGui.QLabel(__("Duration"))
+        self.duration_label = QtGui.QLabel(__("Duration (s): "))
         self.duration_input = QtGui.QLineEdit()
-        self.duration_units_label = QtGui.QLabel(__("s"))
 
         self.wave_order_label = QtGui.QLabel(__("Wave Order"))
         self.wave_order_selector = QtGui.QComboBox()
         self.wave_order_selector.insertItems(0, [__("1st Order"), __("2nd Order")])
 
-        self.depth_label = QtGui.QLabel(__("Depth"))
+        self.depth_label = QtGui.QLabel(__("Depth (m): "))
         self.depth_input = QtGui.QLineEdit()
-        self.depth_units_label = QtGui.QLabel(__("m"))
 
-        self.fixed_depth_label = QtGui.QLabel(__("Fixed depth"))
+        self.fixed_depth_label = QtGui.QLabel(__("Fixed depth (m): "))
         self.fixed_depth_input = QtGui.QLineEdit()
         self.fixed_depth_input.setEnabled(False)
-        self.fixed_depth_units_label = QtGui.QLabel(__("m"))
 
-        self.piston_dir_label = QtGui.QLabel(__("Piston direction"))
+        self.piston_dir_label = QtGui.QLabel(__("Piston direction (X, Y, Z): "))
         self.piston_dir_x = QtGui.QLineEdit()
-        self.piston_dir_x_label = QtGui.QLabel(__("X"))
         self.piston_dir_y = QtGui.QLineEdit()
-        self.piston_dir_y_label = QtGui.QLabel(__("Y"))
         self.piston_dir_z = QtGui.QLineEdit()
-        self.piston_dir_z_label = QtGui.QLabel(__("Z"))
 
-        self.wave_height_label = QtGui.QLabel(__("Wave height"))
+        self.wave_height_label = QtGui.QLabel(__("Wave height (m): "))
         self.wave_height_input = QtGui.QLineEdit()
-        self.wave_height_units_label = QtGui.QLabel(__("m"))
 
-        self.wave_period_label = QtGui.QLabel(__("Wave period"))
+        self.wave_period_label = QtGui.QLabel(__("Wave period (s): "))
         self.wave_period_input = QtGui.QLineEdit()
-        self.wave_period_units_label = QtGui.QLabel(__("s"))
 
-        self.phase_label = QtGui.QLabel(__("Phase"))
+        self.phase_label = QtGui.QLabel(__("Phase (rad): "))
         self.phase_input = QtGui.QLineEdit()
-        self.phase_units_label = QtGui.QLabel(__("rad"))
 
-        self.ramp_label = QtGui.QLabel(__("Ramp"))
+        self.ramp_label = QtGui.QLabel(__("Ramp (m): "))
         self.ramp_input = QtGui.QLineEdit()
-        self.ramp_units_label = QtGui.QLabel(__(""))
 
-        self.disksave_label = QtGui.QLabel(__("Save to disk"))
+        self.disksave_label = QtGui.QLabel(__("Save theoretical values > "))
         self.disksave_periods = QtGui.QLineEdit()
-        self.disksave_periods_label = QtGui.QLabel(__("periods"))
+        self.disksave_periods_label = QtGui.QLabel(__("Periods: "))
         self.disksave_periodsteps = QtGui.QLineEdit()
-        self.disksave_periodsteps_label = QtGui.QLabel(__("period steps"))
+        self.disksave_periodsteps_label = QtGui.QLabel(__("Period Steps: "))
         self.disksave_xpos = QtGui.QLineEdit()
-        self.disksave_xpos_label = QtGui.QLabel(__("xpos"))
+        self.disksave_xpos_label = QtGui.QLabel(__("X Pos: "))
         self.disksave_zpos = QtGui.QLineEdit()
-        self.disksave_zpos_label = QtGui.QLabel(__("zpos"))
+        self.disksave_zpos_label = QtGui.QLabel(__("Z Pos: "))
 
         self.root_layout = QtGui.QHBoxLayout()
         self.root_layout.addWidget(self.root_label)
         self.root_layout.addStretch(1)
-        [self.root_layout.addWidget(x) for x in [self.duration_label, self.duration_input, self.duration_units_label]]
+        [self.root_layout.addWidget(x) for x in [self.duration_label, self.duration_input]]
 
         self.first_row_layout = QtGui.QHBoxLayout()
         [self.first_row_layout.addWidget(x) for x in [self.wave_order_label, self.wave_order_selector,
-                                                      self.depth_label, self.depth_input, self.depth_units_label,
-                                                      self.fixed_depth_label, self.fixed_depth_input,
-                                                      self.fixed_depth_units_label]]
+                                                      self.depth_label, self.depth_input,
+                                                      self.fixed_depth_label, self.fixed_depth_input]]
 
         self.second_row_layout = QtGui.QHBoxLayout()
         [self.second_row_layout.addWidget(x) for x in [self.piston_dir_label,
-                                                       self.piston_dir_x, self.piston_dir_x_label,
-                                                       self.piston_dir_y, self.piston_dir_y_label,
-                                                       self.piston_dir_z, self.piston_dir_z_label]]
+                                                       self.piston_dir_x,
+                                                       self.piston_dir_y,
+                                                       self.piston_dir_z]]
 
         self.third_row_layout = QtGui.QHBoxLayout()
         [self.third_row_layout.addWidget(x) for x in [self.wave_height_label, self.wave_height_input,
-                                                      self.wave_height_units_label, self.wave_period_label,
-                                                      self.wave_period_input, self.wave_period_units_label]]
+                                                      self.wave_period_label, self.wave_period_input]]
 
         self.fourth_row_layout = QtGui.QHBoxLayout()
-        [self.fourth_row_layout.addWidget(x) for x in [self.phase_label, self.phase_input, self.phase_units_label,
-                                                       self.ramp_label, self.ramp_input, self.ramp_units_label]]
+        [self.fourth_row_layout.addWidget(x) for x in [self.phase_label, self.phase_input,
+                                                       self.ramp_label, self.ramp_input]]
 
         self.fifth_row_layout = QtGui.QHBoxLayout()
-        [self.fifth_row_layout.addWidget(x) for x in [self.disksave_label, self.disksave_periods,
-                                                      self.disksave_periods_label, self.disksave_periodsteps,
-                                                      self.disksave_periodsteps_label, self.disksave_xpos,
-                                                      self.disksave_xpos_label, self.disksave_zpos,
-                                                      self.disksave_zpos_label]]
+        [self.fifth_row_layout.addWidget(x) for x in [self.disksave_label,
+                                                      self.disksave_periods_label, self.disksave_periods,
+                                                      self.disksave_periodsteps_label, self.disksave_periodsteps,
+                                                      self.disksave_xpos_label, self.disksave_xpos,
+                                                      self.disksave_zpos_label, self.disksave_zpos]]
 
         self.main_layout.addLayout(self.root_layout)
         self.main_layout.addWidget(guiutils.h_line_generator())
@@ -1819,36 +1798,29 @@ class IrregularWaveMotionTimeline(QtGui.QWidget):
 
         self.duration_label = QtGui.QLabel(__("Duration"))
         self.duration_input = QtGui.QLineEdit()
-        self.duration_units_label = QtGui.QLabel(__("s"))
 
         self.wave_order_label = QtGui.QLabel(__("Wave Order"))
         self.wave_order_selector = QtGui.QComboBox()
         self.wave_order_selector.insertItems(0, [__("1st Order"), __("2nd Order")])
 
-        self.depth_label = QtGui.QLabel(__("Depth"))
+        self.depth_label = QtGui.QLabel(__("Depth (m): "))
         self.depth_input = QtGui.QLineEdit()
-        self.depth_units_label = QtGui.QLabel(__("m"))
 
-        self.fixed_depth_label = QtGui.QLabel(__("Fixed depth"))
+        self.fixed_depth_label = QtGui.QLabel(__("Fixed depth (m): "))
         self.fixed_depth_input = QtGui.QLineEdit()
         self.fixed_depth_input.setEnabled(False)
-        self.fixed_depth_units_label = QtGui.QLabel(__("m"))
+        self.fixed_depth_units_label = QtGui.QLabel()
 
-        self.piston_dir_label = QtGui.QLabel(__("Piston direction"))
+        self.piston_dir_label = QtGui.QLabel(__("Piston direction (X, Y, Z): "))
         self.piston_dir_x = QtGui.QLineEdit()
-        self.piston_dir_x_label = QtGui.QLabel(__("X"))
         self.piston_dir_y = QtGui.QLineEdit()
-        self.piston_dir_y_label = QtGui.QLabel(__("Y"))
         self.piston_dir_z = QtGui.QLineEdit()
-        self.piston_dir_z_label = QtGui.QLabel(__("Z"))
 
-        self.wave_height_label = QtGui.QLabel(__("Wave height"))
+        self.wave_height_label = QtGui.QLabel(__("Wave height (m): "))
         self.wave_height_input = QtGui.QLineEdit()
-        self.wave_height_units_label = QtGui.QLabel(__("m"))
 
-        self.wave_period_label = QtGui.QLabel(__("Wave period"))
+        self.wave_period_label = QtGui.QLabel(__("Wave period (s): "))
         self.wave_period_input = QtGui.QLineEdit()
-        self.wave_period_units_label = QtGui.QLabel(__("s"))
 
         self.spectrum_label = QtGui.QLabel(__("Spectrum"))
         self.spectrum_selector = QtGui.QComboBox()
@@ -1862,114 +1834,110 @@ class IrregularWaveMotionTimeline(QtGui.QWidget):
 
         self.peak_coef_label = QtGui.QLabel(__("Peak Coeff"))
         self.peak_coef_input = QtGui.QLineEdit()
-        self.peak_coef_units_label = QtGui.QLabel(__(""))
 
         self.waves_label = QtGui.QLabel(__("Number of waves"))
         self.waves_input = QtGui.QLineEdit()
-        self.waves_units_label = QtGui.QLabel(__(""))
 
         self.randomseed_label = QtGui.QLabel(__("Random Seed"))
         self.randomseed_input = QtGui.QLineEdit()
-        self.randomseed_units_label = QtGui.QLabel(__(""))
 
-        self.serieini_label = QtGui.QLabel(__("Initial time in wave serie"))
+        self.serieini_label = QtGui.QLabel(__("Initial time in wave serie (s): "))
         self.serieini_input = QtGui.QLineEdit()
-        self.serieini_units_label = QtGui.QLabel(__("s"))
 
         self.serieini_autofit = QtGui.QCheckBox("Auto fit")
 
-        self.ramptime_label = QtGui.QLabel(__("Time of ramp"))
+        self.ramptime_label = QtGui.QLabel(__("Time of ramp (s): "))
         self.ramptime_input = QtGui.QLineEdit()
-        self.ramptime_units_label = QtGui.QLabel(__("s"))
 
-        self.savemotion_label = QtGui.QLabel(__("Motion saving"))
+        self.savemotion_label = QtGui.QLabel(__("Motion saving > "))
         self.savemotion_time_input = QtGui.QLineEdit()
-        self.savemotion_time_label = QtGui.QLabel(__("time"))
+        self.savemotion_time_label = QtGui.QLabel(__("Time (s): "))
         self.savemotion_timedt_input = QtGui.QLineEdit()
-        self.savemotion_timedt_label = QtGui.QLabel(__("timedt"))
+        self.savemotion_timedt_label = QtGui.QLabel(__("DT Time (s): "))
         self.savemotion_xpos_input = QtGui.QLineEdit()
-        self.savemotion_xpos_label = QtGui.QLabel(__("xpos"))
+        self.savemotion_xpos_label = QtGui.QLabel(__("X Pos: "))
         self.savemotion_zpos_input = QtGui.QLineEdit()
-        self.savemotion_zpos_label = QtGui.QLabel(__("zpos"))
+        self.savemotion_zpos_label = QtGui.QLabel(__("Z Pos: "))
 
-        self.saveserie_label = QtGui.QLabel(__("Serie saving"))
+        self.saveserie_label = QtGui.QLabel(__("Serie saving > "))
         self.saveserie_timemin_input = QtGui.QLineEdit()
-        self.saveserie_timemin_label = QtGui.QLabel(__("timemin"))
+        self.saveserie_timemin_label = QtGui.QLabel(__("Min. Time (s): "))
         self.saveserie_timemax_input = QtGui.QLineEdit()
-        self.saveserie_timemax_label = QtGui.QLabel(__("timemax"))
+        self.saveserie_timemax_label = QtGui.QLabel(__("Max. Time (s): "))
         self.saveserie_timedt_input = QtGui.QLineEdit()
-        self.saveserie_timedt_label = QtGui.QLabel(__("timedt"))
+        self.saveserie_timedt_label = QtGui.QLabel(__("DT Time (s): "))
         self.saveserie_xpos_input = QtGui.QLineEdit()
-        self.saveserie_xpos_label = QtGui.QLabel(__("xpos"))
+        self.saveserie_xpos_label = QtGui.QLabel(__("X Pos: "))
 
-        self.saveseriewaves_label = QtGui.QLabel(__("Serie waves saving"))
+        self.saveseriewaves_label = QtGui.QLabel(__("Serie waves saving > "))
         self.saveseriewaves_timemin_input = QtGui.QLineEdit()
-        self.saveseriewaves_timemin_label = QtGui.QLabel(__("timemin"))
+        self.saveseriewaves_timemin_label = QtGui.QLabel(__("Min. Time (s): "))
         self.saveseriewaves_timemax_input = QtGui.QLineEdit()
-        self.saveseriewaves_timemax_label = QtGui.QLabel(__("timemax"))
+        self.saveseriewaves_timemax_label = QtGui.QLabel(__("Max. Time (s): "))
         self.saveseriewaves_xpos_input = QtGui.QLineEdit()
-        self.saveseriewaves_xpos_label = QtGui.QLabel(__("xpos"))
+        self.saveseriewaves_xpos_label = QtGui.QLabel(__("X Pos: "))
 
         self.root_layout = QtGui.QHBoxLayout()
         self.root_layout.addWidget(self.root_label)
         self.root_layout.addStretch(1)
-        [self.root_layout.addWidget(x) for x in [self.duration_label, self.duration_input, self.duration_units_label]]
+        [self.root_layout.addWidget(x) for x in [self.duration_label, self.duration_input]]
 
         self.first_row_layout = QtGui.QHBoxLayout()
         [self.first_row_layout.addWidget(x) for x in [self.wave_order_label, self.wave_order_selector,
-                                                      self.depth_label, self.depth_input, self.depth_units_label,
-                                                      self.fixed_depth_label, self.fixed_depth_input,
-                                                      self.fixed_depth_units_label]]
+                                                      self.depth_label, self.depth_input,
+                                                      self.fixed_depth_label, self.fixed_depth_input]]
 
         self.second_row_layout = QtGui.QHBoxLayout()
         [self.second_row_layout.addWidget(x) for x in [self.piston_dir_label,
-                                                       self.piston_dir_x, self.piston_dir_x_label,
-                                                       self.piston_dir_y, self.piston_dir_y_label,
-                                                       self.piston_dir_z, self.piston_dir_z_label]]
+                                                       self.piston_dir_x,
+                                                       self.piston_dir_y,
+                                                       self.piston_dir_z]]
 
         self.third_row_layout = QtGui.QHBoxLayout()
         [self.third_row_layout.addWidget(x) for x in [self.wave_height_label, self.wave_height_input,
-                                                      self.wave_height_units_label, self.wave_period_label,
-                                                      self.wave_period_input, self.wave_period_units_label]]
+                                                      self.wave_period_label, self.wave_period_input]]
 
         self.fourth_row_layout = QtGui.QHBoxLayout()
         [self.fourth_row_layout.addWidget(x) for x in [self.spectrum_label, self.spectrum_selector,
                                                        self.discretization_label, self.discretization_selector,
-                                                       self.peak_coef_label, self.peak_coef_input,
-                                                       self.peak_coef_units_label]]
+                                                       self.peak_coef_label, self.peak_coef_input]]
 
         self.fifth_row_layout = QtGui.QHBoxLayout()
-        [self.fifth_row_layout.addWidget(x) for x in [self.waves_label, self.waves_input, self.waves_units_label,
-                                                      self.randomseed_label, self.randomseed_input,
-                                                      self.randomseed_units_label]]
+        [self.fifth_row_layout.addWidget(x) for x in [self.waves_label, self.waves_input,
+                                                      self.randomseed_label, self.randomseed_input]]
 
         self.sixth_row_layout = QtGui.QHBoxLayout()
-        [self.sixth_row_layout.addWidget(x) for x in [self.serieini_label, self.serieini_input,
-                                                      self.serieini_units_label, self.serieini_autofit]]
+        [self.sixth_row_layout.addWidget(x) for x in [self.serieini_label, self.serieini_input, self.serieini_autofit]]
 
         self.seventh_row_layout = QtGui.QHBoxLayout()
-        [self.seventh_row_layout.addWidget(x) for x in [self.ramptime_label, self.ramptime_input,
-                                                        self.ramptime_units_label]]
+        [self.seventh_row_layout.addWidget(x) for x in [self.ramptime_label, self.ramptime_input]]
 
         self.eighth_row_layout = QtGui.QHBoxLayout()
-        [self.eighth_row_layout.addWidget(x) for x in [self.savemotion_label, self.savemotion_time_input,
-                                                       self.savemotion_time_label, self.savemotion_timedt_input,
-                                                       self.savemotion_timedt_label, self.savemotion_xpos_input,
-                                                       self.savemotion_xpos_label, self.savemotion_zpos_input,
-                                                       self.savemotion_zpos_label]]
+        [self.eighth_row_layout.addWidget(x) for x in [self.savemotion_label,
+                                                       self.savemotion_time_label, self.savemotion_time_input,
+                                                       self.savemotion_timedt_label, self.savemotion_timedt_input,
+                                                       self.savemotion_xpos_label, self.savemotion_xpos_input,
+                                                       self.savemotion_zpos_label, self.savemotion_zpos_input]]
+
         self.ninth_row_layout = QtGui.QHBoxLayout()
-        [self.ninth_row_layout.addWidget(x) for x in [self.saveserie_label, self.saveserie_timemin_input,
-                                                      self.saveserie_timemin_label, self.saveserie_timemax_input,
-                                                      self.saveserie_timemax_label, self.saveserie_timedt_input,
-                                                      self.saveserie_timedt_label, self.saveserie_xpos_input,
-                                                      self.saveserie_xpos_label]]
+        [self.ninth_row_layout.addWidget(x) for x in [self.saveserie_label,
+                                                      self.saveserie_timemin_label,
+                                                      self.saveserie_timemin_input,
+                                                      self.saveserie_timemax_label,
+                                                      self.saveserie_timemax_input,
+                                                      self.saveserie_timedt_label,
+                                                      self.saveserie_timedt_input,
+                                                      self.saveserie_xpos_label,
+                                                      self.saveserie_xpos_input]]
 
         self.tenth_row_layout = QtGui.QHBoxLayout()
-        [self.tenth_row_layout.addWidget(x) for x in [self.saveseriewaves_label, self.saveseriewaves_timemin_input,
+        [self.tenth_row_layout.addWidget(x) for x in [self.saveseriewaves_label,
                                                       self.saveseriewaves_timemin_label,
-                                                      self.saveseriewaves_timemax_input,
+                                                      self.saveseriewaves_timemin_input,
                                                       self.saveseriewaves_timemax_label,
-                                                      self.saveseriewaves_xpos_input, self.saveseriewaves_xpos_label]]
+                                                      self.saveseriewaves_timemax_input,
+                                                      self.saveseriewaves_xpos_label,
+                                                      self.saveseriewaves_xpos_input]]
 
         self.main_layout.addLayout(self.root_layout)
         self.main_layout.addWidget(guiutils.h_line_generator())
@@ -2106,29 +2074,28 @@ class FileMotionTimeline(QtGui.QWidget):
         self.main_layout.setContentsMargins(10, 10, 10, 10)
         self.parent_movement = file_wave_gen.parent_movement
 
-        self.root_label = QtGui.QLabel(__("File movement"))
+        self.root_label = QtGui.QLabel(__("File movement: "))
 
-        self.duration_label = QtGui.QLabel(__("Duration"))
+        self.duration_label = QtGui.QLabel(__("Duration (s): "))
         self.duration_input = QtGui.QLineEdit()
-        self.duration_units_label = QtGui.QLabel(__("s"))
 
-        self.filename_label = QtGui.QLabel(__("File name"))
+        self.filename_label = QtGui.QLabel(__("File name: "))
         self.filename_input = QtGui.QLineEdit()
         self.filename_browse = QtGui.QPushButton(__("Browse"))
 
-        self.fields_label = QtGui.QLabel(__("Number of fields"))
+        self.fields_label = QtGui.QLabel(__("Number of fields: "))
         self.fields_input = QtGui.QLineEdit()
 
-        self.fieldtime_label = QtGui.QLabel(__("Column with time"))
+        self.fieldtime_label = QtGui.QLabel(__("Column with time: "))
         self.fieldtime_input = QtGui.QLineEdit()
 
-        self.fieldx_label = QtGui.QLabel(__("X positions column"))
+        self.fieldx_label = QtGui.QLabel(__("X positions column: "))
         self.fieldx_input = QtGui.QLineEdit()
 
-        self.fieldy_label = QtGui.QLabel(__("Y positions column"))
+        self.fieldy_label = QtGui.QLabel(__("Y positions column: "))
         self.fieldy_input = QtGui.QLineEdit()
 
-        self.fieldz_label = QtGui.QLabel(__("Z positions column"))
+        self.fieldz_label = QtGui.QLabel(__("Z positions column: "))
         self.fieldz_input = QtGui.QLineEdit()
 
         self.root_layout = QtGui.QHBoxLayout()
@@ -2136,7 +2103,6 @@ class FileMotionTimeline(QtGui.QWidget):
         self.root_layout.addStretch(1)
         self.root_layout.addWidget(self.duration_label)
         self.root_layout.addWidget(self.duration_input)
-        self.root_layout.addWidget(self.duration_units_label)
 
         self.first_row_layout = QtGui.QHBoxLayout()
         self.first_row_layout.addWidget(self.filename_label)
@@ -2182,16 +2148,7 @@ class FileMotionTimeline(QtGui.QWidget):
     def on_file_browse(self):
         # noinspection PyArgumentList
         filename, _ = QtGui.QFileDialog.getOpenFileName(self, __("Open file"), QtCore.QDir.homePath())
-        if len(filename) > 1:
-            utils.debug("Copying {} to {}".format(filename, self.project_folder_path))
-            try:
-                shutil.copy2(filename, self.project_folder_path)
-                self.filename_input.setText("{}/{}".format(self.project_folder_path, filename.split("/")[-1]))
-            except IOError:
-                utils.error("Unable to copy {} into {}".format(filename, self.project_folder_path))
-                guiutils.error_dialog("Unable to copy {} into {}. Check file and directory permissions".format(
-                    filename, self.project_folder_path))
-                self.filename_input.setText("")
+        self.filename_input.setText(filename)
 
     def on_change(self):
         self._sanitize_input()
@@ -2242,34 +2199,33 @@ class RotationFileMotionTimeline(QtGui.QWidget):
 
         self.root_label = QtGui.QLabel(__("Rotation file movement"))
 
-        self.duration_label = QtGui.QLabel(__("Duration"))
+        self.duration_label = QtGui.QLabel(__("Duration (s): "))
         self.duration_input = QtGui.QLineEdit()
-        self.duration_units_label = QtGui.QLabel(__("s"))
 
-        self.filename_label = QtGui.QLabel(__("File name"))
+        self.filename_label = QtGui.QLabel(__("File name: "))
         self.filename_input = QtGui.QLineEdit()
         self.filename_browse = QtGui.QPushButton(__("Browse"))
 
-        self.anglesunits_label = QtGui.QLabel(__("Angle Units"))
+        self.anglesunits_label = QtGui.QLabel(__("Angle Units: "))
         self.anglesunits_selector = QtGui.QComboBox()
         self.anglesunits_selector.insertItems(0, [__("Degrees"), __("Radians")])
 
-        self.axisp1x_label = QtGui.QLabel(__("Axis Point 1 X"))
+        self.axisp1x_label = QtGui.QLabel(__("Axis 1 X: "))
         self.axisp1x_input = QtGui.QLineEdit()
 
-        self.axisp1y_label = QtGui.QLabel(__("Axis Point 1 Y"))
+        self.axisp1y_label = QtGui.QLabel(__("Axis 1 Y: "))
         self.axisp1y_input = QtGui.QLineEdit()
 
-        self.axisp1z_label = QtGui.QLabel(__("Axis Point 1 Z"))
+        self.axisp1z_label = QtGui.QLabel(__("Axis 1 Z: "))
         self.axisp1z_input = QtGui.QLineEdit()
 
-        self.axisp2x_label = QtGui.QLabel(__("Axis Point 2 X"))
+        self.axisp2x_label = QtGui.QLabel(__("Axis 2 X: "))
         self.axisp2x_input = QtGui.QLineEdit()
 
-        self.axisp2y_label = QtGui.QLabel(__("Axis Point 2 Y"))
+        self.axisp2y_label = QtGui.QLabel(__("Axis 2 Y: "))
         self.axisp2y_input = QtGui.QLineEdit()
 
-        self.axisp2z_label = QtGui.QLabel(__("Axis Point 2 Z"))
+        self.axisp2z_label = QtGui.QLabel(__("Axis 2 Z: "))
         self.axisp2z_input = QtGui.QLineEdit()
 
         self.root_layout = QtGui.QHBoxLayout()
@@ -2279,7 +2235,6 @@ class RotationFileMotionTimeline(QtGui.QWidget):
         self.root_layout.addWidget(self.anglesunits_selector)
         self.root_layout.addWidget(self.duration_label)
         self.root_layout.addWidget(self.duration_input)
-        self.root_layout.addWidget(self.duration_units_label)
 
         self.first_row_layout = QtGui.QHBoxLayout()
         self.first_row_layout.addWidget(self.filename_label)
@@ -2326,16 +2281,7 @@ class RotationFileMotionTimeline(QtGui.QWidget):
     def on_file_browse(self):
         # noinspection PyArgumentList
         filename, _ = QtGui.QFileDialog.getOpenFileName(self, __("Open file"), QtCore.QDir.homePath())
-        if len(filename) > 1:
-            utils.debug("Copying {} to {}".format(filename, self.project_folder_path))
-            try:
-                shutil.copy2(filename, self.project_folder_path)
-                self.filename_input.setText("{}/{}".format(self.project_folder_path, filename.split("/")[-1]))
-            except IOError:
-                utils.error("Unable to copy {} into {}".format(filename, self.project_folder_path))
-                guiutils.error_dialog("Unable to copy {} into {}. Check file and directory permissions".format(
-                    filename, self.project_folder_path))
-                self.filename_input.setText("")
+        self.filename_input.setText(filename)
 
     def on_change(self):
         self._sanitize_input()

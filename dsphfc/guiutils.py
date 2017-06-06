@@ -1364,6 +1364,11 @@ def widget_state_config(widgets, config):
         widgets["ex_selector_combo"].setEnabled(True)
         widgets["ex_button"].setEnabled(True)
         widgets["ex_additional"].setEnabled(True)
+        # Post-proccessing is enabled on cancel, to evaluate only currently exported parts
+        widgets['post_proc_partvtk_button'].setEnabled(True)
+        widgets['post_proc_computeforces_button'].setEnabled(True)
+        widgets['post_proc_floatinginfo_button'].setEnabled(True)
+        widgets['post_proc_measuretool_button'].setEnabled(True)
     elif config == "sim finished":
         widgets['post_proc_partvtk_button'].setEnabled(True)
         widgets['post_proc_computeforces_button'].setEnabled(True)
