@@ -280,6 +280,15 @@ def initials_list_to_initials_property(initials_mks):
     return to_ret
 
 
+def get_maximum_particles(dp):
+    """ Gets the maximum number of particles that can be in the Case Limits with the given DP """
+    to_ret = utils.get_fc_object('Case_Limits').Width.Value / (data['dp'] * 1000)
+    to_ret *= utils.get_fc_object('Case_Limits').Height.Value / (data['dp'] * 1000)
+    to_ret *= utils.get_fc_object('Case_Limits').Length.Value / (data['dp'] * 1000)
+
+    return to_ret
+
+
 def get_default_data():
     """ Sets default data at start of the macro.
         Returns data and temp_data dict with default values.
