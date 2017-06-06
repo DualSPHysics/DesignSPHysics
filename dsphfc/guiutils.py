@@ -551,15 +551,11 @@ def def_execparams_window(data):
     kernel_layout.addStretch(1)
 
     # Viscosity formulation
-    def on_viscotreatment_change(index):
-        visco_input.setText("0.01" if index == 0 else "0.000001")
-
     viscotreatment_layout = QtGui.QHBoxLayout()
     viscotreatment_label = QtGui.QLabel("Viscosity Formulation: ")
     viscotreatment_input = QtGui.QComboBox()
     viscotreatment_input.insertItems(0, ['Artificial', 'Laminar + SPS'])
     viscotreatment_input.setCurrentIndex(int(data['viscotreatment']) - 1)
-    viscotreatment_input.currentIndexChanged.connect(on_viscotreatment_change)
 
     viscotreatment_layout.addWidget(viscotreatment_label)
     viscotreatment_layout.addWidget(viscotreatment_input)
@@ -570,9 +566,20 @@ def def_execparams_window(data):
     visco_label = QtGui.QLabel("Viscosity value: ")
     visco_input = QtGui.QLineEdit()
     visco_input.setMaxLength(10)
-    visco_input.setText(str(data['visco']))
+    visco_units_label = QtGui.QLabel("")
     visco_layout.addWidget(visco_label)
     visco_layout.addWidget(visco_input)
+    visco_layout.addWidget(visco_units_label)
+
+    def on_viscotreatment_change(index):
+        visco_input.setText("0.01" if index == 0 else "0.000001")
+        visco_label.setText("Viscosity value (alpha): " if index == 0 else "Viscosity value (µ0): ")
+        visco_units_label.setText("" if index == 0 else "Pa·s")
+
+    on_viscotreatment_change(int(data['viscotreatment']) - 1)
+    visco_input.setText(str(data['visco']))
+
+    viscotreatment_input.currentIndexChanged.connect(on_viscotreatment_change)
 
     # Viscosity with boundary
     viscoboundfactor_layout = QtGui.QHBoxLayout()
@@ -584,6 +591,25 @@ def def_execparams_window(data):
     viscoboundfactor_layout.addWidget(viscoboundfactor_label)
     viscoboundfactor_layout.addWidget(viscoboundfactor_input)
 
+    # DeltaSPH enabled selector
+    def on_deltasph_en_change(index):
+        if index == 0:
+            deltasph_input.setEnabled(False)
+        else:
+            deltasph_input.setEnabled(True)
+            deltasph_input.setText("0.1")
+
+    deltasph_en_layout = QtGui.QHBoxLayout()
+    deltasph_en_label = QtGui.QLabel("Enable DeltaSPH: ")
+    deltasph_en_input = QtGui.QComboBox()
+    deltasph_en_input.insertItems(0, ['No', 'Yes'])
+    deltasph_en_input.setCurrentIndex(int(data['deltasph_en']))
+    deltasph_en_input.currentIndexChanged.connect(on_deltasph_en_change)
+
+    deltasph_en_layout.addWidget(deltasph_en_label)
+    deltasph_en_layout.addWidget(deltasph_en_input)
+    deltasph_en_layout.addStretch(1)
+
     # DeltaSPH value
     deltasph_layout = QtGui.QHBoxLayout()
     deltasph_label = QtGui.QLabel("DeltaSPH value: ")
@@ -592,6 +618,11 @@ def def_execparams_window(data):
     deltasph_input.setText(str(data['deltasph']))
     deltasph_layout.addWidget(deltasph_label)
     deltasph_layout.addWidget(deltasph_input)
+
+    if deltasph_en_input.currentIndex() == 0:
+        deltasph_input.setEnabled(False)
+    else:
+        deltasph_input.setEnabled(True)
 
     # Shifting mode
     def on_shifting_change(index):
@@ -768,19 +799,19 @@ def def_execparams_window(data):
 
     # Increase of Z+
     incz_layout = QtGui.QHBoxLayout()
-    incz_label = QtGui.QLabel("Increase of Z+: ")
+    incz_label = QtGui.QLabel("Increase of Z+ (%): ")
     incz_input = QtGui.QLineEdit()
     incz_input.setMaxLength(10)
-    incz_input.setText(str(data['incz']))
+    incz_input.setText(str(float(data['incz']) * 100))
     incz_layout.addWidget(incz_label)
     incz_layout.addWidget(incz_input)
 
     # Max parts out allowed
     partsoutmax_layout = QtGui.QHBoxLayout()
-    partsoutmax_label = QtGui.QLabel("Max parts out allowed: ")
+    partsoutmax_label = QtGui.QLabel("Max parts out allowed (%): ")
     partsoutmax_input = QtGui.QLineEdit()
     partsoutmax_input.setMaxLength(10)
-    partsoutmax_input.setText(str(data['partsoutmax']))
+    partsoutmax_input.setText(str(int(data['partsoutmax']) * 100))
     partsoutmax_layout.addWidget(partsoutmax_label)
     partsoutmax_layout.addWidget(partsoutmax_input)
 
@@ -939,6 +970,7 @@ def def_execparams_window(data):
         data['visco'] = visco_input.text()
         data['viscoboundfactor'] = viscoboundfactor_input.text()
         data['deltasph'] = deltasph_input.text()
+        data['deltasph_en'] = deltasph_en_input.currentIndex()
         data['shifting'] = str(shifting_input.currentIndex())
         data['shiftcoef'] = shiftcoef_input.text()
         data['shifttfs'] = shifttfs_input.text()
@@ -953,8 +985,8 @@ def def_execparams_window(data):
         data['dtallparticles'] = dtallparticles_input.text()
         data['timemax'] = timemax_input.text()
         data['timeout'] = timeout_input.text()
-        data['incz'] = incz_input.text()
-        data['partsoutmax'] = partsoutmax_input.text()
+        data['incz'] = str(float(incz_input.text()) / 100)
+        data['partsoutmax'] = str(int(partsoutmax_input.text()) / 100)
         data['rhopoutmin'] = rhopoutmin_input.text()
         data['rhopoutmax'] = rhopoutmax_input.text()
         data['period_x'] = [period_x_chk.isChecked(),
@@ -993,6 +1025,7 @@ def def_execparams_window(data):
     ep_main_layout.addLayout(viscotreatment_layout)
     ep_main_layout.addLayout(visco_layout)
     ep_main_layout.addLayout(viscoboundfactor_layout)
+    ep_main_layout.addLayout(deltasph_en_layout)
     ep_main_layout.addLayout(deltasph_layout)
     ep_main_layout.addLayout(shifting_layout)
     ep_main_layout.addLayout(shiftcoef_layout)

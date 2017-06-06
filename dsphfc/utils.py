@@ -331,6 +331,7 @@ def get_default_data():
     data['visco'] = 0.01
     data['viscoboundfactor'] = 1
     data['deltasph'] = 0
+    data['deltasph_en'] = 0
     data['shifting'] = 0
     data['shiftcoef'] = -2
     data['shifttfs'] = 0
@@ -345,8 +346,8 @@ def get_default_data():
     data['dtallparticles'] = 0
     data['timemax'] = 1.5
     data['timeout'] = 0.01
-    data['incz'] = 1
-    data['partsoutmax'] = 1
+    data['incz'] = 100
+    data['partsoutmax'] = 100
     data['rhopoutmin'] = 700
     data['rhopoutmax'] = 1300
 
