@@ -1200,14 +1200,16 @@ def dump_to_xml(data, save_name):
     f.write('\t\t\t<parameter key="RhopOutMax" value="' + str(
         data['rhopoutmax']) + '" comment="Maximum rhop valid (default=1300)" units_comment="kg/m^3" />\n')
     if data['period_x'][0]:
-        f.write('\t\t\t<parameter key="XPeriodicIncY" value="' + str(data['period_x'][2]) + '"/>\n')
+        if data['3dmode']:
+            f.write('\t\t\t<parameter key="XPeriodicIncY" value="' + str(data['period_x'][2]) + '"/>\n')
         f.write('\t\t\t<parameter key="XPeriodicIncZ" value="' + str(data['period_x'][3]) + '"/>\n')
-    if data['period_y'][0]:
+    if data['period_y'][0] and data['3dmode']:
         f.write('\t\t\t<parameter key="YPeriodicIncX" value="' + str(data['period_y'][1]) + '"/>\n')
         f.write('\t\t\t<parameter key="YPeriodicIncZ" value="' + str(data['period_y'][3]) + '"/>\n')
     if data['period_z'][0]:
         f.write('\t\t\t<parameter key="ZPeriodicIncX" value="' + str(data['period_z'][1]) + '"/>\n')
-        f.write('\t\t\t<parameter key="ZPeriodicIncY" value="' + str(data['period_z'][2]) + '"/>\n')
+        if data['3dmode']:
+            f.write('\t\t\t<parameter key="ZPeriodicIncY" value="' + str(data['period_z'][2]) + '"/>\n')
     f.write('\t\t</parameters>\n')
     f.write('\t</execution>\n')
     f.write('</case>\n')
