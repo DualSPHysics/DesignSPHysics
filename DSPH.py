@@ -102,6 +102,9 @@ if not is_compatible:
     raise EnvironmentError(__("This FreeCAD version is not compatible. "
                               "Please update FreeCAD to version 0.16 or higher."))
 
+# Set QT to UTF-8 encoding
+QtCore.QTextCodec.setCodecForCStrings(QtCore.QTextCodec.codecForName('UTF-8'))
+
 # Main data structure
 data = dict()  # Used to save on disk case parameters and related data
 temp_data = dict()  # Used to store temporal useful items (like processes)
