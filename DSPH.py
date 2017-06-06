@@ -3077,7 +3077,8 @@ def motion_change():
                 current_row += 1
         elif isinstance(target_movement, SpecialMovement):
             timeline_list_table.setRowCount(1)
-            actions_groupbox_table.setEnabled(False)
+            timeline_list_table.setEnabled(True)
+            actions_groupbox_table.setEnabled(True)
 
             if isinstance(target_movement.generator, RegularWaveGen):
                 target_to_put = dsphwidgets.RegularWaveMotionTimeline(target_movement.generator)
