@@ -341,6 +341,7 @@ def on_save_case(save_as=None):
                                   exec_params="-{}".format(str(ex_selector_combo.currentText()).lower()),
                                   lib_path='/'.join(data['gencase_path'].split('/')[:-1]))
 
+
         # Use gencase if possible to generate the case final definition
         data['gencase_done'] = False
         if data['gencase_path'] != "":
