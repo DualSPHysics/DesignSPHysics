@@ -3434,8 +3434,7 @@ def on_tree_item_selection_change():
                 removefromdsph_button.hide()
                 properties_widget.setMinimumHeight(100)
                 properties_widget.setMaximumHeight(100)
-                return
-            if selection[0].Name in data['simobjects'].keys():
+            elif selection[0].Name in data['simobjects'].keys():
                 # Show properties on table
                 property_table.show()
                 addtodsph_button.hide()
