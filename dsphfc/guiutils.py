@@ -1434,7 +1434,7 @@ def case_summary(orig_data):
             has_initials = utils.__('Not applicable') if value[1].lower() == "bound" else has_initials
             real_mk = value[0] + 11 if value[1].lower() == "bound" else value[0] + 1
             data['objects_info'] += "<li><b>{label}</b> (<i>{iname}</i>): <br/>" \
-                                    "Type: {type} (MK{type}: {mk} ; MK: {real_mk})<br/>" \
+                                    "Type: {type} (MK{type}: <b>{mk}</b> ; MK: <b>{real_mk}</b>)<br/>" \
                                     "Fill mode: {fillmode}<br/>" \
                                     "Floats: {floats}<br/>" \
                                     "Has initials: {initials}</li><br/>".format(label=fc_object.Label, iname=key,

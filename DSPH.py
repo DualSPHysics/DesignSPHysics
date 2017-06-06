@@ -166,9 +166,6 @@ execparams_button.setToolTip(__("Change execution parameters, such as\ntime of s
 execparams_button.clicked.connect(lambda: guiutils.def_execparams_window(data))
 widget_state_elements['execparams_button'] = execparams_button
 
-constants_separator = guiutils.h_line_generator()
-crucialvars_separator = guiutils.h_line_generator()
-
 logo_label = QtGui.QLabel()
 logo_label.setPixmap(os.path.dirname(os.path.abspath(__file__)) + "/DSPH_Images/{}".format("logo.png"))
 
@@ -804,8 +801,6 @@ cc_layout.addLayout(ccfilebuttons_layout)
 cc_layout.addLayout(ccthirdrow_layout)
 cc_layout.addLayout(ccfourthrow_layout)
 cc_layout.addLayout(ccsecondrow)
-cc_separator = QtGui.QFrame()
-cc_separator.setFrameStyle(QtGui.QFrame.HLine)
 
 # Defines run window dialog
 run_dialog = QtGui.QDialog(None, QtCore.Qt.CustomizeWindowHint | QtCore.Qt.WindowTitleHint)
@@ -1108,9 +1103,6 @@ ex_button_layout.addWidget(ex_additional)
 ex_layout.addWidget(ex_label)
 ex_layout.addLayout(ex_selector_layout)
 ex_layout.addLayout(ex_button_layout)
-
-ex_separator = QtGui.QFrame()
-ex_separator.setFrameStyle(QtGui.QFrame.HLine)
 
 # Defines export window dialog.
 # This dialog is used in each <tool>_export function as a generic progress information
@@ -2107,9 +2099,6 @@ export_second_row_layout.addWidget(post_proc_measuretool_button)
 export_layout.addLayout(export_first_row_layout)
 export_layout.addLayout(export_second_row_layout)
 
-export_separator = QtGui.QFrame()
-export_separator.setFrameStyle(QtGui.QFrame.HLine)
-
 # Object list table scaffolding
 objectlist_layout = QtGui.QVBoxLayout()
 objectlist_label = QtGui.QLabel("<b>" + __("Object order") + "</b>")
@@ -2123,9 +2112,6 @@ widget_state_elements['objectlist_table'] = objectlist_table
 temp_data['objectlist_table'] = objectlist_table
 objectlist_layout.addWidget(objectlist_label)
 objectlist_layout.addWidget(objectlist_table)
-
-objectlist_separator = QtGui.QFrame()
-objectlist_separator.setFrameStyle(QtGui.QFrame.HLine)
 
 # ++++++++++++ Main Layout construction ++++++++++++
 logo_layout.addStretch(0.5)
@@ -2142,19 +2128,19 @@ constantsandsetup_layout.addWidget(setup_button)
 
 intro_layout.addWidget(help_button)
 intro_layout.addLayout(constantsandsetup_layout)
-intro_layout.addWidget(constants_separator)
 
 main_layout.addLayout(logo_layout)
 main_layout.addLayout(intro_layout)
+main_layout.addWidget(guiutils.h_line_generator())
 main_layout.addLayout(dp_layout)
-main_layout.addWidget(crucialvars_separator)
-main_layout.addLayout(cc_layout)
-main_layout.addWidget(cc_separator)
-main_layout.addLayout(ex_layout)
-main_layout.addWidget(ex_separator)
-main_layout.addLayout(export_layout)
-main_layout.addWidget(export_separator)
+main_layout.addWidget(guiutils.h_line_generator())
 main_layout.addLayout(objectlist_layout)
+main_layout.addWidget(guiutils.h_line_generator())
+main_layout.addLayout(cc_layout)
+main_layout.addWidget(guiutils.h_line_generator())
+main_layout.addLayout(ex_layout)
+main_layout.addWidget(guiutils.h_line_generator())
+main_layout.addLayout(export_layout)
 
 # Default disabled widgets
 guiutils.widget_state_config(widget_state_elements, "no case")
@@ -3243,17 +3229,17 @@ def motion_change():
     bt_to_add.clicked.connect(on_add_acc_circular)
     actions_groupbox_table.setCellWidget(5, 0, bt_to_add)
     bt_to_add = QtGui.QPushButton(guiutils.get_icon("left-arrow.png"),
-                                  __("Add an sinusoidal rotational motion"))
+                                  __("Add a sinusoidal rotational motion"))
     bt_to_add.setStyleSheet("text-align: left")
     bt_to_add.clicked.connect(on_add_sinu_rot)
     actions_groupbox_table.setCellWidget(6, 0, bt_to_add)
     bt_to_add = QtGui.QPushButton(guiutils.get_icon("left-arrow.png"),
-                                  __("Add an sinusoidal circular motion"))
+                                  __("Add a sinusoidal circular motion"))
     bt_to_add.setStyleSheet("text-align: left")
     bt_to_add.clicked.connect(on_add_sinu_cir)
     actions_groupbox_table.setCellWidget(7, 0, bt_to_add)
     bt_to_add = QtGui.QPushButton(guiutils.get_icon("left-arrow.png"),
-                                  __("Add an sinusoidal rectilinear motion"))
+                                  __("Add a sinusoidal rectilinear motion"))
     bt_to_add.setStyleSheet("text-align: left")
     bt_to_add.clicked.connect(on_add_sinu_rect)
     actions_groupbox_table.setCellWidget(8, 0, bt_to_add)
