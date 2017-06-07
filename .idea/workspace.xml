@@ -7,8 +7,8 @@
   <component name="ChangeListManager">
     <list default="true" id="22d76f4b-310a-4afb-8788-a472c77b2c87" name="Default" comment="">
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/DSPH.py" afterPath="$PROJECT_DIR$/DSPH.py" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/dsphfc/lang/english.json" afterPath="$PROJECT_DIR$/dsphfc/lang/english.json" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/dsphfc/guiutils.py" afterPath="$PROJECT_DIR$/dsphfc/guiutils.py" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/dsphfc/templates/case_summary_template.html" afterPath="$PROJECT_DIR$/dsphfc/templates/case_summary_template.html" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="TRACKING_ENABLED" value="true" />
@@ -38,7 +38,7 @@
   </component>
   <component name="FileEditorManager">
     <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
-      <file leaf-file-name="DSPH.py" pinned="false" current-in-tab="true">
+      <file leaf-file-name="DSPH.py" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/DSPH.py">
           <provider selected="true" editor-type-id="text-editor">
             <state relative-caret-position="380">
@@ -80,8 +80,8 @@
       <file leaf-file-name="case_summary_template.html" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/dsphfc/templates/case_summary_template.html">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="192">
-              <caret line="12" column="38" lean-forward="false" selection-start-line="12" selection-start-column="38" selection-end-line="12" selection-end-column="38" />
+            <state relative-caret-position="303">
+              <caret line="20" column="9" lean-forward="false" selection-start-line="20" selection-start-column="9" selection-end-line="20" selection-end-column="9" />
               <folding />
             </state>
           </provider>
@@ -211,11 +211,11 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="guiutils.py" pinned="false" current-in-tab="false">
+      <file leaf-file-name="guiutils.py" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/dsphfc/guiutils.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="15696">
-              <caret line="988" column="69" lean-forward="false" selection-start-line="988" selection-start-column="69" selection-end-line="988" selection-end-column="69" />
+            <state relative-caret-position="383">
+              <caret line="1476" column="45" lean-forward="false" selection-start-line="1476" selection-start-column="45" selection-end-line="1476" selection-end-column="45" />
               <folding>
                 <element signature="e#160#174#0" expanded="true" />
               </folding>
@@ -294,11 +294,11 @@
         <option value="$PROJECT_DIR$/dsphfc/propenums.py" />
         <option value="$PROJECT_DIR$/dsphfc/xmlimporter.py" />
         <option value="$PROJECT_DIR$/dsphfc/properties.py" />
-        <option value="$PROJECT_DIR$/dsphfc/templates/case_summary_template.html" />
         <option value="$PROJECT_DIR$/dsphfc/dsphwidgets.py" />
-        <option value="$PROJECT_DIR$/dsphfc/guiutils.py" />
         <option value="$PROJECT_DIR$/dsphfc/utils.py" />
         <option value="$PROJECT_DIR$/DSPH.py" />
+        <option value="$PROJECT_DIR$/dsphfc/templates/case_summary_template.html" />
+        <option value="$PROJECT_DIR$/dsphfc/guiutils.py" />
       </list>
     </option>
   </component>
@@ -901,7 +901,6 @@
     <option name="myLimit" value="2678400000" />
   </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value="Cut objects are now supported as fluid and bound, not only bound" />
     <MESSAGE value="Now case names can contain non ascii characters. Fixes #3" />
     <MESSAGE value="Changed DSPH properties order (now type is first)&#10;Changed a few text strings&#10;Removed lattice options&#10;Added CPU/GPU text in batch files&#10;Disabled 'open with paraview' check due to lack of testing&#10;Now when changing step algorithm some fields will be disabled&#10;Now when changing shifting mode some fields will be disabled" />
     <MESSAGE value="Implemented periodicity as execution parameter(s)&#10;Changed batch template location" />
@@ -926,7 +925,8 @@
     <MESSAGE value="Fixed an error when clicking on Case Limits won't refresh the object order table." />
     <MESSAGE value="Now Y dimension is ignored in periodicity conditions if a case is in 2D" />
     <MESSAGE value="Changed multiple fields in execution parameters." />
-    <option name="LAST_COMMIT_MESSAGE" value="Changed multiple fields in execution parameters." />
+    <MESSAGE value="Added a dialog on changing a case from 3D to 2D that asks the user to set the Y position directly" />
+    <option name="LAST_COMMIT_MESSAGE" value="Added a dialog on changing a case from 3D to 2D that asks the user to set the Y position directly" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
@@ -2743,14 +2743,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/dsphfc/templates/case_summary_template.html">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="192">
-          <caret line="12" column="38" lean-forward="false" selection-start-line="12" selection-start-column="38" selection-end-line="12" selection-end-column="38" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://C:/Program Files/FreeCAD 0.16/bin/Lib/multiprocessing/connection.py">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="360">
@@ -2779,16 +2771,6 @@
         <state relative-caret-position="736">
           <caret line="52" column="0" lean-forward="false" selection-start-line="52" selection-start-column="0" selection-end-line="53" selection-end-column="0" />
           <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/dsphfc/guiutils.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="15696">
-          <caret line="988" column="69" lean-forward="false" selection-start-line="988" selection-start-column="69" selection-end-line="988" selection-end-column="69" />
-          <folding>
-            <element signature="e#160#174#0" expanded="true" />
-          </folding>
         </state>
       </provider>
     </entry>
@@ -2927,6 +2909,24 @@
             <element signature="e#125758#130514#0" expanded="false" />
             <element signature="e#130544#132660#0" expanded="false" />
             <element signature="e#143293#145699#0" expanded="false" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/dsphfc/templates/case_summary_template.html">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="303">
+          <caret line="20" column="9" lean-forward="false" selection-start-line="20" selection-start-column="9" selection-end-line="20" selection-end-column="9" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/dsphfc/guiutils.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="383">
+          <caret line="1476" column="45" lean-forward="false" selection-start-line="1476" selection-start-column="45" selection-end-line="1476" selection-end-column="45" />
+          <folding>
+            <element signature="e#160#174#0" expanded="true" />
           </folding>
         </state>
       </provider>

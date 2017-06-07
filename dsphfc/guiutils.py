@@ -1467,15 +1467,15 @@ def case_summary(orig_data):
                 continue
             fc_object = utils.get_fc_object(key)
             is_floating = utils.__('Yes') if str(value[0]) in data['floating_mks'].keys() else utils.__('No')
-            is_floating = utils.__('Not applicable') if value[1].lower() == "fluid" else is_floating
+            is_floating = utils.__('No') if value[1].lower() == "fluid" else is_floating
             has_initials = utils.__('Yes') if str(value[0]) in data['initials_mks'].keys() else utils.__('No')
-            has_initials = utils.__('Not applicable') if value[1].lower() == "bound" else has_initials
+            has_initials = utils.__('No') if value[1].lower() == "bound" else has_initials
             real_mk = value[0] + 11 if value[1].lower() == "bound" else value[0] + 1
             data['objects_info'] += "<li><b>{label}</b> (<i>{iname}</i>): <br/>" \
                                     "Type: {type} (MK{type}: <b>{mk}</b> ; MK: <b>{real_mk}</b>)<br/>" \
                                     "Fill mode: {fillmode}<br/>" \
-                                    "Floats: {floats}<br/>" \
-                                    "Has initials: {initials}</li><br/>".format(label=fc_object.Label, iname=key,
+                                    "Floating: {floats}<br/>" \
+                                    "Initials: {initials}</li><br/>".format(label=fc_object.Label, iname=key,
                                                                                 type=value[1].title(), mk=value[0],
                                                                                 real_mk=str(real_mk),
                                                                                 fillmode=value[2].title(),
