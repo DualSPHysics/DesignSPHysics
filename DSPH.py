@@ -1146,10 +1146,12 @@ ex_selector_layout.addWidget(ex_selector_combo)
 
 # Simulate case button
 ex_button = QtGui.QPushButton(__("Run"))
-ex_button.setStyleSheet("QPushButton { color: green; font-weight: bold; }")
+ex_button.setStyleSheet("QPushButton {font-weight: bold; }")
 ex_button.setToolTip(__(
     "Starts the case simulation. "
     "From the simulation\nwindow you can see the current progress and\nuseful information."))
+ex_button.setIcon(guiutils.get_icon("run.png"))
+ex_button.setIconSize(QtCore.QSize(12, 12))
 ex_button.clicked.connect(on_ex_simulate)
 widget_state_elements['ex_button'] = ex_button
 
