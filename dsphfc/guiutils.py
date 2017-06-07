@@ -1373,10 +1373,10 @@ def widget_state_config(widgets, config):
         widgets['post_proc_floatinginfo_button'].setEnabled(True)
         widgets['post_proc_measuretool_button'].setEnabled(True)
     elif config == "simulation not done":
-        widgets['post_proc_partvtk_button'].setEnabled(False)
-        widgets['post_proc_computeforces_button'].setEnabled(False)
-        widgets['post_proc_floatinginfo_button'].setEnabled(False)
-        widgets['post_proc_measuretool_button'].setEnabled(False)
+        widgets['post_proc_partvtk_button'].setEnabled(True)
+        widgets['post_proc_computeforces_button'].setEnabled(True)
+        widgets['post_proc_floatinginfo_button'].setEnabled(True)
+        widgets['post_proc_measuretool_button'].setEnabled(True)
     elif config == "execs not correct":
         widgets["ex_selector_combo"].setEnabled(False)
         widgets["ex_button"].setEnabled(False)

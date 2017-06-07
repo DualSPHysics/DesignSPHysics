@@ -344,6 +344,9 @@ def on_save_case(save_as=None):
                             )
                         except IOError:
                             utils.error("Unable to copy {} into {}".format(filename, save_name))
+                        except shutil.Error:
+                            # Probably already copied the file.
+                            pass
 
         utils.dump_to_xml(data, save_name)  # Dumps all the case data to an XML file.
 
