@@ -738,11 +738,57 @@ def on_2d_toggle():
     if utils.valid_document_environment():
         if data['3dmode']:
             # Change to 2D
-            temp_data['3d_width'] = utils.get_fc_object('Case_Limits').Width.Value
-            utils.get_fc_object('Case_Limits').Width.Value = utils.WIDTH_2D
-            guiutils.get_fc_view_object('Case_Limits').DisplayMode = 'Flat Lines'
-            guiutils.get_fc_view_object('Case_Limits').ShapeColor = (1.00, 0.00, 0.00)
-            guiutils.get_fc_view_object('Case_Limits').Transparency = 90
+            y_pos_2d_window = QtGui.QDialog()
+            y_pos_2d_window.setWindowTitle(__("Set Y position"))
+
+            ok_button = QtGui.QPushButton(__("Ok"))
+            cancel_button = QtGui.QPushButton(__("Cancel"))
+
+            # Ok Button handler
+            def on_ok():
+                temp_data['3d_width'] = utils.get_fc_object('Case_Limits').Width.Value
+
+                try:
+                    utils.get_fc_object('Case_Limits').Placement.Base.y = float(y2_pos_input.text())
+                except ValueError:
+                    guiutils.error_dialog(__("The Y position that was inserted is not valid."))
+
+                utils.get_fc_object('Case_Limits').Width.Value = utils.WIDTH_2D
+                guiutils.get_fc_view_object('Case_Limits').DisplayMode = 'Flat Lines'
+                guiutils.get_fc_view_object('Case_Limits').ShapeColor = (1.00, 0.00, 0.00)
+                guiutils.get_fc_view_object('Case_Limits').Transparency = 90
+                # Toggle 3D Mode and change name
+                data['3dmode'] = not data['3dmode']
+                utils.get_fc_object('Case_Limits').Label = "Case Limits (3D)" if data['3dmode'] else "Case Limits (2D)"
+                y_pos_2d_window.accept()
+
+            # Cancel Button handler
+            def on_cancel():
+                y_pos_2d_window.reject()
+
+            ok_button.clicked.connect(on_ok)
+            cancel_button.clicked.connect(on_cancel)
+
+            # Button layout definition
+            y2d_button_layout = QtGui.QHBoxLayout()
+            y2d_button_layout.addStretch(1)
+            y2d_button_layout.addWidget(ok_button)
+            y2d_button_layout.addWidget(cancel_button)
+
+            y_pos_intro_layout = QtGui.QHBoxLayout()
+            y_pos_intro_label = QtGui.QLabel(__("New Y position (mm): "))
+            y2_pos_input = QtGui.QLineEdit()
+            y2_pos_input.setText(str(utils.get_fc_object('Case_Limits').Placement.Base.y))
+            y_pos_intro_layout.addWidget(y_pos_intro_label)
+            y_pos_intro_layout.addWidget(y2_pos_input)
+
+            y_pos_2d_layout = QtGui.QVBoxLayout()
+            y_pos_2d_layout.addLayout(y_pos_intro_layout)
+            y_pos_2d_layout.addStretch(1)
+            y_pos_2d_layout.addLayout(y2d_button_layout)
+
+            y_pos_2d_window.setLayout(y_pos_2d_layout)
+            y_pos_2d_window.exec_()
         else:
             # Change to 3D
             try:
@@ -755,10 +801,9 @@ def on_2d_toggle():
             guiutils.get_fc_view_object('Case_Limits').DisplayMode = 'Wireframe'
             guiutils.get_fc_view_object('Case_Limits').ShapeColor = (0.80, 0.80, 0.80)
             guiutils.get_fc_view_object('Case_Limits').Transparency = 0
-
-        # Toggle 3D Mode and change name
-        data['3dmode'] = not data['3dmode']
-        utils.get_fc_object('Case_Limits').Label = "Case Limits (3D)" if data['3dmode'] else "Case Limits (2D)"
+            # Toggle 3D Mode and change name
+            data['3dmode'] = not data['3dmode']
+            utils.get_fc_object('Case_Limits').Label = "Case Limits (3D)" if data['3dmode'] else "Case Limits (2D)"
     else:
         utils.error("Not a valid case environment")
 
