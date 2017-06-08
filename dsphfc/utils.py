@@ -59,8 +59,6 @@ DIVIDER = 1000
 PICKLE_PROTOCOL = 1  # Binary mode
 VERSION = "0.3.1706-8-SPHERIC"
 WIDTH_2D = 0.001
-
-
 # ------ END CONSTANTS DEFINITION ------
 
 
@@ -1073,8 +1071,6 @@ def dump_to_xml(data, save_name):
                 f.write('\t\t\t\t\t\t<duration value="{}" '
                         'comment="Movement duration, Zero is the end of simulation (def=0)" />\n'.format(mot.duration))
                 f.write('\t\t\t\t\t\t<depth value="{}" comment="Fluid depth (def=0)" />\n'.format(mot.depth))
-                f.write('\t\t\t\t\t\t<fixeddepth value="{}" '
-                        'comment="Fluid depth without paddle (def=0)" />\n'.format(mot.fixed_depth))
                 f.write('\t\t\t\t\t\t<pistondir x="{}" y="{}" z="{}" '
                         'comment="Movement direction (def=(1,0,0))" />\n'.format(*mot.piston_dir))
                 f.write('\t\t\t\t\t\t<waveheight value="{}" comment="Wave height" />\n'.format(mot.wave_height))

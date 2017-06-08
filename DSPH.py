@@ -26,11 +26,15 @@ import shutil
 from PySide import QtGui, QtCore
 
 # Fix FreeCAD not searching in the user-set macro folder.
-sys.path.append(os.path.dirname(os.path.abspath(__file__)))
 
-from dsphfc.properties import *
-from dsphfc import utils, guiutils, xmlimporter, dsphwidgets
-from dsphfc.utils import __
+try:
+    from dsphfc.properties import *
+    from dsphfc import utils, guiutils, xmlimporter, dsphwidgets
+    from dsphfc.utils import __
+except:
+    sys.path.append(os.path.dirname(os.path.abspath(__file__)))
+
+print(utils.DEBUGGING)
 
 # Copyright (C) 2016 - Andrés Vieira (anvieiravazquez@gmail.com)
 # EPHYSLAB Environmental Physics Laboratory, Universidade de Vigo
@@ -64,12 +68,6 @@ __status__ = "Development"
 # TODO: Wiki - Add motion section
 # TODO: Wiki - Add case summary
 # TODO: Wiki - Add error reporting procedure / viewing
-# ------------------------------- 0.3 BETA -------------------------------
-# TODO: 0.3Beta - Reformat some language strings
-# TODO: 0.3Beta - Fix line spacing on 'Details' (Execution)
-# TODO: 0.3Beta - Implement success dialog on post-proccessing finish
-# TODO: 0.3Beta - Save 3D dimensions when changing to 2D. Restore them on vice-versa
-# TODO: 0.3Beta - Fix bug when making a new case from a 2D one (case limits not working properly)
 # ------------------------------- 0.4 BETA -------------------------------
 # TODO: 0.4Beta - Movement brief explanation
 # TODO: 0.4Beta - Periodicity support - Show arrows (bounds) to show periodicity
@@ -282,6 +280,7 @@ x_period_bt = QtGui.QPushButton("Toggle Y Periodicity")
 def on_new_case(prompt=True):
     """ Defines what happens when new case is clicked. Closes all documents
         if possible and creates a FreeCAD document with Case Limits object. """
+
     if utils.document_count() > 0:
         new_case_success = utils.prompt_close_all_documents(prompt)
         if not new_case_success:
