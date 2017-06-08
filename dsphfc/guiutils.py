@@ -811,7 +811,7 @@ def def_execparams_window(data):
     partsoutmax_label = QtGui.QLabel("Max parts out allowed (%): ")
     partsoutmax_input = QtGui.QLineEdit()
     partsoutmax_input.setMaxLength(10)
-    partsoutmax_input.setText(str(int(data['partsoutmax']) * 100))
+    partsoutmax_input.setText(str(float(data['partsoutmax']) * 100))
     partsoutmax_layout.addWidget(partsoutmax_label)
     partsoutmax_layout.addWidget(partsoutmax_input)
 
@@ -986,7 +986,7 @@ def def_execparams_window(data):
         data['timemax'] = timemax_input.text()
         data['timeout'] = timeout_input.text()
         data['incz'] = str(float(incz_input.text()) / 100)
-        data['partsoutmax'] = str(int(partsoutmax_input.text()) / 100)
+        data['partsoutmax'] = str(float(partsoutmax_input.text()) / 100)
         data['rhopoutmin'] = rhopoutmin_input.text()
         data['rhopoutmax'] = rhopoutmax_input.text()
         data['period_x'] = [period_x_chk.isChecked(),
@@ -1098,7 +1098,7 @@ def def_setup_window(data):
 
     # PartVTK4 path
     partvtk4path_layout = QtGui.QHBoxLayout()
-    partvtk4path_label = QtGui.QLabel("PartVTK4 Path: ")
+    partvtk4path_label = QtGui.QLabel("PartVTK Path: ")
     partvtk4path_input = QtGui.QLineEdit()
     partvtk4path_input.setText(data["partvtk4_path"])
     partvtk4path_input.setPlaceholderText("Put PartVTK4 path here")
@@ -1452,6 +1452,9 @@ def case_summary(orig_data):
     data['stepalgorithm'] = {'1': 'Verlet', '2': 'Symplectic'}[str(data['stepalgorithm'])]
     data['project_mode'] = '3D' if data['3dmode'] else '2D'
 
+    data['incz'] = float(data['incz']) * 100
+    data['partsoutmax'] = float(data['partsoutmax']) * 100
+
     # Setting certain values to automatic
     for x in ['hswl', 'speedsystem', 'speedsound', 'h', 'b', 'massfluid', 'massbound']:
         data[x] = '<u>Automatic</u>' if data[x + '_auto'] else data[x]
@@ -1476,11 +1479,11 @@ def case_summary(orig_data):
                                     "Fill mode: {fillmode}<br/>" \
                                     "Floating: {floats}<br/>" \
                                     "Initials: {initials}</li><br/>".format(label=fc_object.Label, iname=key,
-                                                                                type=value[1].title(), mk=value[0],
-                                                                                real_mk=str(real_mk),
-                                                                                fillmode=value[2].title(),
-                                                                                floats=is_floating,
-                                                                                initials=has_initials)
+                                                                            type=value[1].title(), mk=value[0],
+                                                                            real_mk=str(real_mk),
+                                                                            fillmode=value[2].title(),
+                                                                            floats=is_floating,
+                                                                            initials=has_initials)
         data['objects_info'] += "</ul>"
     else:
         data['objects_info'] += utils.__("No objects were added to the simulation yet.")
@@ -1502,8 +1505,8 @@ def case_summary(orig_data):
                     mklist.append(str(key))
 
             data['movement_info'] += "<li>{movtype} <u>{movname}</u><br/>" \
-                                     "Applied to mks: {mklist}</li><br/>".format(movtype=movtype, movname=mov.name,
-                                                                                 mklist=', '.join(mklist))
+                                     "Applied to MK: {mklist}</li><br/>".format(movtype=movtype, movname=mov.name,
+                                                                                mklist=', '.join(mklist))
 
         data['movement_info'] += "</ul>"
     else:
