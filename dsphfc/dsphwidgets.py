@@ -967,15 +967,15 @@ class RotSinuMotionTimeline(QtGui.QWidget):
         self.z2_input = QtGui.QLineEdit()
         self.z2_input.setStyleSheet("width: 5px;")
 
-        self.freq_label = QtGui.QLabel("Freq ")
+        self.freq_label = QtGui.QLabel("Freq (hz)")
         self.freq_input = QtGui.QLineEdit()
         self.freq_input.setStyleSheet("width: 5px;")
 
-        self.ampl_label = QtGui.QLabel("Ampl ")
+        self.ampl_label = QtGui.QLabel("Ampl (m)")
         self.ampl_input = QtGui.QLineEdit()
         self.ampl_input.setStyleSheet("width: 5px;")
 
-        self.phase_label = QtGui.QLabel("Phase ")
+        self.phase_label = QtGui.QLabel("Phase (rad)")
         self.phase_input = QtGui.QLineEdit()
         self.phase_input.setStyleSheet("width: 5px;")
 
@@ -1655,7 +1655,7 @@ class RegularWaveMotionTimeline(QtGui.QWidget):
         self.phase_label = QtGui.QLabel(__("Phase (rad): "))
         self.phase_input = QtGui.QLineEdit()
 
-        self.ramp_label = QtGui.QLabel(__("Ramp (m): "))
+        self.ramp_label = QtGui.QLabel(__("Ramp: "))
         self.ramp_input = QtGui.QLineEdit()
 
         self.disksave_label = QtGui.QLabel(__("Save theoretical values > "))
@@ -1859,7 +1859,7 @@ class IrregularWaveMotionTimeline(QtGui.QWidget):
         self.savemotion_zpos_input = QtGui.QLineEdit()
         self.savemotion_zpos_label = QtGui.QLabel(__("Z Pos: "))
 
-        self.saveserie_label = QtGui.QLabel(__("Serie saving > "))
+        self.saveserie_label = QtGui.QLabel(__("Save serie > "))
         self.saveserie_timemin_input = QtGui.QLineEdit()
         self.saveserie_timemin_label = QtGui.QLabel(__("Min. Time (s): "))
         self.saveserie_timemax_input = QtGui.QLineEdit()
@@ -1869,7 +1869,7 @@ class IrregularWaveMotionTimeline(QtGui.QWidget):
         self.saveserie_xpos_input = QtGui.QLineEdit()
         self.saveserie_xpos_label = QtGui.QLabel(__("X Pos: "))
 
-        self.saveseriewaves_label = QtGui.QLabel(__("Serie waves saving > "))
+        self.saveseriewaves_label = QtGui.QLabel(__("Save serie waves > "))
         self.saveseriewaves_timemin_input = QtGui.QLineEdit()
         self.saveseriewaves_timemin_label = QtGui.QLabel(__("Min. Time (s): "))
         self.saveseriewaves_timemax_input = QtGui.QLineEdit()
@@ -2089,13 +2089,13 @@ class FileMotionTimeline(QtGui.QWidget):
         self.fieldtime_label = QtGui.QLabel(__("Column with time: "))
         self.fieldtime_input = QtGui.QLineEdit()
 
-        self.fieldx_label = QtGui.QLabel(__("X positions column: "))
+        self.fieldx_label = QtGui.QLabel(__("X position column: "))
         self.fieldx_input = QtGui.QLineEdit()
 
-        self.fieldy_label = QtGui.QLabel(__("Y positions column: "))
+        self.fieldy_label = QtGui.QLabel(__("Y position column: "))
         self.fieldy_input = QtGui.QLineEdit()
 
-        self.fieldz_label = QtGui.QLabel(__("Z positions column: "))
+        self.fieldz_label = QtGui.QLabel(__("Z position column: "))
         self.fieldz_input = QtGui.QLineEdit()
 
         self.root_layout = QtGui.QHBoxLayout()
@@ -2164,8 +2164,8 @@ class FileMotionTimeline(QtGui.QWidget):
                        fields=str(self.fields_input.text()),
                        fieldtime=str(self.fieldtime_input.text()),
                        fieldx=str(self.fieldx_input.text()),
-                       fieldy=str(self.fieldx_input.text()),
-                       fieldz=str(self.fieldx_input.text()))
+                       fieldy=str(self.fieldy_input.text()),
+                       fieldz=str(self.fieldz_input.text()))
 
     def on_delete(self):
         self.deleted.emit(self.index, self.construct_motion_object())
@@ -2175,7 +2175,7 @@ class FileMotionTimeline(QtGui.QWidget):
          if len(x.text()) is 0
          else x.setText(x.text().replace(",", "."))
          for x in [self.duration_input, self.fields_input, self.fieldtime_input, self.fieldx_input,
-                   self.fieldx_input, self.fieldx_input]]
+                   self.fieldy_input, self.fieldz_input]]
 
 
 class RotationFileMotionTimeline(QtGui.QWidget):

@@ -346,8 +346,8 @@ def get_default_data():
     data['dtallparticles'] = 0
     data['timemax'] = 1.5
     data['timeout'] = 0.01
-    data['incz'] = 100
-    data['partsoutmax'] = 100
+    data['incz'] = 1
+    data['partsoutmax'] = 1
     data['rhopoutmin'] = 700
     data['rhopoutmax'] = 1300
 

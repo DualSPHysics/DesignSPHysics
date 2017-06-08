@@ -24,9 +24,11 @@ import traceback
 import subprocess
 import shutil
 from PySide import QtGui, QtCore
-from dsphfc.properties import *
 
-sys.path.append(FreeCAD.getUserAppDataDir() + "Macro/")
+# Fix FreeCAD not searching in the user-set macro folder.
+sys.path.append(os.path.dirname(os.path.abspath(__file__)))
+
+from dsphfc.properties import *
 from dsphfc import utils, guiutils, xmlimporter, dsphwidgets
 from dsphfc.utils import __
 
@@ -152,7 +154,7 @@ constants_label = QtGui.QLabel(
 constants_label.setWordWrap(True)
 constants_button = QtGui.QPushButton(__("Define\nConstants"))
 constants_button.setToolTip(__("Use this button to define case constants,\n"
-                               "such as lattice, gravity or fluid reference density."))
+                               "such as gravity or fluid reference density."))
 
 constants_button.clicked.connect(lambda: guiutils.def_constants_window(data))
 widget_state_elements['constants_button'] = constants_button
@@ -184,14 +186,10 @@ def on_dp_changed():
 dp_layout = QtGui.QHBoxLayout()
 dp_label = QtGui.QLabel(__("Inter-particle distance: "))
 dp_label.setToolTip(__(
-    "Lower DP to have more particles in the case."
-    "\nIncrease it to ease times of simulation."
-    "\nNote that more DP implies more quality in the final result."))
+    "Lower DP to have more particles in the case."))
 dp_input = QtGui.QLineEdit()
 dp_input.setToolTip(__(
-    "Lower DP to have more particles in the case."
-    "\nIncrease it to ease times of simulation."
-    "\nNote that more DP implies more quality in the final result."))
+    "Lower DP to have more particles in the case."))
 dp_label2 = QtGui.QLabel(" meters")
 dp_input.setMaxLength(10)
 dp_input.setText(str(data['dp']))
@@ -217,7 +215,7 @@ casecontrols_label = QtGui.QLabel("<b>" + __("Pre-processing") + "<b>")
 casecontrols_bt_newdoc = QtGui.QToolButton()
 casecontrols_bt_newdoc.setToolButtonStyle(QtCore.Qt.ToolButtonTextBesideIcon)
 casecontrols_bt_newdoc.setText("  " + __("New\n  Case"))
-casecontrols_bt_newdoc.setToolTip(__("Creates a new case. \nThe current documents opened will be closed."))
+casecontrols_bt_newdoc.setToolTip(__("Creates a new case. \nThe opened documents will be closed."))
 casecontrols_bt_newdoc.setIcon(guiutils.get_icon("new.png"))
 casecontrols_bt_newdoc.setIconSize(QtCore.QSize(28, 28))
 
@@ -227,7 +225,7 @@ casecontrols_bt_savedoc.setPopupMode(QtGui.QToolButton.MenuButtonPopup)
 casecontrols_bt_savedoc.setToolButtonStyle(QtCore.Qt.ToolButtonTextBesideIcon)
 casecontrols_bt_savedoc.setText("  " + __("Save\n  Case"))
 casecontrols_bt_savedoc.setToolTip(__(
-    "Saves the case and executes GenCase over.\nIf GenCase fails or is not set up, only the case\nwill be saved."))
+    "Saves the case and executes GenCase over."))
 casecontrols_bt_savedoc.setIcon(guiutils.get_icon("save.png"))
 casecontrols_bt_savedoc.setIconSize(QtCore.QSize(28, 28))
 casecontrols_menu_savemenu = QtGui.QMenu()
@@ -412,7 +410,7 @@ def on_save_case(save_as=None):
                     data['project_path'] + '/' + data['project_name'] + '_Out/' + data['project_name'] + ".out", "rb")
                 gencase_failed_dialog = QtGui.QMessageBox()
                 gencase_failed_dialog.setText(__(
-                    "Error executing gencase. Did you add objects to the case?. "
+                    "Error executing GenCase. Did you add objects to the case?. "
                     "Another reason could be memory issues. View details for more info."))
                 gencase_failed_dialog.setDetailedText(
                     gencase_out_file.read().split("================================")[1])
@@ -1689,7 +1687,7 @@ def on_computeforces():
     cfces_format_layout.addStretch(1)
     cfces_format_layout.addWidget(outformat_combobox)
 
-    cfces_onlymk_label = QtGui.QLabel(__("MK's to process (blank for all)"))
+    cfces_onlymk_label = QtGui.QLabel(__("MK's to process (empty for all)"))
     cfces_onlymk_text = QtGui.QLineEdit()
     cfces_onlymk_text.setPlaceholderText("1,2,3 or 1-30")
     cfces_onlymk_layout.addWidget(cfces_onlymk_label)
@@ -2144,10 +2142,10 @@ post_proc_computeforces_button = QtGui.QPushButton(__("ComputeForces"))
 post_proc_floatinginfo_button = QtGui.QPushButton(__("FloatingInfo"))
 post_proc_measuretool_button = QtGui.QPushButton(__("MeasureTool"))
 
-post_proc_partvtk_button.setToolTip(__("Opens the PartVTK exporting tool."))
-post_proc_computeforces_button.setToolTip(__("Opens the ComputeForces exporting tool."))
-post_proc_floatinginfo_button.setToolTip(__("Opens the FloatingInfo exporting tool."))
-post_proc_measuretool_button.setToolTip(__("Opens the MeasureTool exporting tool."))
+post_proc_partvtk_button.setToolTip(__("Opens the PartVTK tool."))
+post_proc_computeforces_button.setToolTip(__("Opens the ComputeForces tool."))
+post_proc_floatinginfo_button.setToolTip(__("Opens the FloatingInfo tool."))
+post_proc_measuretool_button.setToolTip(__("Opens the MeasureTool tool."))
 
 widget_state_elements['post_proc_partvtk_button'] = post_proc_partvtk_button
 widget_state_elements['post_proc_computeforces_button'] = post_proc_computeforces_button
@@ -2265,11 +2263,11 @@ properties_widget.setWidget(properties_scaff_widget)
 mkgroup_label = QtGui.QLabel("   {}".format(__("MKGroup")))
 mkgroup_label.setToolTip(__("Establishes the object group."))
 objtype_label = QtGui.QLabel("   {}".format(__("Type of object")))
-objtype_label.setToolTip(__("Establishes the object type, fluid or bound"))
+objtype_label.setToolTip(__("Establishes the object type: Fluid or bound"))
 fillmode_label = QtGui.QLabel("   {}".format(__("Fill mode")))
 fillmode_label.setToolTip(__(
-    "Sets fill mode.\nFull: generates filling and external mesh."
-    "\nSolid: generates only filling.\nFace: generates only external mesh."
+    "Sets fill mode.\nFull: generates internal volume and external mesh."
+    "\nSolid: generates only internal volume.\nFace: generates only external mesh."
     "\nWire: generates only external mesh polygon edges."))
 floatstate_label = QtGui.QLabel("   {}".format(__("Float state")))
 floatstate_label.setToolTip(__("Sets floating state for this object MK."))
@@ -2314,6 +2312,8 @@ def objtype_change(index):
 
     if objtype_prop.itemText(index).lower() == "bound":
         mkgroup_prop.setRange(0, 240)
+        # TODO: Check this!
+        # mkgroup_prop.setValue(int(utils.get_first_mk_not_used("bound", data)))
         selectiongui.ShapeColor = (0.80, 0.80, 0.80)
         selectiongui.Transparency = 0
         floatstate_prop.setEnabled(True)
@@ -2321,6 +2321,7 @@ def objtype_change(index):
         mkgroup_label.setText("   " + __("MKBound"))
     elif objtype_prop.itemText(index).lower() == "fluid":
         mkgroup_prop.setRange(0, 10)
+        # mkgroup_prop.setValue(int(utils.get_first_mk_not_used("fluid", data)))
         selectiongui.ShapeColor = (0.00, 0.45, 1.00)
         selectiongui.Transparency = 30
         # Remove floating properties if it is changed to fluid
@@ -2550,7 +2551,7 @@ def floatstate_change():
 
     floating_inertia_layout = QtGui.QHBoxLayout()
     floating_inertia_label = QtGui.QLabel(__("Inertia (kg*m<sup>2</sup>): "))
-    floating_inertia_label.setToolTip(__("Sets the mk group inertia."))
+    floating_inertia_label.setToolTip(__("Sets the MK group inertia."))
     floating_inertia_label_x = QtGui.QLabel("X")
     floating_inertia_input_x = QtGui.QLineEdit()
     floating_inertia_label_y = QtGui.QLabel("Y")
@@ -2570,7 +2571,7 @@ def floatstate_change():
 
     floating_velini_layout = QtGui.QHBoxLayout()
     floating_velini_label = QtGui.QLabel(__("Initial linear velocity: "))
-    floating_velini_label.setToolTip(__("Sets the mk group initial linear velocity"))
+    floating_velini_label.setToolTip(__("Sets the MK group initial linear velocity"))
     floating_velini_label_x = QtGui.QLabel("X")
     floating_velini_input_x = QtGui.QLineEdit()
     floating_velini_label_y = QtGui.QLabel("Y")
@@ -2590,7 +2591,7 @@ def floatstate_change():
 
     floating_omegaini_layout = QtGui.QHBoxLayout()
     floating_omegaini_label = QtGui.QLabel(__("Initial angular velocity: "))
-    floating_omegaini_label.setToolTip(__("Sets the mk group initial angular velocity"))
+    floating_omegaini_label.setToolTip(__("Sets the MK group initial angular velocity"))
     floating_omegaini_label_x = QtGui.QLabel("X")
     floating_omegaini_input_x = QtGui.QLineEdit()
     floating_omegaini_label_y = QtGui.QLabel("Y")
@@ -3002,14 +3003,15 @@ def motion_change():
     def check_movement_compatibility(target_movement):
         # Wave generators are exclusive
         if isinstance(target_movement, SpecialMovement):
-            notice_label.setText("Notice: Wave generators are exclusive. "
+            notice_label.setText("Notice: Wave generators and file movements are exclusive. "
                                  "All movements are disabled when using one.")
             del movements_selected[:]
         elif isinstance(target_movement, Movement):
             for index, ms in enumerate(movements_selected):
                 if isinstance(ms, SpecialMovement):
                     movements_selected.pop(index)
-                    notice_label.setText("Notice: Regular movements are not compatible with wave generators.")
+                    notice_label.setText("Notice: Regular movements are not compatible "
+                                         "with wave generators and file movements.")
 
     # Movements table actions
     def on_check_movement(index, checked):
@@ -3057,7 +3059,7 @@ def motion_change():
         if __("Irregular wave generator") in action.text():
             to_add = SpecialMovement(generator=IrregularWaveGen(), name="Irregular Wave Generator")
         if __("Linear motion from a file") in action.text():
-            to_add = SpecialMovement(generator=FileGen(), name="Movement from a file")
+            to_add = SpecialMovement(generator=FileGen(), name="Linear motion from a file")
         if __("Rotation from a file") in action.text():
             to_add = SpecialMovement(generator=RotationFileGen(), name="Rotation from a file")
 
@@ -3474,7 +3476,7 @@ def on_tree_item_selection_change():
     if len(selection) > 0:
         if len(selection) > 1:
             # Multiple objects selected
-            addtodsph_button.setText(__("Add all possible to DSPH Simulation"))
+            addtodsph_button.setText(__("Add all possible objects to DSPH Simulation"))
             property_table.hide()
             addtodsph_button.show()
             removefromdsph_button.hide()
@@ -3695,11 +3697,11 @@ def selection_monitor():
                     for subelem in o.OutList:
                         if subelem.Placement.Rotation.Angle != 0.0:
                             subelem.Placement.Rotation.Angle = 0.0
-                            utils.error(__("Can't change fillbox contents rotation!"))
+                            utils.error(__("Can't change rotation!"))
                 if "case_limits" in o.Name.lower():
                     if o.Placement.Rotation.Angle != 0.0:
                         o.Placement.Rotation.Angle = 0.0
-                        utils.error(__("Can't change Case Limits rotation!"))
+                        utils.error(__("Can't change rotation!"))
                     if not data['3dmode'] and o.Width.Value != utils.WIDTH_2D:
                         o.Width.Value = utils.WIDTH_2D
                         utils.error(__("Can't change width if the case is in 2D Mode!"))
@@ -3715,4 +3717,4 @@ monitor_thread = threading.Thread(target=selection_monitor)
 monitor_thread.start()
 
 FreeCADGui.activateWorkbench("PartWorkbench")
-utils.log(__("Done loading data."))
+utils.log(__("Loading data is done."))
