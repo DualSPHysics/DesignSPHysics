@@ -1505,7 +1505,7 @@ def case_summary(orig_data):
                     mklist.append(str(key))
 
             data['movement_info'] += "<li>{movtype} <u>{movname}</u><br/>" \
-                                     "Applied to MK: {mklist}</li><br/>".format(movtype=movtype, movname=mov.name,
+                                     "Applied to MKBound: {mklist}</li><br/>".format(movtype=movtype, movname=mov.name,
                                                                                 mklist=', '.join(mklist))
 
         data['movement_info'] += "</ul>"
