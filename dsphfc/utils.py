@@ -54,11 +54,13 @@ along with DesignSPHysics.  If not, see <http://www.gnu.org/licenses/>.
 # ------ CONSTANTS DEFINITION ------
 FREECAD_MIN_VERSION = "016"
 APP_NAME = "DesignSPHysics"
-DEBUGGING = True
+DEBUGGING = False
 DIVIDER = 1000
 PICKLE_PROTOCOL = 1  # Binary mode
-VERSION = "0.3.1706-9-SPHERIC"
+VERSION = "0.3.1706-19"
 WIDTH_2D = 0.001
+
+
 # ------ END CONSTANTS DEFINITION ------
 
 
@@ -92,11 +94,8 @@ def debug(message):
 
 
 def __(text):
-    """ Translation helper. Takes a string and
-    tries to return its translation to the current
-    FreeCAD locale.
-    If the translation is missing or the file does
-    not exists, return default english string. """
+    """ Translation helper. Takes a string and tries to return its translation to the current FreeCAD locale.
+    If the translation is missing or the file does not exists, return default english string. """
 
     # Get FreeCAD current language
     freecad_locale = FreeCADGui.getLocale().lower().replace(", ", "-").replace(" ", "-")
@@ -233,10 +232,8 @@ def check_executables(data):
 
     # Spawn warning dialog and return filtered data.
     if not execs_correct:
-        warning(
-            "One or more of the executables in the setup is not correct. Check plugin setup to fix missing binaries")
-        guiutils.warning_dialog(
-            "One or more of the executables in the setup is not correct. Check plugin setup to fix missing binaries.")
+        warning("One or more of the executables in the setup is not correct. Check plugin setup to fix missing binaries")
+        guiutils.warning_dialog("One or more of the executables in the setup is not correct. Check plugin setup to fix missing binaries.")
     return data, execs_correct
 
 
@@ -245,9 +242,7 @@ def float_list_to_float_property(floating_mks):
     for key, value in floating_mks.iteritems():
         if isinstance(value, list):
             # Is in old mode. Change to OOP
-            fp = FloatProperty(mk=float(key),
-                               mass_density_type=int(value[0][0]),
-                               mass_density_value=float(value[0][1]))
+            fp = FloatProperty(mk=float(key), mass_density_type=int(value[0][0]), mass_density_value=float(value[0][1]))
             if not value[1][0]:  # Gravity center is not auto
                 fp.gravity_center = value[1][1:]
             if not value[2][0]:  # Inertia is not auto
@@ -269,8 +264,7 @@ def initials_list_to_initials_property(initials_mks):
     for key, value in initials_mks.iteritems():
         if isinstance(value, list):
             # Is in old mode. Change to OOP
-            ip = InitialsProperty(mk=int(key),
-                                  force=value)
+            ip = InitialsProperty(mk=int(key), force=value)
             to_ret[key] = ip
         else:
             # Is in OOP mode, appending
@@ -468,7 +462,6 @@ def get_first_mk_not_used(objtype, data):
 
 def open_help():
     """ Opens a web browser with this software help. """
-
     webbrowser.open("http://design.sphysics.org/wiki/")
 
 
@@ -489,12 +482,9 @@ def print_license():
 
 def prompt_close_all_documents(prompt=True):
     """ Shows a dialog to close all the current documents.
-        If accepted, close all the current documents and
-        return True, else returns False. """
+        If accepted, close all the current documents and return True, else returns False. """
     if prompt:
-        user_selection = guiutils.ok_cancel_dialog(APP_NAME,
-                                                   "To do this you must close all current documents."
-                                                   " Close all the documents?")
+        user_selection = guiutils.ok_cancel_dialog(APP_NAME, "To do this you must close all current documents. Close all the documents?")
     if not prompt or user_selection == QtGui.QMessageBox.Ok:
         # Close all current documents.
         log("Closing all current documents")
@@ -506,16 +496,13 @@ def prompt_close_all_documents(prompt=True):
 
 
 def document_count():
-    """ Returns an integer representing the number of
-        current opened documents in FreeCAD. """
+    """ Returns an integer representing the number of current opened documents in FreeCAD. """
     return len(FreeCAD.listDocuments().keys())
 
 
 def valid_document_environment():
     """ Returns a boolean if a correct document environment is found.
-    A correct document environment is defined if only a DSPH_Case document
-    is currently opened in FreeCAD. """
-
+    A correct document environment is defined if only a DSPH_Case document is currently opened in FreeCAD. """
     return True if document_count() is 1 and 'dsph_case' in FreeCAD.listDocuments().keys()[0].lower() else False
 
 
@@ -551,31 +538,27 @@ def create_periodicity_helpers(data):
     group = FreeCAD.activeDocument().addObject("App::DocumentObjectGroup", "Helpers_internal_")
     group.Label = "Case Helpers"
 
-    y1h = Draft.makeWire([FreeCAD.Vector(0.0, 0.0, 0.0), FreeCAD.Vector(0.0, 1.0, 0.0)], closed=False, face=False,
-                         support=None)
+    y1h = Draft.makeWire([FreeCAD.Vector(0.0, 0.0, 0.0), FreeCAD.Vector(0.0, 1.0, 0.0)], closed=False, face=False, support=None)
     y1h.Label = "Y Start Helper"
     y1h.ViewObject.EndArrow = True
     y1h.ViewObject.ArrowType = "Arrow"
     y1h.ViewObject.Visibility = False
 
-    y2h = Draft.makeWire([FreeCAD.Vector(0.0, 1.0, 0.0), FreeCAD.Vector(0.0, 0.0, 0.0)], closed=False, face=False,
-                         support=None)
+    y2h = Draft.makeWire([FreeCAD.Vector(0.0, 1.0, 0.0), FreeCAD.Vector(0.0, 0.0, 0.0)], closed=False, face=False, support=None)
     # y2h.Name = "y2h"
     y2h.Label = "Y End Helper"
     y2h.ViewObject.EndArrow = True
     y2h.ViewObject.ArrowType = "Arrow"
     y2h.ViewObject.Visibility = False
 
-    x1h = Draft.makeWire([FreeCAD.Vector(0.0, 0.0, 0.0), FreeCAD.Vector(1.0, 0.0, 0.0)], closed=False, face=False,
-                         support=None)
+    x1h = Draft.makeWire([FreeCAD.Vector(0.0, 0.0, 0.0), FreeCAD.Vector(1.0, 0.0, 0.0)], closed=False, face=False, support=None)
     # x1h.Name = "x1h"
     x1h.Label = "X Start Helper"
     x1h.ViewObject.EndArrow = True
     x1h.ViewObject.ArrowType = "Arrow"
     x1h.ViewObject.Visibility = False
 
-    x2h = Draft.makeWire([FreeCAD.Vector(1.0, 0.0, 0.0), FreeCAD.Vector(0.0, 0.0, 0.0)], closed=False, face=False,
-                         support=None)
+    x2h = Draft.makeWire([FreeCAD.Vector(1.0, 0.0, 0.0), FreeCAD.Vector(0.0, 0.0, 0.0)], closed=False, face=False, support=None)
     # x2h.Name = "x2h"
     x2h.Label = "X End Helper"
     x2h.ViewObject.EndArrow = True
@@ -592,10 +575,8 @@ def valid_periodicity_helpers(data):
     """ Returns true if periodicity helpers exist and are valid in the case"""
     if 'periodicity_helpers' not in data.keys():
         return False
-    elif 'x1' not in data['periodicity_helpers'].keys() \
-            or 'x2' not in data['periodicity_helpers'].keys() \
-            or 'y1' not in data['periodicity_helpers'].keys() \
-            or 'y2' not in data['periodicity_helpers'].keys():
+    elif 'x1' not in data['periodicity_helpers'].keys() or 'x2' not in data['periodicity_helpers'].keys() \
+            or 'y1' not in data['periodicity_helpers'].keys() or 'y2' not in data['periodicity_helpers'].keys():
         return False
     elif None in [get_fc_object(x) for x in data['periodicity_helpers'].values()]:
         return False
@@ -617,44 +598,30 @@ def dump_to_xml(data, save_name):
     f.write('\t<casedef>\n')
     f.write('\t\t<constantsdef>\n')
     f.write('\t\t\t<lattice bound="' + str(data['lattice_bound']) + '" fluid="' + str(data['lattice_fluid']) + '" />\n')
-    f.write('\t\t\t<gravity x="' + str(data['gravity'][0]) + '" y="' + str(data['gravity'][1]) + '" z="' + str(
-        data['gravity'][2]) + '" comment="Gravitational acceleration" units_comment="m/s^2" />\n')
-    f.write('\t\t\t<rhop0 value="' + str(
-        data['rhop0']) + '" comment="Reference density of the fluid" units_comment="kg/m^3" />\n')
-    f.write('\t\t\t<hswl value="' + str(data['hswl']) + '" auto="' + str(data['hswl_auto']).lower() +
-            '" comment="Maximum still water level to calculate speedofsound using coefsound" '
-            'units_comment="metres (m)"  />\n')
-    f.write('\t\t\t<gamma value="' + str(
-        data['gamma']) + '" comment="Polytropic constant for water used in the state equation" />\n')
+    f.write('\t\t\t<gravity x="' + str(data['gravity'][0]) + '" y="' + str(data['gravity'][1]) + '" z="' + str(data['gravity'][2]) + '" comment="Gravitational acceleration" units_comment="m/s^2" />\n')
+    f.write('\t\t\t<rhop0 value="' + str(data['rhop0']) + '" comment="Reference density of the fluid" units_comment="kg/m^3" />\n')
+    f.write('\t\t\t<hswl value="' + str(data['hswl']) + '" auto="' + str(data['hswl_auto']).lower() + '" comment="Maximum still water level to calculate speedofsound using coefsound" '
+                                                                                                      'units_comment="metres (m)"  />\n')
+    f.write('\t\t\t<gamma value="' + str(data['gamma']) + '" comment="Polytropic constant for water used in the state equation" />\n')
     f.write('\t\t\t<speedsystem value="' + str(data['speedsystem']) + '" auto="' + str(data['speedsystem_auto']).lower()
             + '" comment="Maximum system speed (by default the dam-break propagation is used)" />\n')
-    f.write(
-        '\t\t\t<coefsound value="' + str(data['coefsound']) + '" comment="Coefficient to multiply speedsystem" />\n')
-    f.write('\t\t\t<speedsound value="' + str(data['speedsound']) + '" auto="' + str(data['speedsound_auto']).lower()
-            + '" comment="Speed of sound to use in the simulation '
-              '(by default speedofsound=coefsound*speedsystem)" />\n')
-    f.write('\t\t\t<coefh value="' + str(
-        data['coefh']) + '" comment="Coefficient to calculate the smoothing length (h=coefh*sqrt(3*dp^2) in 3D)" />\n')
+    f.write('\t\t\t<coefsound value="' + str(data['coefsound']) + '" comment="Coefficient to multiply speedsystem" />\n')
+    f.write('\t\t\t<speedsound value="' + str(data['speedsound']) + '" auto="' + str(data['speedsound_auto']).lower() + '" comment="Speed of sound to use in the simulation '
+                                                                                                                        '(by default speedofsound=coefsound*speedsystem)" />\n')
+    f.write('\t\t\t<coefh value="' + str(data['coefh']) + '" comment="Coefficient to calculate the smoothing length (h=coefh*sqrt(3*dp^2) in 3D)" />\n')
     f.write('\t\t\t<cflnumber value="' + str(data['cflnumber']) + '" comment="Coefficient to multiply dt" />\n')
-    f.write('\t\t\t<h value="' + str(data['h']) + '" auto="' + str(
-        data['h_auto']).lower() + '" units_comment="metres (m)" />\n')
-    f.write('\t\t\t<b value="' + str(data['b']) + '" auto="' + str(
-        data['b_auto']).lower() + '" units_comment="metres (m)" />\n')
-    f.write('\t\t\t<massbound value="' + str(data['massbound']) + '" auto="' + str(
-        data['massbound_auto']).lower() + '" units_comment="kg" />\n')
-    f.write('\t\t\t<massfluid value="' + str(data['massfluid']) + '" auto="' + str(
-        data['massfluid_auto']).lower() + '" units_comment="kg" />\n')
+    f.write('\t\t\t<h value="' + str(data['h']) + '" auto="' + str(data['h_auto']).lower() + '" units_comment="metres (m)" />\n')
+    f.write('\t\t\t<b value="' + str(data['b']) + '" auto="' + str(data['b_auto']).lower() + '" units_comment="metres (m)" />\n')
+    f.write('\t\t\t<massbound value="' + str(data['massbound']) + '" auto="' + str(data['massbound_auto']).lower() + '" units_comment="kg" />\n')
+    f.write('\t\t\t<massfluid value="' + str(data['massfluid']) + '" auto="' + str(data['massfluid_auto']).lower() + '" units_comment="kg" />\n')
     f.write('\t\t</constantsdef>\n')
     f.write('\t\t<mkconfig boundcount="240" fluidcount="10">\n')
     f.write('\t\t</mkconfig>\n')
     f.write('\t\t<geometry>\n')
-    f.write('\t\t\t<definition dp="' + str(
-        data['dp']) + '" comment="Initial inter-particle distance" units_comment="metres (m)">\n')
+    f.write('\t\t\t<definition dp="' + str(data['dp']) + '" comment="Initial inter-particle distance" units_comment="metres (m)">\n')
     min_point = FreeCAD.ActiveDocument.getObject("Case_Limits").Placement.Base
     max_point = FreeCAD.ActiveDocument.getObject("Case_Limits")
-    f.write('\t\t\t\t<pointmin x="' + str((min_point.x / DIVIDER)) + '" y="' + str(
-        (min_point.y / DIVIDER)) + '" z="' + str(
-        (min_point.z / DIVIDER)) + '" />\n')
+    f.write('\t\t\t\t<pointmin x="' + str((min_point.x / DIVIDER)) + '" y="' + str((min_point.y / DIVIDER)) + '" z="' + str((min_point.z / DIVIDER)) + '" />\n')
     if data['3dmode']:
         f.write('\t\t\t\t<pointmax x="' + str(
             (min_point.x / DIVIDER + max_point.Length.Value / DIVIDER)) + '" y="' + str(
@@ -685,7 +652,7 @@ def dump_to_xml(data, save_name):
                 f.write('\t\t\t\t\t<setmkbound mk="' + str(valuelist[0]) + '"/>\n')
             f.write('\t\t\t\t\t<setdrawmode mode="' + valuelist[2].lower() + '"/>\n')
             """ Exports supported objects in a xml parametric mode.
-            If specal objects are found, exported in an specific manner (p.e FillBox)
+            If special objects are found, exported in an specific manner (p.e FillBox)
             The rest of the things are exported in STL format."""
             if o.TypeId == "Part::Box":
                 f.write('\t\t\t\t\t<move x="' + str(o.Placement.Base.x / DIVIDER) + '" y="' + str(
@@ -693,7 +660,7 @@ def dump_to_xml(data, save_name):
                 f.write('\t\t\t\t\t<rotate ang="' + str(math.degrees(o.Placement.Rotation.Angle)) + '" x="' + str(
                     -o.Placement.Rotation.Axis.x) + '" y="' + str(-o.Placement.Rotation.Axis.y) + '" z="' + str(
                     -o.Placement.Rotation.Axis.z) + '" />\n')
-                f.write('\t\t\t\t\t<drawbox>\n')
+                f.write('\t\t\t\t\t<drawbox objname="{}">\n'.format(o.Label))
                 f.write('\t\t\t\t\t\t<boxfill>solid</boxfill>\n')
                 f.write('\t\t\t\t\t\t<point x="0" y="0" z="0" />\n')
                 f.write('\t\t\t\t\t\t<size x="' + str(o.Length.Value / DIVIDER) + '" y="' + str(
@@ -705,7 +672,7 @@ def dump_to_xml(data, save_name):
                 f.write('\t\t\t\t\t<rotate ang="' + str(math.degrees(o.Placement.Rotation.Angle)) + '" x="' + str(
                     -o.Placement.Rotation.Axis.x) + '" y="' + str(-o.Placement.Rotation.Axis.y) + '" z="' + str(
                     -o.Placement.Rotation.Axis.z) + '" />\n')
-                f.write('\t\t\t\t\t<drawsphere radius="' + str(o.Radius.Value / DIVIDER) + '">\n')
+                f.write('\t\t\t\t\t<drawsphere radius="' + str(o.Radius.Value / DIVIDER) + '"  objname="{}">\n'.format(o.Label))
                 f.write('\t\t\t\t\t\t<point x="0" y="0" z="0" />\n')
                 f.write('\t\t\t\t\t</drawsphere>\n')
             elif o.TypeId == "Part::Cylinder":
@@ -714,7 +681,7 @@ def dump_to_xml(data, save_name):
                 f.write('\t\t\t\t\t<rotate ang="' + str(math.degrees(o.Placement.Rotation.Angle)) + '" x="' + str(
                     -o.Placement.Rotation.Axis.x) + '" y="' + str(-o.Placement.Rotation.Axis.y) + '" z="' + str(
                     -o.Placement.Rotation.Axis.z) + '" />\n')
-                f.write('\t\t\t\t\t<drawcylinder radius="' + str(o.Radius.Value / DIVIDER) + '">\n')
+                f.write('\t\t\t\t\t<drawcylinder radius="' + str(o.Radius.Value / DIVIDER) + '" objname="{}">\n'.format(o.Label))
                 f.write('\t\t\t\t\t\t<point x="0" y="0" z="0" />\n')
                 f.write('\t\t\t\t\t\t<point x="0" y="0" z="' + str((0 + o.Height.Value) / DIVIDER) + '" />\n')
                 f.write('\t\t\t\t\t</drawcylinder>\n')
@@ -740,7 +707,7 @@ def dump_to_xml(data, save_name):
                         f.write('\t\t\t\t\t<fillbox x="' + str(
                             (fillpoint.Placement.Base.x - filllimits.Placement.Base.x) / DIVIDER) + '" y="' + str(
                             (fillpoint.Placement.Base.y - filllimits.Placement.Base.y) / DIVIDER) + '" z="' + str(
-                            (fillpoint.Placement.Base.z - filllimits.Placement.Base.z) / DIVIDER) + '">\n')
+                            (fillpoint.Placement.Base.z - filllimits.Placement.Base.z) / DIVIDER) + '" objname="{}">\n'.format(o.Label))
                         f.write('\t\t\t\t\t\t<modefill>void</modefill>\n')
                         f.write('\t\t\t\t\t\t<point x="0" y="0" z="0" />\n')
                         f.write('\t\t\t\t\t\t<size x="' + str(filllimits.Length.Value / DIVIDER) + '" y="' + str(
@@ -758,7 +725,7 @@ def dump_to_xml(data, save_name):
                     __objs__ = list()
                     __objs__.append(o)
                     Mesh.export(__objs__, save_name + "/" + o.Name + ".stl")
-                    f.write('\t\t\t\t\t<drawfilestl file="' + o.Name + ".stl" + '" >\n')
+                    f.write('\t\t\t\t\t<drawfilestl file="' + o.Name + ".stl" + '" objname="{}">\n'.format(o.Label))
                     f.write('\t\t\t\t\t\t<drawscale x="0.001" y="0.001" z="0.001" />\n')
                     f.write('\t\t\t\t\t</drawfilestl>\n')
                     del __objs__

@@ -26,7 +26,6 @@ import shutil
 from PySide import QtGui, QtCore
 
 # Fix FreeCAD not searching in the user-set macro folder.
-
 try:
     from dsphfc.properties import *
     from dsphfc import utils, guiutils, xmlimporter, dsphwidgets
@@ -55,7 +54,7 @@ print(utils.DEBUGGING)
 # along with DesignSPHysics.  If not, see <http://www.gnu.org/licenses/>.
 
 __author__ = "Andrés Vieira"
-__copyright__ = "Copyright 2016, DualSHPysics Team"
+__copyright__ = "Copyright 2016-2017, DualSHPysics Team"
 __credits__ = ["Andrés Vieira", "Alejandro Jacobo Cabrera Crespo", "Orlando García Feal"]
 __license__ = "GPL"
 __version__ = utils.VERSION
@@ -68,9 +67,6 @@ __status__ = "Development"
 # TODO: Wiki - Add motion section
 # TODO: Wiki - Add case summary
 # TODO: Wiki - Add error reporting procedure / viewing
-# ------------------------------- 0.3 BETA -------------------------------
-# TODO: 0.3Beta - Post-Processing while executing
-# TODO: 0.3Beta - Put object name in XML exporting tags
 # ------------------------------- 0.4 BETA -------------------------------
 # TODO: 0.4Beta - Movement brief explanation
 # TODO: 0.4Beta - Periodicity support - Show arrows (bounds) to show periodicity
@@ -105,10 +101,8 @@ except EnvironmentError:
 # Version check. This script is only compatible with FreeCAD 0.16 or higher
 is_compatible = utils.is_compatible_version()
 if not is_compatible:
-    guiutils.error_dialog(__("This FreeCAD version is not compatible. "
-                             "Please update FreeCAD to version 0.16 or higher."))
-    raise EnvironmentError(__("This FreeCAD version is not compatible. "
-                              "Please update FreeCAD to version 0.16 or higher."))
+    guiutils.error_dialog(__("This FreeCAD version is not compatible. Please update FreeCAD to version 0.16 or higher."))
+    raise EnvironmentError(__("This FreeCAD version is not compatible. Please update FreeCAD to version 0.16 or higher."))
 
 # Set QT to UTF-8 encoding
 QtCore.QTextCodec.setCodecForCStrings(QtCore.QTextCodec.codecForName('UTF-8'))
@@ -155,12 +149,10 @@ intro_layout = QtGui.QVBoxLayout()
 
 # DSPH dock first section.
 # Includes constant definition, help, etc.
-constants_label = QtGui.QLabel(
-    "<b>" + __("Configuration") + "</b>")
+constants_label = QtGui.QLabel("<b>" + __("Configuration") + "</b>")
 constants_label.setWordWrap(True)
 constants_button = QtGui.QPushButton(__("Define\nConstants"))
-constants_button.setToolTip(__("Use this button to define case constants,\n"
-                               "such as gravity or fluid reference density."))
+constants_button.setToolTip(__("Use this button to define case constants,\nsuch as gravity or fluid reference density."))
 
 constants_button.clicked.connect(lambda: guiutils.def_constants_window(data))
 widget_state_elements['constants_button'] = constants_button
@@ -191,11 +183,9 @@ def on_dp_changed():
 # DP Introduction layout
 dp_layout = QtGui.QHBoxLayout()
 dp_label = QtGui.QLabel(__("Inter-particle distance: "))
-dp_label.setToolTip(__(
-    "Lower DP to have more particles in the case."))
+dp_label.setToolTip(__("Lower DP to have more particles in the case."))
 dp_input = QtGui.QLineEdit()
-dp_input.setToolTip(__(
-    "Lower DP to have more particles in the case."))
+dp_input.setToolTip(__("Lower DP to have more particles in the case."))
 dp_label2 = QtGui.QLabel(" meters")
 dp_input.setMaxLength(10)
 dp_input.setText(str(data['dp']))
@@ -250,16 +240,13 @@ casecontrols_bt_loaddoc.setIconSize(QtCore.QSize(28, 28))
 
 # Add fillbox button
 casecontrols_bt_addfillbox = QtGui.QPushButton(__("Add fillbox"))
-casecontrols_bt_addfillbox.setToolTip(__(
-    "Adds a FillBox. A FillBox is able to fill an empty space\n"
-    "within limits of geometry and a maximum bounding\nbox placed by the user."))
+casecontrols_bt_addfillbox.setToolTip(__("Adds a FillBox. A FillBox is able to fill an empty space\nwithin limits of geometry and a maximum bounding\nbox placed by the user."))
 casecontrols_bt_addfillbox.setEnabled(False)
 widget_state_elements['casecontrols_bt_addfillbox'] = casecontrols_bt_addfillbox
 
 # Import STL button
 casecontrols_bt_addstl = QtGui.QPushButton("Import STL")
-casecontrols_bt_addstl.setToolTip(__(
-    "Imports a STL with postprocessing. This way you can set the scale of the imported object."))
+casecontrols_bt_addstl.setToolTip(__("Imports a STL with postprocessing. This way you can set the scale of the imported object."))
 casecontrols_bt_addstl.setEnabled(False)
 widget_state_elements['casecontrols_bt_addstl'] = casecontrols_bt_addstl
 
@@ -276,8 +263,7 @@ summary_bt.setEnabled(False)
 
 # Toggle 3D/2D button
 toggle3dbutton = QtGui.QPushButton(__("Change 3D/2D"))
-toggle3dbutton.setToolTip(__("Changes the case mode between 2D and 3D mode, switching the Case Limits between"
-                             " a plane or a cube"))
+toggle3dbutton.setToolTip(__("Changes the case mode between 2D and 3D mode, switching the Case Limits between a plane or a cube"))
 widget_state_elements['toggle3dbutton'] = toggle3dbutton
 
 # Toggle Periodicity buttons
@@ -319,8 +305,7 @@ def on_save_case(save_as=None):
 
     if " " in save_name:  # Spawn error if path contains any spaces.
         guiutils.error_dialog(__(
-            "The path you selected contains spaces. Due to DualSPHysics restrictions, "
-            "you'll need to use a folder path without any spaces."))
+            "The path you selected contains spaces. Due to DualSPHysics restrictions, you'll need to use a folder path without any spaces."))
         return
 
     # Check if there is any path, a blank one meant the user cancelled the save file dialog
@@ -344,9 +329,7 @@ def on_save_case(save_as=None):
                         utils.debug("Copying {} to {}".format(filename, save_name))
                         try:
                             shutil.copy2(filename, save_name)
-                            movement.generator.filename = "{}/{}".format(
-                                save_name, filename.split("/")[-1]
-                            )
+                            movement.generator.filename = "{}/{}".format(save_name, filename.split("/")[-1])
                         except IOError:
                             utils.error("Unable to copy {} into {}".format(filename, save_name))
                         except shutil.Error:
@@ -373,9 +356,9 @@ def on_save_case(save_as=None):
         if data['gencase_path'] != "":
             os.chdir(data['project_path'])
             process = QtCore.QProcess(fc_main_window)
-            process.start(data['gencase_path'], [data['project_path'] + '/' + data['project_name'] + '_Def',
-                                                 data['project_path'] + '/' + data['project_name'] + '_Out/' + data[
-                                                     'project_name'], '-save:+all'])
+            process.start(
+                data['gencase_path'], [data['project_path'] + '/' + data['project_name'] + '_Def', data['project_path'] + '/' + data['project_name'] + '_Out/' + data['project_name'], '-save:+all']
+            )
             process.waitForFinished()
             output = str(process.readAllStandardOutput())
             error_in_gen_case = False
@@ -385,25 +368,16 @@ def on_save_case(save_as=None):
                     total_particles_text = output[output.index("Total particles: "):output.index(" (bound=")]
                     total_particles = int(total_particles_text[total_particles_text.index(": ") + 2:])
                     data['total_particles'] = total_particles
-
                     utils.log(__("Total number of particles exported: ") + str(total_particles))
                     if total_particles < 300:
-                        utils.warning(__(
-                            "Are you sure all the parameters are set right? "
-                            "The number of particles is very low ({}). "
-                            "Lower the DP to increase number of particles").format(
-                            str(total_particles)))
+                        utils.warning(__("Are you sure all the parameters are set right? The number of particles is very low ({}). "
+                                         "Lower the DP to increase number of particles").format(str(total_particles)))
                     elif total_particles > 200000:
-                        utils.warning(__(
-                            "Number of particles is pretty high ({}) and "
-                            "it could take a lot of time to simulate.").format(
-                            str(total_particles)))
+                        utils.warning(__("Number of particles is pretty high ({}) and it could take a lot of time to simulate.").format(str(total_particles)))
                     data['gencase_done'] = True
                     guiutils.widget_state_config(widget_state_elements, "gencase done")
                     gencase_infosave_dialog = QtGui.QMessageBox()
-                    gencase_infosave_dialog.setText(__("Gencase exported {} particles. "
-                                                       "Press View Details to check the output.\n").format(
-                        str(total_particles)))
+                    gencase_infosave_dialog.setText(__("Gencase exported {} particles. Press View Details to check the output.\n").format(str(total_particles)))
                     gencase_infosave_dialog.setDetailedText(output.split("================================")[1])
                     gencase_infosave_dialog.setIcon(QtGui.QMessageBox.Information)
                     gencase_infosave_dialog.exec_()
@@ -413,14 +387,10 @@ def on_save_case(save_as=None):
 
             if str(process.exitCode()) != "0" or error_in_gen_case:
                 # Multiple possible causes. Let the user know
-                gencase_out_file = open(
-                    data['project_path'] + '/' + data['project_name'] + '_Out/' + data['project_name'] + ".out", "rb")
+                gencase_out_file = open(data['project_path'] + '/' + data['project_name'] + '_Out/' + data['project_name'] + ".out", "rb")
                 gencase_failed_dialog = QtGui.QMessageBox()
-                gencase_failed_dialog.setText(__(
-                    "Error executing GenCase. Did you add objects to the case?. "
-                    "Another reason could be memory issues. View details for more info."))
-                gencase_failed_dialog.setDetailedText(
-                    gencase_out_file.read().split("================================")[1])
+                gencase_failed_dialog.setText(__("Error executing GenCase. Did you add objects to the case?. Another reason could be memory issues. View details for more info."))
+                gencase_failed_dialog.setDetailedText(gencase_out_file.read().split("================================")[1])
                 gencase_failed_dialog.setIcon(QtGui.QMessageBox.Critical)
                 gencase_out_file.close()
                 gencase_failed_dialog.exec_()
@@ -451,8 +421,7 @@ def on_load_case():
     Load points to a dsphdata custom file, that stores all the relevant info.
     If FCStd file is not found the project is considered corrupt."""
     # noinspection PyArgumentList
-    load_name, _ = QtGui.QFileDialog.getOpenFileName(dsph_main_dock, __("Load Case"), QtCore.QDir.homePath(),
-                                                     "casedata.dsphdata")
+    load_name, _ = QtGui.QFileDialog.getOpenFileName(dsph_main_dock, __("Load Case"), QtCore.QDir.homePath(), "casedata.dsphdata")
     if load_name == "":
         # User pressed cancel.  No path is selected.
         return
@@ -484,8 +453,7 @@ def on_load_case():
             try:
                 load_disk_data = pickle.load(load_picklefile)
             except AttributeError:
-                guiutils.error_dialog(__("There was an error trying to load the case. This can be due to the project "
-                                         "being from another version or an error while saving the case."))
+                guiutils.error_dialog(__("There was an error trying to load the case. This can be due to the project being from another version or an error while saving the case."))
                 on_new_case(prompt=False)
                 return
 
@@ -497,12 +465,9 @@ def on_load_case():
         # Update data structure with disk loaded one
         data.update(load_disk_data)
     except (EOFError, ValueError):
-        guiutils.error_dialog(__("There was an error importing the case properties. "
-                                 "You probably need to set them again."
+        guiutils.error_dialog(__("There was an error importing the case properties. You probably need to set them again."
                                  "\n\n"
-                                 "This could be caused due to file corruption, "
-                                 "caused by operating system based line "
-                                 "endings or ends-of-file, or other related aspects."))
+                                 "This could be caused due to file corruption, caused by operating system based line endings or ends-of-file, or other related aspects."))
 
     # Fill some data
     dp_input.setText(str(data['dp']))
@@ -560,8 +525,7 @@ def on_add_stl():
     the user to set parameters for the import process"""
     filedialog = QtGui.QFileDialog()
     # noinspection PyArgumentList
-    file_name, _ = filedialog.getOpenFileName(fc_main_window, __("Select STL to import"), QtCore.QDir.homePath(),
-                                              "STL Files (*.stl)")
+    file_name, _ = filedialog.getOpenFileName(fc_main_window, __("Select STL to import"), QtCore.QDir.homePath(), "STL Files (*.stl)")
     # Defines import stl dialog
     stl_dialog = QtGui.QDialog()
     stl_dialog.setModal(True)
@@ -636,16 +600,12 @@ def on_add_stl():
                              name=str(stl_objname_text.text()))
             stl_dialog.accept()
         except ValueError:
-            utils.error(__("There was an error. "
-                           "Are you sure you wrote correct float values in the sacaling factor?"))
-            guiutils.error_dialog(__("There was an error. "
-                                     "Are you sure you wrote correct float values in the sacaling factor?"))
+            utils.error(__("There was an error. Are you sure you wrote correct float values in the scaling factor?"))
+            guiutils.error_dialog(__("There was an error. Are you sure you wrote correct float values in the sacaling factor?"))
 
     def stl_dialog_browse():
         # noinspection PyArgumentList
-        file_name_temp, _ = filedialog.getOpenFileName(fc_main_window, __("Select STL to import"),
-                                                       QtCore.QDir.homePath(),
-                                                       "STL Files (*.stl)")
+        file_name_temp, _ = filedialog.getOpenFileName(fc_main_window, __("Select STL to import"), QtCore.QDir.homePath(), "STL Files (*.stl)")
         stl_file_path.setText(file_name_temp)
         stl_dialog.raise_()
         stl_dialog.activateWindow()
@@ -666,8 +626,7 @@ def on_import_xml():
                                "nor its properties."))
 
     # noinspection PyArgumentList
-    import_name, _ = QtGui.QFileDialog.getOpenFileName(dsph_main_dock, __("Import XML"), QtCore.QDir.homePath(),
-                                                       "XML Files (*.xml)")
+    import_name, _ = QtGui.QFileDialog.getOpenFileName(dsph_main_dock, __("Import XML"), QtCore.QDir.homePath(), "XML Files (*.xml)")
     if import_name == "":
         # User pressed cancel.  No path is selected.
         return
@@ -686,10 +645,8 @@ def on_import_xml():
         limits_point_min = config['limits_min']
         limits_point_max = config['limits_max']
         # noinspection PyArgumentList
-        FreeCAD.ActiveDocument.getObject('Case_Limits').Placement = FreeCAD.Placement(
-            FreeCAD.Vector(limits_point_min[0] * 1000, limits_point_min[1] * 1000, limits_point_min[2] * 1000),
-            FreeCAD.Rotation(FreeCAD.Vector(0, 0, 1),
-                             0))
+        FreeCAD.ActiveDocument.getObject('Case_Limits').Placement = FreeCAD.Placement(FreeCAD.Vector(limits_point_min[0] * 1000, limits_point_min[1] * 1000, limits_point_min[2] * 1000),
+                                                                                      FreeCAD.Rotation(FreeCAD.Vector(0, 0, 1), 0))
         FreeCAD.ActiveDocument.getObject("Case_Limits").Length = str(limits_point_max[0] - limits_point_min[0]) + ' m'
         FreeCAD.ActiveDocument.getObject("Case_Limits").Width = str(limits_point_max[1] - limits_point_min[1]) + ' m'
         FreeCAD.ActiveDocument.getObject("Case_Limits").Height = str(limits_point_max[2] - limits_point_min[2]) + ' m'
@@ -732,8 +689,7 @@ def on_import_xml():
 
             # Notify change to refresh UI elements related.
             on_tree_item_selection_change()
-    guiutils.info_dialog(__("Importing successful. Note that some objects may not be automatically added to the case,"
-                            " and other may not have its properties correctly applied."))
+    guiutils.info_dialog(__("Importing successful. Note that some objects may not be automatically added to the case, and other may not have its properties correctly applied."))
 
 
 def on_summary():
@@ -986,8 +942,7 @@ def on_ex_simulate():
     run_button_details.clicked.connect(on_details)
 
     # Launch simulation and watch filesystem to monitor simulation
-    filelist = [f for f in os.listdir(data['project_path'] + '/' + data['project_name'] + "_Out/") if
-                f.startswith("Part")]
+    filelist = [f for f in os.listdir(data['project_path'] + '/' + data['project_name'] + "_Out/") if f.startswith("Part")]
     for f in filelist:
         os.remove(data['project_path'] + '/' + data['project_name'] + "_Out/" + f)
 
@@ -1013,10 +968,8 @@ def on_ex_simulate():
                 run_dialog.hide()
                 guiutils.widget_state_config(widget_state_elements, "sim error")
                 execution_error_dialog = QtGui.QMessageBox()
-                execution_error_dialog.setText(__(
-                    "There was an error in execution. Make sure you set the parameters right (and they exist)."
-                    " Also, make sure that your computer has the right hardware to simulate."
-                    " Check the details for more information."))
+                execution_error_dialog.setText(__("There was an error in execution. Make sure you set the parameters right (and they exist). "
+                                                  "Also, make sure that your computer has the right hardware to simulate. Check the details for more information."))
                 execution_error_dialog.setDetailedText(str(output).split("================================")[1])
                 execution_error_dialog.setIcon(QtGui.QMessageBox.Critical)
                 execution_error_dialog.exec_()
@@ -1026,8 +979,8 @@ def on_ex_simulate():
     process.finished.connect(on_dsph_sim_finished)
     temp_data['current_process'] = process
     static_params_exe = [data['project_path'] + '/' + data['project_name'] + "_Out/" + data['project_name'],
-                         data['project_path'] + '/' + data['project_name'] + "_Out/", "-svres",
-                         "-" + str(ex_selector_combo.currentText()).lower()]
+                         data['project_path'] + '/' + data['project_name'] + "_Out/",
+                         "-svres", "-" + str(ex_selector_combo.currentText()).lower()]
     if len(data['additional_parameters']) < 2:
         additional_params_ex = list()
     else:
@@ -1058,14 +1011,12 @@ def on_ex_simulate():
         if "Part_" in run_file_data[-1]:
             last_line_parttime = run_file_data[-1].split(".")
             if "Part_" in last_line_parttime[0]:
-                current_value = (float(last_line_parttime[0].split(" ")[-1] + "." + last_line_parttime[1][:2]) * float(
-                    100)) / float(data['timemax'])
+                current_value = (float(last_line_parttime[0].split(" ")[-1] + "." + last_line_parttime[1][:2]) * float(100)) / float(data['timemax'])
                 run_progbar_bar.setValue(current_value)
                 run_dialog.setWindowTitle(__("DualSPHysics Simulation: {}%").format(str(format(current_value, ".2f"))))
 
             last_line_time = run_file_data[-1].split("  ")[-1]
-            if ("===" not in last_line_time) and ("CellDiv" not in last_line_time) and (
-                        "memory" not in last_line_time) and ("-" in last_line_time):
+            if ("===" not in last_line_time) and ("CellDiv" not in last_line_time) and ("memory" not in last_line_time) and ("-" in last_line_time):
                 # Update time field
                 try:
                     run_group_label_eta.setText(__("Estimated time to complete simulation: ") + last_line_time)
@@ -1138,8 +1089,7 @@ def on_additional_parameters():
 
 # Execution section scaffolding
 ex_layout = QtGui.QVBoxLayout()
-ex_label = QtGui.QLabel(
-    "<b>" + __("Simulation control") + "</b> ")
+ex_label = QtGui.QLabel("<b>" + __("Simulation control") + "</b> ")
 ex_label.setWordWrap(True)
 
 # Combobox for processor selection
@@ -1155,9 +1105,7 @@ ex_selector_layout.addWidget(ex_selector_combo)
 # Simulate case button
 ex_button = QtGui.QPushButton(__("Run"))
 ex_button.setStyleSheet("QPushButton {font-weight: bold; }")
-ex_button.setToolTip(__(
-    "Starts the case simulation. "
-    "From the simulation\nwindow you can see the current progress and\nuseful information."))
+ex_button.setToolTip(__("Starts the case simulation. From the simulation\nwindow you can see the current progress and\nuseful information."))
 ex_button.setIcon(guiutils.get_icon("run.png"))
 ex_button.setIconSize(QtCore.QSize(12, 12))
 ex_button.clicked.connect(on_ex_simulate)
@@ -1212,8 +1160,7 @@ def partvtk_export(export_parameters):
     # Find total export parts and adjust progress bar
     partfiles = glob.glob(data['project_path'] + '/' + data['project_name'] + "_Out/" + "Part_*.bi4")
     for filename in partfiles:
-        temp_data['total_export_parts'] = max(int(filename.split("Part_")[1].split(".bi4")[0]),
-                                              temp_data['total_export_parts'])
+        temp_data['total_export_parts'] = max(int(filename.split("Part_")[1].split(".bi4")[0]), temp_data['total_export_parts'])
     export_progbar_bar.setRange(0, temp_data['total_export_parts'])
     export_progbar_bar.setValue(0)
 
@@ -1287,8 +1234,7 @@ def partvtk_export(export_parameters):
                      formats[export_parameters['save_mode']]], stdout=subprocess.PIPE)
                 found = True
             if not found:
-                guiutils.error_dialog("Paraview was not found in your system (Is it installed regularly?)."
-                                      "Please open the exported files manually")
+                guiutils.error_dialog("Paraview was not found in your system (Is it installed regularly?). Please open the exported files manually")
 
     export_process = QtCore.QProcess(dsph_main_dock)
     export_process.finished.connect(on_export_finished)
@@ -1482,8 +1428,7 @@ def floatinginfo_export(export_parameters):
     # Find total export parts
     partfiles = glob.glob(data['project_path'] + '/' + data['project_name'] + "_Out/" + "Part_*.bi4")
     for filename in partfiles:
-        temp_data['total_export_parts'] = max(int(filename.split("Part_")[1].split(".bi4")[0]),
-                                              temp_data['total_export_parts'])
+        temp_data['total_export_parts'] = max(int(filename.split("Part_")[1].split(".bi4")[0]), temp_data['total_export_parts'])
     export_progbar_bar.setRange(0, temp_data['total_export_parts'])
     export_progbar_bar.setValue(0)
 
@@ -1517,7 +1462,7 @@ def floatinginfo_export(export_parameters):
         '-savemotion',
         '-savedata ' + data['project_path'] + '/' + data['project_name'] + '_Out/' + export_parameters['filename'],
         export_parameters['additional_parameters']
-        ]
+    ]
 
     if len(export_parameters['onlymk']) > 0:
         static_params_exp.append('-onlymk:' + export_parameters['onlymk'])
@@ -1607,8 +1552,7 @@ def computeforces_export(export_parameters):
     # Find total export parts
     partfiles = glob.glob(data['project_path'] + '/' + data['project_name'] + "_Out/" + "Part_*.bi4")
     for filename in partfiles:
-        temp_data['total_export_parts'] = max(int(filename.split("Part_")[1].split(".bi4")[0]),
-                                              temp_data['total_export_parts'])
+        temp_data['total_export_parts'] = max(int(filename.split("Part_")[1].split(".bi4")[0]), temp_data['total_export_parts'])
     export_progbar_bar.setRange(0, temp_data['total_export_parts'])
     export_progbar_bar.setValue(0)
 
@@ -1666,8 +1610,7 @@ def computeforces_export(export_parameters):
         except IndexError:
             current_part = export_progbar_bar.value()
         export_progbar_bar.setValue(int(current_part))
-        export_dialog.setWindowTitle(
-            __("Exporting: ") + str(current_part) + "/" + str(temp_data['total_export_parts']))
+        export_dialog.setWindowTitle(__("Exporting: ") + str(current_part) + "/" + str(temp_data['total_export_parts']))
 
     temp_data['current_export_process'].readyReadStandardOutput.connect(on_stdout_ready)
 
@@ -1750,8 +1693,7 @@ def measuretool_export(export_parameters):
     # Find total export parts
     partfiles = glob.glob(data['project_path'] + '/' + data['project_name'] + "_Out/" + "Part_*.bi4")
     for filename in partfiles:
-        temp_data['total_export_parts'] = max(int(filename.split("Part_")[1].split(".bi4")[0]),
-                                              temp_data['total_export_parts'])
+        temp_data['total_export_parts'] = max(int(filename.split("Part_")[1].split(".bi4")[0]), temp_data['total_export_parts'])
     export_progbar_bar.setRange(0, temp_data['total_export_parts'])
     export_progbar_bar.setValue(0)
 
@@ -1825,8 +1767,7 @@ def measuretool_export(export_parameters):
         except IndexError:
             current_part = export_progbar_bar.value()
         export_progbar_bar.setValue(int(current_part))
-        export_dialog.setWindowTitle(
-            __("Exporting: ") + str(current_part) + "/" + str(temp_data['total_export_parts']))
+        export_dialog.setWindowTitle(__("Exporting: ") + str(current_part) + "/" + str(temp_data['total_export_parts']))
 
     temp_data['current_export_process'].readyReadStandardOutput.connect(on_stdout_ready)
 
@@ -2256,8 +2197,7 @@ addtodsph_button.setToolTip(__("Adds the current selection to\nthe case. Objects
 
 # Same as above, this time with remove
 removefromdsph_button = QtGui.QPushButton(__("Remove from DSPH Simulation"))
-removefromdsph_button.setToolTip(__(
-    "Removes the current selection from the case.\nObjects not included in the case will not be exported."))
+removefromdsph_button.setToolTip(__("Removes the current selection from the case.\nObjects not included in the case will not be exported."))
 
 property_widget_layout.addWidget(property_table)
 property_widget_layout.addWidget(addtodsph_button)
@@ -2272,10 +2212,9 @@ mkgroup_label.setToolTip(__("Establishes the object group."))
 objtype_label = QtGui.QLabel("   {}".format(__("Type of object")))
 objtype_label.setToolTip(__("Establishes the object type: Fluid or bound"))
 fillmode_label = QtGui.QLabel("   {}".format(__("Fill mode")))
-fillmode_label.setToolTip(__(
-    "Sets fill mode.\nFull: generates internal volume and external mesh."
-    "\nSolid: generates only internal volume.\nFace: generates only external mesh."
-    "\nWire: generates only external mesh polygon edges."))
+fillmode_label.setToolTip(__("Sets fill mode.\nFull: generates internal volume and external mesh."
+                             "\nSolid: generates only internal volume.\nFace: generates only external mesh."
+                             "\nWire: generates only external mesh polygon edges."))
 floatstate_label = QtGui.QLabel("   {}".format(__("Float state")))
 floatstate_label.setToolTip(__("Sets floating state for this object MK."))
 initials_label = QtGui.QLabel("   {}".format(__("Initials")))
@@ -2399,8 +2338,7 @@ def floatstate_change():
     target_mk = int(data['simobjects'][FreeCADGui.Selection.getSelection()[0].Name][0])
 
     def on_ok():
-        guiutils.info_dialog(
-            __("This will apply the floating properties to all objects with mkbound = ") + str(target_mk))
+        guiutils.info_dialog(__("This will apply the floating properties to all objects with mkbound = ") + str(target_mk))
         if is_floating_selector.currentIndex() == 1:
             # Floating false
             if str(target_mk) in data['floating_mks'].keys():
@@ -3010,15 +2948,13 @@ def motion_change():
     def check_movement_compatibility(target_movement):
         # Wave generators are exclusive
         if isinstance(target_movement, SpecialMovement):
-            notice_label.setText("Notice: Wave generators and file movements are exclusive. "
-                                 "All movements are disabled when using one.")
+            notice_label.setText("Notice: Wave generators and file movements are exclusive. All movements are disabled when using one.")
             del movements_selected[:]
         elif isinstance(target_movement, Movement):
             for index, ms in enumerate(movements_selected):
                 if isinstance(ms, SpecialMovement):
                     movements_selected.pop(index)
-                    notice_label.setText("Notice: Regular movements are not compatible "
-                                         "with wave generators and file movements.")
+                    notice_label.setText("Notice: Regular movements are not compatible with wave generators and file movements.")
 
     # Movements table actions
     def on_check_movement(index, checked):
@@ -3143,8 +3079,7 @@ def motion_change():
                 elif isinstance(motion, RectSinuMotion):
                     target_to_put = dsphwidgets.RectSinuMotionTimeline(current_row, motion)
                 else:
-                    raise NotImplementedError("The type of movement: {} is not implemented.".format(
-                        str(motion.__class__.__name__)))
+                    raise NotImplementedError("The type of movement: {} is not implemented.".format(str(motion.__class__.__name__)))
 
                 target_to_put.changed.connect(on_timeline_item_change)
                 target_to_put.deleted.connect(on_timeline_item_delete)
@@ -3282,48 +3217,39 @@ def motion_change():
                 on_movement_selected(movement_list_table.selectedIndexes()[0].row(), None)
 
     actions_groupbox_table.setRowCount(9)
-    bt_to_add = QtGui.QPushButton(guiutils.get_icon("left-arrow.png"),
-                                  __("Add a delay"))
+    bt_to_add = QtGui.QPushButton(guiutils.get_icon("left-arrow.png"), __("Add a delay"))
     bt_to_add.setStyleSheet("text-align: left")
     bt_to_add.clicked.connect(on_add_delay)
     actions_groupbox_table.setCellWidget(0, 0, bt_to_add)
-    bt_to_add = QtGui.QPushButton(guiutils.get_icon("left-arrow.png"),
-                                  __("Add a rectilinear motion"))
+    bt_to_add = QtGui.QPushButton(guiutils.get_icon("left-arrow.png"), __("Add a rectilinear motion"))
     bt_to_add.setStyleSheet("text-align: left")
     bt_to_add.clicked.connect(on_add_rectilinear)
     actions_groupbox_table.setCellWidget(1, 0, bt_to_add)
-    bt_to_add = QtGui.QPushButton(guiutils.get_icon("left-arrow.png"),
-                                  __("Add an accelerated rectilinear motion"))
+    bt_to_add = QtGui.QPushButton(guiutils.get_icon("left-arrow.png"), __("Add an accelerated rectilinear motion"))
     bt_to_add.setStyleSheet("text-align: left")
     bt_to_add.clicked.connect(on_add_accrectilinear)
     actions_groupbox_table.setCellWidget(2, 0, bt_to_add)
-    bt_to_add = QtGui.QPushButton(guiutils.get_icon("left-arrow.png"),
-                                  __("Add a rotational motion"))
+    bt_to_add = QtGui.QPushButton(guiutils.get_icon("left-arrow.png"), __("Add a rotational motion"))
     bt_to_add.setStyleSheet("text-align: left")
     bt_to_add.clicked.connect(on_add_rotational)
     actions_groupbox_table.setCellWidget(3, 0, bt_to_add)
-    bt_to_add = QtGui.QPushButton(guiutils.get_icon("left-arrow.png"),
-                                  __("Add an accelerated rotational motion"))
+    bt_to_add = QtGui.QPushButton(guiutils.get_icon("left-arrow.png"), __("Add an accelerated rotational motion"))
     bt_to_add.setStyleSheet("text-align: left")
     bt_to_add.clicked.connect(on_add_acc_rotational)
     actions_groupbox_table.setCellWidget(4, 0, bt_to_add)
-    bt_to_add = QtGui.QPushButton(guiutils.get_icon("left-arrow.png"),
-                                  __("Add an accelerated circular motion"))
+    bt_to_add = QtGui.QPushButton(guiutils.get_icon("left-arrow.png"), __("Add an accelerated circular motion"))
     bt_to_add.setStyleSheet("text-align: left")
     bt_to_add.clicked.connect(on_add_acc_circular)
     actions_groupbox_table.setCellWidget(5, 0, bt_to_add)
-    bt_to_add = QtGui.QPushButton(guiutils.get_icon("left-arrow.png"),
-                                  __("Add a sinusoidal rotational motion"))
+    bt_to_add = QtGui.QPushButton(guiutils.get_icon("left-arrow.png"), __("Add a sinusoidal rotational motion"))
     bt_to_add.setStyleSheet("text-align: left")
     bt_to_add.clicked.connect(on_add_sinu_rot)
     actions_groupbox_table.setCellWidget(6, 0, bt_to_add)
-    bt_to_add = QtGui.QPushButton(guiutils.get_icon("left-arrow.png"),
-                                  __("Add a sinusoidal circular motion"))
+    bt_to_add = QtGui.QPushButton(guiutils.get_icon("left-arrow.png"), __("Add a sinusoidal circular motion"))
     bt_to_add.setStyleSheet("text-align: left")
     bt_to_add.clicked.connect(on_add_sinu_cir)
     actions_groupbox_table.setCellWidget(7, 0, bt_to_add)
-    bt_to_add = QtGui.QPushButton(guiutils.get_icon("left-arrow.png"),
-                                  __("Add a sinusoidal rectilinear motion"))
+    bt_to_add = QtGui.QPushButton(guiutils.get_icon("left-arrow.png"), __("Add a sinusoidal rectilinear motion"))
     bt_to_add.setStyleSheet("text-align: left")
     bt_to_add.clicked.connect(on_add_sinu_rect)
     actions_groupbox_table.setCellWidget(8, 0, bt_to_add)
@@ -3676,27 +3602,17 @@ def selection_monitor():
             removefromdsph_button.hide()
         # Ensure helpers are positioned correctly
         if utils.valid_periodicity_helpers(data):
-            utils.get_fc_object(data['periodicity_helpers']['x1']).Start = utils.get_fc_object(
-                'Case_Limits').Placement.Base
-            utils.get_fc_object(data['periodicity_helpers']['x2']).End = utils.get_fc_object(
-                'Case_Limits').Placement.Base
+            utils.get_fc_object(data['periodicity_helpers']['x1']).Start = utils.get_fc_object('Case_Limits').Placement.Base
+            utils.get_fc_object(data['periodicity_helpers']['x2']).End = utils.get_fc_object('Case_Limits').Placement.Base
 
-            utils.get_fc_object(data['periodicity_helpers']['y1']).Start = utils.get_fc_object(
-                'Case_Limits').Placement.Base
-            utils.get_fc_object(data['periodicity_helpers']['y2']).End = utils.get_fc_object(
-                'Case_Limits').Placement.Base
+            utils.get_fc_object(data['periodicity_helpers']['y1']).Start = utils.get_fc_object('Case_Limits').Placement.Base
+            utils.get_fc_object(data['periodicity_helpers']['y2']).End = utils.get_fc_object('Case_Limits').Placement.Base
 
-            utils.get_fc_object(data['periodicity_helpers']['x1']).End = utils.get_fc_object(
-                'Case_Limits').Placement.Base + FreeCAD.Vector(utils.get_fc_object('Case_Limits').Width.Value, 0.0, 0.0)
-            utils.get_fc_object(data['periodicity_helpers']['x2']).Start = utils.get_fc_object(
-                'Case_Limits').Placement.Base + FreeCAD.Vector(utils.get_fc_object('Case_Limits').Width.Value, 0.0, 0.0)
+            utils.get_fc_object(data['periodicity_helpers']['x1']).End = utils.get_fc_object('Case_Limits').Placement.Base + FreeCAD.Vector(utils.get_fc_object('Case_Limits').Width.Value, 0.0, 0.0)
+            utils.get_fc_object(data['periodicity_helpers']['x2']).Start = utils.get_fc_object('Case_Limits').Placement.Base + FreeCAD.Vector(utils.get_fc_object('Case_Limits').Width.Value, 0.0, 0.0)
 
-            utils.get_fc_object(data['periodicity_helpers']['y1']).End = utils.get_fc_object(
-                'Case_Limits').Placement.Base + FreeCAD.Vector(0.0, utils.get_fc_object('Case_Limits').Length.Value,
-                                                               0.0)
-            utils.get_fc_object(data['periodicity_helpers']['y2']).Start = utils.get_fc_object(
-                'Case_Limits').Placement.Base + FreeCAD.Vector(0.0, utils.get_fc_object('Case_Limits').Length.Value,
-                                                               0.0)
+            utils.get_fc_object(data['periodicity_helpers']['y1']).End = utils.get_fc_object('Case_Limits').Placement.Base + FreeCAD.Vector(0.0, utils.get_fc_object('Case_Limits').Length.Value, 0.0)
+            utils.get_fc_object(data['periodicity_helpers']['y2']).Start = utils.get_fc_object('Case_Limits').Placement.Base + FreeCAD.Vector(0.0, utils.get_fc_object('Case_Limits').Length.Value, 0.0)
         # watch fillbox rotations and prevent them
         try:
             for o in FreeCAD.getDocument("DSPH_Case").Objects:
