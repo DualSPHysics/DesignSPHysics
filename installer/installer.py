@@ -36,7 +36,7 @@ from PySide import QtGui, QtCore
 # You should have received a copy of the GNU General Public License
 # along with DesignSPHysics.  If not, see <http://www.gnu.org/licenses/>.
 
-print "Copyright (C) 2016 - Andrés Vieira"
+print "Copyright (C) 2016-2017 - Andrés Vieira"
 print "EPHYSLAB Environmental Physics Laboratory, Universidade de Vigo"
 
 
@@ -63,9 +63,7 @@ def main():
 
     install_layout = QtGui.QVBoxLayout()
     install_layout.setContentsMargins(10, 10, 10, 10)
-    description_label = QtGui.QLabel(
-        'DesignSPHysics is a macro made for FreeCAD that '
-        'allows the user to design case environments to use with DualSPHyisics.')
+    description_label = QtGui.QLabel('DesignSPHysics is a macro made for FreeCAD that allows the user to design case environments to use with DualSPHyisics.')
     description_label.setWordWrap(True)
     description_label.setAlignment(QtCore.Qt.AlignCenter)
     credits_label = QtGui.QLabel("DualSPHysics team.\nDeveloped by Andrés Vieira (Universidade de Vigo).\n")

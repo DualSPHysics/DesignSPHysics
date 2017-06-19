@@ -449,8 +449,13 @@ class AccCirMotion(BaseMotion):
         self.ang_acc = ang_acc
 
     def __str__(self):
-        return "AccCirMotion [Duration: {} ; AngVelocity: {} ; AngAccel: {} ; Reference: {} ; Axis: [{}, {}]]" \
-            .format(self.duration, self.ang_vel, self.ang_acc, self.reference, self.axis1, self.axis2)
+        return "AccCirMotion [Duration: {} ; AngVelocity: {} ; AngAccel: {} ; Reference: {} ; Axis: [{}, {}]]".format(
+            self.duration,
+            self.ang_vel,
+            self.ang_acc,
+            self.reference,
+            self.axis1,
+            self.axis2)
 
 
 class WaitMotion(BaseMotion):
@@ -500,8 +505,13 @@ class RotSinuMotion(BaseMotion):
         self.phase = phase
 
     def __str__(self):
-        return "RotSinuMotion [Duration: {} ; Frequency: {} ; Amplitude: {} ; Phase: {} ; Axis: [{}, {}]]" \
-            .format(self.duration, self.freq, self.ampl, self.phase, self.axis1, self.axis2)
+        return "RotSinuMotion [Duration: {} ; Frequency: {} ; Amplitude: {} ; Phase: {} ; Axis: [{}, {}]]".format(
+            self.duration,
+            self.freq,
+            self.ampl,
+            self.phase,
+            self.axis1,
+            self.axis2)
 
 
 class CirSinuMotion(BaseMotion):
@@ -541,9 +551,14 @@ class CirSinuMotion(BaseMotion):
         self.phase = phase
 
     def __str__(self):
-        return "CirSinuMotion [Duration: {} ; Frequency: {} ; Amplitude: {} ; " \
-               "Phase: {} ; Reference: {} ; Axis: [{}, {}]]" \
-            .format(self.duration, self.freq, self.ampl, self.phase, self.reference, self.axis1, self.axis2)
+        return "CirSinuMotion [Duration: {} ; Frequency: {} ; Amplitude: {} ; " "Phase: {} ; Reference: {} ; Axis: [{}, {}]]".format(
+            self.duration,
+            self.freq,
+            self.ampl,
+            self.phase,
+            self.reference,
+            self.axis1,
+            self.axis2)
 
 
 class RectSinuMotion(BaseMotion):
@@ -570,5 +585,8 @@ class RectSinuMotion(BaseMotion):
         self.phase = phase
 
     def __str__(self):
-        return "RectSinuMotion [Duration: {} ; Frequency: {} ; Amplitude: {} ; Phase: {}" \
-            .format(self.duration, self.freq, self.ampl, self.phase)
+        return "RectSinuMotion [Duration: {} ; Frequency: {} ; Amplitude: {} ; Phase: {}".format(
+            self.duration,
+            self.freq,
+            self.ampl,
+            self.phase)
