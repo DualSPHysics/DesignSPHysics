@@ -68,16 +68,20 @@ __status__ = "Development"
 # TODO: Wiki - Add motion section
 # TODO: Wiki - Add case summary
 # TODO: Wiki - Add error reporting procedure / viewing
+# ------------------------------- 0.3 BETA -------------------------------
+# TODO: 0.3Beta - Post-Processing while executing
+# TODO: 0.3Beta - Put object name in XML exporting tags
 # ------------------------------- 0.4 BETA -------------------------------
 # TODO: 0.4Beta - Movement brief explanation
 # TODO: 0.4Beta - Periodicity support - Show arrows (bounds) to show periodicity
 # TODO: 0.4Beta - Toolbox (Fillbox, wave, periodicity, imports...) to clean the UI
 # TODO: 0.4Beta - Create Material support
 # TODO: 0.4Beta - Material creator and assigner
+# TODO: 0.4Beta - Separate GenCase from saving
 # ------------------------------- 0.5 BETA -------------------------------
 # TODO: 0.5Beta - Refactor all code
 # TODO: 0.5Beta - 'Pythonize' code and delete redundant code
-# TODO: 0.5Beta - Improve debug messages and make GUI section to enable it
+# TODO: 0.5Beta - Improve debug messages and make GUI section to enable/disable it
 # TODO: 0.5Beta - Revisit all strings to translate and make some translations.
 # TODO: 0.5Beta - Make some kind of a translation platform.
 # TODO: 0.5Beta - Rework constants window (default parameters, better scaffolding, help...)
@@ -86,6 +90,10 @@ __status__ = "Development"
 # TODO: 0.5Beta - Change rotation procedure. Try not to use matrixreset, delete null rotations... etc
 # TODO: 0.5Beta - Redesign
 # TODO: 0.5Beta - Revisit and complete documentation of the code
+# ------------------------------- NO VERSION ------------------------------
+# TODO: NO VERSION - SSH Server support.
+# TODO: NO VERSION - Multi-case support (multiple tabs)
+# TODO: NO VERSION - Integrate better with FreeCAD (replace file menus etc)
 # endregion general To-Do
 
 # Print license at macro start
