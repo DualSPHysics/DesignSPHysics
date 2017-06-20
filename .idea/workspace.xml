@@ -1,14 +1,14 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="BookmarkManager">
-    <bookmark url="file://$PROJECT_DIR$/DSPH.py" line="64" mnemonic="9" />
-    <bookmark url="file://$PROJECT_DIR$/DSPH.py" line="2250" mnemonic="1" />
+    <bookmark url="file://$PROJECT_DIR$/DSPH.py" line="65" mnemonic="9" />
+    <bookmark url="file://$PROJECT_DIR$/DSPH.py" line="2220" mnemonic="1" />
   </component>
   <component name="ChangeListManager">
     <list default="true" id="22d76f4b-310a-4afb-8788-a472c77b2c87" name="Default" comment="">
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/DSPH.py" afterPath="$PROJECT_DIR$/DSPH.py" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/dsphfc/properties.py" afterPath="$PROJECT_DIR$/dsphfc/properties.py" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/dsphfc/lang/english.json" afterPath="$PROJECT_DIR$/dsphfc/lang/english.json" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/dsphfc/utils.py" afterPath="$PROJECT_DIR$/dsphfc/utils.py" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/installer/installer.py" afterPath="$PROJECT_DIR$/installer/installer.py" />
     </list>
@@ -20,7 +20,7 @@
     <option name="LAST_RESOLUTION" value="IGNORE" />
   </component>
   <component name="CoverageDataManager">
-    <SUITE FILE_PATH="coverage/Macro$Reopen_FreeCAD_and_Execute.coverage" NAME="Reopen FreeCAD and Execute Coverage Results" MODIFIED="1497863382879" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$USER_HOME$/Documents/DSPH" />
+    <SUITE FILE_PATH="coverage/Macro$Reopen_FreeCAD_and_Execute.coverage" NAME="Reopen FreeCAD and Execute Coverage Results" MODIFIED="1497947786488" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$USER_HOME$/Documents/DSPH" />
   </component>
   <component name="CreatePatchCommitExecutor">
     <option name="PATCH_PATH" value="" />
@@ -43,8 +43,8 @@
       <file leaf-file-name="DSPH.py" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/DSPH.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="527">
-              <caret line="83" column="33" lean-forward="false" selection-start-line="83" selection-start-column="33" selection-end-line="83" selection-end-column="33" />
+            <state relative-caret-position="432">
+              <caret line="120" column="43" lean-forward="false" selection-start-line="120" selection-start-column="43" selection-end-line="120" selection-end-column="43" />
               <folding>
                 <element signature="e#324#338#0" expanded="true" />
               </folding>
@@ -52,11 +52,31 @@
           </provider>
         </entry>
       </file>
+      <file leaf-file-name="installer.py" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/installer/installer.py">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="242">
+              <caret line="90" column="12" lean-forward="false" selection-start-line="90" selection-start-column="12" selection-end-line="90" selection-end-column="12" />
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="xmlimporter.py" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/dsphfc/xmlimporter.py">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="439">
+              <caret line="259" column="14" lean-forward="false" selection-start-line="259" selection-start-column="14" selection-end-line="259" selection-end-column="14" />
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
       <file leaf-file-name="utils.py" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/dsphfc/utils.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="560">
-              <caret line="56" column="17" lean-forward="false" selection-start-line="56" selection-start-column="17" selection-end-line="56" selection-end-column="17" />
+            <state relative-caret-position="416">
+              <caret line="59" column="21" lean-forward="false" selection-start-line="59" selection-start-column="21" selection-end-line="59" selection-end-column="21" />
               <folding>
                 <element signature="e#250#264#0" expanded="true" />
               </folding>
@@ -68,22 +88,6 @@
   </component>
   <component name="FindInProjectRecents">
     <findStrings>
-      <find>Partv</find>
-      <find>Done loading</find>
-      <find>Lower dp</find>
-      <find>error execu</find>
-      <find>Stopping export</find>
-      <find>If gencase</find>
-      <find>co</find>
-      <find>positions</find>
-      <find>Freq</find>
-      <find>sets fill</find>
-      <find>opens the com</find>
-      <find>serie</find>
-      <find>add all poss</find>
-      <find>change case limit</find>
-      <find>position</find>
-      <find>fillbox conten</find>
       <find>Sets the mk group ini</find>
       <find>creates a new case</find>
       <find>e this button to define</find>
@@ -98,6 +102,22 @@
       <find>utils.debug</find>
       <find>fixed</find>
       <find>Applied to Mk</find>
+      <find>perio</find>
+      <find>periodic</find>
+      <find>perid</find>
+      <find>peri</find>
+      <find>h</find>
+      <find>helper</find>
+      <find>helpers</find>
+      <find>per</find>
+      <find>periodii</find>
+      <find>periodicity</find>
+      <find>periodicit</find>
+      <find>periodici</find>
+      <find>periodi</find>
+      <find>period</find>
+      <find>Paths to</find>
+      <find>= &quot;</find>
     </findStrings>
     <replaceStrings>
       <replace>self.time_label</replace>
@@ -128,8 +148,8 @@
         <option value="$PROJECT_DIR$/dsphfc/lang/english.json" />
         <option value="$PROJECT_DIR$/dsphfc/guiutils.py" />
         <option value="$PROJECT_DIR$/dsphfc/properties.py" />
-        <option value="$PROJECT_DIR$/installer/installer.py" />
         <option value="$PROJECT_DIR$/DSPH.py" />
+        <option value="$PROJECT_DIR$/installer/installer.py" />
         <option value="$PROJECT_DIR$/dsphfc/utils.py" />
       </list>
     </option>
@@ -179,8 +199,6 @@
       <foldersAlwaysOnTop value="true" />
     </navigator>
     <panes>
-      <pane id="Scope" />
-      <pane id="Scratches" />
       <pane id="ProjectPane">
         <subPane>
           <PATH>
@@ -203,12 +221,28 @@
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
             <PATH_ELEMENT>
+              <option name="myItemId" value="installer" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+          </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="Macro" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="Macro" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
               <option name="myItemId" value="dsphfc" />
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
           </PATH>
         </subPane>
       </pane>
+      <pane id="Scope" />
+      <pane id="Scratches" />
     </panes>
   </component>
   <component name="PropertiesComponent">
@@ -652,8 +686,9 @@
     <editor active="true" />
     <layout>
       <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.15031983" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
-      <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.22993062" sideWeight="0.49156272" order="6" side_tool="false" content_ui="tabs" />
+      <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.22993062" sideWeight="0.49156272" order="6" side_tool="false" content_ui="tabs" />
       <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.22993062" sideWeight="0.5084373" order="7" side_tool="true" content_ui="tabs" />
+      <window_info id="Find" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32903865" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.20911793" sideWeight="0.4915751" order="10" side_tool="false" content_ui="tabs" />
       <window_info id="Python Console" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32903865" sideWeight="0.5" order="8" side_tool="false" content_ui="tabs" />
       <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32960895" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
@@ -668,7 +703,6 @@
       <window_info id="Inspection" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.4" sideWeight="0.5" order="5" side_tool="false" content_ui="tabs" />
       <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="9" side_tool="false" content_ui="tabs" />
       <window_info id="Hierarchy" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="2" side_tool="false" content_ui="combo" />
-      <window_info id="Find" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32903865" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Database" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Ant Build" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
     </layout>
@@ -701,7 +735,6 @@
     <option name="myLimit" value="2678400000" />
   </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value="Added 'Additional Parameters' field to FloatingInfo and ComputeForces.&#10;Fixed DSPH properties for objects that will be exported to STL. Now type can be changed but not fill mode.&#10;Fixed details button on simulation window. Now it doesn't close itself.&#10;Removed 'm' unit label from Ramp in regular wave generators." />
     <MESSAGE value="Added 'Additional Parameters' field to FloatingInfo and ComputeForces.&#10;Fixed DSPH properties for objects that will be exported to STL. Now type can be changed but not fill mode.&#10;Fixed details button on simulation window. Now it doesn't close itself.&#10;Removed 'm' unit label from Ramp in regular wave generators.&#10;Changed default name on new movements for something specific.&#10;Added normal movement to the menu on 'Create New' (Movement)." />
     <MESSAGE value="Added a placeholder in the movement window when no movement is selected or created.&#10;Add general MK usage list on Case summary." />
     <MESSAGE value="Fixed double-spacing in simulation details pane" />
@@ -726,7 +759,8 @@
     <MESSAGE value="Removed fixeddepth from XML export" />
     <MESSAGE value="Fixed a string on case summary." />
     <MESSAGE value="Now post-processing tools can be used while executing to check current results." />
-    <option name="LAST_COMMIT_MESSAGE" value="Now post-processing tools can be used while executing to check current results." />
+    <MESSAGE value="Added object names in XML definition.&#10;Preparing for release." />
+    <option name="LAST_COMMIT_MESSAGE" value="Added object names in XML definition.&#10;Preparing for release." />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
@@ -1072,7 +1106,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="1008">
           <caret line="63" column="78" lean-forward="false" selection-start-line="63" selection-start-column="78" selection-end-line="63" selection-end-column="78" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -1087,7 +1120,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="928">
           <caret line="58" column="5" lean-forward="false" selection-start-line="58" selection-start-column="5" selection-end-line="58" selection-end-column="5" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -1134,13 +1166,22 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="3504">
           <caret line="220" column="11" lean-forward="true" selection-start-line="220" selection-start-column="11" selection-end-line="220" selection-end-column="11" />
-          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/DSPH.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="432">
+          <caret line="120" column="43" lean-forward="false" selection-start-line="120" selection-start-column="43" selection-end-line="120" selection-end-column="43" />
+          <folding>
+            <element signature="e#324#338#0" expanded="true" />
+          </folding>
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/dsphfc/xmlimporter.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="3816">
+        <state relative-caret-position="439">
           <caret line="259" column="14" lean-forward="false" selection-start-line="259" selection-start-column="14" selection-end-line="259" selection-end-column="14" />
           <folding />
         </state>
@@ -1148,26 +1189,16 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/installer/installer.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-1377">
-          <caret line="65" column="86" lean-forward="false" selection-start-line="65" selection-start-column="86" selection-end-line="65" selection-end-column="86" />
+        <state relative-caret-position="242">
+          <caret line="90" column="12" lean-forward="false" selection-start-line="90" selection-start-column="12" selection-end-line="90" selection-end-column="12" />
           <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/DSPH.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="527">
-          <caret line="83" column="33" lean-forward="false" selection-start-line="83" selection-start-column="33" selection-end-line="83" selection-end-column="33" />
-          <folding>
-            <element signature="e#324#338#0" expanded="true" />
-          </folding>
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/dsphfc/utils.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="560">
-          <caret line="56" column="17" lean-forward="false" selection-start-line="56" selection-start-column="17" selection-end-line="56" selection-end-column="17" />
+        <state relative-caret-position="416">
+          <caret line="59" column="21" lean-forward="false" selection-start-line="59" selection-start-column="21" selection-end-line="59" selection-end-column="21" />
           <folding>
             <element signature="e#250#264#0" expanded="true" />
           </folding>

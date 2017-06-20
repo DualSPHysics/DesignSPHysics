@@ -57,7 +57,7 @@ APP_NAME = "DesignSPHysics"
 DEBUGGING = False
 DIVIDER = 1000
 PICKLE_PROTOCOL = 1  # Binary mode
-VERSION = "0.3.1706-19"
+VERSION = "0.3.1706-20"
 WIDTH_2D = 0.001
 
 
@@ -122,18 +122,6 @@ def check_executables(data):
     """ Checks the different executables used by DesignSPHysics. Returns the filtered data structure and a boolean
     stating if all went correctly. """
     execs_correct = True
-    debug("Paths to check:\n"
-          "{}\n"
-          "{}\n"
-          "{}\n"
-          "{}\n"
-          "{}\n"
-          "{}\n".format(data['gencase_path'],
-                        data['dsphysics_path'],
-                        data['partvtk4_path'],
-                        data['computeforces_path'],
-                        data['floatinginfo_path'],
-                        data['measuretool_path']))
 
     # Tries to identify gencase
     if os.path.isfile(data['gencase_path']):
@@ -412,6 +400,7 @@ def get_default_data():
     if os.path.isfile(FreeCAD.getUserAppDataDir() + '/dsph_data.dsphdata'):
         try:
             with open(FreeCAD.getUserAppDataDir() + '/dsph_data.dsphdata', 'rb') as picklefile:
+                log("Found data file. Loading data from disk.")
                 disk_data = pickle.load(picklefile)
                 data['gencase_path'] = disk_data['gencase_path']
                 data['dsphysics_path'] = disk_data['dsphysics_path']
@@ -419,6 +408,7 @@ def get_default_data():
                 data['computeforces_path'] = disk_data['computeforces_path']
                 data['floatinginfo_path'] = disk_data['floatinginfo_path']
                 data['measuretool_path'] = disk_data['measuretool_path']
+
         except Exception:
             # traceback.print_exc()
             warning(__("The main settings file is corrupted. Deleting..."))
@@ -430,7 +420,6 @@ def get_default_data():
             data['floatinginfo_path'] = ""
             data['measuretool_path'] = ""
 
-        log("Found data file. Loading data from disk.")
         data, state = check_executables(data)
     else:
         data["project_path"] = ""
@@ -525,63 +514,8 @@ def create_dsph_document():
     FreeCADGui.ActiveDocument.getObject("Case_Limits").LineWidth = 2.00
     FreeCADGui.ActiveDocument.getObject("Case_Limits").Selectable = False
 
-    # TODO: Peroidicty <- enable this
-    # create_periodicity_helpers()
-
     FreeCAD.ActiveDocument.recompute()
     FreeCADGui.SendMsgToActiveView("ViewFit")
-
-
-def create_periodicity_helpers(data):
-    """ Creates periodicity helper arrows in the case.
-        Also, stores their names to further reference them in the data dict. """
-    group = FreeCAD.activeDocument().addObject("App::DocumentObjectGroup", "Helpers_internal_")
-    group.Label = "Case Helpers"
-
-    y1h = Draft.makeWire([FreeCAD.Vector(0.0, 0.0, 0.0), FreeCAD.Vector(0.0, 1.0, 0.0)], closed=False, face=False, support=None)
-    y1h.Label = "Y Start Helper"
-    y1h.ViewObject.EndArrow = True
-    y1h.ViewObject.ArrowType = "Arrow"
-    y1h.ViewObject.Visibility = False
-
-    y2h = Draft.makeWire([FreeCAD.Vector(0.0, 1.0, 0.0), FreeCAD.Vector(0.0, 0.0, 0.0)], closed=False, face=False, support=None)
-    # y2h.Name = "y2h"
-    y2h.Label = "Y End Helper"
-    y2h.ViewObject.EndArrow = True
-    y2h.ViewObject.ArrowType = "Arrow"
-    y2h.ViewObject.Visibility = False
-
-    x1h = Draft.makeWire([FreeCAD.Vector(0.0, 0.0, 0.0), FreeCAD.Vector(1.0, 0.0, 0.0)], closed=False, face=False, support=None)
-    # x1h.Name = "x1h"
-    x1h.Label = "X Start Helper"
-    x1h.ViewObject.EndArrow = True
-    x1h.ViewObject.ArrowType = "Arrow"
-    x1h.ViewObject.Visibility = False
-
-    x2h = Draft.makeWire([FreeCAD.Vector(1.0, 0.0, 0.0), FreeCAD.Vector(0.0, 0.0, 0.0)], closed=False, face=False, support=None)
-    # x2h.Name = "x2h"
-    x2h.Label = "X End Helper"
-    x2h.ViewObject.EndArrow = True
-    x2h.ViewObject.ArrowType = "Arrow"
-    x2h.ViewObject.Visibility = False
-
-    # Add it to helpers group in FreeCAD
-    [FreeCAD.ActiveDocument.getObject("Helpers_internal_").addObject(x) for x in [y1h, y2h, x1h, x2h]]
-    # Store names in data dictionary to save references.
-    data["periodicity_helpers"] = {'y1': y1h.Name, 'y2': y2h.Name, 'x1': x1h.Name, 'x2': x2h.Name}
-
-
-def valid_periodicity_helpers(data):
-    """ Returns true if periodicity helpers exist and are valid in the case"""
-    if 'periodicity_helpers' not in data.keys():
-        return False
-    elif 'x1' not in data['periodicity_helpers'].keys() or 'x2' not in data['periodicity_helpers'].keys() \
-            or 'y1' not in data['periodicity_helpers'].keys() or 'y2' not in data['periodicity_helpers'].keys():
-        return False
-    elif None in [get_fc_object(x) for x in data['periodicity_helpers'].values()]:
-        return False
-    else:
-        return True
 
 
 def dump_to_xml(data, save_name):

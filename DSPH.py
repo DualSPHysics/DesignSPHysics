@@ -32,8 +32,9 @@ try:
     from dsphfc.utils import __
 except:
     sys.path.append(os.path.dirname(os.path.abspath(__file__)))
-
-print(utils.DEBUGGING)
+    from dsphfc.properties import *
+    from dsphfc import utils, guiutils, xmlimporter, dsphwidgets
+    from dsphfc.utils import __
 
 # Copyright (C) 2016 - Andrés Vieira (anvieiravazquez@gmail.com)
 # EPHYSLAB Environmental Physics Laboratory, Universidade de Vigo
@@ -69,7 +70,6 @@ __status__ = "Development"
 # TODO: Wiki - Add error reporting procedure / viewing
 # ------------------------------- 0.4 BETA -------------------------------
 # TODO: 0.4Beta - Movement brief explanation
-# TODO: 0.4Beta - Periodicity support - Show arrows (bounds) to show periodicity
 # TODO: 0.4Beta - Toolbox (Fillbox, wave, periodicity, imports...) to clean the UI
 # TODO: 0.4Beta - Create Material support
 # TODO: 0.4Beta - Material creator and assigner
@@ -772,30 +772,6 @@ def on_2d_toggle():
         utils.error("Not a valid case environment")
 
 
-def on_y_per_toggle():
-    """ Toggles Y-axis periodicity """
-    if not utils.valid_periodicity_helpers(data):
-        utils.create_periodicity_helpers(data)
-
-    y1 = guiutils.get_fc_view_object(data['periodicity_helpers']['y1'])
-    y2 = guiutils.get_fc_view_object(data['periodicity_helpers']['y2'])
-
-    y1.Visibility = not y1.Visibility
-    y2.Visibility = not y2.Visibility
-
-
-def on_x_per_toggle():
-    """ Toggles X-axis periodicity """
-    if not utils.valid_periodicity_helpers(data):
-        utils.create_periodicity_helpers(data)
-
-    x1 = guiutils.get_fc_view_object(data['periodicity_helpers']['x1'])
-    x2 = guiutils.get_fc_view_object(data['periodicity_helpers']['x2'])
-
-    x1.Visibility = not x1.Visibility
-    x2.Visibility = not x2.Visibility
-
-
 # Connect case control buttons to respective handlers
 casecontrols_bt_newdoc.clicked.connect(on_new_case)
 casecontrols_bt_savedoc.clicked.connect(on_save_case)
@@ -806,8 +782,6 @@ casecontrols_bt_addstl.clicked.connect(on_add_stl)
 casecontrols_bt_importxml.clicked.connect(on_import_xml)
 summary_bt.clicked.connect(on_summary)
 toggle3dbutton.clicked.connect(on_2d_toggle)
-y_period_bt.clicked.connect(on_y_per_toggle)
-x_period_bt.clicked.connect(on_x_per_toggle)
 
 # Defines case control scaffolding
 cclabel_layout.addWidget(casecontrols_label)
@@ -819,10 +793,6 @@ ccsecondrow.addWidget(toggle3dbutton)
 ccthirdrow_layout.addWidget(casecontrols_bt_addfillbox)
 ccthirdrow_layout.addWidget(casecontrols_bt_addstl)
 ccthirdrow_layout.addWidget(casecontrols_bt_importxml)
-
-# TODO: Periodicty <- Enable this
-# ccfourthrow_layout.addWidget(y_period_bt)
-# ccfourthrow_layout.addWidget(x_period_bt)
 
 cc_layout.addLayout(cclabel_layout)
 cc_layout.addLayout(ccfilebuttons_layout)
@@ -3600,19 +3570,6 @@ def selection_monitor():
             property_table.hide()
             addtodsph_button.hide()
             removefromdsph_button.hide()
-        # Ensure helpers are positioned correctly
-        if utils.valid_periodicity_helpers(data):
-            utils.get_fc_object(data['periodicity_helpers']['x1']).Start = utils.get_fc_object('Case_Limits').Placement.Base
-            utils.get_fc_object(data['periodicity_helpers']['x2']).End = utils.get_fc_object('Case_Limits').Placement.Base
-
-            utils.get_fc_object(data['periodicity_helpers']['y1']).Start = utils.get_fc_object('Case_Limits').Placement.Base
-            utils.get_fc_object(data['periodicity_helpers']['y2']).End = utils.get_fc_object('Case_Limits').Placement.Base
-
-            utils.get_fc_object(data['periodicity_helpers']['x1']).End = utils.get_fc_object('Case_Limits').Placement.Base + FreeCAD.Vector(utils.get_fc_object('Case_Limits').Width.Value, 0.0, 0.0)
-            utils.get_fc_object(data['periodicity_helpers']['x2']).Start = utils.get_fc_object('Case_Limits').Placement.Base + FreeCAD.Vector(utils.get_fc_object('Case_Limits').Width.Value, 0.0, 0.0)
-
-            utils.get_fc_object(data['periodicity_helpers']['y1']).End = utils.get_fc_object('Case_Limits').Placement.Base + FreeCAD.Vector(0.0, utils.get_fc_object('Case_Limits').Length.Value, 0.0)
-            utils.get_fc_object(data['periodicity_helpers']['y2']).Start = utils.get_fc_object('Case_Limits').Placement.Base + FreeCAD.Vector(0.0, utils.get_fc_object('Case_Limits').Length.Value, 0.0)
         # watch fillbox rotations and prevent them
         try:
             for o in FreeCAD.getDocument("DSPH_Case").Objects:
