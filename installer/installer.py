@@ -165,6 +165,9 @@ def main():
                         data['gencase_path'] = dest_folder + "/dualsphysics/EXECS/GenCase4" + extension
                         data['dsphysics_path'] = dest_folder + "/dualsphysics/EXECS/DualSPHysics4" + extension
                         data['partvtk4_path'] = dest_folder + "/dualsphysics/EXECS/PartVTK4" + extension
+                        data['computeforces_path'] = dest_folder + "/dualsphysics/EXECS/ComputeForces4" + extension
+                        data['floatinginfo_path'] = dest_folder + "/dualsphysics/EXECS/FloatingInfo4" + extension
+                        data['measuretool_path'] = dest_folder + "/dualsphysics/EXECS/MeasureTool4" + extension
                         with open(fc_folder + '/dsph_data.dsphdata', 'wb') as picklefile:
                             pickle.dump(data, picklefile, 1)
 
