@@ -36,8 +36,9 @@ except:
     from dsphfc import utils, guiutils, xmlimporter, dsphwidgets
     from dsphfc.utils import __
 
-# Copyright (C) 2016 - Andrés Vieira (anvieiravazquez@gmail.com)
+# Copyright (C) 2017 - Andrés Vieira (anvieiravazquez@gmail.com)
 # EPHYSLAB Environmental Physics Laboratory, Universidade de Vigo
+# EPHYTECH Environmental Physics Technologies
 #
 # This file is part of DesignSPHysics.
 #
