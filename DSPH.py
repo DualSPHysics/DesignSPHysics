@@ -68,12 +68,12 @@ __status__ = "Development"
 # -------------------------------   WIKI   -------------------------------
 # TODO: Wiki - Write http://design.sphysics.org/wiki/doku.php?id=concepts
 # ------------------------------- 0.4 BETA -------------------------------
-# TODO: 0.4Beta - Fillbox for fluid & bound
 # TODO: 0.4Beta - Save additional parameters into script files
 # TODO: 0.4Beta - Separate GenCase from saving
 # TODO: 0.4Beta - Execute an estimation of possible particles in the case and spawn a dialog if there are too much
 # TODO: 0.4Beta - Show details at the end of post-processing
 # TODO: 0.4Beta - Lock case limits view properties (lock in wireframe etc)
+# TODO: 0.4Beta - Clicking on a group that is not a fillbox should prompt to add all the inside objects
 # TODO: 0.4Beta - Create Material support
 # TODO: 0.4Beta - Material creator and assigner
 # ------------------------------- 0.5 BETA -------------------------------
@@ -2227,23 +2227,28 @@ def objtype_change(index):
     selectiongui = FreeCADGui.getDocument("DSPH_Case").getObject(selection.Name)
     data['simobjects'][selection.Name][1] = objtype_prop.itemText(index)
 
-    if "fillbox" in selection.Name.lower():
-        return
-
     if objtype_prop.itemText(index).lower() == "bound":
         mkgroup_prop.setRange(0, 240)
         # TODO: Check this!
         # mkgroup_prop.setValue(int(utils.get_first_mk_not_used("bound", data)))
-        selectiongui.ShapeColor = (0.80, 0.80, 0.80)
-        selectiongui.Transparency = 0
+        try:
+            selectiongui.ShapeColor = (0.80, 0.80, 0.80)
+            selectiongui.Transparency = 0
+        except AttributeError:
+            # Can't change attributes
+            pass
         floatstate_prop.setEnabled(True)
         initials_prop.setEnabled(False)
         mkgroup_label.setText("&nbsp;&nbsp;&nbsp;" + __("MKBound") + " <a href='http://design.sphysics.org/wiki/doku.php?id=concepts'>?</a>")
     elif objtype_prop.itemText(index).lower() == "fluid":
         mkgroup_prop.setRange(0, 10)
         # mkgroup_prop.setValue(int(utils.get_first_mk_not_used("fluid", data)))
-        selectiongui.ShapeColor = (0.00, 0.45, 1.00)
-        selectiongui.Transparency = 30
+        try:
+            selectiongui.ShapeColor = (0.00, 0.45, 1.00)
+            selectiongui.Transparency = 30
+        except AttributeError:
+            # Can't change attributes
+            pass
         # Remove floating properties if it is changed to fluid
         if str(data['simobjects'][selection.Name][0]) in data['floating_mks'].keys():
             data['floating_mks'].pop(str(data['simobjects'][selection.Name][0]), None)
@@ -3422,12 +3427,7 @@ def on_tree_item_selection_change():
                         to_change.setCurrentIndex(1)
                         mkgroup_prop.setRange(0, 240)
                         mkgroup_label.setText("&nbsp;&nbsp;&nbsp;" + __("MKBound") + " <a href='http://design.sphysics.org/wiki/doku.php?id=concepts'>?</a>")
-                elif selection[0].TypeId == "App::DocumentObjectGroup" and "fillbox" in selection[0].Name.lower():
-                    # Fillbox
-                    mkgroup_label.setText("&nbsp;&nbsp;&nbsp;" + __("MKFluid") + " <a href='http://design.sphysics.org/wiki/doku.php?id=concepts'>?</a>")
-                    to_change.setEnabled(False)
-                    to_change.setCurrentIndex(0)
-                elif selection[0].TypeId in ["Mesh::Feature", "Part::Cut"]:
+                elif selection[0].TypeId in ["Mesh::Feature", "Part::Cut"] or (selection[0].TypeId == "App::DocumentObjectGroup" and "fillbox" in selection[0].Name.lower()):
                     # Is an object that will be exported to STL
                     to_change.setEnabled(True)
                     if data['simobjects'][selection[0].Name][1].lower() == "fluid":
@@ -3471,13 +3471,12 @@ def on_tree_item_selection_change():
 
                 # float state config
                 to_change = property_table.cellWidget(3, 1)
-                if selection[0].TypeId in temp_data['supported_types']:
+                if selection[0].TypeId in temp_data['supported_types'] or (selection[0].TypeId == "App::DocumentObjectGroup" and "fillbox" in selection[0].Name.lower()):
                     if data['simobjects'][selection[0].Name][1].lower() == "fluid":
                         to_change.setEnabled(False)
                     else:
                         to_change.setEnabled(True)
-                elif selection[0].TypeId == "App::DocumentObjectGroup" and "fillbox" in selection[0].Name.lower():
-                    to_change.setEnabled(False)
+                    # TODO: Check that fillbox can float
 
                 # initials restrictions
                 to_change = property_table.cellWidget(4, 1)
@@ -3485,18 +3484,15 @@ def on_tree_item_selection_change():
                     to_change.setEnabled(True)
                 else:
                     to_change.setEnabled(False)
-                if selection[0].TypeId == "App::DocumentObjectGroup" and "fillbox" in selection[0].Name.lower():
-                    to_change.setEnabled(True)
 
                 # motion restrictions
                 to_change = property_table.cellWidget(6, 1)
-                if selection[0].TypeId in temp_data['supported_types'] or "Mesh::Feature" in str(selection[0].TypeId):
+                if selection[0].TypeId in temp_data['supported_types'] or "Mesh::Feature" in str(selection[0].TypeId) or \
+                        (selection[0].TypeId == "App::DocumentObjectGroup" and "fillbox" in selection[0].Name.lower()):
                     if data['simobjects'][selection[0].Name][1].lower() == "fluid":
                         to_change.setEnabled(False)
                     else:
                         to_change.setEnabled(True)
-                elif selection[0].TypeId == "App::DocumentObjectGroup" and "fillbox" in selection[0].Name.lower():
-                    to_change.setEnabled(False)
 
             else:
                 properties_widget.setMinimumHeight(100)
