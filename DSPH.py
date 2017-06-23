@@ -66,26 +66,28 @@ __status__ = "Development"
 
 # region General To-Do to use with PyCharm
 # -------------------------------   WIKI   -------------------------------
-# TODO: Wiki - Add motion section
-# TODO: Wiki - Add case summary
-# TODO: Wiki - Add error reporting procedure / viewing
+# TODO: Wiki - Write http://design.sphysics.org/wiki/doku.php?id=concepts
 # ------------------------------- 0.4 BETA -------------------------------
-# TODO: 0.4Beta - Movement brief explanation
-# TODO: 0.4Beta - Toolbox (Fillbox, wave, periodicity, imports...) to clean the UI
+# TODO: 0.4Beta - Fillbox for fluid & bound
+# TODO: 0.4Beta - Save additional parameters into script files
+# TODO: 0.4Beta - Separate GenCase from saving
+# TODO: 0.4Beta - Execute an estimation of possible particles in the case and spawn a dialog if there are too much
+# TODO: 0.4Beta - Show details at the end of post-processing
+# TODO: 0.4Beta - Lock case limits view properties (lock in wireframe etc)
 # TODO: 0.4Beta - Create Material support
 # TODO: 0.4Beta - Material creator and assigner
-# TODO: 0.4Beta - Separate GenCase from saving
 # ------------------------------- 0.5 BETA -------------------------------
 # TODO: 0.5Beta - Refactor all code
 # TODO: 0.5Beta - 'Pythonize' code and delete redundant code
 # TODO: 0.5Beta - Improve debug messages and make GUI section to enable/disable it
 # TODO: 0.5Beta - Revisit all strings to translate and make some translations.
 # TODO: 0.5Beta - Make some kind of a translation platform.
-# TODO: 0.5Beta - Rework constants window (default parameters, better scaffolding, help...)
 # TODO: 0.5Beta - Study uses with latest DSPH and spaces in folder names etc
 # TODO: 0.5Beta - Test and fix all possible things.
 # TODO: 0.5Beta - Change rotation procedure. Try not to use matrixreset, delete null rotations... etc
 # TODO: 0.5Beta - Redesign
+# TODO: 0.5Beta - Rework constants window (default parameters, better scaffolding, help...)
+# TODO: 0.5Beta - Toolbox (Fillbox, wave, periodicity, imports...) to clean the UI
 # TODO: 0.5Beta - Revisit and complete documentation of the code
 # ------------------------------- NO VERSION ------------------------------
 # TODO: NO VERSION - SSH Server support.
@@ -2179,6 +2181,7 @@ properties_scaff_widget.setLayout(property_widget_layout)
 properties_widget.setWidget(properties_scaff_widget)
 
 mkgroup_label = QtGui.QLabel("   {}".format(__("MKGroup")))
+mkgroup_label.setOpenExternalLinks(True)
 mkgroup_label.setToolTip(__("Establishes the object group."))
 objtype_label = QtGui.QLabel("   {}".format(__("Type of object")))
 objtype_label.setToolTip(__("Establishes the object type: Fluid or bound"))
@@ -2235,7 +2238,7 @@ def objtype_change(index):
         selectiongui.Transparency = 0
         floatstate_prop.setEnabled(True)
         initials_prop.setEnabled(False)
-        mkgroup_label.setText("   " + __("MKBound"))
+        mkgroup_label.setText("&nbsp;&nbsp;&nbsp;" + __("MKBound") + " <a href='http://design.sphysics.org/wiki/doku.php?id=concepts'>?</a>")
     elif objtype_prop.itemText(index).lower() == "fluid":
         mkgroup_prop.setRange(0, 10)
         # mkgroup_prop.setValue(int(utils.get_first_mk_not_used("fluid", data)))
@@ -2249,7 +2252,7 @@ def objtype_change(index):
             data['motion_mks'].pop(data['simobjects'][selection.Name][0], None)
         floatstate_prop.setEnabled(False)
         initials_prop.setEnabled(True)
-        mkgroup_label.setText("   " + __("MKFluid"))
+        mkgroup_label.setText("&nbsp;&nbsp;&nbsp;" + __("MKFluid") + " <a href='http://design.sphysics.org/wiki/doku.php?id=concepts'>?</a>")
 
     on_tree_item_selection_change()
 
@@ -2849,10 +2852,15 @@ def motion_change():
     has_motion_selector = QtGui.QComboBox()
     has_motion_selector.insertItems(0, ["True", "False"])
     has_motion_selector.currentIndexChanged.connect(on_motion_change)
+    has_motion_helplabel = QtGui.QLabel("<a href='http://design.sphysics.org/wiki/doku.php?id=featreference#configure_object_motion'>{}</a>".format(__("Movement Help")))
+    has_motion_helplabel.setTextFormat(QtCore.Qt.RichText)
+    has_motion_helplabel.setTextInteractionFlags(QtCore.Qt.TextBrowserInteraction)
+    has_motion_helplabel.setOpenExternalLinks(True)
     has_motion_targetlabel = QtGui.QLabel(__("Target MKBound: ") + str(target_mk))
     has_motion_layout.addWidget(has_motion_label)
     has_motion_layout.addWidget(has_motion_selector)
     has_motion_layout.addStretch(1)
+    has_motion_layout.addWidget(has_motion_helplabel)
     has_motion_layout.addWidget(has_motion_targetlabel)
 
     motion_features_layout = QtGui.QHBoxLayout()
@@ -3409,14 +3417,14 @@ def on_tree_item_selection_change():
                     if data['simobjects'][selection[0].Name][1].lower() == "fluid":
                         to_change.setCurrentIndex(0)
                         mkgroup_prop.setRange(0, 10)
-                        mkgroup_label.setText("   " + __("MKFluid"))
+                        mkgroup_label.setText("&nbsp;&nbsp;&nbsp;" + __("MKFluid") + " <a href='http://design.sphysics.org/wiki/doku.php?id=concepts'>?</a>")
                     elif data['simobjects'][selection[0].Name][1].lower() == "bound":
                         to_change.setCurrentIndex(1)
                         mkgroup_prop.setRange(0, 240)
-                        mkgroup_label.setText("   " + __("MKBound"))
+                        mkgroup_label.setText("&nbsp;&nbsp;&nbsp;" + __("MKBound") + " <a href='http://design.sphysics.org/wiki/doku.php?id=concepts'>?</a>")
                 elif selection[0].TypeId == "App::DocumentObjectGroup" and "fillbox" in selection[0].Name.lower():
                     # Fillbox
-                    mkgroup_label.setText("   " + __("MKFluid"))
+                    mkgroup_label.setText("&nbsp;&nbsp;&nbsp;" + __("MKFluid") + " <a href='http://design.sphysics.org/wiki/doku.php?id=concepts'>?</a>")
                     to_change.setEnabled(False)
                     to_change.setCurrentIndex(0)
                 elif selection[0].TypeId in ["Mesh::Feature", "Part::Cut"]:
@@ -3425,11 +3433,11 @@ def on_tree_item_selection_change():
                     if data['simobjects'][selection[0].Name][1].lower() == "fluid":
                         to_change.setCurrentIndex(0)
                         mkgroup_prop.setRange(0, 10)
-                        mkgroup_label.setText("   " + __("MKFluid"))
+                        mkgroup_label.setText("&nbsp;&nbsp;&nbsp;" + __("MKFluid") + " <a href='http://design.sphysics.org/wiki/doku.php?id=concepts'>?</a>")
                     elif data['simobjects'][selection[0].Name][1].lower() == "bound":
                         to_change.setCurrentIndex(1)
                         mkgroup_prop.setRange(0, 240)
-                        mkgroup_label.setText("   " + __("MKBound"))
+                        mkgroup_label.setText("&nbsp;&nbsp;&nbsp;" + __("MKBound") + " <a href='http://design.sphysics.org/wiki/doku.php?id=concepts'>?</a>")
                 else:
                     # Everything else
                     to_change.setCurrentIndex(1)
