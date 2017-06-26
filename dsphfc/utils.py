@@ -59,7 +59,7 @@ DIVIDER = 1000
 PICKLE_PROTOCOL = 1  # Binary mode
 VERSION = "0.4.1706-21"
 WIDTH_2D = 0.001
-
+MAX_PARTICLE_WARNING = 2000000
 
 # ------ END CONSTANTS DEFINITION ------
 
@@ -262,11 +262,11 @@ def initials_list_to_initials_property(initials_mks):
 
 def get_maximum_particles(dp):
     """ Gets the maximum number of particles that can be in the Case Limits with the given DP """
-    to_ret = utils.get_fc_object('Case_Limits').Width.Value / (data['dp'] * 1000)
-    to_ret *= utils.get_fc_object('Case_Limits').Height.Value / (data['dp'] * 1000)
-    to_ret *= utils.get_fc_object('Case_Limits').Length.Value / (data['dp'] * 1000)
+    to_ret = get_fc_object('Case_Limits').Width.Value / (dp * 1000)
+    to_ret *= get_fc_object('Case_Limits').Height.Value / (dp * 1000)
+    to_ret *= get_fc_object('Case_Limits').Length.Value / (dp * 1000)
 
-    return to_ret
+    return int(to_ret)
 
 
 def get_default_data():
