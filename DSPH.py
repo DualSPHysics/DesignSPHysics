@@ -3587,8 +3587,8 @@ def selection_monitor():
             property_table.hide()
             addtodsph_button.hide()
             removefromdsph_button.hide()
-        # watch fillbox rotations and prevent them
         try:
+            # watch fillbox rotations and prevent them
             for o in FreeCAD.getDocument("DSPH_Case").Objects:
                 if o.TypeId == "App::DocumentObjectGroup" and "fillbox" in o.Name.lower():
                     for subelem in o.OutList:
@@ -3602,6 +3602,14 @@ def selection_monitor():
                     if not data['3dmode'] and o.Width.Value != utils.WIDTH_2D:
                         o.Width.Value = utils.WIDTH_2D
                         utils.error(__("Can't change width if the case is in 2D Mode!"))
+
+            # Prevent some view properties of Case Limits to be changed
+            if guiutils.get_fc_view_object("Case_Limits").DisplayMode != "Wireframe":
+                guiutils.get_fc_view_object("Case_Limits").DisplayMode = "Wireframe"
+            if guiutils.get_fc_view_object("Case_Limits").LineColor != (1.00, 0.00, 0.00):
+                guiutils.get_fc_view_object("Case_Limits").LineColor = (1.00, 0.00, 0.00)
+            if guiutils.get_fc_view_object("Case_Limits").Selectable:
+                guiutils.get_fc_view_object("Case_Limits").Selectable = False
         except NameError:
             # DSPH Case not opened, disable things
             guiutils.widget_state_config(widget_state_elements, "no case")
