@@ -512,10 +512,13 @@ def on_add_fillbox():
     fillbox_gp = FreeCAD.getDocument("DSPH_Case").addObject("App::DocumentObjectGroup", "FillBox")
     fillbox_point = FreeCAD.ActiveDocument.addObject("Part::Sphere", "FillPoint")
     fillbox_limits = FreeCAD.ActiveDocument.addObject("Part::Box", "FillLimit")
+    fillbox_limits.Length = '1000 mm'
+    fillbox_limits.Width = '1000 mm'
+    fillbox_limits.Height = '1000 mm'
     fillbox_limits.ViewObject.DisplayMode = "Wireframe"
     fillbox_limits.ViewObject.LineColor = (0.00, 0.78, 1.00)
-    fillbox_point.Radius.Value = 0.2
-    fillbox_point.Placement.Base = FreeCAD.Vector(5, 5, 5)
+    fillbox_point.Radius.Value = 10
+    fillbox_point.Placement.Base = FreeCAD.Vector(500, 500, 500)
     fillbox_point.ViewObject.ShapeColor = (0.00, 0.00, 0.00)
     fillbox_gp.addObject(fillbox_limits)
     fillbox_gp.addObject(fillbox_point)
