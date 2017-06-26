@@ -16,7 +16,7 @@
     <option name="LAST_RESOLUTION" value="IGNORE" />
   </component>
   <component name="CoverageDataManager">
-    <SUITE FILE_PATH="coverage/Macro$Reopen_FreeCAD_and_Execute.coverage" NAME="Reopen FreeCAD and Execute Coverage Results" MODIFIED="1498209192287" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$USER_HOME$/Documents/DSPH" />
+    <SUITE FILE_PATH="coverage/Macro$Reopen_FreeCAD_and_Execute.coverage" NAME="Reopen FreeCAD and Execute Coverage Results" MODIFIED="1498466151268" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$USER_HOME$/Documents/DSPH" />
   </component>
   <component name="CreatePatchCommitExecutor">
     <option name="PATCH_PATH" value="" />
@@ -39,8 +39,8 @@
       <file leaf-file-name="DSPH.py" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/DSPH.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="302">
-              <caret line="70" column="0" lean-forward="false" selection-start-line="70" selection-start-column="0" selection-end-line="70" selection-end-column="0" />
+            <state relative-caret-position="462">
+              <caret line="520" column="58" lean-forward="false" selection-start-line="520" selection-start-column="58" selection-end-line="520" selection-end-column="58" />
               <folding>
                 <element signature="e#324#338#0" expanded="true" />
               </folding>
@@ -91,8 +91,8 @@
       <file leaf-file-name="utils.py" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/dsphfc/utils.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="384">
-              <caret line="43" column="0" lean-forward="false" selection-start-line="43" selection-start-column="0" selection-end-line="43" selection-end-column="0" />
+            <state relative-caret-position="17648">
+              <caret line="1122" column="19" lean-forward="false" selection-start-line="1122" selection-start-column="4" selection-end-line="1122" selection-end-column="19" />
               <folding>
                 <element signature="e#250#264#0" expanded="true" />
               </folding>
@@ -104,7 +104,6 @@
   </component>
   <component name="FindInProjectRecents">
     <findStrings>
-      <find>Sets additional parame</find>
       <find>m</find>
       <find>mk</find>
       <find>for ex</find>
@@ -134,6 +133,7 @@
       <find>MKBound</find>
       <find>type of obj</find>
       <find>objtype_prop</find>
+      <find>batch_generator</find>
     </findStrings>
     <replaceStrings>
       <replace>self.time_label</replace>
@@ -238,8 +238,9 @@
     <property name="WebServerToolWindowFactoryState" value="false" />
     <property name="js.eslint.eslintPackage" value="" />
     <property name="settings.editor.selected.configurable" value="preferences.sourceCode" />
-    <property name="SearchEverywhereHistoryKey" value="dumpto&#9;null&#9;null&#10;on_e&#9;null&#9;null&#10;onnew&#9;null&#9;null&#10;on selec&#9;null&#9;null&#10;simulate&#9;null&#9;null&#10;onsav&#9;null&#9;null&#10;onsave&#9;null&#9;null&#10;onexsi&#9;null&#9;null&#10;addtos&#9;null&#9;null&#10;add&#9;null&#9;null&#10;newca&#9;null&#9;null&#10;dsph&#9;FILE&#9;file://C:/Users/ndrs/AppData/Roaming/FreeCAD/Macro/dsphfc/dsphwidgets.py&#10;xml&#9;null&#9;null&#10;selection&#9;null&#9;null&#10;on_impor&#9;null&#9;null&#10;save_case&#9;null&#9;null" />
+    <property name="SearchEverywhereHistoryKey" value="addfill&#9;null&#9;null&#10;batch&#9;null&#9;null&#10;dumpto&#9;null&#9;null&#10;on_e&#9;null&#9;null&#10;onnew&#9;null&#9;null&#10;on selec&#9;null&#9;null&#10;simulate&#9;null&#9;null&#10;onsav&#9;null&#9;null&#10;onsave&#9;null&#9;null&#10;onexsi&#9;null&#9;null&#10;addtos&#9;null&#9;null&#10;add&#9;null&#9;null&#10;newca&#9;null&#9;null&#10;dsph&#9;FILE&#9;file://C:/Users/ndrs/AppData/Roaming/FreeCAD/Macro/dsphfc/dsphwidgets.py&#10;xml&#9;null&#9;null&#10;selection&#9;null&#9;null&#10;on_impor&#9;null&#9;null&#10;save_case&#9;null&#9;null" />
     <property name="last_opened_file_path" value="C:/Program Files/FreeCAD 0.16/bin/python.exe" />
+    <property name="FullScreen" value="true" />
   </component>
   <component name="RunDashboard">
     <option name="ruleStates">
@@ -677,13 +678,13 @@
       <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.24083251" sideWeight="0.49156272" order="6" side_tool="false" content_ui="tabs" />
       <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.22993062" sideWeight="0.5084373" order="7" side_tool="true" content_ui="tabs" />
       <window_info id="Find" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32903865" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
-      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32960895" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.20911793" sideWeight="0.4915751" order="10" side_tool="false" content_ui="tabs" />
       <window_info id="Python Console" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32903865" sideWeight="0.5" order="8" side_tool="false" content_ui="tabs" />
+      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32960895" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Structure" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.1684435" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
-      <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.4" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Favorites" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="1" side_tool="true" content_ui="tabs" />
       <window_info id="Notes" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.30063966" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" x="2363" y="239" width="619" height="687" />
+      <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.4" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Data View" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="5" side_tool="false" content_ui="tabs" />
       <window_info id="Cvs" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
       <window_info id="Message" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
@@ -726,7 +727,6 @@
     <option name="myLimit" value="2678400000" />
   </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value="Implemented an success/error dialog on post-processing tools." />
     <MESSAGE value="Now on changing from 2D to 3D, if its possible, Width restores itself to its original 3D value." />
     <MESSAGE value="Fixed an error when making a new case from a previous 2D one, that made the case limits' width to be 1 nanometer." />
     <MESSAGE value="Added units to some properties of the floating configuration window." />
@@ -751,7 +751,8 @@
     <MESSAGE value="Little patches for release" />
     <MESSAGE value="Changes on readme and license" />
     <MESSAGE value="Added some help links and reworked the TODO timeline" />
-    <option name="LAST_COMMIT_MESSAGE" value="Added some help links and reworked the TODO timeline" />
+    <MESSAGE value="Implemented fluid &amp; solid support for fillboxes" />
+    <option name="LAST_COMMIT_MESSAGE" value="Implemented fluid &amp; solid support for fillboxes" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
@@ -1159,16 +1160,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/dsphfc/utils.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="384">
-          <caret line="43" column="0" lean-forward="false" selection-start-line="43" selection-start-column="0" selection-end-line="43" selection-end-column="0" />
-          <folding>
-            <element signature="e#250#264#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/LICENSE">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="0">
@@ -1193,10 +1184,20 @@
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/dsphfc/utils.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="17648">
+          <caret line="1122" column="19" lean-forward="false" selection-start-line="1122" selection-start-column="4" selection-end-line="1122" selection-end-column="19" />
+          <folding>
+            <element signature="e#250#264#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/DSPH.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="302">
-          <caret line="70" column="0" lean-forward="false" selection-start-line="70" selection-start-column="0" selection-end-line="70" selection-end-column="0" />
+        <state relative-caret-position="462">
+          <caret line="520" column="58" lean-forward="false" selection-start-line="520" selection-start-column="58" selection-end-line="520" selection-end-column="58" />
           <folding>
             <element signature="e#324#338#0" expanded="true" />
           </folding>
