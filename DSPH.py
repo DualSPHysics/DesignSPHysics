@@ -70,7 +70,6 @@ __status__ = "Development"
 # ------------------------------- 0.4 BETA -------------------------------
 # TODO: 0.4Beta - Save additional parameters into script files
 # TODO: 0.4Beta - Separate GenCase from saving
-# TODO: 0.4Beta - Execute an estimation of possible particles in the case and spawn a dialog if there are too much
 # TODO: 0.4Beta - Show details at the end of post-processing
 # TODO: 0.4Beta - Lock case limits view properties (lock in wireframe etc)
 # TODO: 0.4Beta - Clicking on a group that is not a fillbox should prompt to add all the inside objects
@@ -298,6 +297,16 @@ def on_save_case(save_as=None):
     """ Defines what happens when save case button is clicked.
     Saves a freecad scene definition, a dump of dsph data useful for this macro
     and tries to generate a case with gencase."""
+
+    # Check possible size of the case in particles and warn the user if there are too much.
+    case_maximum_particles = utils.get_maximum_particles(data['dp'])
+    utils.debug("Max number of particles that can be created is: {}".format(case_maximum_particles))
+    if case_maximum_particles > utils.MAX_PARTICLE_WARNING:
+        # Spawn a dialog warning the user
+        max_particle_warning = guiutils.ok_cancel_dialog(__('Are you sure?'), __("With that Case Limits size and DP you can generate as much as {} particles.\n\n"
+                                                                                 "Are you sure you want to continue saving?").format(case_maximum_particles))
+        if max_particle_warning == QtGui.QMessageBox.Cancel:
+            return
 
     # Watch if save path is available.  Prompt the user if not.
     if (data['project_path'] == "" and data['project_name'] == "") or save_as:
