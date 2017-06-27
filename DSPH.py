@@ -68,12 +68,10 @@ __status__ = "Development"
 # -------------------------------   WIKI   -------------------------------
 # TODO: Wiki - Write http://design.sphysics.org/wiki/doku.php?id=concepts
 # ------------------------------- 0.4 BETA -------------------------------
-# TODO: 0.4Beta - Save additional parameters into script files
 # TODO: 0.4Beta - Show details at the end of post-processing
 # TODO: 0.4Beta - Clicking on a group that is not a fillbox should prompt to add all the inside objects
 # TODO: 0.4Beta - Create Material support
 # TODO: 0.4Beta - Material creator and assigner
-# TODO: 0.4Beta - Re-code the 'open with paraview' feature using the new paraview path
 # ------------------------------- 0.5 BETA -------------------------------
 # TODO: 0.5Beta - Refactor all code
 # TODO: 0.5Beta - 'Pythonize' code and delete redundant code
@@ -348,7 +346,7 @@ def on_save_case(save_as=None):
                                   gcpath=data['gencase_path'],
                                   dsphpath=data['dsphysics_path'],
                                   pvtkpath=data['partvtk4_path'],
-                                  exec_params="-{}".format(str(ex_selector_combo.currentText()).lower()),
+                                  exec_params="-{} {}".format(str(ex_selector_combo.currentText()).lower(), data['additional_parameters']),
                                   lib_path='/'.join(data['gencase_path'].split('/')[:-1]))
 
         # Save data array on disk
