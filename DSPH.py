@@ -73,7 +73,6 @@ __status__ = "Development"
 # TODO: 0.4Beta - Clicking on a group that is not a fillbox should prompt to add all the inside objects
 # TODO: 0.4Beta - Create Material support
 # TODO: 0.4Beta - Material creator and assigner
-# TODO: 0.4Beta - Add Paraview as a tool in config.
 # TODO: 0.4Beta - Re-code the 'open with paraview' feature using the new paraview path
 # ------------------------------- 0.5 BETA -------------------------------
 # TODO: 0.5Beta - Refactor all code
@@ -1180,49 +1179,11 @@ def partvtk_export(export_parameters):
 
         # Bit of code that tries to open ParaView if the option was selected.
         if export_parameters['open_paraview']:
-            # Try to find paraview and open exported parts with it in each OS
-            found = False
             formats = {0: "vtk", 1: "csv", 2: "asc"}
-            if "win" in utils.get_os():
-                # In Windows, check the different program files folders and finds paraview
-                if os.environ['PROCESSOR_ARCHITECTURE'].lower() == 'amd64':
-                    for f in os.listdir(os.environ['PROGRAMFILES']):
-                        if "paraview" in f.lower():
-                            # Paraview found, find binary
-                            try:
-                                subprocess.Popen(["{}\\{}\\bin\\paraview.exe".format(os.environ['PROGRAMFILES'], f),
-                                                  "--data={}\\{}..{}".format(
-                                                      data['project_path'] + '\\' + data['project_name'] + '_Out',
-                                                      export_parameters['file_name'],
-                                                      formats[export_parameters['save_mode']])], stdout=subprocess.PIPE)
-                                found = True
-                            except:
-                                # Error while executing command
-                                pass
-                elif os.environ['PROCESSOR_ARCHITECTURE'].lower() == 'x86':
-                    for f in os.listdir(os.environ['PROGRAMFILES(X86)']):
-                        if "paraview" in f.lower():
-                            # Paraview found, find binary
-                            try:
-                                subprocess.Popen(
-                                    ["{}\\{}\\bin\\paraview.exe".format(os.environ['PROGRAMFILES(X86)'], f),
-                                     "--data={}\\{}_..{}".format(
-                                         data['project_path'] + '\\' + data['project_name'] + '_Out',
-                                         export_parameters['file_name'], formats[export_parameters['save_mode']])],
-                                    stdout=subprocess.PIPE)
-                                found = True
-                            except:
-                                # Error while executing command
-                                pass
-            elif "linux" in utils.get_os():
-                # In GNU/Linux just launch it
-                subprocess.Popen(
-                    ["paraview", "--data={}/{}_..{}".format(
-                        data['project_path'] + '/' + data['project_name'] + '_Out'), export_parameters['file_name'],
-                     formats[export_parameters['save_mode']]], stdout=subprocess.PIPE)
-                found = True
-            if not found:
-                guiutils.error_dialog("Paraview was not found in your system (Is it installed regularly?). Please open the exported files manually")
+            subprocess.Popen([data['paraview_path'], "--data={}\\{}_..{}".format(
+                data['project_path'] + '\\' + data['project_name'] + '_Out',
+                export_parameters['file_name'],
+                formats[export_parameters['save_mode']])], stdout=subprocess.PIPE)
 
     export_process = QtCore.QProcess(dsph_main_dock)
     export_process.finished.connect(on_export_finished)
@@ -1313,7 +1274,7 @@ def on_partvtk():
     pvtk_parameters_layout.addWidget(pvtk_parameters_text)
 
     pvtk_open_at_end = QtGui.QCheckBox("Open with ParaView at export end")
-    pvtk_open_at_end.setEnabled(False)  # TODO: Remove this
+    pvtk_open_at_end.setEnabled(data['paraview_path'] != "")
 
     pvtk_export_button = QtGui.QPushButton(__("Export"))
     pvtk_cancel_button = QtGui.QPushButton(__("Cancel"))

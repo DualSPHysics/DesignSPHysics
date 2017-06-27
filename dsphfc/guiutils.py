@@ -1153,6 +1153,21 @@ def def_setup_window(data):
     measuretool_layout.addWidget(measuretool_input)
     measuretool_layout.addWidget(measuretool_browse)
 
+    # ParaView path
+    paraview_layout = QtGui.QHBoxLayout()
+    paraview_label = QtGui.QLabel("ParaView Path: ")
+    paraview_input = QtGui.QLineEdit()
+    try:
+        paraview_input.setText(data["paraview_path"])
+    except KeyError:
+        paraview_input.setText("")
+    paraview_input.setPlaceholderText("Put ParaView path here")
+    paraview_browse = QtGui.QPushButton("...")
+
+    paraview_layout.addWidget(paraview_label)
+    paraview_layout.addWidget(paraview_input)
+    paraview_layout.addWidget(paraview_browse)
+
     # ------------ Button behaviour definition --------------
     def on_ok():
         data['gencase_path'] = gencasepath_input.text()
@@ -1161,6 +1176,7 @@ def def_setup_window(data):
         data['computeforces_path'] = computeforces_input.text()
         data['floatinginfo_path'] = floatinginfo_input.text()
         data['measuretool_path'] = measuretool_input.text()
+        data['paraview_path'] = paraview_input.text()
         with open(FreeCAD.getUserAppDataDir() + '/dsph_data.dsphdata', 'wb') as picklefile:
             pickle.dump(data, picklefile, utils.PICKLE_PROTOCOL)
         utils.log("Setup changed. Saved to " + FreeCAD.getUserAppDataDir() + "/dsph_data.dsphdata")
@@ -1277,6 +1293,13 @@ def def_setup_window(data):
                 utils.error("I can't recognize MeasureTool in that exe!")
                 warning_dialog("I can't recognize MeasureTool in that exe!")
 
+    def on_paraview_browse():
+        filedialog = QtGui.QFileDialog()
+        # noinspection PyArgumentList
+        file_name, _ = filedialog.getOpenFileName(setup_window, "Select ParaView path", QtCore.QDir.homePath())
+        if file_name != "":
+            paraview_input.setText(file_name)
+
     ok_button.clicked.connect(on_ok)
     cancel_button.clicked.connect(on_cancel)
     gencasepath_browse.clicked.connect(on_gencase_browse)
@@ -1285,6 +1308,7 @@ def def_setup_window(data):
     computeforces_browse.clicked.connect(on_computeforces_browse)
     floatinginfo_browse.clicked.connect(on_floatinginfo_browse)
     measuretool_browse.clicked.connect(on_measuretool_browse)
+    paraview_browse.clicked.connect(on_paraview_browse)
 
     # Button layout definition
     stp_button_layout = QtGui.QHBoxLayout()
@@ -1300,6 +1324,7 @@ def def_setup_window(data):
     stp_main_layout.addLayout(computeforces_layout)
     stp_main_layout.addLayout(floatinginfo_layout)
     stp_main_layout.addLayout(measuretool_layout)
+    stp_main_layout.addLayout(paraview_layout)
     stp_main_layout.addStretch(1)
 
     stp_groupbox = QtGui.QGroupBox("Setup parameters")
