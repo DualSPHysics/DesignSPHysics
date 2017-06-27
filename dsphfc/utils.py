@@ -343,6 +343,7 @@ def get_default_data():
     data['floatinginfo_path'] = ""
     data['computeforces_path'] = ""
     data['measuretool_path'] = ""
+    data['paraview_path'] = ""
 
     # Case mode
     data['3dmode'] = True
