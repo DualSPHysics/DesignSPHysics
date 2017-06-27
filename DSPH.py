@@ -69,12 +69,12 @@ __status__ = "Development"
 # TODO: Wiki - Write http://design.sphysics.org/wiki/doku.php?id=concepts
 # ------------------------------- 0.4 BETA -------------------------------
 # TODO: 0.4Beta - Save additional parameters into script files
-# TODO: 0.4Beta - Separate GenCase from saving
 # TODO: 0.4Beta - Show details at the end of post-processing
-# TODO: 0.4Beta - Lock case limits view properties (lock in wireframe etc)
 # TODO: 0.4Beta - Clicking on a group that is not a fillbox should prompt to add all the inside objects
 # TODO: 0.4Beta - Create Material support
 # TODO: 0.4Beta - Material creator and assigner
+# TODO: 0.4Beta - Add Paraview as a tool in config.
+# TODO: 0.4Beta - Re-code the 'open with paraview' feature using the new paraview path
 # ------------------------------- 0.5 BETA -------------------------------
 # TODO: 0.5Beta - Refactor all code
 # TODO: 0.5Beta - 'Pythonize' code and delete redundant code
@@ -227,7 +227,7 @@ casecontrols_bt_savedoc.setToolTip(__(
 casecontrols_bt_savedoc.setIcon(guiutils.get_icon("save.png"))
 casecontrols_bt_savedoc.setIconSize(QtCore.QSize(28, 28))
 casecontrols_menu_savemenu = QtGui.QMenu()
-casecontrols_menu_savemenu.addAction(guiutils.get_icon("save.png"), __("Save Case"))
+casecontrols_menu_savemenu.addAction(guiutils.get_icon("save.png"), __("Save and run GenCase"))
 casecontrols_menu_savemenu.addAction(guiutils.get_icon("save.png"), __("Save as..."))
 casecontrols_bt_savedoc.setMenu(casecontrols_menu_savemenu)
 widget_state_elements['casecontrols_bt_savedoc'] = casecontrols_bt_savedoc
@@ -295,18 +295,7 @@ def on_new_case(prompt=True):
 
 def on_save_case(save_as=None):
     """ Defines what happens when save case button is clicked.
-    Saves a freecad scene definition, a dump of dsph data useful for this macro
-    and tries to generate a case with gencase."""
-
-    # Check possible size of the case in particles and warn the user if there are too much.
-    case_maximum_particles = utils.get_maximum_particles(data['dp'])
-    utils.debug("Max number of particles that can be created is: {}".format(case_maximum_particles))
-    if case_maximum_particles > utils.MAX_PARTICLE_WARNING:
-        # Spawn a dialog warning the user
-        max_particle_warning = guiutils.ok_cancel_dialog(__('Are you sure?'), __("With that Case Limits size and DP you can generate as much as {} particles.\n\n"
-                                                                                 "Are you sure you want to continue saving?").format(case_maximum_particles))
-        if max_particle_warning == QtGui.QMessageBox.Cancel:
-            return
+    Saves a freecad scene definition, and a dump of dsph data for the case."""
 
     # Watch if save path is available.  Prompt the user if not.
     if (data['project_path'] == "" and data['project_name'] == "") or save_as:
@@ -363,51 +352,6 @@ def on_save_case(save_as=None):
                                   exec_params="-{}".format(str(ex_selector_combo.currentText()).lower()),
                                   lib_path='/'.join(data['gencase_path'].split('/')[:-1]))
 
-        # Use gencase if possible to generate the case final definition
-        data['gencase_done'] = False
-        if data['gencase_path'] != "":
-            os.chdir(data['project_path'])
-            process = QtCore.QProcess(fc_main_window)
-            process.start(
-                data['gencase_path'], [data['project_path'] + '/' + data['project_name'] + '_Def', data['project_path'] + '/' + data['project_name'] + '_Out/' + data['project_name'], '-save:+all']
-            )
-            process.waitForFinished()
-            output = str(process.readAllStandardOutput())
-            error_in_gen_case = False
-            # If GenCase was succesful, check for internal errors
-            if str(process.exitCode()) == "0":
-                try:
-                    total_particles_text = output[output.index("Total particles: "):output.index(" (bound=")]
-                    total_particles = int(total_particles_text[total_particles_text.index(": ") + 2:])
-                    data['total_particles'] = total_particles
-                    utils.log(__("Total number of particles exported: ") + str(total_particles))
-                    if total_particles < 300:
-                        utils.warning(__("Are you sure all the parameters are set right? The number of particles is very low ({}). "
-                                         "Lower the DP to increase number of particles").format(str(total_particles)))
-                    elif total_particles > 200000:
-                        utils.warning(__("Number of particles is pretty high ({}) and it could take a lot of time to simulate.").format(str(total_particles)))
-                    data['gencase_done'] = True
-                    guiutils.widget_state_config(widget_state_elements, "gencase done")
-                    gencase_infosave_dialog = QtGui.QMessageBox()
-                    gencase_infosave_dialog.setText(__("Gencase exported {} particles. Press View Details to check the output.\n").format(str(total_particles)))
-                    gencase_infosave_dialog.setDetailedText(output.split("================================")[1])
-                    gencase_infosave_dialog.setIcon(QtGui.QMessageBox.Information)
-                    gencase_infosave_dialog.exec_()
-                except ValueError:
-                    # Not an expected result. GenCase had a not handled error
-                    error_in_gen_case = True
-
-            if str(process.exitCode()) != "0" or error_in_gen_case:
-                # Multiple possible causes. Let the user know
-                gencase_out_file = open(data['project_path'] + '/' + data['project_name'] + '_Out/' + data['project_name'] + ".out", "rb")
-                gencase_failed_dialog = QtGui.QMessageBox()
-                gencase_failed_dialog.setText(__("Error executing GenCase. Did you add objects to the case?. Another reason could be memory issues. View details for more info."))
-                gencase_failed_dialog.setDetailedText(gencase_out_file.read().split("================================")[1])
-                gencase_failed_dialog.setIcon(QtGui.QMessageBox.Critical)
-                gencase_out_file.close()
-                gencase_failed_dialog.exec_()
-                utils.warning(__("GenCase Failed."))
-
         # Save data array on disk
         try:
             with open(save_name + "/casedata.dsphdata", 'wb') as picklefile:
@@ -415,15 +359,74 @@ def on_save_case(save_as=None):
         except Exception as e:
             traceback.print_exc()
             guiutils.error_dialog(__("There was a problem saving the DSPH information file (casedata.dsphdata)."))
-
     else:
         utils.log(__("Saving cancelled."))
 
 
+def on_save_with_gencase():
+    # Check possible size of the case in particles and warn the user if there are too much.
+    case_maximum_particles = utils.get_maximum_particles(data['dp'])
+    utils.debug("Max number of particles that can be created is: {}".format(case_maximum_particles))
+    if case_maximum_particles > utils.MAX_PARTICLE_WARNING:
+        # Spawn a dialog warning the user
+        max_particle_warning = guiutils.ok_cancel_dialog(__('Are you sure?'), __("With that Case Limits size and DP you can generate as much as {} particles.\n\n"
+                                                                                 "Are you sure you want to continue saving?").format(case_maximum_particles))
+        if max_particle_warning == QtGui.QMessageBox.Cancel:
+            return
+
+    # Save Case
+    on_save_case()
+
+    # Use gencase if possible to generate the case final definition
+    data['gencase_done'] = False
+    if data['gencase_path'] != "":
+        os.chdir(data['project_path'])
+        process = QtCore.QProcess(fc_main_window)
+        process.start(
+            data['gencase_path'], [data['project_path'] + '/' + data['project_name'] + '_Def', data['project_path'] + '/' + data['project_name'] + '_Out/' + data['project_name'], '-save:+all']
+        )
+        process.waitForFinished()
+        output = str(process.readAllStandardOutput())
+        error_in_gen_case = False
+        # If GenCase was succesful, check for internal errors
+        if str(process.exitCode()) == "0":
+            try:
+                total_particles_text = output[output.index("Total particles: "):output.index(" (bound=")]
+                total_particles = int(total_particles_text[total_particles_text.index(": ") + 2:])
+                data['total_particles'] = total_particles
+                utils.log(__("Total number of particles exported: ") + str(total_particles))
+                if total_particles < 300:
+                    utils.warning(__("Are you sure all the parameters are set right? The number of particles is very low ({}). "
+                                     "Lower the DP to increase number of particles").format(str(total_particles)))
+                elif total_particles > 200000:
+                    utils.warning(__("Number of particles is pretty high ({}) and it could take a lot of time to simulate.").format(str(total_particles)))
+                data['gencase_done'] = True
+                guiutils.widget_state_config(widget_state_elements, "gencase done")
+                gencase_infosave_dialog = QtGui.QMessageBox()
+                gencase_infosave_dialog.setText(__("Gencase exported {} particles. Press View Details to check the output.\n").format(str(total_particles)))
+                gencase_infosave_dialog.setDetailedText(output.split("================================")[1])
+                gencase_infosave_dialog.setIcon(QtGui.QMessageBox.Information)
+                gencase_infosave_dialog.exec_()
+            except ValueError:
+                # Not an expected result. GenCase had a not handled error
+                error_in_gen_case = True
+
+        if str(process.exitCode()) != "0" or error_in_gen_case:
+            # Multiple possible causes. Let the user know
+            gencase_out_file = open(data['project_path'] + '/' + data['project_name'] + '_Out/' + data['project_name'] + ".out", "rb")
+            gencase_failed_dialog = QtGui.QMessageBox()
+            gencase_failed_dialog.setText(__("Error executing GenCase. Did you add objects to the case?. Another reason could be memory issues. View details for more info."))
+            gencase_failed_dialog.setDetailedText(gencase_out_file.read().split("================================")[1])
+            gencase_failed_dialog.setIcon(QtGui.QMessageBox.Critical)
+            gencase_out_file.close()
+            gencase_failed_dialog.exec_()
+            utils.warning(__("GenCase Failed."))
+
+
 def on_save_menu(action):
     """ Handles the save button and its dropdown items. """
-    if __("Save Case") in action.text():
-        on_save_case()
+    if __("Save and run GenCase") in action.text():
+        on_save_with_gencase()
     if __("Save as...") in action.text():
         on_save_case(save_as=True)
 
@@ -2241,7 +2244,7 @@ def objtype_change(index):
 
     if objtype_prop.itemText(index).lower() == "bound":
         mkgroup_prop.setRange(0, 240)
-        # TODO: Check this!
+        # TODO: Check this! (Set first MK possible for the type)
         # mkgroup_prop.setValue(int(utils.get_first_mk_not_used("bound", data)))
         try:
             selectiongui.ShapeColor = (0.80, 0.80, 0.80)
@@ -3488,7 +3491,6 @@ def on_tree_item_selection_change():
                         to_change.setEnabled(False)
                     else:
                         to_change.setEnabled(True)
-                    # TODO: Check that fillbox can float
 
                 # initials restrictions
                 to_change = property_table.cellWidget(4, 1)
