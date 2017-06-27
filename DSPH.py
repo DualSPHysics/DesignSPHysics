@@ -68,7 +68,6 @@ __status__ = "Development"
 # -------------------------------   WIKI   -------------------------------
 # TODO: Wiki - Write http://design.sphysics.org/wiki/doku.php?id=concepts
 # ------------------------------- 0.4 BETA -------------------------------
-# TODO: 0.4Beta - Show details at the end of post-processing
 # TODO: 0.4Beta - Clicking on a group that is not a fillbox should prompt to add all the inside objects
 # TODO: 0.4Beta - Create Material support
 # TODO: 0.4Beta - Material creator and assigner
@@ -1171,9 +1170,9 @@ def partvtk_export(export_parameters):
 
         if exit_code == 0:
             # Exported correctly
-            guiutils.info_dialog("Post-processing finished successfully.")
+            guiutils.info_dialog(info_text=__("Post-processing finished successfully. Press the details button to show PartVTK output"), detailed_text=temp_data['current_output'])
         else:
-            guiutils.error_dialog("There was an error on the post-processing.")
+            guiutils.error_dialog(__("There was an error on the post-processing."))
 
         # Bit of code that tries to open ParaView if the option was selected.
         if export_parameters['open_paraview']:
@@ -1183,6 +1182,7 @@ def partvtk_export(export_parameters):
                 export_parameters['file_name'],
                 formats[export_parameters['save_mode']])], stdout=subprocess.PIPE)
 
+    temp_data['current_output'] = ""
     export_process = QtCore.QProcess(dsph_main_dock)
     export_process.finished.connect(on_export_finished)
 
@@ -1209,6 +1209,7 @@ def partvtk_export(export_parameters):
     def on_stdout_ready():
         # Update progress bar
         current_output = str(temp_data['current_export_process'].readAllStandardOutput())
+        temp_data['current_output'] += current_output
         try:
             current_part = current_output.split("{}_".format(export_parameters['file_name']))[1]
             if export_parameters['save_mode'] == 0:
@@ -1397,10 +1398,11 @@ def floatinginfo_export(export_parameters):
         export_dialog.hide()
         if exit_code == 0:
             # Exported correctly
-            guiutils.info_dialog("Post-processing finished successfully.")
+            guiutils.info_dialog(info_text=__("Post-processing finished successfully. Press the details button to see FloatingInfo output."), detailed_text=temp_data['current_output'])
         else:
-            guiutils.error_dialog("There was an error on the post-processing.")
+            guiutils.error_dialog(__("There was an error on the post-processing."))
 
+    temp_data['current_output'] = ""
     export_process = QtCore.QProcess(dsph_main_dock)
     export_process.finished.connect(on_export_finished)
 
@@ -1420,6 +1422,7 @@ def floatinginfo_export(export_parameters):
     def on_stdout_ready():
         # update progress bar
         current_output = str(temp_data['current_export_process'].readAllStandardOutput())
+        temp_data['current_output'] += current_output
         try:
             current_part = current_output.split("Part_")[1].split("  ")[0]
         except IndexError:
@@ -1521,10 +1524,11 @@ def computeforces_export(export_parameters):
         export_dialog.hide()
         if exit_code == 0:
             # Exported correctly
-            guiutils.info_dialog("Post-processing finished successfully.")
+            guiutils.info_dialog(info_text=__("Post-processing finished successfully. Press the details button to see ComputeForces output."), detailed_text=temp_data['current_output'])
         else:
-            guiutils.error_dialog("There was an error on the post-processing.")
+            guiutils.error_dialog(__("There was an error on the post-processing."))
 
+    temp_data['current_output'] = ""
     export_process = QtCore.QProcess(dsph_main_dock)
     export_process.finished.connect(on_export_finished)
 
@@ -1552,6 +1556,7 @@ def computeforces_export(export_parameters):
     def on_stdout_ready():
         # update progress bar
         current_output = str(temp_data['current_export_process'].readAllStandardOutput())
+        temp_data['current_output'] += current_output
         try:
             current_part = current_output.split("Part_")[1].split(".bi4")[0]
         except IndexError:
@@ -1662,10 +1667,11 @@ def measuretool_export(export_parameters):
         export_dialog.hide()
         if exit_code == 0:
             # Exported correctly
-            guiutils.info_dialog("Post-processing finished successfully.")
+            guiutils.info_dialog(info_text=__("Post-processing finished successfully. Press the details button to see MeasureTool output"), detailed_text=temp_data['current_output'])
         else:
-            guiutils.error_dialog("There was an error on the post-processing.")
+            guiutils.error_dialog(__("There was an error on the post-processing."))
 
+    temp_data['current_output'] = ""
     export_process = QtCore.QProcess(dsph_main_dock)
     export_process.finished.connect(on_export_finished)
 
@@ -1709,6 +1715,7 @@ def measuretool_export(export_parameters):
     def on_stdout_ready():
         # update progress bar
         current_output = str(temp_data['current_export_process'].readAllStandardOutput())
+        temp_data['current_output'] += current_output
         try:
             current_part = current_output.split("/Part_")[1].split(".bi4")[0]
         except IndexError:
