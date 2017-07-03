@@ -382,6 +382,10 @@ def get_default_data():
     It stores all the movements created in this case. """
     data['global_movements'] = list()
 
+    """ Global property list.
+        It stores all the properties created in this case. """
+    data['global_properties'] = list()
+
     """ Object movement mapping.
     Dictionary with a list of movements attached..
     {'mkgroup': [movement1, movement2, ...]} """

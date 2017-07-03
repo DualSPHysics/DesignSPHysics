@@ -66,11 +66,9 @@ __status__ = "Development"
 
 # region General To-Do to use with PyCharm
 # -------------------------------   WIKI   -------------------------------
-# TODO: Wiki - Write http://design.sphysics.org/wiki/doku.php?id=concepts
 # ------------------------------- 0.4 BETA -------------------------------
-# TODO: 0.4Beta - Clicking on a group that is not a fillbox should prompt to add all the inside objects
-# TODO: 0.4Beta - Create Material support
-# TODO: 0.4Beta - Material creator and assigner
+# TODO: 0.4Beta - Create Property support
+# TODO: 0.4Beta - Property creator and assigner
 # ------------------------------- 0.5 BETA -------------------------------
 # TODO: 0.5Beta - Refactor all code
 # TODO: 0.5Beta - 'Pythonize' code and delete redundant code
@@ -88,6 +86,7 @@ __status__ = "Development"
 # TODO: NO VERSION - SSH Server support.
 # TODO: NO VERSION - Multi-case support (multiple tabs)
 # TODO: NO VERSION - Integrate better with FreeCAD (replace file menus etc)
+# TODO: NO VERSION - Clicking on a group that is not a fillbox should prompt to add all the inside objects
 # endregion general To-Do
 
 # Print license at macro start
@@ -258,6 +257,12 @@ summary_bt = QtGui.QPushButton(__("Case summary"))
 summary_bt.setToolTip(__("Shows a complete case summary with objects, configurations and settings in a brief view."))
 widget_state_elements['summary_bt'] = summary_bt
 summary_bt.setEnabled(False)
+
+# Properties button
+properties_bt = QtGui.QPushButton(__("Properties"))
+properties_bt.setToolTip(__("Shows a window with properties defined for the current case."))
+widget_state_elements['properties_bt'] = properties_bt
+properties_bt.setEnabled(False)
 
 # Toggle 3D/2D button
 toggle3dbutton = QtGui.QPushButton(__("Change 3D/2D"))
@@ -786,6 +791,88 @@ def on_2d_toggle():
         utils.error("Not a valid case environment")
 
 
+def on_properties():
+    # TODO: Create a copy o global properties and edit that in this window. On Cancel, discard, on OK, replace global properties with the temporal copy
+    # TODO: Custom delete button that handles in which row it is
+    # TODO: Custom MK input with placeholder and row placement. Each time it's changed change temporal property object
+
+    property_window = QtGui.QDialog()
+    property_window.setMinimumSize(1400, 600)
+    property_window.setWindowTitle(__("Property configuration"))
+    ok_button = QtGui.QPushButton(__("Ok"))
+    cancel_button = QtGui.QPushButton(__("Cancel"))
+
+    property_window_layout = QtGui.QVBoxLayout()
+    property_window_groupboxes_layout = QtGui.QHBoxLayout()
+    property_window_buttons_layout = QtGui.QHBoxLayout()
+
+    property_list_gb = QtGui.QGroupBox(__("Global property list"))
+    property_list_gb.setMaximumWidth(450)
+    property_list_layout = QtGui.QVBoxLayout()
+    property_list_table = QtGui.QTableWidget()
+    property_list_layout.addWidget(property_list_table)
+
+    property_list_table.setColumnCount(3)
+    property_list_table.setHorizontalHeaderLabels([__("Name"), __("Applied to MK"), ""])
+    property_list_table.setSelectionMode(QtGui.QAbstractItemView.SingleSelection)
+    property_list_table.horizontalHeader().setResizeMode(QtGui.QHeaderView.Stretch)
+    property_list_table.horizontalHeader().setResizeMode(0, QtGui.QHeaderView.Stretch)
+    property_list_table.horizontalHeader().setResizeMode(1, QtGui.QHeaderView.ResizeToContents)
+    property_list_table.horizontalHeader().setResizeMode(2, QtGui.QHeaderView.ResizeToContents)
+    property_list_table.verticalHeader().setVisible(False)
+
+    property_details_gb = QtGui.QGroupBox(__("Selected property details"))
+    property_details_layout = QtGui.QVBoxLayout()
+
+    property_details_gb.setLayout(property_details_layout)
+    property_list_gb.setLayout(property_list_layout)
+
+    property_window_groupboxes_layout.addWidget(property_list_gb)
+    property_window_groupboxes_layout.addWidget(property_details_gb)
+
+    property_window_buttons_layout.addStretch(1)
+    property_window_buttons_layout.addWidget(ok_button)
+    property_window_buttons_layout.addWidget(cancel_button)
+
+    property_window_layout.addLayout(property_window_groupboxes_layout)
+    property_window_layout.addLayout(property_window_buttons_layout)
+
+    def on_ok():
+        property_window.accept()
+
+    def on_cancel():
+        property_window.reject()
+
+    ok_button.clicked.connect(on_ok)
+    cancel_button.clicked.connect(on_cancel)
+
+    def create_new_property():
+        data['global_properties'].append(CustomProperty(name="New Property"))
+        refresh_properties_table()
+
+    def refresh_properties_table():
+        """ Refreshes the properties table. """
+        property_list_table.clearContents()
+        property_list_table.setRowCount(len(data["global_properties"]) + 1)
+        current_row = 0
+
+        for cur_property in data["global_properties"]:
+            property_list_table.setItem(current_row, 0, QtGui.QTableWidgetItem(cur_property.name))
+            property_list_table.setItem(current_row, 1, QtGui.QTableWidgetItem(cur_property.mkapplied))
+            property_list_table.setCellWidget(current_row, 2, QtGui.QPushButton("D"))
+            current_row += 1
+
+        create_new_property_button = QtGui.QPushButton("Create New")
+        create_new_property_button.clicked.connect(create_new_property)
+        property_list_table.setCellWidget(current_row, 0, QtGui.QWidget())
+        property_list_table.setCellWidget(current_row, 1, QtGui.QWidget())
+        property_list_table.setCellWidget(current_row, 2, create_new_property_button)
+
+    refresh_properties_table()
+
+    property_window.setLayout(property_window_layout)
+    property_window.exec_()
+
 # Connect case control buttons to respective handlers
 casecontrols_bt_newdoc.clicked.connect(on_new_case)
 casecontrols_bt_savedoc.clicked.connect(on_save_case)
@@ -795,6 +882,7 @@ casecontrols_bt_addfillbox.clicked.connect(on_add_fillbox)
 casecontrols_bt_addstl.clicked.connect(on_add_stl)
 casecontrols_bt_importxml.clicked.connect(on_import_xml)
 summary_bt.clicked.connect(on_summary)
+properties_bt.clicked.connect(on_properties)
 toggle3dbutton.clicked.connect(on_2d_toggle)
 
 # Defines case control scaffolding
@@ -803,6 +891,7 @@ ccfilebuttons_layout.addWidget(casecontrols_bt_newdoc)
 ccfilebuttons_layout.addWidget(casecontrols_bt_savedoc)
 ccfilebuttons_layout.addWidget(casecontrols_bt_loaddoc)
 ccsecondrow.addWidget(summary_bt)
+ccsecondrow.addWidget(properties_bt)
 ccsecondrow.addWidget(toggle3dbutton)
 ccthirdrow_layout.addWidget(casecontrols_bt_addfillbox)
 ccthirdrow_layout.addWidget(casecontrols_bt_addstl)
@@ -2140,10 +2229,10 @@ properties_scaff_widget = QtGui.QWidget()  # Scaffolding widget, only useful to 
 property_widget_layout = QtGui.QVBoxLayout()
 
 # Property table
-property_table = QtGui.QTableWidget(7, 2)
-property_table.setHorizontalHeaderLabels([__("Property Name"), __("Value")])
-property_table.verticalHeader().setVisible(False)
-property_table.horizontalHeader().setResizeMode(QtGui.QHeaderView.Stretch)
+object_property_table = QtGui.QTableWidget(7, 2)
+object_property_table.setHorizontalHeaderLabels([__("Property Name"), __("Value")])
+object_property_table.verticalHeader().setVisible(False)
+object_property_table.horizontalHeader().setResizeMode(QtGui.QHeaderView.Stretch)
 
 # Add an object to DSPH. Only appears when an object is not part of the simulation
 addtodsph_button = QtGui.QPushButton(__("Add to DSPH Simulation"))
@@ -2153,7 +2242,7 @@ addtodsph_button.setToolTip(__("Adds the current selection to\nthe case. Objects
 removefromdsph_button = QtGui.QPushButton(__("Remove from DSPH Simulation"))
 removefromdsph_button.setToolTip(__("Removes the current selection from the case.\nObjects not included in the case will not be exported."))
 
-property_widget_layout.addWidget(property_table)
+property_widget_layout.addWidget(object_property_table)
 property_widget_layout.addWidget(addtodsph_button)
 property_widget_layout.addWidget(removefromdsph_button)
 
@@ -2187,13 +2276,13 @@ floatstate_label.setAlignment(QtCore.Qt.AlignLeft)
 initials_label.setAlignment(QtCore.Qt.AlignLeft)
 motion_label.setAlignment(QtCore.Qt.AlignLeft)
 
-property_table.setCellWidget(0, 0, objtype_label)
-property_table.setCellWidget(1, 0, mkgroup_label)
-property_table.setCellWidget(2, 0, fillmode_label)
-property_table.setCellWidget(3, 0, floatstate_label)
-property_table.setCellWidget(4, 0, initials_label)
-property_table.setCellWidget(5, 0, material_label)
-property_table.setCellWidget(6, 0, motion_label)
+object_property_table.setCellWidget(0, 0, objtype_label)
+object_property_table.setCellWidget(1, 0, mkgroup_label)
+object_property_table.setCellWidget(2, 0, fillmode_label)
+object_property_table.setCellWidget(3, 0, floatstate_label)
+object_property_table.setCellWidget(4, 0, initials_label)
+object_property_table.setCellWidget(5, 0, material_label)
+object_property_table.setCellWidget(6, 0, motion_label)
 
 
 def mkgroup_change(value):
@@ -2594,7 +2683,7 @@ def floatstate_change():
         floating_props_group.setEnabled(False)
         is_floating_selector.setCurrentIndex(1)
         floating_props_massrhop_selector.setCurrentIndex(1)
-        floating_props_massrhop_input.setText("100")
+        floating_props_massrhop_input.setText("1000")
         floating_center_input_x.setText("0")
         floating_center_input_y.setText("0")
         floating_center_input_z.setText("0")
@@ -2924,6 +3013,7 @@ def motion_change():
     # Movements table actions
     def on_check_movement(index, checked):
         """ Add or delete a movement from the temporal list of selected movements. """
+        notice_label.setText("")  # Reset the notice label if a valid change is made
         target_movement = data["global_movements"][index]
         if checked:
             check_movement_compatibility(target_movement)
@@ -2934,12 +3024,14 @@ def motion_change():
 
     def on_loop_movement(index, checked):
         """ Make a movement loop itself """
+        notice_label.setText("")  # Reset the notice label if a valid change is made
         data["global_movements"][index].set_loop(checked)
 
     def on_delete_movement(index):
         """ Remove a movement from the project. """
         try:
             movements_selected.remove(data["global_movements"][index])
+            notice_label.setText("")  # Reset the notice label if a valid change is made
         except ValueError:
             # Movement wasn't selected
             pass
@@ -2949,6 +3041,7 @@ def motion_change():
 
     def on_new_movement():
         """ Creates a movement on the project. """
+        notice_label.setText("")  # Reset the notice label if a valid change is made
         to_add = Movement(name="New Movement")
         data["global_movements"].append(to_add)
         movements_selected.append(to_add)
@@ -2958,7 +3051,7 @@ def motion_change():
 
     def on_new_wave_generator(action):
         """ Creates a movement on the project. """
-
+        notice_label.setText("")  # Reset the notice label if a valid change is made
         if __("Movement") in action.text():
             on_new_movement()
             return
@@ -2981,11 +3074,13 @@ def motion_change():
     def on_movement_name_change(row, column):
         """ Changes the name of a movement on the project. """
         target_item = movement_list_table.item(row, column)
-        if target_item is not None:
+        if target_item is not None and data["global_movements"][row].name != target_item.text():
+            notice_label.setText("")  # Reset the notice label if a valid change is made
             data["global_movements"][row].name = target_item.text()
 
     def on_timeline_item_change(index, motion_object):
         """ Changes the values of an item on the timeline. """
+        notice_label.setText("")  # Reset the notice label if a valid change is made
         if isinstance(motion_object, WaveGen):
             motion_object.parent_movement.set_wavegen(motion_object)
         else:
@@ -2993,15 +3088,18 @@ def motion_change():
 
     def on_timeline_item_delete(index, motion_object):
         """ Deletes an item from the timeline. """
+        notice_label.setText("")  # Reset the notice label if a valid change is made
         motion_object.parent_movement.motion_list.pop(index)
         on_movement_selected(movement_list_table.selectedIndexes()[0].row(), None)
 
     def on_timeline_item_order_up(index):
+        notice_label.setText("")  # Reset the notice label if a valid change is made
         movement = data["global_movements"][movement_list_table.selectedIndexes()[0].row()]
         movement.motion_list.insert(index - 1, movement.motion_list.pop(index))
         on_movement_selected(movement_list_table.selectedIndexes()[0].row(), None)
 
     def on_timeline_item_order_down(index):
+        notice_label.setText("")  # Reset the notice label if a valid change is made
         movement = data["global_movements"][movement_list_table.selectedIndexes()[0].row()]
         movement.motion_list.insert(index + 1, movement.motion_list.pop(index))
         on_movement_selected(movement_list_table.selectedIndexes()[0].row(), None)
@@ -3017,6 +3115,8 @@ def motion_change():
             timeline_list_table.setCellWidget(0, 0, dsphwidgets.MovementTimelinePlaceholder())
             return
         timeline_list_table.clearContents()
+
+        notice_label.setText("")  # Reset the notice label if a valid change is made
 
         if isinstance(target_movement, Movement):
             timeline_list_table.setRowCount(len(target_movement.motion_list))
@@ -3120,6 +3220,7 @@ def motion_change():
     # Possible actions for adding motions to a movement
     def on_add_delay():
         """ Adds a WaitMotion to the timeline of the selected movement. """
+        notice_label.setText("")  # Reset the notice label if a valid change is made
         if len(movement_list_table.selectedIndexes()) > 0:
             if movement_list_table.selectedIndexes()[0].row() is not len(data["global_movements"]):
                 data["global_movements"][movement_list_table.selectedIndexes()[0].row()].add_motion(WaitMotion())
@@ -3127,6 +3228,7 @@ def motion_change():
 
     def on_add_rectilinear():
         """ Adds a RectMotion to the timeline of the selected movement. """
+        notice_label.setText("")  # Reset the notice label if a valid change is made
         if len(movement_list_table.selectedIndexes()) > 0:
             if movement_list_table.selectedIndexes()[0].row() is not len(data["global_movements"]):
                 data["global_movements"][movement_list_table.selectedIndexes()[0].row()].add_motion(RectMotion())
@@ -3134,6 +3236,7 @@ def motion_change():
 
     def on_add_accrectilinear():
         """ Adds a AccRectMotion to the timeline of the selected movement. """
+        notice_label.setText("")  # Reset the notice label if a valid change is made
         if len(movement_list_table.selectedIndexes()) > 0:
             if movement_list_table.selectedIndexes()[0].row() is not len(data["global_movements"]):
                 data["global_movements"][movement_list_table.selectedIndexes()[0].row()].add_motion(AccRectMotion())
@@ -3141,6 +3244,7 @@ def motion_change():
 
     def on_add_rotational():
         """ Adds a RotMotion to the timeline of the selected movement. """
+        notice_label.setText("")  # Reset the notice label if a valid change is made
         if len(movement_list_table.selectedIndexes()) > 0:
             if movement_list_table.selectedIndexes()[0].row() is not len(data["global_movements"]):
                 data["global_movements"][movement_list_table.selectedIndexes()[0].row()].add_motion(RotMotion())
@@ -3148,6 +3252,7 @@ def motion_change():
 
     def on_add_acc_rotational():
         """ Adds a AccRotMotion to the timeline of the selected movement. """
+        notice_label.setText("")  # Reset the notice label if a valid change is made
         if len(movement_list_table.selectedIndexes()) > 0:
             if movement_list_table.selectedIndexes()[0].row() is not len(data["global_movements"]):
                 data["global_movements"][movement_list_table.selectedIndexes()[0].row()].add_motion(AccRotMotion())
@@ -3155,6 +3260,7 @@ def motion_change():
 
     def on_add_acc_circular():
         """ Adds a AccCirMotion to the timeline of the selected movement. """
+        notice_label.setText("")  # Reset the notice label if a valid change is made
         if len(movement_list_table.selectedIndexes()) > 0:
             if movement_list_table.selectedIndexes()[0].row() is not len(data["global_movements"]):
                 data["global_movements"][movement_list_table.selectedIndexes()[0].row()].add_motion(AccCirMotion())
@@ -3162,6 +3268,7 @@ def motion_change():
 
     def on_add_sinu_rot():
         """ Adds a RotSinuMotion to the timeline of the selected movement. """
+        notice_label.setText("")  # Reset the notice label if a valid change is made
         if len(movement_list_table.selectedIndexes()) > 0:
             if movement_list_table.selectedIndexes()[0].row() is not len(data["global_movements"]):
                 data["global_movements"][movement_list_table.selectedIndexes()[0].row()].add_motion(RotSinuMotion())
@@ -3169,6 +3276,7 @@ def motion_change():
 
     def on_add_sinu_cir():
         """ Adds a CirSinuMotion to the timeline of the selected movement. """
+        notice_label.setText("")  # Reset the notice label if a valid change is made
         if len(movement_list_table.selectedIndexes()) > 0:
             if movement_list_table.selectedIndexes()[0].row() is not len(data["global_movements"]):
                 data["global_movements"][movement_list_table.selectedIndexes()[0].row()].add_motion(CirSinuMotion())
@@ -3176,6 +3284,7 @@ def motion_change():
 
     def on_add_sinu_rect():
         """ Adds a RectSinuMotion to the timeline of the selected movement. """
+        notice_label.setText("")  # Reset the notice label if a valid change is made
         if len(movement_list_table.selectedIndexes()) > 0:
             if movement_list_table.selectedIndexes()[0].row() is not len(data["global_movements"]):
                 data["global_movements"][movement_list_table.selectedIndexes()[0].row()].add_motion(RectSinuMotion())
@@ -3248,19 +3357,19 @@ floatstate_prop.clicked.connect(floatstate_change)
 initials_prop.clicked.connect(initials_change)
 material_prop.clicked.connect(material_change)
 motion_prop.clicked.connect(motion_change)
-property_table.setCellWidget(0, 1, objtype_prop)
-property_table.setCellWidget(1, 1, mkgroup_prop)
-property_table.setCellWidget(2, 1, fillmode_prop)
-property_table.setCellWidget(3, 1, floatstate_prop)
-property_table.setCellWidget(4, 1, initials_prop)
-property_table.setCellWidget(5, 1, material_prop)
-property_table.setCellWidget(6, 1, motion_prop)
+object_property_table.setCellWidget(0, 1, objtype_prop)
+object_property_table.setCellWidget(1, 1, mkgroup_prop)
+object_property_table.setCellWidget(2, 1, fillmode_prop)
+object_property_table.setCellWidget(3, 1, floatstate_prop)
+object_property_table.setCellWidget(4, 1, initials_prop)
+object_property_table.setCellWidget(5, 1, material_prop)
+object_property_table.setCellWidget(6, 1, motion_prop)
 
 # Dock the widget to the left side of screen
 fc_main_window.addDockWidget(QtCore.Qt.LeftDockWidgetArea, properties_widget)
 
 # By default all is hidden in the widget
-property_table.hide()
+object_property_table.hide()
 addtodsph_button.hide()
 removefromdsph_button.hide()
 
@@ -3375,28 +3484,28 @@ def on_tree_item_selection_change():
         if len(selection) > 1:
             # Multiple objects selected
             addtodsph_button.setText(__("Add all possible objects to DSPH Simulation"))
-            property_table.hide()
+            object_property_table.hide()
             addtodsph_button.show()
             removefromdsph_button.hide()
             pass
         else:
             # One object selected
             if selection[0].Name == "Case_Limits" or "_internal_" in selection[0].Name:
-                property_table.hide()
+                object_property_table.hide()
                 addtodsph_button.hide()
                 removefromdsph_button.hide()
                 properties_widget.setMinimumHeight(100)
                 properties_widget.setMaximumHeight(100)
             elif selection[0].Name in data['simobjects'].keys():
                 # Show properties on table
-                property_table.show()
+                object_property_table.show()
                 addtodsph_button.hide()
                 removefromdsph_button.show()
                 properties_widget.setMinimumHeight(300)
                 properties_widget.setMaximumHeight(300)
 
                 # type config
-                to_change = property_table.cellWidget(0, 1)
+                to_change = object_property_table.cellWidget(0, 1)
                 if selection[0].TypeId in temp_data['supported_types']:
                     # Supported object
                     to_change.setEnabled(True)
@@ -3425,11 +3534,11 @@ def on_tree_item_selection_change():
                     to_change.setEnabled(False)
 
                 # MK config
-                to_change = property_table.cellWidget(1, 1)
+                to_change = object_property_table.cellWidget(1, 1)
                 to_change.setValue(data['simobjects'][selection[0].Name][0])
 
                 # fill mode config
-                to_change = property_table.cellWidget(2, 1)
+                to_change = object_property_table.cellWidget(2, 1)
                 if selection[0].TypeId in temp_data['supported_types']:
                     # Object is a supported type. Fill with its type and enable selector.
                     to_change.setEnabled(True)
@@ -3451,7 +3560,7 @@ def on_tree_item_selection_change():
                     to_change.setEnabled(False)
 
                 # float state config
-                to_change = property_table.cellWidget(3, 1)
+                to_change = object_property_table.cellWidget(3, 1)
                 if selection[0].TypeId in temp_data['supported_types'] or (selection[0].TypeId == "App::DocumentObjectGroup" and "fillbox" in selection[0].Name.lower()):
                     if data['simobjects'][selection[0].Name][1].lower() == "fluid":
                         to_change.setEnabled(False)
@@ -3459,14 +3568,14 @@ def on_tree_item_selection_change():
                         to_change.setEnabled(True)
 
                 # initials restrictions
-                to_change = property_table.cellWidget(4, 1)
+                to_change = object_property_table.cellWidget(4, 1)
                 if data['simobjects'][selection[0].Name][1].lower() == "fluid":
                     to_change.setEnabled(True)
                 else:
                     to_change.setEnabled(False)
 
                 # motion restrictions
-                to_change = property_table.cellWidget(6, 1)
+                to_change = object_property_table.cellWidget(6, 1)
                 if selection[0].TypeId in temp_data['supported_types'] or "Mesh::Feature" in str(selection[0].TypeId) or \
                         (selection[0].TypeId == "App::DocumentObjectGroup" and "fillbox" in selection[0].Name.lower()):
                     if data['simobjects'][selection[0].Name][1].lower() == "fluid":
@@ -3480,17 +3589,17 @@ def on_tree_item_selection_change():
                 if selection[0].InList == list():
                     # Show button to add to simulation
                     addtodsph_button.setText(__("Add to DSPH Simulation"))
-                    property_table.hide()
+                    object_property_table.hide()
                     addtodsph_button.show()
                     removefromdsph_button.hide()
                 else:
                     addtodsph_button.setText(__("Can't add this object to the simulation"))
-                    property_table.hide()
+                    object_property_table.hide()
                     addtodsph_button.show()
                     addtodsph_button.setEnabled(False)
                     removefromdsph_button.hide()
     else:
-        property_table.hide()
+        object_property_table.hide()
         addtodsph_button.hide()
         removefromdsph_button.hide()
 
@@ -3552,7 +3661,7 @@ def selection_monitor():
     while True:
         # ensure everything is fine when objects are not selected
         if len(FreeCADGui.Selection.getSelection()) == 0:
-            property_table.hide()
+            object_property_table.hide()
             addtodsph_button.hide()
             removefromdsph_button.hide()
         try:
