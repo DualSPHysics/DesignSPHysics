@@ -590,3 +590,18 @@ class RectSinuMotion(BaseMotion):
             self.freq,
             self.ampl,
             self.phase)
+
+
+class CustomProperty:
+    """ DualSPHysics compatible custom property.
+
+            Attributes:
+                name: Name of the property
+                mkapplied: String with MK ranges and list
+            """
+
+    # TODO: Finish this.
+
+    def __init__(self, name="New Property", mkapplied=""):
+        self.name = name
+        self.mkapplied = mkapplied

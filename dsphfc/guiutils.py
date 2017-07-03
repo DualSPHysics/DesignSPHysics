@@ -1375,6 +1375,7 @@ def widget_state_config(widgets, config):
         widgets["casecontrols_bt_addstl"].setEnabled(True)
         widgets["summary_bt"].setEnabled(True)
         widgets["toggle3dbutton"].setEnabled(True)
+        widgets["properties_bt"].setEnabled(True)
     elif config == "gencase done":
         widgets["ex_selector_combo"].setEnabled(True)
         widgets["ex_button"].setEnabled(True)
@@ -1392,6 +1393,7 @@ def widget_state_config(widgets, config):
         widgets["casecontrols_bt_addstl"].setEnabled(True)
         widgets["summary_bt"].setEnabled(True)
         widgets["toggle3dbutton"].setEnabled(True)
+        widgets["properties_bt"].setEnabled(True)
     elif config == "simulation done":
         widgets['post_proc_partvtk_button'].setEnabled(True)
         widgets['post_proc_computeforces_button'].setEnabled(True)
