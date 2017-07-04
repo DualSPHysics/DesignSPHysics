@@ -2288,7 +2288,6 @@ object_property_table.setCellWidget(6, 0, motion_label)
 def mkgroup_change(value):
     """ Defines what happens when MKGroup is changed. """
     selection = FreeCADGui.Selection.getSelection()[0]
-    utils.debug('Changing MK Group for {}'.format(selection.Label))
     data['simobjects'][selection.Name][0] = value
 
 
@@ -2297,12 +2296,14 @@ def objtype_change(index):
     selection = FreeCADGui.Selection.getSelection()[0]
     selectiongui = FreeCADGui.getDocument("DSPH_Case").getObject(selection.Name)
     utils.debug('Changing Object Type for {}'.format(selection.Label))
-    data['simobjects'][selection.Name][1] = objtype_prop.itemText(index)
 
     if objtype_prop.itemText(index).lower() == "bound":
         mkgroup_prop.setRange(0, 240)
         # TODO: Check this! (Set first MK possible for the type)
-        # mkgroup_prop.setValue(int(utils.get_first_mk_not_used("bound", data)))
+        if data['simobjects'][selection.Name][1].lower() != "bound":
+            utils.debug("NEEDS UPDATING")
+            mkgroup_prop.setValue(int(utils.get_first_mk_not_used("bound", data)))
+
         try:
             selectiongui.ShapeColor = (0.80, 0.80, 0.80)
             selectiongui.Transparency = 0
@@ -2314,7 +2315,9 @@ def objtype_change(index):
         mkgroup_label.setText("&nbsp;&nbsp;&nbsp;" + __("MKBound") + " <a href='http://design.sphysics.org/wiki/doku.php?id=concepts'>?</a>")
     elif objtype_prop.itemText(index).lower() == "fluid":
         mkgroup_prop.setRange(0, 10)
-        # mkgroup_prop.setValue(int(utils.get_first_mk_not_used("fluid", data)))
+        if data['simobjects'][selection.Name][1].lower() != "fluid":
+            utils.debug("NEEDS UPDATING")
+            mkgroup_prop.setValue(int(utils.get_first_mk_not_used("fluid", data)))
         try:
             selectiongui.ShapeColor = (0.00, 0.45, 1.00)
             selectiongui.Transparency = 30
@@ -2331,6 +2334,7 @@ def objtype_change(index):
         initials_prop.setEnabled(True)
         mkgroup_label.setText("&nbsp;&nbsp;&nbsp;" + __("MKFluid") + " <a href='http://design.sphysics.org/wiki/doku.php?id=concepts'>?</a>")
 
+    data['simobjects'][selection.Name][1] = objtype_prop.itemText(index)
     on_tree_item_selection_change()
 
 
