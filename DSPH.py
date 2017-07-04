@@ -2288,6 +2288,7 @@ object_property_table.setCellWidget(6, 0, motion_label)
 def mkgroup_change(value):
     """ Defines what happens when MKGroup is changed. """
     selection = FreeCADGui.Selection.getSelection()[0]
+    utils.debug('Changing MK Group for {}'.format(selection.Label))
     data['simobjects'][selection.Name][0] = value
 
 
@@ -2295,6 +2296,7 @@ def objtype_change(index):
     """ Defines what happens when type of object is changed """
     selection = FreeCADGui.Selection.getSelection()[0]
     selectiongui = FreeCADGui.getDocument("DSPH_Case").getObject(selection.Name)
+    utils.debug('Changing Object Type for {}'.format(selection.Label))
     data['simobjects'][selection.Name][1] = objtype_prop.itemText(index)
 
     if objtype_prop.itemText(index).lower() == "bound":
@@ -3504,6 +3506,11 @@ def on_tree_item_selection_change():
                 properties_widget.setMinimumHeight(300)
                 properties_widget.setMaximumHeight(300)
 
+                # MK config
+                mkgroup_prop.setRange(0, 240)
+                to_change = object_property_table.cellWidget(1, 1)
+                to_change.setValue(data['simobjects'][selection[0].Name][0])
+
                 # type config
                 to_change = object_property_table.cellWidget(0, 1)
                 if selection[0].TypeId in temp_data['supported_types']:
@@ -3532,10 +3539,6 @@ def on_tree_item_selection_change():
                     # Everything else
                     to_change.setCurrentIndex(1)
                     to_change.setEnabled(False)
-
-                # MK config
-                to_change = object_property_table.cellWidget(1, 1)
-                to_change.setValue(data['simobjects'][selection[0].Name][0])
 
                 # fill mode config
                 to_change = object_property_table.cellWidget(2, 1)
