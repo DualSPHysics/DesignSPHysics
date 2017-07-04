@@ -2,17 +2,13 @@
 <project version="4">
   <component name="BookmarkManager">
     <bookmark url="file://$PROJECT_DIR$/DSPH.py" line="66" mnemonic="9" />
-    <bookmark url="file://$PROJECT_DIR$/DSPH.py" line="2951" mnemonic="2" />
+    <bookmark url="file://$PROJECT_DIR$/DSPH.py" line="2953" mnemonic="2" />
     <bookmark url="file://$PROJECT_DIR$/DSPH.py" line="820" mnemonic="1" />
   </component>
   <component name="ChangeListManager">
     <list default="true" id="22d76f4b-310a-4afb-8788-a472c77b2c87" name="Default" comment="">
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/DSPH.py" afterPath="$PROJECT_DIR$/DSPH.py" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/dsphfc/guiutils.py" afterPath="$PROJECT_DIR$/dsphfc/guiutils.py" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/dsphfc/lang/english.json" afterPath="$PROJECT_DIR$/dsphfc/lang/english.json" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/dsphfc/properties.py" afterPath="$PROJECT_DIR$/dsphfc/properties.py" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/dsphfc/utils.py" afterPath="$PROJECT_DIR$/dsphfc/utils.py" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="TRACKING_ENABLED" value="true" />
@@ -22,7 +18,7 @@
     <option name="LAST_RESOLUTION" value="IGNORE" />
   </component>
   <component name="CoverageDataManager">
-    <SUITE FILE_PATH="coverage/Macro$Reopen_FreeCAD_and_Execute.coverage" NAME="Reopen FreeCAD and Execute Coverage Results" MODIFIED="1499070820068" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$USER_HOME$/Documents/DSPH" />
+    <SUITE FILE_PATH="coverage/Macro$Reopen_FreeCAD_and_Execute.coverage" NAME="Reopen FreeCAD and Execute Coverage Results" MODIFIED="1499163458674" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$USER_HOME$/Documents/DSPH" />
   </component>
   <component name="CreatePatchCommitExecutor">
     <option name="PATCH_PATH" value="" />
@@ -42,14 +38,14 @@
   </component>
   <component name="FileEditorManager">
     <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
-      <file leaf-file-name="DSPH.py" pinned="false" current-in-tab="false">
+      <file leaf-file-name="DSPH.py" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/DSPH.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="64">
-              <caret line="3015" column="84" lean-forward="false" selection-start-line="3015" selection-start-column="84" selection-end-line="3015" selection-end-column="84" />
+            <state relative-caret-position="160">
+              <caret line="2308" column="30" lean-forward="true" selection-start-line="2308" selection-start-column="30" selection-end-line="2308" selection-end-column="30" />
               <folding>
                 <element signature="e#324#338#0" expanded="true" />
-                <element signature="e#146024#148405#0" expanded="false" />
+                <element signature="e#146163#148544#0" expanded="false" />
               </folding>
             </state>
           </provider>
@@ -58,7 +54,7 @@
       <file leaf-file-name="properties.py" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/dsphfc/properties.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="540">
+            <state relative-caret-position="9616">
               <caret line="602" column="6" lean-forward="false" selection-start-line="602" selection-start-column="6" selection-end-line="602" selection-end-column="6" />
               <folding />
             </state>
@@ -115,10 +111,10 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="xmlimporter.py" pinned="false" current-in-tab="true">
+      <file leaf-file-name="xmlimporter.py" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/dsphfc/xmlimporter.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="684">
+            <state relative-caret-position="428">
               <caret line="259" column="14" lean-forward="false" selection-start-line="259" selection-start-column="14" selection-end-line="259" selection-end-column="14" />
               <folding />
             </state>
@@ -151,7 +147,6 @@
   </component>
   <component name="FindInProjectRecents">
     <findStrings>
-      <find>per</find>
       <find>periodii</find>
       <find>periodicity</find>
       <find>periodicit</find>
@@ -181,6 +176,7 @@
       <find>float state</find>
       <find>100</find>
       <find>unnoticing... name chan</find>
+      <find>mkgroup_prop.setValue</find>
     </findStrings>
     <replaceStrings>
       <replace>self.time_label</replace>
@@ -702,9 +698,10 @@
   </component>
   <component name="ToolWindowManager">
     <frame x="0" y="0" width="1920" height="1080" extended-state="6" />
+    <editor active="true" />
     <layout>
       <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.16151386" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
-      <window_info id="TODO" active="true" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.24083251" sideWeight="0.49156272" order="7" side_tool="false" content_ui="tabs" />
+      <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.24083251" sideWeight="0.49156272" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.22993062" sideWeight="0.5084373" order="6" side_tool="true" content_ui="tabs" />
       <window_info id="Find" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32903865" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.20911793" sideWeight="0.4915751" order="10" side_tool="false" content_ui="tabs" />
@@ -756,7 +753,6 @@
     <option name="myLimit" value="2678400000" />
   </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value="Fixed an error when clicking on Case Limits won't refresh the object order table." />
     <MESSAGE value="Now Y dimension is ignored in periodicity conditions if a case is in 2D" />
     <MESSAGE value="Changed multiple fields in execution parameters." />
     <MESSAGE value="Added a dialog on changing a case from 3D to 2D that asks the user to set the Y position directly" />
@@ -781,7 +777,8 @@
     <MESSAGE value="Added paraview path to the setup. Re-enabled 'open with paraview' at partvtk finish if it is setup" />
     <MESSAGE value="Now the additional parameters for execution get saved in the batch scripts too." />
     <MESSAGE value="Implemented details (showing the output) in each post-processing tool." />
-    <option name="LAST_COMMIT_MESSAGE" value="Implemented details (showing the output) in each post-processing tool." />
+    <MESSAGE value="Started implementing properties.&#10;Fixed #5" />
+    <option name="LAST_COMMIT_MESSAGE" value="Started implementing properties.&#10;Fixed #5" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
@@ -814,7 +811,7 @@
           <caret line="664" column="16" lean-forward="true" selection-start-line="664" selection-start-column="16" selection-end-line="664" selection-end-column="16" />
           <folding>
             <element signature="e#324#338#0" expanded="true" />
-            <element signature="e#146024#148405#0" expanded="false" />
+            <element signature="e#146163#148544#0" expanded="false" />
           </folding>
         </state>
       </provider>
@@ -843,7 +840,7 @@
           <caret line="664" column="30" lean-forward="false" selection-start-line="664" selection-start-column="30" selection-end-line="664" selection-end-column="30" />
           <folding>
             <element signature="e#324#338#0" expanded="true" />
-            <element signature="e#146024#148405#0" expanded="false" />
+            <element signature="e#146163#148544#0" expanded="false" />
           </folding>
         </state>
       </provider>
@@ -872,7 +869,7 @@
           <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
           <folding>
             <element signature="e#324#338#0" expanded="true" />
-            <element signature="e#146024#148405#0" expanded="false" />
+            <element signature="e#146163#148544#0" expanded="false" />
           </folding>
         </state>
       </provider>
@@ -901,7 +898,7 @@
           <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
           <folding>
             <element signature="e#324#338#0" expanded="true" />
-            <element signature="e#146024#148405#0" expanded="false" />
+            <element signature="e#146163#148544#0" expanded="false" />
           </folding>
         </state>
       </provider>
@@ -930,7 +927,7 @@
           <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
           <folding>
             <element signature="e#324#338#0" expanded="true" />
-            <element signature="e#146024#148405#0" expanded="false" />
+            <element signature="e#146163#148544#0" expanded="false" />
           </folding>
         </state>
       </provider>
@@ -959,7 +956,7 @@
           <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
           <folding>
             <element signature="e#324#338#0" expanded="true" />
-            <element signature="e#146024#148405#0" expanded="false" />
+            <element signature="e#146163#148544#0" expanded="false" />
           </folding>
         </state>
       </provider>
@@ -988,7 +985,7 @@
           <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
           <folding>
             <element signature="e#324#338#0" expanded="true" />
-            <element signature="e#146024#148405#0" expanded="false" />
+            <element signature="e#146163#148544#0" expanded="false" />
           </folding>
         </state>
       </provider>
@@ -1017,7 +1014,7 @@
           <caret line="30" column="8" lean-forward="false" selection-start-line="30" selection-start-column="8" selection-end-line="30" selection-end-column="8" />
           <folding>
             <element signature="e#324#338#0" expanded="true" />
-            <element signature="e#146024#148405#0" expanded="false" />
+            <element signature="e#146163#148544#0" expanded="false" />
           </folding>
         </state>
       </provider>
@@ -1038,7 +1035,7 @@
           <caret line="67" column="34" lean-forward="false" selection-start-line="67" selection-start-column="34" selection-end-line="67" selection-end-column="34" />
           <folding>
             <element signature="e#324#338#0" expanded="true" />
-            <element signature="e#146024#148405#0" expanded="false" />
+            <element signature="e#146163#148544#0" expanded="false" />
           </folding>
         </state>
       </provider>
@@ -1211,20 +1208,9 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/DSPH.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="64">
-          <caret line="3015" column="84" lean-forward="false" selection-start-line="3015" selection-start-column="84" selection-end-line="3015" selection-end-column="84" />
-          <folding>
-            <element signature="e#324#338#0" expanded="true" />
-            <element signature="e#146024#148405#0" expanded="false" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/dsphfc/properties.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="540">
+        <state relative-caret-position="9616">
           <caret line="602" column="6" lean-forward="false" selection-start-line="602" selection-start-column="6" selection-end-line="602" selection-end-column="6" />
           <folding />
         </state>
@@ -1232,9 +1218,20 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/dsphfc/xmlimporter.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="684">
+        <state relative-caret-position="428">
           <caret line="259" column="14" lean-forward="false" selection-start-line="259" selection-start-column="14" selection-end-line="259" selection-end-column="14" />
           <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/DSPH.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="160">
+          <caret line="2308" column="30" lean-forward="true" selection-start-line="2308" selection-start-column="30" selection-end-line="2308" selection-end-column="30" />
+          <folding>
+            <element signature="e#324#338#0" expanded="true" />
+            <element signature="e#146163#148544#0" expanded="false" />
+          </folding>
         </state>
       </provider>
     </entry>
