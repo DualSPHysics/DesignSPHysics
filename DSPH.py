@@ -2229,7 +2229,7 @@ properties_scaff_widget = QtGui.QWidget()  # Scaffolding widget, only useful to 
 property_widget_layout = QtGui.QVBoxLayout()
 
 # Property table
-object_property_table = QtGui.QTableWidget(7, 2)
+object_property_table = QtGui.QTableWidget(6, 2)
 object_property_table.setHorizontalHeaderLabels([__("Property Name"), __("Value")])
 object_property_table.verticalHeader().setVisible(False)
 object_property_table.horizontalHeader().setResizeMode(QtGui.QHeaderView.Stretch)
@@ -2281,8 +2281,7 @@ object_property_table.setCellWidget(1, 0, mkgroup_label)
 object_property_table.setCellWidget(2, 0, fillmode_label)
 object_property_table.setCellWidget(3, 0, floatstate_label)
 object_property_table.setCellWidget(4, 0, initials_label)
-object_property_table.setCellWidget(5, 0, material_label)
-object_property_table.setCellWidget(6, 0, motion_label)
+object_property_table.setCellWidget(5, 0, motion_label)
 
 
 def mkgroup_change(value):
@@ -2295,15 +2294,11 @@ def objtype_change(index):
     """ Defines what happens when type of object is changed """
     selection = FreeCADGui.Selection.getSelection()[0]
     selectiongui = FreeCADGui.getDocument("DSPH_Case").getObject(selection.Name)
-    utils.debug('Changing Object Type for {}'.format(selection.Label))
 
     if objtype_prop.itemText(index).lower() == "bound":
         mkgroup_prop.setRange(0, 240)
-        # TODO: Check this! (Set first MK possible for the type)
         if data['simobjects'][selection.Name][1].lower() != "bound":
-            utils.debug("NEEDS UPDATING")
             mkgroup_prop.setValue(int(utils.get_first_mk_not_used("bound", data)))
-
         try:
             selectiongui.ShapeColor = (0.80, 0.80, 0.80)
             selectiongui.Transparency = 0
@@ -2316,7 +2311,6 @@ def objtype_change(index):
     elif objtype_prop.itemText(index).lower() == "fluid":
         mkgroup_prop.setRange(0, 10)
         if data['simobjects'][selection.Name][1].lower() != "fluid":
-            utils.debug("NEEDS UPDATING")
             mkgroup_prop.setValue(int(utils.get_first_mk_not_used("fluid", data)))
         try:
             selectiongui.ShapeColor = (0.00, 0.45, 1.00)
@@ -2817,65 +2811,6 @@ def initials_change():
     initials_window.exec_()
 
 
-def material_change():
-    """ Defines a window with initials properties. """
-    material_window = QtGui.QDialog()
-    material_window.setWindowTitle(__("Initials configuration"))
-    ok_button = QtGui.QPushButton(__("Ok"))
-    cancel_button = QtGui.QPushButton(__("Cancel"))
-    target_mk = int(data['simobjects'][FreeCADGui.Selection.getSelection()[0].Name][0])
-
-    # TODO: (Material management) Material related code
-    def on_ok():
-        guiutils.info_dialog(
-            __("This will apply the material properties to all objects with mkbound = ") + str(target_mk))
-        if has_material_selector.currentIndex() == 1:
-            # Material default
-            pass
-        else:
-            # Material custom
-            pass
-
-        materials_window.accept()
-
-    def on_cancel():
-        materials_window.reject()
-
-    def on_material_change():
-        pass
-
-    ok_button.clicked.connect(on_ok)
-    cancel_button.clicked.connect(on_cancel)
-
-    has_material_layout = QtGui.QHBoxLayout()
-    has_material_label = QtGui.QLabel(__("Set material: "))
-    has_material_label.setToolTip(__("Sets the current material."))
-    has_material_selector = QtGui.QComboBox()
-    has_material_selector.insertItems(0, ['Default', 'Custom'])
-    has_material_selector.currentIndexChanged.connect(on_material_change)
-    has_material_targetlabel = QtGui.QLabel(__("Target MKGroup: ") + str(target_mk))
-    has_material_layout.addWidget(has_material_label)
-    has_material_layout.addWidget(has_material_selector)
-    has_material_layout.addStretch(1)
-    has_material_layout.addWidget(has_material_targetlabel)
-
-    material_props_group = QtGui.QGroupBox(__("Material properties"))
-
-    buttons_layout = QtGui.QHBoxLayout()
-    buttons_layout.addStretch(1)
-    buttons_layout.addWidget(ok_button)
-    buttons_layout.addWidget(cancel_button)
-
-    material_window_layout = QtGui.QVBoxLayout()
-    material_window_layout.addLayout(has_material_layout)
-    material_window_layout.addWidget(material_props_group)
-    material_window_layout.addLayout(buttons_layout)
-
-    material_window.setLayout(material_window_layout)
-
-    material_window.exec_()
-
-
 def motion_change():
     """ Defines a window with motion properties. """
     motion_window = QtGui.QDialog()
@@ -3349,10 +3284,7 @@ objtype_prop = QtGui.QComboBox()
 fillmode_prop = QtGui.QComboBox()
 floatstate_prop = QtGui.QPushButton(__("Configure"))
 initials_prop = QtGui.QPushButton(__("Configure"))
-material_prop = QtGui.QPushButton(__("Configure"))
 motion_prop = QtGui.QPushButton(__("Configure"))
-# TODO: Enable material.
-material_prop.setEnabled(False)
 mkgroup_prop.setRange(0, 240)
 objtype_prop.insertItems(0, ['Fluid', 'Bound'])
 fillmode_prop.insertItems(1, ['Full', 'Solid', 'Face', 'Wire'])
@@ -3361,15 +3293,13 @@ objtype_prop.currentIndexChanged.connect(objtype_change)
 fillmode_prop.currentIndexChanged.connect(fillmode_change)
 floatstate_prop.clicked.connect(floatstate_change)
 initials_prop.clicked.connect(initials_change)
-material_prop.clicked.connect(material_change)
 motion_prop.clicked.connect(motion_change)
 object_property_table.setCellWidget(0, 1, objtype_prop)
 object_property_table.setCellWidget(1, 1, mkgroup_prop)
 object_property_table.setCellWidget(2, 1, fillmode_prop)
 object_property_table.setCellWidget(3, 1, floatstate_prop)
 object_property_table.setCellWidget(4, 1, initials_prop)
-object_property_table.setCellWidget(5, 1, material_prop)
-object_property_table.setCellWidget(6, 1, motion_prop)
+object_property_table.setCellWidget(5, 1, motion_prop)
 
 # Dock the widget to the left side of screen
 fc_main_window.addDockWidget(QtCore.Qt.LeftDockWidgetArea, properties_widget)
@@ -3582,7 +3512,7 @@ def on_tree_item_selection_change():
                     to_change.setEnabled(False)
 
                 # motion restrictions
-                to_change = object_property_table.cellWidget(6, 1)
+                to_change = object_property_table.cellWidget(5, 1)
                 if selection[0].TypeId in temp_data['supported_types'] or "Mesh::Feature" in str(selection[0].TypeId) or \
                         (selection[0].TypeId == "App::DocumentObjectGroup" and "fillbox" in selection[0].Name.lower()):
                     if data['simobjects'][selection[0].Name][1].lower() == "fluid":
