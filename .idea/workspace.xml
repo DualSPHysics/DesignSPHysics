@@ -2,7 +2,7 @@
 <project version="4">
   <component name="BookmarkManager">
     <bookmark url="file://$PROJECT_DIR$/DSPH.py" line="66" mnemonic="9" />
-    <bookmark url="file://$PROJECT_DIR$/DSPH.py" line="2953" mnemonic="2" />
+    <bookmark url="file://$PROJECT_DIR$/DSPH.py" line="2957" mnemonic="2" />
     <bookmark url="file://$PROJECT_DIR$/DSPH.py" line="820" mnemonic="1" />
   </component>
   <component name="ChangeListManager">
@@ -18,7 +18,7 @@
     <option name="LAST_RESOLUTION" value="IGNORE" />
   </component>
   <component name="CoverageDataManager">
-    <SUITE FILE_PATH="coverage/Macro$Reopen_FreeCAD_and_Execute.coverage" NAME="Reopen FreeCAD and Execute Coverage Results" MODIFIED="1499163458674" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$USER_HOME$/Documents/DSPH" />
+    <SUITE FILE_PATH="coverage/Macro$Reopen_FreeCAD_and_Execute.coverage" NAME="Reopen FreeCAD and Execute Coverage Results" MODIFIED="1499164473776" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$USER_HOME$/Documents/DSPH" />
   </component>
   <component name="CreatePatchCommitExecutor">
     <option name="PATCH_PATH" value="" />
@@ -41,11 +41,11 @@
       <file leaf-file-name="DSPH.py" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/DSPH.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="160">
-              <caret line="2308" column="30" lean-forward="true" selection-start-line="2308" selection-start-column="30" selection-end-line="2308" selection-end-column="30" />
+            <state relative-caret-position="512">
+              <caret line="2320" column="12" lean-forward="true" selection-start-line="2320" selection-start-column="12" selection-end-line="2320" selection-end-column="12" />
               <folding>
                 <element signature="e#324#338#0" expanded="true" />
-                <element signature="e#146163#148544#0" expanded="false" />
+                <element signature="e#146322#148703#0" expanded="false" />
               </folding>
             </state>
           </provider>
@@ -753,7 +753,6 @@
     <option name="myLimit" value="2678400000" />
   </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value="Now Y dimension is ignored in periodicity conditions if a case is in 2D" />
     <MESSAGE value="Changed multiple fields in execution parameters." />
     <MESSAGE value="Added a dialog on changing a case from 3D to 2D that asks the user to set the Y position directly" />
     <MESSAGE value="Changed case summary texts" />
@@ -778,7 +777,8 @@
     <MESSAGE value="Now the additional parameters for execution get saved in the batch scripts too." />
     <MESSAGE value="Implemented details (showing the output) in each post-processing tool." />
     <MESSAGE value="Started implementing properties.&#10;Fixed #5" />
-    <option name="LAST_COMMIT_MESSAGE" value="Started implementing properties.&#10;Fixed #5" />
+    <MESSAGE value="Fixed a bug where putting an MK value higher than 10 in bounds would set to 10 some fluid ones" />
+    <option name="LAST_COMMIT_MESSAGE" value="Fixed a bug where putting an MK value higher than 10 in bounds would set to 10 some fluid ones" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
@@ -811,7 +811,7 @@
           <caret line="664" column="16" lean-forward="true" selection-start-line="664" selection-start-column="16" selection-end-line="664" selection-end-column="16" />
           <folding>
             <element signature="e#324#338#0" expanded="true" />
-            <element signature="e#146163#148544#0" expanded="false" />
+            <element signature="e#146322#148703#0" expanded="false" />
           </folding>
         </state>
       </provider>
@@ -840,7 +840,7 @@
           <caret line="664" column="30" lean-forward="false" selection-start-line="664" selection-start-column="30" selection-end-line="664" selection-end-column="30" />
           <folding>
             <element signature="e#324#338#0" expanded="true" />
-            <element signature="e#146163#148544#0" expanded="false" />
+            <element signature="e#146322#148703#0" expanded="false" />
           </folding>
         </state>
       </provider>
@@ -869,7 +869,7 @@
           <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
           <folding>
             <element signature="e#324#338#0" expanded="true" />
-            <element signature="e#146163#148544#0" expanded="false" />
+            <element signature="e#146322#148703#0" expanded="false" />
           </folding>
         </state>
       </provider>
@@ -898,7 +898,7 @@
           <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
           <folding>
             <element signature="e#324#338#0" expanded="true" />
-            <element signature="e#146163#148544#0" expanded="false" />
+            <element signature="e#146322#148703#0" expanded="false" />
           </folding>
         </state>
       </provider>
@@ -927,7 +927,7 @@
           <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
           <folding>
             <element signature="e#324#338#0" expanded="true" />
-            <element signature="e#146163#148544#0" expanded="false" />
+            <element signature="e#146322#148703#0" expanded="false" />
           </folding>
         </state>
       </provider>
@@ -956,7 +956,7 @@
           <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
           <folding>
             <element signature="e#324#338#0" expanded="true" />
-            <element signature="e#146163#148544#0" expanded="false" />
+            <element signature="e#146322#148703#0" expanded="false" />
           </folding>
         </state>
       </provider>
@@ -985,7 +985,7 @@
           <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
           <folding>
             <element signature="e#324#338#0" expanded="true" />
-            <element signature="e#146163#148544#0" expanded="false" />
+            <element signature="e#146322#148703#0" expanded="false" />
           </folding>
         </state>
       </provider>
@@ -1014,7 +1014,7 @@
           <caret line="30" column="8" lean-forward="false" selection-start-line="30" selection-start-column="8" selection-end-line="30" selection-end-column="8" />
           <folding>
             <element signature="e#324#338#0" expanded="true" />
-            <element signature="e#146163#148544#0" expanded="false" />
+            <element signature="e#146322#148703#0" expanded="false" />
           </folding>
         </state>
       </provider>
@@ -1035,7 +1035,7 @@
           <caret line="67" column="34" lean-forward="false" selection-start-line="67" selection-start-column="34" selection-end-line="67" selection-end-column="34" />
           <folding>
             <element signature="e#324#338#0" expanded="true" />
-            <element signature="e#146163#148544#0" expanded="false" />
+            <element signature="e#146322#148703#0" expanded="false" />
           </folding>
         </state>
       </provider>
@@ -1226,11 +1226,11 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/DSPH.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="160">
-          <caret line="2308" column="30" lean-forward="true" selection-start-line="2308" selection-start-column="30" selection-end-line="2308" selection-end-column="30" />
+        <state relative-caret-position="512">
+          <caret line="2320" column="12" lean-forward="true" selection-start-line="2320" selection-start-column="12" selection-end-line="2320" selection-end-column="12" />
           <folding>
             <element signature="e#324#338#0" expanded="true" />
-            <element signature="e#146163#148544#0" expanded="false" />
+            <element signature="e#146322#148703#0" expanded="false" />
           </folding>
         </state>
       </provider>
