@@ -476,7 +476,9 @@ def on_load_case():
         # Remove exec paths from loaded data if user have already correct ones.
         _, already_correct = utils.check_executables(data)
         if already_correct:
-            [load_disk_data.pop(x, None) for x in ['gencase_path', 'dsphysics_path', 'partvtk4_path']]
+            [load_disk_data.pop(x, None) for x in ['gencase_path', 'dsphysics_path', 'partvtk4_path',
+                                                   'floatinginfo_path', 'computeforces_path', 'measuretool_path',
+                                                   'isosurface_path', 'boundaryvtk_path']]
 
         # Update data structure with disk loaded one
         data.update(load_disk_data)
@@ -872,6 +874,7 @@ def on_properties():
 
     property_window.setLayout(property_window_layout)
     property_window.exec_()
+
 
 # Connect case control buttons to respective handlers
 casecontrols_bt_newdoc.clicked.connect(on_new_case)
@@ -2119,6 +2122,402 @@ def on_measuretool():
     measuretool_tool_dialog.exec_()
 
 
+def isosurface_export(export_parameters):
+    """ Export IsoSurface button behaviour.
+    Launches a process while disabling the button. """
+    guiutils.widget_state_config(widget_state_elements, "export start")
+    widget_state_elements['post_proc_isosurface_button'].setText("Exporting...")
+
+    # Find total export parts and adjust progress bar
+    partfiles = glob.glob(data['project_path'] + '/' + data['project_name'] + "_Out/" + "Part_*.bi4")
+    for filename in partfiles:
+        temp_data['total_export_parts'] = max(int(filename.split("Part_")[1].split(".bi4")[0]), temp_data['total_export_parts'])
+    export_progbar_bar.setRange(0, temp_data['total_export_parts'])
+    export_progbar_bar.setValue(0)
+
+    export_dialog.show()
+
+    # Cancel button handler
+    def on_cancel():
+        utils.log(__("Stopping export"))
+        if temp_data['current_export_process'] is not None:
+            temp_data['current_export_process'].kill()
+            widget_state_elements['post_proc_isosurface_button'].setText(__("IsoSurface"))
+        guiutils.widget_state_config(widget_state_elements, "export cancel")
+        export_dialog.hide()
+
+    export_button_cancel.clicked.connect(on_cancel)
+
+    # IsoSurface export finish handler
+    def on_export_finished(exit_code):
+        widget_state_elements['post_proc_isosurface_button'].setText(__("IsoSurface"))
+        guiutils.widget_state_config(widget_state_elements, "export finished")
+
+        export_dialog.hide()
+
+        if exit_code == 0:
+            # Exported correctly
+            guiutils.info_dialog(info_text=__("Post-processing finished successfully. Press the details button to show IsoSurface output"), detailed_text=temp_data['current_output'])
+        else:
+            guiutils.error_dialog(__("There was an error on the post-processing."), detailed_text=temp_data['current_output'])
+
+    temp_data['current_output'] = ""
+    export_process = QtCore.QProcess(dsph_main_dock)
+    export_process.finished.connect(on_export_finished)
+
+    # Build parameters
+    static_params_exp = ['-dirin ' + data['project_path'] + '/' + data['project_name'] + '_Out/',
+                         '-saveiso ' + data['project_path'] + '/' + data['project_name'] + '_Out/' +
+                         export_parameters['file_name'], '-onlytype:' + export_parameters['save_types'] +
+                         export_parameters['additional_parameters']]
+
+    # Start process
+    export_process.start(data['isosurface_path'], static_params_exp)
+    temp_data['current_export_process'] = export_process
+
+    # Information ready handler.
+    def on_stdout_ready():
+        # Update progress bar
+        current_output = str(temp_data['current_export_process'].readAllStandardOutput())
+        temp_data['current_output'] += current_output
+        try:
+            current_part = current_output.split("{}_".format(export_parameters['file_name']))[1]
+            current_part = int(current_part.split(".vtk")[0])
+        except IndexError:
+            current_part = export_progbar_bar.value()
+        export_progbar_bar.setValue(current_part)
+        export_dialog.setWindowTitle(
+            __("Exporting: ") + str(current_part) + "/" + str(temp_data['total_export_parts']))
+
+    temp_data['current_export_process'].readyReadStandardOutput.connect(on_stdout_ready)
+
+
+def on_isosurface():
+    """ Opens a dialog with IsoSurface exporting options """
+    isosurface_tool_dialog = QtGui.QDialog()
+
+    isosurface_tool_dialog.setModal(False)
+    isosurface_tool_dialog.setWindowTitle(__("IsoSurface Tool"))
+    isosurface_tool_layout = QtGui.QVBoxLayout()
+
+    isosfc_types_groupbox = QtGui.QGroupBox(__("Types to export"))
+    isosfc_filename_layout = QtGui.QHBoxLayout()
+    isosfc_parameters_layout = QtGui.QHBoxLayout()
+    isosfc_buttons_layout = QtGui.QHBoxLayout()
+
+    isosfc_types_groupbox_layout = QtGui.QVBoxLayout()
+    isosfc_types_chk_all = QtGui.QCheckBox(__("All"))
+    isosfc_types_chk_all.setCheckState(QtCore.Qt.Checked)
+    isosfc_types_chk_bound = QtGui.QCheckBox(__("Bound"))
+    isosfc_types_chk_fluid = QtGui.QCheckBox(__("Fluid"))
+    isosfc_types_chk_fixed = QtGui.QCheckBox(__("Fixed"))
+    isosfc_types_chk_moving = QtGui.QCheckBox(__("Moving"))
+    isosfc_types_chk_floating = QtGui.QCheckBox(__("Floating"))
+    [isosfc_types_groupbox_layout.addWidget(x) for x in [isosfc_types_chk_all, isosfc_types_chk_bound, isosfc_types_chk_fluid,
+                                                         isosfc_types_chk_fixed, isosfc_types_chk_moving,
+                                                         isosfc_types_chk_floating]]
+    isosfc_types_groupbox.setLayout(isosfc_types_groupbox_layout)
+
+    isosfc_file_name_label = QtGui.QLabel(__("File name"))
+    isosfc_file_name_text = QtGui.QLineEdit()
+    isosfc_file_name_text.setText('FileIso')
+    isosfc_filename_layout.addWidget(isosfc_file_name_label)
+    isosfc_filename_layout.addWidget(isosfc_file_name_text)
+
+    isosfc_parameters_label = QtGui.QLabel(__("Additional Parameters"))
+    isosfc_parameters_text = QtGui.QLineEdit()
+    isosfc_parameters_layout.addWidget(isosfc_parameters_label)
+    isosfc_parameters_layout.addWidget(isosfc_parameters_text)
+
+    isosfc_export_button = QtGui.QPushButton(__("Export"))
+    isosfc_cancel_button = QtGui.QPushButton(__("Cancel"))
+    isosfc_buttons_layout.addWidget(isosfc_export_button)
+    isosfc_buttons_layout.addWidget(isosfc_cancel_button)
+
+    isosurface_tool_layout.addWidget(isosfc_types_groupbox)
+    isosurface_tool_layout.addStretch(1)
+    isosurface_tool_layout.addLayout(isosfc_filename_layout)
+    isosurface_tool_layout.addLayout(isosfc_parameters_layout)
+    isosurface_tool_layout.addLayout(isosfc_buttons_layout)
+
+    isosurface_tool_dialog.setLayout(isosurface_tool_layout)
+
+    def on_isosfc_cancel():
+        isosurface_tool_dialog.reject()
+
+    def on_isosfc_export():
+        export_parameters = dict()
+        export_parameters['save_types'] = '-all'
+        if isosfc_types_chk_all.isChecked():
+            export_parameters['save_types'] = '+all'
+        else:
+            if isosfc_types_chk_bound.isChecked():
+                export_parameters['save_types'] += ',+bound'
+            if isosfc_types_chk_fluid.isChecked():
+                export_parameters['save_types'] += ',+fluid'
+            if isosfc_types_chk_fixed.isChecked():
+                export_parameters['save_types'] += ',+fixed'
+            if isosfc_types_chk_moving.isChecked():
+                export_parameters['save_types'] += ',+moving'
+            if isosfc_types_chk_floating.isChecked():
+                export_parameters['save_types'] += ',+floating'
+
+        if export_parameters['save_types'] == '-all':
+            export_parameters['save_types'] = '+all'
+
+        if len(isosfc_file_name_text.text()) > 0:
+            export_parameters['file_name'] = isosfc_file_name_text.text()
+        else:
+            export_parameters['file_name'] = 'IsoFile'
+
+        if len(isosfc_parameters_text.text()) > 0:
+            export_parameters['additional_parameters'] = isosfc_parameters_text.text()
+        else:
+            export_parameters['additional_parameters'] = ''
+
+        isosurface_export(export_parameters)
+        isosurface_tool_dialog.accept()
+
+    def on_isosfc_type_all_change(state):
+        if state == QtCore.Qt.Checked:
+            [chk.setCheckState(QtCore.Qt.Unchecked) for chk in [isosfc_types_chk_bound,
+                                                                isosfc_types_chk_fluid,
+                                                                isosfc_types_chk_fixed,
+                                                                isosfc_types_chk_moving,
+                                                                isosfc_types_chk_floating]]
+
+    def on_isosfc_type_bound_change(state):
+        if state == QtCore.Qt.Checked:
+            isosfc_types_chk_all.setCheckState(QtCore.Qt.Unchecked)
+
+    def on_isosfc_type_fluid_change(state):
+        if state == QtCore.Qt.Checked:
+            isosfc_types_chk_all.setCheckState(QtCore.Qt.Unchecked)
+
+    def on_isosfc_type_fixed_change(state):
+        if state == QtCore.Qt.Checked:
+            isosfc_types_chk_all.setCheckState(QtCore.Qt.Unchecked)
+
+    def on_isosfc_type_moving_change(state):
+        if state == QtCore.Qt.Checked:
+            isosfc_types_chk_all.setCheckState(QtCore.Qt.Unchecked)
+
+    def on_isosfc_type_floating_change(state):
+        if state == QtCore.Qt.Checked:
+            isosfc_types_chk_all.setCheckState(QtCore.Qt.Unchecked)
+
+    isosfc_types_chk_all.stateChanged.connect(on_isosfc_type_all_change)
+    isosfc_types_chk_bound.stateChanged.connect(on_isosfc_type_bound_change)
+    isosfc_types_chk_fluid.stateChanged.connect(on_isosfc_type_fluid_change)
+    isosfc_types_chk_fixed.stateChanged.connect(on_isosfc_type_fixed_change)
+    isosfc_types_chk_moving.stateChanged.connect(on_isosfc_type_moving_change)
+    isosfc_types_chk_floating.stateChanged.connect(on_isosfc_type_floating_change)
+    isosfc_export_button.clicked.connect(on_isosfc_export)
+    isosfc_cancel_button.clicked.connect(on_isosfc_cancel)
+    isosurface_tool_dialog.exec_()
+
+
+# TODO: Implement this
+def boundaryvtk_export(export_parameters):
+    """ Export IsoSurface button behaviour.
+    Launches a process while disabling the button. """
+    guiutils.widget_state_config(widget_state_elements, "export start")
+    widget_state_elements['post_proc_boundaryvtk_button'].setText("Exporting...")
+
+    # Find total export parts and adjust progress bar
+    partfiles = glob.glob(data['project_path'] + '/' + data['project_name'] + "_Out/" + "Part_*.bi4")
+    for filename in partfiles:
+        temp_data['total_export_parts'] = max(int(filename.split("Part_")[1].split(".bi4")[0]), temp_data['total_export_parts'])
+    export_progbar_bar.setRange(0, temp_data['total_export_parts'])
+    export_progbar_bar.setValue(0)
+
+    export_dialog.show()
+
+    # Cancel button handler
+    def on_cancel():
+        utils.log(__("Stopping export"))
+        if temp_data['current_export_process'] is not None:
+            temp_data['current_export_process'].kill()
+            widget_state_elements['post_proc_boundaryvtk_button'].setText(__("IsoSurface"))
+        guiutils.widget_state_config(widget_state_elements, "export cancel")
+        export_dialog.hide()
+
+    export_button_cancel.clicked.connect(on_cancel)
+
+    # IsoSurface export finish handler
+    def on_export_finished(exit_code):
+        widget_state_elements['post_proc_boundaryvtk_button'].setText(__("IsoSurface"))
+        guiutils.widget_state_config(widget_state_elements, "export finished")
+
+        export_dialog.hide()
+
+        if exit_code == 0:
+            # Exported correctly
+            guiutils.info_dialog(info_text=__("Post-processing finished successfully. Press the details button to show IsoSurface output"), detailed_text=temp_data['current_output'])
+        else:
+            guiutils.error_dialog(__("There was an error on the post-processing."), detailed_text=temp_data['current_output'])
+
+    temp_data['current_output'] = ""
+    export_process = QtCore.QProcess(dsph_main_dock)
+    export_process.finished.connect(on_export_finished)
+
+    # Build parameters
+    static_params_exp = ['-dirin ' + data['project_path'] + '/' + data['project_name'] + '_Out/',
+                         '-saveiso ' + data['project_path'] + '/' + data['project_name'] + '_Out/' +
+                         export_parameters['file_name'], '-onlytype:' + export_parameters['save_types'] +
+                         export_parameters['additional_parameters']]
+
+    # Start process
+    export_process.start(data['boundaryvtk_path'], static_params_exp)
+    temp_data['current_export_process'] = export_process
+
+    # Information ready handler.
+    def on_stdout_ready():
+        # Update progress bar
+        current_output = str(temp_data['current_export_process'].readAllStandardOutput())
+        temp_data['current_output'] += current_output
+        try:
+            current_part = current_output.split("{}_".format(export_parameters['file_name']))[1]
+            current_part = int(current_part.split(".vtk")[0])
+        except IndexError:
+            current_part = export_progbar_bar.value()
+        export_progbar_bar.setValue(current_part)
+        export_dialog.setWindowTitle(
+            __("Exporting: ") + str(current_part) + "/" + str(temp_data['total_export_parts']))
+
+    temp_data['current_export_process'].readyReadStandardOutput.connect(on_stdout_ready)
+
+
+# TODO: Implement this
+def on_boundaryvtk():
+    """ Opens a dialog with BoundaryVTK exporting options """
+    boundaryvtk_tool_dialog = QtGui.QDialog()
+
+    # TODO: Remove this
+    guiutils.warning_dialog("Not implemented yet")
+    return
+
+    boundaryvtk_tool_dialog.setModal(False)
+    boundaryvtk_tool_dialog.setWindowTitle(__("BoundaryVTK Tool"))
+    boundaryvtk_tool_layout = QtGui.QVBoxLayout()
+
+    bvtk_types_groupbox = QtGui.QGroupBox(__("Types to export"))
+    bvtk_filename_layout = QtGui.QHBoxLayout()
+    bvtk_parameters_layout = QtGui.QHBoxLayout()
+    bvtk_buttons_layout = QtGui.QHBoxLayout()
+
+    bvtk_types_groupbox_layout = QtGui.QVBoxLayout()
+    bvtk_types_chk_all = QtGui.QCheckBox(__("All"))
+    bvtk_types_chk_all.setCheckState(QtCore.Qt.Checked)
+    bvtk_types_chk_bound = QtGui.QCheckBox(__("Bound"))
+    bvtk_types_chk_fluid = QtGui.QCheckBox(__("Fluid"))
+    bvtk_types_chk_fixed = QtGui.QCheckBox(__("Fixed"))
+    bvtk_types_chk_moving = QtGui.QCheckBox(__("Moving"))
+    bvtk_types_chk_floating = QtGui.QCheckBox(__("Floating"))
+    [bvtk_types_groupbox_layout.addWidget(x) for x in [bvtk_types_chk_all, bvtk_types_chk_bound, bvtk_types_chk_fluid,
+                                                       bvtk_types_chk_fixed, bvtk_types_chk_moving,
+                                                       bvtk_types_chk_floating]]
+    bvtk_types_groupbox.setLayout(bvtk_types_groupbox_layout)
+
+    bvtk_file_name_label = QtGui.QLabel(__("File name"))
+    bvtk_file_name_text = QtGui.QLineEdit()
+    bvtk_file_name_text.setText('FileIso')
+    bvtk_filename_layout.addWidget(bvtk_file_name_label)
+    bvtk_filename_layout.addWidget(bvtk_file_name_text)
+
+    bvtk_parameters_label = QtGui.QLabel(__("Additional Parameters"))
+    bvtk_parameters_text = QtGui.QLineEdit()
+    bvtk_parameters_layout.addWidget(bvtk_parameters_label)
+    bvtk_parameters_layout.addWidget(bvtk_parameters_text)
+
+    bvtk_export_button = QtGui.QPushButton(__("Export"))
+    bvtk_cancel_button = QtGui.QPushButton(__("Cancel"))
+    bvtk_buttons_layout.addWidget(bvtk_export_button)
+    bvtk_buttons_layout.addWidget(bvtk_cancel_button)
+
+    boundaryvtk_tool_layout.addWidget(bvtk_types_groupbox)
+    boundaryvtk_tool_layout.addStretch(1)
+    boundaryvtk_tool_layout.addLayout(bvtk_filename_layout)
+    boundaryvtk_tool_layout.addLayout(bvtk_parameters_layout)
+    boundaryvtk_tool_layout.addLayout(bvtk_buttons_layout)
+
+    boundaryvtk_tool_dialog.setLayout(boundaryvtk_tool_layout)
+
+    def on_bvtk_cancel():
+        boundaryvtk_tool_dialog.reject()
+
+    def on_bvtk_export():
+        export_parameters = dict()
+        export_parameters['save_types'] = '-all'
+        if bvtk_types_chk_all.isChecked():
+            export_parameters['save_types'] = '+all'
+        else:
+            if bvtk_types_chk_bound.isChecked():
+                export_parameters['save_types'] += ',+bound'
+            if bvtk_types_chk_fluid.isChecked():
+                export_parameters['save_types'] += ',+fluid'
+            if bvtk_types_chk_fixed.isChecked():
+                export_parameters['save_types'] += ',+fixed'
+            if bvtk_types_chk_moving.isChecked():
+                export_parameters['save_types'] += ',+moving'
+            if bvtk_types_chk_floating.isChecked():
+                export_parameters['save_types'] += ',+floating'
+
+        if export_parameters['save_types'] == '-all':
+            export_parameters['save_types'] = '+all'
+
+        if len(bvtk_file_name_text.text()) > 0:
+            export_parameters['file_name'] = bvtk_file_name_text.text()
+        else:
+            export_parameters['file_name'] = 'IsoFile'
+
+        if len(bvtk_parameters_text.text()) > 0:
+            export_parameters['additional_parameters'] = bvtk_parameters_text.text()
+        else:
+            export_parameters['additional_parameters'] = ''
+
+        boundaryvtk_export(export_parameters)
+        boundaryvtk_tool_dialog.accept()
+
+    def on_bvtk_type_all_change(state):
+        if state == QtCore.Qt.Checked:
+            [chk.setCheckState(QtCore.Qt.Unchecked) for chk in [bvtk_types_chk_bound,
+                                                                bvtk_types_chk_fluid,
+                                                                bvtk_types_chk_fixed,
+                                                                bvtk_types_chk_moving,
+                                                                bvtk_types_chk_floating]]
+
+    def on_bvtk_type_bound_change(state):
+        if state == QtCore.Qt.Checked:
+            bvtk_types_chk_all.setCheckState(QtCore.Qt.Unchecked)
+
+    def on_bvtk_type_fluid_change(state):
+        if state == QtCore.Qt.Checked:
+            bvtk_types_chk_all.setCheckState(QtCore.Qt.Unchecked)
+
+    def on_bvtk_type_fixed_change(state):
+        if state == QtCore.Qt.Checked:
+            bvtk_types_chk_all.setCheckState(QtCore.Qt.Unchecked)
+
+    def on_bvtk_type_moving_change(state):
+        if state == QtCore.Qt.Checked:
+            bvtk_types_chk_all.setCheckState(QtCore.Qt.Unchecked)
+
+    def on_bvtk_type_floating_change(state):
+        if state == QtCore.Qt.Checked:
+            bvtk_types_chk_all.setCheckState(QtCore.Qt.Unchecked)
+
+    bvtk_types_chk_all.stateChanged.connect(on_bvtk_type_all_change)
+    bvtk_types_chk_bound.stateChanged.connect(on_bvtk_type_bound_change)
+    bvtk_types_chk_fluid.stateChanged.connect(on_bvtk_type_fluid_change)
+    bvtk_types_chk_fixed.stateChanged.connect(on_bvtk_type_fixed_change)
+    bvtk_types_chk_moving.stateChanged.connect(on_bvtk_type_moving_change)
+    bvtk_types_chk_floating.stateChanged.connect(on_bvtk_type_floating_change)
+    bvtk_export_button.clicked.connect(on_bvtk_export)
+    bvtk_cancel_button.clicked.connect(on_bvtk_cancel)
+    boundaryvtk_tool_dialog.exec_()
+
+
 # Post processing section scaffolding
 export_layout = QtGui.QVBoxLayout()
 export_label = QtGui.QLabel(
@@ -2130,29 +2529,39 @@ export_second_row_layout = QtGui.QHBoxLayout()
 # Tool buttons
 post_proc_partvtk_button = QtGui.QPushButton(__("PartVTK"))
 post_proc_computeforces_button = QtGui.QPushButton(__("ComputeForces"))
+post_proc_isosurface_button = QtGui.QPushButton(__("IsoSurface"))
 post_proc_floatinginfo_button = QtGui.QPushButton(__("FloatingInfo"))
 post_proc_measuretool_button = QtGui.QPushButton(__("MeasureTool"))
+post_proc_boundaryvtk_button = QtGui.QPushButton(__("BoundaryVTK"))
 
 post_proc_partvtk_button.setToolTip(__("Opens the PartVTK tool."))
 post_proc_computeforces_button.setToolTip(__("Opens the ComputeForces tool."))
 post_proc_floatinginfo_button.setToolTip(__("Opens the FloatingInfo tool."))
 post_proc_measuretool_button.setToolTip(__("Opens the MeasureTool tool."))
+post_proc_isosurface_button.setToolTip(__("Opens the IsoSurface tool."))
+post_proc_boundaryvtk_button.setToolTip(__("Opens the BoundaryVTK tool."))
 
 widget_state_elements['post_proc_partvtk_button'] = post_proc_partvtk_button
 widget_state_elements['post_proc_computeforces_button'] = post_proc_computeforces_button
 widget_state_elements['post_proc_floatinginfo_button'] = post_proc_floatinginfo_button
 widget_state_elements['post_proc_measuretool_button'] = post_proc_measuretool_button
+widget_state_elements['post_proc_isosurface_button'] = post_proc_isosurface_button
+widget_state_elements['post_proc_boundaryvtk_button'] = post_proc_boundaryvtk_button
 
 post_proc_partvtk_button.clicked.connect(on_partvtk)
 post_proc_computeforces_button.clicked.connect(on_computeforces)
 post_proc_floatinginfo_button.clicked.connect(on_floatinginfo)
 post_proc_measuretool_button.clicked.connect(on_measuretool)
+post_proc_isosurface_button.clicked.connect(on_isosurface)
+post_proc_boundaryvtk_button.clicked.connect(on_boundaryvtk)
 
 export_layout.addWidget(export_label)
 export_first_row_layout.addWidget(post_proc_partvtk_button)
 export_first_row_layout.addWidget(post_proc_computeforces_button)
+export_first_row_layout.addWidget(post_proc_isosurface_button)
 export_second_row_layout.addWidget(post_proc_floatinginfo_button)
 export_second_row_layout.addWidget(post_proc_measuretool_button)
+export_second_row_layout.addWidget(post_proc_boundaryvtk_button)
 export_layout.addLayout(export_first_row_layout)
 export_layout.addLayout(export_second_row_layout)
 

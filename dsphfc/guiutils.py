@@ -1153,6 +1153,36 @@ def def_setup_window(data):
     measuretool_layout.addWidget(measuretool_input)
     measuretool_layout.addWidget(measuretool_browse)
 
+    # IsoSurface path
+    isosurface_layout = QtGui.QHBoxLayout()
+    isosurface_label = QtGui.QLabel("IsoSurface Path: ")
+    isosurface_input = QtGui.QLineEdit()
+    try:
+        isosurface_input.setText(data["isosurface_path"])
+    except KeyError:
+        isosurface_input.setText("")
+    isosurface_input.setPlaceholderText("Put IsoSurface path here")
+    isosurface_browse = QtGui.QPushButton("...")
+
+    isosurface_layout.addWidget(isosurface_label)
+    isosurface_layout.addWidget(isosurface_input)
+    isosurface_layout.addWidget(isosurface_browse)
+
+    # BoundaryVTK path
+    boundaryvtk_layout = QtGui.QHBoxLayout()
+    boundaryvtk_label = QtGui.QLabel("BoundaryVTK Path: ")
+    boundaryvtk_input = QtGui.QLineEdit()
+    try:
+        boundaryvtk_input.setText(data["boundaryvtk_path"])
+    except KeyError:
+        boundaryvtk_input.setText("")
+    boundaryvtk_input.setPlaceholderText("Put BoundaryVTK path here")
+    boundaryvtk_browse = QtGui.QPushButton("...")
+
+    boundaryvtk_layout.addWidget(boundaryvtk_label)
+    boundaryvtk_layout.addWidget(boundaryvtk_input)
+    boundaryvtk_layout.addWidget(boundaryvtk_browse)
+
     # ParaView path
     paraview_layout = QtGui.QHBoxLayout()
     paraview_label = QtGui.QLabel("ParaView Path: ")
@@ -1176,6 +1206,8 @@ def def_setup_window(data):
         data['computeforces_path'] = computeforces_input.text()
         data['floatinginfo_path'] = floatinginfo_input.text()
         data['measuretool_path'] = measuretool_input.text()
+        data['isosurface_path'] = isosurface_input.text()
+        data['boundaryvtk_path'] = boundaryvtk_input.text()
         data['paraview_path'] = paraview_input.text()
         with open(FreeCAD.getUserAppDataDir() + '/dsph_data.dsphdata', 'wb') as picklefile:
             pickle.dump(data, picklefile, utils.PICKLE_PROTOCOL)
@@ -1293,6 +1325,40 @@ def def_setup_window(data):
                 utils.error("I can't recognize MeasureTool in that exe!")
                 warning_dialog("I can't recognize MeasureTool in that exe!")
 
+    def on_isosurface_browse():
+        filedialog = QtGui.QFileDialog()
+        # noinspection PyArgumentList
+        file_name, _ = filedialog.getOpenFileName(setup_window, "Select IsoSurface path", QtCore.QDir.homePath())
+        if file_name != "":
+            # Verify if exe is indeed measuretool
+            process = QtCore.QProcess(FreeCADGui.getMainWindow())
+            process.start(file_name)
+            process.waitForFinished()
+            output = str(process.readAllStandardOutput())
+
+            if "isosurface" in output[0:22].lower():
+                isosurface_input.setText(file_name)
+            else:
+                utils.error("I can't recognize IsoSurface in that exe!")
+                warning_dialog("I can't recognize IsoSurface in that exe!")
+
+    def on_boundaryvtk_browse():
+        filedialog = QtGui.QFileDialog()
+        # noinspection PyArgumentList
+        file_name, _ = filedialog.getOpenFileName(setup_window, "Select BoundaryVTK path", QtCore.QDir.homePath())
+        if file_name != "":
+            # Verify if exe is indeed measuretool
+            process = QtCore.QProcess(FreeCADGui.getMainWindow())
+            process.start(file_name)
+            process.waitForFinished()
+            output = str(process.readAllStandardOutput())
+
+            if "boundaryvtk" in output[0:22].lower():
+                boundaryvtk_input.setText(file_name)
+            else:
+                utils.error("I can't recognize BoundaryVTK in that exe!")
+                warning_dialog("I can't recognize BoundaryVTK in that exe!")
+
     def on_paraview_browse():
         filedialog = QtGui.QFileDialog()
         # noinspection PyArgumentList
@@ -1308,6 +1374,8 @@ def def_setup_window(data):
     computeforces_browse.clicked.connect(on_computeforces_browse)
     floatinginfo_browse.clicked.connect(on_floatinginfo_browse)
     measuretool_browse.clicked.connect(on_measuretool_browse)
+    boundaryvtk_browse.clicked.connect(on_boundaryvtk_browse)
+    isosurface_browse.clicked.connect(on_isosurface_browse)
     paraview_browse.clicked.connect(on_paraview_browse)
 
     # Button layout definition
@@ -1324,6 +1392,8 @@ def def_setup_window(data):
     stp_main_layout.addLayout(computeforces_layout)
     stp_main_layout.addLayout(floatinginfo_layout)
     stp_main_layout.addLayout(measuretool_layout)
+    stp_main_layout.addLayout(isosurface_layout)
+    stp_main_layout.addLayout(boundaryvtk_layout)
     stp_main_layout.addLayout(paraview_layout)
     stp_main_layout.addStretch(1)
 
@@ -1355,6 +1425,8 @@ def widget_state_config(widgets, config):
         widgets['post_proc_computeforces_button'].setEnabled(False)
         widgets['post_proc_floatinginfo_button'].setEnabled(False)
         widgets['post_proc_measuretool_button'].setEnabled(False)
+        widgets['post_proc_isosurface_button'].setEnabled(False)
+        widgets['post_proc_boundaryvtk_button'].setEnabled(False)
         widgets["objectlist_table"].setEnabled(False)
         widgets["dp_input"].setEnabled(False)
         widgets["summary_bt"].setEnabled(False)
@@ -1371,6 +1443,8 @@ def widget_state_config(widgets, config):
         widgets['post_proc_computeforces_button'].setEnabled(False)
         widgets['post_proc_floatinginfo_button'].setEnabled(False)
         widgets['post_proc_measuretool_button'].setEnabled(False)
+        widgets['post_proc_isosurface_button'].setEnabled(False)
+        widgets['post_proc_boundaryvtk_button'].setEnabled(False)
         widgets["casecontrols_bt_addfillbox"].setEnabled(True)
         widgets["casecontrols_bt_addstl"].setEnabled(True)
         widgets["summary_bt"].setEnabled(True)
@@ -1399,11 +1473,15 @@ def widget_state_config(widgets, config):
         widgets['post_proc_computeforces_button'].setEnabled(True)
         widgets['post_proc_floatinginfo_button'].setEnabled(True)
         widgets['post_proc_measuretool_button'].setEnabled(True)
+        widgets['post_proc_isosurface_button'].setEnabled(True)
+        widgets['post_proc_boundaryvtk_button'].setEnabled(True)
     elif config == "simulation not done":
         widgets['post_proc_partvtk_button'].setEnabled(True)
         widgets['post_proc_computeforces_button'].setEnabled(True)
         widgets['post_proc_floatinginfo_button'].setEnabled(True)
         widgets['post_proc_measuretool_button'].setEnabled(True)
+        widgets['post_proc_isosurface_button'].setEnabled(True)
+        widgets['post_proc_boundaryvtk_button'].setEnabled(True)
     elif config == "execs not correct":
         widgets["ex_selector_combo"].setEnabled(False)
         widgets["ex_button"].setEnabled(False)
@@ -1412,6 +1490,8 @@ def widget_state_config(widgets, config):
         widgets['post_proc_computeforces_button'].setEnabled(False)
         widgets['post_proc_floatinginfo_button'].setEnabled(False)
         widgets['post_proc_measuretool_button'].setEnabled(False)
+        widgets['post_proc_isosurface_button'].setEnabled(False)
+        widgets['post_proc_boundaryvtk_button'].setEnabled(False)
     elif config == "sim start":
         widgets["ex_button"].setEnabled(False)
         widgets["ex_additional"].setEnabled(False)
@@ -1420,6 +1500,8 @@ def widget_state_config(widgets, config):
         widgets['post_proc_computeforces_button'].setEnabled(True)
         widgets['post_proc_floatinginfo_button'].setEnabled(True)
         widgets['post_proc_measuretool_button'].setEnabled(True)
+        widgets['post_proc_isosurface_button'].setEnabled(True)
+        widgets['post_proc_boundaryvtk_button'].setEnabled(True)
     elif config == "sim cancel":
         widgets["ex_selector_combo"].setEnabled(True)
         widgets["ex_button"].setEnabled(True)
@@ -1429,11 +1511,15 @@ def widget_state_config(widgets, config):
         widgets['post_proc_computeforces_button'].setEnabled(True)
         widgets['post_proc_floatinginfo_button'].setEnabled(True)
         widgets['post_proc_measuretool_button'].setEnabled(True)
+        widgets['post_proc_isosurface_button'].setEnabled(True)
+        widgets['post_proc_boundaryvtk_button'].setEnabled(True)
     elif config == "sim finished":
         widgets['post_proc_partvtk_button'].setEnabled(True)
         widgets['post_proc_computeforces_button'].setEnabled(True)
         widgets['post_proc_floatinginfo_button'].setEnabled(True)
         widgets['post_proc_measuretool_button'].setEnabled(True)
+        widgets['post_proc_isosurface_button'].setEnabled(True)
+        widgets['post_proc_boundaryvtk_button'].setEnabled(True)
     elif config == "sim error":
         widgets["ex_selector_combo"].setEnabled(True)
         widgets["ex_button"].setEnabled(True)
@@ -1443,16 +1529,22 @@ def widget_state_config(widgets, config):
         widgets['post_proc_computeforces_button'].setEnabled(False)
         widgets['post_proc_floatinginfo_button'].setEnabled(False)
         widgets['post_proc_measuretool_button'].setEnabled(False)
+        widgets['post_proc_isosurface_button'].setEnabled(False)
+        widgets['post_proc_boundaryvtk_button'].setEnabled(False)
     elif config == "export cancel":
         widgets['post_proc_partvtk_button'].setEnabled(True)
         widgets['post_proc_computeforces_button'].setEnabled(True)
         widgets['post_proc_floatinginfo_button'].setEnabled(True)
         widgets['post_proc_measuretool_button'].setEnabled(True)
+        widgets['post_proc_isosurface_button'].setEnabled(True)
+        widgets['post_proc_boundaryvtk_button'].setEnabled(True)
     elif config == "export finished":
         widgets['post_proc_partvtk_button'].setEnabled(True)
         widgets['post_proc_computeforces_button'].setEnabled(True)
         widgets['post_proc_floatinginfo_button'].setEnabled(True)
         widgets['post_proc_measuretool_button'].setEnabled(True)
+        widgets['post_proc_isosurface_button'].setEnabled(True)
+        widgets['post_proc_boundaryvtk_button'].setEnabled(True)
 
 
 def case_summary(orig_data):
