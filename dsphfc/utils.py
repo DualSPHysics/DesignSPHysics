@@ -218,6 +218,36 @@ def check_executables(data):
         execs_correct = False
         data['measuretool_path'] = ""
 
+    # Tries to identify isosurface
+    if os.path.isfile(data['isosurface_path']):
+        process = QtCore.QProcess(FreeCADGui.getMainWindow())
+        process.start(data['isosurface_path'])
+        process.waitForFinished()
+        output = str(process.readAllStandardOutput())
+        if "isosurface" in output[0:22].lower():
+            log("Found correct IsoSurface.")
+        else:
+            execs_correct = False
+            data['isosurface_path'] = ""
+    else:
+        execs_correct = False
+        data['isosurface_path'] = ""
+
+    # Tries to identify boundaryvtk
+    if os.path.isfile(data['boundaryvtk_path']):
+        process = QtCore.QProcess(FreeCADGui.getMainWindow())
+        process.start(data['boundaryvtk_path'])
+        process.waitForFinished()
+        output = str(process.readAllStandardOutput())
+        if "boundaryvtk" in output[0:22].lower():
+            log("Found correct BoundaryVTK.")
+        else:
+            execs_correct = False
+            data['boundaryvtk_path'] = ""
+    else:
+        execs_correct = False
+        data['boundaryvtk_path'] = ""
+
     # Spawn warning dialog and return filtered data.
     if not execs_correct:
         warning("One or more of the executables in the setup is not correct. Check plugin setup to fix missing binaries")
@@ -343,6 +373,8 @@ def get_default_data():
     data['floatinginfo_path'] = ""
     data['computeforces_path'] = ""
     data['measuretool_path'] = ""
+    data['isosurface_path'] = ""
+    data['boundaryvtk_path'] = ""
     data['paraview_path'] = ""
 
     # Case mode
@@ -414,6 +446,9 @@ def get_default_data():
                 data['computeforces_path'] = disk_data['computeforces_path']
                 data['floatinginfo_path'] = disk_data['floatinginfo_path']
                 data['measuretool_path'] = disk_data['measuretool_path']
+                data['isosurface_path'] = disk_data['isosurface_path']
+                data['boundaryvtk_path'] = disk_data['boundaryvtk_path']
+                data['paraview_path'] = disk_data['paraview_path']
 
         except Exception:
             # traceback.print_exc()
@@ -425,6 +460,9 @@ def get_default_data():
             data['computeforces_path'] = ""
             data['floatinginfo_path'] = ""
             data['measuretool_path'] = ""
+            data['isosurface_path'] = ""
+            data['boundaryvtk_path'] = ""
+            data['paraview_path'] = ""
 
         data, state = check_executables(data)
     else:
