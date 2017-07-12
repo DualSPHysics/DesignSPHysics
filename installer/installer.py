@@ -87,113 +87,108 @@ def main():
     def on_install():
         """ Defines what happens when install button
             is pressed. """
+        install_button.setEnabled(False)
+        install_button.setText('Installing...')
+        system = platform.system()
+        try:
+            if os.path.isdir("./resource/DSPH_Images") and os.path.isfile("./resource/DSPH.py"):
 
-        def threadfunc():
-            """ Thread that verifies and copies files to the
-                installation folder. """
-            install_button.setEnabled(False)
-            install_button.setText('Installing...')
-            system = platform.system()
-            try:
-                if os.path.isdir("./resource/DSPH_Images") and os.path.isfile("./resource/DSPH.py"):
-
-                    # Set the directory depending on the system.
-                    if 'windows' in system.lower():
-                        dest_folder = os.getenv('APPDATA') + '/FreeCAD/Macro'
-                        fc_folder = os.getenv('APPDATA') + '/FreeCAD'
-                        extension = "_win64.exe"
-                    elif 'linux' in system.lower():
-                        dest_folder = os.path.expanduser('~') + '/.FreeCAD/Macro'
-                        fc_folder = os.path.expanduser('~') + '/.FreeCAD'
-                        extension = "_linux64"
-                    else:
-                        # Operating system not supported
-                        install_button.setText('ERROR :(')
-                        install_failed_dialog = QtGui.QMessageBox()
-                        install_failed_dialog.setText(
-                            "DesignSPHysics encountered an error while installing. "
-                            "Click on view details for more info.")
-                        install_failed_dialog.setDetailedText("Operating system not supported: " + str(system))
-                        install_failed_dialog.setIcon(QtGui.QMessageBox.Critical)
-                        install_failed_dialog.exec_()
-                        sys.exit(1)
-
-                    # Try to remove previous files
-                    if not os.path.isdir(dest_folder):
-                        os.makedirs(dest_folder)
-                    try:
-                        os.remove(dest_folder + 'DSPH.py')
-                    except OSError:
-                        # File does not exists.  Ignoring
-                        pass
-                    try:
-                        os.remove(dest_folder + 'LICENSE')
-                    except OSError:
-                        # File does not exists.  Ignoring
-                        pass
-                    try:
-                        shutil.rmtree(dest_folder + '/DSPH_Images')
-                    except OSError:
-                        # Directory does not exists.  Ignoring
-                        pass
-                    try:
-                        shutil.rmtree(dest_folder + '/dsphfc')
-                    except OSError:
-                        # Directory does not exists.  Ignoring
-                        pass
-                    try:
-                        shutil.rmtree(dest_folder + '/test-examples')
-                    except OSError:
-                        # Directory does not exists.  Ignoring
-                        pass
-
-                    # Copy new files
-                    shutil.copy("./resource/DSPH.py", dest_folder)
-                    shutil.copy("./resource/LICENSE", dest_folder)
-                    shutil.copytree("./resource/DSPH_Images", dest_folder + '/DSPH_Images')
-                    shutil.copytree("./resource/dsphfc", dest_folder + '/dsphfc')
-                    shutil.copytree("./resource/test-examples", dest_folder + '/test-examples')
-
-                    if installopts_selector.currentIndex() is 0:
-                        try:
-                            shutil.rmtree(dest_folder + '/dualsphysics')
-                        except OSError:
-                            # Directory does not exists.  Ignoring
-                            pass
-                        shutil.copytree("./resource/dualsphysics", dest_folder + '/dualsphysics')
-                        data = dict()
-                        data['gencase_path'] = dest_folder + "/dualsphysics/EXECS/GenCase4" + extension
-                        data['dsphysics_path'] = dest_folder + "/dualsphysics/EXECS/DualSPHysics4" + extension
-                        data['partvtk4_path'] = dest_folder + "/dualsphysics/EXECS/PartVTK4" + extension
-                        data['computeforces_path'] = dest_folder + "/dualsphysics/EXECS/ComputeForces4" + extension
-                        data['floatinginfo_path'] = dest_folder + "/dualsphysics/EXECS/FloatingInfo4" + extension
-                        data['measuretool_path'] = dest_folder + "/dualsphysics/EXECS/MeasureTool4" + extension
-                        with open(fc_folder + '/dsph_data.dsphdata', 'wb') as picklefile:
-                            pickle.dump(data, picklefile, 1)
-
-                    # Installation completed
-                    install_button.setText('Installed!')
-                    install_success_dialog = QtGui.QMessageBox()
-                    install_success_dialog.setText("DesignSPHysics installed correctly.")
-                    install_success_dialog.setIcon(QtGui.QMessageBox.Information)
-                    install_success_dialog.exec_()
-                    os._exit(0)
+                # Set the directory depending on the system.
+                if 'windows' in system.lower():
+                    dest_folder = os.getenv('APPDATA') + '/FreeCAD/Macro'
+                    fc_folder = os.getenv('APPDATA') + '/FreeCAD'
+                    extension = "_win64.exe"
+                elif 'linux' in system.lower():
+                    dest_folder = os.path.expanduser('~') + '/.FreeCAD/Macro'
+                    fc_folder = os.path.expanduser('~') + '/.FreeCAD'
+                    extension = "_linux64"
                 else:
-                    raise Exception('DSPH_Images or DSPH.py are not in the resource folder.')
-            except Exception as e:
-                # Something failed, show error
-                install_button.setText('ERROR :(')
-                install_failed_dialog = QtGui.QMessageBox()
-                install_failed_dialog.setText(
-                    "DesignSPHysics encountered an error while installing. Click on view details for more info.")
-                install_failed_dialog.setDetailedText(
-                    "Exception " + str(e.__class__.__name__) + " encountered.\nError message: " + str(e))
-                install_failed_dialog.setIcon(QtGui.QMessageBox.Critical)
-                install_failed_dialog.exec_()
-                os._exit(0)
+                    # Operating system not supported
+                    install_button.setText('ERROR :(')
+                    install_failed_dialog = QtGui.QMessageBox()
+                    install_failed_dialog.setText(
+                        "DesignSPHysics encountered an error while installing. "
+                        "Click on view details for more info.")
+                    install_failed_dialog.setDetailedText("Operating system not supported: " + str(system))
+                    install_failed_dialog.setIcon(QtGui.QMessageBox.Critical)
+                    install_failed_dialog.exec_()
+                    sys.exit(1)
 
-        installthread = threading.Thread(target=threadfunc)
-        installthread.start()  # Begins installing on a thread
+                # Try to remove previous files
+                if not os.path.isdir(dest_folder):
+                    os.makedirs(dest_folder)
+                try:
+                    os.remove(dest_folder + 'DSPH.py')
+                except OSError:
+                    # File does not exists.  Ignoring
+                    pass
+                try:
+                    os.remove(dest_folder + 'LICENSE')
+                except OSError:
+                    # File does not exists.  Ignoring
+                    pass
+                try:
+                    shutil.rmtree(dest_folder + '/DSPH_Images')
+                except OSError:
+                    # Directory does not exists.  Ignoring
+                    pass
+                try:
+                    shutil.rmtree(dest_folder + '/dsphfc')
+                except OSError:
+                    # Directory does not exists.  Ignoring
+                    pass
+                try:
+                    shutil.rmtree(dest_folder + '/test-examples')
+                except OSError:
+                    # Directory does not exists.  Ignoring
+                    pass
+
+                # Copy new files
+                shutil.copy("./resource/DSPH.py", dest_folder)
+                shutil.copy("./resource/LICENSE", dest_folder)
+                shutil.copytree("./resource/DSPH_Images", dest_folder + '/DSPH_Images')
+                shutil.copytree("./resource/dsphfc", dest_folder + '/dsphfc')
+                shutil.copytree("./resource/test-examples", dest_folder + '/test-examples')
+
+                if installopts_selector.currentIndex() is 0:
+                    try:
+                        shutil.rmtree(dest_folder + '/dualsphysics')
+                    except OSError:
+                        # Directory does not exists.  Ignoring
+                        pass
+                    shutil.copytree("./resource/dualsphysics", dest_folder + '/dualsphysics')
+                    data = dict()
+                    data['gencase_path'] = dest_folder + "/dualsphysics/EXECS/GenCase4" + extension
+                    data['dsphysics_path'] = dest_folder + "/dualsphysics/EXECS/DualSPHysics4" + extension
+                    data['partvtk4_path'] = dest_folder + "/dualsphysics/EXECS/PartVTK4" + extension
+                    data['computeforces_path'] = dest_folder + "/dualsphysics/EXECS/ComputeForces4" + extension
+                    data['floatinginfo_path'] = dest_folder + "/dualsphysics/EXECS/FloatingInfo4" + extension
+                    data['measuretool_path'] = dest_folder + "/dualsphysics/EXECS/MeasureTool4" + extension
+                    data['isosurface_path'] = dest_folder + "/dualsphysics/EXECS/IsoSurface4" + extension
+                    data['boundaryvtk_path'] = dest_folder + "/dualsphysics/EXECS/BoundaryVTK4" + extension
+                    with open(fc_folder + '/dsph_data.dsphdata', 'wb') as picklefile:
+                        pickle.dump(data, picklefile, 1)
+
+                # Installation completed
+                install_button.setText('Installed!')
+                install_success_dialog = QtGui.QMessageBox()
+                install_success_dialog.setText("DesignSPHysics installed correctly.")
+                install_success_dialog.setIcon(QtGui.QMessageBox.Information)
+                install_success_dialog.exec_()
+                return
+            else:
+                raise Exception('DSPH_Images or DSPH.py are not in the resource folder.')
+        except Exception as e:
+            # Something failed, show error
+            install_button.setText('ERROR :(')
+            install_failed_dialog = QtGui.QMessageBox()
+            install_failed_dialog.setText(
+                "DesignSPHysics encountered an error while installing. Click on view details for more info.")
+            install_failed_dialog.setDetailedText(
+                "Exception " + str(e.__class__.__name__) + " encountered.\nError message: " + str(e))
+            install_failed_dialog.setIcon(QtGui.QMessageBox.Critical)
+            install_failed_dialog.exec_()
+            return
 
     install_button.clicked.connect(on_install)
     main_layout.addWidget(image_label)
