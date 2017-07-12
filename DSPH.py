@@ -217,8 +217,7 @@ casecontrols_bt_savedoc = QtGui.QToolButton()
 casecontrols_bt_savedoc.setPopupMode(QtGui.QToolButton.MenuButtonPopup)
 casecontrols_bt_savedoc.setToolButtonStyle(QtCore.Qt.ToolButtonTextBesideIcon)
 casecontrols_bt_savedoc.setText("  " + __("Save\n  Case"))
-casecontrols_bt_savedoc.setToolTip(__(
-    "Saves the case and executes GenCase over."))
+casecontrols_bt_savedoc.setToolTip(__("Saves the case and executes GenCase over."))
 casecontrols_bt_savedoc.setIcon(guiutils.get_icon("save.png"))
 casecontrols_bt_savedoc.setIconSize(QtCore.QSize(28, 28))
 casecontrols_menu_savemenu = QtGui.QMenu()
@@ -236,8 +235,11 @@ casecontrols_bt_loaddoc.setIcon(guiutils.get_icon("load.png"))
 casecontrols_bt_loaddoc.setIconSize(QtCore.QSize(28, 28))
 
 # Add fillbox button
+
 casecontrols_bt_addfillbox = QtGui.QPushButton(__("Add fillbox"))
-casecontrols_bt_addfillbox.setToolTip(__("Adds a FillBox. A FillBox is able to fill an empty space\nwithin limits of geometry and a maximum bounding\nbox placed by the user."))
+casecontrols_bt_addfillbox.setToolTip(
+    __("Adds a FillBox. A FillBox is able to fill an empty space\nwithin "
+       "limits of geometry and a maximum bounding\nbox placed by the user."))
 casecontrols_bt_addfillbox.setEnabled(False)
 widget_state_elements['casecontrols_bt_addfillbox'] = casecontrols_bt_addfillbox
 
@@ -306,8 +308,8 @@ def on_save_case(save_as=None):
         save_name = data['project_path']
 
     if " " in save_name:  # Spawn error if path contains any spaces.
-        guiutils.error_dialog(__(
-            "The path you selected contains spaces. Due to DualSPHysics restrictions, you'll need to use a folder path without any spaces."))
+        guiutils.error_dialog(
+            __("The path you selected contains spaces. Due to DualSPHysics restrictions, you'll need to use a folder path without any spaces."))
         return
 
     # Check if there is any path, a blank one meant the user cancelled the save file dialog
@@ -345,13 +347,14 @@ def on_save_case(save_as=None):
             utils.warning(__("Can't create executable bat file! One or more of the paths in plugin setup is not set"))
         else:
             # Export batch files
-            utils.batch_generator(full_path=save_name,
-                                  case_name=save_name.split('/')[-1],
-                                  gcpath=data['gencase_path'],
-                                  dsphpath=data['dsphysics_path'],
-                                  pvtkpath=data['partvtk4_path'],
-                                  exec_params="-{} {}".format(str(ex_selector_combo.currentText()).lower(), data['additional_parameters']),
-                                  lib_path='/'.join(data['gencase_path'].split('/')[:-1]))
+            utils.batch_generator(
+                full_path=save_name,
+                case_name=save_name.split('/')[-1],
+                gcpath=data['gencase_path'],
+                dsphpath=data['dsphysics_path'],
+                pvtkpath=data['partvtk4_path'],
+                exec_params="-{} {}".format(str(ex_selector_combo.currentText()).lower(), data['additional_parameters']),
+                lib_path='/'.join(data['gencase_path'].split('/')[:-1]))
 
         # Save data array on disk
         try:
@@ -370,8 +373,10 @@ def on_save_with_gencase():
     utils.debug("Max number of particles that can be created is: {}".format(case_maximum_particles))
     if case_maximum_particles > utils.MAX_PARTICLE_WARNING:
         # Spawn a dialog warning the user
-        max_particle_warning = guiutils.ok_cancel_dialog(__('Are you sure?'), __("With that Case Limits size and DP you can generate as much as {} particles.\n\n"
-                                                                                 "Are you sure you want to continue saving?").format(case_maximum_particles))
+        max_particle_warning = guiutils.ok_cancel_dialog(
+            __('Are you sure?'),
+            __("With that Case Limits size and DP you can generate as much as {} particles.\n\n"
+               "Are you sure you want to continue saving?").format(case_maximum_particles))
         if max_particle_warning == QtGui.QMessageBox.Cancel:
             return
 
@@ -383,9 +388,10 @@ def on_save_with_gencase():
     if data['gencase_path'] != "":
         os.chdir(data['project_path'])
         process = QtCore.QProcess(fc_main_window)
-        process.start(
-            data['gencase_path'], [data['project_path'] + '/' + data['project_name'] + '_Def', data['project_path'] + '/' + data['project_name'] + '_Out/' + data['project_name'], '-save:+all']
-        )
+        process.start(data['gencase_path'], [
+            data['project_path'] + '/' + data['project_name'] + '_Def', data['project_path'] + '/' + data['project_name'] + '_Out/' + data['project_name'],
+            '-save:+all'
+        ])
         process.waitForFinished()
         output = str(process.readAllStandardOutput())
         error_in_gen_case = False
@@ -397,8 +403,9 @@ def on_save_with_gencase():
                 data['total_particles'] = total_particles
                 utils.log(__("Total number of particles exported: ") + str(total_particles))
                 if total_particles < 300:
-                    utils.warning(__("Are you sure all the parameters are set right? The number of particles is very low ({}). "
-                                     "Lower the DP to increase number of particles").format(str(total_particles)))
+                    utils.warning(
+                        __("Are you sure all the parameters are set right? The number of particles is very low ({}). "
+                           "Lower the DP to increase number of particles").format(str(total_particles)))
                 elif total_particles > 200000:
                     utils.warning(__("Number of particles is pretty high ({}) and it could take a lot of time to simulate.").format(str(total_particles)))
                 data['gencase_done'] = True
@@ -416,7 +423,8 @@ def on_save_with_gencase():
             # Multiple possible causes. Let the user know
             gencase_out_file = open(data['project_path'] + '/' + data['project_name'] + '_Out/' + data['project_name'] + ".out", "rb")
             gencase_failed_dialog = QtGui.QMessageBox()
-            gencase_failed_dialog.setText(__("Error executing GenCase. Did you add objects to the case?. Another reason could be memory issues. View details for more info."))
+            gencase_failed_dialog.setText(
+                __("Error executing GenCase. Did you add objects to the case?. Another reason could be memory issues. View details for more info."))
             gencase_failed_dialog.setDetailedText(gencase_out_file.read().split("================================")[1])
             gencase_failed_dialog.setIcon(QtGui.QMessageBox.Critical)
             gencase_out_file.close()
@@ -469,23 +477,30 @@ def on_load_case():
             try:
                 load_disk_data = pickle.load(load_picklefile)
             except AttributeError:
-                guiutils.error_dialog(__("There was an error trying to load the case. This can be due to the project being from another version or an error while saving the case."))
+                guiutils.error_dialog(
+                    __("There was an error trying to load the case. This can be due to the project being "
+                       "from another version or an error while saving the case."))
                 on_new_case(prompt=False)
                 return
 
         # Remove exec paths from loaded data if user have already correct ones.
         _, already_correct = utils.check_executables(data)
         if already_correct:
-            [load_disk_data.pop(x, None) for x in ['gencase_path', 'dsphysics_path', 'partvtk4_path',
-                                                   'floatinginfo_path', 'computeforces_path', 'measuretool_path',
-                                                   'isosurface_path', 'boundaryvtk_path']]
+            [
+                load_disk_data.pop(x, None)
+                for x in [
+                    'gencase_path', 'dsphysics_path', 'partvtk4_path', 'floatinginfo_path', 'computeforces_path', 'measuretool_path', 'isosurface_path',
+                    'boundaryvtk_path'
+                ]
+            ]
 
         # Update data structure with disk loaded one
         data.update(load_disk_data)
     except (EOFError, ValueError):
-        guiutils.error_dialog(__("There was an error importing the case properties. You probably need to set them again."
-                                 "\n\n"
-                                 "This could be caused due to file corruption, caused by operating system based line endings or ends-of-file, or other related aspects."))
+        guiutils.error_dialog(
+            __("There was an error importing the case properties. You probably need to set them again."
+               "\n\n"
+               "This could be caused due to file corruption, caused by operating system based line endings or ends-of-file, or other related aspects."))
 
     # Fill some data
     dp_input.setText(str(data['dp']))
@@ -573,9 +588,18 @@ def on_add_stl():
     stl_scaling_y_e = QtGui.QLineEdit("1")
     stl_scaling_z_l = QtGui.QLabel("Z: ")
     stl_scaling_z_e = QtGui.QLineEdit("1")
-    [stl_scaling_layout.addWidget(x) for x in
-     [stl_scaling_label, stl_scaling_x_l, stl_scaling_x_e, stl_scaling_y_l, stl_scaling_y_e,
-      stl_scaling_z_l, stl_scaling_z_e, ]]
+    [
+        stl_scaling_layout.addWidget(x)
+        for x in [
+            stl_scaling_label,
+            stl_scaling_x_l,
+            stl_scaling_x_e,
+            stl_scaling_y_l,
+            stl_scaling_y_e,
+            stl_scaling_z_l,
+            stl_scaling_z_e,
+        ]
+    ]
     # END Scaling factor
 
     # Import object name
@@ -608,17 +632,14 @@ def on_add_stl():
 
     # STL Dialog function definition and connections
     def stl_ok_clicked():
-        [stl_scaling_edit.setText(stl_scaling_edit.text().replace(",", ".")) for stl_scaling_edit in [
-            stl_scaling_x_e,
-            stl_scaling_y_e,
-            stl_scaling_z_e
-        ]]
+        [stl_scaling_edit.setText(stl_scaling_edit.text().replace(",", ".")) for stl_scaling_edit in [stl_scaling_x_e, stl_scaling_y_e, stl_scaling_z_e]]
         try:
-            utils.import_stl(filename=str(stl_file_path.text()),
-                             scale_x=float(stl_scaling_x_e.text()),
-                             scale_y=float(stl_scaling_y_e.text()),
-                             scale_z=float(stl_scaling_z_e.text()),
-                             name=str(stl_objname_text.text()))
+            utils.import_stl(
+                filename=str(stl_file_path.text()),
+                scale_x=float(stl_scaling_x_e.text()),
+                scale_y=float(stl_scaling_y_e.text()),
+                scale_z=float(stl_scaling_z_e.text()),
+                name=str(stl_objname_text.text()))
             stl_dialog.accept()
         except ValueError:
             utils.error(__("There was an error. Are you sure you wrote correct float values in the scaling factor?"))
@@ -642,9 +663,10 @@ def on_import_xml():
     """ Imports an already created GenCase/DSPH compatible
     file and loads it in the scene. """
 
-    guiutils.warning_dialog(__("This feature is experimental. It's meant to help to build a case importing bits from"
-                               "previous, non DesignSPHysics code. This is not intended neither to import all objects "
-                               "nor its properties."))
+    guiutils.warning_dialog(
+        __("This feature is experimental. It's meant to help to build a case importing bits from"
+           "previous, non DesignSPHysics code. This is not intended neither to import all objects "
+           "nor its properties."))
 
     # noinspection PyArgumentList
     import_name, _ = QtGui.QFileDialog.getOpenFileName(dsph_main_dock, __("Import XML"), QtCore.QDir.homePath(), "XML Files (*.xml)")
@@ -666,8 +688,8 @@ def on_import_xml():
         limits_point_min = config['limits_min']
         limits_point_max = config['limits_max']
         # noinspection PyArgumentList
-        FreeCAD.ActiveDocument.getObject('Case_Limits').Placement = FreeCAD.Placement(FreeCAD.Vector(limits_point_min[0] * 1000, limits_point_min[1] * 1000, limits_point_min[2] * 1000),
-                                                                                      FreeCAD.Rotation(FreeCAD.Vector(0, 0, 1), 0))
+        FreeCAD.ActiveDocument.getObject('Case_Limits').Placement = FreeCAD.Placement(
+            FreeCAD.Vector(limits_point_min[0] * 1000, limits_point_min[1] * 1000, limits_point_min[2] * 1000), FreeCAD.Rotation(FreeCAD.Vector(0, 0, 1), 0))
         FreeCAD.ActiveDocument.getObject("Case_Limits").Length = str(limits_point_max[0] - limits_point_min[0]) + ' m'
         FreeCAD.ActiveDocument.getObject("Case_Limits").Width = str(limits_point_max[1] - limits_point_min[1]) + ' m'
         FreeCAD.ActiveDocument.getObject("Case_Limits").Height = str(limits_point_max[2] - limits_point_min[2]) + ' m'
@@ -710,7 +732,8 @@ def on_import_xml():
 
             # Notify change to refresh UI elements related.
             on_tree_item_selection_change()
-    guiutils.info_dialog(__("Importing successful. Note that some objects may not be automatically added to the case, and other may not have its properties correctly applied."))
+    guiutils.info_dialog(
+        __("Importing successful. Note that some objects may not be automatically added to the case, and other may not have its properties correctly applied."))
 
 
 def on_summary():
@@ -1044,8 +1067,9 @@ def on_ex_simulate():
                 run_dialog.hide()
                 guiutils.widget_state_config(widget_state_elements, "sim error")
                 execution_error_dialog = QtGui.QMessageBox()
-                execution_error_dialog.setText(__("There was an error in execution. Make sure you set the parameters right (and they exist). "
-                                                  "Also, make sure that your computer has the right hardware to simulate. Check the details for more information."))
+                execution_error_dialog.setText(
+                    __("There was an error in execution. Make sure you set the parameters right (and they exist). "
+                       "Also, make sure that your computer has the right hardware to simulate. Check the details for more information."))
                 execution_error_dialog.setDetailedText(str(output).split("================================")[1])
                 execution_error_dialog.setIcon(QtGui.QMessageBox.Critical)
                 execution_error_dialog.exec_()
@@ -1054,9 +1078,10 @@ def on_ex_simulate():
     process = QtCore.QProcess(run_dialog)
     process.finished.connect(on_dsph_sim_finished)
     temp_data['current_process'] = process
-    static_params_exe = [data['project_path'] + '/' + data['project_name'] + "_Out/" + data['project_name'],
-                         data['project_path'] + '/' + data['project_name'] + "_Out/",
-                         "-svres", "-" + str(ex_selector_combo.currentText()).lower()]
+    static_params_exe = [
+        data['project_path'] + '/' + data['project_name'] + "_Out/" + data['project_name'], data['project_path'] + '/' + data['project_name'] + "_Out/",
+        "-svres", "-" + str(ex_selector_combo.currentText()).lower()
+    ]
     if len(data['additional_parameters']) < 2:
         additional_params_ex = list()
     else:
@@ -1262,17 +1287,21 @@ def partvtk_export(export_parameters):
 
         if exit_code == 0:
             # Exported correctly
-            guiutils.info_dialog(info_text=__("Post-processing finished successfully. Press the details button to show PartVTK output"), detailed_text=temp_data['current_output'])
+            guiutils.info_dialog(
+                info_text=__("Post-processing finished successfully. Press the details button to show PartVTK output"),
+                detailed_text=temp_data['current_output'])
         else:
             guiutils.error_dialog(__("There was an error on the post-processing."))
 
         # Bit of code that tries to open ParaView if the option was selected.
         if export_parameters['open_paraview']:
             formats = {0: "vtk", 1: "csv", 2: "asc"}
-            subprocess.Popen([data['paraview_path'], "--data={}\\{}_..{}".format(
-                data['project_path'] + '\\' + data['project_name'] + '_Out',
-                export_parameters['file_name'],
-                formats[export_parameters['save_mode']])], stdout=subprocess.PIPE)
+            subprocess.Popen(
+                [
+                    data['paraview_path'], "--data={}\\{}_..{}".format(data['project_path'] + '\\' + data['project_name'] + '_Out',
+                                                                       export_parameters['file_name'], formats[export_parameters['save_mode']])
+                ],
+                stdout=subprocess.PIPE)
 
     temp_data['current_output'] = ""
     export_process = QtCore.QProcess(dsph_main_dock)
@@ -1288,10 +1317,11 @@ def partvtk_export(export_parameters):
         save_mode = '-saveascii '
 
     # Build parameters
-    static_params_exp = ['-dirin ' + data['project_path'] + '/' + data['project_name'] + '_Out/',
-                         save_mode + data['project_path'] + '/' + data['project_name'] + '_Out/' +
-                         export_parameters['file_name'], '-onlytype:' + export_parameters['save_types'] +
-                         export_parameters['additional_parameters']]
+    static_params_exp = [
+        '-dirin ' + data['project_path'] + '/' + data['project_name'] + '_Out/',
+        save_mode + data['project_path'] + '/' + data['project_name'] + '_Out/' + export_parameters['file_name'],
+        '-onlytype:' + export_parameters['save_types'] + export_parameters['additional_parameters']
+    ]
 
     # Start process
     export_process.start(data['partvtk4_path'], static_params_exp)
@@ -1313,8 +1343,7 @@ def partvtk_export(export_parameters):
         except IndexError:
             current_part = export_progbar_bar.value()
         export_progbar_bar.setValue(current_part)
-        export_dialog.setWindowTitle(
-            __("Exporting: ") + str(current_part) + "/" + str(temp_data['total_export_parts']))
+        export_dialog.setWindowTitle(__("Exporting: ") + str(current_part) + "/" + str(temp_data['total_export_parts']))
 
     temp_data['current_export_process'].readyReadStandardOutput.connect(on_stdout_ready)
 
@@ -1348,9 +1377,10 @@ def on_partvtk():
     pvtk_types_chk_fixed = QtGui.QCheckBox(__("Fixed"))
     pvtk_types_chk_moving = QtGui.QCheckBox(__("Moving"))
     pvtk_types_chk_floating = QtGui.QCheckBox(__("Floating"))
-    [pvtk_types_groupbox_layout.addWidget(x) for x in [pvtk_types_chk_all, pvtk_types_chk_bound, pvtk_types_chk_fluid,
-                                                       pvtk_types_chk_fixed, pvtk_types_chk_moving,
-                                                       pvtk_types_chk_floating]]
+    [
+        pvtk_types_groupbox_layout.addWidget(x)
+        for x in [pvtk_types_chk_all, pvtk_types_chk_bound, pvtk_types_chk_fluid, pvtk_types_chk_fixed, pvtk_types_chk_moving, pvtk_types_chk_floating]
+    ]
     pvtk_types_groupbox.setLayout(pvtk_types_groupbox_layout)
 
     pvtk_file_name_label = QtGui.QLabel(__("File name"))
@@ -1423,11 +1453,10 @@ def on_partvtk():
 
     def on_pvtk_type_all_change(state):
         if state == QtCore.Qt.Checked:
-            [chk.setCheckState(QtCore.Qt.Unchecked) for chk in [pvtk_types_chk_bound,
-                                                                pvtk_types_chk_fluid,
-                                                                pvtk_types_chk_fixed,
-                                                                pvtk_types_chk_moving,
-                                                                pvtk_types_chk_floating]]
+            [
+                chk.setCheckState(QtCore.Qt.Unchecked)
+                for chk in [pvtk_types_chk_bound, pvtk_types_chk_fluid, pvtk_types_chk_fixed, pvtk_types_chk_moving, pvtk_types_chk_floating]
+            ]
 
     def on_pvtk_type_bound_change(state):
         if state == QtCore.Qt.Checked:
@@ -1490,7 +1519,9 @@ def floatinginfo_export(export_parameters):
         export_dialog.hide()
         if exit_code == 0:
             # Exported correctly
-            guiutils.info_dialog(info_text=__("Post-processing finished successfully. Press the details button to see FloatingInfo output."), detailed_text=temp_data['current_output'])
+            guiutils.info_dialog(
+                info_text=__("Post-processing finished successfully. Press the details button to see FloatingInfo output."),
+                detailed_text=temp_data['current_output'])
         else:
             guiutils.error_dialog(__("There was an error on the post-processing."))
 
@@ -1499,10 +1530,8 @@ def floatinginfo_export(export_parameters):
     export_process.finished.connect(on_export_finished)
 
     static_params_exp = [
-        '-filexml ' + data['project_path'] + '/' + data['project_name'] + '_Out/' + data['project_name'] + '.xml',
-        '-savemotion',
-        '-savedata ' + data['project_path'] + '/' + data['project_name'] + '_Out/' + export_parameters['filename'],
-        export_parameters['additional_parameters']
+        '-filexml ' + data['project_path'] + '/' + data['project_name'] + '_Out/' + data['project_name'] + '.xml', '-savemotion',
+        '-savedata ' + data['project_path'] + '/' + data['project_name'] + '_Out/' + export_parameters['filename'], export_parameters['additional_parameters']
     ]
 
     if len(export_parameters['onlymk']) > 0:
@@ -1520,8 +1549,7 @@ def floatinginfo_export(export_parameters):
         except IndexError:
             current_part = export_progbar_bar.value()
         export_progbar_bar.setValue(int(current_part))
-        export_dialog.setWindowTitle(
-            __("Exporting: ") + str(current_part) + "/" + str(temp_data['total_export_parts']))
+        export_dialog.setWindowTitle(__("Exporting: ") + str(current_part) + "/" + str(temp_data['total_export_parts']))
 
     temp_data['current_export_process'].readyReadStandardOutput.connect(on_stdout_ready)
 
@@ -1616,7 +1644,9 @@ def computeforces_export(export_parameters):
         export_dialog.hide()
         if exit_code == 0:
             # Exported correctly
-            guiutils.info_dialog(info_text=__("Post-processing finished successfully. Press the details button to see ComputeForces output."), detailed_text=temp_data['current_output'])
+            guiutils.info_dialog(
+                info_text=__("Post-processing finished successfully. Press the details button to see ComputeForces output."),
+                detailed_text=temp_data['current_output'])
         else:
             guiutils.error_dialog(__("There was an error on the post-processing."))
 
@@ -1635,8 +1665,7 @@ def computeforces_export(export_parameters):
     static_params_exp = [
         '-dirin ' + data['project_path'] + '/' + data['project_name'] + '_Out/',
         '-filexml ' + data['project_path'] + '/' + data['project_name'] + '_Out/' + data['project_name'] + '.xml',
-        save_mode + data['project_path'] + '/' + data['project_name'] + '_Out/' + export_parameters['filename'],
-        export_parameters['additional_parameters']
+        save_mode + data['project_path'] + '/' + data['project_name'] + '_Out/' + export_parameters['filename'], export_parameters['additional_parameters']
     ]
 
     if len(export_parameters['onlymk']) > 0:
@@ -1759,7 +1788,9 @@ def measuretool_export(export_parameters):
         export_dialog.hide()
         if exit_code == 0:
             # Exported correctly
-            guiutils.info_dialog(info_text=__("Post-processing finished successfully. Press the details button to see MeasureTool output"), detailed_text=temp_data['current_output'])
+            guiutils.info_dialog(
+                info_text=__("Post-processing finished successfully. Press the details button to see MeasureTool output"),
+                detailed_text=temp_data['current_output'])
         else:
             guiutils.error_dialog(__("There was an error on the post-processing."))
 
@@ -1795,9 +1826,7 @@ def measuretool_export(export_parameters):
         '-dirin ' + data['project_path'] + '/' + data['project_name'] + '_Out/',
         '-filexml ' + data['project_path'] + '/' + data['project_name'] + '_Out/' + data['project_name'] + '.xml',
         save_mode + data['project_path'] + '/' + data['project_name'] + '_Out/' + export_parameters['filename'],
-        '-points ' + data['project_path'] + '/points.txt',
-        '-vars:' + export_parameters['save_vars'],
-        calculate_height,
+        '-points ' + data['project_path'] + '/points.txt', '-vars:' + export_parameters['save_vars'], calculate_height,
         export_parameters['additional_parameters']
     ]
 
@@ -1852,9 +1881,13 @@ def on_measuretool():
     mtool_types_chk_ace = QtGui.QCheckBox(__("Acceleration"))
     mtool_types_chk_vor = QtGui.QCheckBox(__("Vorticity"))
     mtool_types_chk_kcorr = QtGui.QCheckBox(__("KCorr"))
-    [mtool_types_groupbox_layout.addWidget(x) for x in
-     [mtool_types_chk_all, mtool_types_chk_vel, mtool_types_chk_rhop, mtool_types_chk_press, mtool_types_chk_mass,
-      mtool_types_chk_vol, mtool_types_chk_idp, mtool_types_chk_ace, mtool_types_chk_vor, mtool_types_chk_kcorr]]
+    [
+        mtool_types_groupbox_layout.addWidget(x)
+        for x in [
+            mtool_types_chk_all, mtool_types_chk_vel, mtool_types_chk_rhop, mtool_types_chk_press, mtool_types_chk_mass, mtool_types_chk_vol,
+            mtool_types_chk_idp, mtool_types_chk_ace, mtool_types_chk_vor, mtool_types_chk_kcorr
+        ]
+    ]
     mtool_types_groupbox.setLayout(mtool_types_groupbox_layout)
 
     mtool_calculate_elevation = QtGui.QCheckBox(__("Calculate water elevation"))
@@ -1941,15 +1974,13 @@ def on_measuretool():
 
     def on_mtool_measure_all_change(state):
         if state == QtCore.Qt.Checked:
-            [chk.setCheckState(QtCore.Qt.Unchecked) for chk in [mtool_types_chk_vel,
-                                                                mtool_types_chk_rhop,
-                                                                mtool_types_chk_press,
-                                                                mtool_types_chk_mass,
-                                                                mtool_types_chk_vol,
-                                                                mtool_types_chk_idp,
-                                                                mtool_types_chk_ace,
-                                                                mtool_types_chk_vor,
-                                                                mtool_types_chk_kcorr]]
+            [
+                chk.setCheckState(QtCore.Qt.Unchecked)
+                for chk in [
+                    mtool_types_chk_vel, mtool_types_chk_rhop, mtool_types_chk_press, mtool_types_chk_mass, mtool_types_chk_vol, mtool_types_chk_idp,
+                    mtool_types_chk_ace, mtool_types_chk_vor, mtool_types_chk_kcorr
+                ]
+            ]
 
     def on_mtool_measure_single_change(state):
         if state == QtCore.Qt.Checked:
@@ -1975,9 +2006,11 @@ def on_measuretool():
             temp_data['measuretool_points'] = list()
             for mtool_row in range(0, mpoints_table.rowCount()):
                 try:
-                    current_point = [float(mpoints_table.item(mtool_row, 0).text()),
-                                     float(mpoints_table.item(mtool_row, 1).text()),
-                                     float(mpoints_table.item(mtool_row, 2).text())]
+                    current_point = [
+                        float(mpoints_table.item(mtool_row, 0).text()),
+                        float(mpoints_table.item(mtool_row, 1).text()),
+                        float(mpoints_table.item(mtool_row, 2).text())
+                    ]
                     temp_data['measuretool_points'].append(current_point)
                 except (ValueError, AttributeError):
                     pass
@@ -2014,10 +2047,8 @@ def on_measuretool():
         mgrid_table.setRowCount(100)
         mgrid_table.setColumnCount(12)
         mgrid_table.verticalHeader().setVisible(False)
-        mgrid_table.setHorizontalHeaderLabels(["BeginX", "BeginY", "BeginZ",
-                                               "StepX", "StepY", "StepZ",
-                                               "CountX", "CountY", "CountZ",
-                                               "FinalX", "FinalY", "FinalZ"])
+        mgrid_table.setHorizontalHeaderLabels(
+            ["BeginX", "BeginY", "BeginZ", "StepX", "StepY", "StepZ", "CountX", "CountY", "CountZ", "FinalX", "FinalY", "FinalZ"])
 
         for i, grid in enumerate(temp_data['measuretool_grid']):
             for j in range(0, mgrid_table.columnCount() - 3):
@@ -2036,24 +2067,20 @@ def on_measuretool():
                 return
             for mgrid_row in range(0, mgrid_table.rowCount()):
                 try:
-                    current_grid = [float(mgrid_table.item(mgrid_row, 0).text()),
-                                    float(mgrid_table.item(mgrid_row, 1).text()),
-                                    float(mgrid_table.item(mgrid_row, 2).text()),
-                                    float(mgrid_table.item(mgrid_row, 3).text()),
-                                    float(mgrid_table.item(mgrid_row, 4).text()),
-                                    float(mgrid_table.item(mgrid_row, 5).text()),
-                                    float(mgrid_table.item(mgrid_row, 6).text()),
-                                    float(mgrid_table.item(mgrid_row, 7).text()),
-                                    float(mgrid_table.item(mgrid_row, 8).text())]
-                    mgrid_table.setItem(mgrid_row, 9, QtGui.QTableWidgetItem(
-                        str(current_grid[0] + current_grid[3] * current_grid[6] - 1)
-                    ))
-                    mgrid_table.setItem(mgrid_row, 10, QtGui.QTableWidgetItem(
-                        str(current_grid[1] + current_grid[4] * current_grid[7] - 1)
-                    ))
-                    mgrid_table.setItem(mgrid_row, 11, QtGui.QTableWidgetItem(
-                        str(current_grid[2] + current_grid[5] * current_grid[8] - 1)
-                    ))
+                    current_grid = [
+                        float(mgrid_table.item(mgrid_row, 0).text()),
+                        float(mgrid_table.item(mgrid_row, 1).text()),
+                        float(mgrid_table.item(mgrid_row, 2).text()),
+                        float(mgrid_table.item(mgrid_row, 3).text()),
+                        float(mgrid_table.item(mgrid_row, 4).text()),
+                        float(mgrid_table.item(mgrid_row, 5).text()),
+                        float(mgrid_table.item(mgrid_row, 6).text()),
+                        float(mgrid_table.item(mgrid_row, 7).text()),
+                        float(mgrid_table.item(mgrid_row, 8).text())
+                    ]
+                    mgrid_table.setItem(mgrid_row, 9, QtGui.QTableWidgetItem(str(current_grid[0] + current_grid[3] * current_grid[6] - 1)))
+                    mgrid_table.setItem(mgrid_row, 10, QtGui.QTableWidgetItem(str(current_grid[1] + current_grid[4] * current_grid[7] - 1)))
+                    mgrid_table.setItem(mgrid_row, 11, QtGui.QTableWidgetItem(str(current_grid[2] + current_grid[5] * current_grid[8] - 1)))
                     mgrid_table.item(mgrid_row, 9).setFlags(QtCore.Qt.ItemIsSelectable | QtCore.Qt.ItemIsEnabled)
                     mgrid_table.item(mgrid_row, 10).setFlags(QtCore.Qt.ItemIsSelectable | QtCore.Qt.ItemIsEnabled)
                     mgrid_table.item(mgrid_row, 11).setFlags(QtCore.Qt.ItemIsSelectable | QtCore.Qt.ItemIsEnabled)
@@ -2064,15 +2091,17 @@ def on_measuretool():
             temp_data['measuretool_grid'] = list()
             for mgrid_row in range(0, mgrid_table.rowCount()):
                 try:
-                    current_grid = [float(mgrid_table.item(mgrid_row, 0).text()),
-                                    float(mgrid_table.item(mgrid_row, 1).text()),
-                                    float(mgrid_table.item(mgrid_row, 2).text()),
-                                    float(mgrid_table.item(mgrid_row, 3).text()),
-                                    float(mgrid_table.item(mgrid_row, 4).text()),
-                                    float(mgrid_table.item(mgrid_row, 5).text()),
-                                    float(mgrid_table.item(mgrid_row, 6).text()),
-                                    float(mgrid_table.item(mgrid_row, 7).text()),
-                                    float(mgrid_table.item(mgrid_row, 8).text())]
+                    current_grid = [
+                        float(mgrid_table.item(mgrid_row, 0).text()),
+                        float(mgrid_table.item(mgrid_row, 1).text()),
+                        float(mgrid_table.item(mgrid_row, 2).text()),
+                        float(mgrid_table.item(mgrid_row, 3).text()),
+                        float(mgrid_table.item(mgrid_row, 4).text()),
+                        float(mgrid_table.item(mgrid_row, 5).text()),
+                        float(mgrid_table.item(mgrid_row, 6).text()),
+                        float(mgrid_table.item(mgrid_row, 7).text()),
+                        float(mgrid_table.item(mgrid_row, 8).text())
+                    ]
                     temp_data['measuretool_grid'].append(current_grid)
                 except (ValueError, AttributeError):
                     pass
@@ -2157,7 +2186,9 @@ def isosurface_export(export_parameters):
 
         if exit_code == 0:
             # Exported correctly
-            guiutils.info_dialog(info_text=__("Post-processing finished successfully. Press the details button to show IsoSurface output"), detailed_text=temp_data['current_output'])
+            guiutils.info_dialog(
+                info_text=__("Post-processing finished successfully. Press the details button to show IsoSurface output"),
+                detailed_text=temp_data['current_output'])
         else:
             guiutils.error_dialog(__("There was an error on the post-processing."), detailed_text=temp_data['current_output'])
 
@@ -2166,10 +2197,11 @@ def isosurface_export(export_parameters):
     export_process.finished.connect(on_export_finished)
 
     # Build parameters
-    static_params_exp = ['-dirin ' + data['project_path'] + '/' + data['project_name'] + '_Out/',
-                         '-saveiso ' + data['project_path'] + '/' + data['project_name'] + '_Out/' +
-                         export_parameters['file_name'], '-onlytype:' + export_parameters['save_types'] +
-                         export_parameters['additional_parameters']]
+    static_params_exp = [
+        '-dirin ' + data['project_path'] + '/' + data['project_name'] + '_Out/',
+        '-saveiso ' + data['project_path'] + '/' + data['project_name'] + '_Out/' + export_parameters['file_name'],
+        '-onlytype:' + export_parameters['save_types'] + export_parameters['additional_parameters']
+    ]
 
     # Start process
     export_process.start(data['isosurface_path'], static_params_exp)
@@ -2186,8 +2218,7 @@ def isosurface_export(export_parameters):
         except IndexError:
             current_part = export_progbar_bar.value()
         export_progbar_bar.setValue(current_part)
-        export_dialog.setWindowTitle(
-            __("Exporting: ") + str(current_part) + "/" + str(temp_data['total_export_parts']))
+        export_dialog.setWindowTitle(__("Exporting: ") + str(current_part) + "/" + str(temp_data['total_export_parts']))
 
     temp_data['current_export_process'].readyReadStandardOutput.connect(on_stdout_ready)
 
@@ -2213,9 +2244,11 @@ def on_isosurface():
     isosfc_types_chk_fixed = QtGui.QCheckBox(__("Fixed"))
     isosfc_types_chk_moving = QtGui.QCheckBox(__("Moving"))
     isosfc_types_chk_floating = QtGui.QCheckBox(__("Floating"))
-    [isosfc_types_groupbox_layout.addWidget(x) for x in [isosfc_types_chk_all, isosfc_types_chk_bound, isosfc_types_chk_fluid,
-                                                         isosfc_types_chk_fixed, isosfc_types_chk_moving,
-                                                         isosfc_types_chk_floating]]
+    [
+        isosfc_types_groupbox_layout.addWidget(x)
+        for x in
+        [isosfc_types_chk_all, isosfc_types_chk_bound, isosfc_types_chk_fluid, isosfc_types_chk_fixed, isosfc_types_chk_moving, isosfc_types_chk_floating]
+    ]
     isosfc_types_groupbox.setLayout(isosfc_types_groupbox_layout)
 
     isosfc_file_name_label = QtGui.QLabel(__("File name"))
@@ -2280,11 +2313,10 @@ def on_isosurface():
 
     def on_isosfc_type_all_change(state):
         if state == QtCore.Qt.Checked:
-            [chk.setCheckState(QtCore.Qt.Unchecked) for chk in [isosfc_types_chk_bound,
-                                                                isosfc_types_chk_fluid,
-                                                                isosfc_types_chk_fixed,
-                                                                isosfc_types_chk_moving,
-                                                                isosfc_types_chk_floating]]
+            [
+                chk.setCheckState(QtCore.Qt.Unchecked)
+                for chk in [isosfc_types_chk_bound, isosfc_types_chk_fluid, isosfc_types_chk_fixed, isosfc_types_chk_moving, isosfc_types_chk_floating]
+            ]
 
     def on_isosfc_type_bound_change(state):
         if state == QtCore.Qt.Checked:
@@ -2353,7 +2385,9 @@ def boundaryvtk_export(export_parameters):
 
         if exit_code == 0:
             # Exported correctly
-            guiutils.info_dialog(info_text=__("Post-processing finished successfully. Press the details button to show IsoSurface output"), detailed_text=temp_data['current_output'])
+            guiutils.info_dialog(
+                info_text=__("Post-processing finished successfully. Press the details button to show IsoSurface output"),
+                detailed_text=temp_data['current_output'])
         else:
             guiutils.error_dialog(__("There was an error on the post-processing."), detailed_text=temp_data['current_output'])
 
@@ -2362,10 +2396,11 @@ def boundaryvtk_export(export_parameters):
     export_process.finished.connect(on_export_finished)
 
     # Build parameters
-    static_params_exp = ['-dirin ' + data['project_path'] + '/' + data['project_name'] + '_Out/',
-                         '-saveiso ' + data['project_path'] + '/' + data['project_name'] + '_Out/' +
-                         export_parameters['file_name'], '-onlytype:' + export_parameters['save_types'] +
-                         export_parameters['additional_parameters']]
+    static_params_exp = [
+        '-dirin ' + data['project_path'] + '/' + data['project_name'] + '_Out/',
+        '-saveiso ' + data['project_path'] + '/' + data['project_name'] + '_Out/' + export_parameters['file_name'],
+        '-onlytype:' + export_parameters['save_types'] + export_parameters['additional_parameters']
+    ]
 
     # Start process
     export_process.start(data['boundaryvtk_path'], static_params_exp)
@@ -2382,8 +2417,7 @@ def boundaryvtk_export(export_parameters):
         except IndexError:
             current_part = export_progbar_bar.value()
         export_progbar_bar.setValue(current_part)
-        export_dialog.setWindowTitle(
-            __("Exporting: ") + str(current_part) + "/" + str(temp_data['total_export_parts']))
+        export_dialog.setWindowTitle(__("Exporting: ") + str(current_part) + "/" + str(temp_data['total_export_parts']))
 
     temp_data['current_export_process'].readyReadStandardOutput.connect(on_stdout_ready)
 
@@ -2414,9 +2448,10 @@ def on_boundaryvtk():
     bvtk_types_chk_fixed = QtGui.QCheckBox(__("Fixed"))
     bvtk_types_chk_moving = QtGui.QCheckBox(__("Moving"))
     bvtk_types_chk_floating = QtGui.QCheckBox(__("Floating"))
-    [bvtk_types_groupbox_layout.addWidget(x) for x in [bvtk_types_chk_all, bvtk_types_chk_bound, bvtk_types_chk_fluid,
-                                                       bvtk_types_chk_fixed, bvtk_types_chk_moving,
-                                                       bvtk_types_chk_floating]]
+    [
+        bvtk_types_groupbox_layout.addWidget(x)
+        for x in [bvtk_types_chk_all, bvtk_types_chk_bound, bvtk_types_chk_fluid, bvtk_types_chk_fixed, bvtk_types_chk_moving, bvtk_types_chk_floating]
+    ]
     bvtk_types_groupbox.setLayout(bvtk_types_groupbox_layout)
 
     bvtk_file_name_label = QtGui.QLabel(__("File name"))
@@ -2481,11 +2516,10 @@ def on_boundaryvtk():
 
     def on_bvtk_type_all_change(state):
         if state == QtCore.Qt.Checked:
-            [chk.setCheckState(QtCore.Qt.Unchecked) for chk in [bvtk_types_chk_bound,
-                                                                bvtk_types_chk_fluid,
-                                                                bvtk_types_chk_fixed,
-                                                                bvtk_types_chk_moving,
-                                                                bvtk_types_chk_floating]]
+            [
+                chk.setCheckState(QtCore.Qt.Unchecked)
+                for chk in [bvtk_types_chk_bound, bvtk_types_chk_fluid, bvtk_types_chk_fixed, bvtk_types_chk_moving, bvtk_types_chk_floating]
+            ]
 
     def on_bvtk_type_bound_change(state):
         if state == QtCore.Qt.Checked:
@@ -2520,8 +2554,7 @@ def on_boundaryvtk():
 
 # Post processing section scaffolding
 export_layout = QtGui.QVBoxLayout()
-export_label = QtGui.QLabel(
-    "<b>" + __("Post-processing") + "</b>")
+export_label = QtGui.QLabel("<b>" + __("Post-processing") + "</b>")
 export_label.setWordWrap(True)
 export_first_row_layout = QtGui.QHBoxLayout()
 export_second_row_layout = QtGui.QHBoxLayout()
@@ -2665,9 +2698,10 @@ mkgroup_label.setToolTip(__("Establishes the object group."))
 objtype_label = QtGui.QLabel("   {}".format(__("Type of object")))
 objtype_label.setToolTip(__("Establishes the object type: Fluid or bound"))
 fillmode_label = QtGui.QLabel("   {}".format(__("Fill mode")))
-fillmode_label.setToolTip(__("Sets fill mode.\nFull: generates internal volume and external mesh."
-                             "\nSolid: generates only internal volume.\nFace: generates only external mesh."
-                             "\nWire: generates only external mesh polygon edges."))
+fillmode_label.setToolTip(
+    __("Sets fill mode.\nFull: generates internal volume and external mesh."
+       "\nSolid: generates only internal volume.\nFace: generates only external mesh."
+       "\nWire: generates only external mesh polygon edges."))
 floatstate_label = QtGui.QLabel("   {}".format(__("Float state")))
 floatstate_label.setToolTip(__("Sets floating state for this object MK."))
 initials_label = QtGui.QLabel("   {}".format(__("Initials")))
@@ -2813,37 +2847,35 @@ def floatstate_change():
             if floating_center_auto.isChecked():
                 fp.gravity_center = list()
             else:
-                fp.gravity_center = [float(floating_center_input_x.text()),
-                                     float(floating_center_input_y.text()),
-                                     float(floating_center_input_z.text())]
+                fp.gravity_center = [float(floating_center_input_x.text()), float(floating_center_input_y.text()), float(floating_center_input_z.text())]
 
             if floating_center_auto.isChecked():
                 fp.gravity_center = list()
             else:
-                fp.gravity_center = [float(floating_center_input_x.text()),
-                                     float(floating_center_input_y.text()),
-                                     float(floating_center_input_z.text())]
+                fp.gravity_center = [float(floating_center_input_x.text()), float(floating_center_input_y.text()), float(floating_center_input_z.text())]
 
             if floating_inertia_auto.isChecked():
                 fp.inertia = list()
             else:
-                fp.inertia = [float(floating_inertia_input_x.text()),
-                              float(floating_inertia_input_y.text()),
-                              float(floating_inertia_input_z.text())]
+                fp.inertia = [float(floating_inertia_input_x.text()), float(floating_inertia_input_y.text()), float(floating_inertia_input_z.text())]
 
             if floating_velini_auto.isChecked():
                 fp.initial_linear_velocity = list()
             else:
-                fp.initial_linear_velocity = [float(floating_velini_input_x.text()),
-                                              float(floating_velini_input_y.text()),
-                                              float(floating_velini_input_z.text())]
+                fp.initial_linear_velocity = [
+                    float(floating_velini_input_x.text()),
+                    float(floating_velini_input_y.text()),
+                    float(floating_velini_input_z.text())
+                ]
 
             if floating_omegaini_auto.isChecked():
                 fp.initial_angular_velocity = list()
             else:
-                fp.initial_angular_velocity = [float(floating_omegaini_input_x.text()),
-                                               float(floating_omegaini_input_y.text()),
-                                               float(floating_omegaini_input_z.text())]
+                fp.initial_angular_velocity = [
+                    float(floating_omegaini_input_x.text()),
+                    float(floating_omegaini_input_y.text()),
+                    float(floating_omegaini_input_z.text())
+                ]
 
             data['floating_mks'][str(target_mk)] = fp
 
@@ -3074,18 +3106,11 @@ def floatstate_change():
             floating_omegaini_input_y.setText(str(data['floating_mks'][str(target_mk)].initial_angular_velocity[1]))
             floating_omegaini_input_z.setText(str(data['floating_mks'][str(target_mk)].initial_angular_velocity[2]))
 
-        floating_center_auto.setCheckState(
-            QtCore.Qt.Checked if len(data['floating_mks'][str(target_mk)].gravity_center) == 0
-            else QtCore.Qt.Unchecked)
-        floating_inertia_auto.setCheckState(
-            QtCore.Qt.Checked if len(data['floating_mks'][str(target_mk)].inertia) == 0
-            else QtCore.Qt.Unchecked)
-        floating_velini_auto.setCheckState(
-            QtCore.Qt.Checked if len(data['floating_mks'][str(target_mk)].initial_linear_velocity) == 0
-            else QtCore.Qt.Unchecked)
+        floating_center_auto.setCheckState(QtCore.Qt.Checked if len(data['floating_mks'][str(target_mk)].gravity_center) == 0 else QtCore.Qt.Unchecked)
+        floating_inertia_auto.setCheckState(QtCore.Qt.Checked if len(data['floating_mks'][str(target_mk)].inertia) == 0 else QtCore.Qt.Unchecked)
+        floating_velini_auto.setCheckState(QtCore.Qt.Checked if len(data['floating_mks'][str(target_mk)].initial_linear_velocity) == 0 else QtCore.Qt.Unchecked)
         floating_omegaini_auto.setCheckState(
-            QtCore.Qt.Checked if len(data['floating_mks'][str(target_mk)].initial_angular_velocity) == 0
-            else QtCore.Qt.Unchecked)
+            QtCore.Qt.Checked if len(data['floating_mks'][str(target_mk)].initial_angular_velocity) == 0 else QtCore.Qt.Unchecked)
     else:
         is_floating_selector.setCurrentIndex(1)
         on_floating_change(1)
@@ -3124,8 +3149,7 @@ def initials_change():
 
     # Ok button handler
     def on_ok():
-        guiutils.info_dialog(
-            __("This will apply the initials properties to all objects with mkfluid = ") + str(target_mk))
+        guiutils.info_dialog(__("This will apply the initials properties to all objects with mkfluid = ") + str(target_mk))
         if has_initials_selector.currentIndex() == 1:
             # Initials false
             if str(target_mk) in data['initials_mks'].keys():
@@ -3133,10 +3157,10 @@ def initials_change():
         else:
             # Initials true
             # Structure: InitialsProperty Object
-            data['initials_mks'][str(target_mk)] = InitialsProperty(mk=target_mk,
-                                                                    force=[float(initials_vector_input_x.text()),
-                                                                           float(initials_vector_input_y.text()),
-                                                                           float(initials_vector_input_z.text())])
+            data['initials_mks'][str(target_mk)] = InitialsProperty(
+                mk=target_mk, force=[float(initials_vector_input_x.text()),
+                                     float(initials_vector_input_y.text()),
+                                     float(initials_vector_input_z.text())])
         initials_window.accept()
 
     # Cancel button handler
@@ -3233,8 +3257,7 @@ def motion_change():
     movements_selected = list(data["motion_mks"].get(target_mk, list()))
 
     def on_ok():
-        guiutils.info_dialog(
-            __("This will apply the motion properties to all objects with mkbound = ") + str(target_mk))
+        guiutils.info_dialog(__("This will apply the motion properties to all objects with mkbound = ") + str(target_mk))
         if has_motion_selector.currentIndex() == 0:
             # True has been selected
             # Reinstance the list and copy every movement selected to avoid referencing problems.
@@ -3277,7 +3300,8 @@ def motion_change():
     has_motion_selector = QtGui.QComboBox()
     has_motion_selector.insertItems(0, ["True", "False"])
     has_motion_selector.currentIndexChanged.connect(on_motion_change)
-    has_motion_helplabel = QtGui.QLabel("<a href='http://design.sphysics.org/wiki/doku.php?id=featreference#configure_object_motion'>{}</a>".format(__("Movement Help")))
+    has_motion_helplabel = QtGui.QLabel(
+        "<a href='http://design.sphysics.org/wiki/doku.php?id=featreference#configure_object_motion'>{}</a>".format(__("Movement Help")))
     has_motion_helplabel.setTextFormat(QtCore.Qt.RichText)
     has_motion_helplabel.setTextInteractionFlags(QtCore.Qt.TextBrowserInteraction)
     has_motion_helplabel.setOpenExternalLinks(True)
@@ -3867,7 +3891,8 @@ def on_tree_item_selection_change():
                         to_change.setCurrentIndex(1)
                         mkgroup_prop.setRange(0, 240)
                         mkgroup_label.setText("&nbsp;&nbsp;&nbsp;" + __("MKBound") + " <a href='http://design.sphysics.org/wiki/doku.php?id=concepts'>?</a>")
-                elif selection[0].TypeId in ["Mesh::Feature", "Part::Cut"] or (selection[0].TypeId == "App::DocumentObjectGroup" and "fillbox" in selection[0].Name.lower()):
+                elif selection[0].TypeId in ["Mesh::Feature", "Part::Cut"] or (selection[0].TypeId == "App::DocumentObjectGroup" and
+                                                                               "fillbox" in selection[0].Name.lower()):
                     # Is an object that will be exported to STL
                     to_change.setEnabled(True)
                     if data['simobjects'][selection[0].Name][1].lower() == "fluid":
@@ -3907,7 +3932,8 @@ def on_tree_item_selection_change():
 
                 # float state config
                 to_change = object_property_table.cellWidget(3, 1)
-                if selection[0].TypeId in temp_data['supported_types'] or (selection[0].TypeId == "App::DocumentObjectGroup" and "fillbox" in selection[0].Name.lower()):
+                if selection[0].TypeId in temp_data['supported_types'] or (selection[0].TypeId == "App::DocumentObjectGroup" and
+                                                                           "fillbox" in selection[0].Name.lower()):
                     if data['simobjects'][selection[0].Name][1].lower() == "fluid":
                         to_change.setEnabled(False)
                     else:
@@ -3973,10 +3999,11 @@ def on_tree_item_selection_change():
         if context_object.Name == "Case_Limits":
             continue
         # objectlist_table.setCellWidget(current_row, 0, QtGui.QLabel("   " + context_object.Label))
-        target_widget = dsphwidgets.ObjectOrderWidget(index=current_row,
-                                                      object_mk=data['simobjects'][context_object.Name][0],
-                                                      mktype=data['simobjects'][context_object.Name][1],
-                                                      object_name=context_object.Label)
+        target_widget = dsphwidgets.ObjectOrderWidget(
+            index=current_row,
+            object_mk=data['simobjects'][context_object.Name][0],
+            mktype=data['simobjects'][context_object.Name][1],
+            object_name=context_object.Label)
 
         target_widget.up.connect(on_up_objectorder)
         target_widget.down.connect(on_down_objectorder)
