@@ -6,12 +6,9 @@
     <bookmark url="file://$PROJECT_DIR$/DSPH.py" line="822" mnemonic="1" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="22d76f4b-310a-4afb-8788-a472c77b2c87" name="Default" comment="">
+    <list default="true" id="22d76f4b-310a-4afb-8788-a472c77b2c87" name="Default" comment="Added IsoSurface support. Currently working on BoundaryVTK. Fixes #8">
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/DSPH.py" afterPath="$PROJECT_DIR$/DSPH.py" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/dsphfc/guiutils.py" afterPath="$PROJECT_DIR$/dsphfc/guiutils.py" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/dsphfc/lang/english.json" afterPath="$PROJECT_DIR$/dsphfc/lang/english.json" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/dsphfc/utils.py" afterPath="$PROJECT_DIR$/dsphfc/utils.py" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/installer/installer.py" afterPath="$PROJECT_DIR$/installer/installer.py" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="TRACKING_ENABLED" value="true" />
@@ -21,7 +18,7 @@
     <option name="LAST_RESOLUTION" value="IGNORE" />
   </component>
   <component name="CoverageDataManager">
-    <SUITE FILE_PATH="coverage/Macro$Reopen_FreeCAD_and_Execute.coverage" NAME="Reopen FreeCAD and Execute Coverage Results" MODIFIED="1499682777193" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$USER_HOME$/Documents/DSPH" />
+    <SUITE FILE_PATH="coverage/Macro$Reopen_FreeCAD_and_Execute.coverage" NAME="Reopen FreeCAD and Execute Coverage Results" MODIFIED="1499847116881" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$USER_HOME$/Documents/DSPH" />
   </component>
   <component name="CreatePatchCommitExecutor">
     <option name="PATCH_PATH" value="" />
@@ -41,65 +38,11 @@
   </component>
   <component name="FileEditorManager">
     <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
-      <file leaf-file-name="DSPH.py" pinned="false" current-in-tab="true">
-        <entry file="file://$PROJECT_DIR$/DSPH.py">
+      <file leaf-file-name="installer.py" pinned="false" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/installer/installer.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="572">
-              <caret line="2551" column="24" lean-forward="true" selection-start-line="2551" selection-start-column="24" selection-end-line="2551" selection-end-column="25" />
-              <folding>
-                <element signature="e#324#338#0" expanded="true" />
-                <element signature="e#56668#60935#0" expanded="false" />
-                <element signature="e#67330#70339#0" expanded="false" />
-                <element signature="e#70369#72887#0" expanded="false" />
-                <element signature="e#72939#76263#0" expanded="false" />
-                <element signature="e#76294#79322#0" expanded="false" />
-                <element signature="e#79372#83459#0" expanded="false" />
-                <element signature="e#83488#98915#0" expanded="false" />
-                <element signature="e#98964#102227#0" expanded="false" />
-                <element signature="e#108129#111396#0" expanded="false" />
-                <element signature="e#163058#165439#0" expanded="false" />
-              </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="case_summary_template.html" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/dsphfc/templates/case_summary_template.html">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="336">
-              <caret line="21" column="27" lean-forward="false" selection-start-line="21" selection-start-column="26" selection-end-line="21" selection-end-column="27" />
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="dsphwidgets.py" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/dsphfc/dsphwidgets.py">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="33504">
-              <caret line="2101" column="45" lean-forward="false" selection-start-line="2101" selection-start-column="45" selection-end-line="2101" selection-end-column="45" />
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="utils.py" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/dsphfc/utils.py">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="524">
-              <caret line="464" column="26" lean-forward="false" selection-start-line="464" selection-start-column="26" selection-end-line="464" selection-end-column="26" />
-              <folding>
-                <element signature="e#250#264#0" expanded="true" />
-              </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="guiutils.py" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/dsphfc/guiutils.py">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="476">
-              <caret line="1214" column="42" lean-forward="false" selection-start-line="1214" selection-start-column="42" selection-end-line="1214" selection-end-column="42" />
+            <state relative-caret-position="684">
+              <caret line="187" column="28" lean-forward="false" selection-start-line="187" selection-start-column="28" selection-end-line="187" selection-end-column="28" />
               <folding />
             </state>
           </provider>
@@ -166,7 +109,6 @@
         <option value="$PROJECT_DIR$/dsphfc/xmlimporter.py" />
         <option value="$PROJECT_DIR$/dsphfc/dsphwidgets.py" />
         <option value="$PROJECT_DIR$/dsphfc/lang/english.json" />
-        <option value="$PROJECT_DIR$/installer/installer.py" />
         <option value="$PROJECT_DIR$/LICENSE" />
         <option value="$PROJECT_DIR$/README.md" />
         <option value="$PROJECT_DIR$/dsphfc/properties.py" />
@@ -174,6 +116,7 @@
         <option value="$PROJECT_DIR$/dsphfc/guiutils.py" />
         <option value="$PROJECT_DIR$/dsphfc/utils.py" />
         <option value="$PROJECT_DIR$/DSPH.py" />
+        <option value="$PROJECT_DIR$/installer/installer.py" />
       </list>
     </option>
   </component>
@@ -221,6 +164,8 @@
       <foldersAlwaysOnTop value="true" />
     </navigator>
     <panes>
+      <pane id="Scratches" />
+      <pane id="Scope" />
       <pane id="ProjectPane">
         <subPane>
           <PATH>
@@ -243,14 +188,12 @@
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
             <PATH_ELEMENT>
-              <option name="myItemId" value="dsphfc" />
+              <option name="myItemId" value="installer" />
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
           </PATH>
         </subPane>
       </pane>
-      <pane id="Scope" />
-      <pane id="Scratches" />
     </panes>
   </component>
   <component name="PropertiesComponent">
@@ -691,9 +634,8 @@
   </component>
   <component name="ToolWindowManager">
     <frame x="0" y="0" width="1920" height="1080" extended-state="6" />
-    <editor active="true" />
     <layout>
-      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.16151386" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
+      <window_info id="Project" active="true" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.16471216" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
       <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.24083251" sideWeight="0.49156272" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.22993062" sideWeight="0.5084373" order="6" side_tool="true" content_ui="tabs" />
       <window_info id="Find" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32903865" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
@@ -746,7 +688,6 @@
     <option name="myLimit" value="2678400000" />
   </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value="Added an icon to the Run button." />
     <MESSAGE value="Fixed an error when trying to copy a file.&#10;Fixed an error when opening an simulation-canceled case would not let the user use post processing tools." />
     <MESSAGE value="Fixed FreeCAD not finding libraries at start." />
     <MESSAGE value="Preparing to release in SPHERIC" />
@@ -771,7 +712,8 @@
     <MESSAGE value="Now when changing an object type or creating a new one the lowest MK free is put automatically. Fixes #7" />
     <MESSAGE value="Deleted material related code. Cleaned last commit mess" />
     <MESSAGE value="Updated case summary template to show new executable paths" />
-    <option name="LAST_COMMIT_MESSAGE" value="Updated case summary template to show new executable paths" />
+    <MESSAGE value="Added IsoSurface support. Currently working on BoundaryVTK. Fixes #8" />
+    <option name="LAST_COMMIT_MESSAGE" value="Added IsoSurface support. Currently working on BoundaryVTK. Fixes #8" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
@@ -784,9 +726,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="17272">
           <caret line="1016" column="4" lean-forward="true" selection-start-line="1016" selection-start-column="4" selection-end-line="1016" selection-end-column="60" />
-          <folding>
-            <element signature="e#250#264#0" expanded="true" />
-          </folding>
         </state>
       </provider>
     </entry>
@@ -794,7 +733,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="0">
           <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -822,9 +760,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="7378">
           <caret line="434" column="112" lean-forward="false" selection-start-line="434" selection-start-column="112" selection-end-line="434" selection-end-column="112" />
-          <folding>
-            <element signature="e#250#264#0" expanded="true" />
-          </folding>
         </state>
       </provider>
     </entry>
@@ -832,7 +767,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="0">
           <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -860,9 +794,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="0">
           <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-          <folding>
-            <element signature="e#250#264#0" expanded="true" />
-          </folding>
         </state>
       </provider>
     </entry>
@@ -870,7 +801,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="8840">
           <caret line="1116" column="56" lean-forward="false" selection-start-line="1116" selection-start-column="56" selection-end-line="1116" selection-end-column="56" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -898,9 +828,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="2193">
           <caret line="129" column="16" lean-forward="false" selection-start-line="129" selection-start-column="16" selection-end-line="129" selection-end-column="16" />
-          <folding>
-            <element signature="e#250#264#0" expanded="true" />
-          </folding>
         </state>
       </provider>
     </entry>
@@ -908,7 +835,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="3162">
           <caret line="186" column="31" lean-forward="false" selection-start-line="186" selection-start-column="26" selection-end-line="186" selection-end-column="31" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -936,9 +862,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="1139">
           <caret line="129" column="16" lean-forward="false" selection-start-line="129" selection-start-column="16" selection-end-line="129" selection-end-column="16" />
-          <folding>
-            <element signature="e#250#264#0" expanded="true" />
-          </folding>
         </state>
       </provider>
     </entry>
@@ -946,7 +869,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="2176">
           <caret line="186" column="31" lean-forward="false" selection-start-line="186" selection-start-column="26" selection-end-line="186" selection-end-column="31" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -974,9 +896,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="2193">
           <caret line="129" column="16" lean-forward="false" selection-start-line="129" selection-start-column="16" selection-end-line="129" selection-end-column="16" />
-          <folding>
-            <element signature="e#250#264#0" expanded="true" />
-          </folding>
         </state>
       </provider>
     </entry>
@@ -984,7 +903,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="2176">
           <caret line="186" column="31" lean-forward="false" selection-start-line="186" selection-start-column="26" selection-end-line="186" selection-end-column="31" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -1012,9 +930,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="2193">
           <caret line="129" column="16" lean-forward="true" selection-start-line="129" selection-start-column="16" selection-end-line="129" selection-end-column="16" />
-          <folding>
-            <element signature="e#250#264#0" expanded="true" />
-          </folding>
         </state>
       </provider>
     </entry>
@@ -1022,7 +937,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="3162">
           <caret line="186" column="31" lean-forward="false" selection-start-line="186" selection-start-column="26" selection-end-line="186" selection-end-column="31" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -1050,9 +964,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="986">
           <caret line="58" column="18" lean-forward="false" selection-start-line="58" selection-start-column="18" selection-end-line="58" selection-end-column="18" />
-          <folding>
-            <element signature="e#250#264#0" expanded="true" />
-          </folding>
         </state>
       </provider>
     </entry>
@@ -1060,7 +971,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="3162">
           <caret line="186" column="31" lean-forward="false" selection-start-line="186" selection-start-column="26" selection-end-line="186" selection-end-column="31" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -1088,9 +998,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="0">
           <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-          <folding>
-            <element signature="e#250#264#0" expanded="true" />
-          </folding>
         </state>
       </provider>
     </entry>
@@ -1146,7 +1053,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="833">
           <caret line="112" column="42" lean-forward="false" selection-start-line="112" selection-start-column="42" selection-end-line="112" selection-end-column="42" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -1154,9 +1060,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="0">
           <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-          <folding>
-            <element signature="e#250#264#0" expanded="true" />
-          </folding>
         </state>
       </provider>
     </entry>
@@ -1192,7 +1095,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="16">
           <caret line="1" column="0" lean-forward="false" selection-start-line="1" selection-start-column="0" selection-end-line="2" selection-end-column="0" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -1207,7 +1109,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="0">
           <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="17" selection-end-column="71" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -1215,15 +1116,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="560">
           <caret line="35" column="57" lean-forward="false" selection-start-line="35" selection-start-column="57" selection-end-line="35" selection-end-column="57" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/installer/installer.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="1344">
-          <caret line="90" column="12" lean-forward="false" selection-start-line="90" selection-start-column="12" selection-end-line="90" selection-end-column="12" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -1238,7 +1130,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="416">
           <caret line="26" column="60" lean-forward="false" selection-start-line="26" selection-start-column="60" selection-end-line="26" selection-end-column="60" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -1253,7 +1144,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="33504">
           <caret line="2101" column="45" lean-forward="false" selection-start-line="2101" selection-start-column="45" selection-end-line="2101" selection-end-column="45" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -1261,7 +1151,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="4032">
           <caret line="259" column="14" lean-forward="false" selection-start-line="259" selection-start-column="14" selection-end-line="259" selection-end-column="14" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -1269,7 +1158,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="540">
           <caret line="602" column="6" lean-forward="false" selection-start-line="602" selection-start-column="6" selection-end-line="602" selection-end-column="6" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -1277,32 +1165,27 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="336">
           <caret line="21" column="27" lean-forward="false" selection-start-line="21" selection-start-column="26" selection-end-line="21" selection-end-column="27" />
-          <folding />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/dsphfc/guiutils.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="476">
+        <state relative-caret-position="19312">
           <caret line="1214" column="42" lean-forward="false" selection-start-line="1214" selection-start-column="42" selection-end-line="1214" selection-end-column="42" />
-          <folding />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/dsphfc/utils.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="524">
+        <state relative-caret-position="7120">
           <caret line="464" column="26" lean-forward="false" selection-start-line="464" selection-start-column="26" selection-end-line="464" selection-end-column="26" />
-          <folding>
-            <element signature="e#250#264#0" expanded="true" />
-          </folding>
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/DSPH.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="572">
-          <caret line="2551" column="24" lean-forward="true" selection-start-line="2551" selection-start-column="24" selection-end-line="2551" selection-end-column="25" />
+        <state relative-caret-position="16">
+          <caret line="2551" column="33" lean-forward="false" selection-start-line="2551" selection-start-column="33" selection-end-line="2551" selection-end-column="33" />
           <folding>
             <element signature="e#324#338#0" expanded="true" />
             <element signature="e#56668#60935#0" expanded="false" />
@@ -1316,6 +1199,14 @@
             <element signature="e#108129#111396#0" expanded="false" />
             <element signature="e#163058#165439#0" expanded="false" />
           </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/installer/installer.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="684">
+          <caret line="187" column="28" lean-forward="false" selection-start-line="187" selection-start-column="28" selection-end-line="187" selection-end-column="28" />
+          <folding />
         </state>
       </provider>
     </entry>
