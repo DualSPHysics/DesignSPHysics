@@ -14,7 +14,7 @@ It includes support for pre-processing with GenCase, simulation with DualSPHysic
 
 In the future the code will be modular, so integration with different SPH solvers can be used. Right now it's optimized to be used with DualSPHysics 4.X
 
-It is developed as a FreeCAD macro, in python 2.7.
+It is developed as a FreeCAD module with a macro bootstrapper, in python 2.7.
 
 ## Installation instructions
 To install DesignSPHysics you have 2 options: Using an installer (release version) or using a development build (git)
@@ -25,12 +25,12 @@ To install a release version go to the download section of the [official webpage
 Execute the installer (installer.exe on Windows and installer on GNU/Linux) to open the installer. Then press install and it will copy the needed scripts in FreeCAD's macro default folder.
 
 ### Installing a develompent build
-Clone this repository and copy:
-* `DSPH.py` file
-* `DSPH_Images/` folder
-* `dsphfc/` folder
+Clone this repository and rename the folder to 'DesignSPHysics'. Then copy the folder to the Mod folder of the FreeCAD installation directory. 
 
-To FreeCAD macro directory (%appdata%/FreeCAD/Macro on Windows; ~/.FreeCAD/Macro on GNU/Linux)
+By default, for example, in Windows, it is located in `C:\Program Files\FreeCAD 0.16\Mod\`
+
+Then copy the file `DesignSPHysics.FCMacro` of this repository into the FreeCAD macro directory (`%appdata%/FreeCAD/Macro` on Windows; `~/.FreeCAD/Macro` on GNU/Linux)
+
 
 ## Where to get help
 You can check the [DesignSPHysics Wiki](http://design.sphysics.org/wiki) to get help.
