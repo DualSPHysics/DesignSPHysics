@@ -1,15 +1,11 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
-"""DesignSPHysics.
+"""
+Initializes a complete interface with DualSPHysics suite related operations.
 
-This is the main script (or Macro) meant to be used
-with FreeCAD. Initializes a complete interface with
-DualSPHysics suite related operations.
+It allows an user to create DualSPHysics compatible cases, automating a bunch of things needed to use them.
 
-It allows an user to create DualSPHysics compatible
-cases, automating a bunch of things needed to use
-them.
-
+More info in http://design.sphysics.org/
 """
 
 import FreeCAD
