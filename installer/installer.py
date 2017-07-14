@@ -45,25 +45,15 @@ def dprint(string):
     print ">>>Debug: " + str(string)
 
 
-class AdminStateUnknownError(Exception):
-    """Cannot determine whether the user is an admin."""
-    pass
-
-
 def is_user_admin():
     """Return True if user has admin privileges.
-
-    Raises:
-        AdminStateUnknownError if user privileges cannot be determined.
     """
-    try:
-        return os.getuid() == 0
-    except AttributeError:
-        pass
+
     try:
         return ctypes.windll.shell32.IsUserAnAdmin() == 1
     except AttributeError:
-        raise AdminStateUnknownError
+        # Probably linux, admin not needed so true
+        return True
 
 
 def main():
@@ -114,7 +104,7 @@ def main():
         install_button.setText('Installing...')
         system = platform.system()
         try:
-            if os.path.isdir("./resource/DSPH_Images") and os.path.isfile("./resource/__init__.py"):
+            if os.path.isdir("./resource/DSPH_Images") and os.path.isfile("./resource/DesignSPHysics.py"):
 
                 # Set the directory depending on the system.
                 if 'windows' in system.lower():
@@ -125,15 +115,8 @@ def main():
                 elif 'linux' in system.lower():
                     macro_dir = os.path.expanduser('~') + '/.FreeCAD/Macro'
                     fc_folder = os.path.expanduser('~') + '/.FreeCAD'
+                    fc_default_mod_dir = os.path.expanduser('~') + '/.FreeCAD/Mod'
                     extension = "_linux64"
-                    # TODO: Delete this and implement for linux.
-                    install_button.setText('ERROR :(')
-                    install_failed_dialog = QtGui.QMessageBox()
-                    install_failed_dialog.setText("DesignSPHysics encountered an error while installing. " "Click on view details for more info.")
-                    install_failed_dialog.setDetailedText("Linux not supported in this build. Sorry!")
-                    install_failed_dialog.setIcon(QtGui.QMessageBox.Critical)
-                    install_failed_dialog.exec_()
-                    sys.exit(1)
                 else:
                     # Operating system not supported
                     install_button.setText('ERROR :(')
@@ -147,8 +130,10 @@ def main():
                 # Try to remove files from previous and current versions
                 if not os.path.isdir(macro_dir):
                     os.makedirs(macro_dir)
+                if not os.path.isdir(fc_default_mod_dir):
+                    os.makedirs(fc_default_mod_dir)
                 try:
-                    os.remove(macro_dir + '/__init__.py')
+                    os.remove(macro_dir + '/DesignSPHysics.py')
                 except OSError:
                     # File does not exists.  Ignoring
                     pass
@@ -188,7 +173,7 @@ def main():
                     os.mkdir(fc_default_mod_dir + '/DesignSPHysics')
 
                 # Copy new files
-                shutil.copy("./resource/__init__.py", fc_default_mod_dir + '/DesignSPHysics')
+                shutil.copy("./resource/DesignSPHysics.py", fc_default_mod_dir + '/DesignSPHysics')
                 shutil.copy("./resource/LICENSE", fc_default_mod_dir + '/DesignSPHysics')
                 shutil.copy("./resource/DesignSPHysics.FCMacro", macro_dir)
                 shutil.copytree("./resource/DSPH_Images", fc_default_mod_dir + '/DesignSPHysics' + '/DSPH_Images')
@@ -222,7 +207,7 @@ def main():
                 install_success_dialog.exec_()
                 return
             else:
-                raise Exception('DSPH_Images or __init__.py are not in the resource folder.')
+                raise Exception('DSPH_Images or DesignSPHysics.py are not in the resource folder.')
         except Exception as e:
             # Something failed, show error
             install_button.setText('ERROR :(')
