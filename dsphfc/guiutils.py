@@ -15,7 +15,6 @@ import os
 import utils
 from sys import platform
 from PySide import QtGui, QtCore
-
 """
 Copyright (C) 2016 - Andrés Vieira (anvieiravazquez@gmail.com)
 EPHYSLAB Environmental Physics Laboratory, Universidade de Vigo
@@ -90,7 +89,8 @@ def ok_cancel_dialog(title, text):
     open_confirm_dialog = QtGui.QMessageBox()
     open_confirm_dialog.setText(title)
     open_confirm_dialog.setInformativeText(text)
-    open_confirm_dialog.setStandardButtons(QtGui.QMessageBox.Ok | QtGui.QMessageBox.Cancel)
+    open_confirm_dialog.setStandardButtons(QtGui.QMessageBox.Ok |
+                                           QtGui.QMessageBox.Cancel)
     open_confirm_dialog.setDefaultButton(QtGui.QMessageBox.Ok)
     return open_confirm_dialog.exec_()
 
@@ -98,11 +98,13 @@ def ok_cancel_dialog(title, text):
 def get_icon(file_name):
     """ Returns a QIcon to use with DesignSPHysics.
     Retrieves a file with filename (like image.png) from the DSPH_Images folder. """
-    file_to_load = os.path.dirname(os.path.abspath(__file__)) + "/../DSPH_Images/{}".format(file_name)
+    file_to_load = os.path.dirname(
+        os.path.abspath(__file__)) + "/../DSPH_Images/{}".format(file_name)
     if os.path.isfile(file_to_load):
         return QtGui.QIcon(file_to_load)
     else:
-        raise IOError("File {} not found in DSPH_Images folder".format(file_name))
+        raise IOError(
+            "File {} not found in DSPH_Images folder".format(file_name))
 
 
 def get_fc_main_window():
@@ -163,7 +165,8 @@ def def_constants_window(data):
     gravityz_input.setText(str(data['gravity'][2]))
     gravityz_input.setValidator(gravityz_validator)
 
-    gravity_label2 = QtGui.QLabel("m/s<span style='vertical-align:super'>2</span>")
+    gravity_label2 = QtGui.QLabel(
+        "m/s<span style='vertical-align:super'>2</span>")
 
     gravity_layout.addWidget(gravity_label)
     gravity_layout.addWidget(gravityx_input)  # For X
@@ -179,7 +182,8 @@ def def_constants_window(data):
     rhop0_validator = QtGui.QIntValidator(0, 10000, rhop0_input)
     rhop0_input.setText(str(data['rhop0']))
     rhop0_input.setValidator(rhop0_validator)
-    rhop0_label2 = QtGui.QLabel("kg/m<span style='vertical-align:super'>3<span>")
+    rhop0_label2 = QtGui.QLabel(
+        "kg/m<span style='vertical-align:super'>3<span>")
 
     rhop0_layout.addWidget(rhop0_label)
     rhop0_layout.addWidget(rhop0_input)
@@ -194,7 +198,8 @@ def def_constants_window(data):
     else:
         hswlauto_chk.setCheckState(QtCore.Qt.Unchecked)
 
-    def on_hswlauto_check():  # Controls if user selected auto HSWL or not enabling/disablen HSWL custom
+    def on_hswlauto_check(
+    ):  # Controls if user selected auto HSWL or not enabling/disablen HSWL custom
         # value introduction
         if hswlauto_chk.isChecked():
             hswl_input.setEnabled(False)
@@ -242,7 +247,8 @@ def def_constants_window(data):
     else:
         speedsystemauto_chk.setCheckState(QtCore.Qt.Unchecked)
 
-    def on_speedsystemauto_check():  # Controls if user selected auto speedsystem or not enabling/disablen
+    def on_speedsystemauto_check(
+    ):  # Controls if user selected auto speedsystem or not enabling/disablen
         # speedsystem custom value introduction
         if speedsystemauto_chk.isChecked():
             speedsystem_input.setEnabled(False)
@@ -290,7 +296,8 @@ def def_constants_window(data):
     else:
         speedsoundauto_chk.setCheckState(QtCore.Qt.Unchecked)
 
-    def on_speedsoundauto_check():  # Controls if user selected auto speedsound or not enabling/disablen speedsound
+    def on_speedsoundauto_check(
+    ):  # Controls if user selected auto speedsound or not enabling/disablen speedsound
         # custom value introduction
         if speedsoundauto_chk.isChecked():
             speedsound_input.setEnabled(False)
@@ -352,7 +359,8 @@ def def_constants_window(data):
     else:
         hauto_chk.setCheckState(QtCore.Qt.Unchecked)
 
-    def on_hauto_check():  # Controls if user selected auto h or not enabling/disablen h custom value
+    def on_hauto_check(
+    ):  # Controls if user selected auto h or not enabling/disablen h custom value
         # introduction
         if hauto_chk.isChecked():
             h_input.setEnabled(False)
@@ -386,7 +394,8 @@ def def_constants_window(data):
     else:
         bauto_chk.setCheckState(QtCore.Qt.Unchecked)
 
-    def on_bauto_check():  # Controls if user selected auto b or not enabling/disablen b custom value
+    def on_bauto_check(
+    ):  # Controls if user selected auto b or not enabling/disablen b custom value
         # introduction
         if bauto_chk.isChecked():
             b_input.setEnabled(False)
@@ -416,7 +425,11 @@ def def_constants_window(data):
     def on_ok():
         data['lattice_bound'] = str(lattice_input.currentIndex() + 1)
         data['lattice_fluid'] = str(lattice2_input.currentIndex() + 1)
-        data['gravity'] = [gravityx_input.text(), gravityy_input.text(), gravityz_input.text()]
+        data['gravity'] = [
+            gravityx_input.text(),
+            gravityy_input.text(),
+            gravityz_input.text()
+        ]
         data['rhop0'] = rhop0_input.text()
         data['hswl'] = hswl_input.text()
         data['hswl_auto'] = hswlauto_chk.isChecked()
@@ -499,7 +512,8 @@ def def_execparams_window(data):
     posdouble_layout = QtGui.QHBoxLayout()
     posdouble_label = QtGui.QLabel("Precision in particle interaction: ")
     posdouble_input = QtGui.QComboBox()
-    posdouble_input.insertItems(0, ['Simple', 'Double', 'Uses and saves double'])
+    posdouble_input.insertItems(0,
+                                ['Simple', 'Double', 'Uses and saves double'])
     posdouble_input.setCurrentIndex(int(data['posdouble']))
 
     posdouble_layout.addWidget(posdouble_label)
@@ -573,7 +587,8 @@ def def_execparams_window(data):
 
     def on_viscotreatment_change(index):
         visco_input.setText("0.01" if index == 0 else "0.000001")
-        visco_label.setText("Viscosity value (alpha): " if index == 0 else "Viscosity value (µ0): ")
+        visco_label.setText("Viscosity value (alpha): "
+                            if index == 0 else "Viscosity value (µ0): ")
         visco_units_label.setText("" if index == 0 else "Pa·s")
 
     on_viscotreatment_change(int(data['viscotreatment']) - 1)
@@ -636,7 +651,8 @@ def def_execparams_window(data):
     shifting_layout = QtGui.QHBoxLayout()
     shifting_label = QtGui.QLabel("Shifting mode: ")
     shifting_input = QtGui.QComboBox()
-    shifting_input.insertItems(0, ['None', 'Ignore bound', 'Ignore fixed', 'Full'])
+    shifting_input.insertItems(
+        0, ['None', 'Ignore bound', 'Ignore fixed', 'Full'])
     shifting_input.setCurrentIndex(int(data['shifting']))
     shifting_input.currentIndexChanged.connect(on_shifting_change)
 
@@ -704,7 +720,8 @@ def def_execparams_window(data):
     else:
         dtiniauto_chk.setCheckState(QtCore.Qt.Unchecked)
 
-    def on_dtiniauto_check():  # Controls if user selected auto b or not enabling/disablen b custom value
+    def on_dtiniauto_check(
+    ):  # Controls if user selected auto b or not enabling/disablen b custom value
         # introduction
         if dtiniauto_chk.isChecked():
             dtini_input.setEnabled(False)
@@ -732,7 +749,8 @@ def def_execparams_window(data):
     else:
         dtminauto_chk.setCheckState(QtCore.Qt.Unchecked)
 
-    def on_dtminauto_check():  # Controls if user selected auto b or not enabling/disablen b custom value
+    def on_dtminauto_check(
+    ):  # Controls if user selected auto b or not enabling/disablen b custom value
         # introduction
         if dtminauto_chk.isChecked():
             dtmin_input.setEnabled(False)
@@ -821,7 +839,8 @@ def def_execparams_window(data):
     rhopoutmin_input = QtGui.QLineEdit()
     rhopoutmin_input.setMaxLength(10)
     rhopoutmin_input.setText(str(data['rhopoutmin']))
-    rhopoutmin_label2 = QtGui.QLabel("kg/m<span style='vertical-align:super'>3</span>")
+    rhopoutmin_label2 = QtGui.QLabel(
+        "kg/m<span style='vertical-align:super'>3</span>")
     rhopoutmin_layout.addWidget(rhopoutmin_label)
     rhopoutmin_layout.addWidget(rhopoutmin_input)
     rhopoutmin_layout.addWidget(rhopoutmin_label2)
@@ -832,7 +851,8 @@ def def_execparams_window(data):
     rhopoutmax_input = QtGui.QLineEdit()
     rhopoutmax_input.setMaxLength(10)
     rhopoutmax_input.setText(str(data['rhopoutmax']))
-    rhopoutmax_label2 = QtGui.QLabel("kg/m<span style='vertical-align:super'>3</span>")
+    rhopoutmax_label2 = QtGui.QLabel(
+        "kg/m<span style='vertical-align:super'>3</span>")
     rhopoutmax_layout.addWidget(rhopoutmax_label)
     rhopoutmax_layout.addWidget(rhopoutmax_input)
     rhopoutmax_layout.addWidget(rhopoutmax_label2)
@@ -989,18 +1009,24 @@ def def_execparams_window(data):
         data['partsoutmax'] = str(float(partsoutmax_input.text()) / 100)
         data['rhopoutmin'] = rhopoutmin_input.text()
         data['rhopoutmax'] = rhopoutmax_input.text()
-        data['period_x'] = [period_x_chk.isChecked(),
-                            float(period_x_inc_x_input.text()),
-                            float(period_x_inc_y_input.text()),
-                            float(period_x_inc_z_input.text())]
-        data['period_y'] = [period_y_chk.isChecked(),
-                            float(period_y_inc_x_input.text()),
-                            float(period_y_inc_y_input.text()),
-                            float(period_y_inc_z_input.text())]
-        data['period_z'] = [period_z_chk.isChecked(),
-                            float(period_z_inc_x_input.text()),
-                            float(period_z_inc_y_input.text()),
-                            float(period_z_inc_z_input.text())]
+        data['period_x'] = [
+            period_x_chk.isChecked(),
+            float(period_x_inc_x_input.text()),
+            float(period_x_inc_y_input.text()),
+            float(period_x_inc_z_input.text())
+        ]
+        data['period_y'] = [
+            period_y_chk.isChecked(),
+            float(period_y_inc_x_input.text()),
+            float(period_y_inc_y_input.text()),
+            float(period_y_inc_z_input.text())
+        ]
+        data['period_z'] = [
+            period_z_chk.isChecked(),
+            float(period_z_inc_x_input.text()),
+            float(period_z_inc_y_input.text()),
+            float(period_z_inc_z_input.text())
+        ]
         utils.log("Execution Parameters changed")
         execparams_window.accept()
 
@@ -1209,9 +1235,11 @@ def def_setup_window(data):
         data['isosurface_path'] = isosurface_input.text()
         data['boundaryvtk_path'] = boundaryvtk_input.text()
         data['paraview_path'] = paraview_input.text()
-        with open(FreeCAD.getUserAppDataDir() + '/dsph_data.dsphdata', 'wb') as picklefile:
+        with open(FreeCAD.getUserAppDataDir() + '/dsph_data.dsphdata',
+                  'wb') as picklefile:
             pickle.dump(data, picklefile, utils.PICKLE_PROTOCOL)
-        utils.log("Setup changed. Saved to " + FreeCAD.getUserAppDataDir() + "/dsph_data.dsphdata")
+        utils.log("Setup changed. Saved to " + FreeCAD.getUserAppDataDir() +
+                  "/dsph_data.dsphdata")
         data_to_merge, state = utils.check_executables(data)
         data.update(data_to_merge)
         setup_window.accept()
@@ -1223,7 +1251,9 @@ def def_setup_window(data):
     def on_gencase_browse():
         filedialog = QtGui.QFileDialog()
         # noinspection PyArgumentList
-        file_name, _ = filedialog.getOpenFileName(setup_window, "Select GenCase path", QtCore.QDir.homePath())
+        file_name, _ = filedialog.getOpenFileName(setup_window,
+                                                  "Select GenCase path",
+                                                  QtCore.QDir.homePath())
         if file_name != "":
             # Verify if exe is indeed gencase
             process = QtCore.QProcess(FreeCADGui.getMainWindow())
@@ -1234,18 +1264,29 @@ def def_setup_window(data):
             if "gencase" in output[0:15].lower():
                 gencasepath_input.setText(file_name)
             else:
-                utils.error("I can't recognize GenCase in that exe!")
-                warning_dialog("I can't recognize GenCase in that exe!")
+                utils.error(
+                    "I can't recognize GenCase in that executable.! "
+                    "Check that the file corresponds with the appropiate tool and that you have permissions to execute it"
+                )
+                warning_dialog(
+                    "I can't recognize GenCase in that executable.! "
+                    "Check that the file corresponds with the appropiate tool and that you have permissions to execute it",
+                    detailed_text="If you're working with GNU/Linux, you can give permissions to an executable from the terminal "
+                    "with: chmod +x /path/to/the/executable"
+                )
 
     def on_dualsphysics_browse():
         filedialog = QtGui.QFileDialog()
         # noinspection PyArgumentList
-        file_name, _ = filedialog.getOpenFileName(setup_window, "Select DualSPHysics path", QtCore.QDir.homePath())
+        file_name, _ = filedialog.getOpenFileName(setup_window,
+                                                  "Select DualSPHysics path",
+                                                  QtCore.QDir.homePath())
         if file_name != "":
             # Verify if exe is indeed dualsphysics
             process = QtCore.QProcess(FreeCADGui.getMainWindow())
             if platform == "linux" or platform == "linux2":
-                os.environ["LD_LIBRARY_PATH"] = "{}/".format("/".join(file_name.split("/")[:-1]))
+                os.environ["LD_LIBRARY_PATH"] = "{}/".format(
+                    "/".join(file_name.split("/")[:-1]))
                 process.start(file_name)
             else:
                 process.start(file_name)
@@ -1254,13 +1295,23 @@ def def_setup_window(data):
             if "dualsphysics" in output[0:20].lower():
                 dsphpath_input.setText(file_name)
             else:
-                utils.error("I can't recognize DualSPHysics in that exe!")
-                warning_dialog("I can't recognize DualSPHysics in that exe!")
+                utils.error(
+                    "I can't recognize DualSPHysics in that executable.! "
+                    "Check that the file corresponds with the appropiate tool and that you have permissions to execute it"
+                )
+                warning_dialog(
+                    "I can't recognize DualSPHysics in that executable.! "
+                    "Check that the file corresponds with the appropiate tool and that you have permissions to execute it",
+                    detailed_text="If you're working with GNU/Linux, you can give permissions to an executable from the terminal "
+                    "with: chmod +x /path/to/the/executable"
+                )
 
     def on_partvtk4_browse():
         filedialog = QtGui.QFileDialog()
         # noinspection PyArgumentList
-        file_name, _ = filedialog.getOpenFileName(setup_window, "Select PartVTK4 path", QtCore.QDir.homePath())
+        file_name, _ = filedialog.getOpenFileName(setup_window,
+                                                  "Select PartVTK4 path",
+                                                  QtCore.QDir.homePath())
         if file_name != "":
             # Verify if exe is indeed dualsphysics
             process = QtCore.QProcess(FreeCADGui.getMainWindow())
@@ -1271,13 +1322,23 @@ def def_setup_window(data):
             if "partvtk4" in output[0:20].lower():
                 partvtk4path_input.setText(file_name)
             else:
-                utils.error("I can't recognize PartVTK4 in that exe!")
-                warning_dialog("I can't recognize PartVTK4 in that exe!")
+                utils.error(
+                    "I can't recognize PartVTK4 in that executable.! "
+                    "Check that the file corresponds with the appropiate tool and that you have permissions to execute it"
+                )
+                warning_dialog(
+                    "I can't recognize PartVTK4 in that executable.! "
+                    "Check that the file corresponds with the appropiate tool and that you have permissions to execute it",
+                    detailed_text="If you're working with GNU/Linux, you can give permissions to an executable from the terminal "
+                    "with: chmod +x /path/to/the/executable"
+                )
 
     def on_computeforces_browse():
         filedialog = QtGui.QFileDialog()
         # noinspection PyArgumentList
-        file_name, _ = filedialog.getOpenFileName(setup_window, "Select ComputeForces path", QtCore.QDir.homePath())
+        file_name, _ = filedialog.getOpenFileName(setup_window,
+                                                  "Select ComputeForces path",
+                                                  QtCore.QDir.homePath())
         if file_name != "":
             # Verify if exe is indeed computeforces
             process = QtCore.QProcess(FreeCADGui.getMainWindow())
@@ -1288,13 +1349,23 @@ def def_setup_window(data):
             if "computeforces" in output[0:22].lower():
                 computeforces_input.setText(file_name)
             else:
-                utils.error("I can't recognize ComputeForces in that exe!")
-                warning_dialog("I can't recognize ComputeForces in that exe!")
+                utils.error(
+                    "I can't recognize ComputeForces in that executable.! "
+                    "Check that the file corresponds with the appropiate tool and that you have permissions to execute it"
+                )
+                warning_dialog(
+                    "I can't recognize ComputeForces in that executable.! "
+                    "Check that the file corresponds with the appropiate tool and that you have permissions to execute it",
+                    detailed_text="If you're working with GNU/Linux, you can give permissions to an executable from the terminal "
+                    "with: chmod +x /path/to/the/executable"
+                )
 
     def on_floatinginfo_browse():
         filedialog = QtGui.QFileDialog()
         # noinspection PyArgumentList
-        file_name, _ = filedialog.getOpenFileName(setup_window, "Select FloatingInfo path", QtCore.QDir.homePath())
+        file_name, _ = filedialog.getOpenFileName(setup_window,
+                                                  "Select FloatingInfo path",
+                                                  QtCore.QDir.homePath())
         if file_name != "":
             # Verify if exe is indeed floatinginfo
             process = QtCore.QProcess(FreeCADGui.getMainWindow())
@@ -1305,13 +1376,23 @@ def def_setup_window(data):
             if "floatinginfo" in output[0:22].lower():
                 floatinginfo_input.setText(file_name)
             else:
-                utils.error("I can't recognize FloatingInfo in that exe!")
-                warning_dialog("I can't recognize FloatingInfo in that exe!")
+                utils.error(
+                    "I can't recognize FloatingInfo in that executable.! "
+                    "Check that the file corresponds with the appropiate tool and that you have permissions to execute it"
+                )
+                warning_dialog(
+                    "I can't recognize FloatingInfo in that executable.! "
+                    "Check that the file corresponds with the appropiate tool and that you have permissions to execute it",
+                    detailed_text="If you're working with GNU/Linux, you can give permissions to an executable from the terminal "
+                    "with: chmod +x /path/to/the/executable"
+                )
 
     def on_measuretool_browse():
         filedialog = QtGui.QFileDialog()
         # noinspection PyArgumentList
-        file_name, _ = filedialog.getOpenFileName(setup_window, "Select MeasureTool path", QtCore.QDir.homePath())
+        file_name, _ = filedialog.getOpenFileName(setup_window,
+                                                  "Select MeasureTool path",
+                                                  QtCore.QDir.homePath())
         if file_name != "":
             # Verify if exe is indeed measuretool
             process = QtCore.QProcess(FreeCADGui.getMainWindow())
@@ -1322,13 +1403,23 @@ def def_setup_window(data):
             if "measuretool" in output[0:22].lower():
                 measuretool_input.setText(file_name)
             else:
-                utils.error("I can't recognize MeasureTool in that exe!")
-                warning_dialog("I can't recognize MeasureTool in that exe!")
+                utils.error(
+                    "I can't recognize MeasureTool in that executable.! "
+                    "Check that the file corresponds with the appropiate tool and that you have permissions to execute it"
+                )
+                warning_dialog(
+                    "I can't recognize MeasureTool in that executable.! "
+                    "Check that the file corresponds with the appropiate tool and that you have permissions to execute it",
+                    detailed_text="If you're working with GNU/Linux, you can give permissions to an executable from the terminal "
+                    "with: chmod +x /path/to/the/executable"
+                )
 
     def on_isosurface_browse():
         filedialog = QtGui.QFileDialog()
         # noinspection PyArgumentList
-        file_name, _ = filedialog.getOpenFileName(setup_window, "Select IsoSurface path", QtCore.QDir.homePath())
+        file_name, _ = filedialog.getOpenFileName(setup_window,
+                                                  "Select IsoSurface path",
+                                                  QtCore.QDir.homePath())
         if file_name != "":
             # Verify if exe is indeed measuretool
             process = QtCore.QProcess(FreeCADGui.getMainWindow())
@@ -1339,13 +1430,23 @@ def def_setup_window(data):
             if "isosurface" in output[0:22].lower():
                 isosurface_input.setText(file_name)
             else:
-                utils.error("I can't recognize IsoSurface in that exe!")
-                warning_dialog("I can't recognize IsoSurface in that exe!")
+                utils.error(
+                    "I can't recognize IsoSurface in that executable.! "
+                    "Check that the file corresponds with the appropiate tool and that you have permissions to execute it"
+                )
+                warning_dialog(
+                    "I can't recognize IsoSurface in that executable.! "
+                    "Check that the file corresponds with the appropiate tool and that you have permissions to execute it",
+                    detailed_text="If you're working with GNU/Linux, you can give permissions to an executable from the terminal "
+                    "with: chmod +x /path/to/the/executable"
+                )
 
     def on_boundaryvtk_browse():
         filedialog = QtGui.QFileDialog()
         # noinspection PyArgumentList
-        file_name, _ = filedialog.getOpenFileName(setup_window, "Select BoundaryVTK path", QtCore.QDir.homePath())
+        file_name, _ = filedialog.getOpenFileName(setup_window,
+                                                  "Select BoundaryVTK path",
+                                                  QtCore.QDir.homePath())
         if file_name != "":
             # Verify if exe is indeed measuretool
             process = QtCore.QProcess(FreeCADGui.getMainWindow())
@@ -1356,13 +1457,23 @@ def def_setup_window(data):
             if "boundaryvtk" in output[0:22].lower():
                 boundaryvtk_input.setText(file_name)
             else:
-                utils.error("I can't recognize BoundaryVTK in that exe!")
-                warning_dialog("I can't recognize BoundaryVTK in that exe!")
+                utils.error(
+                    "I can't recognize BoundaryVTK in that executable.! "
+                    "Check that the file corresponds with the appropiate tool and that you have permissions to execute it"
+                )
+                warning_dialog(
+                    "I can't recognize BoundaryVTK in that executable.! "
+                    "Check that the file corresponds with the appropiate tool and that you have permissions to execute it",
+                    detailed_text="If you're working with GNU/Linux, you can give permissions to an executable from the terminal "
+                    "with: chmod +x /path/to/the/executable"
+                )
 
     def on_paraview_browse():
         filedialog = QtGui.QFileDialog()
         # noinspection PyArgumentList
-        file_name, _ = filedialog.getOpenFileName(setup_window, "Select ParaView path", QtCore.QDir.homePath())
+        file_name, _ = filedialog.getOpenFileName(setup_window,
+                                                  "Select ParaView path",
+                                                  QtCore.QDir.homePath())
         if file_name != "":
             paraview_input.setText(file_name)
 
@@ -1566,16 +1677,23 @@ def case_summary(orig_data):
 
     for k in ['gencase_path', 'dsphysics_path', 'partvtk4_path']:
         if data[k] == "":
-            data[k] = "<i>{}</i>".format(utils.__("Executable not correctly set"))
+            data[k] = "<i>{}</i>".format(
+                utils.__("Executable not correctly set"))
 
-    data['stepalgorithm'] = {'1': 'Verlet', '2': 'Symplectic'}[str(data['stepalgorithm'])]
+    data['stepalgorithm'] = {
+        '1': 'Verlet',
+        '2': 'Symplectic'
+    }[str(data['stepalgorithm'])]
     data['project_mode'] = '3D' if data['3dmode'] else '2D'
 
     data['incz'] = float(data['incz']) * 100
     data['partsoutmax'] = float(data['partsoutmax']) * 100
 
     # Setting certain values to automatic
-    for x in ['hswl', 'speedsystem', 'speedsound', 'h', 'b', 'massfluid', 'massbound']:
+    for x in [
+            'hswl', 'speedsystem', 'speedsound', 'h', 'b', 'massfluid',
+            'massbound'
+    ]:
         data[x] = '<u>Automatic</u>' if data[x + '_auto'] else data[x]
 
     # region Formatting objects info
@@ -1588,11 +1706,16 @@ def case_summary(orig_data):
             if key.lower() == 'case_limits':
                 continue
             fc_object = utils.get_fc_object(key)
-            is_floating = utils.__('Yes') if str(value[0]) in data['floating_mks'].keys() else utils.__('No')
-            is_floating = utils.__('No') if value[1].lower() == "fluid" else is_floating
-            has_initials = utils.__('Yes') if str(value[0]) in data['initials_mks'].keys() else utils.__('No')
-            has_initials = utils.__('No') if value[1].lower() == "bound" else has_initials
-            real_mk = value[0] + 11 if value[1].lower() == "bound" else value[0] + 1
+            is_floating = utils.__('Yes') if str(
+                value[0]) in data['floating_mks'].keys() else utils.__('No')
+            is_floating = utils.__('No') if value[
+                1].lower() == "fluid" else is_floating
+            has_initials = utils.__('Yes') if str(
+                value[0]) in data['initials_mks'].keys() else utils.__('No')
+            has_initials = utils.__('No') if value[
+                1].lower() == "bound" else has_initials
+            real_mk = value[0] + 11 if value[
+                1].lower() == "bound" else value[0] + 1
             data['objects_info'] += "<li><b>{label}</b> (<i>{iname}</i>): <br/>" \
                                     "Type: {type} (MK{type}: <b>{mk}</b> ; MK: <b>{real_mk}</b>)<br/>" \
                                     "Fill mode: {fillmode}<br/>" \
@@ -1605,7 +1728,8 @@ def case_summary(orig_data):
                                                                             initials=has_initials)
         data['objects_info'] += "</ul>"
     else:
-        data['objects_info'] += utils.__("No objects were added to the simulation yet.")
+        data['objects_info'] += utils.__(
+            "No objects were added to the simulation yet.")
     # endregion Formatting objects info
 
     # region Formatting movement info
@@ -1624,8 +1748,7 @@ def case_summary(orig_data):
                     mklist.append(str(key))
 
             data['movement_info'] += "<li>{movtype} <u>{movname}</u><br/>" \
-                                     "Applied to MKBound: {mklist}</li><br/>".format(movtype=movtype, movname=mov.name,
-                                                                                mklist=', '.join(mklist))
+                                     "Applied to MKBound: {mklist}</li><br/>".format(movtype=movtype, movname=mov.name, mklist=', '.join(mklist))
 
         data['movement_info'] += "</ul>"
     else:
@@ -1640,8 +1763,10 @@ def case_summary(orig_data):
         elif element[1].lower() == 'fluid':
             data['mkfluidused'].append(str(element[0]))
 
-    data['mkboundused'] = ", ".join(data['mkboundused']) if len(data['mkboundused']) > 0 else "None"
-    data['mkfluidused'] = ", ".join(data['mkfluidused']) if len(data['mkfluidused']) > 0 else "None"
+    data['mkboundused'] = ", ".join(
+        data['mkboundused']) if len(data['mkboundused']) > 0 else "None"
+    data['mkfluidused'] = ", ".join(
+        data['mkfluidused']) if len(data['mkfluidused']) > 0 else "None"
 
     # endregion Formatting movement info
 
@@ -1653,10 +1778,12 @@ def case_summary(orig_data):
     lib_folder = os.path.dirname(os.path.realpath(__file__))
 
     try:
-        with open("{}/templates/case_summary_template.html".format(lib_folder), "r") as input_template:
+        with open("{}/templates/case_summary_template.html".format(lib_folder),
+                  "r") as input_template:
             info_text = input_template.read().format(**data)
     except:
-        error_dialog("An error ocurred trying to load the template file and format it.")
+        error_dialog(
+            "An error ocurred trying to load the template file and format it.")
         return
 
     info.setText(info_text)
