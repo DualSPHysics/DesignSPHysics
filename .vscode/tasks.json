@@ -6,7 +6,8 @@
         {
             "taskName": "Run DesignSPHysics",
             "command": "python C:\\Users\\ndrs\\Documents\\DSPH\\fc_execute.py",
-            "type": "shell"
+            "type": "shell",
+            "problemMatcher": []
         }
     ]
 }

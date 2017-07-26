@@ -895,13 +895,13 @@ def dump_to_xml(data, save_name):
                                 except AttributeError:
                                     is_looping = False
                                 if is_looping:
-                                    f.write('\t\t\t\t<mvrotsinu id="{}" duration="{}" next="{}">\n'
+                                    f.write('\t\t\t\t<mvrotsinu id="{}" duration="{}" anglesunits="radians" next="{}" >\n'
                                             .format(mot_counter, motion.duration, first_series_motion))
                                 else:
-                                    f.write('\t\t\t\t<mvrotsinu id="{}" duration="{}">\n'
+                                    f.write('\t\t\t\t<mvrotsinu id="{}" duration="{}" anglesunits="radians">\n'
                                             .format(mot_counter, motion.duration))
                             else:
-                                f.write('\t\t\t\t<mvrotsinu id="{}" duration="{}" next="{}">\n'
+                                f.write('\t\t\t\t<mvrotsinu id="{}" duration="{}" anglesunits="radians" next="{}">\n'
                                         .format(mot_counter, motion.duration, mot_counter + 1))
 
                             f.write('\t\t\t\t\t<freq v="{}"/>\n'
