@@ -129,7 +129,7 @@ def check_executables(data):
         process.start(data['gencase_path'])
         process.waitForFinished()
         output = str(process.readAllStandardOutput())
-        if "gencase" in output[0:22].lower():
+        if "gencase" in output.lower():
             log("Found correct GenCase.")
         else:
             execs_correct = False
@@ -149,7 +149,7 @@ def check_executables(data):
 
         process.waitForFinished()
         output = str(process.readAllStandardOutput())
-        if "dualsphysics" in output[0:22].lower():
+        if "dualsphysics" in output.lower():
             log("Found correct DualSPHysics.")
         else:
             execs_correct = False
@@ -164,7 +164,7 @@ def check_executables(data):
         process.start(data['partvtk4_path'])
         process.waitForFinished()
         output = str(process.readAllStandardOutput())
-        if "partvtk4" in output[0:22].lower():
+        if "partvtk4" in output.lower():
             log("Found correct PartVTK4.")
         else:
             execs_correct = False
@@ -179,7 +179,7 @@ def check_executables(data):
         process.start(data['computeforces_path'])
         process.waitForFinished()
         output = str(process.readAllStandardOutput())
-        if "computeforces" in output[0:22].lower():
+        if "computeforces" in output.lower():
             log("Found correct ComputeForces.")
         else:
             execs_correct = False
@@ -194,7 +194,7 @@ def check_executables(data):
         process.start(data['floatinginfo_path'])
         process.waitForFinished()
         output = str(process.readAllStandardOutput())
-        if "floatinginfo" in output[0:22].lower():
+        if "floatinginfo" in output.lower():
             log("Found correct FloatingInfo.")
         else:
             execs_correct = False
@@ -209,7 +209,7 @@ def check_executables(data):
         process.start(data['measuretool_path'])
         process.waitForFinished()
         output = str(process.readAllStandardOutput())
-        if "measuretool" in output[0:22].lower():
+        if "measuretool" in output.lower():
             log("Found correct MeasureTool.")
         else:
             execs_correct = False
@@ -224,7 +224,7 @@ def check_executables(data):
         process.start(data['isosurface_path'])
         process.waitForFinished()
         output = str(process.readAllStandardOutput())
-        if "isosurface" in output[0:22].lower():
+        if "isosurface" in output.lower():
             log("Found correct IsoSurface.")
         else:
             execs_correct = False
@@ -239,7 +239,7 @@ def check_executables(data):
         process.start(data['boundaryvtk_path'])
         process.waitForFinished()
         output = str(process.readAllStandardOutput())
-        if "boundaryvtk" in output[0:22].lower():
+        if "boundaryvtk" in output.lower():
             log("Found correct BoundaryVTK.")
         else:
             execs_correct = False
@@ -581,8 +581,7 @@ def dump_to_xml(data, save_name):
     f.write('\t\t\t<hswl value="' + str(data['hswl']) + '" auto="' + str(data['hswl_auto']).lower() + '" comment="Maximum still water level to calculate speedofsound using coefsound" '
                                                                                                       'units_comment="metres (m)"  />\n')
     f.write('\t\t\t<gamma value="' + str(data['gamma']) + '" comment="Polytropic constant for water used in the state equation" />\n')
-    f.write('\t\t\t<speedsystem value="' + str(data['speedsystem']) + '" auto="' + str(data['speedsystem_auto']).lower()
-            + '" comment="Maximum system speed (by default the dam-break propagation is used)" />\n')
+    f.write('\t\t\t<speedsystem value="' + str(data['speedsystem']) + '" auto="' + str(data['speedsystem_auto']).lower() + '" comment="Maximum system speed (by default the dam-break propagation is used)" />\n')
     f.write('\t\t\t<coefsound value="' + str(data['coefsound']) + '" comment="Coefficient to multiply speedsystem" />\n')
     f.write('\t\t\t<speedsound value="' + str(data['speedsound']) + '" auto="' + str(data['speedsound_auto']).lower() + '" comment="Speed of sound to use in the simulation '
                                                                                                                         '(by default speedofsound=coefsound*speedsystem)" />\n')
