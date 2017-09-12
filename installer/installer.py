@@ -110,7 +110,12 @@ def main():
                 if 'windows' in system.lower():
                     macro_dir = os.getenv('APPDATA') + '/FreeCAD/Macro'
                     fc_folder = os.getenv('APPDATA') + '/FreeCAD'
+                    
+                    # Check in the 64 bit folder if FreeCAD is present. If not use the 32bit one.
                     fc_default_mod_dir = os.getenv('ProgramW6432') + '/FreeCAD 0.16/Mod'
+                    if not os.path.exists(fc_default_mod_dir):
+                        fc_default_mod_dir = os.getenv('programfiles(x86)') + '/FreeCAD 0.16/Mod'
+
                     extension = "_win64.exe"
                 elif 'linux' in system.lower():
                     macro_dir = os.path.expanduser('~') + '/.FreeCAD/Macro'
@@ -134,6 +139,11 @@ def main():
                     os.makedirs(fc_default_mod_dir)
                 try:
                     os.remove(macro_dir + '/DesignSPHysics.py')
+                except OSError:
+                    # File does not exists.  Ignoring
+                    pass
+                try:
+                    os.remove(macro_dir + '/DSPH.py')
                 except OSError:
                     # File does not exists.  Ignoring
                     pass

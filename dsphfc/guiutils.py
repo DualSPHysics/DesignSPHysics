@@ -1257,7 +1257,7 @@ def def_setup_window(data):
         if file_name != "":
             # Verify if exe is indeed gencase
             process = QtCore.QProcess(FreeCADGui.getMainWindow())
-            process.start(file_name)
+            process.start('"{}"'.format(file_name))
             process.waitForFinished()
             output = str(process.readAllStandardOutput())
 
@@ -1287,9 +1287,9 @@ def def_setup_window(data):
             if platform == "linux" or platform == "linux2":
                 os.environ["LD_LIBRARY_PATH"] = "{}/".format(
                     "/".join(file_name.split("/")[:-1]))
-                process.start(file_name)
+                process.start('"{}"'.format(file_name))
             else:
-                process.start(file_name)
+                process.start('"{}"'.format(file_name))
             process.waitForFinished()
             output = str(process.readAllStandardOutput())
             if "dualsphysics" in output[0:20].lower():
@@ -1315,7 +1315,7 @@ def def_setup_window(data):
         if file_name != "":
             # Verify if exe is indeed dualsphysics
             process = QtCore.QProcess(FreeCADGui.getMainWindow())
-            process.start(file_name)
+            process.start('"{}"'.format(file_name))
             process.waitForFinished()
             output = str(process.readAllStandardOutput())
 
@@ -1342,7 +1342,7 @@ def def_setup_window(data):
         if file_name != "":
             # Verify if exe is indeed computeforces
             process = QtCore.QProcess(FreeCADGui.getMainWindow())
-            process.start(file_name)
+            process.start('"{}"'.format(file_name))
             process.waitForFinished()
             output = str(process.readAllStandardOutput())
 
@@ -1369,7 +1369,7 @@ def def_setup_window(data):
         if file_name != "":
             # Verify if exe is indeed floatinginfo
             process = QtCore.QProcess(FreeCADGui.getMainWindow())
-            process.start(file_name)
+            process.start('"{}"'.format(file_name))
             process.waitForFinished()
             output = str(process.readAllStandardOutput())
 
@@ -1396,7 +1396,7 @@ def def_setup_window(data):
         if file_name != "":
             # Verify if exe is indeed measuretool
             process = QtCore.QProcess(FreeCADGui.getMainWindow())
-            process.start(file_name)
+            process.start('"{}"'.format(file_name))
             process.waitForFinished()
             output = str(process.readAllStandardOutput())
 
@@ -1423,7 +1423,7 @@ def def_setup_window(data):
         if file_name != "":
             # Verify if exe is indeed measuretool
             process = QtCore.QProcess(FreeCADGui.getMainWindow())
-            process.start(file_name)
+            process.start('"{}"'.format(file_name))
             process.waitForFinished()
             output = str(process.readAllStandardOutput())
 
@@ -1450,7 +1450,7 @@ def def_setup_window(data):
         if file_name != "":
             # Verify if exe is indeed measuretool
             process = QtCore.QProcess(FreeCADGui.getMainWindow())
-            process.start(file_name)
+            process.start('"{}"'.format(file_name))
             process.waitForFinished()
             output = str(process.readAllStandardOutput())
 

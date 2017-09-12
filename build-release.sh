@@ -5,7 +5,8 @@ cd release-linux
 pyinstaller --onefile --windowed --icon=../installer/resource/install.ico ../installer/installer.py
 cp ./dist/installer ./
 cp -rf ../installer/resource ./
-cp ../DSPH.py ./resource/
+cp ../DesignSPHysics.py ./resource/
+cp ../DesignSPHysics.FCMacro ./resource/
 cp ../LICENSE ./resource/
 cp -rf ../DSPH_Images/ ./resource/
 cp -rf ../dsphfc/ ./resource/
