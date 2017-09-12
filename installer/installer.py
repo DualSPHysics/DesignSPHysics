@@ -215,6 +215,7 @@ def main():
                 install_success_dialog.setText("DesignSPHysics installed correctly.")
                 install_success_dialog.setIcon(QtGui.QMessageBox.Information)
                 install_success_dialog.exec_()
+                sys.exit(0)
                 return
             else:
                 raise Exception('DSPH_Images or DesignSPHysics.py are not in the resource folder.')
