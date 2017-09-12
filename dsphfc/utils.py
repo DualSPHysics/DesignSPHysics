@@ -125,16 +125,19 @@ def check_executables(data):
 
     # Tries to identify gencase
     if os.path.isfile(data['gencase_path']):
+        debug('Path FOUND for gencase')        
         process = QtCore.QProcess(FreeCADGui.getMainWindow())
-        process.start(data['gencase_path'])
+        process.start('"{}"'.format(data['gencase_path']))
         process.waitForFinished()
         output = str(process.readAllStandardOutput())
         if "gencase" in output.lower():
             log("Found correct GenCase.")
         else:
+            debug('Execution of gencase did not find correct gencase')            
             execs_correct = False
             data['gencase_path'] = ""
     else:
+        debug('Path not found for gencase')
         execs_correct = False
         data['gencase_path'] = ""
 
@@ -143,9 +146,9 @@ def check_executables(data):
         process = QtCore.QProcess(FreeCADGui.getMainWindow())
         if platform == "linux" or platform == "linux2":
             os.environ["LD_LIBRARY_PATH"] = "/".join(data['dsphysics_path'].split("/")[:-1])
-            process.start(data['dsphysics_path'])
+            process.start('"{}"'.format(data['dsphysics_path']))
         else:
-            process.start(data['dsphysics_path'])
+            process.start('"{}"'.format(data['dsphysics_path']))
 
         process.waitForFinished()
         output = str(process.readAllStandardOutput())
@@ -161,7 +164,7 @@ def check_executables(data):
     # Tries to identify partvtk4
     if os.path.isfile(data['partvtk4_path']):
         process = QtCore.QProcess(FreeCADGui.getMainWindow())
-        process.start(data['partvtk4_path'])
+        process.start('"{}"'.format(data['partvtk4_path']))
         process.waitForFinished()
         output = str(process.readAllStandardOutput())
         if "partvtk4" in output.lower():
@@ -176,7 +179,7 @@ def check_executables(data):
     # Tries to identify computeforces
     if os.path.isfile(data['computeforces_path']):
         process = QtCore.QProcess(FreeCADGui.getMainWindow())
-        process.start(data['computeforces_path'])
+        process.start('"{}"'.format(data['computeforces_path']))
         process.waitForFinished()
         output = str(process.readAllStandardOutput())
         if "computeforces" in output.lower():
@@ -191,7 +194,7 @@ def check_executables(data):
     # Tries to identify floatinginfo
     if os.path.isfile(data['floatinginfo_path']):
         process = QtCore.QProcess(FreeCADGui.getMainWindow())
-        process.start(data['floatinginfo_path'])
+        process.start('"{}"'.format(data['floatinginfo_path']))
         process.waitForFinished()
         output = str(process.readAllStandardOutput())
         if "floatinginfo" in output.lower():
@@ -206,7 +209,7 @@ def check_executables(data):
     # Tries to identify measuretool
     if os.path.isfile(data['measuretool_path']):
         process = QtCore.QProcess(FreeCADGui.getMainWindow())
-        process.start(data['measuretool_path'])
+        process.start('"{}"'.format(data['measuretool_path']))
         process.waitForFinished()
         output = str(process.readAllStandardOutput())
         if "measuretool" in output.lower():
@@ -221,7 +224,7 @@ def check_executables(data):
     # Tries to identify isosurface
     if os.path.isfile(data['isosurface_path']):
         process = QtCore.QProcess(FreeCADGui.getMainWindow())
-        process.start(data['isosurface_path'])
+        process.start('"{}"'.format(data['isosurface_path']))
         process.waitForFinished()
         output = str(process.readAllStandardOutput())
         if "isosurface" in output.lower():
@@ -236,7 +239,7 @@ def check_executables(data):
     # Tries to identify boundaryvtk
     if os.path.isfile(data['boundaryvtk_path']):
         process = QtCore.QProcess(FreeCADGui.getMainWindow())
-        process.start(data['boundaryvtk_path'])
+        process.start('"{}"'.format(data['boundaryvtk_path']))
         process.waitForFinished()
         output = str(process.readAllStandardOutput())
         if "boundaryvtk" in output.lower():
