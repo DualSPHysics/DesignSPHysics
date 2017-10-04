@@ -54,10 +54,10 @@ along with DesignSPHysics.  If not, see <http://www.gnu.org/licenses/>.
 # ------ CONSTANTS DEFINITION ------
 FREECAD_MIN_VERSION = "016"
 APP_NAME = "DesignSPHysics"
-DEBUGGING = False
+DEBUGGING = True
 DIVIDER = 1000
 PICKLE_PROTOCOL = 1  # Binary mode
-VERSION = "0.4.1710-02 (Develop)"
+VERSION = "0.4.1710-04 (Develop)"
 WIDTH_2D = 0.001
 MAX_PARTICLE_WARNING = 2000000
 
@@ -251,11 +251,55 @@ def check_executables(data):
         execs_correct = False
         data['boundaryvtk_path'] = ""
 
-    # Spawn warning dialog and return filtered data.
     if not execs_correct:
-        warning("One or more of the executables in the setup is not correct. Check plugin setup to fix missing binaries")
-        guiutils.warning_dialog("One or more of the executables in the setup is not correct. Check plugin setup to fix missing binaries.")
+        bundled_execs_present = are_executables_bundled()
+
+        if bundled_execs_present:
+            user_selection = guiutils.ok_cancel_dialog(APP_NAME, "One or more of the executables in the setup is not correct. \n"
+                                                                 "A DualSPHysics bundle was detected on your installation. Do you want \n"
+                                                                 "to autofill the executables?")
+            if user_selection == QtGui.QMessageBox.Ok:
+                # Auto-fill executables.
+                filled_data = auto_fill_executables()
+                data.update(filled_data)
+                return data, execs_correct
+            else:
+                return data, execs_correct
+        else:
+            # Spawn warning dialog and return filtered data.
+            if not execs_correct:
+                warning("One or more of the executables in the setup is not correct. Check plugin setup to fix missing binaries")
+                guiutils.warning_dialog("One or more of the executables in the setup is not correct. Check plugin setup to fix missing binaries.")
     return data, execs_correct
+
+
+def are_executables_bundled():
+    dsph_execs_path = os.path.dirname(os.path.realpath(__file__)) + "/../dualsphysics/EXECS/"
+    return os.path.isdir(dsph_execs_path)
+
+
+def auto_fill_executables():
+    dsph_execs_path = os.path.dirname(os.path.realpath(__file__)) + "/../dualsphysics/EXECS/"
+    new_data = dict()
+    if "linux" in platform.lower():
+        new_data['gencase_path'] = dsph_execs_path + "GenCase4_linux64"
+        new_data['dsphysics_path'] = dsph_execs_path + "DualSPHysics4_linux64"
+        new_data['partvtk4_path'] = dsph_execs_path + "PartVTK4_linux64"
+        new_data['computeforces_path'] = dsph_execs_path + "ComputeForces4_linux64"
+        new_data['floatinginfo_path'] = dsph_execs_path + "FloatingInfo4_linux64"
+        new_data['measuretool_path'] = dsph_execs_path + "MeasureTool4_linux64"
+        new_data['isosurface_path'] = dsph_execs_path + "IsoSurface4_linux64"
+        new_data['boundaryvtk_path'] = dsph_execs_path + "BoundaryVTK4_linux64"
+    elif "windows" in platform.system:
+        new_data['gencase_path'] = dsph_execs_path + "GenCase4_win64"
+        new_data['dsphysics_path'] = dsph_execs_path + "DualSPHysics4_win64"
+        new_data['partvtk4_path'] = dsph_execs_path + "PartVTK4_win64"
+        new_data['computeforces_path'] = dsph_execs_path + "ComputeForces4_win64"
+        new_data['floatinginfo_path'] = dsph_execs_path + "FloatingInfo4_win64"
+        new_data['measuretool_path'] = dsph_execs_path + "MeasureTool4_win64"
+        new_data['isosurface_path'] = dsph_execs_path + "IsoSurface4_win64"
+        new_data['boundaryvtk_path'] = dsph_execs_path + "BoundaryVTK4_win64"
+    return new_data
 
 
 def float_list_to_float_property(floating_mks):
