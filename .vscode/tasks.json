@@ -5,7 +5,7 @@
     "tasks": [
         {
             "taskName": "Run DesignSPHysics",
-            "command": "python C:\\Users\\ndrs\\Documents\\DSPH\\fc_execute.py",
+            "command": "killall freecad ; freecad /home/ndrs/.FreeCAD/Macro/DesignSPHysics.FCMacro",
             "type": "shell",
             "problemMatcher": []
         }
