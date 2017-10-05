@@ -290,15 +290,15 @@ def auto_fill_executables():
         new_data['measuretool_path'] = dsph_execs_path + "MeasureTool4_linux64"
         new_data['isosurface_path'] = dsph_execs_path + "IsoSurface4_linux64"
         new_data['boundaryvtk_path'] = dsph_execs_path + "BoundaryVTK4_linux64"
-    elif "windows" in platform.system:
-        new_data['gencase_path'] = dsph_execs_path + "GenCase4_win64"
-        new_data['dsphysics_path'] = dsph_execs_path + "DualSPHysics4_win64"
-        new_data['partvtk4_path'] = dsph_execs_path + "PartVTK4_win64"
-        new_data['computeforces_path'] = dsph_execs_path + "ComputeForces4_win64"
-        new_data['floatinginfo_path'] = dsph_execs_path + "FloatingInfo4_win64"
-        new_data['measuretool_path'] = dsph_execs_path + "MeasureTool4_win64"
-        new_data['isosurface_path'] = dsph_execs_path + "IsoSurface4_win64"
-        new_data['boundaryvtk_path'] = dsph_execs_path + "BoundaryVTK4_win64"
+    elif "win" in platform.lower():
+        new_data['gencase_path'] = dsph_execs_path + "GenCase4_win64.exe"
+        new_data['dsphysics_path'] = dsph_execs_path + "DualSPHysics4_win64.exe"
+        new_data['partvtk4_path'] = dsph_execs_path + "PartVTK4_win64.exe"
+        new_data['computeforces_path'] = dsph_execs_path + "ComputeForces4_win64.exe"
+        new_data['floatinginfo_path'] = dsph_execs_path + "FloatingInfo4_win64.exe"
+        new_data['measuretool_path'] = dsph_execs_path + "MeasureTool4_win64.exe"
+        new_data['isosurface_path'] = dsph_execs_path + "IsoSurface4_win64.exe"
+        new_data['boundaryvtk_path'] = dsph_execs_path + "BoundaryVTK4_win64.exe"
     return new_data
 
 
