@@ -971,7 +971,7 @@ class RotSinuMotionTimeline(QtGui.QWidget):
         self.freq_input = QtGui.QLineEdit()
         self.freq_input.setStyleSheet("width: 5px;")
 
-        self.ampl_label = QtGui.QLabel("Ampl (m)")
+        self.ampl_label = QtGui.QLabel("Ampl (rad)")
         self.ampl_input = QtGui.QLineEdit()
         self.ampl_input.setStyleSheet("width: 5px;")
 
