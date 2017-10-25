@@ -57,7 +57,7 @@ APP_NAME = "DesignSPHysics"
 DEBUGGING = True
 DIVIDER = 1000
 PICKLE_PROTOCOL = 1  # Binary mode
-VERSION = "0.4.1710-04 (Develop)"
+VERSION = "0.4.1710-04-develop"
 WIDTH_2D = 0.001
 MAX_PARTICLE_WARNING = 2000000
 
@@ -125,7 +125,7 @@ def check_executables(data):
 
     # Tries to identify gencase
     if os.path.isfile(data['gencase_path']):
-        debug('Path FOUND for gencase')        
+        debug('Path FOUND for gencase')
         process = QtCore.QProcess(FreeCADGui.getMainWindow())
         process.start('"{}"'.format(data['gencase_path']))
         process.waitForFinished()
@@ -133,7 +133,7 @@ def check_executables(data):
         if "gencase" in output.lower():
             log("Found correct GenCase.")
         else:
-            debug('Execution of gencase did not find correct gencase')            
+            debug('Execution of gencase did not find correct gencase')
             execs_correct = False
             data['gencase_path'] = ""
     else:
@@ -256,7 +256,7 @@ def check_executables(data):
 
         if bundled_execs_present:
             user_selection = guiutils.ok_cancel_dialog(APP_NAME, "One or more of the executables in the setup is not correct. \n"
-                                                                 "A DualSPHysics bundle was detected on your installation. Do you want \n"
+                                                                 "A DualSPHysics package was detected on your installation. Do you want \n"
                                                                  "to autofill the executables?")
             if user_selection == QtGui.QMessageBox.Ok:
                 # Auto-fill executables.
@@ -482,9 +482,9 @@ def get_default_data():
 
     # Try to load saved paths. This way the user does not need
     # to introduce the software paths every time
-    if os.path.isfile(FreeCAD.getUserAppDataDir() + '/dsph_data.dsphdata'):
+    if os.path.isfile(FreeCAD.getUserAppDataDir() + '/dsph_data-{}.dsphdata'.format(VERSION)):
         try:
-            with open(FreeCAD.getUserAppDataDir() + '/dsph_data.dsphdata', 'rb') as picklefile:
+            with open(FreeCAD.getUserAppDataDir() + '/dsph_data-{}.dsphdata'.format(VERSION), 'rb') as picklefile:
                 log("Found data file. Loading data from disk.")
                 disk_data = pickle.load(picklefile)
                 data['gencase_path'] = disk_data['gencase_path']

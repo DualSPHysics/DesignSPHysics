@@ -1235,11 +1235,11 @@ def def_setup_window(data):
         data['isosurface_path'] = isosurface_input.text()
         data['boundaryvtk_path'] = boundaryvtk_input.text()
         data['paraview_path'] = paraview_input.text()
-        with open(FreeCAD.getUserAppDataDir() + '/dsph_data.dsphdata',
+        with open(FreeCAD.getUserAppDataDir() + '/dsph_data-{}.dsphdata'.format(utils.VERSION),
                   'wb') as picklefile:
             pickle.dump(data, picklefile, utils.PICKLE_PROTOCOL)
         utils.log("Setup changed. Saved to " + FreeCAD.getUserAppDataDir() +
-                  "/dsph_data.dsphdata")
+                  '/dsph_data-{}.dsphdata'.format(utils.VERSION))
         data_to_merge, state = utils.check_executables(data)
         data.update(data_to_merge)
         setup_window.accept()

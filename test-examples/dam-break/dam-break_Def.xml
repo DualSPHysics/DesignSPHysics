@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" ?>
-<case app="dam-break" date="16-12-2016 10:56:09">
+<!-- Case name: dam-break -->
+<case app="DesignSPHysics v0.4.1710-04 (Develop)" date="24-10-2017 13:16:26">
 	<casedef>
 		<constantsdef>
 			<lattice bound="1" fluid="1" />
@@ -21,17 +22,18 @@
 		</mkconfig>
 		<geometry>
 			<definition dp="0.025" comment="Initial inter-particle distance" units_comment="metres (m)">
-				<pointmin x="-0.25" y="-0.25" z="-0.25" />
-				<pointmax x="1.25" y="0.75" z="0.95" />
+				<pointmin x="0.0" y="0.0" z="0.0" />
+				<pointmax x="1.0" y="0.5" z="0.7" />
 			</definition>
 			<commands>
 				<mainlist>
+					<setshapemode>dp | bound</setshapemode>
 					<matrixreset />
 					<setmkfluid mk="0"/>
 					<setdrawmode mode="full"/>
 					<move x="0.0" y="0.2" z="0.0" />
 					<rotate ang="0.0" x="-0.0" y="-0.0" z="-1.0" />
-					<drawbox>
+					<drawbox objname="Water">
 						<boxfill>solid</boxfill>
 						<point x="0" y="0" z="0" />
 						<size x="0.3" y="0.3" z="0.3" />
@@ -41,7 +43,7 @@
 					<setdrawmode mode="full"/>
 					<move x="0.0" y="0.0" z="0.0" />
 					<rotate ang="0.0" x="-0.0" y="-0.0" z="-1.0" />
-					<drawbox>
+					<drawbox objname="LargeWall1">
 						<boxfill>solid</boxfill>
 						<point x="0" y="0" z="0" />
 						<size x="1.0" y="0.01" z="0.5" />
@@ -51,7 +53,7 @@
 					<setdrawmode mode="full"/>
 					<move x="0.0" y="0.0" z="0.0" />
 					<rotate ang="0.0" x="-0.0" y="-0.0" z="-1.0" />
-					<drawbox>
+					<drawbox objname="Floor">
 						<boxfill>solid</boxfill>
 						<point x="0" y="0" z="0" />
 						<size x="1.0" y="0.5" z="0.01" />
@@ -61,7 +63,7 @@
 					<setdrawmode mode="full"/>
 					<move x="0.0" y="0.49" z="0.0" />
 					<rotate ang="0.0" x="-0.0" y="-0.0" z="-1.0" />
-					<drawbox>
+					<drawbox objname="LargeWall2">
 						<boxfill>solid</boxfill>
 						<point x="0" y="0" z="0" />
 						<size x="1.0" y="0.01" z="0.5" />
@@ -71,7 +73,7 @@
 					<setdrawmode mode="full"/>
 					<move x="0.0" y="0.0" z="0.0" />
 					<rotate ang="0.0" x="-0.0" y="-0.0" z="-1.0" />
-					<drawbox>
+					<drawbox objname="ShortWall1">
 						<boxfill>solid</boxfill>
 						<point x="0" y="0" z="0" />
 						<size x="0.01" y="0.5" z="0.5" />
@@ -81,11 +83,12 @@
 					<setdrawmode mode="full"/>
 					<move x="0.99" y="0.0" z="0.0" />
 					<rotate ang="0.0" x="-0.0" y="-0.0" z="-1.0" />
-					<drawbox>
+					<drawbox objname="ShortWall2">
 						<boxfill>solid</boxfill>
 						<point x="0" y="0" z="0" />
 						<size x="0.01" y="0.5" z="0.5" />
 					</drawbox>
+					<shapeout file="" />
 				</mainlist>
 			</commands>
 		</geometry>
@@ -100,9 +103,9 @@
 			<parameter key="Visco" value="0.01" comment="Viscosity value" /> % Note alpha can depend on the resolution. A value of 0.01 is recommended for near irrotational flows.
 			<parameter key="ViscoBoundFactor" value="1" comment="Multiply viscosity value with boundary (default=1)" />
 			<parameter key="DeltaSPH" value="0" comment="DeltaSPH value, 0.1 is the typical value, with 0 disabled (default=0)" />
-			<parameter key="#Shifting" value="0" comment="Shifting mode 0:None, 1:Ignore bound, 2:Ignore fixed, 3:Full (default=0)" />
-			<parameter key="#ShiftCoef" value="-2" comment="Coefficient for shifting computation (default=-2)" />
-			<parameter key="#ShiftTFS" value="1.5" comment="Threshold to detect free surface. Typically 1.5 for 2D and 2.75 for 3D (default=0)" />
+			<parameter key="Shifting" value="0" comment="Shifting mode 0:None, 1:Ignore bound, 2:Ignore fixed, 3:Full (default=0)" />
+			<parameter key="ShiftCoef" value="-2" comment="Coefficient for shifting computation (default=-2)" />
+			<parameter key="ShiftTFS" value="1.5" comment="Threshold to detect free surface. Typically 1.5 for 2D and 2.75 for 3D (default=0)" />
 			<parameter key="RigidAlgorithm" value="1" comment="Rigid Algorithm 1:SPH, 2:DEM (default=1)" />
 			<parameter key="FtPause" value="0.0" comment="Time to freeze the floatings at simulation start (warmup) (default=0)" units_comment="seconds" />
 			<parameter key="CoefDtMin" value="0.05" comment="Coefficient to calculate minimum time step dtmin=coefdtmin*h/speedsound (default=0.05)" />
