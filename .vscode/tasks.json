@@ -5,7 +5,12 @@
     "tasks": [
         {
             "taskName": "Run DesignSPHysics",
-            "command": "killall freecad ; freecad /home/ndrs/.FreeCAD/Macro/DesignSPHysics.FCMacro",
+            "windows": {
+                "command": ""
+            },
+            "linux": {
+                "command": "killall freecad ; freecad /home/ndrs/.FreeCAD/Macro/DesignSPHysics.FCMacro"
+            },
             "type": "shell",
             "problemMatcher": []
         }

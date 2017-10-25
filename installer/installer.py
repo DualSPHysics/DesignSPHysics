@@ -40,6 +40,7 @@ from PySide import QtGui, QtCore
 print "Copyright (C) 2016-2017 - Andrés Vieira"
 print "EPHYSLAB Environmental Physics Laboratory, Universidade de Vigo"
 
+VERSION = "0.4.1710-04-develop"
 
 def dprint(string):
     print ">>>Debug: " + str(string)
@@ -206,7 +207,7 @@ def main():
                     data['measuretool_path'] = fc_default_mod_dir + '/DesignSPHysics' + "/dualsphysics/EXECS/MeasureTool4" + extension
                     data['isosurface_path'] = fc_default_mod_dir + '/DesignSPHysics' + "/dualsphysics/EXECS/IsoSurface4" + extension
                     data['boundaryvtk_path'] = fc_default_mod_dir + '/DesignSPHysics' + "/dualsphysics/EXECS/BoundaryVTK4" + extension
-                    with open(fc_folder + '/dsph_data.dsphdata', 'wb') as picklefile:
+                    with open(fc_folder + '/dsph_data-{}.dsphdata'.format(VERSION), 'wb') as picklefile:
                         pickle.dump(data, picklefile, 1)
 
                 # Installation completed

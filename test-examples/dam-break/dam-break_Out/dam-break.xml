@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" ?>
-<case app="GenCase4 v4.0.025 (15-04-2016)" date="16-12-2016 10:56:09">
+<!-- Case name: dam-break -->
+<case app="GenCase4 v4.0.051 (09-08-2017)" date="24-10-2017 13:16:26">
     <casedef>
         <constantsdef>
             <lattice bound="1" fluid="1" />
@@ -20,17 +21,18 @@
         <mkconfig boundcount="240" fluidcount="10" />
         <geometry>
             <definition dp="0.025" comment="Initial inter-particle distance" units_comment="metres (m)">
-                <pointmin x="-0.25" y="-0.25" z="-0.25" />
-                <pointmax x="1.25" y="0.75" z="0.95" />
+                <pointmin x="0.0" y="0.0" z="0.0" />
+                <pointmax x="1.0" y="0.5" z="0.7" />
             </definition>
             <commands>
                 <mainlist>
+                    <setshapemode>dp | bound</setshapemode>
                     <matrixreset />
                     <setmkfluid mk="0" />
                     <setdrawmode mode="full" />
                     <move x="0.0" y="0.2" z="0.0" />
                     <rotate ang="0.0" x="-0.0" y="-0.0" z="-1.0" />
-                    <drawbox>
+                    <drawbox objname="Water">
                         <boxfill>solid</boxfill>
                         <point x="0" y="0" z="0" />
                         <size x="0.3" y="0.3" z="0.3" />
@@ -40,7 +42,7 @@
                     <setdrawmode mode="full" />
                     <move x="0.0" y="0.0" z="0.0" />
                     <rotate ang="0.0" x="-0.0" y="-0.0" z="-1.0" />
-                    <drawbox>
+                    <drawbox objname="LargeWall1">
                         <boxfill>solid</boxfill>
                         <point x="0" y="0" z="0" />
                         <size x="1.0" y="0.01" z="0.5" />
@@ -50,7 +52,7 @@
                     <setdrawmode mode="full" />
                     <move x="0.0" y="0.0" z="0.0" />
                     <rotate ang="0.0" x="-0.0" y="-0.0" z="-1.0" />
-                    <drawbox>
+                    <drawbox objname="Floor">
                         <boxfill>solid</boxfill>
                         <point x="0" y="0" z="0" />
                         <size x="1.0" y="0.5" z="0.01" />
@@ -60,7 +62,7 @@
                     <setdrawmode mode="full" />
                     <move x="0.0" y="0.49" z="0.0" />
                     <rotate ang="0.0" x="-0.0" y="-0.0" z="-1.0" />
-                    <drawbox>
+                    <drawbox objname="LargeWall2">
                         <boxfill>solid</boxfill>
                         <point x="0" y="0" z="0" />
                         <size x="1.0" y="0.01" z="0.5" />
@@ -70,7 +72,7 @@
                     <setdrawmode mode="full" />
                     <move x="0.0" y="0.0" z="0.0" />
                     <rotate ang="0.0" x="-0.0" y="-0.0" z="-1.0" />
-                    <drawbox>
+                    <drawbox objname="ShortWall1">
                         <boxfill>solid</boxfill>
                         <point x="0" y="0" z="0" />
                         <size x="0.01" y="0.5" z="0.5" />
@@ -80,11 +82,12 @@
                     <setdrawmode mode="full" />
                     <move x="0.99" y="0.0" z="0.0" />
                     <rotate ang="0.0" x="-0.0" y="-0.0" z="-1.0" />
-                    <drawbox>
+                    <drawbox objname="ShortWall2">
                         <boxfill>solid</boxfill>
                         <point x="0" y="0" z="0" />
                         <size x="0.01" y="0.5" z="0.5" />
                     </drawbox>
+                    <shapeout file="" />
                 </mainlist>
             </commands>
         </geometry>
@@ -99,9 +102,9 @@
             <parameter key="Visco" value="0.01" comment="Viscosity value" />
             <parameter key="ViscoBoundFactor" value="1" comment="Multiply viscosity value with boundary (default=1)" />
             <parameter key="DeltaSPH" value="0" comment="DeltaSPH value, 0.1 is the typical value, with 0 disabled (default=0)" />
-            <parameter key="#Shifting" value="0" comment="Shifting mode 0:None, 1:Ignore bound, 2:Ignore fixed, 3:Full (default=0)" />
-            <parameter key="#ShiftCoef" value="-2" comment="Coefficient for shifting computation (default=-2)" />
-            <parameter key="#ShiftTFS" value="1.5" comment="Threshold to detect free surface. Typically 1.5 for 2D and 2.75 for 3D (default=0)" />
+            <parameter key="Shifting" value="0" comment="Shifting mode 0:None, 1:Ignore bound, 2:Ignore fixed, 3:Full (default=0)" />
+            <parameter key="ShiftCoef" value="-2" comment="Coefficient for shifting computation (default=-2)" />
+            <parameter key="ShiftTFS" value="1.5" comment="Threshold to detect free surface. Typically 1.5 for 2D and 2.75 for 3D (default=0)" />
             <parameter key="RigidAlgorithm" value="1" comment="Rigid Algorithm 1:SPH, 2:DEM (default=1)" />
             <parameter key="FtPause" value="0.0" comment="Time to freeze the floatings at simulation start (warmup) (default=0)" units_comment="seconds" />
             <parameter key="CoefDtMin" value="0.05" comment="Coefficient to calculate minimum time step dtmin=coefdtmin*h/speedsound (default=0.05)" />
@@ -115,9 +118,13 @@
             <parameter key="RhopOutMin" value="700" comment="Minimum rhop valid (default=700)" units_comment="kg/m^3" />
             <parameter key="RhopOutMax" value="1300" comment="Maximum rhop valid (default=1300)" units_comment="kg/m^3" />
         </parameters>
-        <particles np="4989" nb="3261" nbf="3261" mkboundfirst="11" mkfluidfirst="1">
-            <fixed mkbound="0" mk="11" begin="0" count="3261" />
-            <fluid mkfluid="0" mk="1" begin="3261" count="1728" />
+        <particles np="3708" nb="1980" nbf="1980" mkboundfirst="11" mkfluidfirst="1">
+            <_summary>
+                <fixed count="1980" id="0-1979" mkcount="1" mkvalues="11" />
+                <fluid count="1728" id="1980-3707" mkcount="1" mkvalues="1" />
+            </_summary>
+            <fixed mkbound="0" mk="11" begin="0" count="1980" />
+            <fluid mkfluid="0" mk="1" begin="1980" count="1728" />
         </particles>
         <constants>
             <gravity x="0" y="0" z="-9.81" units_comment="m/s^2" />
@@ -125,10 +132,10 @@
             <gamma value="7" />
             <rhop0 value="1000" units_comment="kg/m^3" />
             <dp value="0.025" units_comment="metres (m)" />
-            <h value="4.3301270189E-002" units_comment="metres (m)" />
-            <b value="1.5415714286E+005" units_comment="metres (m)" />
-            <massbound value="1.5625000000E-002" units_comment="kg" />
-            <massfluid value="1.5625000000E-002" units_comment="kg" />
+            <h value="4.3301270189E-02" units_comment="metres (m)" />
+            <b value="1.5415714286E+05" units_comment="Pascal (Pa)" />
+            <massbound value="1.5625000000E-02" units_comment="kg" />
+            <massfluid value="1.5625000000E-02" units_comment="kg" />
         </constants>
         <motion />
     </execution>
