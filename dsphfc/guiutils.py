@@ -1043,6 +1043,8 @@ def def_execparams_window(data):
     ep_button_layout.addWidget(cancel_button)
 
     # START Main layout definition and composition.
+    ep_main_layout_scroll = QtGui.QScrollArea()
+    ep_main_layout_scroll_widget = QtGui.QWidget()
     ep_main_layout = QtGui.QVBoxLayout()
     ep_main_layout.addLayout(posdouble_layout)
     ep_main_layout.addLayout(stepalgorithm_layout)
@@ -1074,17 +1076,17 @@ def def_execparams_window(data):
     ep_main_layout.addLayout(period_y_layout)
     ep_main_layout.addLayout(period_z_layout)
 
-    ep_main_layout.addStretch(1)
+    ep_main_layout_scroll_widget.setLayout(ep_main_layout)
+    ep_main_layout_scroll.setWidget(ep_main_layout_scroll_widget)
+    ep_main_layout_scroll.setHorizontalScrollBarPolicy(QtCore.Qt.ScrollBarAlwaysOff)
 
-    ep_groupbox = QtGui.QGroupBox("Execution Parameters")
-    ep_groupbox.setLayout(ep_main_layout)
     execparams_window_layout = QtGui.QVBoxLayout()
-    execparams_window_layout.addWidget(ep_groupbox)
+    execparams_window_layout.addWidget(ep_main_layout_scroll)
     execparams_window_layout.addLayout(ep_button_layout)
     execparams_window.setLayout(execparams_window_layout)
     # END Main layout definition and composition.
 
-    execparams_window.resize(600, 400)
+    execparams_window.resize(800, 600)
     execparams_window.exec_()
 
 

@@ -60,31 +60,6 @@ __maintainer__ = "Andrés Vieira"
 __email__ = "anvieiravazquez@gmail.com"
 __status__ = "Development"
 
-# region General To-Do to use with PyCharm
-# -------------------------------   WIKI   -------------------------------
-# ------------------------------- 0.4 BETA -------------------------------
-# TODO: 0.4Beta - Create Property support
-# TODO: 0.4Beta - Property creator and assigner
-# ------------------------------- 0.5 BETA -------------------------------
-# TODO: 0.5Beta - Refactor all code
-# TODO: 0.5Beta - 'Pythonize' code and delete redundant code
-# TODO: 0.5Beta - Improve debug messages and make GUI section to enable/disable it
-# TODO: 0.5Beta - Revisit all strings to translate and make some translations.
-# TODO: 0.5Beta - Make some kind of a translation platform.
-# TODO: 0.5Beta - Study uses with latest DSPH and spaces in folder names etc
-# TODO: 0.5Beta - Test and fix all possible things.
-# TODO: 0.5Beta - Change rotation procedure. Try not to use matrixreset, delete null rotations... etc
-# TODO: 0.5Beta - Redesign
-# TODO: 0.5Beta - Rework constants window (default parameters, better scaffolding, help...)
-# TODO: 0.5Beta - Toolbox (Fillbox, wave, periodicity, imports...) to clean the UI
-# TODO: 0.5Beta - Revisit and complete documentation of the code
-# ------------------------------- NO VERSION ------------------------------
-# TODO: NO VERSION - SSH Server support.
-# TODO: NO VERSION - Multi-case support (multiple tabs)
-# TODO: NO VERSION - Integrate better with FreeCAD (replace file menus etc)
-# TODO: NO VERSION - Clicking on a group that is not a fillbox should prompt to add all the inside objects
-# endregion general To-Do
-
 # Print license at macro start
 try:
     utils.print_license()
@@ -137,7 +112,7 @@ main_layout = QtGui.QVBoxLayout()  # Main Widget layout.  Vertical ordering
 # Component layouts definition
 logo_layout = QtGui.QHBoxLayout()
 logo_layout.setSpacing(0)
-logo_layout.setContentsMargins(0, 0, 0, 20)
+logo_layout.setContentsMargins(0, 0, 0, 0)
 intro_layout = QtGui.QVBoxLayout()
 
 # DSPH dock first section.
@@ -150,7 +125,7 @@ constants_button.setToolTip(__("Use this button to define case constants,\nsuch 
 constants_button.clicked.connect(lambda: guiutils.def_constants_window(data))
 widget_state_elements['constants_button'] = constants_button
 
-help_button = QtGui.QPushButton("Help: DesignSPHysics Wiki")
+help_button = QtGui.QPushButton("Help")
 help_button.setToolTip(__("Push this button to open a browser with help\non how to use this tool."))
 help_button.clicked.connect(utils.open_help)
 
@@ -817,6 +792,9 @@ def on_properties():
     # TODO: Custom delete button that handles in which row it is
     # TODO: Custom MK input with placeholder and row placement. Each time it's changed change temporal property object
 
+    guiutils.info_dialog("Not implemented yet", detailed_text="This feature is not implemented yet. Sorry for the inconvenience")
+    return
+
     property_window = QtGui.QDialog()
     property_window.setMinimumSize(1400, 600)
     property_window.setWindowTitle(__("Property configuration"))
@@ -1190,14 +1168,10 @@ ex_label = QtGui.QLabel("<b>" + __("Simulation control") + "</b> ")
 ex_label.setWordWrap(True)
 
 # Combobox for processor selection
-ex_selector_layout = QtGui.QHBoxLayout()
-ex_selector_label = QtGui.QLabel(__("Simulation processor:"))
 ex_selector_combo = QtGui.QComboBox()
 ex_selector_combo.addItem("CPU")
 ex_selector_combo.addItem("GPU")
 widget_state_elements['ex_selector_combo'] = ex_selector_combo
-ex_selector_layout.addWidget(ex_selector_label)
-ex_selector_layout.addWidget(ex_selector_combo)
 
 # Simulate case button
 ex_button = QtGui.QPushButton(__("Run"))
@@ -1216,10 +1190,11 @@ widget_state_elements['ex_additional'] = ex_additional
 
 ex_button_layout = QtGui.QHBoxLayout()
 ex_button_layout.addWidget(ex_button)
+ex_button_layout.addWidget(ex_selector_combo)
 ex_button_layout.addWidget(ex_additional)
 
 ex_layout.addWidget(ex_label)
-ex_layout.addLayout(ex_selector_layout)
+
 ex_layout.addLayout(ex_button_layout)
 
 # Defines export window dialog.
@@ -2612,6 +2587,7 @@ objectlist_layout.addWidget(objectlist_table)
 logo_layout.addStretch(0.5)
 logo_layout.addWidget(logo_label)
 logo_layout.addStretch(0.5)
+logo_layout.addWidget(help_button)
 
 # Adding things here and there
 intro_layout.addWidget(constants_label)
@@ -2621,10 +2597,10 @@ constantsandsetup_layout.addWidget(constants_button)
 constantsandsetup_layout.addWidget(execparams_button)
 constantsandsetup_layout.addWidget(setup_button)
 
-intro_layout.addWidget(help_button)
 intro_layout.addLayout(constantsandsetup_layout)
 
 main_layout.addLayout(logo_layout)
+main_layout.addWidget(guiutils.h_line_generator())
 main_layout.addLayout(intro_layout)
 main_layout.addWidget(guiutils.h_line_generator())
 main_layout.addLayout(dp_layout)
