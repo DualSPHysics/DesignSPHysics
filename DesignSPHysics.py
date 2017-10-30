@@ -533,6 +533,9 @@ def on_add_stl():
     filedialog = QtGui.QFileDialog()
     # noinspection PyArgumentList
     file_name, _ = filedialog.getOpenFileName(fc_main_window, __("Select STL to import"), QtCore.QDir.homePath(), "STL Files (*.stl)")
+    if len(file_name) <= 1:
+        # User didn't select any files
+        return
     # Defines import stl dialog
     stl_dialog = QtGui.QDialog()
     stl_dialog.setModal(True)
