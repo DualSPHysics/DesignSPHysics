@@ -53,10 +53,10 @@ along with DesignSPHysics.  If not, see <http://www.gnu.org/licenses/>.
 # ------ CONSTANTS DEFINITION ------
 FREECAD_MIN_VERSION = "016"
 APP_NAME = "DesignSPHysics"
-DEBUGGING = True
+DEBUGGING = False
 DIVIDER = 1000
 PICKLE_PROTOCOL = 1  # Binary mode
-VERSION = "0.4.1711-02-develop"
+VERSION = "0.4.1711-02"
 WIDTH_2D = 0.001
 MAX_PARTICLE_WARNING = 2000000
 
@@ -129,7 +129,6 @@ def check_executables(data):
     execs_correct = True
 
     refocus_cwd()
-    print("Checking executables for the cwd: {}".format(os.getcwd()))
 
     # Tries to identify gencase
     if os.path.isfile(data['gencase_path']):
