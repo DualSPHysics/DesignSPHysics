@@ -109,7 +109,7 @@ def main():
                 if 'windows' in system.lower():
                     macro_dir = os.getenv('APPDATA') + '/FreeCAD/Macro'
                     fc_folder = os.getenv('APPDATA') + '/FreeCAD'
-                    
+
                     # Check in the 64 bit folder if FreeCAD is present. If not use the 32bit one.
                     fc_default_mod_dir = os.getenv('ProgramW6432') + '/FreeCAD 0.16/Mod'
                     if not os.path.exists(fc_default_mod_dir):
@@ -143,6 +143,11 @@ def main():
                     pass
                 try:
                     os.remove(macro_dir + '/DSPH.py')
+                except OSError:
+                    # File does not exists.  Ignoring
+                    pass
+                try:
+                    os.remove(macro_dir + '/default-config.json')
                 except OSError:
                     # File does not exists.  Ignoring
                     pass
@@ -185,6 +190,7 @@ def main():
                 shutil.copy("./resource/DesignSPHysics.py", fc_default_mod_dir + '/DesignSPHysics')
                 shutil.copy("./resource/LICENSE", fc_default_mod_dir + '/DesignSPHysics')
                 shutil.copy("./resource/DesignSPHysics.FCMacro", macro_dir)
+                shutil.copy("./resource/default-config.json", fc_default_mod_dir + '/DesignSPHysics')
                 shutil.copytree("./resource/DSPH_Images", fc_default_mod_dir + '/DesignSPHysics' + '/DSPH_Images')
                 shutil.copytree("./resource/dsphfc", fc_default_mod_dir + '/DesignSPHysics' + '/dsphfc')
                 shutil.copytree("./resource/test-examples", fc_default_mod_dir + '/DesignSPHysics' + '/test-examples')
