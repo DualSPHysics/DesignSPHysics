@@ -117,10 +117,19 @@ def __(text):
         return to_ret
 
 
+def refocus_cwd():
+    """ Ensures the current working directory is the DesignSPHysics folder """
+    utils_dir = os.path.dirname(os.path.abspath(__file__))
+    os.chdir(utils_dir + "/..")
+
+
 def check_executables(data):
     """ Checks the different executables used by DesignSPHysics. Returns the filtered data structure and a boolean
     stating if all went correctly. """
     execs_correct = True
+
+    refocus_cwd()
+    print("Checking executables for the cwd: {}".format(os.getcwd()))
 
     # Tries to identify gencase
     if os.path.isfile(data['gencase_path']):
@@ -251,40 +260,30 @@ def check_executables(data):
         data['boundaryvtk_path'] = ""
 
     if not execs_correct:
-        # Spawn warning dialog and return filtered data.
-        if not execs_correct:
-            warning("One or more of the executables in the setup is not correct. Check plugin setup to fix missing binaries")
-            guiutils.warning_dialog("One or more of the executables in the setup is not correct. Check plugin setup to fix missing binaries.")
+        bundled_execs_present = are_executables_bundled()
+
+        if bundled_execs_present:
+            user_selection = guiutils.ok_cancel_dialog(APP_NAME, "One or more of the executables in the setup is not correct. \n"
+                                                       "A DualSPHysics package was detected on your installation. Do you want \n"
+                                                       "to load the default configuration?")
+            if user_selection == QtGui.QMessageBox.Ok:
+                # Auto-fill executables.
+                filled_data = get_default_config_file()
+                data.update(filled_data)
+                return data, execs_correct
+            else:
+                return data, execs_correct
+        else:
+            # Spawn warning dialog and return filtered data.
+            if not execs_correct:
+                warning("One or more of the executables in the setup is not correct. Check plugin setup to fix missing binaries")
+                guiutils.warning_dialog("One or more of the executables in the setup is not correct. Check plugin setup to fix missing binaries.")
     return data, execs_correct
 
 
 def are_executables_bundled():
     dsph_execs_path = os.path.dirname(os.path.realpath(__file__)) + "/../dualsphysics/EXECS/"
     return os.path.isdir(dsph_execs_path)
-
-
-def auto_fill_executables():
-    dsph_execs_path = os.path.dirname(os.path.realpath(__file__)) + "/../dualsphysics/EXECS/"
-    new_data = dict()
-    if "linux" in platform.lower():
-        new_data['gencase_path'] = dsph_execs_path + "GenCase4_linux64"
-        new_data['dsphysics_path'] = dsph_execs_path + "DualSPHysics4_linux64"
-        new_data['partvtk4_path'] = dsph_execs_path + "PartVTK4_linux64"
-        new_data['computeforces_path'] = dsph_execs_path + "ComputeForces4_linux64"
-        new_data['floatinginfo_path'] = dsph_execs_path + "FloatingInfo4_linux64"
-        new_data['measuretool_path'] = dsph_execs_path + "MeasureTool4_linux64"
-        new_data['isosurface_path'] = dsph_execs_path + "IsoSurface4_linux64"
-        new_data['boundaryvtk_path'] = dsph_execs_path + "BoundaryVTK4_linux64"
-    elif "win" in platform.lower():
-        new_data['gencase_path'] = dsph_execs_path + "GenCase4_win64.exe"
-        new_data['dsphysics_path'] = dsph_execs_path + "DualSPHysics4_win64.exe"
-        new_data['partvtk4_path'] = dsph_execs_path + "PartVTK4_win64.exe"
-        new_data['computeforces_path'] = dsph_execs_path + "ComputeForces4_win64.exe"
-        new_data['floatinginfo_path'] = dsph_execs_path + "FloatingInfo4_win64.exe"
-        new_data['measuretool_path'] = dsph_execs_path + "MeasureTool4_win64.exe"
-        new_data['isosurface_path'] = dsph_execs_path + "IsoSurface4_win64.exe"
-        new_data['boundaryvtk_path'] = dsph_execs_path + "BoundaryVTK4_win64.exe"
-    return new_data
 
 
 def float_list_to_float_property(floating_mks):
