@@ -396,7 +396,6 @@ def on_save_with_gencase():
                 gencase_infosave_dialog.exec_()
 
                 if gencase_infosave_dialog.clickedButton() == open_with_paraview_button:
-                    # TODO: Open With Paraview
                     subprocess.Popen(
                         [
                             data['paraview_path'], "--data={}\\{}".format(data['project_path'] + '\\' + data['project_name'] + '_Out',
