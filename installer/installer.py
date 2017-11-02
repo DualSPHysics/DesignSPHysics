@@ -190,7 +190,7 @@ def main():
                 shutil.copy("./resource/DesignSPHysics.py", fc_default_mod_dir + '/DesignSPHysics')
                 shutil.copy("./resource/LICENSE", fc_default_mod_dir + '/DesignSPHysics')
                 shutil.copy("./resource/DesignSPHysics.FCMacro", macro_dir)
-                shutil.copy("./resource/default-config.json", fc_default_mod_dir)
+                shutil.copy("./resource/default-config.json", fc_default_mod_dir + '/DesignSPHysics')
                 shutil.copytree("./resource/DSPH_Images", fc_default_mod_dir + '/DesignSPHysics' + '/DSPH_Images')
                 shutil.copytree("./resource/dsphfc", fc_default_mod_dir + '/DesignSPHysics' + '/dsphfc')
                 shutil.copytree("./resource/test-examples", fc_default_mod_dir + '/DesignSPHysics' + '/test-examples')
