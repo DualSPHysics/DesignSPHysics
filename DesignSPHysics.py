@@ -354,10 +354,11 @@ def on_save_with_gencase():
     # Save Case
     on_save_case()
 
+    utils.refocus_cwd()
+
     # Use gencase if possible to generate the case final definition
     data['gencase_done'] = False
     if data['gencase_path'] != "":
-        os.chdir(data['project_path'])
         process = QtCore.QProcess(fc_main_window)
         process.start(data['gencase_path'], [
             data['project_path'] + '/' + data['project_name'] + '_Def', data['project_path'] + '/' + data['project_name'] + '_Out/' + data['project_name'],
@@ -496,7 +497,7 @@ def on_load_case():
         guiutils.widget_state_config(widget_state_elements, "simulation not done")
 
     # Check executable paths
-    os.chdir(data['project_path'])
+    utils.refocus_cwd()
     data, correct_execs = utils.check_executables(data)
     if not correct_execs:
         guiutils.widget_state_config(widget_state_elements, "execs not correct")
