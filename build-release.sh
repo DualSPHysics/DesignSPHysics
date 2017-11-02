@@ -7,6 +7,7 @@ cp ./dist/installer ./
 cp -rf ../installer/resource ./
 cp ../DesignSPHysics.py ./resource/
 cp ../DesignSPHysics.FCMacro ./resource/
+cp ../default-config.json ./resource/
 cp ../LICENSE ./resource/
 cp -rf ../DSPH_Images/ ./resource/
 cp -rf ../dsphfc/ ./resource/
