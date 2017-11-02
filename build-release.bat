@@ -7,6 +7,7 @@ xcopy .\dist\installer.exe .\ /Y
 xcopy ..\installer\resource .\resource\ /S /E /Y
 xcopy ..\DesignSPHysics.py .\resource /Y
 xcopy ..\DesignSPHysics.FCMacro .\resource /Y
+xcopy ..\default-config.json .\resource /Y
 xcopy ..\LICENSE .\resource /Y
 xcopy ..\DSPH_Images .\resource\DSPH_Images\ /S /E /Y
 xcopy ..\dsphfc .\resource\dsphfc\ /S /E /Y
