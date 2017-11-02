@@ -386,7 +386,24 @@ def on_save_with_gencase():
                 gencase_infosave_dialog.setText(__("Gencase exported {} particles. Press View Details to check the output.\n").format(str(total_particles)))
                 gencase_infosave_dialog.setDetailedText(output.split("================================")[1])
                 gencase_infosave_dialog.setIcon(QtGui.QMessageBox.Information)
+
+                # If a paraview path is present, add a button to open the result with it
+                open_with_paraview_button = None
+                if len(data["paraview_path"]) > 1:
+                    open_with_paraview_button = gencase_infosave_dialog.addButton(__("Open with ParaView"), QtGui.QMessageBox.YesRole)
+
+                ok_button = gencase_infosave_dialog.addButton(__("Ok"), QtGui.QMessageBox.YesRole)
                 gencase_infosave_dialog.exec_()
+
+                if gencase_infosave_dialog.clickedButton() == open_with_paraview_button:
+                    # TODO: Open With Paraview
+                    subprocess.Popen(
+                        [
+                            data['paraview_path'], "--data={}\\{}".format(data['project_path'] + '\\' + data['project_name'] + '_Out',
+                                                                          data['project_name'] + "_All.vtk")
+                        ],
+                        stdout=subprocess.PIPE)
+
             except ValueError:
                 # Not an expected result. GenCase had a not handled error
                 error_in_gen_case = True
@@ -3276,8 +3293,8 @@ def motion_change():
     has_motion_selector = QtGui.QComboBox()
     has_motion_selector.insertItems(0, ["True", "False"])
     has_motion_selector.currentIndexChanged.connect(on_motion_change)
-    has_motion_helplabel = QtGui.QLabel(
-        "<a href='http://design.sphysics.org/wiki/doku.php?id=featreference#configure_object_motion'>{}</a>".format(__("Movement Help")))
+    has_motion_helplabel = QtGui.QLabel("<a href='http://design.sphysics.org/wiki/doku.php?id=featreference#configure_object_motion'>{}</a>".format(
+        __("Movement Help")))
     has_motion_helplabel.setTextFormat(QtCore.Qt.RichText)
     has_motion_helplabel.setTextInteractionFlags(QtCore.Qt.TextBrowserInteraction)
     has_motion_helplabel.setOpenExternalLinks(True)
@@ -3867,8 +3884,8 @@ def on_tree_item_selection_change():
                         to_change.setCurrentIndex(1)
                         mkgroup_prop.setRange(0, 240)
                         mkgroup_label.setText("&nbsp;&nbsp;&nbsp;" + __("MKBound") + " <a href='http://design.sphysics.org/wiki/doku.php?id=concepts'>?</a>")
-                elif selection[0].TypeId in ["Mesh::Feature", "Part::Cut"] or (selection[0].TypeId == "App::DocumentObjectGroup" and
-                                                                               "fillbox" in selection[0].Name.lower()):
+                elif selection[0].TypeId in ["Mesh::Feature", "Part::Cut"] or (selection[0].TypeId == "App::DocumentObjectGroup"
+                                                                               and "fillbox" in selection[0].Name.lower()):
                     # Is an object that will be exported to STL
                     to_change.setEnabled(True)
                     if data['simobjects'][selection[0].Name][1].lower() == "fluid":
@@ -3908,8 +3925,8 @@ def on_tree_item_selection_change():
 
                 # float state config
                 to_change = object_property_table.cellWidget(3, 1)
-                if selection[0].TypeId in temp_data['supported_types'] or (selection[0].TypeId == "App::DocumentObjectGroup" and
-                                                                           "fillbox" in selection[0].Name.lower()):
+                if selection[0].TypeId in temp_data['supported_types'] or (selection[0].TypeId == "App::DocumentObjectGroup"
+                                                                           and "fillbox" in selection[0].Name.lower()):
                     if data['simobjects'][selection[0].Name][1].lower() == "fluid":
                         to_change.setEnabled(False)
                     else:
