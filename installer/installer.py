@@ -40,15 +40,13 @@ from PySide import QtGui, QtCore
 print "Copyright (C) 2016-2017 - Andrés Vieira"
 print "EPHYSLAB Environmental Physics Laboratory, Universidade de Vigo"
 
-VERSION = "0.4.1710-04-develop"
 
 def dprint(string):
     print ">>>Debug: " + str(string)
 
 
 def is_user_admin():
-    """Return True if user has admin privileges.
-    """
+    """ Return True if user has admin privileges. """
 
     try:
         return ctypes.windll.shell32.IsUserAnAdmin() == 1
@@ -68,7 +66,7 @@ def main():
     w.setFixedSize(400, 500)
 
     w.setWindowFlags(QtCore.Qt.Dialog)
-    w.setWindowTitle('DSPH for FreeCAD Installer')
+    w.setWindowTitle('DualSPHysics Installer')
 
     main_layout = QtGui.QVBoxLayout()
     main_layout.setContentsMargins(0, 0, 0, 0)
@@ -198,17 +196,6 @@ def main():
                         # Directory does not exists.  Ignoring
                         pass
                     shutil.copytree("./resource/dualsphysics", fc_default_mod_dir + '/DesignSPHysics' + '/dualsphysics')
-                    data = dict()
-                    data['gencase_path'] = fc_default_mod_dir + '/DesignSPHysics' + "/dualsphysics/EXECS/GenCase4" + extension
-                    data['dsphysics_path'] = fc_default_mod_dir + '/DesignSPHysics' + "/dualsphysics/EXECS/DualSPHysics4" + extension
-                    data['partvtk4_path'] = fc_default_mod_dir + '/DesignSPHysics' + "/dualsphysics/EXECS/PartVTK4" + extension
-                    data['computeforces_path'] = fc_default_mod_dir + '/DesignSPHysics' + "/dualsphysics/EXECS/ComputeForces4" + extension
-                    data['floatinginfo_path'] = fc_default_mod_dir + '/DesignSPHysics' + "/dualsphysics/EXECS/FloatingInfo4" + extension
-                    data['measuretool_path'] = fc_default_mod_dir + '/DesignSPHysics' + "/dualsphysics/EXECS/MeasureTool4" + extension
-                    data['isosurface_path'] = fc_default_mod_dir + '/DesignSPHysics' + "/dualsphysics/EXECS/IsoSurface4" + extension
-                    data['boundaryvtk_path'] = fc_default_mod_dir + '/DesignSPHysics' + "/dualsphysics/EXECS/BoundaryVTK4" + extension
-                    with open(fc_folder + '/dsph_data-{}.dsphdata'.format(VERSION), 'wb') as picklefile:
-                        pickle.dump(data, picklefile, 1)
 
                 # Installation completed
                 install_button.setText('Installed!')
