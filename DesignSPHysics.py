@@ -1807,8 +1807,8 @@ def measuretool_export(export_parameters):
     else:
         # Save grid
         with open(data['project_path'] + '/' + 'points.txt', 'w') as f:
-            f.write("POINTSLIST\n")
             for curr_point in temp_data['measuretool_grid']:
+                f.write("POINTSLIST\n")
                 f.write("{}  {}  {}\n{}  {}  {}\n{}  {}  {}\n".format(*curr_point))
 
     calculate_height = '-height' if export_parameters['calculate_water_elevation'] else ''
