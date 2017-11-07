@@ -588,8 +588,10 @@ def def_execparams_window(data):
     def on_viscotreatment_change(index):
         visco_input.setText("0.01" if index == 0 else "0.000001")
         visco_label.setText("Viscosity value (alpha): "
-                            if index == 0 else "Viscosity value (µ0): ")
-        visco_units_label.setText("" if index == 0 else "Pa·s")
+                            if index == 0 else "Kinematic viscosity: ")
+        visco_units_label.setText(
+            "" if index == 0 else
+            "m<span style='vertical-align:super'>2</span>/s")
 
     on_viscotreatment_change(int(data['viscotreatment']) - 1)
     visco_input.setText(str(data['visco']))
