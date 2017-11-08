@@ -1282,7 +1282,9 @@ def partvtk_export(export_parameters):
                 info_text=__("Post-processing finished successfully. Press the details button to show PartVTK output"),
                 detailed_text=temp_data['current_output'])
         else:
-            guiutils.error_dialog(__("There was an error on the post-processing."))
+            guiutils.error_dialog(
+                __("There was an error on the post-processing. Show details to view the errors."),
+                detailed_text=temp_data['current_output'])
 
         # Bit of code that tries to open ParaView if the option was selected.
         if export_parameters['open_paraview']:
@@ -1311,8 +1313,11 @@ def partvtk_export(export_parameters):
     static_params_exp = [
         '-dirin ' + data['project_path'] + '/' + data['project_name'] + '_Out/',
         save_mode + data['project_path'] + '/' + data['project_name'] + '_Out/' + export_parameters['file_name'],
-        '-onlytype:' + export_parameters['save_types'] + export_parameters['additional_parameters']
+        '-onlytype:' + export_parameters['save_types'] + " " + export_parameters['additional_parameters']
     ]
+
+    utils.debug("Going to execute: {} {}".format(data['partvtk4_path'],
+                                                 " ".join(static_params_exp)))
 
     # Start process
     export_process.start(data['partvtk4_path'], static_params_exp)
@@ -1514,7 +1519,7 @@ def floatinginfo_export(export_parameters):
                 info_text=__("Post-processing finished successfully. Press the details button to see FloatingInfo output."),
                 detailed_text=temp_data['current_output'])
         else:
-            guiutils.error_dialog(__("There was an error on the post-processing."))
+            guiutils.error_dialog(__("There was an error on the post-processing. Press the details button to see the error"), detailed_text=temp_data['current_output'])
 
     temp_data['current_output'] = ""
     export_process = QtCore.QProcess(dsph_main_dock)
@@ -1639,7 +1644,7 @@ def computeforces_export(export_parameters):
                 info_text=__("Post-processing finished successfully. Press the details button to see ComputeForces output."),
                 detailed_text=temp_data['current_output'])
         else:
-            guiutils.error_dialog(__("There was an error on the post-processing."))
+            guiutils.error_dialog(__("There was an error on the post-processing. Press the details button to see the error"), detailed_text=temp_data['current_output'])
 
     temp_data['current_output'] = ""
     export_process = QtCore.QProcess(dsph_main_dock)
@@ -1783,7 +1788,7 @@ def measuretool_export(export_parameters):
                 info_text=__("Post-processing finished successfully. Press the details button to see MeasureTool output"),
                 detailed_text=temp_data['current_output'])
         else:
-            guiutils.error_dialog(__("There was an error on the post-processing."))
+            guiutils.error_dialog(__("There was an error on the post-processing. Press the details button to see the error"), detailed_text=temp_data['current_output'])
 
     temp_data['current_output'] = ""
     export_process = QtCore.QProcess(dsph_main_dock)
@@ -2191,7 +2196,7 @@ def isosurface_export(export_parameters):
     static_params_exp = [
         '-dirin ' + data['project_path'] + '/' + data['project_name'] + '_Out/',
         '-saveiso ' + data['project_path'] + '/' + data['project_name'] + '_Out/' + export_parameters['file_name'],
-        '-onlytype:' + export_parameters['save_types'] + export_parameters['additional_parameters']
+        '-onlytype:' + export_parameters['save_types'] + " " + export_parameters['additional_parameters']
     ]
 
     # Start process
@@ -2390,7 +2395,7 @@ def boundaryvtk_export(export_parameters):
     static_params_exp = [
         '-dirin ' + data['project_path'] + '/' + data['project_name'] + '_Out/',
         '-saveiso ' + data['project_path'] + '/' + data['project_name'] + '_Out/' + export_parameters['file_name'],
-        '-onlytype:' + export_parameters['save_types'] + export_parameters['additional_parameters']
+        '-onlytype:' + export_parameters['save_types'] + " " + export_parameters['additional_parameters']
     ]
 
     # Start process
