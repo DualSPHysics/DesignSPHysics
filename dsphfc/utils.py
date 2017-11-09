@@ -736,7 +736,8 @@ def dump_to_xml(data, save_name):
                     __objs__ = list()
                     __objs__.append(o)
                     Mesh.export(__objs__, save_name + "/" + o.Name + ".stl")
-                    f.write('\t\t\t\t\t<drawfilestl file="' + o.Name + ".stl" + '" objname="{}">\n'.format(o.Label))
+                    f.write('\t\t\t\t\t<drawfilestl file="' + save_name + "/" +
+                            o.Name + ".stl" + '" objname="{}">\n'.format(o.Label))
                     f.write('\t\t\t\t\t\t<drawscale x="0.001" y="0.001" z="0.001" />\n')
                     f.write('\t\t\t\t\t</drawfilestl>\n')
                     del __objs__
