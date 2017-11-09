@@ -20,7 +20,7 @@ It is developed as a FreeCAD module with a macro bootstrapper, in python 2.7.
 To install DesignSPHysics you have 2 options: Using an installer (release version) or using a development build (git)
 
 ### Installing a release version
-To install a release version go to the download section of the [official webpage](http://design.sphysics.org) and download the appropiate binary.
+To install a release version go to the download section of the [official webpage](http://design.sphysics.org) and download the appropriate binary.
 
 Execute the installer (installer.exe on Windows and installer on GNU/Linux) to open the installer. Then press install and it will copy the needed scripts in FreeCAD's macro default folder.
 
