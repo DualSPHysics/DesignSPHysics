@@ -13,6 +13,7 @@ import pickle
 import sys
 import os
 import utils
+import subprocess
 from sys import platform
 from PySide import QtGui, QtCore
 """
@@ -1080,7 +1081,8 @@ def def_execparams_window(data):
 
     ep_main_layout_scroll_widget.setLayout(ep_main_layout)
     ep_main_layout_scroll.setWidget(ep_main_layout_scroll_widget)
-    ep_main_layout_scroll.setHorizontalScrollBarPolicy(QtCore.Qt.ScrollBarAlwaysOff)
+    ep_main_layout_scroll.setHorizontalScrollBarPolicy(
+        QtCore.Qt.ScrollBarAlwaysOff)
 
     execparams_window_layout = QtGui.QVBoxLayout()
     execparams_window_layout.addWidget(ep_main_layout_scroll)
@@ -1726,8 +1728,10 @@ def case_summary(orig_data):
                                     "Floating: {floats}<br/>" \
                                     "Initials: {initials}</li><br/>".format(label=fc_object.Label, iname=key,
                                                                             type=value[1].title(), mk=value[0],
-                                                                            real_mk=str(real_mk),
-                                                                            fillmode=value[2].title(),
+                                                                            real_mk=str(
+                                                                                real_mk),
+                                                                            fillmode=value[2].title(
+                                                                            ),
                                                                             floats=is_floating,
                                                                             initials=has_initials)
         data['objects_info'] += "</ul>"
@@ -1752,7 +1756,8 @@ def case_summary(orig_data):
                     mklist.append(str(key))
 
             data['movement_info'] += "<li>{movtype} <u>{movname}</u><br/>" \
-                                     "Applied to MKBound: {mklist}</li><br/>".format(movtype=movtype, movname=mov.name, mklist=', '.join(mklist))
+                                     "Applied to MKBound: {mklist}</li><br/>".format(
+                                         movtype=movtype, movname=mov.name, mklist=', '.join(mklist))
 
         data['movement_info'] += "</ul>"
     else:
@@ -1803,3 +1808,113 @@ def case_summary(orig_data):
 def get_fc_view_object(internal_name):
     """ Returns a FreeCADGui View provider object by a name. """
     return FreeCADGui.getDocument("DSPH_Case").getObject(internal_name)
+
+
+def gencase_completed_dialog(particle_count=0, detail_text="No details", data=dict()):
+    """ Creates a gencase save dialog with different options, like
+    open the results with paraview, show details or dismiss. """
+
+    # Window Creation
+    window = QtGui.QDialog()
+    window.setWindowTitle(utils.__("Save & GenCase"))
+
+    # Main Layout creation
+    main_layout = QtGui.QVBoxLayout()
+
+    # Main Layout elements
+    info_message = QtGui.QLabel(
+        utils.__("Gencase exported {} particles. Press View Details to check the output").format(str(particle_count)))
+
+    button_layout = QtGui.QHBoxLayout()
+    bt_open_with_paraview = QtGui.QPushButton(utils.__("Open with Paraview"))
+    bt_details = QtGui.QPushButton(utils.__("View Details"))
+    bt_ok = QtGui.QPushButton(utils.__("Ok"))
+    button_layout.addWidget(bt_open_with_paraview)
+    button_layout.addWidget(bt_details)
+    button_layout.addWidget(bt_ok)
+
+    ck_mkcells = QtGui.QRadioButton(
+        utils.__("Open {}_MkCells").format(data['project_name']))
+    ck_all = QtGui.QRadioButton(
+        utils.__("Open {}_All").format(data['project_name']))
+    ck_fluid = QtGui.QRadioButton(
+        utils.__("Open {}_Fluid").format(data['project_name']))
+    ck_bound = QtGui.QRadioButton(
+        utils.__("Open {}_Bound").format(data['project_name']))
+
+    horizontal_separator = h_line_generator()
+
+    detail_text_area = QtGui.QTextEdit()
+    detail_text_area.setText(detail_text)
+
+    # Main Layout scaffolding
+    main_layout.addWidget(info_message)
+    main_layout.addWidget(ck_mkcells)
+    main_layout.addWidget(ck_all)
+    main_layout.addWidget(ck_fluid)
+    main_layout.addWidget(ck_bound)
+    main_layout.addLayout(button_layout)
+    main_layout.addWidget(horizontal_separator)
+    main_layout.addWidget(detail_text_area)
+
+    # Window logic
+    horizontal_separator.hide()
+    detail_text_area.hide()
+    ck_mkcells.setChecked(True)
+
+    if len(data["paraview_path"]) > 1:
+        bt_open_with_paraview.show()
+        ck_mkcells.show()
+        ck_all.show()
+        ck_fluid.show()
+        ck_bound.show()
+    else:
+        bt_open_with_paraview.hide()
+        ck_mkcells.hide()
+        ck_all.hide()
+        ck_fluid.hide()
+        ck_bound.hide()
+
+    def on_ok():
+        window.accept()
+
+    def on_view_details():
+        if horizontal_separator.isVisible():
+            horizontal_separator.hide()
+            detail_text_area.hide()
+            bt_details.setText(utils.__("View Details"))
+        elif not horizontal_separator.isVisible():
+            horizontal_separator.show()
+            detail_text_area.show()
+            bt_details.setText(utils.__("Hide Details"))
+
+    def on_open_paraview():
+        suffix = "All"
+        if ck_mkcells.isChecked():
+            suffix = "MkCells"
+        if ck_all.isChecked():
+            suffix = "All"
+        if ck_fluid.isChecked():
+            suffix = "Fluid"
+        if ck_bound.isChecked():
+            suffix = "Bound"
+
+        subprocess.Popen(
+            [
+                data['paraview_path'],
+                "--data={}\\{}".format(
+                    data['project_path'] + '\\' +
+                    data['project_name'] + '_Out',
+                    data['project_name'] + "_{}.vtk".format(suffix)
+                )
+            ],
+            stdout=subprocess.PIPE)
+        window.accept()
+
+    bt_ok.clicked.connect(on_ok)
+    bt_details.clicked.connect(on_view_details)
+    bt_open_with_paraview.clicked.connect(on_open_paraview)
+
+    # Window scaffolding and execution
+    window.setLayout(main_layout)
+    window.exec_()
