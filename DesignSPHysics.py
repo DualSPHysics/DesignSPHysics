@@ -423,33 +423,6 @@ def on_save_with_gencase():
                                                   detail_text=output.split(
                                                       "================================")[1],
                                                   data=data)
-
-                # TODO: Replace this
-                # gencase_infosave_dialog = QtGui.QMessageBox()
-                # gencase_infosave_dialog.setText(
-                #     __("Gencase exported {} particles. Press View Details to check the output.\n").format(str(total_particles)))
-                # gencase_infosave_dialog.setDetailedText(
-                #     output.split("================================")[1])
-                # gencase_infosave_dialog.setIcon(QtGui.QMessageBox.Information)
-
-                # # If a paraview path is present, add a button to open the result with it
-                # open_with_paraview_button = None
-                # if len(data["paraview_path"]) > 1:
-                #     open_with_paraview_button = gencase_infosave_dialog.addButton(
-                #         __("Open with ParaView"), QtGui.QMessageBox.YesRole)
-
-                # ok_button = gencase_infosave_dialog.addButton(
-                #     __("Ok"), QtGui.QMessageBox.YesRole)
-                # gencase_infosave_dialog.exec_()
-
-                # if gencase_infosave_dialog.clickedButton() == open_with_paraview_button:
-                #     subprocess.Popen(
-                #         [
-                #             data['paraview_path'], "--data={}\\{}".format(data['project_path'] + '\\' + data['project_name'] + '_Out',
-                #                                                           data['project_name'] + "_All.vtk")
-                #         ],
-                #         stdout=subprocess.PIPE)
-
             except ValueError:
                 # Not an expected result. GenCase had a not handled error
                 error_in_gen_case = True
