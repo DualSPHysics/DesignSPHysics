@@ -1272,11 +1272,11 @@ def def_setup_window(data):
             else:
                 utils.error(
                     "I can't recognize GenCase in that executable.! "
-                    "Check that the file corresponds with the appropiate tool and that you have permissions to execute it"
+                    "Check that the file corresponds with the appropriate tool and that you have permissions to execute it"
                 )
                 warning_dialog(
                     "I can't recognize GenCase in that executable.! "
-                    "Check that the file corresponds with the appropiate tool and that you have permissions to execute it",
+                    "Check that the file corresponds with the appropriate tool and that you have permissions to execute it",
                     detailed_text="If you're working with GNU/Linux, you can give permissions to an executable from the terminal "
                     "with: chmod +x /path/to/the/executable"
                 )
@@ -1303,11 +1303,11 @@ def def_setup_window(data):
             else:
                 utils.error(
                     "I can't recognize DualSPHysics in that executable.! "
-                    "Check that the file corresponds with the appropiate tool and that you have permissions to execute it"
+                    "Check that the file corresponds with the appropriate tool and that you have permissions to execute it"
                 )
                 warning_dialog(
                     "I can't recognize DualSPHysics in that executable.! "
-                    "Check that the file corresponds with the appropiate tool and that you have permissions to execute it",
+                    "Check that the file corresponds with the appropriate tool and that you have permissions to execute it",
                     detailed_text="If you're working with GNU/Linux, you can give permissions to an executable from the terminal "
                     "with: chmod +x /path/to/the/executable"
                 )
@@ -1330,11 +1330,11 @@ def def_setup_window(data):
             else:
                 utils.error(
                     "I can't recognize PartVTK4 in that executable.! "
-                    "Check that the file corresponds with the appropiate tool and that you have permissions to execute it"
+                    "Check that the file corresponds with the appropriate tool and that you have permissions to execute it"
                 )
                 warning_dialog(
                     "I can't recognize PartVTK4 in that executable.! "
-                    "Check that the file corresponds with the appropiate tool and that you have permissions to execute it",
+                    "Check that the file corresponds with the appropriate tool and that you have permissions to execute it",
                     detailed_text="If you're working with GNU/Linux, you can give permissions to an executable from the terminal "
                     "with: chmod +x /path/to/the/executable"
                 )
@@ -1357,11 +1357,11 @@ def def_setup_window(data):
             else:
                 utils.error(
                     "I can't recognize ComputeForces in that executable.! "
-                    "Check that the file corresponds with the appropiate tool and that you have permissions to execute it"
+                    "Check that the file corresponds with the appropriate tool and that you have permissions to execute it"
                 )
                 warning_dialog(
                     "I can't recognize ComputeForces in that executable.! "
-                    "Check that the file corresponds with the appropiate tool and that you have permissions to execute it",
+                    "Check that the file corresponds with the appropriate tool and that you have permissions to execute it",
                     detailed_text="If you're working with GNU/Linux, you can give permissions to an executable from the terminal "
                     "with: chmod +x /path/to/the/executable"
                 )
@@ -1384,11 +1384,11 @@ def def_setup_window(data):
             else:
                 utils.error(
                     "I can't recognize FloatingInfo in that executable.! "
-                    "Check that the file corresponds with the appropiate tool and that you have permissions to execute it"
+                    "Check that the file corresponds with the appropriate tool and that you have permissions to execute it"
                 )
                 warning_dialog(
                     "I can't recognize FloatingInfo in that executable.! "
-                    "Check that the file corresponds with the appropiate tool and that you have permissions to execute it",
+                    "Check that the file corresponds with the appropriate tool and that you have permissions to execute it",
                     detailed_text="If you're working with GNU/Linux, you can give permissions to an executable from the terminal "
                     "with: chmod +x /path/to/the/executable"
                 )
@@ -1411,11 +1411,11 @@ def def_setup_window(data):
             else:
                 utils.error(
                     "I can't recognize MeasureTool in that executable.! "
-                    "Check that the file corresponds with the appropiate tool and that you have permissions to execute it"
+                    "Check that the file corresponds with the appropriate tool and that you have permissions to execute it"
                 )
                 warning_dialog(
                     "I can't recognize MeasureTool in that executable.! "
-                    "Check that the file corresponds with the appropiate tool and that you have permissions to execute it",
+                    "Check that the file corresponds with the appropriate tool and that you have permissions to execute it",
                     detailed_text="If you're working with GNU/Linux, you can give permissions to an executable from the terminal "
                     "with: chmod +x /path/to/the/executable"
                 )
@@ -1438,11 +1438,11 @@ def def_setup_window(data):
             else:
                 utils.error(
                     "I can't recognize IsoSurface in that executable.! "
-                    "Check that the file corresponds with the appropiate tool and that you have permissions to execute it"
+                    "Check that the file corresponds with the appropriate tool and that you have permissions to execute it"
                 )
                 warning_dialog(
                     "I can't recognize IsoSurface in that executable.! "
-                    "Check that the file corresponds with the appropiate tool and that you have permissions to execute it",
+                    "Check that the file corresponds with the appropriate tool and that you have permissions to execute it",
                     detailed_text="If you're working with GNU/Linux, you can give permissions to an executable from the terminal "
                     "with: chmod +x /path/to/the/executable"
                 )
@@ -1465,11 +1465,11 @@ def def_setup_window(data):
             else:
                 utils.error(
                     "I can't recognize BoundaryVTK in that executable.! "
-                    "Check that the file corresponds with the appropiate tool and that you have permissions to execute it"
+                    "Check that the file corresponds with the appropriate tool and that you have permissions to execute it"
                 )
                 warning_dialog(
                     "I can't recognize BoundaryVTK in that executable.! "
-                    "Check that the file corresponds with the appropiate tool and that you have permissions to execute it",
+                    "Check that the file corresponds with the appropriate tool and that you have permissions to execute it",
                     detailed_text="If you're working with GNU/Linux, you can give permissions to an executable from the terminal "
                     "with: chmod +x /path/to/the/executable"
                 )
@@ -1792,7 +1792,7 @@ def case_summary(orig_data):
             info_text = input_template.read().format(**data)
     except:
         error_dialog(
-            "An error ocurred trying to load the template file and format it.")
+            "An error occurred trying to load the template file and format it.")
         return
 
     info.setText(info_text)

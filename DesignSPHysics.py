@@ -398,7 +398,7 @@ def on_save_with_gencase():
         process.waitForFinished()
         output = str(process.readAllStandardOutput())
         error_in_gen_case = False
-        # If GenCase was succesful, check for internal errors
+        # If GenCase was successful, check for internal errors
         if str(process.exitCode()) == "0":
             try:
                 total_particles_text = output[output.index(
