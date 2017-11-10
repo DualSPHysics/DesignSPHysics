@@ -2226,16 +2226,44 @@ def on_measuretool():
                         float(mgrid_table.item(mgrid_row, 3).text()),
                         float(mgrid_table.item(mgrid_row, 4).text()),
                         float(mgrid_table.item(mgrid_row, 5).text()),
-                        float(mgrid_table.item(mgrid_row, 6).text()),
-                        float(mgrid_table.item(mgrid_row, 7).text()),
-                        float(mgrid_table.item(mgrid_row, 8).text())
+                        int(mgrid_table.item(mgrid_row, 6).text()),
+                        int(mgrid_table.item(mgrid_row, 7).text()),
+                        int(mgrid_table.item(mgrid_row, 8).text())
                     ]
-                    mgrid_table.setItem(mgrid_row, 9, QtGui.QTableWidgetItem(
-                        str(current_grid[0] + current_grid[3] * current_grid[6] - 1)))
-                    mgrid_table.setItem(mgrid_row, 10, QtGui.QTableWidgetItem(
-                        str(current_grid[1] + current_grid[4] * current_grid[7] - 1)))
-                    mgrid_table.setItem(mgrid_row, 11, QtGui.QTableWidgetItem(
-                        str(current_grid[2] + current_grid[5] * current_grid[8] - 1)))
+
+                    utils.debug(current_grid)
+
+                    # Make the operations to calculate final points
+                    mgrid_table.setItem(mgrid_row, 9, QtGui.QTableWidgetItem(str(
+                        float(current_grid[0]) +
+                        float(current_grid[6] - 1) *
+                        float(current_grid[3])
+                    )))
+                    mgrid_table.setItem(mgrid_row, 10, QtGui.QTableWidgetItem(str(
+                        float(current_grid[1]) +
+                        float(current_grid[7] - 1) *
+                        float(current_grid[4])
+                    )))
+                    mgrid_table.setItem(mgrid_row, 11, QtGui.QTableWidgetItem(str(
+                        float(current_grid[2]) +
+                        float(current_grid[8] - 1) *
+                        float(current_grid[5])
+                    )))
+
+                    if current_grid[6] is 0:
+                        mgrid_table.setItem(mgrid_row, 9, QtGui.QTableWidgetItem(str(
+                            "0"
+                        )))
+                    if current_grid[7] is 0:
+                        mgrid_table.setItem(mgrid_row, 10, QtGui.QTableWidgetItem(str(
+                            "0"
+                        )))
+                    if current_grid[8] is 0:
+                        mgrid_table.setItem(mgrid_row, 11, QtGui.QTableWidgetItem(str(
+                            "0"
+                        )))
+
+                    # Those should not be used
                     mgrid_table.item(mgrid_row, 9).setFlags(
                         QtCore.Qt.ItemIsSelectable | QtCore.Qt.ItemIsEnabled)
                     mgrid_table.item(mgrid_row, 10).setFlags(
