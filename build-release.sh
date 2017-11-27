@@ -16,3 +16,7 @@ cp -rf ../dualsphysics/ ./resource/
 rm ./installer.spec
 rm -rf ./build
 rm -rf ./dist
+chmod -R 777 .
+cd ..
+tar -zcvf release-linux.tar.gz release-linux/
+rm -r release-linux/

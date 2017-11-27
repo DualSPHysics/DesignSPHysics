@@ -1,9 +1,8 @@
-#!/usr/bin/env python2.7
 # -*- coding: utf-8 -*-
 """DesignSPHysics Installer.
 
 This file spawns a Qt window that installs DSPH files
-into FreeCAD's default Macro directory. 
+into FreeCAD's default Macro directory.
 
 This script is meant to use with pyinstaller to generate
 a simple standalone executable for release.
@@ -11,12 +10,10 @@ a simple standalone executable for release.
 """
 
 import sys
-import threading
 import shutil
 import platform
 import os
 import ctypes
-import pickle
 from PySide import QtGui, QtCore
 
 # Copyright (C) 2016 - Andrés Vieira (anvieiravazquez@gmail.com)
@@ -42,6 +39,7 @@ print "EPHYSLAB Environmental Physics Laboratory, Universidade de Vigo"
 
 
 def dprint(string):
+    """ Prints a debug message in the terminal window """
     print ">>>Debug: " + str(string)
 
 
@@ -108,19 +106,11 @@ def main():
                 # Set the directory depending on the system.
                 if 'windows' in system.lower():
                     macro_dir = os.getenv('APPDATA') + '/FreeCAD/Macro'
-                    fc_folder = os.getenv('APPDATA') + '/FreeCAD'
-
-                    # Check in the 64 bit folder if FreeCAD is present. If not use the 32bit one.
-                    fc_default_mod_dir = os.getenv('ProgramW6432') + '/FreeCAD 0.16/Mod'
-                    if not os.path.exists(fc_default_mod_dir):
-                        fc_default_mod_dir = os.getenv('programfiles(x86)') + '/FreeCAD 0.16/Mod'
-
-                    extension = "_win64.exe"
+                    fc_default_mod_dir = os.getenv(
+                        'APPDATA') + '/FreeCAD/Mod'
                 elif 'linux' in system.lower():
                     macro_dir = os.path.expanduser('~') + '/.FreeCAD/Macro'
-                    fc_folder = os.path.expanduser('~') + '/.FreeCAD'
                     fc_default_mod_dir = os.path.expanduser('~') + '/.FreeCAD/Mod'
-                    extension = "_linux64"
                 else:
                     # Operating system not supported
                     install_button.setText('ERROR :(')
@@ -227,15 +217,6 @@ def main():
     main_layout.addWidget(image_label)
     main_layout.addLayout(install_layout)
     w.setLayout(main_layout)
-
-    if not is_user_admin():
-        install_button.setText('Administrator privileges needed')
-        install_failed_dialog = QtGui.QMessageBox()
-        install_failed_dialog.setText("Please run the installer with Administrator privileges")
-        install_failed_dialog.setIcon(QtGui.QMessageBox.Critical)
-        install_failed_dialog.exec_()
-        sys.exit(1)
-
     w.show()
     app.exec_()
     sys.exit(0)
