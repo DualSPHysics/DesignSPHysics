@@ -1,20 +1,21 @@
 # DesignSPHysics
-DesignSPHysics is a module intended for use with the simulator [DualSPHysics](http://dual.sphysics.org/) and [FreeCAD](http://www.freecadweb.org/?lang=es_ES)
+
+DesignSPHysics is a software module built into [FreeCAD](http://www.freecadweb.org/) that provides a Graphical User Interface for [DualSPHysics](http://dual.sphysics.org/).
 
 It is under development since September 2016 and in Beta stage.
 
-Check the [Official Webpage](http://design.sphysics.org)
+Check the [Official Webpage](http://design.sphysics.org) for downloads and more information.
 
 ![Screenshot](http://design.sphysics.org/img/github-shot.png)
 
 ## Description
-DSPH for FreeCAD enables the user to create cases with solids and fluids and exports it to DualSPHysics compatbile format. In addition, it does the hard work for the user, generating the case automatically, simulating, and post-processing, all inside FreeCAD.
+DesignSPHysics enables the user to create cases with solids and fluids and exports it to a DualSPHysics compatbile format. In addition, it does the hard work for the user, generating the case automatically, simulating, and post-processing, all inside FreeCAD.
 
 It includes support for pre-processing with GenCase, simulation with DualSPHysics and post-processign with several tools of the DualSPHysics package.
 
 In the future the code will be modular, so integration with different SPH solvers can be used. Right now it's optimized to be used with DualSPHysics 4.X
 
-It is developed as a FreeCAD module with a macro bootstrapper, in python 2.7.
+It is developed as a FreeCAD module with a macro bootstrapper, in Python 2.7, using the QT libraries via PySide.
 
 ## Installation instructions
 To install DesignSPHysics you have 2 options: Using an installer (release version) or using a development build (git)
@@ -27,13 +28,12 @@ Execute the installer (installer.exe on Windows and installer on GNU/Linux) to o
 ### Installing a develompent build
 Clone this repository and rename the folder to 'DesignSPHysics'. Then copy the folder to the Mod folder of the FreeCAD installation directory. 
 
-By default, for example, in Windows, it is located in `C:\Program Files\FreeCAD 0.16\Mod\`
+By default, for example, in Windows, it is located in `%appdata%/FreeCAD/Mod` or in Linux in `~/.FreeCAD/Mod`
 
 Then copy the file `DesignSPHysics.FCMacro` of this repository into the FreeCAD macro directory (`%appdata%/FreeCAD/Macro` on Windows; `~/.FreeCAD/Macro` on GNU/Linux)
 
-
 ## Where to get help
-You can check the [DesignSPHysics Wiki](http://design.sphysics.org/wiki) to get help.
+You can check the [DesignSPHysics Wiki](http://design.sphysics.org/wiki) to get help. Also, you can post an issue here on GitHub or send [an email to me](mailto:anvieiravazquez@gmail.com)
 
 ## Contributing
 Right now the application is in early stages, so the best way to contribute right now is to post issues and suggestions for the code.

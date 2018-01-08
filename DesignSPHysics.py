@@ -1116,7 +1116,7 @@ def on_ex_simulate():
     def on_dsph_sim_finished(exit_code):
         # Reads output and completes the progress bar
         output = temp_data['current_process'].readAllStandardOutput()
-        run_details_text.setText(output)
+        run_details_text.setText(str(output))
         run_details_text.moveCursor(QtGui.QTextCursor.End)
         run_watcher.removePath(
             data['project_path'] + '/' + data['project_name'] + "_Out/")
