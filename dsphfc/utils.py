@@ -22,6 +22,7 @@ import tempfile
 import traceback
 import webbrowser
 import json
+import shutil
 from sys import platform
 from datetime import datetime
 
@@ -603,6 +604,32 @@ def create_dsph_document():
     FreeCAD.ActiveDocument.recompute()
     FreeCADGui.SendMsgToActiveView("ViewFit")
 
+
+def create_dsph_document_from_fcstd(document_path):
+    """ Creates a new DSPH compatible document in FreeCAD.
+        It includes the case limits and a compatible name. """
+    temp_document_path = tempfile.gettempdir() + "/" + "DSPH_Case.fcstd"
+    shutil.copyfile(document_path, temp_document_path)
+    FreeCAD.open(temp_document_path)
+    FreeCAD.setActiveDocument("DSPH_Case")
+    FreeCAD.ActiveDocument = FreeCAD.getDocument("DSPH_Case")
+    FreeCADGui.ActiveDocument = FreeCADGui.getDocument("DSPH_Case")
+    FreeCADGui.activateWorkbench("PartWorkbench")
+    FreeCADGui.activeDocument().activeView().viewAxonometric()
+    FreeCAD.ActiveDocument.addObject("Part::Box", "Case_Limits")
+    FreeCAD.ActiveDocument.getObject("Case_Limits").Label = "Case Limits (3D)"
+    FreeCAD.ActiveDocument.getObject("Case_Limits").Length = '1000 mm'
+    FreeCAD.ActiveDocument.getObject("Case_Limits").Width = '1000 mm'
+    FreeCAD.ActiveDocument.getObject("Case_Limits").Height = '1000 mm'
+    FreeCADGui.ActiveDocument.getObject(
+        "Case_Limits").DisplayMode = "Wireframe"
+    FreeCADGui.ActiveDocument.getObject(
+        "Case_Limits").LineColor = (1.00, 0.00, 0.00)
+    FreeCADGui.ActiveDocument.getObject("Case_Limits").LineWidth = 2.00
+    FreeCADGui.ActiveDocument.getObject("Case_Limits").Selectable = False
+
+    FreeCAD.ActiveDocument.recompute()
+    FreeCADGui.SendMsgToActiveView("ViewFit")
 
 def dump_to_xml(data, save_name):
     """ Saves all of the data in the opened case

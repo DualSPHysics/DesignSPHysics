@@ -187,12 +187,19 @@ casecontrols_label = QtGui.QLabel("<b>" + __("Pre-processing") + "<b>")
 
 # New Case button
 casecontrols_bt_newdoc = QtGui.QToolButton()
+casecontrols_bt_newdoc.setPopupMode(QtGui.QToolButton.MenuButtonPopup)
 casecontrols_bt_newdoc.setToolButtonStyle(QtCore.Qt.ToolButtonTextBesideIcon)
 casecontrols_bt_newdoc.setText("  " + __("New\n  Case"))
 casecontrols_bt_newdoc.setToolTip(
     __("Creates a new case. \nThe opened documents will be closed."))
 casecontrols_bt_newdoc.setIcon(guiutils.get_icon("new.png"))
 casecontrols_bt_newdoc.setIconSize(QtCore.QSize(28, 28))
+casecontrols_menu_newdoc = QtGui.QMenu()
+casecontrols_menu_newdoc.addAction(
+    guiutils.get_icon("new.png"), __("New"))
+casecontrols_menu_newdoc.addAction(
+    guiutils.get_icon("new.png"), __("Import FreeCAD Document"))
+casecontrols_bt_newdoc.setMenu(casecontrols_menu_newdoc)
 
 # Save Case button and dropdown
 casecontrols_bt_savedoc = QtGui.QToolButton()
@@ -281,6 +288,26 @@ def on_new_case(prompt=True):
     data.update(new_case_default_data)
     temp_data.update(new_case_temp_data)
     utils.create_dsph_document()
+    guiutils.widget_state_config(widget_state_elements, "new case")
+    data['simobjects']['Case_Limits'] = [
+        "mkspecial", "typespecial", "fillspecial"]
+    dp_input.setText(str(data["dp"]))
+    on_tree_item_selection_change()
+
+
+def on_new_from_freecad_document(prompt=True):
+    file_name, _ = QtGui.QFileDialog().getOpenFileName(guiutils.get_fc_main_window(), "Select document to import", QtCore.QDir.homePath())
+
+    if utils.document_count() > 0:
+        new_case_success = utils.prompt_close_all_documents(prompt)
+        if not new_case_success:
+            return
+
+    # Creates a new document and merges default data to the current data structure.
+    new_case_default_data, new_case_temp_data = utils.get_default_data()
+    data.update(new_case_default_data)
+    temp_data.update(new_case_temp_data)
+    utils.create_dsph_document_from_fcstd(file_name)
     guiutils.widget_state_config(widget_state_elements, "new case")
     data['simobjects']['Case_Limits'] = [
         "mkspecial", "typespecial", "fillspecial"]
@@ -440,6 +467,14 @@ def on_save_with_gencase():
             gencase_out_file.close()
             gencase_failed_dialog.exec_()
             utils.warning(__("GenCase Failed."))
+
+
+def on_newdoc_menu(action):
+    """ Handles the new document button and its dropdown items. """
+    if __("New") in action.text():
+        on_new_case()
+    if __("Import FreeCAD Document") in action.text():
+        on_new_from_freecad_document()
 
 
 def on_save_menu(action):
@@ -960,6 +995,7 @@ def on_properties():
 # Connect case control buttons to respective handlers
 casecontrols_bt_newdoc.clicked.connect(on_new_case)
 casecontrols_bt_savedoc.clicked.connect(on_save_case)
+casecontrols_menu_newdoc.triggered.connect(on_newdoc_menu)
 casecontrols_menu_savemenu.triggered.connect(on_save_menu)
 casecontrols_bt_loaddoc.clicked.connect(on_load_case)
 casecontrols_bt_addfillbox.clicked.connect(on_add_fillbox)
