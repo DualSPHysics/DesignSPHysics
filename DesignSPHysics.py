@@ -21,6 +21,9 @@ import subprocess
 import shutil
 from PySide import QtGui, QtCore
 
+reload(sys)
+sys.setdefaultencoding('utf-8')
+
 # Fix FreeCAD not searching in the user-set macro folder.
 try:
     from dsphfc.properties import *

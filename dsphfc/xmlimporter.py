@@ -13,6 +13,10 @@ import FreeCADGui
 import Mesh
 import json
 import sys
+
+reload(sys)
+sys.setdefaultencoding('utf-8')
+
 import utils
 import xmltodict
 import xml.etree.ElementTree as ElementTree

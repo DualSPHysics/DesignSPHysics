@@ -7,6 +7,9 @@ in a DSPH related case.
 
 """
 
+import sys
+reload(sys)
+sys.setdefaultencoding('utf-8')
 import random
 from propenums import *
 

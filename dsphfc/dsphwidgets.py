@@ -15,6 +15,11 @@ import FreeCADGui
 from PySide import QtCore, QtGui
 import utils
 import shutil
+
+import sys
+reload(sys)
+sys.setdefaultencoding('utf-8')
+
 from utils import __
 import guiutils
 from properties import *
