@@ -15,6 +15,10 @@ import os
 import utils
 import subprocess
 from sys import platform
+
+reload(sys)
+sys.setdefaultencoding('utf-8')
+
 from PySide import QtGui, QtCore
 """
 Copyright (C) 2016 - Andrés Vieira (anvieiravazquez@gmail.com)

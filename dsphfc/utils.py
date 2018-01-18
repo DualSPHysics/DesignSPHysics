@@ -26,6 +26,10 @@ import shutil
 from sys import platform
 from datetime import datetime
 
+import sys
+reload(sys)
+sys.setdefaultencoding('utf-8')
+
 from PySide import QtGui, QtCore
 
 import guiutils
