@@ -4295,7 +4295,7 @@ def on_tree_item_selection_change():
                         mkgroup_prop.setRange(0, 240)
                         mkgroup_label.setText("&nbsp;&nbsp;&nbsp;" + __(
                             "MKBound") + " <a href='http://design.sphysics.org/wiki/doku.php?id=concepts'>?</a>")
-                elif selection[0].TypeId in ["Mesh::Feature", "Part::Cut"] or (selection[0].TypeId == "App::DocumentObjectGroup" and "fillbox" in selection[0].Name.lower()):
+                elif "part" in selection[0].TypeId.lower() or "mesh" in selection[0].TypeId.lower() or (selection[0].TypeId == "App::DocumentObjectGroup" and "fillbox" in selection[0].Name.lower()):
                     # Is an object that will be exported to STL
                     to_change.setEnabled(True)
                     if data['simobjects'][selection[0].Name][1].lower() == "fluid":

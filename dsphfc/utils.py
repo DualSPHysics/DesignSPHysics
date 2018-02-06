@@ -64,6 +64,7 @@ PICKLE_PROTOCOL = 1  # Binary mode
 VERSION = "0.4.1711-17-develop"
 WIDTH_2D = 0.001
 MAX_PARTICLE_WARNING = 2000000
+HELP_WEBPAGE = "https://github.com/ndrs92/DesignSPHysics/wiki"
 
 # ------ END CONSTANTS DEFINITION ------
 
@@ -542,7 +543,7 @@ def get_first_mk_not_used(objtype, data):
 
 def open_help():
     """ Opens a web browser with this software help. """
-    webbrowser.open("http://design.sphysics.org/wiki/")
+    webbrowser.open(HELP_WEBPAGE)
 
 
 def get_os():
