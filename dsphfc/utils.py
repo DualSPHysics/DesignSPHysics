@@ -997,6 +997,9 @@ def dump_to_xml(data, save_name):
         f.write('\t\t</motion>\n')
     f.write('\t</casedef>\n')
     f.write('\t<execution>\n')
+
+    # A counter for special movements. Controls when and how to open/close tags
+    written_movements_counter = 0
     for mk, motlist in data["motion_mks"].iteritems():
         # Check if object has motion enabled but no motions selected
         if len(motlist) < 1:
@@ -1005,8 +1008,12 @@ def dump_to_xml(data, save_name):
             mot = motlist[0].generator
             if isinstance(mot, FileGen):
                 continue
-            f.write('\t\t\t<special>\n')
-            f.write('\t\t\t\t<wavepaddles>\n')
+            
+            # Open tags only for the first movement
+            if written_movements_counter == 0:
+                f.write('\t\t\t<special>\n')
+                f.write('\t\t\t\t<wavepaddles>\n')
+
             if isinstance(mot, RegularWaveGen):
                 f.write('\t\t\t\t\t<piston>\n')
                 f.write('\t\t\t\t\t\t<mkbound value="{}" comment="Mk-Bound of selected particles" />\n'.format(mk))
@@ -1023,6 +1030,8 @@ def dump_to_xml(data, save_name):
                         'comment="Saves motion data. xpos and zpos are optional. '
                         'zpos=-depth of the measuring point" />\n'.format(mot.disksave_periods, mot.disksave_periodsteps, mot.disksave_xpos, mot.disksave_zpos))
                 f.write('\t\t\t\t\t</piston>\n')
+                written_movements_counter += 1
+
             elif isinstance(mot, IrregularWaveGen):
                 f.write('\t\t\t\t\t<piston_spectrum>\n')
                 f.write('\t\t\t\t\t\t<mkbound value="{}" comment="Mk-Bound of selected particles" />\n'.format(mk))
@@ -1055,8 +1064,13 @@ def dump_to_xml(data, save_name):
                 f.write('\t\t\t\t\t\t<saveseriewaves timemin="{}" timemax="{}" xpos="{}" '
                         'comment="Saves serie heights" />\n'.format(mot.saveseriewaves_timemin, mot.saveseriewaves_timemax, mot.saveseriewaves_xpos))
                 f.write('\t\t\t\t\t</piston_spectrum>\n')
-            f.write('\t\t\t\t</wavepaddles>\n')
-            f.write('\t\t\t</special>\n')
+                written_movements_counter += 1
+    
+    # Close tags only if at least one movement was written.
+    if written_movements_counter > 0:
+        f.write('\t\t\t\t</wavepaddles>\n')
+        f.write('\t\t\t</special>\n')
+
     f.write('\t\t<parameters>\n')
     # Writes parameters as user introduced
     f.write('\t\t\t<parameter key="PosDouble" value="' + str(data['posdouble']) + '" comment="Precision in particle interaction '
