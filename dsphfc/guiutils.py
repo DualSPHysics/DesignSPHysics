@@ -20,6 +20,7 @@ reload(sys)
 sys.setdefaultencoding('utf-8')
 
 from PySide import QtGui, QtCore
+from execution_parameters import *
 """
 Copyright (C) 2016 - Andrés Vieira (anvieiravazquez@gmail.com)
 EPHYSLAB Environmental Physics Laboratory, Universidade de Vigo
@@ -864,6 +865,73 @@ def def_execparams_window(data):
     rhopoutmax_layout.addWidget(rhopoutmax_input)
     rhopoutmax_layout.addWidget(rhopoutmax_label2)
 
+    # DomainFixed
+    def on_domainfixed_chk():
+        domainfixed_xmin_input.setEnabled(domainfixed_chk.isChecked())
+        domainfixed_xmax_input.setEnabled(domainfixed_chk.isChecked())
+        domainfixed_ymin_input.setEnabled(domainfixed_chk.isChecked())
+        domainfixed_ymax_input.setEnabled(domainfixed_chk.isChecked())
+        domainfixed_zmin_input.setEnabled(domainfixed_chk.isChecked())
+        domainfixed_zmax_input.setEnabled(domainfixed_chk.isChecked())
+
+
+    domainfixed_layout = QtGui.QVBoxLayout()    
+    domainfixed_chk = QtGui.QCheckBox("Fixed Domain")
+
+    domainfixed_x_layout = QtGui.QHBoxLayout()
+    domainfixed_y_layout = QtGui.QHBoxLayout()
+    domainfixed_z_layout = QtGui.QHBoxLayout()
+    
+    domainfixed_xmin_label = QtGui.QLabel("X Min")
+    domainfixed_xmin_input = QtGui.QLineEdit("0")
+    domainfixed_xmax_label = QtGui.QLabel("X Max")
+    domainfixed_xmax_input = QtGui.QLineEdit("0")
+
+    domainfixed_ymin_label = QtGui.QLabel("Y Min")
+    domainfixed_ymin_input = QtGui.QLineEdit("0")
+    domainfixed_ymax_label = QtGui.QLabel("Y Max")
+    domainfixed_ymax_input = QtGui.QLineEdit("0")
+
+    domainfixed_zmin_label = QtGui.QLabel("Z Min")
+    domainfixed_zmin_input = QtGui.QLineEdit("0")
+    domainfixed_zmax_label = QtGui.QLabel("Z Max")
+    domainfixed_zmax_input = QtGui.QLineEdit("0")
+    
+    domainfixed_x_layout.addWidget(domainfixed_xmin_label)
+    domainfixed_x_layout.addWidget(domainfixed_xmin_input)
+    domainfixed_x_layout.addWidget(domainfixed_xmax_label)
+    domainfixed_x_layout.addWidget(domainfixed_xmax_input)
+    
+    domainfixed_y_layout.addWidget(domainfixed_ymin_label)
+    domainfixed_y_layout.addWidget(domainfixed_ymin_input)
+    domainfixed_y_layout.addWidget(domainfixed_ymax_label)
+    domainfixed_y_layout.addWidget(domainfixed_ymax_input)
+    
+    domainfixed_z_layout.addWidget(domainfixed_zmin_label)
+    domainfixed_z_layout.addWidget(domainfixed_zmin_input)
+    domainfixed_z_layout.addWidget(domainfixed_zmax_label)
+    domainfixed_z_layout.addWidget(domainfixed_zmax_input)
+    
+    domainfixed_layout.addWidget(domainfixed_chk)
+    domainfixed_layout.addLayout(domainfixed_x_layout)
+    domainfixed_layout.addLayout(domainfixed_y_layout)
+    domainfixed_layout.addLayout(domainfixed_z_layout)
+    
+    domainfixed_chk.stateChanged.connect(on_domainfixed_chk)
+
+    try:
+        domainfixed_chk.setChecked(data["domainfixed"].enabled)
+        domainfixed_xmin_input.setText(str(data["domainfixed"].xmin))
+        domainfixed_xmax_input.setText(str(data["domainfixed"].xmax))
+        domainfixed_ymin_input.setText(str(data["domainfixed"].ymin))
+        domainfixed_ymax_input.setText(str(data["domainfixed"].ymax))
+        domainfixed_zmin_input.setText(str(data["domainfixed"].zmin))
+        domainfixed_zmax_input.setText(str(data["domainfixed"].zmax))
+    except:
+        pass
+
+    on_domainfixed_chk()
+
     # Periodicity in X
     def on_period_x_chk():
         if period_x_chk.isChecked():
@@ -1016,6 +1084,15 @@ def def_execparams_window(data):
         data['partsoutmax'] = str(float(partsoutmax_input.text()) / 100)
         data['rhopoutmin'] = rhopoutmin_input.text()
         data['rhopoutmax'] = rhopoutmax_input.text()
+        data['domainfixed'] = DomainFixedParameter(
+                        domainfixed_chk.isChecked(),
+                        float(domainfixed_xmin_input.text()),
+                        float(domainfixed_xmax_input.text()),
+                        float(domainfixed_ymin_input.text()),
+                        float(domainfixed_ymax_input.text()),
+                        float(domainfixed_zmin_input.text()),
+                        float(domainfixed_zmax_input.text()))
+        
         data['period_x'] = [
             period_x_chk.isChecked(),
             float(period_x_inc_x_input.text()),
@@ -1079,6 +1156,7 @@ def def_execparams_window(data):
     ep_main_layout.addLayout(partsoutmax_layout)
     ep_main_layout.addLayout(rhopoutmin_layout)
     ep_main_layout.addLayout(rhopoutmax_layout)
+    ep_main_layout.addLayout(domainfixed_layout)
     ep_main_layout.addLayout(period_x_layout)
     ep_main_layout.addLayout(period_y_layout)
     ep_main_layout.addLayout(period_z_layout)
