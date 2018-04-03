@@ -59,6 +59,7 @@ along with DesignSPHysics.  If not, see <http://www.gnu.org/licenses/>.
 FREECAD_MIN_VERSION = "016"
 APP_NAME = "DesignSPHysics"
 DEBUGGING = True
+VERBOSE = False
 DIVIDER = 1000
 PICKLE_PROTOCOL = 1  # Binary mode
 VERSION = "0.4.1711-17-develop"
@@ -82,19 +83,22 @@ def is_compatible_version():
 
 
 def log(message):
-    print "[" + APP_NAME + "] " + message.encode('utf-8')
+    if VERBOSE:
+        print "[" + APP_NAME + "] " + message.encode('utf-8')
 
 
 def warning(message):
-    print "[" + APP_NAME + "] " + "[WARNING]" + ": " + str(message)
+    if VERBOSE:
+        print "[" + APP_NAME + "] " + "[WARNING]" + ": " + str(message)
 
 
 def error(message):
-    print "[" + APP_NAME + "] " + "[ERROR]" + ": " + str(message)
+    if VERBOSE:
+        print "[" + APP_NAME + "] " + "[ERROR]" + ": " + str(message)
 
 
 def debug(message):
-    if DEBUGGING:
+    if DEBUGGING and VERBOSE:
         print "[" + APP_NAME + "] " + "[<<<<DEBUG>>>>]" + ": " + str(message)
 
 
@@ -556,7 +560,8 @@ def print_license():
     licpath = os.path.abspath(__file__).split("dsphfc")[0] + "LICENSE"
     if os.path.isfile(licpath):
         with open(licpath) as licfile:
-            print licfile.read()
+            if VERBOSE:
+                print licfile.read()
     else:
         raise EnvironmentError("LICENSE file could not be found. Are you sure you didn't delete it?")
 
