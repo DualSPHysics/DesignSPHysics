@@ -35,6 +35,7 @@ from PySide import QtGui, QtCore
 import guiutils
 import stl
 from properties import *
+from execution_parameters import *
 """
 Copyright (C) 2016 - Andrés Vieira (anvieiravazquez@gmail.com)
 EPHYSLAB Environmental Physics Laboratory, Universidade de Vigo
@@ -400,6 +401,7 @@ def get_default_data():
     data['partsoutmax'] = 1
     data['rhopoutmin'] = 700
     data['rhopoutmax'] = 1300
+    data['domainfixed'] = DomainFixedParameter(False, 0, 0, 0, 0, 0, 0)
 
     # Periodicity data [enabled, x_inc, y_inc, z_inc]
     data['period_x'] = [False, 0.0, 0.0, 0.0]
@@ -642,6 +644,8 @@ def create_dsph_document_from_fcstd(document_path):
     FreeCADGui.SendMsgToActiveView("ViewFit")
 
 def dump_to_xml(data, save_name):
+    guiutils.warning_dialog(str(data['domainfixed']))
+
     """ Saves all of the data in the opened case
         to disk. Generates a GenCase compatible XML. """
     # Saves all the data in XML format.
@@ -1136,6 +1140,13 @@ def dump_to_xml(data, save_name):
         f.write('\t\t\t<parameter key="ZPeriodicIncX" value="' + str(data['period_z'][1]) + '"/>\n')
         if data['3dmode']:
             f.write('\t\t\t<parameter key="ZPeriodicIncY" value="' + str(data['period_z'][2]) + '"/>\n')
+    if data['domainfixed'].enabled:
+        f.write('\t\t\t<parameter key="DomainFixedXmin" value="{}" comment="The domain is fixed in the specified limit (default=not applied)" units_comment="metres (m)" />\n'.format(data['domainfixed'].xmin))
+        f.write('\t\t\t<parameter key="DomainFixedXmax" value="{}" comment="The domain is fixed in the specified limit (default=not applied)" units_comment="metres (m)" />\n'.format(data['domainfixed'].xmax))
+        f.write('\t\t\t<parameter key="DomainFixedYmin" value="{}" comment="The domain is fixed in the specified limit (default=not applied)" units_comment="metres (m)" />\n'.format(data['domainfixed'].ymin))
+        f.write('\t\t\t<parameter key="DomainFixedYmax" value="{}" comment="The domain is fixed in the specified limit (default=not applied)" units_comment="metres (m)" />\n'.format(data['domainfixed'].ymax))
+        f.write('\t\t\t<parameter key="DomainFixedZmin" value="{}" comment="The domain is fixed in the specified limit (default=not applied)" units_comment="metres (m)" />\n'.format(data['domainfixed'].zmin))
+        f.write('\t\t\t<parameter key="DomainFixedZmax" value="{}" comment="The domain is fixed in the specified limit (default=not applied)" units_comment="metres (m)" />\n'.format(data['domainfixed'].zmax))
     f.write('\t\t</parameters>\n')
     f.write('\t</execution>\n')
     f.write('</case>\n')
