@@ -1630,7 +1630,7 @@ class RegularWaveMotionTimeline(QtGui.QWidget):
         self.main_layout.setContentsMargins(10, 10, 10, 10)
         self.parent_movement = reg_wave_gen.parent_movement
 
-        self.root_label = QtGui.QLabel(__("Regular wave generator"))
+        self.root_label = QtGui.QLabel(__("Regular wave generator (Piston)"))
 
         self.duration_label = QtGui.QLabel(__("Duration (s): "))
         self.duration_input = QtGui.QLineEdit()
@@ -1799,7 +1799,7 @@ class IrregularWaveMotionTimeline(QtGui.QWidget):
         self.main_layout.setContentsMargins(10, 10, 10, 10)
         self.parent_movement = irreg_wave_gen.parent_movement
 
-        self.root_label = QtGui.QLabel(__("Irregular wave generator"))
+        self.root_label = QtGui.QLabel(__("Irregular wave generator (Piston)"))
 
         self.duration_label = QtGui.QLabel(__("Duration"))
         self.duration_input = QtGui.QLineEdit()
