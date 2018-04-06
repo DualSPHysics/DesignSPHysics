@@ -3753,12 +3753,12 @@ def motion_change():
         if __("Movement") in action.text():
             on_new_movement()
             return
-        if __("Regular wave generator") in action.text():
+        if __("Regular wave generator (Piston)") in action.text():
             to_add = SpecialMovement(
-                generator=RegularWaveGen(), name="Regular Wave Generator")
-        if __("Irregular wave generator") in action.text():
+                generator=RegularWaveGen(), name="Regular Wave Generator (Piston)")
+        if __("Irregular wave generator (Piston)") in action.text():
             to_add = SpecialMovement(
-                generator=IrregularWaveGen(), name="Irregular Wave Generator")
+                generator=IrregularWaveGen(), name="Irregular Wave Generator (Piston)")
         if __("Linear motion from a file") in action.text():
             to_add = SpecialMovement(
                 generator=FileGen(), name="Linear motion from a file")
@@ -3938,9 +3938,9 @@ def motion_change():
         create_new_movement_menu.addAction(
             guiutils.get_icon("movement.png"), __("Movement"))
         create_new_movement_menu.addAction(guiutils.get_icon(
-            "regular_wave.png"), __("Regular wave generator"))
+            "regular_wave.png"), __("Regular wave generator (Piston)"))
         create_new_movement_menu.addAction(guiutils.get_icon(
-            "irregular_wave.png"), __("Irregular wave generator"))
+            "irregular_wave.png"), __("Irregular wave generator (Piston)"))
         create_new_movement_menu.addAction(guiutils.get_icon(
             "file_mov.png"), __("Linear motion from a file"))
         create_new_movement_menu.addAction(guiutils.get_icon(
