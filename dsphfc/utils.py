@@ -1021,7 +1021,7 @@ def dump_to_xml(data, save_name):
                 f.write('\t\t\t<special>\n')
                 f.write('\t\t\t\t<wavepaddles>\n')
 
-            if isinstance(mot, RegularWaveGen):
+            if isinstance(mot, RegularPistonWaveGen):
                 f.write('\t\t\t\t\t<piston>\n')
                 f.write('\t\t\t\t\t\t<mkbound value="{}" comment="Mk-Bound of selected particles" />\n'.format(mk))
                 f.write('\t\t\t\t\t\t<waveorder value="{}" ' 'comment="Order wave generation 1:1st order, 2:2nd order (def=1)" />\n'.format(mot.wave_order))
@@ -1039,7 +1039,7 @@ def dump_to_xml(data, save_name):
                 f.write('\t\t\t\t\t</piston>\n')
                 written_movements_counter += 1
 
-            elif isinstance(mot, IrregularWaveGen):
+            elif isinstance(mot, IrregularPistonWaveGen):
                 f.write('\t\t\t\t\t<piston_spectrum>\n')
                 f.write('\t\t\t\t\t\t<mkbound value="{}" comment="Mk-Bound of selected particles" />\n'.format(mk))
                 f.write('\t\t\t\t\t\t<waveorder value="{}" ' 'comment="Order wave generation 1:1st order, 2:2nd order (def=1)" />\n'.format(mot.wave_order))

@@ -1615,10 +1615,10 @@ class RectSinuMotionTimeline(QtGui.QWidget):
 class RegularWaveMotionTimeline(QtGui.QWidget):
     """ A Regular Wave motion graphical representation for a table-based timeline """
 
-    changed = QtCore.Signal(int, RegularWaveGen)
+    changed = QtCore.Signal(int, RegularPistonWaveGen)
 
     def __init__(self, reg_wave_gen):
-        if not isinstance(reg_wave_gen, RegularWaveGen):
+        if not isinstance(reg_wave_gen, RegularPistonWaveGen):
             raise TypeError("You tried to spawn a regular wave generator "
                             "motion widget in the timeline with a wrong object")
         if reg_wave_gen is None:
@@ -1749,7 +1749,7 @@ class RegularWaveMotionTimeline(QtGui.QWidget):
             utils.debug("Introduced an invalid value for a float number.")
 
     def construct_motion_object(self):
-        return RegularWaveGen(parent_movement=self.parent_movement,
+        return RegularPistonWaveGen(parent_movement=self.parent_movement,
                               wave_order=self.wave_order_selector.currentIndex() + 1, start=0,
                               duration=float(self.duration_input.text()), depth=float(self.depth_input.text()),
                               fixed_depth=float(self.fixed_depth_input.text()),
@@ -1784,10 +1784,10 @@ class RegularWaveMotionTimeline(QtGui.QWidget):
 class IrregularWaveMotionTimeline(QtGui.QWidget):
     """ An Irregular Wave motion graphical representation for a table-based timeline """
 
-    changed = QtCore.Signal(int, IrregularWaveGen)
+    changed = QtCore.Signal(int, IrregularPistonWaveGen)
 
     def __init__(self, irreg_wave_gen):
-        if not isinstance(irreg_wave_gen, IrregularWaveGen):
+        if not isinstance(irreg_wave_gen, IrregularPistonWaveGen):
             raise TypeError("You tried to spawn an irregular wave generator "
                             "motion widget in the timeline with a wrong object")
         if irreg_wave_gen is None:
@@ -2010,7 +2010,7 @@ class IrregularWaveMotionTimeline(QtGui.QWidget):
             utils.debug("Introduced an invalid value for a float number.")
 
     def construct_motion_object(self):
-        return IrregularWaveGen(parent_movement=self.parent_movement,
+        return IrregularPistonWaveGen(parent_movement=self.parent_movement,
                                 wave_order=self.wave_order_selector.currentIndex() + 1, start=0,
                                 duration=float(self.duration_input.text()), depth=float(self.depth_input.text()),
                                 fixed_depth=float(self.fixed_depth_input.text()),
