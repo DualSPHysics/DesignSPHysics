@@ -644,8 +644,6 @@ def create_dsph_document_from_fcstd(document_path):
     FreeCADGui.SendMsgToActiveView("ViewFit")
 
 def dump_to_xml(data, save_name):
-    guiutils.warning_dialog(str(data['domainfixed']))
-
     """ Saves all of the data in the opened case
         to disk. Generates a GenCase compatible XML. """
     # Saves all the data in XML format.
