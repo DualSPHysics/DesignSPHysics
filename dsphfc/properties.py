@@ -106,13 +106,15 @@ class Movement(object):
             motion.parent_movement = self
             self.motion_list.append(motion)
         else:
-            raise TypeError("You are trying to append a non-motion object to a movement list.")
+            raise TypeError(
+                "You are trying to append a non-motion object to a movement list.")
 
     def set_loop(self, state):
         if isinstance(state, bool):
             self.loop = state
         else:
-            raise TypeError("Tried to set a boolean with an {}".format(state.__class__.__name__))
+            raise TypeError("Tried to set a boolean with an {}".format(
+                state.__class__.__name__))
 
     def remove_motion(self, position):
         self.motion_list.pop(position)
@@ -149,7 +151,8 @@ class SpecialMovement(object):
             raise TypeError("You are trying to set a non-generator object.")
 
     def __str__(self):
-        to_ret = "SpecialMovement <{}> with an {}".format(self.name, self.generator.__class__.__name__) + "\n"
+        to_ret = "SpecialMovement <{}> with an {}".format(
+            self.name, self.generator.__class__.__name__) + "\n"
         return to_ret
 
 
@@ -164,13 +167,11 @@ class WaveGen(object):
         duration: Movement duration, 0 means until simulation end
         depth: Fluid depth (def 0)
         fixed_depth: Fluid depth without paddle (def 0)
-        piston_dir: Movement direction (def [1,0,0])
         wave_height: Wave height (def 0.5)
         wave_period: Wave period (def 1)
     """
 
-    def __init__(self, parent_movement=None, wave_order=1, start=0, duration=0, depth=0, fixed_depth=0,
-                 piston_dir=None, wave_height=0.5, wave_period=1):
+    def __init__(self, parent_movement=None, wave_order=1, start=0, duration=0, depth=0, fixed_depth=0, wave_height=0.5, wave_period=1):
         super(WaveGen, self).__init__()
         self.parent_movement = parent_movement
         self.type = "Base Wave Generator"
@@ -179,35 +180,35 @@ class WaveGen(object):
         self.duration = duration
         self.depth = depth
         self.fixed_depth = fixed_depth
-        self.piston_dir = [1, 0, 0] if piston_dir is None else piston_dir
         self.wave_height = wave_height
         self.wave_period = wave_period
 
 
-class RegularWaveGen(WaveGen):
-    """ Regular Wave Generator.
+class RegularPistonWaveGen(WaveGen):
+    """ Piston Regular Wave Generator.
 
     Attributes:
         phase: Initial wave phase in function of PI
         ramp: Periods of ramp
+        piston_dir: Movement direction (def [1,0,0])
     """
 
-    def __init__(self, parent_movement=None, wave_order=2, start=0, duration=0, depth=0, fixed_depth=0,
-                 piston_dir=None, wave_height=0.5, wave_period=1, phase=0, ramp=0, disksave_periods=24,
-                 disksave_periodsteps=20, disksave_xpos=2, disksave_zpos=-0.15):
-        super(RegularWaveGen, self).__init__(parent_movement, wave_order, start, duration, depth, fixed_depth,
-                                             piston_dir, wave_height, wave_period)
-        self.type = "Regular Wave Generator"
+    def __init__(self, parent_movement=None, wave_order=2, start=0, duration=0, depth=0, fixed_depth=0, wave_height=0.5, wave_period=1, phase=0, ramp=0, disksave_periods=24,
+                 disksave_periodsteps=20, disksave_xpos=2, disksave_zpos=-0.15, piston_dir=None):
+        super(RegularPistonWaveGen, self).__init__(parent_movement, wave_order, start,
+                                             duration, depth, fixed_depth, wave_height, wave_period)
+        self.type = "Regular Piston Wave Generator"
         self.phase = phase
         self.ramp = ramp
         self.disksave_periods = disksave_periods
         self.disksave_periodsteps = disksave_periodsteps
         self.disksave_xpos = disksave_xpos
         self.disksave_zpos = disksave_zpos
+        self.piston_dir = [1, 0, 0] if piston_dir is None else piston_dir
 
 
-class IrregularWaveGen(WaveGen):
-    """ Regular Wave Generator.
+class IrregularPistonWaveGen(WaveGen):
+    """ Piston Regular Wave Generator.
 
     Attributes:
         spectrum: Spectrum type selected for the generation
@@ -217,18 +218,18 @@ class IrregularWaveGen(WaveGen):
         randomseed: Random seed to initialize RNG
         serieini: Initial time in irregular wave serie
         ramptime: Time of ramp
+        piston_dir: Movement direction (def [1,0,0])
     """
 
-    def __init__(self, parent_movement=None, wave_order=1, start=0, duration=0, depth=0, fixed_depth=0,
-                 piston_dir=None, wave_height=0.5, wave_period=1, spectrum=IrregularSpectrum.JONSWAP,
+    def __init__(self, parent_movement=None, wave_order=1, start=0, duration=0, depth=0, fixed_depth=0, wave_height=0.5, wave_period=1, spectrum=IrregularSpectrum.JONSWAP,
                  discretization=IrregularDiscretization.STRETCHED,
                  peak_coef=0.1, waves=50, randomseed=random.randint(0, 9999), serieini=0, ramptime=0,
                  serieini_autofit=True, savemotion_time=30, savemotion_timedt=0.05, savemotion_xpos=2,
                  savemotion_zpos=-0.15, saveserie_timemin=0, saveserie_timemax=1300, saveserie_timedt=0.05,
-                 saveserie_xpos=0, saveseriewaves_timemin=0, saveseriewaves_timemax=1000, saveseriewaves_xpos=2):
-        super(IrregularWaveGen, self).__init__(parent_movement, wave_order, start, duration, depth, fixed_depth,
-                                               piston_dir, wave_height, wave_period)
-        self.type = "Irregular Wave Generator"
+                 saveserie_xpos=0, saveseriewaves_timemin=0, saveseriewaves_timemax=1000, saveseriewaves_xpos=2, piston_dir=None):
+        super(IrregularPistonWaveGen, self).__init__(parent_movement, wave_order, start,
+                                               duration, depth, fixed_depth, wave_height, wave_period)
+        self.type = "Irregular Piston Wave Generator"
         self.spectrum = spectrum
         self.discretization = discretization
         self.peak_coef = peak_coef
@@ -248,6 +249,83 @@ class IrregularWaveGen(WaveGen):
         self.saveseriewaves_timemin = saveseriewaves_timemin
         self.saveseriewaves_timemax = saveseriewaves_timemax
         self.saveseriewaves_xpos = saveseriewaves_xpos
+        self.piston_dir = [1, 0, 0] if piston_dir is None else piston_dir
+
+
+class RegularFlapWaveGen(WaveGen):
+    """ Flap Regular Wave Generator.
+
+    Attributes:
+        phase: Initial wave phase in function of PI
+        ramp: Periods of ramp
+        variable_draft: Position of the wavemaker hinge
+        flapaxis0: Point 0 of axis rotation
+        flapaxis1: Point 1 of axis rotation        
+    """
+
+    def __init__(self, parent_movement=None, wave_order=2, start=0, duration=0, depth=0, fixed_depth=0, wave_height=0.5, wave_period=1, phase=0, ramp=0, disksave_periods=24,
+                 disksave_periodsteps=20, disksave_xpos=2, disksave_zpos=-0.15, variable_draft=0.0, flapaxis0=None, flapaxis1=None):
+        super(RegularFlapWaveGen, self).__init__(parent_movement, wave_order,
+                                                 start, duration, depth, fixed_depth, wave_height, wave_period)
+        self.type = "Regular Flap Wave Generator"
+        self.phase = phase
+        self.ramp = ramp
+        self.variable_draft = variable_draft
+        self.flapaxis0 = [0, -1, 0] if flapaxis0 is None else flapaxis0
+        self.flapaxis1 = [0, 1, 0] if flapaxis1 is None else flapaxis1
+        self.disksave_periods = disksave_periods
+        self.disksave_periodsteps = disksave_periodsteps
+        self.disksave_xpos = disksave_xpos
+        self.disksave_zpos = disksave_zpos
+
+
+class IrregularPistonWaveGen(WaveGen):
+    """ Flap Regular Wave Generator.
+
+    Attributes:
+        spectrum: Spectrum type selected for the generation
+        discretization: Type of discretization for the spectrum
+        peak_coef: Peak enhancement coefficient
+        waves: Number of waves to create irregular waves
+        randomseed: Random seed to initialize RNG
+        serieini: Initial time in irregular wave serie
+        ramptime: Time of ramp
+        variable_draft: Position of the wavemaker hinge
+        flapaxis0: Point 0 of axis rotation
+        flapaxis1: Point 1 of axis rotation  
+    """
+
+    def __init__(self, parent_movement=None, wave_order=1, start=0, duration=0, depth=0, fixed_depth=0, wave_height=0.5, wave_period=1, spectrum=IrregularSpectrum.JONSWAP,
+                 discretization=IrregularDiscretization.STRETCHED,
+                 peak_coef=0.1, waves=50, randomseed=random.randint(0, 9999), serieini=0, ramptime=0,
+                 serieini_autofit=True, savemotion_time=30, savemotion_timedt=0.05, savemotion_xpos=2,
+                 savemotion_zpos=-0.15, saveserie_timemin=0, saveserie_timemax=1300, saveserie_timedt=0.05,
+                 saveserie_xpos=0, saveseriewaves_timemin=0, saveseriewaves_timemax=1000, saveseriewaves_xpos=2, variable_draft=0.0, flapaxis0=None, flapaxis1=None):
+        super(IrregularPistonWaveGen, self).__init__(parent_movement, wave_order, start,
+                                               duration, depth, fixed_depth, wave_height, wave_period)
+        self.type = "Irregular Flap Wave Generator"
+        self.spectrum = spectrum
+        self.discretization = discretization
+        self.peak_coef = peak_coef
+        self.waves = waves
+        self.randomseed = randomseed
+        self.serieini = serieini
+        self.serieini_autofit = serieini_autofit
+        self.ramptime = ramptime
+        self.savemotion_time = savemotion_time
+        self.savemotion_timedt = savemotion_timedt
+        self.savemotion_xpos = savemotion_xpos
+        self.savemotion_zpos = savemotion_zpos
+        self.saveserie_timemin = saveserie_timemin
+        self.saveserie_timemax = saveserie_timemax
+        self.saveserie_timedt = saveserie_timedt
+        self.saveserie_xpos = saveserie_xpos
+        self.saveseriewaves_timemin = saveseriewaves_timemin
+        self.saveseriewaves_timemax = saveseriewaves_timemax
+        self.saveseriewaves_xpos = saveseriewaves_xpos
+        self.variable_draft = variable_draft
+        self.flapaxis0 = [0, -1, 0] if flapaxis0 is None else flapaxis0
+        self.flapaxis1 = [0, 1, 0] if flapaxis1 is None else flapaxis1
 
 
 class FileGen(WaveGen):

@@ -3755,10 +3755,10 @@ def motion_change():
             return
         if __("Regular wave generator (Piston)") in action.text():
             to_add = SpecialMovement(
-                generator=RegularWaveGen(), name="Regular Wave Generator (Piston)")
+                generator=RegularPistonWaveGen(), name="Regular Wave Generator (Piston)")
         if __("Irregular wave generator (Piston)") in action.text():
             to_add = SpecialMovement(
-                generator=IrregularWaveGen(), name="Irregular Wave Generator (Piston)")
+                generator=IrregularPistonWaveGen(), name="Irregular Wave Generator (Piston)")
         if __("Linear motion from a file") in action.text():
             to_add = SpecialMovement(
                 generator=FileGen(), name="Linear motion from a file")
@@ -3888,10 +3888,10 @@ def motion_change():
             timeline_list_table.setEnabled(True)
             actions_groupbox_table.setEnabled(False)
 
-            if isinstance(target_movement.generator, RegularWaveGen):
+            if isinstance(target_movement.generator, RegularPistonWaveGen):
                 target_to_put = dsphwidgets.RegularWaveMotionTimeline(
                     target_movement.generator)
-            elif isinstance(target_movement.generator, IrregularWaveGen):
+            elif isinstance(target_movement.generator, IrregularPistonWaveGen):
                 target_to_put = dsphwidgets.IrregularWaveMotionTimeline(
                     target_movement.generator)
             elif isinstance(target_movement.generator, FileGen):
