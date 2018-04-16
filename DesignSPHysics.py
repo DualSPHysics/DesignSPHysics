@@ -210,7 +210,7 @@ casecontrols_bt_savedoc.setPopupMode(QtGui.QToolButton.MenuButtonPopup)
 casecontrols_bt_savedoc.setToolButtonStyle(QtCore.Qt.ToolButtonTextBesideIcon)
 casecontrols_bt_savedoc.setText("  " + __("Save\n  Case"))
 casecontrols_bt_savedoc.setToolTip(
-    __("Saves the case and executes GenCase over."))
+    __("Saves the case."))
 casecontrols_bt_savedoc.setIcon(guiutils.get_icon("save.png"))
 casecontrols_bt_savedoc.setIconSize(QtCore.QSize(28, 28))
 casecontrols_menu_savemenu = QtGui.QMenu()
@@ -299,7 +299,8 @@ def on_new_case(prompt=True):
 
 
 def on_new_from_freecad_document(prompt=True):
-    file_name, _ = QtGui.QFileDialog().getOpenFileName(guiutils.get_fc_main_window(), "Select document to import", QtCore.QDir.homePath())
+    file_name, _ = QtGui.QFileDialog().getOpenFileName(guiutils.get_fc_main_window(),
+                                                       "Select document to import", QtCore.QDir.homePath())
 
     if utils.document_count() > 0:
         new_case_success = utils.prompt_close_all_documents(prompt)
@@ -3758,7 +3759,13 @@ def motion_change():
                 generator=RegularPistonWaveGen(), name="Regular Wave Generator (Piston)")
         if __("Irregular wave generator (Piston)") in action.text():
             to_add = SpecialMovement(
-                generator=IrregularPistonWaveGen(), name="Irregular Wave Generator (Piston)")
+                generator=IrregularFlapWaveGen(), name="Irregular Wave Generator (Flap)")
+        if __("Regular wave generator (Flap)") in action.text():
+            to_add = SpecialMovement(
+                generator=RegularFlapWaveGen(), name="Regular Wave Generator (Flap)")
+        if __("Irregular wave generator (Flap)") in action.text():
+            to_add = SpecialMovement(
+                generator=IrregularFlapWaveGen(), name="Irregular Wave Generator (Piston)")
         if __("Linear motion from a file") in action.text():
             to_add = SpecialMovement(
                 generator=FileGen(), name="Linear motion from a file")
@@ -3889,10 +3896,16 @@ def motion_change():
             actions_groupbox_table.setEnabled(False)
 
             if isinstance(target_movement.generator, RegularPistonWaveGen):
-                target_to_put = dsphwidgets.RegularWaveMotionTimeline(
+                target_to_put = dsphwidgets.RegularPistonWaveMotionTimeline(
                     target_movement.generator)
             elif isinstance(target_movement.generator, IrregularPistonWaveGen):
-                target_to_put = dsphwidgets.IrregularWaveMotionTimeline(
+                target_to_put = dsphwidgets.IrregularPistonWaveMotionTimeline(
+                    target_movement.generator)
+            if isinstance(target_movement.generator, RegularFlapWaveGen):
+                target_to_put = dsphwidgets.RegularFlapWaveMotionTimeline(
+                    target_movement.generator)
+            elif isinstance(target_movement.generator, IrregularFlapWaveGen):
+                target_to_put = dsphwidgets.IrregularFlapWaveMotionTimeline(
                     target_movement.generator)
             elif isinstance(target_movement.generator, FileGen):
                 target_to_put = dsphwidgets.FileMotionTimeline(
@@ -3941,6 +3954,10 @@ def motion_change():
             "regular_wave.png"), __("Regular wave generator (Piston)"))
         create_new_movement_menu.addAction(guiutils.get_icon(
             "irregular_wave.png"), __("Irregular wave generator (Piston)"))
+        create_new_movement_menu.addAction(guiutils.get_icon(
+            "regular_wave.png"), __("Regular wave generator (Flap)"))
+        create_new_movement_menu.addAction(guiutils.get_icon(
+            "irregular_wave.png"), __("Irregular wave generator (Flap)"))
         create_new_movement_menu.addAction(guiutils.get_icon(
             "file_mov.png"), __("Linear motion from a file"))
         create_new_movement_menu.addAction(guiutils.get_icon(

@@ -279,8 +279,8 @@ class RegularFlapWaveGen(WaveGen):
         self.disksave_zpos = disksave_zpos
 
 
-class IrregularPistonWaveGen(WaveGen):
-    """ Flap Regular Wave Generator.
+class IrregularFlapWaveGen(WaveGen):
+    """ Flap Irregular Wave Generator.
 
     Attributes:
         spectrum: Spectrum type selected for the generation
@@ -301,7 +301,7 @@ class IrregularPistonWaveGen(WaveGen):
                  serieini_autofit=True, savemotion_time=30, savemotion_timedt=0.05, savemotion_xpos=2,
                  savemotion_zpos=-0.15, saveserie_timemin=0, saveserie_timemax=1300, saveserie_timedt=0.05,
                  saveserie_xpos=0, saveseriewaves_timemin=0, saveseriewaves_timemax=1000, saveseriewaves_xpos=2, variable_draft=0.0, flapaxis0=None, flapaxis1=None):
-        super(IrregularPistonWaveGen, self).__init__(parent_movement, wave_order, start,
+        super(IrregularFlapWaveGen, self).__init__(parent_movement, wave_order, start,
                                                duration, depth, fixed_depth, wave_height, wave_period)
         self.type = "Irregular Flap Wave Generator"
         self.spectrum = spectrum

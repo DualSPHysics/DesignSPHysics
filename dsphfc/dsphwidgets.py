@@ -59,7 +59,8 @@ class MovementActions(QtGui.QWidget):
         self.loop_checkbox = QtGui.QCheckBox(__("Loop"))
         self.loop_checkbox.setChecked(loop_checked)
         self.loop_checkbox.stateChanged.connect(self.on_loop)
-        self.delete_button = QtGui.QPushButton(guiutils.get_icon("trash.png"), None)
+        self.delete_button = QtGui.QPushButton(
+            guiutils.get_icon("trash.png"), None)
         self.delete_button.clicked.connect(self.on_delete)
         self.setContentsMargins(0, 0, 0, 0)
         main_layout = QtGui.QHBoxLayout()
@@ -90,7 +91,8 @@ class WaveMovementActions(QtGui.QWidget):
         self.use_checkbox = QtGui.QCheckBox(__("Use"))
         self.use_checkbox.setChecked(use_checked)
         self.use_checkbox.stateChanged.connect(self.on_use)
-        self.delete_button = QtGui.QPushButton(guiutils.get_icon("trash.png"), None)
+        self.delete_button = QtGui.QPushButton(
+            guiutils.get_icon("trash.png"), None)
         self.delete_button.clicked.connect(self.on_delete)
         self.setContentsMargins(0, 0, 0, 0)
         main_layout = QtGui.QHBoxLayout()
@@ -116,9 +118,11 @@ class RectilinearMotionTimeline(QtGui.QWidget):
 
     def __init__(self, index, rect_motion):
         if not isinstance(rect_motion, RectMotion):
-            raise TypeError("You tried to spawn a rectilinear motion widget in the timeline with a wrong object")
+            raise TypeError(
+                "You tried to spawn a rectilinear motion widget in the timeline with a wrong object")
         if rect_motion is None:
-            raise TypeError("You tried to spawn a rectilinear motion widget in the timeline without a motion object")
+            raise TypeError(
+                "You tried to spawn a rectilinear motion widget in the timeline without a motion object")
         super(RectilinearMotionTimeline, self).__init__()
         self.index = index
         self.setContentsMargins(0, 0, 0, 0)
@@ -138,12 +142,15 @@ class RectilinearMotionTimeline(QtGui.QWidget):
         self.time_label = QtGui.QLabel(__("Duration (s): "))
         self.time_input = QtGui.QLineEdit()
         self.time_input.setStyleSheet("width: 5px;")
-        self.delete_button = QtGui.QPushButton(guiutils.get_icon("trash.png"), None)
+        self.delete_button = QtGui.QPushButton(
+            guiutils.get_icon("trash.png"), None)
         self.order_button_layout = QtGui.QVBoxLayout()
         self.order_button_layout.setContentsMargins(0, 0, 0, 0)
         self.order_button_layout.setSpacing(0)
-        self.order_up_button = QtGui.QPushButton(guiutils.get_icon("up_arrow.png"), None)
-        self.order_down_button = QtGui.QPushButton(guiutils.get_icon("down_arrow.png"), None)
+        self.order_up_button = QtGui.QPushButton(
+            guiutils.get_icon("up_arrow.png"), None)
+        self.order_down_button = QtGui.QPushButton(
+            guiutils.get_icon("down_arrow.png"), None)
 
         self.order_button_layout.addWidget(self.order_up_button)
         self.order_button_layout.addWidget(self.order_down_button)
@@ -283,12 +290,15 @@ class AccRectilinearMotionTimeline(QtGui.QWidget):
         self.time_label = QtGui.QLabel(__("Duration (s): "))
         self.time_input = QtGui.QLineEdit()
         self.time_input.setStyleSheet("width: 5px;")
-        self.delete_button = QtGui.QPushButton(guiutils.get_icon("trash.png"), None)
+        self.delete_button = QtGui.QPushButton(
+            guiutils.get_icon("trash.png"), None)
         self.order_button_layout = QtGui.QVBoxLayout()
         self.order_button_layout.setContentsMargins(0, 0, 0, 0)
         self.order_button_layout.setSpacing(0)
-        self.order_up_button = QtGui.QPushButton(guiutils.get_icon("up_arrow.png"), None)
-        self.order_down_button = QtGui.QPushButton(guiutils.get_icon("down_arrow.png"), None)
+        self.order_up_button = QtGui.QPushButton(
+            guiutils.get_icon("up_arrow.png"), None)
+        self.order_down_button = QtGui.QPushButton(
+            guiutils.get_icon("down_arrow.png"), None)
 
         self.order_button_layout.addWidget(self.order_up_button)
         self.order_button_layout.addWidget(self.order_down_button)
@@ -392,9 +402,11 @@ class RotationalMotionTimeline(QtGui.QWidget):
 
     def __init__(self, index, rot_motion):
         if not isinstance(rot_motion, RotMotion):
-            raise TypeError("You tried to spawn a rotational motion widget in the timeline with a wrong object")
+            raise TypeError(
+                "You tried to spawn a rotational motion widget in the timeline with a wrong object")
         if rot_motion is None:
-            raise TypeError("You tried to spawn a rotational motion widget in the timeline without a motion object")
+            raise TypeError(
+                "You tried to spawn a rotational motion widget in the timeline without a motion object")
         super(RotationalMotionTimeline, self).__init__()
         self.index = index
         self.setContentsMargins(0, 0, 0, 0)
@@ -407,7 +419,8 @@ class RotationalMotionTimeline(QtGui.QWidget):
         self.velocity_label = QtGui.QLabel("Vel: ")
         self.velocity_input = QtGui.QLineEdit()
         self.velocity_input.setStyleSheet("width: 5px;")
-        self.axis_label = QtGui.QLabel("Axis 1 (X, Y, Z): \n\nAxis 2 (X, Y, Z): ")
+        self.axis_label = QtGui.QLabel(
+            "Axis 1 (X, Y, Z): \n\nAxis 2 (X, Y, Z): ")
         self.axis_layout = QtGui.QVBoxLayout()
         self.axis_first_row_layout = QtGui.QHBoxLayout()
         self.axis_second_row_layout = QtGui.QHBoxLayout()
@@ -426,12 +439,15 @@ class RotationalMotionTimeline(QtGui.QWidget):
         self.time_label = QtGui.QLabel(__("Duration (s): "))
         self.time_input = QtGui.QLineEdit()
         self.time_input.setStyleSheet("width: 5px;")
-        self.delete_button = QtGui.QPushButton(guiutils.get_icon("trash.png"), None)
+        self.delete_button = QtGui.QPushButton(
+            guiutils.get_icon("trash.png"), None)
         self.order_button_layout = QtGui.QVBoxLayout()
         self.order_button_layout.setContentsMargins(0, 0, 0, 0)
         self.order_button_layout.setSpacing(0)
-        self.order_up_button = QtGui.QPushButton(guiutils.get_icon("up_arrow.png"), None)
-        self.order_down_button = QtGui.QPushButton(guiutils.get_icon("down_arrow.png"), None)
+        self.order_up_button = QtGui.QPushButton(
+            guiutils.get_icon("up_arrow.png"), None)
+        self.order_down_button = QtGui.QPushButton(
+            guiutils.get_icon("down_arrow.png"), None)
 
         self.order_button_layout.addWidget(self.order_up_button)
         self.order_button_layout.addWidget(self.order_down_button)
@@ -538,7 +554,8 @@ class RotationalMotionTimeline(QtGui.QWidget):
         self.x2_input.setText(self.x2_input.text().replace(",", "."))
         self.y2_input.setText(self.y2_input.text().replace(",", "."))
         self.z2_input.setText(self.z2_input.text().replace(",", "."))
-        self.velocity_input.setText(self.velocity_input.text().replace(",", "."))
+        self.velocity_input.setText(
+            self.velocity_input.text().replace(",", "."))
         self.time_input.setText(self.time_input.text().replace(",", "."))
 
 
@@ -575,7 +592,8 @@ class AccRotationalMotionTimeline(QtGui.QWidget):
         self.acceleration_label = QtGui.QLabel("Acc: ")
         self.acceleration_input = QtGui.QLineEdit()
         self.acceleration_input.setStyleSheet("width: 5px;")
-        self.axis_label = QtGui.QLabel("Axis 1 (X, Y, Z): \n\nAxis 2 (X, Y, Z): ")
+        self.axis_label = QtGui.QLabel(
+            "Axis 1 (X, Y, Z): \n\nAxis 2 (X, Y, Z): ")
         self.axis_layout = QtGui.QVBoxLayout()
         self.axis_first_row_layout = QtGui.QHBoxLayout()
         self.axis_second_row_layout = QtGui.QHBoxLayout()
@@ -594,12 +612,15 @@ class AccRotationalMotionTimeline(QtGui.QWidget):
         self.time_label = QtGui.QLabel(__("Duration (s): "))
         self.time_input = QtGui.QLineEdit()
         self.time_input.setStyleSheet("width: 5px;")
-        self.delete_button = QtGui.QPushButton(guiutils.get_icon("trash.png"), None)
+        self.delete_button = QtGui.QPushButton(
+            guiutils.get_icon("trash.png"), None)
         self.order_button_layout = QtGui.QVBoxLayout()
         self.order_button_layout.setContentsMargins(0, 0, 0, 0)
         self.order_button_layout.setSpacing(0)
-        self.order_up_button = QtGui.QPushButton(guiutils.get_icon("up_arrow.png"), None)
-        self.order_down_button = QtGui.QPushButton(guiutils.get_icon("down_arrow.png"), None)
+        self.order_up_button = QtGui.QPushButton(
+            guiutils.get_icon("up_arrow.png"), None)
+        self.order_down_button = QtGui.QPushButton(
+            guiutils.get_icon("down_arrow.png"), None)
 
         self.vel_layout.addWidget(self.velocity_label)
         self.vel_layout.addWidget(self.velocity_input)
@@ -716,8 +737,10 @@ class AccRotationalMotionTimeline(QtGui.QWidget):
         self.x2_input.setText(self.x2_input.text().replace(",", "."))
         self.y2_input.setText(self.y2_input.text().replace(",", "."))
         self.z2_input.setText(self.z2_input.text().replace(",", "."))
-        self.velocity_input.setText(self.velocity_input.text().replace(",", "."))
-        self.acceleration_input.setText(self.acceleration_input.text().replace(",", "."))
+        self.velocity_input.setText(
+            self.velocity_input.text().replace(",", "."))
+        self.acceleration_input.setText(
+            self.acceleration_input.text().replace(",", "."))
         self.time_input.setText(self.time_input.text().replace(",", "."))
 
 
@@ -754,7 +777,8 @@ class AccCircularMotionTimeline(QtGui.QWidget):
         self.acceleration_label = QtGui.QLabel("Acc: ")
         self.acceleration_input = QtGui.QLineEdit()
         self.acceleration_input.setStyleSheet("width: 5px;")
-        self.axis_label = QtGui.QLabel("Axis 1 (X, Y, Z): \n\nAxis 2 (X, Y, Z): ")
+        self.axis_label = QtGui.QLabel(
+            "Axis 1 (X, Y, Z): \n\nAxis 2 (X, Y, Z): ")
         self.axis_layout = QtGui.QVBoxLayout()
         self.axis_first_row_layout = QtGui.QHBoxLayout()
         self.axis_second_row_layout = QtGui.QHBoxLayout()
@@ -782,12 +806,15 @@ class AccCircularMotionTimeline(QtGui.QWidget):
         self.time_label = QtGui.QLabel(__("Duration (s): "))
         self.time_input = QtGui.QLineEdit()
         self.time_input.setStyleSheet("width: 5px;")
-        self.delete_button = QtGui.QPushButton(guiutils.get_icon("trash.png"), None)
+        self.delete_button = QtGui.QPushButton(
+            guiutils.get_icon("trash.png"), None)
         self.order_button_layout = QtGui.QVBoxLayout()
         self.order_button_layout.setContentsMargins(0, 0, 0, 0)
         self.order_button_layout.setSpacing(0)
-        self.order_up_button = QtGui.QPushButton(guiutils.get_icon("up_arrow.png"), None)
-        self.order_down_button = QtGui.QPushButton(guiutils.get_icon("down_arrow.png"), None)
+        self.order_up_button = QtGui.QPushButton(
+            guiutils.get_icon("up_arrow.png"), None)
+        self.order_down_button = QtGui.QPushButton(
+            guiutils.get_icon("down_arrow.png"), None)
 
         self.vel_layout.addWidget(self.velocity_label)
         self.vel_layout.addWidget(self.velocity_input)
@@ -923,11 +950,16 @@ class AccCircularMotionTimeline(QtGui.QWidget):
         self.x2_input.setText(self.x2_input.text().replace(",", "."))
         self.y2_input.setText(self.y2_input.text().replace(",", "."))
         self.z2_input.setText(self.z2_input.text().replace(",", "."))
-        self.reference_x_input.setText(self.reference_x_input.text().replace(",", "."))
-        self.reference_y_input.setText(self.reference_y_input.text().replace(",", "."))
-        self.reference_z_input.setText(self.reference_z_input.text().replace(",", "."))
-        self.velocity_input.setText(self.velocity_input.text().replace(",", "."))
-        self.acceleration_input.setText(self.acceleration_input.text().replace(",", "."))
+        self.reference_x_input.setText(
+            self.reference_x_input.text().replace(",", "."))
+        self.reference_y_input.setText(
+            self.reference_y_input.text().replace(",", "."))
+        self.reference_z_input.setText(
+            self.reference_z_input.text().replace(",", "."))
+        self.velocity_input.setText(
+            self.velocity_input.text().replace(",", "."))
+        self.acceleration_input.setText(
+            self.acceleration_input.text().replace(",", "."))
         self.time_input.setText(self.time_input.text().replace(",", "."))
 
 
@@ -955,7 +987,8 @@ class RotSinuMotionTimeline(QtGui.QWidget):
         self.parent_movement = rot_sinu_motion.parent_movement
         self.label = QtGui.QLabel("Sinusoidal \nRotational \nMotion ")
         self.label.setMinimumWidth(75)
-        self.axis_label = QtGui.QLabel("Axis 1 (X, Y, Z): \n\nAxis 2 (X, Y, Z): ")
+        self.axis_label = QtGui.QLabel(
+            "Axis 1 (X, Y, Z): \n\nAxis 2 (X, Y, Z): ")
         self.axis_layout = QtGui.QVBoxLayout()
         self.axis_first_row_layout = QtGui.QHBoxLayout()
         self.axis_second_row_layout = QtGui.QHBoxLayout()
@@ -987,12 +1020,15 @@ class RotSinuMotionTimeline(QtGui.QWidget):
         self.time_label = QtGui.QLabel(__("Duration (s): "))
         self.time_input = QtGui.QLineEdit()
         self.time_input.setStyleSheet("width: 5px;")
-        self.delete_button = QtGui.QPushButton(guiutils.get_icon("trash.png"), None)
+        self.delete_button = QtGui.QPushButton(
+            guiutils.get_icon("trash.png"), None)
         self.order_button_layout = QtGui.QVBoxLayout()
         self.order_button_layout.setContentsMargins(0, 0, 0, 0)
         self.order_button_layout.setSpacing(0)
-        self.order_up_button = QtGui.QPushButton(guiutils.get_icon("up_arrow.png"), None)
-        self.order_down_button = QtGui.QPushButton(guiutils.get_icon("down_arrow.png"), None)
+        self.order_up_button = QtGui.QPushButton(
+            guiutils.get_icon("up_arrow.png"), None)
+        self.order_down_button = QtGui.QPushButton(
+            guiutils.get_icon("down_arrow.png"), None)
 
         self.order_button_layout.addWidget(self.order_up_button)
         self.order_button_layout.addWidget(self.order_down_button)
@@ -1142,7 +1178,8 @@ class CirSinuMotionTimeline(QtGui.QWidget):
         self.parent_movement = cir_sinu_motion.parent_movement
         self.label = QtGui.QLabel("Sinusoidal \nCircular \nMotion ")
         self.label.setMinimumWidth(75)
-        self.axis_label = QtGui.QLabel("Axis 1 (X, Y, Z): \n\nAxis 2 (X, Y, Z): ")
+        self.axis_label = QtGui.QLabel(
+            "Axis 1 (X, Y, Z): \n\nAxis 2 (X, Y, Z): ")
         self.axis_layout = QtGui.QVBoxLayout()
         self.axis_first_row_layout = QtGui.QHBoxLayout()
         self.axis_second_row_layout = QtGui.QHBoxLayout()
@@ -1185,12 +1222,15 @@ class CirSinuMotionTimeline(QtGui.QWidget):
         self.time_label = QtGui.QLabel(__("Duration (s): "))
         self.time_input = QtGui.QLineEdit()
         self.time_input.setStyleSheet("width: 5px;")
-        self.delete_button = QtGui.QPushButton(guiutils.get_icon("trash.png"), None)
+        self.delete_button = QtGui.QPushButton(
+            guiutils.get_icon("trash.png"), None)
         self.order_button_layout = QtGui.QVBoxLayout()
         self.order_button_layout.setContentsMargins(0, 0, 0, 0)
         self.order_button_layout.setSpacing(0)
-        self.order_up_button = QtGui.QPushButton(guiutils.get_icon("up_arrow.png"), None)
-        self.order_down_button = QtGui.QPushButton(guiutils.get_icon("down_arrow.png"), None)
+        self.order_up_button = QtGui.QPushButton(
+            guiutils.get_icon("up_arrow.png"), None)
+        self.order_down_button = QtGui.QPushButton(
+            guiutils.get_icon("down_arrow.png"), None)
 
         self.order_button_layout.addWidget(self.order_up_button)
         self.order_button_layout.addWidget(self.order_down_button)
@@ -1336,9 +1376,12 @@ class CirSinuMotionTimeline(QtGui.QWidget):
         self.x2_input.setText(self.x2_input.text().replace(",", "."))
         self.y2_input.setText(self.y2_input.text().replace(",", "."))
         self.z2_input.setText(self.z2_input.text().replace(",", "."))
-        self.reference_x_input.setText(self.reference_x_input.text().replace(",", "."))
-        self.reference_y_input.setText(self.reference_y_input.text().replace(",", "."))
-        self.reference_z_input.setText(self.reference_z_input.text().replace(",", "."))
+        self.reference_x_input.setText(
+            self.reference_x_input.text().replace(",", "."))
+        self.reference_y_input.setText(
+            self.reference_y_input.text().replace(",", "."))
+        self.reference_z_input.setText(
+            self.reference_z_input.text().replace(",", "."))
         self.freq_input.setText(self.freq_input.text().replace(",", "."))
         self.ampl_input.setText(self.ampl_input.text().replace(",", "."))
         self.phase_input.setText(self.phase_input.text().replace(",", "."))
@@ -1355,9 +1398,11 @@ class WaitMotionTimeline(QtGui.QWidget):
 
     def __init__(self, index, wait_motion):
         if not isinstance(wait_motion, WaitMotion):
-            raise TypeError("You tried to spawn a rectilinear motion widget in the timeline with a wrong object")
+            raise TypeError(
+                "You tried to spawn a rectilinear motion widget in the timeline with a wrong object")
         if wait_motion is None:
-            raise TypeError("You tried to spawn a rectilinear motion widget in the timeline without a motion object")
+            raise TypeError(
+                "You tried to spawn a rectilinear motion widget in the timeline without a motion object")
 
         super(WaitMotionTimeline, self).__init__()
         self.index = index
@@ -1371,12 +1416,15 @@ class WaitMotionTimeline(QtGui.QWidget):
         self.time_label = QtGui.QLabel(__("Duration (s): "))
         self.time_input = QtGui.QLineEdit()
         self.time_input.setStyleSheet("width: 5px;")
-        self.delete_button = QtGui.QPushButton(guiutils.get_icon("trash.png"), None)
+        self.delete_button = QtGui.QPushButton(
+            guiutils.get_icon("trash.png"), None)
         self.order_button_layout = QtGui.QVBoxLayout()
         self.order_button_layout.setContentsMargins(0, 0, 0, 0)
         self.order_button_layout.setSpacing(0)
-        self.order_up_button = QtGui.QPushButton(guiutils.get_icon("up_arrow.png"), None)
-        self.order_down_button = QtGui.QPushButton(guiutils.get_icon("down_arrow.png"), None)
+        self.order_up_button = QtGui.QPushButton(
+            guiutils.get_icon("up_arrow.png"), None)
+        self.order_down_button = QtGui.QPushButton(
+            guiutils.get_icon("down_arrow.png"), None)
 
         self.order_button_layout.addWidget(self.order_up_button)
         self.order_button_layout.addWidget(self.order_down_button)
@@ -1481,12 +1529,15 @@ class RectSinuMotionTimeline(QtGui.QWidget):
         self.time_label = QtGui.QLabel(__("Duration (s): "))
         self.time_input = QtGui.QLineEdit()
         self.time_input.setStyleSheet("width: 5px;")
-        self.delete_button = QtGui.QPushButton(guiutils.get_icon("trash.png"), None)
+        self.delete_button = QtGui.QPushButton(
+            guiutils.get_icon("trash.png"), None)
         self.order_button_layout = QtGui.QVBoxLayout()
         self.order_button_layout.setContentsMargins(0, 0, 0, 0)
         self.order_button_layout.setSpacing(0)
-        self.order_up_button = QtGui.QPushButton(guiutils.get_icon("up_arrow.png"), None)
-        self.order_down_button = QtGui.QPushButton(guiutils.get_icon("down_arrow.png"), None)
+        self.order_up_button = QtGui.QPushButton(
+            guiutils.get_icon("up_arrow.png"), None)
+        self.order_down_button = QtGui.QPushButton(
+            guiutils.get_icon("down_arrow.png"), None)
 
         self.order_button_layout.addWidget(self.order_up_button)
         self.order_button_layout.addWidget(self.order_down_button)
@@ -1612,7 +1663,7 @@ class RectSinuMotionTimeline(QtGui.QWidget):
         self.time_input.setText(self.time_input.text().replace(",", "."))
 
 
-class RegularWaveMotionTimeline(QtGui.QWidget):
+class RegularPistonWaveMotionTimeline(QtGui.QWidget):
     """ A Regular Wave motion graphical representation for a table-based timeline """
 
     changed = QtCore.Signal(int, RegularPistonWaveGen)
@@ -1624,7 +1675,7 @@ class RegularWaveMotionTimeline(QtGui.QWidget):
         if reg_wave_gen is None:
             raise TypeError("You tried to spawn a regular wave generator "
                             "motion widget in the timeline without a motion object")
-        super(RegularWaveMotionTimeline, self).__init__()
+        super(RegularPistonWaveMotionTimeline, self).__init__()
         self.setContentsMargins(0, 0, 0, 0)
         self.main_layout = QtGui.QVBoxLayout()
         self.main_layout.setContentsMargins(10, 10, 10, 10)
@@ -1637,7 +1688,8 @@ class RegularWaveMotionTimeline(QtGui.QWidget):
 
         self.wave_order_label = QtGui.QLabel(__("Wave Order"))
         self.wave_order_selector = QtGui.QComboBox()
-        self.wave_order_selector.insertItems(0, [__("1st Order"), __("2nd Order")])
+        self.wave_order_selector.insertItems(
+            0, [__("1st Order"), __("2nd Order")])
 
         self.depth_label = QtGui.QLabel(__("Depth (m): "))
         self.depth_input = QtGui.QLineEdit()
@@ -1646,7 +1698,8 @@ class RegularWaveMotionTimeline(QtGui.QWidget):
         self.fixed_depth_input = QtGui.QLineEdit()
         self.fixed_depth_input.setEnabled(False)
 
-        self.piston_dir_label = QtGui.QLabel(__("Piston direction (X, Y, Z): "))
+        self.piston_dir_label = QtGui.QLabel(
+            __("Piston direction (X, Y, Z): "))
         self.piston_dir_x = QtGui.QLineEdit()
         self.piston_dir_y = QtGui.QLineEdit()
         self.piston_dir_z = QtGui.QLineEdit()
@@ -1676,7 +1729,8 @@ class RegularWaveMotionTimeline(QtGui.QWidget):
         self.root_layout = QtGui.QHBoxLayout()
         self.root_layout.addWidget(self.root_label)
         self.root_layout.addStretch(1)
-        [self.root_layout.addWidget(x) for x in [self.duration_label, self.duration_input]]
+        [self.root_layout.addWidget(x) for x in [
+            self.duration_label, self.duration_input]]
 
         self.first_row_layout = QtGui.QHBoxLayout()
         [self.first_row_layout.addWidget(x) for x in [self.wave_order_label, self.wave_order_selector,
@@ -1716,7 +1770,8 @@ class RegularWaveMotionTimeline(QtGui.QWidget):
 
     def fill_values(self, reg_wave_gen):
         self.duration_input.setText(str(reg_wave_gen.duration))
-        self.wave_order_selector.setCurrentIndex(int(reg_wave_gen.wave_order) - 1)
+        self.wave_order_selector.setCurrentIndex(
+            int(reg_wave_gen.wave_order) - 1)
         self.depth_input.setText(str(reg_wave_gen.depth))
         self.fixed_depth_input.setText(str(reg_wave_gen.fixed_depth))
         self.piston_dir_x.setText(str(reg_wave_gen.piston_dir[0]))
@@ -1727,7 +1782,8 @@ class RegularWaveMotionTimeline(QtGui.QWidget):
         self.phase_input.setText(str(reg_wave_gen.phase))
         self.ramp_input.setText(str(reg_wave_gen.ramp))
         self.disksave_periods.setText(str(reg_wave_gen.disksave_periods))
-        self.disksave_periodsteps.setText(str(reg_wave_gen.disksave_periodsteps))
+        self.disksave_periodsteps.setText(
+            str(reg_wave_gen.disksave_periodsteps))
         self.disksave_xpos.setText(str(reg_wave_gen.disksave_xpos))
         self.disksave_zpos.setText(str(reg_wave_gen.disksave_zpos))
 
@@ -1750,20 +1806,27 @@ class RegularWaveMotionTimeline(QtGui.QWidget):
 
     def construct_motion_object(self):
         return RegularPistonWaveGen(parent_movement=self.parent_movement,
-                              wave_order=self.wave_order_selector.currentIndex() + 1, start=0,
-                              duration=float(self.duration_input.text()), depth=float(self.depth_input.text()),
-                              fixed_depth=float(self.fixed_depth_input.text()),
-                              piston_dir=[float(self.piston_dir_x.text()),
-                                          float(self.piston_dir_y.text()),
-                                          float(self.piston_dir_z.text())],
-                              wave_height=float(self.wave_height_input.text()),
-                              wave_period=float(self.wave_period_input.text()),
-                              phase=float(self.phase_input.text()),
-                              ramp=float(self.ramp_input.text()),
-                              disksave_periods=float(self.disksave_periods.text()),
-                              disksave_periodsteps=float(self.disksave_periodsteps.text()),
-                              disksave_xpos=float(self.disksave_xpos.text()),
-                              disksave_zpos=float(self.disksave_zpos.text()))
+                                    wave_order=self.wave_order_selector.currentIndex() + 1, start=0,
+                                    duration=float(self.duration_input.text()), depth=float(self.depth_input.text()),
+                                    fixed_depth=float(
+                                        self.fixed_depth_input.text()),
+                                    piston_dir=[float(self.piston_dir_x.text()),
+                                                float(
+                                                    self.piston_dir_y.text()),
+                                                float(self.piston_dir_z.text())],
+                                    wave_height=float(
+                                        self.wave_height_input.text()),
+                                    wave_period=float(
+                                        self.wave_period_input.text()),
+                                    phase=float(self.phase_input.text()),
+                                    ramp=float(self.ramp_input.text()),
+                                    disksave_periods=float(
+                                        self.disksave_periods.text()),
+                                    disksave_periodsteps=float(
+                                        self.disksave_periodsteps.text()),
+                                    disksave_xpos=float(
+                                        self.disksave_xpos.text()),
+                                    disksave_zpos=float(self.disksave_zpos.text()))
 
     def on_delete(self):
         self.deleted.emit(self.index, self.construct_motion_object())
@@ -1781,7 +1844,7 @@ class RegularWaveMotionTimeline(QtGui.QWidget):
                    self.disksave_zpos]]
 
 
-class IrregularWaveMotionTimeline(QtGui.QWidget):
+class IrregularPistonWaveMotionTimeline(QtGui.QWidget):
     """ An Irregular Wave motion graphical representation for a table-based timeline """
 
     changed = QtCore.Signal(int, IrregularPistonWaveGen)
@@ -1793,7 +1856,7 @@ class IrregularWaveMotionTimeline(QtGui.QWidget):
         if irreg_wave_gen is None:
             raise TypeError("You tried to spawn an irregular wave generator "
                             "motion widget in the timeline without a motion object")
-        super(IrregularWaveMotionTimeline, self).__init__()
+        super(IrregularPistonWaveMotionTimeline, self).__init__()
         self.setContentsMargins(0, 0, 0, 0)
         self.main_layout = QtGui.QVBoxLayout()
         self.main_layout.setContentsMargins(10, 10, 10, 10)
@@ -1806,7 +1869,8 @@ class IrregularWaveMotionTimeline(QtGui.QWidget):
 
         self.wave_order_label = QtGui.QLabel(__("Wave Order"))
         self.wave_order_selector = QtGui.QComboBox()
-        self.wave_order_selector.insertItems(0, [__("1st Order"), __("2nd Order")])
+        self.wave_order_selector.insertItems(
+            0, [__("1st Order"), __("2nd Order")])
 
         self.depth_label = QtGui.QLabel(__("Depth (m): "))
         self.depth_input = QtGui.QLineEdit()
@@ -1816,7 +1880,8 @@ class IrregularWaveMotionTimeline(QtGui.QWidget):
         self.fixed_depth_input.setEnabled(False)
         self.fixed_depth_units_label = QtGui.QLabel()
 
-        self.piston_dir_label = QtGui.QLabel(__("Piston direction (X, Y, Z): "))
+        self.piston_dir_label = QtGui.QLabel(
+            __("Piston direction (X, Y, Z): "))
         self.piston_dir_x = QtGui.QLineEdit()
         self.piston_dir_y = QtGui.QLineEdit()
         self.piston_dir_z = QtGui.QLineEdit()
@@ -1835,7 +1900,8 @@ class IrregularWaveMotionTimeline(QtGui.QWidget):
         self.discretization_label = QtGui.QLabel(__("Discretization"))
         self.discretization_selector = QtGui.QComboBox()
         # Index numbers match IrregularDiscretization static values
-        self.discretization_selector.insertItems(0, ["Regular", "Random", "Stretched", "Crosstreched"])
+        self.discretization_selector.insertItems(
+            0, ["Regular", "Random", "Stretched", "Crosstreched"])
 
         self.peak_coef_label = QtGui.QLabel(__("Peak Coeff"))
         self.peak_coef_input = QtGui.QLineEdit()
@@ -1846,7 +1912,8 @@ class IrregularWaveMotionTimeline(QtGui.QWidget):
         self.randomseed_label = QtGui.QLabel(__("Random Seed"))
         self.randomseed_input = QtGui.QLineEdit()
 
-        self.serieini_label = QtGui.QLabel(__("Initial time in wave serie (s): "))
+        self.serieini_label = QtGui.QLabel(
+            __("Initial time in wave serie (s): "))
         self.serieini_input = QtGui.QLineEdit()
 
         self.serieini_autofit = QtGui.QCheckBox("Auto fit")
@@ -1885,7 +1952,8 @@ class IrregularWaveMotionTimeline(QtGui.QWidget):
         self.root_layout = QtGui.QHBoxLayout()
         self.root_layout.addWidget(self.root_label)
         self.root_layout.addStretch(1)
-        [self.root_layout.addWidget(x) for x in [self.duration_label, self.duration_input]]
+        [self.root_layout.addWidget(x) for x in [
+            self.duration_label, self.duration_input]]
 
         self.first_row_layout = QtGui.QHBoxLayout()
         [self.first_row_layout.addWidget(x) for x in [self.wave_order_label, self.wave_order_selector,
@@ -1912,10 +1980,12 @@ class IrregularWaveMotionTimeline(QtGui.QWidget):
                                                       self.randomseed_label, self.randomseed_input]]
 
         self.sixth_row_layout = QtGui.QHBoxLayout()
-        [self.sixth_row_layout.addWidget(x) for x in [self.serieini_label, self.serieini_input, self.serieini_autofit]]
+        [self.sixth_row_layout.addWidget(
+            x) for x in [self.serieini_label, self.serieini_input, self.serieini_autofit]]
 
         self.seventh_row_layout = QtGui.QHBoxLayout()
-        [self.seventh_row_layout.addWidget(x) for x in [self.ramptime_label, self.ramptime_input]]
+        [self.seventh_row_layout.addWidget(
+            x) for x in [self.ramptime_label, self.ramptime_input]]
 
         self.eighth_row_layout = QtGui.QHBoxLayout()
         [self.eighth_row_layout.addWidget(x) for x in [self.savemotion_label,
@@ -1957,7 +2027,8 @@ class IrregularWaveMotionTimeline(QtGui.QWidget):
 
     def fill_values(self, irreg_wave_gen):
         self.duration_input.setText(str(irreg_wave_gen.duration))
-        self.wave_order_selector.setCurrentIndex(int(irreg_wave_gen.wave_order) - 1)
+        self.wave_order_selector.setCurrentIndex(
+            int(irreg_wave_gen.wave_order) - 1)
         self.depth_input.setText(str(irreg_wave_gen.depth))
         self.fixed_depth_input.setText(str(irreg_wave_gen.fixed_depth))
         self.piston_dir_x.setText(str(irreg_wave_gen.piston_dir[0]))
@@ -1966,7 +2037,8 @@ class IrregularWaveMotionTimeline(QtGui.QWidget):
         self.wave_height_input.setText(str(irreg_wave_gen.wave_height))
         self.wave_period_input.setText(str(irreg_wave_gen.wave_period))
         self.spectrum_selector.setCurrentIndex(int(irreg_wave_gen.spectrum))
-        self.discretization_selector.setCurrentIndex(int(irreg_wave_gen.discretization))
+        self.discretization_selector.setCurrentIndex(
+            int(irreg_wave_gen.discretization))
         self.peak_coef_input.setText(str(irreg_wave_gen.peak_coef))
         self.waves_input.setText(str(irreg_wave_gen.waves))
         self.randomseed_input.setText(str(irreg_wave_gen.randomseed))
@@ -1974,16 +2046,23 @@ class IrregularWaveMotionTimeline(QtGui.QWidget):
         self.serieini_autofit.setChecked(irreg_wave_gen.serieini_autofit)
         self.ramptime_input.setText(str(irreg_wave_gen.ramptime))
         self.savemotion_time_input.setText(str(irreg_wave_gen.savemotion_time))
-        self.savemotion_timedt_input.setText(str(irreg_wave_gen.savemotion_timedt))
+        self.savemotion_timedt_input.setText(
+            str(irreg_wave_gen.savemotion_timedt))
         self.savemotion_xpos_input.setText(str(irreg_wave_gen.savemotion_xpos))
         self.savemotion_zpos_input.setText(str(irreg_wave_gen.savemotion_zpos))
-        self.saveserie_timemin_input.setText(str(irreg_wave_gen.saveserie_timemin))
-        self.saveserie_timemax_input.setText(str(irreg_wave_gen.saveserie_timemax))
-        self.saveserie_timedt_input.setText(str(irreg_wave_gen.saveserie_timedt))
+        self.saveserie_timemin_input.setText(
+            str(irreg_wave_gen.saveserie_timemin))
+        self.saveserie_timemax_input.setText(
+            str(irreg_wave_gen.saveserie_timemax))
+        self.saveserie_timedt_input.setText(
+            str(irreg_wave_gen.saveserie_timedt))
         self.saveserie_xpos_input.setText(str(irreg_wave_gen.saveserie_xpos))
-        self.saveseriewaves_timemin_input.setText(str(irreg_wave_gen.saveseriewaves_timemin))
-        self.saveseriewaves_timemax_input.setText(str(irreg_wave_gen.saveseriewaves_timemax))
-        self.saveseriewaves_xpos_input.setText(str(irreg_wave_gen.saveseriewaves_xpos))
+        self.saveseriewaves_timemin_input.setText(
+            str(irreg_wave_gen.saveseriewaves_timemin))
+        self.saveseriewaves_timemax_input.setText(
+            str(irreg_wave_gen.saveseriewaves_timemax))
+        self.saveseriewaves_xpos_input.setText(
+            str(irreg_wave_gen.saveseriewaves_xpos))
 
     def _init_connections(self):
         self.serieini_autofit.stateChanged.connect(self.on_change)
@@ -2011,33 +2090,51 @@ class IrregularWaveMotionTimeline(QtGui.QWidget):
 
     def construct_motion_object(self):
         return IrregularPistonWaveGen(parent_movement=self.parent_movement,
-                                wave_order=self.wave_order_selector.currentIndex() + 1, start=0,
-                                duration=float(self.duration_input.text()), depth=float(self.depth_input.text()),
-                                fixed_depth=float(self.fixed_depth_input.text()),
-                                piston_dir=[float(self.piston_dir_x.text()),
-                                            float(self.piston_dir_y.text()),
-                                            float(self.piston_dir_z.text())],
-                                wave_height=float(self.wave_height_input.text()),
-                                wave_period=float(self.wave_period_input.text()),
-                                spectrum=self.spectrum_selector.currentIndex(),
-                                discretization=self.discretization_selector.currentIndex(),
-                                peak_coef=float(self.peak_coef_input.text()),
-                                waves=float(self.waves_input.text()),
-                                randomseed=float(self.randomseed_input.text()),
-                                serieini=float(self.serieini_input.text()),
-                                ramptime=float(self.ramptime_input.text()),
-                                serieini_autofit=self.serieini_autofit.isChecked(),
-                                savemotion_time=str(self.savemotion_time_input.text()),
-                                savemotion_timedt=str(self.savemotion_timedt_input.text()),
-                                savemotion_xpos=str(self.savemotion_xpos_input.text()),
-                                savemotion_zpos=str(self.savemotion_zpos_input.text()),
-                                saveserie_timemin=str(self.saveserie_timemin_input.text()),
-                                saveserie_timemax=str(self.saveserie_timemax_input.text()),
-                                saveserie_timedt=str(self.saveserie_timedt_input.text()),
-                                saveserie_xpos=str(self.saveserie_xpos_input.text()),
-                                saveseriewaves_timemin=str(self.saveseriewaves_timemin_input.text()),
-                                saveseriewaves_timemax=str(self.saveseriewaves_timemax_input.text()),
-                                saveseriewaves_xpos=str(self.saveseriewaves_xpos_input.text()))
+                                      wave_order=self.wave_order_selector.currentIndex() + 1, start=0,
+                                      duration=float(self.duration_input.text()), depth=float(self.depth_input.text()),
+                                      fixed_depth=float(
+                                          self.fixed_depth_input.text()),
+                                      piston_dir=[float(self.piston_dir_x.text()),
+                                                  float(
+                                                      self.piston_dir_y.text()),
+                                                  float(self.piston_dir_z.text())],
+                                      wave_height=float(
+                                          self.wave_height_input.text()),
+                                      wave_period=float(
+                                          self.wave_period_input.text()),
+                                      spectrum=self.spectrum_selector.currentIndex(),
+                                      discretization=self.discretization_selector.currentIndex(),
+                                      peak_coef=float(
+                                          self.peak_coef_input.text()),
+                                      waves=float(self.waves_input.text()),
+                                      randomseed=float(
+                                          self.randomseed_input.text()),
+                                      serieini=float(
+                                          self.serieini_input.text()),
+                                      ramptime=float(
+                                          self.ramptime_input.text()),
+                                      serieini_autofit=self.serieini_autofit.isChecked(),
+                                      savemotion_time=str(
+                                          self.savemotion_time_input.text()),
+                                      savemotion_timedt=str(
+                                          self.savemotion_timedt_input.text()),
+                                      savemotion_xpos=str(
+                                          self.savemotion_xpos_input.text()),
+                                      savemotion_zpos=str(
+                                          self.savemotion_zpos_input.text()),
+                                      saveserie_timemin=str(
+                                          self.saveserie_timemin_input.text()),
+                                      saveserie_timemax=str(
+                                          self.saveserie_timemax_input.text()),
+                                      saveserie_timedt=str(
+                                          self.saveserie_timedt_input.text()),
+                                      saveserie_xpos=str(
+                                          self.saveserie_xpos_input.text()),
+                                      saveseriewaves_timemin=str(
+                                          self.saveseriewaves_timemin_input.text()),
+                                      saveseriewaves_timemax=str(
+                                          self.saveseriewaves_timemax_input.text()),
+                                      saveseriewaves_xpos=str(self.saveseriewaves_xpos_input.text()))
 
     def on_delete(self):
         self.deleted.emit(self.index, self.construct_motion_object())
@@ -2050,6 +2147,566 @@ class IrregularWaveMotionTimeline(QtGui.QWidget):
                    self.fixed_depth_input, self.piston_dir_x,
                    self.piston_dir_y, self.piston_dir_z,
                    self.wave_height_input, self.wave_period_input,
+                   self.peak_coef_input, self.randomseed_input,
+                   self.serieini_input, self.ramptime_input,
+                   self.savemotion_time_input, self.savemotion_timedt_input,
+                   self.savemotion_xpos_input, self.savemotion_zpos_input,
+                   self.saveserie_timemin_input, self.saveserie_timemax_input,
+                   self.saveserie_timedt_input, self.saveserie_xpos_input,
+                   self.saveseriewaves_timemin_input, self.saveseriewaves_timemax_input,
+                   self.saveseriewaves_xpos_input]]
+
+
+class RegularFlapWaveMotionTimeline(QtGui.QWidget):
+    """ A Regular Flap Wave motion graphical representation for a table-based timeline """
+
+    changed = QtCore.Signal(int, RegularFlapWaveGen)
+
+    def __init__(self, reg_wave_gen):
+        if not isinstance(reg_wave_gen, RegularFlapWaveGen):
+            raise TypeError("You tried to spawn a regular flap wave generator "
+                            "motion widget in the timeline with a wrong object")
+        if reg_wave_gen is None:
+            raise TypeError("You tried to spawn a regular flap wave generator "
+                            "motion widget in the timeline without a motion object")
+        super(RegularFlapWaveMotionTimeline, self).__init__()
+        self.setContentsMargins(0, 0, 0, 0)
+        self.main_layout = QtGui.QVBoxLayout()
+        self.main_layout.setContentsMargins(10, 10, 10, 10)
+        self.parent_movement = reg_wave_gen.parent_movement
+
+        self.root_label = QtGui.QLabel(
+            __("Regular flap wave generator (Flap)"))
+
+        self.duration_label = QtGui.QLabel(__("Duration (s): "))
+        self.duration_input = QtGui.QLineEdit()
+
+        self.wave_order_label = QtGui.QLabel(__("Wave Order"))
+        self.wave_order_selector = QtGui.QComboBox()
+        self.wave_order_selector.insertItems(
+            0, [__("1st Order"), __("2nd Order")])
+
+        self.depth_label = QtGui.QLabel(__("Depth (m): "))
+        self.depth_input = QtGui.QLineEdit()
+
+        self.fixed_depth_label = QtGui.QLabel(__("Fixed depth (m): "))
+        self.fixed_depth_input = QtGui.QLineEdit()
+        self.fixed_depth_input.setEnabled(False)
+
+        self.flap_axis_0_label = QtGui.QLabel(
+            __("Flap axis 0 (X, Y, Z): "))
+        self.flap_axis_0_x = QtGui.QLineEdit()
+        self.flap_axis_0_y = QtGui.QLineEdit()
+        self.flap_axis_0_z = QtGui.QLineEdit()
+
+        self.flap_axis_1_label = QtGui.QLabel(
+            __("Flap axis 1 (X, Y, Z): "))
+        self.flap_axis_1_x = QtGui.QLineEdit()
+        self.flap_axis_1_y = QtGui.QLineEdit()
+        self.flap_axis_1_z = QtGui.QLineEdit()
+
+        self.wave_height_label = QtGui.QLabel(__("Wave height (m): "))
+        self.wave_height_input = QtGui.QLineEdit()
+
+        self.wave_period_label = QtGui.QLabel(__("Wave period (s): "))
+        self.wave_period_input = QtGui.QLineEdit()
+
+        self.variable_draft_label = QtGui.QLabel(__("Variable Draft (m): "))
+        self.variable_draft_input = QtGui.QLineEdit()
+
+        self.phase_label = QtGui.QLabel(__("Phase (rad): "))
+        self.phase_input = QtGui.QLineEdit()
+
+        self.ramp_label = QtGui.QLabel(__("Ramp: "))
+        self.ramp_input = QtGui.QLineEdit()
+
+        self.disksave_label = QtGui.QLabel(__("Save theoretical values > "))
+        self.disksave_periods = QtGui.QLineEdit()
+        self.disksave_periods_label = QtGui.QLabel(__("Periods: "))
+        self.disksave_periodsteps = QtGui.QLineEdit()
+        self.disksave_periodsteps_label = QtGui.QLabel(__("Period Steps: "))
+        self.disksave_xpos = QtGui.QLineEdit()
+        self.disksave_xpos_label = QtGui.QLabel(__("X Pos: "))
+        self.disksave_zpos = QtGui.QLineEdit()
+        self.disksave_zpos_label = QtGui.QLabel(__("Z Pos: "))
+
+        self.root_layout = QtGui.QHBoxLayout()
+        self.root_layout.addWidget(self.root_label)
+        self.root_layout.addStretch(1)
+        [self.root_layout.addWidget(x) for x in [
+            self.duration_label, self.duration_input]]
+
+        self.first_row_layout = QtGui.QHBoxLayout()
+        [self.first_row_layout.addWidget(x) for x in [self.wave_order_label, self.wave_order_selector,
+                                                      self.depth_label, self.depth_input,
+                                                      self.fixed_depth_label, self.fixed_depth_input]]
+
+        self.second_row_layout = QtGui.QHBoxLayout()
+        [self.second_row_layout.addWidget(x) for x in [self.flap_axis_0_label,
+                                                       self.flap_axis_0_x,
+                                                       self.flap_axis_0_y,
+                                                       self.flap_axis_0_z]]
+
+        self.third_row_layout = QtGui.QHBoxLayout()
+        [self.third_row_layout.addWidget(x) for x in [self.flap_axis_1_label,
+                                                      self.flap_axis_1_x,
+                                                      self.flap_axis_1_y,
+                                                      self.flap_axis_1_z]]
+
+        self.fourth_row_layout = QtGui.QHBoxLayout()
+        [self.fourth_row_layout.addWidget(x) for x in [self.wave_height_label, self.wave_height_input,
+                                                       self.wave_period_label, self.wave_period_input,
+                                                       self.variable_draft_label, self.variable_draft_input]]
+
+        self.fifth_row_layout = QtGui.QHBoxLayout()
+        [self.fifth_row_layout.addWidget(x) for x in [self.phase_label, self.phase_input,
+                                                      self.ramp_label, self.ramp_input]]
+
+        self.sixth_row_layout = QtGui.QHBoxLayout()
+        [self.sixth_row_layout.addWidget(x) for x in [self.disksave_label,
+                                                      self.disksave_periods_label, self.disksave_periods,
+                                                      self.disksave_periodsteps_label, self.disksave_periodsteps,
+                                                      self.disksave_xpos_label, self.disksave_xpos,
+                                                      self.disksave_zpos_label, self.disksave_zpos]]
+
+        self.main_layout.addLayout(self.root_layout)
+        self.main_layout.addWidget(guiutils.h_line_generator())
+        [self.main_layout.addLayout(x) for x in [self.first_row_layout, self.second_row_layout,
+                                                 self.third_row_layout, self.fourth_row_layout,
+                                                 self.fifth_row_layout, self.sixth_row_layout]]
+
+        self.setLayout(self.main_layout)
+        self.fill_values(reg_wave_gen)
+        self._init_connections()
+
+    def fill_values(self, reg_wave_gen):
+        self.duration_input.setText(str(reg_wave_gen.duration))
+        self.wave_order_selector.setCurrentIndex(
+            int(reg_wave_gen.wave_order) - 1)
+        self.depth_input.setText(str(reg_wave_gen.depth))
+        self.fixed_depth_input.setText(str(reg_wave_gen.fixed_depth))
+        self.flap_axis_0_x.setText(str(reg_wave_gen.flapaxis0[0]))
+        self.flap_axis_0_y.setText(str(reg_wave_gen.flapaxis0[1]))
+        self.flap_axis_0_z.setText(str(reg_wave_gen.flapaxis0[2]))
+        self.flap_axis_1_x.setText(str(reg_wave_gen.flapaxis1[0]))
+        self.flap_axis_1_y.setText(str(reg_wave_gen.flapaxis1[1]))
+        self.flap_axis_1_z.setText(str(reg_wave_gen.flapaxis1[2]))
+        self.variable_draft_input.setText(str(reg_wave_gen.variable_draft))
+        self.wave_height_input.setText(str(reg_wave_gen.wave_height))
+        self.wave_period_input.setText(str(reg_wave_gen.wave_period))
+        self.phase_input.setText(str(reg_wave_gen.phase))
+        self.ramp_input.setText(str(reg_wave_gen.ramp))
+        self.disksave_periods.setText(str(reg_wave_gen.disksave_periods))
+        self.disksave_periodsteps.setText(
+            str(reg_wave_gen.disksave_periodsteps))
+        self.disksave_xpos.setText(str(reg_wave_gen.disksave_xpos))
+        self.disksave_zpos.setText(str(reg_wave_gen.disksave_zpos))
+
+    def _init_connections(self):
+        self.wave_order_selector.currentIndexChanged.connect(self.on_change)
+        [x.textChanged.connect(self.on_change) for x in [self.duration_input, self.depth_input,
+                                                         self.fixed_depth_input,
+                                                         self.variable_draft_input, self.flap_axis_0_x,
+                                                         self.flap_axis_0_y, self.flap_axis_0_z,
+                                                         self.flap_axis_1_x,
+                                                         self.flap_axis_1_y, self.flap_axis_1_z,
+                                                         self.wave_height_input, self.wave_period_input,
+                                                         self.ramp_input, self.phase_input, self.disksave_periods,
+                                                         self.disksave_periodsteps, self.disksave_xpos,
+                                                         self.disksave_zpos]]
+
+    def on_change(self):
+        self._sanitize_input()
+        try:
+            self.changed.emit(0, self.construct_motion_object())
+        except ValueError:
+            utils.debug("Introduced an invalid value for a float number.")
+
+    def construct_motion_object(self):
+        return RegularFlapWaveGen(parent_movement=self.parent_movement,
+                                  wave_order=self.wave_order_selector.currentIndex() + 1, start=0,
+                                  duration=float(self.duration_input.text()), depth=float(self.depth_input.text()),
+                                  fixed_depth=float(
+                                      self.fixed_depth_input.text()),
+                                  flapaxis0=[float(self.flap_axis_0_x.text()),
+                                             float(
+                                      self.flap_axis_0_y.text()),
+                                      float(self.flap_axis_0_z.text())],
+                                  flapaxis1=[float(self.flap_axis_1_x.text()),
+                                             float(
+                                      self.flap_axis_1_y.text()),
+                                      float(self.flap_axis_1_z.text())],
+                                  variable_draft=float(
+                                      self.variable_draft_input.text()),
+                                  wave_height=float(
+                                      self.wave_height_input.text()),
+                                  wave_period=float(
+                                      self.wave_period_input.text()),
+                                  phase=float(self.phase_input.text()),
+                                  ramp=float(self.ramp_input.text()),
+                                  disksave_periods=float(
+                                      self.disksave_periods.text()),
+                                  disksave_periodsteps=float(
+                                      self.disksave_periodsteps.text()),
+                                  disksave_xpos=float(
+                                      self.disksave_xpos.text()),
+                                  disksave_zpos=float(self.disksave_zpos.text()))
+
+    def on_delete(self):
+        self.deleted.emit(self.index, self.construct_motion_object())
+
+    def _sanitize_input(self):
+        [x.setText("0")
+         if len(x.text()) is 0
+         else x.setText(x.text().replace(",", "."))
+         for x in [self.duration_input, self.depth_input,
+                   self.fixed_depth_input, self.flap_axis_0_x,
+                   self.flap_axis_0_y, self.flap_axis_0_z,
+                   self.flap_axis_1_x,
+                   self.flap_axis_1_y, self.flap_axis_1_z,
+                   self.variable_draft_input,
+                   self.wave_height_input, self.wave_period_input,
+                   self.ramp_input, self.phase_input, self.disksave_periods,
+                   self.disksave_periodsteps, self.disksave_xpos,
+                   self.disksave_zpos]]
+
+
+class IrregularFlapWaveMotionTimeline(QtGui.QWidget):
+    """ An Irregular Flap Wave motion graphical representation for a table-based timeline """
+
+    changed = QtCore.Signal(int, IrregularFlapWaveGen)
+
+    def __init__(self, irreg_wave_gen):
+        if not isinstance(irreg_wave_gen, IrregularFlapWaveGen):
+            raise TypeError("You tried to spawn an irregular flap wave generator "
+                            "motion widget in the timeline with a wrong object")
+        if irreg_wave_gen is None:
+            raise TypeError("You tried to spawn an irregular flap wave generator "
+                            "motion widget in the timeline without a motion object")
+        super(IrregularFlapWaveMotionTimeline, self).__init__()
+        self.setContentsMargins(0, 0, 0, 0)
+        self.main_layout = QtGui.QVBoxLayout()
+        self.main_layout.setContentsMargins(10, 10, 10, 10)
+        self.parent_movement = irreg_wave_gen.parent_movement
+
+        self.root_label = QtGui.QLabel(
+            __("Irregular flap wave generator (Flap)"))
+
+        self.duration_label = QtGui.QLabel(__("Duration"))
+        self.duration_input = QtGui.QLineEdit()
+
+        self.wave_order_label = QtGui.QLabel(__("Wave Order"))
+        self.wave_order_selector = QtGui.QComboBox()
+        self.wave_order_selector.insertItems(
+            0, [__("1st Order"), __("2nd Order")])
+
+        self.depth_label = QtGui.QLabel(__("Depth (m): "))
+        self.depth_input = QtGui.QLineEdit()
+
+        self.fixed_depth_label = QtGui.QLabel(__("Fixed depth (m): "))
+        self.fixed_depth_input = QtGui.QLineEdit()
+        self.fixed_depth_input.setEnabled(False)
+        self.fixed_depth_units_label = QtGui.QLabel()
+
+        self.flap_axis_0_label = QtGui.QLabel(
+            __("Flap axis 0 (X, Y, Z): "))
+        self.flap_axis_0_x = QtGui.QLineEdit()
+        self.flap_axis_0_y = QtGui.QLineEdit()
+        self.flap_axis_0_z = QtGui.QLineEdit()
+
+        self.flap_axis_1_label = QtGui.QLabel(
+            __("Flap axis 1 (X, Y, Z): "))
+        self.flap_axis_1_x = QtGui.QLineEdit()
+        self.flap_axis_1_y = QtGui.QLineEdit()
+        self.flap_axis_1_z = QtGui.QLineEdit()
+
+        self.wave_height_label = QtGui.QLabel(__("Wave height (m): "))
+        self.wave_height_input = QtGui.QLineEdit()
+
+        self.wave_period_label = QtGui.QLabel(__("Wave period (s): "))
+        self.wave_period_input = QtGui.QLineEdit()
+
+        self.variable_draft_label = QtGui.QLabel(__("Variable Draft (m): "))
+        self.variable_draft_input = QtGui.QLineEdit()
+
+        self.spectrum_label = QtGui.QLabel(__("Spectrum"))
+        self.spectrum_selector = QtGui.QComboBox()
+        # Index numbers match IrregularSpectrum static values
+        self.spectrum_selector.insertItems(0, ["Jonswap", "Pierson-Moskowitz"])
+
+        self.discretization_label = QtGui.QLabel(__("Discretization"))
+        self.discretization_selector = QtGui.QComboBox()
+        # Index numbers match IrregularDiscretization static values
+        self.discretization_selector.insertItems(
+            0, ["Regular", "Random", "Stretched", "Crosstreched"])
+
+        self.peak_coef_label = QtGui.QLabel(__("Peak Coeff"))
+        self.peak_coef_input = QtGui.QLineEdit()
+
+        self.waves_label = QtGui.QLabel(__("Number of waves"))
+        self.waves_input = QtGui.QLineEdit()
+
+        self.randomseed_label = QtGui.QLabel(__("Random Seed"))
+        self.randomseed_input = QtGui.QLineEdit()
+
+        self.serieini_label = QtGui.QLabel(
+            __("Initial time in wave serie (s): "))
+        self.serieini_input = QtGui.QLineEdit()
+
+        self.serieini_autofit = QtGui.QCheckBox("Auto fit")
+
+        self.ramptime_label = QtGui.QLabel(__("Time of ramp (s): "))
+        self.ramptime_input = QtGui.QLineEdit()
+
+        self.savemotion_label = QtGui.QLabel(__("Motion saving > "))
+        self.savemotion_time_input = QtGui.QLineEdit()
+        self.savemotion_time_label = QtGui.QLabel(__("Time (s): "))
+        self.savemotion_timedt_input = QtGui.QLineEdit()
+        self.savemotion_timedt_label = QtGui.QLabel(__("DT Time (s): "))
+        self.savemotion_xpos_input = QtGui.QLineEdit()
+        self.savemotion_xpos_label = QtGui.QLabel(__("X Pos: "))
+        self.savemotion_zpos_input = QtGui.QLineEdit()
+        self.savemotion_zpos_label = QtGui.QLabel(__("Z Pos: "))
+
+        self.saveserie_label = QtGui.QLabel(__("Save serie > "))
+        self.saveserie_timemin_input = QtGui.QLineEdit()
+        self.saveserie_timemin_label = QtGui.QLabel(__("Min. Time (s): "))
+        self.saveserie_timemax_input = QtGui.QLineEdit()
+        self.saveserie_timemax_label = QtGui.QLabel(__("Max. Time (s): "))
+        self.saveserie_timedt_input = QtGui.QLineEdit()
+        self.saveserie_timedt_label = QtGui.QLabel(__("DT Time (s): "))
+        self.saveserie_xpos_input = QtGui.QLineEdit()
+        self.saveserie_xpos_label = QtGui.QLabel(__("X Pos: "))
+
+        self.saveseriewaves_label = QtGui.QLabel(__("Save serie waves > "))
+        self.saveseriewaves_timemin_input = QtGui.QLineEdit()
+        self.saveseriewaves_timemin_label = QtGui.QLabel(__("Min. Time (s): "))
+        self.saveseriewaves_timemax_input = QtGui.QLineEdit()
+        self.saveseriewaves_timemax_label = QtGui.QLabel(__("Max. Time (s): "))
+        self.saveseriewaves_xpos_input = QtGui.QLineEdit()
+        self.saveseriewaves_xpos_label = QtGui.QLabel(__("X Pos: "))
+
+        self.root_layout = QtGui.QHBoxLayout()
+        self.root_layout.addWidget(self.root_label)
+        self.root_layout.addStretch(1)
+        [self.root_layout.addWidget(x) for x in [
+            self.duration_label, self.duration_input]]
+
+        self.first_row_layout = QtGui.QHBoxLayout()
+        [self.first_row_layout.addWidget(x) for x in [self.wave_order_label, self.wave_order_selector,
+                                                      self.depth_label, self.depth_input,
+                                                      self.fixed_depth_label, self.fixed_depth_input]]
+
+        self.second_row_layout = QtGui.QHBoxLayout()
+        [self.second_row_layout.addWidget(x) for x in [self.flap_axis_0_label,
+                                                       self.flap_axis_0_x,
+                                                       self.flap_axis_0_y,
+                                                       self.flap_axis_0_z]]
+
+        self.third_row_layout = QtGui.QHBoxLayout()
+        [self.third_row_layout.addWidget(x) for x in [self.flap_axis_1_label,
+                                                      self.flap_axis_1_x,
+                                                      self.flap_axis_1_y,
+                                                      self.flap_axis_1_z]]
+
+        self.fourth_row_layout = QtGui.QHBoxLayout()
+        [self.fourth_row_layout.addWidget(x) for x in [self.wave_height_label, self.wave_height_input,
+                                                       self.wave_period_label, self.wave_period_input,
+                                                       self.variable_draft_label, self.variable_draft_input]]
+
+        self.fifth_row_layout = QtGui.QHBoxLayout()
+        [self.fifth_row_layout.addWidget(x) for x in [self.spectrum_label, self.spectrum_selector,
+                                                      self.discretization_label, self.discretization_selector,
+                                                      self.peak_coef_label, self.peak_coef_input]]
+
+        self.sixth_row_layout = QtGui.QHBoxLayout()
+        [self.sixth_row_layout.addWidget(x) for x in [self.waves_label, self.waves_input,
+                                                      self.randomseed_label, self.randomseed_input]]
+
+        self.seventh_row_layout = QtGui.QHBoxLayout()
+        [self.seventh_row_layout.addWidget(
+            x) for x in [self.serieini_label, self.serieini_input, self.serieini_autofit]]
+
+        self.eighth_row_layout = QtGui.QHBoxLayout()
+        [self.eighth_row_layout.addWidget(
+            x) for x in [self.ramptime_label, self.ramptime_input]]
+
+        self.ninth_row_layout = QtGui.QHBoxLayout()
+        [self.ninth_row_layout.addWidget(x) for x in [self.savemotion_label,
+                                                      self.savemotion_time_label, self.savemotion_time_input,
+                                                      self.savemotion_timedt_label, self.savemotion_timedt_input,
+                                                      self.savemotion_xpos_label, self.savemotion_xpos_input,
+                                                      self.savemotion_zpos_label, self.savemotion_zpos_input]]
+
+        self.tenth_row_layout = QtGui.QHBoxLayout()
+        [self.tenth_row_layout.addWidget(x) for x in [self.saveserie_label,
+                                                      self.saveserie_timemin_label,
+                                                      self.saveserie_timemin_input,
+                                                      self.saveserie_timemax_label,
+                                                      self.saveserie_timemax_input,
+                                                      self.saveserie_timedt_label,
+                                                      self.saveserie_timedt_input,
+                                                      self.saveserie_xpos_label,
+                                                      self.saveserie_xpos_input]]
+
+        self.eleventh_row_layout = QtGui.QHBoxLayout()
+        [self.eleventh_row_layout.addWidget(x) for x in [self.saveseriewaves_label,
+                                                         self.saveseriewaves_timemin_label,
+                                                         self.saveseriewaves_timemin_input,
+                                                         self.saveseriewaves_timemax_label,
+                                                         self.saveseriewaves_timemax_input,
+                                                         self.saveseriewaves_xpos_label,
+                                                         self.saveseriewaves_xpos_input]]
+
+        self.main_layout.addLayout(self.root_layout)
+        self.main_layout.addWidget(guiutils.h_line_generator())
+        [self.main_layout.addLayout(x) for x in [self.first_row_layout, self.second_row_layout, self.third_row_layout,
+                                                 self.fourth_row_layout, self.fifth_row_layout, self.sixth_row_layout,
+                                                 self.seventh_row_layout, self.eighth_row_layout, self.ninth_row_layout,
+                                                 self.tenth_row_layout, self.eleventh_row_layout]]
+
+        self.setLayout(self.main_layout)
+        self.fill_values(irreg_wave_gen)
+        self._init_connections()
+
+    def fill_values(self, irreg_wave_gen):
+        self.duration_input.setText(str(irreg_wave_gen.duration))
+        self.wave_order_selector.setCurrentIndex(
+            int(irreg_wave_gen.wave_order) - 1)
+        self.depth_input.setText(str(irreg_wave_gen.depth))
+        self.fixed_depth_input.setText(str(irreg_wave_gen.fixed_depth))
+        self.flap_axis_0_x.setText(str(irreg_wave_gen.flapaxis0[0]))
+        self.flap_axis_0_y.setText(str(irreg_wave_gen.flapaxis0[1]))
+        self.flap_axis_0_z.setText(str(irreg_wave_gen.flapaxis0[2]))
+        self.flap_axis_1_x.setText(str(irreg_wave_gen.flapaxis1[0]))
+        self.flap_axis_1_y.setText(str(irreg_wave_gen.flapaxis1[1]))
+        self.flap_axis_1_z.setText(str(irreg_wave_gen.flapaxis1[2]))
+        self.wave_height_input.setText(str(irreg_wave_gen.wave_height))
+        self.wave_period_input.setText(str(irreg_wave_gen.wave_period))
+        self.variable_draft_input.setText(str(irreg_wave_gen.variable_draft))
+        self.spectrum_selector.setCurrentIndex(int(irreg_wave_gen.spectrum))
+        self.discretization_selector.setCurrentIndex(
+            int(irreg_wave_gen.discretization))
+        self.peak_coef_input.setText(str(irreg_wave_gen.peak_coef))
+        self.waves_input.setText(str(irreg_wave_gen.waves))
+        self.randomseed_input.setText(str(irreg_wave_gen.randomseed))
+        self.serieini_input.setText(str(irreg_wave_gen.serieini))
+        self.serieini_autofit.setChecked(irreg_wave_gen.serieini_autofit)
+        self.ramptime_input.setText(str(irreg_wave_gen.ramptime))
+        self.savemotion_time_input.setText(str(irreg_wave_gen.savemotion_time))
+        self.savemotion_timedt_input.setText(
+            str(irreg_wave_gen.savemotion_timedt))
+        self.savemotion_xpos_input.setText(str(irreg_wave_gen.savemotion_xpos))
+        self.savemotion_zpos_input.setText(str(irreg_wave_gen.savemotion_zpos))
+        self.saveserie_timemin_input.setText(
+            str(irreg_wave_gen.saveserie_timemin))
+        self.saveserie_timemax_input.setText(
+            str(irreg_wave_gen.saveserie_timemax))
+        self.saveserie_timedt_input.setText(
+            str(irreg_wave_gen.saveserie_timedt))
+        self.saveserie_xpos_input.setText(str(irreg_wave_gen.saveserie_xpos))
+        self.saveseriewaves_timemin_input.setText(
+            str(irreg_wave_gen.saveseriewaves_timemin))
+        self.saveseriewaves_timemax_input.setText(
+            str(irreg_wave_gen.saveseriewaves_timemax))
+        self.saveseriewaves_xpos_input.setText(
+            str(irreg_wave_gen.saveseriewaves_xpos))
+
+    def _init_connections(self):
+        self.serieini_autofit.stateChanged.connect(self.on_change)
+        [x.currentIndexChanged.connect(self.on_change) for x in [self.wave_order_selector, self.spectrum_selector,
+                                                                 self.discretization_selector]]
+
+        [x.textChanged.connect(self.on_change) for x in [self.peak_coef_input, self.waves_input, self.randomseed_input,
+                                                         self.serieini_input, self.ramptime_input, self.duration_input,
+                                                         self.depth_input, self.fixed_depth_input, self.flap_axis_0_x,
+                                                         self.flap_axis_0_y, self.flap_axis_0_z,
+                                                         self.flap_axis_1_x,
+                                                         self.flap_axis_1_y, self.flap_axis_1_z,
+                                                         self.wave_height_input,
+                                                         self.wave_period_input, self.variable_draft_input, self.savemotion_time_input,
+                                                         self.savemotion_timedt_input, self.savemotion_xpos_input,
+                                                         self.savemotion_zpos_input, self.saveserie_timemin_input,
+                                                         self.saveserie_timemax_input, self.saveserie_timedt_input,
+                                                         self.saveserie_xpos_input, self.saveseriewaves_timemin_input,
+                                                         self.saveseriewaves_timemax_input,
+                                                         self.saveseriewaves_xpos_input]]
+
+    def on_change(self):
+        self._sanitize_input()
+        try:
+            self.changed.emit(0, self.construct_motion_object())
+        except ValueError:
+            utils.debug("Introduced an invalid value for a float number.")
+
+    def construct_motion_object(self):
+        return IrregularFlapWaveGen(parent_movement=self.parent_movement,
+                                    wave_order=self.wave_order_selector.currentIndex() + 1, start=0,
+                                    duration=float(self.duration_input.text()), depth=float(self.depth_input.text()),
+                                    fixed_depth=float(
+                                        self.fixed_depth_input.text()),
+                                    flapaxis0=[float(self.flap_axis_0_x.text()),
+                                               float(
+                                        self.flap_axis_0_y.text()),
+                                        float(self.flap_axis_0_z.text())],
+                                    flapaxis1=[float(self.flap_axis_1_x.text()),
+                                               float(
+                                        self.flap_axis_1_y.text()),
+                                        float(self.flap_axis_1_z.text())],
+                                    wave_height=float(
+                                        self.wave_height_input.text()),
+                                    wave_period=float(
+                                        self.wave_period_input.text()),
+                                    variable_draft=float(
+                                        self.variable_draft_input.text()),
+                                    spectrum=self.spectrum_selector.currentIndex(),
+                                    discretization=self.discretization_selector.currentIndex(),
+                                    peak_coef=float(
+                                        self.peak_coef_input.text()),
+                                    waves=float(self.waves_input.text()),
+                                    randomseed=float(
+                                        self.randomseed_input.text()),
+                                    serieini=float(
+                                        self.serieini_input.text()),
+                                    ramptime=float(
+                                        self.ramptime_input.text()),
+                                    serieini_autofit=self.serieini_autofit.isChecked(),
+                                    savemotion_time=str(
+                                        self.savemotion_time_input.text()),
+                                    savemotion_timedt=str(
+                                        self.savemotion_timedt_input.text()),
+                                    savemotion_xpos=str(
+                                        self.savemotion_xpos_input.text()),
+                                    savemotion_zpos=str(
+                                        self.savemotion_zpos_input.text()),
+                                    saveserie_timemin=str(
+                                        self.saveserie_timemin_input.text()),
+                                    saveserie_timemax=str(
+                                        self.saveserie_timemax_input.text()),
+                                    saveserie_timedt=str(
+                                        self.saveserie_timedt_input.text()),
+                                    saveserie_xpos=str(
+                                        self.saveserie_xpos_input.text()),
+                                    saveseriewaves_timemin=str(
+                                        self.saveseriewaves_timemin_input.text()),
+                                    saveseriewaves_timemax=str(
+                                        self.saveseriewaves_timemax_input.text()),
+                                    saveseriewaves_xpos=str(self.saveseriewaves_xpos_input.text()))
+
+    def on_delete(self):
+        self.deleted.emit(self.index, self.construct_motion_object())
+
+    def _sanitize_input(self):
+        [x.setText("0")
+         if len(x.text()) is 0
+         else x.setText(x.text().replace(",", "."))
+         for x in [self.duration_input, self.depth_input,
+                   self.fixed_depth_input, self.flap_axis_0_x,
+                   self.flap_axis_0_y, self.flap_axis_0_z,
+                   self.flap_axis_1_x,
+                   self.flap_axis_1_y, self.flap_axis_1_z,
+                   self.wave_height_input, self.wave_period_input,
+                   self.variable_draft_input,
                    self.peak_coef_input, self.randomseed_input,
                    self.serieini_input, self.ramptime_input,
                    self.savemotion_time_input, self.savemotion_timedt_input,
@@ -2073,7 +2730,8 @@ class FileMotionTimeline(QtGui.QWidget):
             raise TypeError("You tried to spawn a regular wave generator "
                             "motion widget in the timeline without a motion object")
         super(FileMotionTimeline, self).__init__()
-        self.project_folder_path = project_folder_path  # Needed for copying movement file to root of the case.
+        # Needed for copying movement file to root of the case.
+        self.project_folder_path = project_folder_path
         self.setContentsMargins(0, 0, 0, 0)
         self.main_layout = QtGui.QVBoxLayout()
         self.main_layout.setContentsMargins(10, 10, 10, 10)
@@ -2152,7 +2810,8 @@ class FileMotionTimeline(QtGui.QWidget):
 
     def on_file_browse(self):
         # noinspection PyArgumentList
-        filename, _ = QtGui.QFileDialog.getOpenFileName(self, __("Open file"), QtCore.QDir.homePath())
+        filename, _ = QtGui.QFileDialog.getOpenFileName(
+            self, __("Open file"), QtCore.QDir.homePath())
         self.filename_input.setText(filename)
 
     def on_change(self):
@@ -2196,7 +2855,8 @@ class RotationFileMotionTimeline(QtGui.QWidget):
             raise TypeError("You tried to spawn a rotation file generator "
                             "motion widget in the timeline without a motion object")
         super(RotationFileMotionTimeline, self).__init__()
-        self.project_folder_path = project_folder_path  # Needed for copying movement file to root of the case.
+        # Needed for copying movement file to root of the case.
+        self.project_folder_path = project_folder_path
         self.setContentsMargins(0, 0, 0, 0)
         self.main_layout = QtGui.QVBoxLayout()
         self.main_layout.setContentsMargins(10, 10, 10, 10)
@@ -2213,7 +2873,8 @@ class RotationFileMotionTimeline(QtGui.QWidget):
 
         self.anglesunits_label = QtGui.QLabel(__("Angle Units: "))
         self.anglesunits_selector = QtGui.QComboBox()
-        self.anglesunits_selector.insertItems(0, [__("Degrees"), __("Radians")])
+        self.anglesunits_selector.insertItems(
+            0, [__("Degrees"), __("Radians")])
 
         self.axisp1x_label = QtGui.QLabel(__("Axis 1 X: "))
         self.axisp1x_input = QtGui.QLineEdit()
@@ -2266,7 +2927,8 @@ class RotationFileMotionTimeline(QtGui.QWidget):
         self._init_connections()
 
     def fill_values(self, rot_file_wave_gen):
-        self.anglesunits_selector.setCurrentIndex(0 if rot_file_wave_gen.anglesunits == "degrees" else 1)
+        self.anglesunits_selector.setCurrentIndex(
+            0 if rot_file_wave_gen.anglesunits == "degrees" else 1)
         self.duration_input.setText(str(rot_file_wave_gen.duration))
         self.filename_input.setText(str(rot_file_wave_gen.filename))
         self.axisp1x_input.setText(str(rot_file_wave_gen.axisp1[0]))
@@ -2285,7 +2947,8 @@ class RotationFileMotionTimeline(QtGui.QWidget):
 
     def on_file_browse(self):
         # noinspection PyArgumentList
-        filename, _ = QtGui.QFileDialog.getOpenFileName(self, __("Open file"), QtCore.QDir.homePath())
+        filename, _ = QtGui.QFileDialog.getOpenFileName(
+            self, __("Open file"), QtCore.QDir.homePath())
         self.filename_input.setText(filename)
 
     def on_change(self):
@@ -2299,7 +2962,8 @@ class RotationFileMotionTimeline(QtGui.QWidget):
         return RotationFileGen(parent_movement=self.parent_movement,
                                duration=float(self.duration_input.text()),
                                filename=str(self.filename_input.text()),
-                               anglesunits=str(self.anglesunits_selector.currentText().lower()),
+                               anglesunits=str(
+                                   self.anglesunits_selector.currentText().lower()),
                                axisp1=[float(self.axisp1x_input.text()),
                                        float(self.axisp1y_input.text()),
                                        float(self.axisp1z_input.text())],
@@ -2332,11 +2996,14 @@ class ObjectOrderWidget(QtGui.QWidget):
         self.object_name = object_name
         self.main_layout = QtGui.QHBoxLayout()
         self.main_layout.setContentsMargins(10, 0, 10, 0)
-        self.mk_label = QtGui.QLabel("<b>{}{}</b>".format(mktype[0].upper(), str(object_mk)))
+        self.mk_label = QtGui.QLabel(
+            "<b>{}{}</b>".format(mktype[0].upper(), str(object_mk)))
         self.name_label = QtGui.QLabel(str(object_name))
-        self.up_button = QtGui.QPushButton(guiutils.get_icon("up_arrow.png"), None)
+        self.up_button = QtGui.QPushButton(
+            guiutils.get_icon("up_arrow.png"), None)
         self.up_button.clicked.connect(self.on_up)
-        self.down_button = QtGui.QPushButton(guiutils.get_icon("down_arrow.png"), None)
+        self.down_button = QtGui.QPushButton(
+            guiutils.get_icon("down_arrow.png"), None)
         self.down_button.clicked.connect(self.on_down)
 
         self.main_layout.addWidget(self.mk_label)
