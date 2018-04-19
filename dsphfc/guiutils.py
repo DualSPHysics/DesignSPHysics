@@ -60,7 +60,7 @@ def warning_dialog(warn_text, detailed_text=None):
     """Spawns a warning dialog with the text passed."""
 
     warning_messagebox = QtGui.QMessageBox()
-    warning_messagebox.setText(warn_text)
+    warning_messagebox.setText(str(warn_text))
     warning_messagebox.setIcon(QtGui.QMessageBox.Warning)
     if detailed_text is not None:
         warning_messagebox.setDetailedText(str(detailed_text))
@@ -874,14 +874,13 @@ def def_execparams_window(data):
         domainfixed_zmin_input.setEnabled(domainfixed_chk.isChecked())
         domainfixed_zmax_input.setEnabled(domainfixed_chk.isChecked())
 
-
-    domainfixed_layout = QtGui.QVBoxLayout()    
+    domainfixed_layout = QtGui.QVBoxLayout()
     domainfixed_chk = QtGui.QCheckBox("Fixed Domain")
 
     domainfixed_x_layout = QtGui.QHBoxLayout()
     domainfixed_y_layout = QtGui.QHBoxLayout()
     domainfixed_z_layout = QtGui.QHBoxLayout()
-    
+
     domainfixed_xmin_label = QtGui.QLabel("X Min")
     domainfixed_xmin_input = QtGui.QLineEdit("0")
     domainfixed_xmax_label = QtGui.QLabel("X Max")
@@ -896,27 +895,27 @@ def def_execparams_window(data):
     domainfixed_zmin_input = QtGui.QLineEdit("0")
     domainfixed_zmax_label = QtGui.QLabel("Z Max")
     domainfixed_zmax_input = QtGui.QLineEdit("0")
-    
+
     domainfixed_x_layout.addWidget(domainfixed_xmin_label)
     domainfixed_x_layout.addWidget(domainfixed_xmin_input)
     domainfixed_x_layout.addWidget(domainfixed_xmax_label)
     domainfixed_x_layout.addWidget(domainfixed_xmax_input)
-    
+
     domainfixed_y_layout.addWidget(domainfixed_ymin_label)
     domainfixed_y_layout.addWidget(domainfixed_ymin_input)
     domainfixed_y_layout.addWidget(domainfixed_ymax_label)
     domainfixed_y_layout.addWidget(domainfixed_ymax_input)
-    
+
     domainfixed_z_layout.addWidget(domainfixed_zmin_label)
     domainfixed_z_layout.addWidget(domainfixed_zmin_input)
     domainfixed_z_layout.addWidget(domainfixed_zmax_label)
     domainfixed_z_layout.addWidget(domainfixed_zmax_input)
-    
+
     domainfixed_layout.addWidget(domainfixed_chk)
     domainfixed_layout.addLayout(domainfixed_x_layout)
     domainfixed_layout.addLayout(domainfixed_y_layout)
     domainfixed_layout.addLayout(domainfixed_z_layout)
-    
+
     domainfixed_chk.stateChanged.connect(on_domainfixed_chk)
 
     try:
@@ -1085,14 +1084,14 @@ def def_execparams_window(data):
         data['rhopoutmin'] = rhopoutmin_input.text()
         data['rhopoutmax'] = rhopoutmax_input.text()
         data['domainfixed'] = DomainFixedParameter(
-                        domainfixed_chk.isChecked(),
-                        float(domainfixed_xmin_input.text()),
-                        float(domainfixed_xmax_input.text()),
-                        float(domainfixed_ymin_input.text()),
-                        float(domainfixed_ymax_input.text()),
-                        float(domainfixed_zmin_input.text()),
-                        float(domainfixed_zmax_input.text()))
-        
+            domainfixed_chk.isChecked(),
+            float(domainfixed_xmin_input.text()),
+            float(domainfixed_xmax_input.text()),
+            float(domainfixed_ymin_input.text()),
+            float(domainfixed_ymax_input.text()),
+            float(domainfixed_zmin_input.text()),
+            float(domainfixed_zmax_input.text()))
+
         data['period_x'] = [
             period_x_chk.isChecked(),
             float(period_x_inc_x_input.text()),
@@ -1608,6 +1607,113 @@ def def_setup_window(data):
     setup_window.exec_()
 
 
+def damping_config_window(data):
+    """Defines the setup window.
+    Modifies data dictionary passed as parameter."""
+
+    # Creates a dialog and 2 main buttons
+    damping_window = QtGui.QDialog()
+    damping_window.setWindowTitle("Damping configuration")
+    ok_button = QtGui.QPushButton("Save")
+    cancel_button = QtGui.QPushButton("Cancel")
+
+    main_layout = QtGui.QVBoxLayout()
+
+    enabled_checkbox = QtGui.QCheckBox("Enabled")
+
+    main_groupbox = QtGui.QGroupBox("Damping parameters")
+    main_groupbox_layout = QtGui.QVBoxLayout()
+
+    limitmin_layout = QtGui.QHBoxLayout()
+    limitmin_label = QtGui.QLabel("Minimum limit [X, Y, Z]: ")
+    limitmin_x = QtGui.QLineEdit()
+    limitmin_y = QtGui.QLineEdit()
+    limitmin_z = QtGui.QLineEdit()
+    limitmin_units_label = QtGui.QLabel(" meters")
+    [limitmin_layout.addWidget(x) for x in [
+        limitmin_label, limitmin_x, limitmin_y, limitmin_z]]
+
+    limitmax_layout = QtGui.QHBoxLayout()
+    limitmax_label = QtGui.QLabel("Maximum limit [X, Y, Z]: ")
+    limitmax_x = QtGui.QLineEdit()
+    limitmax_y = QtGui.QLineEdit()
+    limitmax_z = QtGui.QLineEdit()
+    limitmax_units_label = QtGui.QLabel(" meters")
+    [limitmax_layout.addWidget(x) for x in [
+        limitmax_label, limitmax_x, limitmax_y, limitmax_z]]
+
+    overlimit_layout = QtGui.QHBoxLayout()
+    overlimit_label = QtGui.QLabel("Overlimit: ")
+    overlimit_input = QtGui.QLineEdit()
+    [overlimit_layout.addWidget(x) for x in [overlimit_label, overlimit_input]]
+
+    redumax_layout = QtGui.QHBoxLayout()
+    redumax_label = QtGui.QLabel("Redumax: ")
+    redumax_input = QtGui.QLineEdit()
+    [redumax_layout.addWidget(x) for x in [redumax_label, redumax_input]]
+
+    main_groupbox_layout.addLayout(limitmin_layout)
+    main_groupbox_layout.addLayout(limitmax_layout)
+    main_groupbox_layout.addLayout(overlimit_layout)
+    main_groupbox_layout.addLayout(redumax_layout)
+
+    main_groupbox.setLayout(main_groupbox_layout)
+
+    button_layout = QtGui.QHBoxLayout()
+    button_layout.addStretch(1)
+    button_layout.addWidget(ok_button)
+    button_layout.addWidget(cancel_button)
+
+    main_layout.addWidget(enabled_checkbox)
+    main_layout.addWidget(main_groupbox)
+    main_layout.addLayout(button_layout)
+
+    damping_window.setLayout(main_layout)
+
+    # Window logic
+    def on_ok():
+        data["damping"].enabled = enabled_checkbox.isChecked()
+        data["damping"].limitmin = [float(limitmin_x.text()), float(limitmin_y.text()), float(limitmin_z.text())]
+        data["damping"].limitmax = [float(limitmax_x.text()), float(limitmax_y.text()), float(limitmax_z.text())]
+        data["damping"].overlimit = float(overlimit_input.text())
+        data["damping"].redumax = float(redumax_input.text())
+        damping_window.accept()
+
+    def on_cancel():
+        damping_window.reject()
+
+    def on_enable_chk(state):
+        if state == QtCore.Qt.Checked:
+            main_groupbox.setEnabled(True)
+        else:
+            main_groupbox.setEnabled(False)
+
+    def on_value_change():
+        [x.setText(x.text().replace(",", ".")) for x in [limitmin_x, limitmin_y,
+                                                         limitmin_z, limitmax_x, limitmax_y, limitmax_z, overlimit_input, redumax_input]]
+
+    ok_button.clicked.connect(on_ok)
+    cancel_button.clicked.connect(on_cancel)
+    enabled_checkbox.stateChanged.connect(on_enable_chk)
+    [x.textChanged.connect(on_value_change) for x in [limitmin_x, limitmin_y,
+                                                      limitmin_z, limitmax_x, limitmax_y, limitmax_z, overlimit_input, redumax_input]]
+
+    # Fill fields with case data
+    enabled_checkbox.setChecked(data["damping"].enabled)
+    limitmin_x.setText(str(data["damping"].limitmin[0]))
+    limitmin_y.setText(str(data["damping"].limitmin[1]))
+    limitmin_z.setText(str(data["damping"].limitmin[2]))
+    limitmax_x.setText(str(data["damping"].limitmax[0]))
+    limitmax_y.setText(str(data["damping"].limitmax[1]))
+    limitmax_z.setText(str(data["damping"].limitmax[2]))
+    overlimit_input.setText(str(data["damping"].overlimit))
+    redumax_input.setText(str(data["damping"].redumax))
+    on_enable_chk(
+        QtCore.Qt.Checked if data["damping"].enabled else QtCore.Qt.Unchecked)
+
+    damping_window.exec_()
+
+
 def widget_state_config(widgets, config):
     """ Takes an widget dictionary and a config string to
         enable and disable certain widgets base on a case. """
@@ -1630,6 +1736,7 @@ def widget_state_config(widgets, config):
         widgets["dp_input"].setEnabled(False)
         widgets["summary_bt"].setEnabled(False)
         widgets["toggle3dbutton"].setEnabled(False)
+        widgets["dampingbutton"].setEnabled(False)
     elif config == "new case":
         widgets["constants_button"].setEnabled(True)
         widgets["execparams_button"].setEnabled(True)
@@ -1649,6 +1756,7 @@ def widget_state_config(widgets, config):
         widgets["summary_bt"].setEnabled(True)
         widgets["toggle3dbutton"].setEnabled(True)
         widgets["properties_bt"].setEnabled(True)
+        widgets["dampingbutton"].setEnabled(True)
     elif config == "gencase done":
         widgets["ex_selector_combo"].setEnabled(True)
         widgets["ex_button"].setEnabled(True)
@@ -1667,6 +1775,7 @@ def widget_state_config(widgets, config):
         widgets["summary_bt"].setEnabled(True)
         widgets["toggle3dbutton"].setEnabled(True)
         widgets["properties_bt"].setEnabled(True)
+        widgets["dampingbutton"].setEnabled(True)
     elif config == "simulation done":
         widgets['post_proc_partvtk_button'].setEnabled(True)
         widgets['post_proc_computeforces_button'].setEnabled(True)

@@ -11,7 +11,7 @@ import sys
 reload(sys)
 sys.setdefaultencoding('utf-8')
 import random
-from propenums import *
+from dsphfc.propenums import *
 
 
 # Copyright (C) 2016 - Andrés Vieira (anvieiravazquez@gmail.com)
@@ -196,7 +196,7 @@ class RegularPistonWaveGen(WaveGen):
     def __init__(self, parent_movement=None, wave_order=2, start=0, duration=0, depth=0, fixed_depth=0, wave_height=0.5, wave_period=1, phase=0, ramp=0, disksave_periods=24,
                  disksave_periodsteps=20, disksave_xpos=2, disksave_zpos=-0.15, piston_dir=None):
         super(RegularPistonWaveGen, self).__init__(parent_movement, wave_order, start,
-                                             duration, depth, fixed_depth, wave_height, wave_period)
+                                                   duration, depth, fixed_depth, wave_height, wave_period)
         self.type = "Regular Piston Wave Generator"
         self.phase = phase
         self.ramp = ramp
@@ -228,7 +228,7 @@ class IrregularPistonWaveGen(WaveGen):
                  savemotion_zpos=-0.15, saveserie_timemin=0, saveserie_timemax=1300, saveserie_timedt=0.05,
                  saveserie_xpos=0, saveseriewaves_timemin=0, saveseriewaves_timemax=1000, saveseriewaves_xpos=2, piston_dir=None):
         super(IrregularPistonWaveGen, self).__init__(parent_movement, wave_order, start,
-                                               duration, depth, fixed_depth, wave_height, wave_period)
+                                                     duration, depth, fixed_depth, wave_height, wave_period)
         self.type = "Irregular Piston Wave Generator"
         self.spectrum = spectrum
         self.discretization = discretization
@@ -260,7 +260,7 @@ class RegularFlapWaveGen(WaveGen):
         ramp: Periods of ramp
         variable_draft: Position of the wavemaker hinge
         flapaxis0: Point 0 of axis rotation
-        flapaxis1: Point 1 of axis rotation        
+        flapaxis1: Point 1 of axis rotation
     """
 
     def __init__(self, parent_movement=None, wave_order=2, start=0, duration=0, depth=0, fixed_depth=0, wave_height=0.5, wave_period=1, phase=0, ramp=0, disksave_periods=24,
@@ -292,7 +292,7 @@ class IrregularFlapWaveGen(WaveGen):
         ramptime: Time of ramp
         variable_draft: Position of the wavemaker hinge
         flapaxis0: Point 0 of axis rotation
-        flapaxis1: Point 1 of axis rotation  
+        flapaxis1: Point 1 of axis rotation
     """
 
     def __init__(self, parent_movement=None, wave_order=1, start=0, duration=0, depth=0, fixed_depth=0, wave_height=0.5, wave_period=1, spectrum=IrregularSpectrum.JONSWAP,
@@ -302,7 +302,7 @@ class IrregularFlapWaveGen(WaveGen):
                  savemotion_zpos=-0.15, saveserie_timemin=0, saveserie_timemax=1300, saveserie_timedt=0.05,
                  saveserie_xpos=0, saveseriewaves_timemin=0, saveseriewaves_timemax=1000, saveseriewaves_xpos=2, variable_draft=0.0, flapaxis0=None, flapaxis1=None):
         super(IrregularFlapWaveGen, self).__init__(parent_movement, wave_order, start,
-                                               duration, depth, fixed_depth, wave_height, wave_period)
+                                                   duration, depth, fixed_depth, wave_height, wave_period)
         self.type = "Irregular Flap Wave Generator"
         self.spectrum = spectrum
         self.discretization = discretization
@@ -673,7 +673,7 @@ class RectSinuMotion(BaseMotion):
             self.phase)
 
 
-class CustomProperty:
+class CustomProperty(object):
     """ DualSPHysics compatible custom property.
 
             Attributes:
@@ -686,3 +686,24 @@ class CustomProperty:
     def __init__(self, name="New Property", mkapplied=""):
         self.name = name
         self.mkapplied = mkapplied
+
+
+class Damping(object):
+    """ DualSPHysics damping settings """
+
+    def __init__(self, enabled=False, limitmin=None, limitmax=None, overlimit=1, redumax=10):
+        self.enabled = enabled
+        self.limitmin = [0, 0, 0] if limitmin is None else limitmin
+        self.limitmax = [0, 0, 0] if limitmax is None else limitmax
+        self.overlimit = overlimit
+        self.redumax = redumax
+
+    def __str__(self):
+        to_ret = ""
+        to_ret += "Damping configuration structure ({})\n".format(
+            "enabled" if self.enabled else "disabled")
+        to_ret += "Minimum limit: X:{} ; Y:{} ; Z:{}\n".format(*self.limitmin)
+        to_ret += "Maximum limit: X:{} ; Y:{} ; Z:{}\n".format(*self.limitmax)
+        to_ret += "Overlimit: {}\n".format(self.overlimit)
+        to_ret += "Redumax: {}".format(self.redumax)
+        return to_ret

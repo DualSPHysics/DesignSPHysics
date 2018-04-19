@@ -410,6 +410,7 @@ def get_default_data():
     data['rhopoutmin'] = 700
     data['rhopoutmax'] = 1300
     data['domainfixed'] = DomainFixedParameter(False, 0, 0, 0, 0, 0, 0)
+    data['damping'] = Damping()
 
     # Periodicity data [enabled, x_inc, y_inc, z_inc]
     data['period_x'] = [False, 0.0, 0.0, 0.0]
@@ -1104,6 +1105,22 @@ def dump_to_xml(data, save_name):
     f.write('\t</casedef>\n')
     f.write('\t<execution>\n')
 
+    f.write('\t\t<special>\n')
+    # Damping support
+    if data["damping"].enabled:
+        f.write('\t\t\t\t<damping>\n')
+        f.write('\t\t\t\t\t<dampingzone>\n')
+        f.write(
+            '\t\t\t\t\t\t<limitmin x="{}" y="{}" z="{}" />\n'.format(*data["damping"].limitmin))
+        f.write(
+            '\t\t\t\t\t\t<limitmax x="{}" y="{}" z="{}" />\n'.format(*data["damping"].limitmin))
+        f.write(
+            '\t\t\t\t\t\t<overlimit value="{}" />\n'.format(data["damping"].overlimit))
+        f.write(
+            '\t\t\t\t\t\t<redumax value="{}" />\n'.format(data["damping"].redumax))
+        f.write('\t\t\t\t\t</dampingzone>\n')
+        f.write('\t\t\t\t</damping>\n')
+
     # A counter for special movements. Controls when and how to open/close tags
     written_movements_counter = 0
     for mk, motlist in data["motion_mks"].iteritems():
@@ -1117,7 +1134,6 @@ def dump_to_xml(data, save_name):
 
             # Open tags only for the first movement
             if written_movements_counter == 0:
-                f.write('\t\t\t<special>\n')
                 f.write('\t\t\t\t<wavepaddles>\n')
 
             if isinstance(mot, RegularPistonWaveGen):
@@ -1275,7 +1291,8 @@ def dump_to_xml(data, save_name):
     # Close tags only if at least one movement was written.
     if written_movements_counter > 0:
         f.write('\t\t\t\t</wavepaddles>\n')
-        f.write('\t\t\t</special>\n')
+
+    f.write('\t\t</special>\n')
 
     f.write('\t\t<parameters>\n')
     # Writes parameters as user introduced
