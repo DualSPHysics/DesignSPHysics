@@ -272,6 +272,12 @@ toggle3dbutton.setToolTip(
     __("Changes the case mode between 2D and 3D mode, switching the Case Limits between a plane or a cube"))
 widget_state_elements['toggle3dbutton'] = toggle3dbutton
 
+# Damping config button
+casecontrols_bt_damping = QtGui.QPushButton(__("Damping"))
+casecontrols_bt_damping.setToolTip(
+    __("Sets up the damping zone for the case"))
+widget_state_elements['dampingbutton'] = casecontrols_bt_damping
+
 # Toggle Periodicity buttons
 y_period_bt = QtGui.QPushButton("Toggle Y Periodicity")
 x_period_bt = QtGui.QPushButton("Toggle Y Periodicity")
@@ -996,6 +1002,10 @@ def on_properties():
     property_window.exec_()
 
 
+def on_damping_button():
+    guiutils.damping_config_window(data)
+
+
 # Connect case control buttons to respective handlers
 casecontrols_bt_newdoc.clicked.connect(on_new_case)
 casecontrols_bt_savedoc.clicked.connect(on_save_case)
@@ -1008,6 +1018,7 @@ casecontrols_bt_importxml.clicked.connect(on_import_xml)
 summary_bt.clicked.connect(on_summary)
 properties_bt.clicked.connect(on_properties)
 toggle3dbutton.clicked.connect(on_2d_toggle)
+casecontrols_bt_damping.clicked.connect(on_damping_button)
 
 # Defines case control scaffolding
 cclabel_layout.addWidget(casecontrols_label)
@@ -1020,6 +1031,7 @@ ccsecondrow.addWidget(toggle3dbutton)
 ccthirdrow_layout.addWidget(casecontrols_bt_addfillbox)
 ccthirdrow_layout.addWidget(casecontrols_bt_addstl)
 ccthirdrow_layout.addWidget(casecontrols_bt_importxml)
+ccfourthrow_layout.addWidget(casecontrols_bt_damping)
 
 cc_layout.addLayout(cclabel_layout)
 cc_layout.addLayout(ccfilebuttons_layout)
