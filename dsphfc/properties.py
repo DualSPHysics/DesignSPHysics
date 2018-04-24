@@ -194,7 +194,7 @@ class RegularPistonWaveGen(WaveGen):
     """
 
     def __init__(self, parent_movement=None, wave_order=2, start=0, duration=0, depth=0, fixed_depth=0, wave_height=0.5, wave_period=1, phase=0, ramp=0, disksave_periods=24,
-                 disksave_periodsteps=20, disksave_xpos=2, disksave_zpos=-0.15, piston_dir=None):
+                 disksave_periodsteps=20, disksave_xpos=2, disksave_zpos=-0.15, piston_dir=None, awas=None):
         super(RegularPistonWaveGen, self).__init__(parent_movement, wave_order, start,
                                                    duration, depth, fixed_depth, wave_height, wave_period)
         self.type = "Regular Piston Wave Generator"
@@ -205,6 +205,52 @@ class RegularPistonWaveGen(WaveGen):
         self.disksave_xpos = disksave_xpos
         self.disksave_zpos = disksave_zpos
         self.piston_dir = [1, 0, 0] if piston_dir is None else piston_dir
+        self.awas = AWAS() if awas is None else awas
+
+
+class AWAS(object):
+    """ AWAS configuration.
+
+    Attributes:
+        startawas: Time to start AWAS correction
+        swl: "Still water level (free-surface water)
+        elevation: Order wave to calculate elevation 1:1st order, 2:2nd order 
+        gaugex: Position in X from piston to measure free-surface water
+        gaugey: Position in Y to measure free-surface water
+        gaugezmin: Minimum position in Z to measure free-surface water, it must be in water
+        gaugezmax: Maximum position in Z to measure free-surface water (def=domain limits)
+        gaugedp: Resolution to measure free-surface water, it uses Dp*gaugedp 
+        coefmasslimit: Coefficient to calculate mass of free-surface
+        savedata: Saves CSV with information
+        limitace: Factor to limit maximum value of acceleration, with 0 disabled
+        correction: Drift correction configuration
+    """
+
+    def __init__(self, enabled=False, startawas=0, swl=0, elevation=AWASWaveOrder.SECOND_ORDER,
+                 gaugex=0, gaugey=0, gaugezmin=0, gaugezmax=0, gaugedp=0, coefmasslimit=0,
+                 savedata=AWASSaveMethod.BY_PART, limitace=0, correction=None):
+        self.enabled = enabled
+        self.startawas = startawas
+        self.swl = swl
+        self.elevation = elevation
+        self.gaugex = gaugex
+        self.gaugey = gaugey
+        self.gaugezmin = gaugezmin
+        self.gaugezmax = gaugezmax
+        self.gaugedp = gaugedp
+        self.coefmasslimit = coefmasslimit
+        self.savedata = savedata
+        self.limitace = limitace
+        self.correction = correction if correction is not None else AWASCorrection()
+
+
+class AWASCorrection(object):
+    """ AWAS drift correction property """
+
+    def __init__(self, coefstroke=0, coefperiod=0, powerfunc=0):
+        self.coefstroke = coefstroke
+        self.coefperiod = coefperiod
+        self.powerfunc = powerfunc
 
 
 class IrregularPistonWaveGen(WaveGen):
