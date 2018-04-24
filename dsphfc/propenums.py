@@ -25,7 +25,7 @@ in class forms, for code organization
 # along with DesignSPHysics.  If not, see <http://www.gnu.org/licenses/>.
 
 
-class IrregularSpectrum:
+class IrregularSpectrum(object):
     """ Types of supported wave spectrums. """
     JONSWAP = 0
     PIERSON_MOSKOWITZ = 1
@@ -35,12 +35,33 @@ class IrregularSpectrum:
         pass
 
 
-class IrregularDiscretization:
+class IrregularDiscretization(object):
     """ Types of supported spectrum discretization. """
     REGULAR = 0
     RANDOM = 1
     STRETCHED = 2
     COSSTRETCHED = 3
+
+    def __init__(self):
+        # Dummy init
+        pass
+
+
+class AWASWaveOrder(object):
+    """ Wave order to calculate elevation """
+    FIRST_ORDER = 1
+    SECOND_ORDER = 2
+
+    def __init__(self):
+        # Dummy init
+        pass
+
+
+class AWASSaveMethod(object):
+    """ Saving method for AWAS CSV """
+    BY_PART = 1
+    MORE_INFO = 2
+    BY_STEP = 3
 
     def __init__(self):
         # Dummy init
