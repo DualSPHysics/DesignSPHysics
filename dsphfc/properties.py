@@ -102,6 +102,7 @@ class Movement(object):
         self.loop = loop
 
     def add_motion(self, motion):
+        """ Adds a motion to the movement """
         if isinstance(motion, BaseMotion):
             motion.parent_movement = self
             self.motion_list.append(motion)
@@ -110,6 +111,7 @@ class Movement(object):
                 "You are trying to append a non-motion object to a movement list.")
 
     def set_loop(self, state):
+        """ Set loop state for the movement """
         if isinstance(state, bool):
             self.loop = state
         else:
@@ -117,6 +119,7 @@ class Movement(object):
                 state.__class__.__name__))
 
     def remove_motion(self, position):
+        """ Removes a motion from the list """
         self.motion_list.pop(position)
 
     def __str__(self):
@@ -144,6 +147,7 @@ class SpecialMovement(object):
         self.generator = generator
 
     def set_wavegen(self, generator):
+        """ Sets the wave generator for the special movement """
         if isinstance(generator, WaveGen):
             generator.parent_movement = self
             self.generator = generator
@@ -190,11 +194,17 @@ class RegularPistonWaveGen(WaveGen):
     Attributes:
         phase: Initial wave phase in function of PI
         ramp: Periods of ramp
+        disksave_periods:
+        disksave_periodsteps:
+        disksave_xpos:
+        disksave_zpos:
         piston_dir: Movement direction (def [1,0,0])
+        awas: AWAS object
     """
 
     def __init__(self, parent_movement=None, wave_order=2, start=0, duration=0, depth=0, fixed_depth=0, wave_height=0.5, wave_period=1, phase=0, ramp=0, disksave_periods=24,
                  disksave_periodsteps=20, disksave_xpos=2, disksave_zpos=-0.15, piston_dir=None, awas=None):
+
         super(RegularPistonWaveGen, self).__init__(parent_movement, wave_order, start,
                                                    duration, depth, fixed_depth, wave_height, wave_period)
         self.type = "Regular Piston Wave Generator"
@@ -214,12 +224,12 @@ class AWAS(object):
     Attributes:
         startawas: Time to start AWAS correction
         swl: "Still water level (free-surface water)
-        elevation: Order wave to calculate elevation 1:1st order, 2:2nd order 
+        elevation: Order wave to calculate elevation 1:1st order, 2:2nd order
         gaugex: Position in X from piston to measure free-surface water
         gaugey: Position in Y to measure free-surface water
         gaugezmin: Minimum position in Z to measure free-surface water, it must be in water
         gaugezmax: Maximum position in Z to measure free-surface water (def=domain limits)
-        gaugedp: Resolution to measure free-surface water, it uses Dp*gaugedp 
+        gaugedp: Resolution to measure free-surface water, it uses Dp*gaugedp
         coefmasslimit: Coefficient to calculate mass of free-surface
         savedata: Saves CSV with information
         limitace: Factor to limit maximum value of acceleration, with 0 disabled
@@ -247,7 +257,8 @@ class AWAS(object):
 class AWASCorrection(object):
     """ AWAS drift correction property """
 
-    def __init__(self, coefstroke=0, coefperiod=0, powerfunc=0):
+    def __init__(self, enabled=False, coefstroke=0, coefperiod=0, powerfunc=0):
+        self.enabled = enabled
         self.coefstroke = coefstroke
         self.coefperiod = coefperiod
         self.powerfunc = powerfunc
