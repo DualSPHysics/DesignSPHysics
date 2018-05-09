@@ -3771,13 +3771,13 @@ def motion_change():
                 generator=RegularPistonWaveGen(), name="Regular Wave Generator (Piston)")
         if __("Irregular wave generator (Piston)") in action.text():
             to_add = SpecialMovement(
-                generator=IrregularFlapWaveGen(), name="Irregular Wave Generator (Flap)")
+                generator=IrregularPistonWaveGen(), name="Irregular Wave Generator (Piston)")
         if __("Regular wave generator (Flap)") in action.text():
             to_add = SpecialMovement(
                 generator=RegularFlapWaveGen(), name="Regular Wave Generator (Flap)")
         if __("Irregular wave generator (Flap)") in action.text():
             to_add = SpecialMovement(
-                generator=IrregularFlapWaveGen(), name="Irregular Wave Generator (Piston)")
+                generator=IrregularFlapWaveGen(), name="Irregular Wave Generator (Flap)")
         if __("Linear motion from a file") in action.text():
             to_add = SpecialMovement(
                 generator=FileGen(), name="Linear motion from a file")
