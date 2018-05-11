@@ -3567,7 +3567,7 @@ def initials_change():
 def motion_change():
     """ Defines a window with motion properties. """
     motion_window = QtGui.QDialog()
-    motion_window.setMinimumSize(1400, 600)
+    motion_window.setMinimumSize(1400, 650)
     motion_window.setWindowTitle(__("Motion configuration"))
     ok_button = QtGui.QPushButton(__("Ok"))
     cancel_button = QtGui.QPushButton(__("Cancel"))

@@ -1880,14 +1880,21 @@ class RegularPistonWaveMotionTimeline(QtGui.QWidget):
         self.awas_gaugezmin_input.setText(str(reg_wave_gen.awas.gaugezmin))
         self.awas_gaugezmax_input.setText(str(reg_wave_gen.awas.gaugezmax))
         self.awas_gaugedp_input.setText(str(reg_wave_gen.awas.gaugedp))
-        self.awas_coefmasslimit_input.setText(str(reg_wave_gen.awas.coefmasslimit))
+        self.awas_coefmasslimit_input.setText(
+            str(reg_wave_gen.awas.coefmasslimit))
         self.awas_limitace_input.setText(str(reg_wave_gen.awas.limitace))
-        self.awas_elevation_selector.setCurrentIndex(int(reg_wave_gen.awas.elevation) - 1)
-        self.awas_savedata_selector.setCurrentIndex(int(reg_wave_gen.awas.savedata) - 1)
-        self.awas_correction_enabled.setChecked(bool(reg_wave_gen.awas.correction.enabled))
-        self.awas_correction_coefstroke_input.setText(str(reg_wave_gen.awas.correction.coefstroke))
-        self.awas_correction_coefperiod_input.setText(str(reg_wave_gen.awas.correction.coefperiod))
-        self.awas_correction_powerfunc_input.setText(str(reg_wave_gen.awas.correction.powerfunc))
+        self.awas_elevation_selector.setCurrentIndex(
+            int(reg_wave_gen.awas.elevation) - 1)
+        self.awas_savedata_selector.setCurrentIndex(
+            int(reg_wave_gen.awas.savedata) - 1)
+        self.awas_correction_enabled.setChecked(
+            bool(reg_wave_gen.awas.correction.enabled))
+        self.awas_correction_coefstroke_input.setText(
+            str(reg_wave_gen.awas.correction.coefstroke))
+        self.awas_correction_coefperiod_input.setText(
+            str(reg_wave_gen.awas.correction.coefperiod))
+        self.awas_correction_powerfunc_input.setText(
+            str(reg_wave_gen.awas.correction.powerfunc))
         self._awas_enabled_handler()
 
     def _init_connections(self):
@@ -1896,7 +1903,8 @@ class RegularPistonWaveMotionTimeline(QtGui.QWidget):
         self.awas_elevation_selector.currentIndexChanged.connect(
             self.on_change)
         self.awas_enabled.stateChanged.connect(self.on_change)
-        self.awas_correction_enabled.stateChanged.connect(self._awas_correction_enabled_handler)
+        self.awas_correction_enabled.stateChanged.connect(
+            self._awas_correction_enabled_handler)
         [x.textChanged.connect(self.on_change) for x in [self.duration_input, self.depth_input,
                                                          self.fixed_depth_input, self.piston_dir_x,
                                                          self.piston_dir_y, self.piston_dir_z,
@@ -2135,6 +2143,58 @@ class IrregularPistonWaveMotionTimeline(QtGui.QWidget):
         self.saveseriewaves_xpos_input = QtGui.QLineEdit()
         self.saveseriewaves_xpos_label = QtGui.QLabel(__("X Pos: "))
 
+        self.awas_label = QtGui.QLabel(__("AWAS configuration"))
+        self.awas_enabled = QtGui.QCheckBox(__("Enabled"))
+
+        self.awas_startawas_label = QtGui.QLabel(__("Start AWAS: "))
+        self.awas_startawas_input = QtGui.QLineEdit()
+
+        self.awas_swl_label = QtGui.QLabel(__("Still water level: "))
+        self.awas_swl_input = QtGui.QLineEdit()
+
+        self.awas_elevation_label = QtGui.QLabel(__("Elevation: "))
+        self.awas_elevation_selector = QtGui.QComboBox()
+        self.awas_elevation_selector.insertItems(
+            0, [__("1st Order"), __("2nd Order")])
+
+        self.awas_gaugex_label = QtGui.QLabel(__("Gauge X: "))
+        self.awas_gaugex_input = QtGui.QLineEdit()
+
+        self.awas_gaugey_label = QtGui.QLabel(__("Gauge Y: "))
+        self.awas_gaugey_input = QtGui.QLineEdit()
+
+        self.awas_gaugezmin_label = QtGui.QLabel(__("Gauge Z Min: "))
+        self.awas_gaugezmin_input = QtGui.QLineEdit()
+
+        self.awas_gaugezmax_label = QtGui.QLabel(__("Gauge Z Max: "))
+        self.awas_gaugezmax_input = QtGui.QLineEdit()
+
+        self.awas_gaugedp_label = QtGui.QLabel(__("Gauge DP: "))
+        self.awas_gaugedp_input = QtGui.QLineEdit()
+
+        self.awas_coefmasslimit_label = QtGui.QLabel(__("Coef. mass limit: "))
+        self.awas_coefmasslimit_input = QtGui.QLineEdit()
+
+        self.awas_savedata_label = QtGui.QLabel(__("Save data: "))
+        self.awas_savedata_selector = QtGui.QComboBox()
+        self.awas_savedata_selector.insertItems(
+            0, [__("By Part"), __("More Info"), __("By Step")])
+
+        self.awas_limitace_label = QtGui.QLabel(__("Limit acceleration: "))
+        self.awas_limitace_input = QtGui.QLineEdit()
+
+        self.awas_correction_label = QtGui.QLabel(__("Correction: "))
+        self.awas_correction_enabled = QtGui.QCheckBox(__("Enabled"))
+
+        self.awas_correction_coefstroke_label = QtGui.QLabel(__("Coefstroke"))
+        self.awas_correction_coefstroke_input = QtGui.QLineEdit()
+
+        self.awas_correction_coefperiod_label = QtGui.QLabel(__("Coefperiod"))
+        self.awas_correction_coefperiod_input = QtGui.QLineEdit()
+
+        self.awas_correction_powerfunc_label = QtGui.QLabel(__("Powerfunc"))
+        self.awas_correction_powerfunc_input = QtGui.QLineEdit()
+
         self.root_layout = QtGui.QHBoxLayout()
         self.root_layout.addWidget(self.root_label)
         self.root_layout.addStretch(1)
@@ -2200,12 +2260,47 @@ class IrregularPistonWaveMotionTimeline(QtGui.QWidget):
                                                       self.saveseriewaves_xpos_label,
                                                       self.saveseriewaves_xpos_input]]
 
+        self.awas_root_layout = QtGui.QHBoxLayout()
+        self.awas_root_layout.addWidget(self.awas_label)
+        self.awas_root_layout.addStretch(1)
+        self.awas_root_layout.addWidget(self.awas_enabled)
+
+        self.awas_first_row_layout = QtGui.QHBoxLayout()
+        [self.awas_first_row_layout.addWidget(x) for x in [self.awas_startawas_label, self.awas_startawas_input,
+                                                           self.awas_swl_label, self.awas_swl_input, self.awas_elevation_label, self.awas_elevation_selector]]
+
+        self.awas_second_row_layout = QtGui.QHBoxLayout()
+        [self.awas_second_row_layout.addWidget(x) for x in [
+            self.awas_gaugex_label, self.awas_gaugex_input, self.awas_gaugey_label, self.awas_gaugey_input]]
+
+        self.awas_third_row_layout = QtGui.QHBoxLayout()
+        [self.awas_third_row_layout.addWidget(x) for x in [
+            self.awas_gaugezmin_label, self.awas_gaugezmin_input, self.awas_gaugezmax_label, self.awas_gaugezmax_input]]
+
+        self.awas_fourth_row_layout = QtGui.QHBoxLayout()
+        [self.awas_fourth_row_layout.addWidget(x) for x in [
+            self.awas_gaugedp_label, self.awas_gaugedp_input, self.awas_coefmasslimit_label, self.awas_coefmasslimit_input]]
+
+        self.awas_fifth_row_layout = QtGui.QHBoxLayout()
+        [self.awas_fifth_row_layout.addWidget(x) for x in [
+            self.awas_savedata_label, self.awas_savedata_selector, self.awas_limitace_label, self.awas_limitace_input]]
+
+        self.awas_sixth_row_layout = QtGui.QHBoxLayout()
+        [self.awas_sixth_row_layout.addWidget(x) for x in [self.awas_correction_label, self.awas_correction_enabled, self.awas_correction_coefstroke_label, self.awas_correction_coefstroke_input,
+                                                           self.awas_correction_coefperiod_label, self.awas_correction_coefperiod_input, self.awas_correction_powerfunc_label, self.awas_correction_powerfunc_input]]
+
         self.main_layout.addLayout(self.root_layout)
         self.main_layout.addWidget(guiutils.h_line_generator())
         [self.main_layout.addLayout(x) for x in [self.first_row_layout, self.second_row_layout, self.third_row_layout,
                                                  self.fourth_row_layout, self.fifth_row_layout, self.sixth_row_layout,
                                                  self.seventh_row_layout, self.eighth_row_layout, self.ninth_row_layout,
                                                  self.tenth_row_layout]]
+
+        self.main_layout.addWidget(guiutils.h_line_generator())
+        self.main_layout.addLayout(self.awas_root_layout)
+        self.main_layout.addWidget(guiutils.h_line_generator())
+        [self.main_layout.addLayout(x) for x in [self.awas_first_row_layout,
+                                                 self.awas_second_row_layout, self.awas_third_row_layout, self.awas_fourth_row_layout, self.awas_fifth_row_layout, self.awas_sixth_row_layout]]
 
         self.setLayout(self.main_layout)
         self.fill_values(irreg_wave_gen)
@@ -2249,9 +2344,39 @@ class IrregularPistonWaveMotionTimeline(QtGui.QWidget):
             str(irreg_wave_gen.saveseriewaves_timemax))
         self.saveseriewaves_xpos_input.setText(
             str(irreg_wave_gen.saveseriewaves_xpos))
+        self.awas_enabled.setChecked(bool(irreg_wave_gen.awas.enabled))
+        self.awas_startawas_input.setText(str(irreg_wave_gen.awas.startawas))
+        self.awas_swl_input.setText(str(irreg_wave_gen.awas.swl))
+        self.awas_gaugex_input.setText(str(irreg_wave_gen.awas.gaugex))
+        self.awas_gaugey_input.setText(str(irreg_wave_gen.awas.gaugey))
+        self.awas_gaugezmin_input.setText(str(irreg_wave_gen.awas.gaugezmin))
+        self.awas_gaugezmax_input.setText(str(irreg_wave_gen.awas.gaugezmax))
+        self.awas_gaugedp_input.setText(str(irreg_wave_gen.awas.gaugedp))
+        self.awas_coefmasslimit_input.setText(
+            str(irreg_wave_gen.awas.coefmasslimit))
+        self.awas_limitace_input.setText(str(irreg_wave_gen.awas.limitace))
+        self.awas_elevation_selector.setCurrentIndex(
+            int(irreg_wave_gen.awas.elevation) - 1)
+        self.awas_savedata_selector.setCurrentIndex(
+            int(irreg_wave_gen.awas.savedata) - 1)
+        self.awas_correction_enabled.setChecked(
+            bool(irreg_wave_gen.awas.correction.enabled))
+        self.awas_correction_coefstroke_input.setText(
+            str(irreg_wave_gen.awas.correction.coefstroke))
+        self.awas_correction_coefperiod_input.setText(
+            str(irreg_wave_gen.awas.correction.coefperiod))
+        self.awas_correction_powerfunc_input.setText(
+            str(irreg_wave_gen.awas.correction.powerfunc))
+        self._awas_enabled_handler()
 
     def _init_connections(self):
         self.serieini_autofit.stateChanged.connect(self.on_change)
+        self.awas_savedata_selector.currentIndexChanged.connect(self.on_change)
+        self.awas_elevation_selector.currentIndexChanged.connect(
+            self.on_change)
+        self.awas_enabled.stateChanged.connect(self.on_change)
+        self.awas_correction_enabled.stateChanged.connect(
+            self._awas_correction_enabled_handler)
         [x.currentIndexChanged.connect(self.on_change) for x in [self.wave_order_selector, self.spectrum_selector,
                                                                  self.discretization_selector]]
 
@@ -2265,16 +2390,86 @@ class IrregularPistonWaveMotionTimeline(QtGui.QWidget):
                                                          self.saveserie_timemax_input, self.saveserie_timedt_input,
                                                          self.saveserie_xpos_input, self.saveseriewaves_timemin_input,
                                                          self.saveseriewaves_timemax_input,
-                                                         self.saveseriewaves_xpos_input]]
+                                                         self.saveseriewaves_xpos_input, self.awas_startawas_input,
+                                                         self.awas_swl_input, self.awas_gaugex_input,
+                                                         self.awas_gaugey_input, self.awas_gaugezmin_input,
+                                                         self.awas_gaugezmax_input, self.awas_coefmasslimit_input,
+                                                         self.awas_limitace_input, self.awas_correction_coefstroke_input,
+                                                         self.awas_correction_coefperiod_input, self.awas_correction_powerfunc_input]]
 
     def on_change(self):
         self._sanitize_input()
+        self._awas_enabled_handler()
         try:
             self.changed.emit(0, self.construct_motion_object())
         except ValueError:
             utils.debug("Introduced an invalid value for a float number.")
 
+    def _awas_enabled_handler(self):
+        [x.setEnabled(self.awas_enabled.isChecked()) for x in [
+            self.awas_startawas_input, self.awas_swl_input,
+            self.awas_elevation_selector, self.awas_gaugex_input,
+            self.awas_gaugey_input, self.awas_gaugezmin_input,
+            self.awas_gaugezmax_input, self.awas_gaugedp_input,
+            self.awas_coefmasslimit_input, self.awas_savedata_selector,
+            self.awas_limitace_input, self.awas_correction_coefperiod_input,
+            self.awas_correction_coefstroke_input, self.awas_correction_powerfunc_input,
+            self.awas_correction_enabled
+        ]]
+        self._awas_correction_enabled_handler()
+    
+    def _awas_correction_enabled_handler(self):
+        enable_state = self.awas_correction_enabled.isChecked()
+        if not self.awas_enabled.isChecked():
+            enable_state = False
+
+        [x.setEnabled(enable_state) for x in [
+            self.awas_correction_coefstroke_input, self.awas_correction_powerfunc_input,
+            self.awas_correction_coefperiod_input
+        ]]
+
     def construct_motion_object(self):
+        _cmo_elevation = None
+        if self.awas_elevation_selector.currentIndex() is 0:
+            _cmo_elevation = AWASWaveOrder.FIRST_ORDER
+        elif self.awas_elevation_selector.currentIndex() is 1:
+            _cmo_elevation = AWASWaveOrder.SECOND_ORDER
+        else:
+            _cmo_elevation = AWASWaveOrder.FIRST_ORDER
+
+        _cmo_savedata = None
+        if self.awas_savedata_selector.currentIndex() is 0:
+            _cmo_savedata = AWASSaveMethod.BY_PART
+        elif self.awas_savedata_selector.currentIndex() is 1:
+            _cmo_savedata = AWASSaveMethod.MORE_INFO
+        elif self.awas_savedata_selector.currentIndex() is 2:
+            _cmo_savedata = AWASSaveMethod.BY_STEP
+        else:
+            _cmo_savedata = AWASSaveMethod.BY_PART
+
+        _cmo_correction = AWASCorrection(
+            enabled=self.awas_correction_enabled.isChecked(),
+            coefstroke=float(self.awas_correction_coefstroke_input.text()),
+            coefperiod=float(self.awas_correction_coefperiod_input.text()),
+            powerfunc=float(self.awas_correction_powerfunc_input.text())
+        )
+
+        awas_object = AWAS(
+            enabled=self.awas_enabled.isChecked(),
+            startawas=float(self.awas_startawas_input.text()),
+            swl=float(self.awas_swl_input.text()),
+            elevation=_cmo_elevation,
+            gaugex=float(self.awas_gaugex_input.text()),
+            gaugey=float(self.awas_gaugey_input.text()),
+            gaugezmin=float(self.awas_gaugezmin_input.text()),
+            gaugezmax=float(self.awas_gaugezmax_input.text()),
+            gaugedp=float(self.awas_gaugedp_input.text()),
+            coefmasslimit=float(self.awas_coefmasslimit_input.text()),
+            savedata=_cmo_savedata,
+            limitace=float(self.awas_limitace_input.text()),
+            correction=_cmo_correction
+        )
+
         return IrregularPistonWaveGen(parent_movement=self.parent_movement,
                                       wave_order=self.wave_order_selector.currentIndex() + 1, start=0,
                                       duration=float(self.duration_input.text()), depth=float(self.depth_input.text()),
@@ -2320,7 +2515,8 @@ class IrregularPistonWaveMotionTimeline(QtGui.QWidget):
                                           self.saveseriewaves_timemin_input.text()),
                                       saveseriewaves_timemax=str(
                                           self.saveseriewaves_timemax_input.text()),
-                                      saveseriewaves_xpos=str(self.saveseriewaves_xpos_input.text()))
+                                      saveseriewaves_xpos=str(self.saveseriewaves_xpos_input.text()),
+                                      awas=awas_object)
 
     def on_delete(self):
         self.deleted.emit(self.index, self.construct_motion_object())
@@ -2340,7 +2536,13 @@ class IrregularPistonWaveMotionTimeline(QtGui.QWidget):
                    self.saveserie_timemin_input, self.saveserie_timemax_input,
                    self.saveserie_timedt_input, self.saveserie_xpos_input,
                    self.saveseriewaves_timemin_input, self.saveseriewaves_timemax_input,
-                   self.saveseriewaves_xpos_input]]
+                   self.saveseriewaves_xpos_input, self.awas_startawas_input,
+                   self.awas_swl_input, self.awas_gaugex_input,
+                   self.awas_gaugey_input, self.awas_gaugezmax_input,
+                   self.awas_gaugezmin_input, self.awas_gaugedp_input,
+                   self.awas_coefmasslimit_input, self.awas_limitace_input,
+                   self.awas_correction_coefstroke_input, self.awas_correction_coefperiod_input,
+                   self.awas_correction_powerfunc_input]]
 
 
 class RegularFlapWaveMotionTimeline(QtGui.QWidget):
