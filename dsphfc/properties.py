@@ -283,7 +283,8 @@ class IrregularPistonWaveGen(WaveGen):
                  peak_coef=0.1, waves=50, randomseed=random.randint(0, 9999), serieini=0, ramptime=0,
                  serieini_autofit=True, savemotion_time=30, savemotion_timedt=0.05, savemotion_xpos=2,
                  savemotion_zpos=-0.15, saveserie_timemin=0, saveserie_timemax=1300, saveserie_timedt=0.05,
-                 saveserie_xpos=0, saveseriewaves_timemin=0, saveseriewaves_timemax=1000, saveseriewaves_xpos=2, piston_dir=None):
+                 saveserie_xpos=0, saveseriewaves_timemin=0, saveseriewaves_timemax=1000, saveseriewaves_xpos=2,
+                 piston_dir=None, awas=None):
         super(IrregularPistonWaveGen, self).__init__(parent_movement, wave_order, start,
                                                      duration, depth, fixed_depth, wave_height, wave_period)
         self.type = "Irregular Piston Wave Generator"
@@ -307,6 +308,7 @@ class IrregularPistonWaveGen(WaveGen):
         self.saveseriewaves_timemax = saveseriewaves_timemax
         self.saveseriewaves_xpos = saveseriewaves_xpos
         self.piston_dir = [1, 0, 0] if piston_dir is None else piston_dir
+        self.awas = AWAS() if awas is None else awas
 
 
 class RegularFlapWaveGen(WaveGen):
