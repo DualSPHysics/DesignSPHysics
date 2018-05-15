@@ -273,10 +273,16 @@ toggle3dbutton.setToolTip(
 widget_state_elements['toggle3dbutton'] = toggle3dbutton
 
 # Damping config button
-casecontrols_bt_damping = QtGui.QPushButton(__("Damping"))
-casecontrols_bt_damping.setToolTip(
-    __("Sets up the damping zone for the case"))
-widget_state_elements['dampingbutton'] = casecontrols_bt_damping
+casecontrols_bt_special = QtGui.QToolButton()
+casecontrols_bt_special.setToolButtonStyle(QtCore.Qt.ToolButtonTextOnly)
+casecontrols_bt_special.setText(__("Special "))
+casecontrols_bt_special.setToolTip(
+    __("Special actions for the case."))
+casecontrols_menu_specialmenu = QtGui.QMenu()
+casecontrols_menu_specialmenu.addAction(__("Damping"))
+casecontrols_bt_special.setMenu(casecontrols_menu_specialmenu)
+casecontrols_bt_special.setFixedHeight(toggle3dbutton.sizeHint().height())
+widget_state_elements['dampingbutton'] = casecontrols_bt_special
 
 # Toggle Periodicity buttons
 y_period_bt = QtGui.QPushButton("Toggle Y Periodicity")
@@ -1003,7 +1009,13 @@ def on_properties():
 
 
 def on_damping_button():
-    guiutils.damping_config_window(data)
+    casecontrols_bt_special.showMenu()
+
+
+def on_special_menu(action):
+    """ Handles the special button menu. """
+    if __("Damping") in action.text():
+        guiutils.damping_config_window(data)
 
 
 # Connect case control buttons to respective handlers
@@ -1011,6 +1023,7 @@ casecontrols_bt_newdoc.clicked.connect(on_new_case)
 casecontrols_bt_savedoc.clicked.connect(on_save_case)
 casecontrols_menu_newdoc.triggered.connect(on_newdoc_menu)
 casecontrols_menu_savemenu.triggered.connect(on_save_menu)
+casecontrols_menu_specialmenu.triggered.connect(on_special_menu)
 casecontrols_bt_loaddoc.clicked.connect(on_load_case)
 casecontrols_bt_addfillbox.clicked.connect(on_add_fillbox)
 casecontrols_bt_addstl.clicked.connect(on_add_stl)
@@ -1018,7 +1031,7 @@ casecontrols_bt_importxml.clicked.connect(on_import_xml)
 summary_bt.clicked.connect(on_summary)
 properties_bt.clicked.connect(on_properties)
 toggle3dbutton.clicked.connect(on_2d_toggle)
-casecontrols_bt_damping.clicked.connect(on_damping_button)
+casecontrols_bt_special.clicked.connect(on_damping_button)
 
 # Defines case control scaffolding
 cclabel_layout.addWidget(casecontrols_label)
@@ -1026,12 +1039,12 @@ ccfilebuttons_layout.addWidget(casecontrols_bt_newdoc)
 ccfilebuttons_layout.addWidget(casecontrols_bt_savedoc)
 ccfilebuttons_layout.addWidget(casecontrols_bt_loaddoc)
 ccsecondrow.addWidget(summary_bt)
-ccsecondrow.addWidget(properties_bt)
+# ccsecondrow.addWidget(properties_bt)
+ccsecondrow.addWidget(casecontrols_bt_special)
 ccsecondrow.addWidget(toggle3dbutton)
 ccthirdrow_layout.addWidget(casecontrols_bt_addfillbox)
 ccthirdrow_layout.addWidget(casecontrols_bt_addstl)
 ccthirdrow_layout.addWidget(casecontrols_bt_importxml)
-ccfourthrow_layout.addWidget(casecontrols_bt_damping)
 
 cc_layout.addLayout(cclabel_layout)
 cc_layout.addLayout(ccfilebuttons_layout)
