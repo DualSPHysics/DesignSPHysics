@@ -426,6 +426,7 @@ def get_default_data():
     data['measuretool_path'] = ""
     data['isosurface_path'] = ""
     data['boundaryvtk_path'] = ""
+    data['flowtool_path'] = ""
     data['paraview_path'] = ""
 
     # Case mode
@@ -468,6 +469,11 @@ def get_default_data():
     Dictionary with a list of movements attached..
     {'mkgroup': [movement1, movement2, ...]} """
     data['motion_mks'] = dict()
+
+    # Post-processing info
+    # FlowTool Boxes: [ [id, "name", x1, x2,..., x8], ... ]
+    # id is an UUID
+    data['flowtool_boxes'] = list()
 
     # Temporal data dict to control execution features.
     temp_data['current_process'] = None
@@ -1540,3 +1546,19 @@ def import_stl(filename=None, scale_x=1, scale_y=1, scale_z=1, name=None):
 def get_fc_object(internal_name):
     """ Returns a FreeCAD internal object by a name. """
     return FreeCAD.getDocument("DSPH_Case").getObject(internal_name)
+
+
+def create_flowtool_boxes(path, boxes):
+    """ Creates a file with flowtool box information """
+    with open(path, 'w') as f:
+        for box in boxes:
+            f.write("BOX @{}\n".format(box[1]))
+            f.write("{} {} {}\n".format(*box[2]))
+            f.write("{} {} {}\n".format(*box[3]))
+            f.write("{} {} {}\n".format(*box[4]))
+            f.write("{} {} {}\n".format(*box[5]))
+            f.write("{} {} {}\n".format(*box[6]))
+            f.write("{} {} {}\n".format(*box[7]))
+            f.write("{} {} {}\n".format(*box[8]))
+            f.write("{} {} {}\n".format(*box[9]))
+            f.write("\n")
