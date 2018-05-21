@@ -19,6 +19,7 @@ import threading
 import traceback
 import subprocess
 import shutil
+import uuid
 from PySide import QtGui, QtCore
 
 reload(sys)
@@ -2619,12 +2620,11 @@ def on_isosurface():
     isosurface_tool_dialog.exec_()
 
 
-# TODO: Implement this
-def boundaryvtk_export(export_parameters):
-    """ Export IsoSurface button behaviour.
+def flowtool_export(export_parameters):
+    """ Export FlowTool button behaviour.
     Launches a process while disabling the button. """
     guiutils.widget_state_config(widget_state_elements, "export start")
-    widget_state_elements['post_proc_boundaryvtk_button'].setText(
+    widget_state_elements['post_proc_flowtool_button'].setText(
         "Exporting...")
 
     # Find total export parts and adjust progress bar
@@ -2643,17 +2643,17 @@ def boundaryvtk_export(export_parameters):
         utils.log(__("Stopping export"))
         if temp_data['current_export_process'] is not None:
             temp_data['current_export_process'].kill()
-            widget_state_elements['post_proc_boundaryvtk_button'].setText(
-                __("IsoSurface"))
+            widget_state_elements['post_proc_flowtool_button'].setText(
+                __("FlowTool"))
         guiutils.widget_state_config(widget_state_elements, "export cancel")
         export_dialog.hide()
 
     export_button_cancel.clicked.connect(on_cancel)
 
-    # IsoSurface export finish handler
+    # FlowTool export finish handler
     def on_export_finished(exit_code):
-        widget_state_elements['post_proc_boundaryvtk_button'].setText(
-            __("IsoSurface"))
+        widget_state_elements['post_proc_flowtool_button'].setText(
+            __("FlowTool"))
         guiutils.widget_state_config(widget_state_elements, "export finished")
 
         export_dialog.hide()
@@ -2662,7 +2662,7 @@ def boundaryvtk_export(export_parameters):
             # Exported correctly
             guiutils.info_dialog(
                 info_text=__(
-                    "Post-processing finished successfully. Press the details button to show IsoSurface output"),
+                    "Post-processing finished successfully. Press the details button to show FlowTool output"),
                 detailed_text=temp_data['current_output'])
         else:
             guiutils.error_dialog(
@@ -2676,14 +2676,15 @@ def boundaryvtk_export(export_parameters):
     static_params_exp = [
         '-dirin ' + data['project_path'] +
         '/' + data['project_name'] + '_Out/',
-        '-saveiso ' + data['project_path'] + '/' +
-        data['project_name'] + '_Out/' + export_parameters['file_name'],
-        '-onlytype:' + export_parameters['save_types'] +
+        '-fileboxes ' + data['project_path'] + '/' + 'fileboxes.txt',
+        '-savecsv ' + data['project_path'] + '/' + data['project_name'] +
+        '_Out/' + '{}.csv'.format(export_parameters['csv_name']),
+        '-savevtk ' + data['project_path'] + '/' + data['project_name'] + '_Out/' + '{}.vtk'.format(export_parameters['vtk_name']) +
         " " + export_parameters['additional_parameters']
     ]
 
     # Start process
-    export_process.start(data['boundaryvtk_path'], static_params_exp)
+    export_process.start(data['flowtool_path'], static_params_exp)
     temp_data['current_export_process'] = export_process
 
     # Information ready handler.
@@ -2694,7 +2695,7 @@ def boundaryvtk_export(export_parameters):
         temp_data['current_output'] += current_output
         try:
             current_part = current_output.split(
-                "{}_".format(export_parameters['file_name']))[1]
+                "{}_".format(export_parameters['vtk_name']))[1]
             current_part = int(current_part.split(".vtk")[0])
         except IndexError:
             current_part = export_progbar_bar.value()
@@ -2704,6 +2705,323 @@ def boundaryvtk_export(export_parameters):
 
     temp_data['current_export_process'].readyReadStandardOutput.connect(
         on_stdout_ready)
+
+
+def on_flowtool():
+    """ Opens a dialog with FlowTool exporting options """
+    flowtool_tool_dialog = QtGui.QDialog()
+
+    flowtool_tool_dialog.setModal(False)
+    flowtool_tool_dialog.setWindowTitle(__("FlowTool Tool"))
+    flowtool_tool_layout = QtGui.QVBoxLayout()
+
+    fltool_boxlist_groupbox = QtGui.QGroupBox(__("List of boxes"))
+    fltool_csvname_layout = QtGui.QHBoxLayout()
+    fltool_vtkname_layout = QtGui.QHBoxLayout()
+    fltool_parameters_layout = QtGui.QHBoxLayout()
+    fltool_buttons_layout = QtGui.QHBoxLayout()
+
+    fltool_boxlist_groupbox_layout = QtGui.QVBoxLayout()
+
+    fltool_addbox_layout = QtGui.QHBoxLayout()
+    fltool_addbox_button = QtGui.QPushButton(__("New Box"))
+    fltool_addbox_layout.addStretch(1)
+    fltool_addbox_layout.addWidget(fltool_addbox_button)
+
+    fltool_boxlist_layout = QtGui.QVBoxLayout()
+
+    fltool_boxlist_groupbox_layout.addLayout(fltool_addbox_layout)
+    fltool_boxlist_groupbox_layout.addLayout(fltool_boxlist_layout)
+    fltool_boxlist_groupbox.setLayout(fltool_boxlist_groupbox_layout)
+
+    fltool_csv_file_name_label = QtGui.QLabel(__("CSV file name"))
+    fltool_csv_file_name_text = QtGui.QLineEdit()
+    fltool_csv_file_name_text.setText('_ResultFlow')
+    fltool_csvname_layout.addWidget(fltool_csv_file_name_label)
+    fltool_csvname_layout.addWidget(fltool_csv_file_name_text)
+
+    fltool_vtk_file_name_label = QtGui.QLabel(__("VTK file name"))
+    fltool_vtk_file_name_text = QtGui.QLineEdit()
+    fltool_vtk_file_name_text.setText('Boxes')
+    fltool_vtkname_layout.addWidget(fltool_vtk_file_name_label)
+    fltool_vtkname_layout.addWidget(fltool_vtk_file_name_text)
+
+    fltool_parameters_label = QtGui.QLabel(__("Additional Parameters"))
+    fltool_parameters_text = QtGui.QLineEdit()
+    fltool_parameters_layout.addWidget(fltool_parameters_label)
+    fltool_parameters_layout.addWidget(fltool_parameters_text)
+
+    fltool_export_button = QtGui.QPushButton(__("Export"))
+    fltool_cancel_button = QtGui.QPushButton(__("Cancel"))
+    fltool_buttons_layout.addWidget(fltool_export_button)
+    fltool_buttons_layout.addWidget(fltool_cancel_button)
+
+    flowtool_tool_layout.addWidget(fltool_boxlist_groupbox)
+    flowtool_tool_layout.addStretch(1)
+    flowtool_tool_layout.addLayout(fltool_csvname_layout)
+    flowtool_tool_layout.addLayout(fltool_vtkname_layout)
+    flowtool_tool_layout.addLayout(fltool_parameters_layout)
+    flowtool_tool_layout.addLayout(fltool_buttons_layout)
+
+    flowtool_tool_dialog.setLayout(flowtool_tool_layout)
+
+    def box_edit(box_id):
+        box_edit_dialog = QtGui.QDialog()
+        box_edit_layout = QtGui.QVBoxLayout()
+
+        target_box = None
+
+        for box in data['flowtool_boxes']:
+            if box[0] == box_id:
+                target_box = box
+
+        if target_box is None:
+            guiutils.error_dialog("There was an error opening the box to edit")
+            return
+
+        box_edit_name_layout = QtGui.QHBoxLayout()
+        box_edit_name_label = QtGui.QLabel(__("Box Name"))
+        box_edit_name_input = QtGui.QLineEdit(str(target_box[1]))
+        box_edit_name_layout.addWidget(box_edit_name_label)
+        box_edit_name_layout.addWidget(box_edit_name_input)
+
+        box_edit_description = QtGui.QLabel(__(
+            "Using multiple boxes with the same\nwill produce only one volume to measure.\nUse that to create prisms and complex forms."))
+        box_edit_description.setAlignment(QtCore.Qt.AlignCenter)
+
+        # Reference image
+        box_edit_image = QtGui.QLabel()
+        box_edit_image.setPixmap(guiutils.get_icon(
+            "flowtool_template.jpg", return_only_path=True))
+        box_edit_image.setAlignment(QtCore.Qt.AlignCenter)
+
+        # Point coords inputs
+        box_edit_points_layout = QtGui.QVBoxLayout()
+
+        box_edit_point_a_layout = QtGui.QHBoxLayout()
+        box_edit_point_a_label = QtGui.QLabel(__("Point A (X, Y, Z)"))
+        box_edit_point_a_x = QtGui.QLineEdit(str(target_box[2][0]))
+        box_edit_point_a_y = QtGui.QLineEdit(str(target_box[2][1]))
+        box_edit_point_a_z = QtGui.QLineEdit(str(target_box[2][2]))
+        box_edit_point_a_layout.addWidget(box_edit_point_a_label)
+        box_edit_point_a_layout.addWidget(box_edit_point_a_x)
+        box_edit_point_a_layout.addWidget(box_edit_point_a_y)
+        box_edit_point_a_layout.addWidget(box_edit_point_a_z)
+
+        box_edit_point_b_layout = QtGui.QHBoxLayout()
+        box_edit_point_b_label = QtGui.QLabel(__("Point B (X, Y, Z)"))
+        box_edit_point_b_x = QtGui.QLineEdit(str(target_box[3][0]))
+        box_edit_point_b_y = QtGui.QLineEdit(str(target_box[3][1]))
+        box_edit_point_b_z = QtGui.QLineEdit(str(target_box[3][2]))
+        box_edit_point_b_layout.addWidget(box_edit_point_b_label)
+        box_edit_point_b_layout.addWidget(box_edit_point_b_x)
+        box_edit_point_b_layout.addWidget(box_edit_point_b_y)
+        box_edit_point_b_layout.addWidget(box_edit_point_b_z)
+
+        box_edit_point_c_layout = QtGui.QHBoxLayout()
+        box_edit_point_c_label = QtGui.QLabel(__("Point C (X, Y, Z)"))
+        box_edit_point_c_x = QtGui.QLineEdit(str(target_box[4][0]))
+        box_edit_point_c_y = QtGui.QLineEdit(str(target_box[4][1]))
+        box_edit_point_c_z = QtGui.QLineEdit(str(target_box[4][2]))
+        box_edit_point_c_layout.addWidget(box_edit_point_c_label)
+        box_edit_point_c_layout.addWidget(box_edit_point_c_x)
+        box_edit_point_c_layout.addWidget(box_edit_point_c_y)
+        box_edit_point_c_layout.addWidget(box_edit_point_c_z)
+
+        box_edit_point_d_layout = QtGui.QHBoxLayout()
+        box_edit_point_d_label = QtGui.QLabel(__("Point D (X, Y, Z)"))
+        box_edit_point_d_x = QtGui.QLineEdit(str(target_box[5][0]))
+        box_edit_point_d_y = QtGui.QLineEdit(str(target_box[5][1]))
+        box_edit_point_d_z = QtGui.QLineEdit(str(target_box[5][2]))
+        box_edit_point_d_layout.addWidget(box_edit_point_d_label)
+        box_edit_point_d_layout.addWidget(box_edit_point_d_x)
+        box_edit_point_d_layout.addWidget(box_edit_point_d_y)
+        box_edit_point_d_layout.addWidget(box_edit_point_d_z)
+
+        box_edit_point_e_layout = QtGui.QHBoxLayout()
+        box_edit_point_e_label = QtGui.QLabel(__("Point E (X, Y, Z)"))
+        box_edit_point_e_x = QtGui.QLineEdit(str(target_box[6][0]))
+        box_edit_point_e_y = QtGui.QLineEdit(str(target_box[6][1]))
+        box_edit_point_e_z = QtGui.QLineEdit(str(target_box[6][2]))
+        box_edit_point_e_layout.addWidget(box_edit_point_e_label)
+        box_edit_point_e_layout.addWidget(box_edit_point_e_x)
+        box_edit_point_e_layout.addWidget(box_edit_point_e_y)
+        box_edit_point_e_layout.addWidget(box_edit_point_e_z)
+
+        box_edit_point_f_layout = QtGui.QHBoxLayout()
+        box_edit_point_f_label = QtGui.QLabel(__("Point F (X, Y, Z)"))
+        box_edit_point_f_x = QtGui.QLineEdit(str(target_box[7][0]))
+        box_edit_point_f_y = QtGui.QLineEdit(str(target_box[7][1]))
+        box_edit_point_f_z = QtGui.QLineEdit(str(target_box[7][2]))
+        box_edit_point_f_layout.addWidget(box_edit_point_f_label)
+        box_edit_point_f_layout.addWidget(box_edit_point_f_x)
+        box_edit_point_f_layout.addWidget(box_edit_point_f_y)
+        box_edit_point_f_layout.addWidget(box_edit_point_f_z)
+
+        box_edit_point_g_layout = QtGui.QHBoxLayout()
+        box_edit_point_g_label = QtGui.QLabel(__("Point G (X, Y, Z)"))
+        box_edit_point_g_x = QtGui.QLineEdit(str(target_box[8][0]))
+        box_edit_point_g_y = QtGui.QLineEdit(str(target_box[8][1]))
+        box_edit_point_g_z = QtGui.QLineEdit(str(target_box[8][2]))
+        box_edit_point_g_layout.addWidget(box_edit_point_g_label)
+        box_edit_point_g_layout.addWidget(box_edit_point_g_x)
+        box_edit_point_g_layout.addWidget(box_edit_point_g_y)
+        box_edit_point_g_layout.addWidget(box_edit_point_g_z)
+
+        box_edit_point_h_layout = QtGui.QHBoxLayout()
+        box_edit_point_h_label = QtGui.QLabel(__("Point H (X, Y, Z)"))
+        box_edit_point_h_x = QtGui.QLineEdit(str(target_box[9][0]))
+        box_edit_point_h_y = QtGui.QLineEdit(str(target_box[9][1]))
+        box_edit_point_h_z = QtGui.QLineEdit(str(target_box[9][2]))
+        box_edit_point_h_layout.addWidget(box_edit_point_h_label)
+        box_edit_point_h_layout.addWidget(box_edit_point_h_x)
+        box_edit_point_h_layout.addWidget(box_edit_point_h_y)
+        box_edit_point_h_layout.addWidget(box_edit_point_h_z)
+
+        box_edit_points_layout.addLayout(box_edit_point_a_layout)
+        box_edit_points_layout.addLayout(box_edit_point_b_layout)
+        box_edit_points_layout.addLayout(box_edit_point_c_layout)
+        box_edit_points_layout.addLayout(box_edit_point_d_layout)
+        box_edit_points_layout.addLayout(box_edit_point_e_layout)
+        box_edit_points_layout.addLayout(box_edit_point_f_layout)
+        box_edit_points_layout.addLayout(box_edit_point_g_layout)
+        box_edit_points_layout.addLayout(box_edit_point_h_layout)
+
+        # Ok and cancel buttons
+        box_edit_button_layout = QtGui.QHBoxLayout()
+        box_edit_button_ok = QtGui.QPushButton(__("OK"))
+        box_edit_button_cancel = QtGui.QPushButton(__("Cancel"))
+
+        box_edit_button_layout.addStretch(1)
+        box_edit_button_layout.addWidget(box_edit_button_ok)
+        box_edit_button_layout.addWidget(box_edit_button_cancel)
+
+        box_edit_layout.addLayout(box_edit_name_layout)
+        box_edit_layout.addWidget(box_edit_description)
+        box_edit_layout.addWidget(box_edit_image)
+        box_edit_layout.addStretch(1)
+        box_edit_layout.addLayout(box_edit_points_layout)
+        box_edit_layout.addLayout(box_edit_button_layout)
+
+        box_edit_dialog.setLayout(box_edit_layout)
+
+        def on_ok():
+            box_to_edit_index = -1
+            for box_index, box_value in enumerate(data['flowtool_boxes']):
+                if box_value[0] == box_id:
+                    box_to_edit_index = box_index
+
+            data['flowtool_boxes'][box_to_edit_index][1] = str(box_edit_name_input.text())
+            data['flowtool_boxes'][box_to_edit_index][2] = [float(box_edit_point_a_x.text()),
+                                                            float(box_edit_point_a_y.text()),
+                                                            float(box_edit_point_a_z.text())]
+            data['flowtool_boxes'][box_to_edit_index][3] = [float(box_edit_point_b_x.text()),
+                                                            float(box_edit_point_b_y.text()),
+                                                            float(box_edit_point_b_z.text())]
+            data['flowtool_boxes'][box_to_edit_index][4] = [float(box_edit_point_c_x.text()),
+                                                            float(box_edit_point_c_y.text()),
+                                                            float(box_edit_point_c_z.text())]
+            data['flowtool_boxes'][box_to_edit_index][5] = [float(box_edit_point_d_x.text()),
+                                                            float(box_edit_point_d_y.text()),
+                                                            float(box_edit_point_d_z.text())]
+            data['flowtool_boxes'][box_to_edit_index][6] = [float(box_edit_point_e_x.text()),
+                                                            float(box_edit_point_e_y.text()),
+                                                            float(box_edit_point_e_z.text())]
+            data['flowtool_boxes'][box_to_edit_index][7] = [float(box_edit_point_f_x.text()),
+                                                            float(box_edit_point_f_y.text()),
+                                                            float(box_edit_point_f_z.text())]
+            data['flowtool_boxes'][box_to_edit_index][8] = [float(box_edit_point_g_x.text()),
+                                                            float(box_edit_point_g_y.text()),
+                                                            float(box_edit_point_g_z.text())]
+            data['flowtool_boxes'][box_to_edit_index][9] = [float(box_edit_point_h_x.text()),
+                                                            float(box_edit_point_h_y.text()),
+                                                            float(box_edit_point_h_z.text())]
+            refresh_boxlist()
+            box_edit_dialog.accept()
+
+        def on_cancel():
+            box_edit_dialog.reject()
+
+        box_edit_button_ok.clicked.connect(on_ok)
+        box_edit_button_cancel.clicked.connect(on_cancel)
+
+        box_edit_dialog.exec_()
+
+    def box_delete(box_id):
+        box_to_remove = None
+        for box in data['flowtool_boxes']:
+            if box[0] == box_id:
+                box_to_remove = box
+        if box_to_remove is not None:
+            data['flowtool_boxes'].remove(box_to_remove)
+            refresh_boxlist()
+
+    def refresh_boxlist():
+        while fltool_boxlist_layout.count() > 0:
+            target = fltool_boxlist_layout.takeAt(0)
+            target.setParent(None)
+
+        for box in data['flowtool_boxes']:
+            to_add_layout = QtGui.QHBoxLayout()
+            to_add_label = QtGui.QLabel(str(box[1]))
+            to_add_layout.addWidget(to_add_label)
+            to_add_layout.addStretch(1)
+            to_add_editbutton = QtGui.QPushButton("Edit")
+            to_add_deletebutton = QtGui.QPushButton("Delete")
+            to_add_layout.addWidget(to_add_editbutton)
+            to_add_layout.addWidget(to_add_deletebutton)
+            to_add_editbutton.clicked.connect(lambda b=box[0]: box_edit(b))
+            to_add_deletebutton.clicked.connect(lambda b=box[0]: box_delete(b))
+            fltool_boxlist_layout.addLayout(to_add_layout)
+
+    def on_fltool_addbox():
+        data['flowtool_boxes'].append(
+            [
+                str(uuid.uuid4()),
+                'BOX',
+                [0.0, 0.0, 0.0],
+                [0.0, 0.0, 0.0],
+                [0.0, 0.0, 0.0],
+                [0.0, 0.0, 0.0],
+                [0.0, 0.0, 0.0],
+                [0.0, 0.0, 0.0],
+                [0.0, 0.0, 0.0],
+                [0.0, 0.0, 0.0]])
+        refresh_boxlist()
+
+    def on_fltool_cancel():
+        flowtool_tool_dialog.reject()
+
+    def on_fltool_export():
+        export_parameters = dict()
+
+        if len(fltool_csv_file_name_text.text()) > 0:
+            export_parameters['csv_name'] = fltool_csv_file_name_text.text()
+        else:
+            export_parameters['csv_name'] = '_ResultFlow'
+
+        if len(fltool_vtk_file_name_text.text()) > 0:
+            export_parameters['vtk_name'] = fltool_vtk_file_name_text.text()
+        else:
+            export_parameters['vtk_name'] = 'Boxes'
+
+        if len(fltool_parameters_text.text()) > 0:
+            export_parameters['additional_parameters'] = fltool_parameters_text.text(
+            )
+        else:
+            export_parameters['additional_parameters'] = ''
+
+        utils.create_flowtool_boxes(
+            data['project_path'] + '/' + 'fileboxes.txt', data['flowtool_boxes'])
+
+        flowtool_export(export_parameters)
+        flowtool_tool_dialog.accept()
+
+    fltool_addbox_button.clicked.connect(on_fltool_addbox)
+    fltool_export_button.clicked.connect(on_fltool_export)
+    fltool_cancel_button.clicked.connect(on_fltool_cancel)
+    refresh_boxlist()
+    flowtool_tool_dialog.exec_()
 
 
 # TODO: Implement this
@@ -2851,6 +3169,7 @@ post_proc_isosurface_button = QtGui.QPushButton(__("IsoSurface"))
 post_proc_floatinginfo_button = QtGui.QPushButton(__("FloatingInfo"))
 post_proc_measuretool_button = QtGui.QPushButton(__("MeasureTool"))
 post_proc_boundaryvtk_button = QtGui.QPushButton(__("BoundaryVTK"))
+post_proc_flowtool_button = QtGui.QPushButton(__("FlowTool"))
 
 post_proc_partvtk_button.setToolTip(__("Opens the PartVTK tool."))
 post_proc_computeforces_button.setToolTip(__("Opens the ComputeForces tool."))
@@ -2858,6 +3177,7 @@ post_proc_floatinginfo_button.setToolTip(__("Opens the FloatingInfo tool."))
 post_proc_measuretool_button.setToolTip(__("Opens the MeasureTool tool."))
 post_proc_isosurface_button.setToolTip(__("Opens the IsoSurface tool."))
 post_proc_boundaryvtk_button.setToolTip(__("Opens the BoundaryVTK tool."))
+post_proc_boundaryvtk_button.setToolTip(__("Opens the FlowTool tool."))
 
 widget_state_elements['post_proc_partvtk_button'] = post_proc_partvtk_button
 widget_state_elements['post_proc_computeforces_button'] = post_proc_computeforces_button
@@ -2865,6 +3185,7 @@ widget_state_elements['post_proc_floatinginfo_button'] = post_proc_floatinginfo_
 widget_state_elements['post_proc_measuretool_button'] = post_proc_measuretool_button
 widget_state_elements['post_proc_isosurface_button'] = post_proc_isosurface_button
 widget_state_elements['post_proc_boundaryvtk_button'] = post_proc_boundaryvtk_button
+widget_state_elements['post_proc_flowtool_button'] = post_proc_flowtool_button
 
 post_proc_partvtk_button.clicked.connect(on_partvtk)
 post_proc_computeforces_button.clicked.connect(on_computeforces)
@@ -2872,6 +3193,7 @@ post_proc_floatinginfo_button.clicked.connect(on_floatinginfo)
 post_proc_measuretool_button.clicked.connect(on_measuretool)
 post_proc_isosurface_button.clicked.connect(on_isosurface)
 post_proc_boundaryvtk_button.clicked.connect(on_boundaryvtk)
+post_proc_flowtool_button.clicked.connect(on_flowtool)
 
 export_layout.addWidget(export_label)
 export_first_row_layout.addWidget(post_proc_partvtk_button)
@@ -2879,7 +3201,8 @@ export_first_row_layout.addWidget(post_proc_computeforces_button)
 export_first_row_layout.addWidget(post_proc_isosurface_button)
 export_second_row_layout.addWidget(post_proc_floatinginfo_button)
 export_second_row_layout.addWidget(post_proc_measuretool_button)
-export_second_row_layout.addWidget(post_proc_boundaryvtk_button)
+# export_second_row_layout.addWidget(post_proc_boundaryvtk_button)
+export_second_row_layout.addWidget(post_proc_flowtool_button)
 export_layout.addLayout(export_first_row_layout)
 export_layout.addLayout(export_second_row_layout)
 

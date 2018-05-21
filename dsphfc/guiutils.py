@@ -101,13 +101,13 @@ def ok_cancel_dialog(title, text):
     return open_confirm_dialog.exec_()
 
 
-def get_icon(file_name):
+def get_icon(file_name, return_only_path=False):
     """ Returns a QIcon to use with DesignSPHysics.
     Retrieves a file with filename (like image.png) from the DSPH_Images folder. """
     file_to_load = os.path.dirname(
         os.path.abspath(__file__)) + "/../DSPH_Images/{}".format(file_name)
     if os.path.isfile(file_to_load):
-        return QtGui.QIcon(file_to_load)
+        return file_to_load if return_only_path else QtGui.QIcon(file_to_load)
     else:
         raise IOError(
             "File {} not found in DSPH_Images folder".format(file_name))
@@ -1296,6 +1296,21 @@ def def_setup_window(data):
     boundaryvtk_layout.addWidget(boundaryvtk_input)
     boundaryvtk_layout.addWidget(boundaryvtk_browse)
 
+    # FlowTool path
+    flowtool_layout = QtGui.QHBoxLayout()
+    flowtool_label = QtGui.QLabel("FlowTool Path: ")
+    flowtool_input = QtGui.QLineEdit()
+    try:
+        flowtool_input.setText(data["flowtool_path"])
+    except KeyError:
+        flowtool_input.setText("")
+    flowtool_input.setPlaceholderText("Put FlowTool path here")
+    flowtool_browse = QtGui.QPushButton("...")
+
+    flowtool_layout.addWidget(flowtool_label)
+    flowtool_layout.addWidget(flowtool_input)
+    flowtool_layout.addWidget(flowtool_browse)
+
     # ParaView path
     paraview_layout = QtGui.QHBoxLayout()
     paraview_label = QtGui.QLabel("ParaView Path: ")
@@ -1321,6 +1336,7 @@ def def_setup_window(data):
         data['measuretool_path'] = measuretool_input.text()
         data['isosurface_path'] = isosurface_input.text()
         data['boundaryvtk_path'] = boundaryvtk_input.text()
+        data['flowtool_path'] = flowtool_input.text()
         data['paraview_path'] = paraview_input.text()
         with open(FreeCAD.getUserAppDataDir() + '/dsph_data-{}.dsphdata'.format(utils.VERSION),
                   'wb') as picklefile:
@@ -1555,6 +1571,33 @@ def def_setup_window(data):
                     "with: chmod +x /path/to/the/executable"
                 )
 
+    def on_flowtool_browse():
+        filedialog = QtGui.QFileDialog()
+        # noinspection PyArgumentList
+        file_name, _ = filedialog.getOpenFileName(setup_window,
+                                                  "Select FlowTool path",
+                                                  QtCore.QDir.homePath())
+        if file_name != "":
+            # Verify if exe is indeed measuretool
+            process = QtCore.QProcess(FreeCADGui.getMainWindow())
+            process.start('"{}"'.format(file_name))
+            process.waitForFinished()
+            output = str(process.readAllStandardOutput())
+
+            if "flowtool" in output[0:22].lower():
+                flowtool_input.setText(file_name)
+            else:
+                utils.error(
+                    "I can't recognize FlowTool in that executable.! "
+                    "Check that the file corresponds with the appropriate tool and that you have permissions to execute it"
+                )
+                warning_dialog(
+                    "I can't recognize FlowTool in that executable.! "
+                    "Check that the file corresponds with the appropriate tool and that you have permissions to execute it",
+                    detailed_text="If you're working with GNU/Linux, you can give permissions to an executable from the terminal "
+                    "with: chmod +x /path/to/the/executable"
+                )
+
     def on_paraview_browse():
         filedialog = QtGui.QFileDialog()
         # noinspection PyArgumentList
@@ -1573,6 +1616,7 @@ def def_setup_window(data):
     floatinginfo_browse.clicked.connect(on_floatinginfo_browse)
     measuretool_browse.clicked.connect(on_measuretool_browse)
     boundaryvtk_browse.clicked.connect(on_boundaryvtk_browse)
+    flowtool_browse.clicked.connect(on_flowtool_browse)
     isosurface_browse.clicked.connect(on_isosurface_browse)
     paraview_browse.clicked.connect(on_paraview_browse)
 
@@ -1592,6 +1636,7 @@ def def_setup_window(data):
     stp_main_layout.addLayout(measuretool_layout)
     stp_main_layout.addLayout(isosurface_layout)
     stp_main_layout.addLayout(boundaryvtk_layout)
+    stp_main_layout.addLayout(flowtool_layout)
     stp_main_layout.addLayout(paraview_layout)
     stp_main_layout.addStretch(1)
 
@@ -1732,6 +1777,7 @@ def widget_state_config(widgets, config):
         widgets['post_proc_measuretool_button'].setEnabled(False)
         widgets['post_proc_isosurface_button'].setEnabled(False)
         widgets['post_proc_boundaryvtk_button'].setEnabled(False)
+        widgets['post_proc_flowtool_button'].setEnabled(False)
         widgets["objectlist_table"].setEnabled(False)
         widgets["dp_input"].setEnabled(False)
         widgets["summary_bt"].setEnabled(False)
@@ -1751,6 +1797,7 @@ def widget_state_config(widgets, config):
         widgets['post_proc_measuretool_button'].setEnabled(False)
         widgets['post_proc_isosurface_button'].setEnabled(False)
         widgets['post_proc_boundaryvtk_button'].setEnabled(False)
+        widgets['post_proc_flowtool_button'].setEnabled(False)
         widgets["casecontrols_bt_addfillbox"].setEnabled(True)
         widgets["casecontrols_bt_addstl"].setEnabled(True)
         widgets["summary_bt"].setEnabled(True)
@@ -1783,6 +1830,7 @@ def widget_state_config(widgets, config):
         widgets['post_proc_measuretool_button'].setEnabled(True)
         widgets['post_proc_isosurface_button'].setEnabled(True)
         widgets['post_proc_boundaryvtk_button'].setEnabled(True)
+        widgets['post_proc_flowtool_button'].setEnabled(True)
     elif config == "simulation not done":
         widgets['post_proc_partvtk_button'].setEnabled(True)
         widgets['post_proc_computeforces_button'].setEnabled(True)
@@ -1790,6 +1838,7 @@ def widget_state_config(widgets, config):
         widgets['post_proc_measuretool_button'].setEnabled(True)
         widgets['post_proc_isosurface_button'].setEnabled(True)
         widgets['post_proc_boundaryvtk_button'].setEnabled(True)
+        widgets['post_proc_flowtool_button'].setEnabled(True)
     elif config == "execs not correct":
         widgets["ex_selector_combo"].setEnabled(False)
         widgets["ex_button"].setEnabled(False)
@@ -1800,6 +1849,7 @@ def widget_state_config(widgets, config):
         widgets['post_proc_measuretool_button'].setEnabled(False)
         widgets['post_proc_isosurface_button'].setEnabled(False)
         widgets['post_proc_boundaryvtk_button'].setEnabled(False)
+        widgets['post_proc_flowtool_button'].setEnabled(False)
     elif config == "sim start":
         widgets["ex_button"].setEnabled(False)
         widgets["ex_additional"].setEnabled(False)
@@ -1810,6 +1860,7 @@ def widget_state_config(widgets, config):
         widgets['post_proc_measuretool_button'].setEnabled(True)
         widgets['post_proc_isosurface_button'].setEnabled(True)
         widgets['post_proc_boundaryvtk_button'].setEnabled(True)
+        widgets['post_proc_flowtool_button'].setEnabled(True)
     elif config == "sim cancel":
         widgets["ex_selector_combo"].setEnabled(True)
         widgets["ex_button"].setEnabled(True)
@@ -1821,6 +1872,7 @@ def widget_state_config(widgets, config):
         widgets['post_proc_measuretool_button'].setEnabled(True)
         widgets['post_proc_isosurface_button'].setEnabled(True)
         widgets['post_proc_boundaryvtk_button'].setEnabled(True)
+        widgets['post_proc_flowtool_button'].setEnabled(True)
     elif config == "sim finished":
         widgets['post_proc_partvtk_button'].setEnabled(True)
         widgets['post_proc_computeforces_button'].setEnabled(True)
@@ -1828,6 +1880,7 @@ def widget_state_config(widgets, config):
         widgets['post_proc_measuretool_button'].setEnabled(True)
         widgets['post_proc_isosurface_button'].setEnabled(True)
         widgets['post_proc_boundaryvtk_button'].setEnabled(True)
+        widgets['post_proc_flowtool_button'].setEnabled(True)
     elif config == "sim error":
         widgets["ex_selector_combo"].setEnabled(True)
         widgets["ex_button"].setEnabled(True)
@@ -1839,6 +1892,7 @@ def widget_state_config(widgets, config):
         widgets['post_proc_measuretool_button'].setEnabled(False)
         widgets['post_proc_isosurface_button'].setEnabled(False)
         widgets['post_proc_boundaryvtk_button'].setEnabled(False)
+        widgets['post_proc_flowtool_button'].setEnabled(False)
     elif config == "export cancel":
         widgets['post_proc_partvtk_button'].setEnabled(True)
         widgets['post_proc_computeforces_button'].setEnabled(True)
@@ -1846,6 +1900,7 @@ def widget_state_config(widgets, config):
         widgets['post_proc_measuretool_button'].setEnabled(True)
         widgets['post_proc_isosurface_button'].setEnabled(True)
         widgets['post_proc_boundaryvtk_button'].setEnabled(True)
+        widgets['post_proc_flowtool_button'].setEnabled(True)
     elif config == "export finished":
         widgets['post_proc_partvtk_button'].setEnabled(True)
         widgets['post_proc_computeforces_button'].setEnabled(True)
@@ -1853,6 +1908,7 @@ def widget_state_config(widgets, config):
         widgets['post_proc_measuretool_button'].setEnabled(True)
         widgets['post_proc_isosurface_button'].setEnabled(True)
         widgets['post_proc_boundaryvtk_button'].setEnabled(True)
+        widgets['post_proc_flowtool_button'].setEnabled(True)
 
 
 def case_summary(orig_data):
