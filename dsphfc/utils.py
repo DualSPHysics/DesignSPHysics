@@ -59,11 +59,11 @@ along with DesignSPHysics.  If not, see <http://www.gnu.org/licenses/>.
 # ------ CONSTANTS DEFINITION ------
 FREECAD_MIN_VERSION = "016"
 APP_NAME = "DesignSPHysics"
-DEBUGGING = False
+DEBUGGING = True
 VERBOSE = False
 DIVIDER = 1000
 PICKLE_PROTOCOL = 1  # Binary mode
-VERSION = "0.4.1805-21"
+VERSION = "0.4.1805-21-develop"
 WIDTH_2D = 0.001
 MAX_PARTICLE_WARNING = 2000000
 HELP_WEBPAGE = "https://github.com/ndrs92/DesignSPHysics/wiki"
@@ -410,7 +410,9 @@ def get_default_data():
     data['rhopoutmin'] = 700
     data['rhopoutmax'] = 1300
     data['domainfixed'] = DomainFixedParameter(False, 0, 0, 0, 0, 0, 0)
-    data['damping'] = Damping()
+
+    # Damping object dictionary: {'ObjectName': DampingObject}
+    data['damping'] = dict()
 
     # Periodicity data [enabled, x_inc, y_inc, z_inc]
     data['period_x'] = [False, 0.0, 0.0, 0.0]
@@ -1113,19 +1115,29 @@ def dump_to_xml(data, save_name):
 
     f.write('\t\t<special>\n')
     # Damping support
-    if data["damping"].enabled:
-        f.write('\t\t\t\t<damping>\n')
-        f.write('\t\t\t\t\t<dampingzone>\n')
-        f.write(
-            '\t\t\t\t\t\t<limitmin x="{}" y="{}" z="{}" />\n'.format(*data["damping"].limitmin))
-        f.write(
-            '\t\t\t\t\t\t<limitmax x="{}" y="{}" z="{}" />\n'.format(*data["damping"].limitmin))
-        f.write(
-            '\t\t\t\t\t\t<overlimit value="{}" />\n'.format(data["damping"].overlimit))
-        f.write(
-            '\t\t\t\t\t\t<redumax value="{}" />\n'.format(data["damping"].redumax))
-        f.write('\t\t\t\t\t</dampingzone>\n')
-        f.write('\t\t\t\t</damping>\n')
+    f.write('\t\t\t\t<damping>\n')
+    for objname, damping_object in data["damping"].iteritems():
+        fc_obj = FreeCAD.ActiveDocument.getObject(objname)
+        if fc_obj is not None and damping_object.enabled:
+            f.write('\t\t\t\t\t<dampingzone>\n')
+            f.write(
+                '\t\t\t\t\t\t<limitmin x="{}" y="{}" z="{}" />\n'.format(
+                    str(fc_obj.Placement.Base.x / DIVIDER),
+                    str(fc_obj.Placement.Base.y / DIVIDER),
+                    str(fc_obj.Placement.Base.z / DIVIDER)
+                ))
+            f.write(
+                '\t\t\t\t\t\t<limitmax x="{}" y="{}" z="{}" />\n'.format(
+                    str(fc_obj.Length.Value / DIVIDER),
+                    str(fc_obj.Width.Value / DIVIDER),
+                    str(fc_obj.Height.Value / DIVIDER)
+                ))
+            f.write(
+                '\t\t\t\t\t\t<overlimit value="{}" />\n'.format(damping_object.overlimit))
+            f.write(
+                '\t\t\t\t\t\t<redumax value="{}" />\n'.format(damping_object.redumax))
+            f.write('\t\t\t\t\t</dampingzone>\n')
+    f.write('\t\t\t\t</damping>\n')
 
     # A counter for special movements. Controls when and how to open/close tags
     written_movements_counter = 0

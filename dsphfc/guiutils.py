@@ -1652,7 +1652,7 @@ def def_setup_window(data):
     setup_window.exec_()
 
 
-def damping_config_window(data):
+def damping_config_window(data, object_key):
     """Defines the setup window.
     Modifies data dictionary passed as parameter."""
 
@@ -1669,24 +1669,6 @@ def damping_config_window(data):
     main_groupbox = QtGui.QGroupBox("Damping parameters")
     main_groupbox_layout = QtGui.QVBoxLayout()
 
-    limitmin_layout = QtGui.QHBoxLayout()
-    limitmin_label = QtGui.QLabel("Minimum limit [X, Y, Z]: ")
-    limitmin_x = QtGui.QLineEdit()
-    limitmin_y = QtGui.QLineEdit()
-    limitmin_z = QtGui.QLineEdit()
-    limitmin_units_label = QtGui.QLabel(" meters")
-    [limitmin_layout.addWidget(x) for x in [
-        limitmin_label, limitmin_x, limitmin_y, limitmin_z]]
-
-    limitmax_layout = QtGui.QHBoxLayout()
-    limitmax_label = QtGui.QLabel("Maximum limit [X, Y, Z]: ")
-    limitmax_x = QtGui.QLineEdit()
-    limitmax_y = QtGui.QLineEdit()
-    limitmax_z = QtGui.QLineEdit()
-    limitmax_units_label = QtGui.QLabel(" meters")
-    [limitmax_layout.addWidget(x) for x in [
-        limitmax_label, limitmax_x, limitmax_y, limitmax_z]]
-
     overlimit_layout = QtGui.QHBoxLayout()
     overlimit_label = QtGui.QLabel("Overlimit: ")
     overlimit_input = QtGui.QLineEdit()
@@ -1697,8 +1679,6 @@ def damping_config_window(data):
     redumax_input = QtGui.QLineEdit()
     [redumax_layout.addWidget(x) for x in [redumax_label, redumax_input]]
 
-    main_groupbox_layout.addLayout(limitmin_layout)
-    main_groupbox_layout.addLayout(limitmax_layout)
     main_groupbox_layout.addLayout(overlimit_layout)
     main_groupbox_layout.addLayout(redumax_layout)
 
@@ -1717,11 +1697,9 @@ def damping_config_window(data):
 
     # Window logic
     def on_ok():
-        data["damping"].enabled = enabled_checkbox.isChecked()
-        data["damping"].limitmin = [float(limitmin_x.text()), float(limitmin_y.text()), float(limitmin_z.text())]
-        data["damping"].limitmax = [float(limitmax_x.text()), float(limitmax_y.text()), float(limitmax_z.text())]
-        data["damping"].overlimit = float(overlimit_input.text())
-        data["damping"].redumax = float(redumax_input.text())
+        data["damping"][object_key].enabled = enabled_checkbox.isChecked()
+        data["damping"][object_key].overlimit = float(overlimit_input.text())
+        data["damping"][object_key].redumax = float(redumax_input.text())
         damping_window.accept()
 
     def on_cancel():
@@ -1734,27 +1712,19 @@ def damping_config_window(data):
             main_groupbox.setEnabled(False)
 
     def on_value_change():
-        [x.setText(x.text().replace(",", ".")) for x in [limitmin_x, limitmin_y,
-                                                         limitmin_z, limitmax_x, limitmax_y, limitmax_z, overlimit_input, redumax_input]]
+        [x.setText(x.text().replace(",", ".")) for x in [overlimit_input, redumax_input]]
 
     ok_button.clicked.connect(on_ok)
     cancel_button.clicked.connect(on_cancel)
     enabled_checkbox.stateChanged.connect(on_enable_chk)
-    [x.textChanged.connect(on_value_change) for x in [limitmin_x, limitmin_y,
-                                                      limitmin_z, limitmax_x, limitmax_y, limitmax_z, overlimit_input, redumax_input]]
+    [x.textChanged.connect(on_value_change) for x in [overlimit_input, redumax_input]]
 
     # Fill fields with case data
-    enabled_checkbox.setChecked(data["damping"].enabled)
-    limitmin_x.setText(str(data["damping"].limitmin[0]))
-    limitmin_y.setText(str(data["damping"].limitmin[1]))
-    limitmin_z.setText(str(data["damping"].limitmin[2]))
-    limitmax_x.setText(str(data["damping"].limitmax[0]))
-    limitmax_y.setText(str(data["damping"].limitmax[1]))
-    limitmax_z.setText(str(data["damping"].limitmax[2]))
-    overlimit_input.setText(str(data["damping"].overlimit))
-    redumax_input.setText(str(data["damping"].redumax))
+    enabled_checkbox.setChecked(data["damping"][object_key].enabled)
+    overlimit_input.setText(str(data["damping"][object_key].overlimit))
+    redumax_input.setText(str(data["damping"][object_key].redumax))
     on_enable_chk(
-        QtCore.Qt.Checked if data["damping"].enabled else QtCore.Qt.Unchecked)
+        QtCore.Qt.Checked if data["damping"][object_key].enabled else QtCore.Qt.Unchecked)
 
     damping_window.exec_()
 
