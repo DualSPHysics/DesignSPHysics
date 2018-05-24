@@ -184,7 +184,7 @@ dp_layout.addWidget(dp_label2)
 cc_layout = QtGui.QVBoxLayout()
 cclabel_layout = QtGui.QHBoxLayout()
 ccfilebuttons_layout = QtGui.QHBoxLayout()
-ccsecondrow = QtGui.QHBoxLayout()
+ccsecondrow_layout = QtGui.QHBoxLayout()
 ccthirdrow_layout = QtGui.QHBoxLayout()
 ccfourthrow_layout = QtGui.QHBoxLayout()
 casecontrols_label = QtGui.QLabel("<b>" + __("Pre-processing") + "<b>")
@@ -274,15 +274,9 @@ toggle3dbutton.setToolTip(
 widget_state_elements['toggle3dbutton'] = toggle3dbutton
 
 # Damping add button
-casecontrols_bt_special = QtGui.QToolButton()
-casecontrols_bt_special.setToolButtonStyle(QtCore.Qt.ToolButtonTextOnly)
-casecontrols_bt_special.setText(__("Special "))
+casecontrols_bt_special = QtGui.QPushButton(__("Special "))
 casecontrols_bt_special.setToolTip(
     __("Special actions for the case."))
-casecontrols_menu_specialmenu = QtGui.QMenu()
-casecontrols_menu_specialmenu.addAction(__("Add damping zone"))
-casecontrols_bt_special.setMenu(casecontrols_menu_specialmenu)
-casecontrols_bt_special.setFixedHeight(toggle3dbutton.sizeHint().height())
 widget_state_elements['dampingbutton'] = casecontrols_bt_special
 
 # Toggle Periodicity buttons
@@ -1022,13 +1016,27 @@ def on_properties():
 
 
 def on_special_button():
-    casecontrols_bt_special.showMenu()
+    """ Spawns a dialog with special options """
+    sp_window = QtGui.QDialog()
+    sp_window_layout = QtGui.QVBoxLayout()
 
+    sp_damping_button = QtGui.QPushButton(__("Damping"))
+    sp_inlet_button = QtGui.QPushButton(__("Inlet/Outlet"))
+    sp_inlet_button.setEnabled(False)
+    sp_chrono_button = QtGui.QPushButton(__("Coupling CHRONO"))
+    sp_chrono_button.setEnabled(False)
+    sp_swash_button = QtGui.QPushButton(__("Coupling SWASH"))
+    sp_swash_button.setEnabled(False)
 
-def on_special_menu(action):
-    """ Handles the special button menu. """
-    if __("Add damping zone") in action.text():
+    def on_damping_option():
         on_add_damping_zone()
+        sp_window.accept()
+
+    sp_damping_button.clicked.connect(on_damping_option)
+
+    [sp_window_layout.addWidget(x) for x in [sp_damping_button, sp_inlet_button, sp_chrono_button, sp_swash_button]]
+    sp_window.setLayout(sp_window_layout)
+    sp_window.exec_()
 
 
 # Connect case control buttons to respective handlers
@@ -1036,7 +1044,6 @@ casecontrols_bt_newdoc.clicked.connect(on_new_case)
 casecontrols_bt_savedoc.clicked.connect(on_save_case)
 casecontrols_menu_newdoc.triggered.connect(on_newdoc_menu)
 casecontrols_menu_savemenu.triggered.connect(on_save_menu)
-casecontrols_menu_specialmenu.triggered.connect(on_special_menu)
 casecontrols_bt_loaddoc.clicked.connect(on_load_case)
 casecontrols_bt_addfillbox.clicked.connect(on_add_fillbox)
 casecontrols_bt_addstl.clicked.connect(on_add_stl)
@@ -1051,19 +1058,19 @@ cclabel_layout.addWidget(casecontrols_label)
 ccfilebuttons_layout.addWidget(casecontrols_bt_newdoc)
 ccfilebuttons_layout.addWidget(casecontrols_bt_savedoc)
 ccfilebuttons_layout.addWidget(casecontrols_bt_loaddoc)
-ccsecondrow.addWidget(summary_bt)
+ccsecondrow_layout.addWidget(summary_bt)
 # ccsecondrow.addWidget(properties_bt)
-ccsecondrow.addWidget(casecontrols_bt_special)
-ccsecondrow.addWidget(toggle3dbutton)
+ccsecondrow_layout.addWidget(toggle3dbutton)
 ccthirdrow_layout.addWidget(casecontrols_bt_addfillbox)
 ccthirdrow_layout.addWidget(casecontrols_bt_addstl)
 ccthirdrow_layout.addWidget(casecontrols_bt_importxml)
+ccfourthrow_layout.addWidget(casecontrols_bt_special)
 
 cc_layout.addLayout(cclabel_layout)
 cc_layout.addLayout(ccfilebuttons_layout)
 cc_layout.addLayout(ccthirdrow_layout)
+cc_layout.addLayout(ccsecondrow_layout)
 cc_layout.addLayout(ccfourthrow_layout)
-cc_layout.addLayout(ccsecondrow)
 
 # Defines run window dialog
 run_dialog = QtGui.QDialog(
