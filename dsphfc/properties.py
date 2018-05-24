@@ -750,10 +750,8 @@ class CustomProperty(object):
 class Damping(object):
     """ DualSPHysics damping settings """
 
-    def __init__(self, enabled=False, limitmin=None, limitmax=None, overlimit=1, redumax=10):
+    def __init__(self, enabled=False, overlimit=1, redumax=10):
         self.enabled = enabled
-        self.limitmin = [0, 0, 0] if limitmin is None else limitmin
-        self.limitmax = [0, 0, 0] if limitmax is None else limitmax
         self.overlimit = overlimit
         self.redumax = redumax
 
@@ -761,8 +759,6 @@ class Damping(object):
         to_ret = ""
         to_ret += "Damping configuration structure ({})\n".format(
             "enabled" if self.enabled else "disabled")
-        to_ret += "Minimum limit: X:{} ; Y:{} ; Z:{}\n".format(*self.limitmin)
-        to_ret += "Maximum limit: X:{} ; Y:{} ; Z:{}\n".format(*self.limitmax)
         to_ret += "Overlimit: {}\n".format(self.overlimit)
         to_ret += "Redumax: {}".format(self.redumax)
         return to_ret

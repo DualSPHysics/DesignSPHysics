@@ -273,14 +273,14 @@ toggle3dbutton.setToolTip(
     __("Changes the case mode between 2D and 3D mode, switching the Case Limits between a plane or a cube"))
 widget_state_elements['toggle3dbutton'] = toggle3dbutton
 
-# Damping config button
+# Damping add button
 casecontrols_bt_special = QtGui.QToolButton()
 casecontrols_bt_special.setToolButtonStyle(QtCore.Qt.ToolButtonTextOnly)
 casecontrols_bt_special.setText(__("Special "))
 casecontrols_bt_special.setToolTip(
     __("Special actions for the case."))
 casecontrols_menu_specialmenu = QtGui.QMenu()
-casecontrols_menu_specialmenu.addAction(__("Damping"))
+casecontrols_menu_specialmenu.addAction(__("Add damping zone"))
 casecontrols_bt_special.setMenu(casecontrols_menu_specialmenu)
 casecontrols_bt_special.setFixedHeight(toggle3dbutton.sizeHint().height())
 widget_state_elements['dampingbutton'] = casecontrols_bt_special
@@ -625,6 +625,18 @@ def on_add_fillbox():
     fillbox_gp.addObject(fillbox_point)
     FreeCAD.ActiveDocument.recompute()
     FreeCADGui.SendMsgToActiveView("ViewFit")
+
+
+def on_add_damping_zone():
+    damping_limits = FreeCAD.ActiveDocument.addObject("Part::Box", "DampingZone")
+    damping_limits.Length = '500 mm'
+    damping_limits.Width = '500 mm'
+    damping_limits.Height = '500 mm'
+    damping_limits.ViewObject.DisplayMode = "Wireframe"
+    damping_limits.ViewObject.LineColor = (0.53, 1.00, 0.08)
+    FreeCAD.ActiveDocument.recompute()
+    FreeCADGui.SendMsgToActiveView("ViewFit")
+    data["damping"][damping_limits.Name] = Damping()
 
 
 def on_add_stl():
@@ -1009,14 +1021,14 @@ def on_properties():
     property_window.exec_()
 
 
-def on_damping_button():
+def on_special_button():
     casecontrols_bt_special.showMenu()
 
 
 def on_special_menu(action):
     """ Handles the special button menu. """
-    if __("Damping") in action.text():
-        guiutils.damping_config_window(data)
+    if __("Add damping zone") in action.text():
+        on_add_damping_zone()
 
 
 # Connect case control buttons to respective handlers
@@ -1032,7 +1044,7 @@ casecontrols_bt_importxml.clicked.connect(on_import_xml)
 summary_bt.clicked.connect(on_summary)
 properties_bt.clicked.connect(on_properties)
 toggle3dbutton.clicked.connect(on_2d_toggle)
-casecontrols_bt_special.clicked.connect(on_damping_button)
+casecontrols_bt_special.clicked.connect(on_special_button)
 
 # Defines case control scaffolding
 cclabel_layout.addWidget(casecontrols_label)
@@ -3297,9 +3309,15 @@ removefromdsph_button = QtGui.QPushButton(__("Remove from DSPH Simulation"))
 removefromdsph_button.setToolTip(
     __("Removes the current selection from the case.\nObjects not included in the case will not be exported."))
 
+# Damping configuration button
+damping_config_button = QtGui.QPushButton(__("Damping configuration"))
+damping_config_button.setToolTip(
+    __("Opens the damping configuration for the selected object"))
+
 property_widget_layout.addWidget(object_property_table)
 property_widget_layout.addWidget(addtodsph_button)
 property_widget_layout.addWidget(removefromdsph_button)
+property_widget_layout.addWidget(damping_config_button)
 
 properties_scaff_widget.setLayout(property_widget_layout)
 
@@ -4507,6 +4525,7 @@ fc_main_window.addDockWidget(QtCore.Qt.LeftDockWidgetArea, properties_widget)
 object_property_table.hide()
 addtodsph_button.hide()
 removefromdsph_button.hide()
+damping_config_button.hide()
 
 
 def add_object_to_sim(name=None):
@@ -4553,9 +4572,17 @@ def remove_object_from_sim():
     on_tree_item_selection_change()
 
 
+def on_damping_config():
+    """ Configures the damping configuration for the selected
+    obejct """
+    selection = FreeCADGui.Selection.getSelection()
+    guiutils.damping_config_window(data, selection[0].Name)
+
+
 # Connects buttons to its functions
 addtodsph_button.clicked.connect(add_object_to_sim)
 removefromdsph_button.clicked.connect(remove_object_from_sim)
+damping_config_button.clicked.connect(on_damping_config)
 
 # Find treewidgets of freecad.
 trees = list()
@@ -4614,6 +4641,11 @@ def on_tree_item_selection_change():
             data['simobjects'].pop(key, None)
             data['export_order'].remove(key)
 
+    # Detect damping deletion
+    for key in data['damping'].keys():
+        if key not in object_names:
+            data['damping'].pop(key, None)
+
     addtodsph_button.setEnabled(True)
     if len(selection) > 0:
         if len(selection) > 1:
@@ -4623,6 +4655,7 @@ def on_tree_item_selection_change():
             object_property_table.hide()
             addtodsph_button.show()
             removefromdsph_button.hide()
+            damping_config_button.hide()
             pass
         else:
             # One object selected
@@ -4630,13 +4663,20 @@ def on_tree_item_selection_change():
                 object_property_table.hide()
                 addtodsph_button.hide()
                 removefromdsph_button.hide()
+                damping_config_button.hide()
                 properties_widget.setMinimumHeight(100)
                 properties_widget.setMaximumHeight(100)
+            elif "dampingzone" in selection[0].Name.lower():
+                object_property_table.hide()
+                addtodsph_button.hide()
+                removefromdsph_button.hide()
+                damping_config_button.show()
             elif selection[0].Name in data['simobjects'].keys():
                 # Show properties on table
                 object_property_table.show()
                 addtodsph_button.hide()
                 removefromdsph_button.show()
+                damping_config_button.hide()
                 properties_widget.setMinimumHeight(300)
                 properties_widget.setMaximumHeight(300)
 
@@ -4734,6 +4774,7 @@ def on_tree_item_selection_change():
                     object_property_table.hide()
                     addtodsph_button.show()
                     removefromdsph_button.hide()
+                    damping_config_button.hide()
                 else:
                     addtodsph_button.setText(
                         __("Can't add this object to the simulation"))
@@ -4741,10 +4782,12 @@ def on_tree_item_selection_change():
                     addtodsph_button.show()
                     addtodsph_button.setEnabled(False)
                     removefromdsph_button.hide()
+                    damping_config_button.hide()
     else:
         object_property_table.hide()
         addtodsph_button.hide()
         removefromdsph_button.hide()
+        damping_config_button.hide()
 
     # Update dsph objects list
     objectlist_table.clear()
@@ -4808,6 +4851,7 @@ def selection_monitor():
             object_property_table.hide()
             addtodsph_button.hide()
             removefromdsph_button.hide()
+            damping_config_button.hide()
         try:
             # watch fillbox rotations and prevent them
             for o in FreeCAD.getDocument("DSPH_Case").Objects:
