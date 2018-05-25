@@ -17,6 +17,7 @@ import utils
 import shutil
 
 import sys
+
 reload(sys)
 sys.setdefaultencoding('utf-8')
 
@@ -1817,7 +1818,8 @@ class RegularPistonWaveMotionTimeline(QtGui.QWidget):
 
         self.awas_first_row_layout = QtGui.QHBoxLayout()
         [self.awas_first_row_layout.addWidget(x) for x in [self.awas_startawas_label, self.awas_startawas_input,
-                                                           self.awas_swl_label, self.awas_swl_input, self.awas_elevation_label, self.awas_elevation_selector]]
+                                                           self.awas_swl_label, self.awas_swl_input,
+                                                           self.awas_elevation_label, self.awas_elevation_selector]]
 
         self.awas_second_row_layout = QtGui.QHBoxLayout()
         [self.awas_second_row_layout.addWidget(x) for x in [
@@ -1829,15 +1831,19 @@ class RegularPistonWaveMotionTimeline(QtGui.QWidget):
 
         self.awas_fourth_row_layout = QtGui.QHBoxLayout()
         [self.awas_fourth_row_layout.addWidget(x) for x in [
-            self.awas_gaugedp_label, self.awas_gaugedp_input, self.awas_coefmasslimit_label, self.awas_coefmasslimit_input]]
+            self.awas_gaugedp_label, self.awas_gaugedp_input, self.awas_coefmasslimit_label,
+            self.awas_coefmasslimit_input]]
 
         self.awas_fifth_row_layout = QtGui.QHBoxLayout()
         [self.awas_fifth_row_layout.addWidget(x) for x in [
             self.awas_savedata_label, self.awas_savedata_selector, self.awas_limitace_label, self.awas_limitace_input]]
 
         self.awas_sixth_row_layout = QtGui.QHBoxLayout()
-        [self.awas_sixth_row_layout.addWidget(x) for x in [self.awas_correction_label, self.awas_correction_enabled, self.awas_correction_coefstroke_label, self.awas_correction_coefstroke_input,
-                                                           self.awas_correction_coefperiod_label, self.awas_correction_coefperiod_input, self.awas_correction_powerfunc_label, self.awas_correction_powerfunc_input]]
+        [self.awas_sixth_row_layout.addWidget(x) for x in
+         [self.awas_correction_label, self.awas_correction_enabled, self.awas_correction_coefstroke_label,
+          self.awas_correction_coefstroke_input,
+          self.awas_correction_coefperiod_label, self.awas_correction_coefperiod_input,
+          self.awas_correction_powerfunc_label, self.awas_correction_powerfunc_input]]
 
         self.main_layout.addLayout(self.root_layout)
         self.main_layout.addWidget(guiutils.h_line_generator())
@@ -1848,7 +1854,9 @@ class RegularPistonWaveMotionTimeline(QtGui.QWidget):
         self.main_layout.addLayout(self.awas_root_layout)
         self.main_layout.addWidget(guiutils.h_line_generator())
         [self.main_layout.addLayout(x) for x in [self.awas_first_row_layout,
-                                                 self.awas_second_row_layout, self.awas_third_row_layout, self.awas_fourth_row_layout, self.awas_fifth_row_layout, self.awas_sixth_row_layout]]
+                                                 self.awas_second_row_layout, self.awas_third_row_layout,
+                                                 self.awas_fourth_row_layout, self.awas_fifth_row_layout,
+                                                 self.awas_sixth_row_layout]]
 
         self.setLayout(self.main_layout)
         self.fill_values(reg_wave_gen)
@@ -1915,8 +1923,10 @@ class RegularPistonWaveMotionTimeline(QtGui.QWidget):
                                                          self.awas_swl_input, self.awas_gaugex_input,
                                                          self.awas_gaugey_input, self.awas_gaugezmin_input,
                                                          self.awas_gaugezmax_input, self.awas_coefmasslimit_input,
-                                                         self.awas_limitace_input, self.awas_correction_coefstroke_input,
-                                                         self.awas_correction_coefperiod_input, self.awas_correction_powerfunc_input]]
+                                                         self.awas_limitace_input,
+                                                         self.awas_correction_coefstroke_input,
+                                                         self.awas_correction_coefperiod_input,
+                                                         self.awas_correction_powerfunc_input]]
 
     def on_change(self):
         self._sanitize_input()
@@ -2267,7 +2277,8 @@ class IrregularPistonWaveMotionTimeline(QtGui.QWidget):
 
         self.awas_first_row_layout = QtGui.QHBoxLayout()
         [self.awas_first_row_layout.addWidget(x) for x in [self.awas_startawas_label, self.awas_startawas_input,
-                                                           self.awas_swl_label, self.awas_swl_input, self.awas_elevation_label, self.awas_elevation_selector]]
+                                                           self.awas_swl_label, self.awas_swl_input,
+                                                           self.awas_elevation_label, self.awas_elevation_selector]]
 
         self.awas_second_row_layout = QtGui.QHBoxLayout()
         [self.awas_second_row_layout.addWidget(x) for x in [
@@ -2279,15 +2290,19 @@ class IrregularPistonWaveMotionTimeline(QtGui.QWidget):
 
         self.awas_fourth_row_layout = QtGui.QHBoxLayout()
         [self.awas_fourth_row_layout.addWidget(x) for x in [
-            self.awas_gaugedp_label, self.awas_gaugedp_input, self.awas_coefmasslimit_label, self.awas_coefmasslimit_input]]
+            self.awas_gaugedp_label, self.awas_gaugedp_input, self.awas_coefmasslimit_label,
+            self.awas_coefmasslimit_input]]
 
         self.awas_fifth_row_layout = QtGui.QHBoxLayout()
         [self.awas_fifth_row_layout.addWidget(x) for x in [
             self.awas_savedata_label, self.awas_savedata_selector, self.awas_limitace_label, self.awas_limitace_input]]
 
         self.awas_sixth_row_layout = QtGui.QHBoxLayout()
-        [self.awas_sixth_row_layout.addWidget(x) for x in [self.awas_correction_label, self.awas_correction_enabled, self.awas_correction_coefstroke_label, self.awas_correction_coefstroke_input,
-                                                           self.awas_correction_coefperiod_label, self.awas_correction_coefperiod_input, self.awas_correction_powerfunc_label, self.awas_correction_powerfunc_input]]
+        [self.awas_sixth_row_layout.addWidget(x) for x in
+         [self.awas_correction_label, self.awas_correction_enabled, self.awas_correction_coefstroke_label,
+          self.awas_correction_coefstroke_input,
+          self.awas_correction_coefperiod_label, self.awas_correction_coefperiod_input,
+          self.awas_correction_powerfunc_label, self.awas_correction_powerfunc_input]]
 
         self.main_layout.addLayout(self.root_layout)
         self.main_layout.addWidget(guiutils.h_line_generator())
@@ -2300,7 +2315,9 @@ class IrregularPistonWaveMotionTimeline(QtGui.QWidget):
         self.main_layout.addLayout(self.awas_root_layout)
         self.main_layout.addWidget(guiutils.h_line_generator())
         [self.main_layout.addLayout(x) for x in [self.awas_first_row_layout,
-                                                 self.awas_second_row_layout, self.awas_third_row_layout, self.awas_fourth_row_layout, self.awas_fifth_row_layout, self.awas_sixth_row_layout]]
+                                                 self.awas_second_row_layout, self.awas_third_row_layout,
+                                                 self.awas_fourth_row_layout, self.awas_fifth_row_layout,
+                                                 self.awas_sixth_row_layout]]
 
         self.setLayout(self.main_layout)
         self.fill_values(irreg_wave_gen)
@@ -2394,8 +2411,10 @@ class IrregularPistonWaveMotionTimeline(QtGui.QWidget):
                                                          self.awas_swl_input, self.awas_gaugex_input,
                                                          self.awas_gaugey_input, self.awas_gaugezmin_input,
                                                          self.awas_gaugezmax_input, self.awas_coefmasslimit_input,
-                                                         self.awas_limitace_input, self.awas_correction_coefstroke_input,
-                                                         self.awas_correction_coefperiod_input, self.awas_correction_powerfunc_input]]
+                                                         self.awas_limitace_input,
+                                                         self.awas_correction_coefstroke_input,
+                                                         self.awas_correction_coefperiod_input,
+                                                         self.awas_correction_powerfunc_input]]
 
     def on_change(self):
         self._sanitize_input()
@@ -2417,7 +2436,7 @@ class IrregularPistonWaveMotionTimeline(QtGui.QWidget):
             self.awas_correction_enabled
         ]]
         self._awas_correction_enabled_handler()
-    
+
     def _awas_correction_enabled_handler(self):
         enable_state = self.awas_correction_enabled.isChecked()
         if not self.awas_enabled.isChecked():
@@ -2718,12 +2737,12 @@ class RegularFlapWaveMotionTimeline(QtGui.QWidget):
                                       self.fixed_depth_input.text()),
                                   flapaxis0=[float(self.flap_axis_0_x.text()),
                                              float(
-                                      self.flap_axis_0_y.text()),
-                                      float(self.flap_axis_0_z.text())],
+                                                 self.flap_axis_0_y.text()),
+                                             float(self.flap_axis_0_z.text())],
                                   flapaxis1=[float(self.flap_axis_1_x.text()),
                                              float(
-                                      self.flap_axis_1_y.text()),
-                                      float(self.flap_axis_1_z.text())],
+                                                 self.flap_axis_1_y.text()),
+                                             float(self.flap_axis_1_z.text())],
                                   variable_draft=float(
                                       self.variable_draft_input.text()),
                                   wave_height=float(
@@ -3012,7 +3031,8 @@ class IrregularFlapWaveMotionTimeline(QtGui.QWidget):
                                                          self.flap_axis_1_x,
                                                          self.flap_axis_1_y, self.flap_axis_1_z,
                                                          self.wave_height_input,
-                                                         self.wave_period_input, self.variable_draft_input, self.savemotion_time_input,
+                                                         self.wave_period_input, self.variable_draft_input,
+                                                         self.savemotion_time_input,
                                                          self.savemotion_timedt_input, self.savemotion_xpos_input,
                                                          self.savemotion_zpos_input, self.saveserie_timemin_input,
                                                          self.saveserie_timemax_input, self.saveserie_timedt_input,
@@ -3035,12 +3055,12 @@ class IrregularFlapWaveMotionTimeline(QtGui.QWidget):
                                         self.fixed_depth_input.text()),
                                     flapaxis0=[float(self.flap_axis_0_x.text()),
                                                float(
-                                        self.flap_axis_0_y.text()),
-                                        float(self.flap_axis_0_z.text())],
+                                                   self.flap_axis_0_y.text()),
+                                               float(self.flap_axis_0_z.text())],
                                     flapaxis1=[float(self.flap_axis_1_x.text()),
                                                float(
-                                        self.flap_axis_1_y.text()),
-                                        float(self.flap_axis_1_z.text())],
+                                                   self.flap_axis_1_y.text()),
+                                               float(self.flap_axis_1_z.text())],
                                     wave_height=float(
                                         self.wave_height_input.text()),
                                     wave_period=float(
@@ -3443,3 +3463,76 @@ class MovementTimelinePlaceholder(QtGui.QWidget):
         self.main_layout.addStretch(0.5)
 
         self.setLayout(self.main_layout)
+
+
+class InfoDialogDetails(QtGui.QDialog):
+    """ A popup dialog with a text box to show details."""
+
+    def __init__(self, text=None):
+        super(InfoDialogDetails, self).__init__(None, QtCore.Qt.CustomizeWindowHint | QtCore.Qt.WindowTitleHint)
+        self.setModal(False)
+        self.setWindowTitle(__("Details"))
+        self.setFixedSize(550, 273)
+        self.main_layout = QtGui.QVBoxLayout()
+
+        self.details_text = QtGui.QTextEdit()
+        self.details_text.setReadOnly(True)
+        self.main_layout.addWidget(self.details_text)
+
+        self.details_text.setText(text)
+
+        self.setLayout(self.main_layout)
+
+
+
+class InfoDialog(QtGui.QDialog):
+    """ An information dialog with popup details and ok button."""
+
+    def __init__(self, info_text="", detailed_text=None):
+        super(InfoDialog, self).__init__()
+        self.setWindowModality(QtCore.Qt.NonModal)
+        self.has_details = detailed_text is not None
+        if self.has_details:
+            self.details_dialog = InfoDialogDetails(detailed_text)
+        self.main_layout = QtGui.QVBoxLayout()
+
+        self.text = QtGui.QLabel(str(info_text))
+        self.text.setWordWrap(True)
+
+        if self.has_details:
+            self.details_button = QtGui.QPushButton("Details")
+        self.ok_button = QtGui.QPushButton("Ok")
+
+        self.button_layout = QtGui.QHBoxLayout()
+        self.button_layout.addStretch(1)
+        if self.has_details:
+            self.button_layout.addWidget(self.details_button)
+        self.button_layout.addWidget(self.ok_button)
+
+        self.main_layout.addWidget(self.text)
+        self.main_layout.addWidget(guiutils.h_line_generator())
+        self.main_layout.addLayout(self.button_layout)
+        self.setLayout(self.main_layout)
+        self.setFixedSize(300, 80)
+
+        self.connections()
+        self.show()
+
+    def on_details_button(self):
+        if self.details_dialog.isVisible():
+            self.details_dialog.hide()
+        else:
+            self.details_dialog.show()
+            self.details_dialog.move(
+                self.x() - self.details_dialog.width() - 15,
+                self.y() - abs(self.height() - self.details_dialog.height()) / 2)
+
+    def on_ok_button(self):
+        if self.has_details:
+            self.details_dialog.hide()
+        self.accept()
+
+    def connections(self):
+        if self.has_details:
+            self.details_button.clicked.connect(self.on_details_button)
+        self.ok_button.clicked.connect(self.on_ok_button)

@@ -480,6 +480,7 @@ def get_default_data():
     # Temporal data dict to control execution features.
     temp_data['current_process'] = None
     temp_data['stored_selection'] = []
+    temp_data['current_info_dialog'] = None
     temp_data['export_numparts'] = ""
     temp_data['total_export_parts'] = -1
     temp_data['measuretool_points'] = list()
@@ -592,7 +593,7 @@ def prompt_close_all_documents(prompt=True):
         If accepted, close all the current documents and return True, else returns False. """
     if prompt:
         user_selection = guiutils.ok_cancel_dialog(
-            APP_NAME, "To do this you must close all current documents. Close all the documents?")
+            APP_NAME, "All documents will be closed")
     if not prompt or user_selection == QtGui.QMessageBox.Ok:
         # Close all current documents.
         log("Closing all current documents")

@@ -379,20 +379,21 @@ def on_save_case(save_as=None):
         utils.dump_to_xml(data, save_name)
 
         # Generate batch file in disk
-        if (data['gencase_path'] == "") or (data['dsphysics_path'] == "") or (data['partvtk4_path'] == ""):
-            utils.warning(
-                __("Can't create executable bat file! One or more of the paths in plugin setup is not set"))
-        else:
-            # Export batch files
-            utils.batch_generator(
-                full_path=save_name,
-                case_name=save_name.split('/')[-1],
-                gcpath=data['gencase_path'],
-                dsphpath=data['dsphysics_path'],
-                pvtkpath=data['partvtk4_path'],
-                exec_params="-{} {}".format(
-                    str(ex_selector_combo.currentText()).lower(), data['additional_parameters']),
-                lib_path='/'.join(data['gencase_path'].split('/')[:-1]))
+        # TODO: fix this and enable it. It's disabled temporarily because it is not working
+        # if (data['gencase_path'] == "") or (data['dsphysics_path'] == "") or (data['partvtk4_path'] == ""):
+        #     utils.warning(
+        #         __("Can't create executable bat file! One or more of the paths in plugin setup is not set"))
+        # else:
+        #     # Export batch files
+        #     utils.batch_generator(
+        #         full_path=save_name,
+        #         case_name=save_name.split('/')[-1],
+        #         gcpath=data['gencase_path'],
+        #         dsphpath=data['dsphysics_path'],
+        #         pvtkpath=data['partvtk4_path'],
+        #         exec_params="-{} {}".format(
+        #             str(ex_selector_combo.currentText()).lower(), data['additional_parameters']),
+        #         lib_path='/'.join(data['gencase_path'].split('/')[:-1]))
 
         # Save data array on disk
         try:
@@ -1471,10 +1472,10 @@ def partvtk_export(export_parameters):
 
         if exit_code == 0:
             # Exported correctly
-            guiutils.info_dialog(
-                info_text=__(
-                    "Post-processing finished successfully. Press the details button to show PartVTK output"),
-                detailed_text=temp_data['current_output'])
+            temp_data['current_info_dialog'] = dsphwidgets.InfoDialog(
+                info_text=__("PartVTK finished successfully"),
+                detailed_text=temp_data['current_output']
+            )
         else:
             guiutils.error_dialog(
                 __("There was an error on the post-processing. Show details to view the errors."),
@@ -1594,7 +1595,7 @@ def on_partvtk():
     pvtk_parameters_layout.addWidget(pvtk_parameters_label)
     pvtk_parameters_layout.addWidget(pvtk_parameters_text)
 
-    pvtk_open_at_end = QtGui.QCheckBox("Open with ParaView at export end")
+    pvtk_open_at_end = QtGui.QCheckBox("Open with ParaView")
     pvtk_open_at_end.setEnabled(data['paraview_path'] != "")
 
     pvtk_export_button = QtGui.QPushButton(__("Export"))
@@ -1726,9 +1727,9 @@ def floatinginfo_export(export_parameters):
         export_dialog.hide()
         if exit_code == 0:
             # Exported correctly
-            guiutils.info_dialog(
+            temp_data['current_info_dialog'] = dsphwidgets.InfoDialog(
                 info_text=__(
-                    "Post-processing finished successfully. Press the details button to see FloatingInfo output."),
+                    "FloatingInfo finished successfully"),
                 detailed_text=temp_data['current_output'])
         else:
             guiutils.error_dialog(
@@ -1868,9 +1869,9 @@ def computeforces_export(export_parameters):
         export_dialog.hide()
         if exit_code == 0:
             # Exported correctly
-            guiutils.info_dialog(
+            temp_data['current_info_dialog'] = dsphwidgets.InfoDialog(
                 info_text=__(
-                    "Post-processing finished successfully. Press the details button to see ComputeForces output."),
+                    "ComputeForces finished successfully."),
                 detailed_text=temp_data['current_output'])
         else:
             guiutils.error_dialog(
@@ -2030,9 +2031,9 @@ def measuretool_export(export_parameters):
         export_dialog.hide()
         if exit_code == 0:
             # Exported correctly
-            guiutils.info_dialog(
+            temp_data['current_info_dialog'] = dsphwidgets.InfoDialog(
                 info_text=__(
-                    "Post-processing finished successfully. Press the details button to see MeasureTool output"),
+                    "MeasureTool finished successfully."),
                 detailed_text=temp_data['current_output'])
         else:
             guiutils.error_dialog(
@@ -2486,9 +2487,9 @@ def isosurface_export(export_parameters):
 
         if exit_code == 0:
             # Exported correctly
-            guiutils.info_dialog(
+            temp_data['current_info_dialog'] = dsphwidgets.InfoDialog(
                 info_text=__(
-                    "Post-processing finished successfully. Press the details button to show IsoSurface output"),
+                    "IsoSurface finished successfully."),
                 detailed_text=temp_data['current_output'])
         else:
             guiutils.error_dialog(
@@ -2703,9 +2704,9 @@ def flowtool_export(export_parameters):
 
         if exit_code == 0:
             # Exported correctly
-            guiutils.info_dialog(
+            temp_data['current_info_dialog'] = dsphwidgets.InfoDialog(
                 info_text=__(
-                    "Post-processing finished successfully. Press the details button to show FlowTool output"),
+                    "FlowTool finished successfully."),
                 detailed_text=temp_data['current_output'])
         else:
             guiutils.error_dialog(
