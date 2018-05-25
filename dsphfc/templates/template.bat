@@ -13,7 +13,7 @@ set gencase="{gcpath}"
 set dualsphysics="{dsphpath}"
 set partvtk="{pvtkpath}"
 
-echo "This script executes GenCase for the case saved, that generates output files in the *_Out dir. Then, executes a simulation on CPU/GPU of the case. Last, it exports all the geometry generated in VTK files for viewing with ParaView."
+echo "This script executes GenCase for the case saved, that generates output files in the *_out dir. Then, executes a simulation on CPU/GPU of the case. Last, it exports all the geometry generated in VTK files for viewing with ParaView."
 pause
 
 rem "dirout" is created to store results or it is removed if it already exists
