@@ -1,10 +1,23 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
+  <component name="BookmarkManager">
+    <bookmark url="file://$PROJECT_DIR$/DesignSPHysics.py" line="1038" mnemonic="1" />
+  </component>
   <component name="ChangeListManager">
     <list default="true" id="22d76f4b-310a-4afb-8788-a472c77b2c87" name="Default" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/Macro.iml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/Macro.iml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/DesignSPHysics.py" beforeDir="false" afterPath="$PROJECT_DIR$/DesignSPHysics.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/dsphfc/guiutils.py" beforeDir="false" afterPath="$PROJECT_DIR$/dsphfc/guiutils.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/dsphfc/lang/english.json" beforeDir="false" afterPath="$PROJECT_DIR$/dsphfc/lang/english.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/dsphfc/templates/template.bat" beforeDir="false" afterPath="$PROJECT_DIR$/dsphfc/templates/template.bat" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/dsphfc/templates/template.sh" beforeDir="false" afterPath="$PROJECT_DIR$/dsphfc/templates/template.sh" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/dsphfc/utils.py" beforeDir="false" afterPath="$PROJECT_DIR$/dsphfc/utils.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/test-examples/dam-break/run.bat" beforeDir="false" afterPath="$PROJECT_DIR$/test-examples/dam-break/run.bat" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/test-examples/dam-break/run.sh" beforeDir="false" afterPath="$PROJECT_DIR$/test-examples/dam-break/run.sh" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/test-examples/float_example/run.bat" beforeDir="false" afterPath="$PROJECT_DIR$/test-examples/float_example/run.bat" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/test-examples/float_example/run.sh" beforeDir="false" afterPath="$PROJECT_DIR$/test-examples/float_example/run.sh" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/test-examples/initials_example/run.bat" beforeDir="false" afterPath="$PROJECT_DIR$/test-examples/initials_example/run.bat" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/test-examples/initials_example/run.sh" beforeDir="false" afterPath="$PROJECT_DIR$/test-examples/initials_example/run.sh" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="TRACKING_ENABLED" value="true" />
@@ -21,46 +34,65 @@
   </component>
   <component name="DatabaseView">
     <option name="SHOW_INTERMEDIATE" value="true" />
+    <option name="GROUP_DATA_SOURCES" value="true" />
     <option name="GROUP_SCHEMA" value="true" />
     <option name="GROUP_CONTENTS" value="false" />
     <option name="SORT_POSITIONED" value="false" />
-    <option name="SHOW_TABLE_DETAILS" value="true" />
     <option name="SHOW_EMPTY_GROUPS" value="false" />
     <option name="AUTO_SCROLL_FROM_SOURCE" value="false" />
+    <option name="HIDDEN_KINDS">
+      <set />
+    </option>
+    <expand />
+    <select />
   </component>
   <component name="FavoritesManager">
     <favorites_list name="Macro" />
   </component>
   <component name="FileEditorManager">
-    <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
-      <file leaf-file-name="installer.py" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/installer/installer.py">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="242">
-              <caret line="161" column="30" selection-start-line="161" selection-start-column="30" selection-end-line="161" selection-end-column="30" />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="DesignSPHysics.py" pinned="false" current-in-tab="true">
-        <entry file="file://$PROJECT_DIR$/DesignSPHysics.py">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="278">
-              <caret line="931" column="88" selection-start-line="931" selection-start-column="88" selection-end-line="931" selection-end-column="88" />
-            </state>
-          </provider>
-        </entry>
-      </file>
-    </leaf>
+    <splitter split-orientation="horizontal" split-proportion="0.5">
+      <split-first>
+        <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
+          <file leaf-file-name="DesignSPHysics.py" pinned="false" current-in-tab="false">
+            <entry file="file://$PROJECT_DIR$/DesignSPHysics.py">
+              <provider selected="true" editor-type-id="text-editor">
+                <state relative-caret-position="889">
+                  <caret line="4900" column="61" selection-start-line="4900" selection-start-column="61" selection-end-line="4900" selection-end-column="61" />
+                  <folding>
+                    <element signature="e#286#300#0" expanded="true" />
+                  </folding>
+                </state>
+              </provider>
+            </entry>
+          </file>
+          <file leaf-file-name="guiutils.py" pinned="false" current-in-tab="true">
+            <entry file="file://$PROJECT_DIR$/dsphfc/guiutils.py">
+              <provider selected="true" editor-type-id="text-editor">
+                <state relative-caret-position="778">
+                  <caret line="2139" column="28" selection-start-line="2139" selection-start-column="28" selection-end-line="2139" selection-end-column="28" />
+                </state>
+              </provider>
+            </entry>
+          </file>
+        </leaf>
+      </split-first>
+      <split-second>
+        <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
+          <file leaf-file-name="utils.py" pinned="false" current-in-tab="true">
+            <entry file="file://$PROJECT_DIR$/dsphfc/utils.py">
+              <provider selected="true" editor-type-id="text-editor">
+                <state relative-caret-position="320">
+                  <caret line="65" column="22" selection-start-line="65" selection-start-column="22" selection-end-line="65" selection-end-column="22" />
+                </state>
+              </provider>
+            </entry>
+          </file>
+        </leaf>
+      </split-second>
+    </splitter>
   </component>
   <component name="FindInProjectRecents">
     <findStrings>
-      <find>Paths to</find>
-      <find>= &quot;</find>
-      <find>mkbound</find>
-      <find>Mkbound</find>
-      <find>target mkbound</find>
-      <find>MKBound</find>
       <find>type of obj</find>
       <find>objtype_prop</find>
       <find>__(&quot;Save as...&quot;)</find>
@@ -85,11 +117,18 @@
       <find>partvtk4_path</find>
       <find>.update</find>
       <find>on_isosu</find>
+      <find>coupling</find>
+      <find>press View De</find>
+      <find>Out</find>
+      <find>_Out</find>
+      <find>View Details</find>
+      <find>Gencase exported</find>
     </findStrings>
     <replaceStrings>
       <replace>self.time_label</replace>
       <replace>QtGui.QLabel(__(&quot;Duration: &quot;))</replace>
       <replace>self.duration_label = QtGui.QLabel(__(&quot;Duration (s): &quot;))</replace>
+      <replace>_out</replace>
     </replaceStrings>
   </component>
   <component name="Git.Settings">
@@ -113,10 +152,11 @@
         <option value="$PROJECT_DIR$/README.md" />
         <option value="$PROJECT_DIR$/dsphfc/properties.py" />
         <option value="$PROJECT_DIR$/dsphfc/templates/case_summary_template.html" />
-        <option value="$PROJECT_DIR$/dsphfc/guiutils.py" />
-        <option value="$PROJECT_DIR$/dsphfc/utils.py" />
         <option value="$PROJECT_DIR$/DSPH.py" />
         <option value="$PROJECT_DIR$/installer/installer.py" />
+        <option value="$PROJECT_DIR$/dsphfc/utils.py" />
+        <option value="$PROJECT_DIR$/DesignSPHysics.py" />
+        <option value="$PROJECT_DIR$/dsphfc/guiutils.py" />
       </list>
     </option>
   </component>
@@ -129,9 +169,10 @@
   <component name="NodePackageJsonFileManager">
     <packageJsonPaths />
   </component>
-  <component name="ProjectFrameBounds" extendedState="7">
-    <option name="width" value="1920" />
-    <option name="height" value="1080" />
+  <component name="ProjectFrameBounds" extendedState="6" fullScreen="true">
+    <option name="x" value="-7" />
+    <option name="width" value="1294" />
+    <option name="height" value="1057" />
   </component>
   <component name="ProjectInspectionProfilesVisibleTreeState">
     <entry key="Project Default">
@@ -164,6 +205,11 @@
               <item name="DesignSPHysics" type="b2602c69:ProjectViewProjectNode" />
               <item name="DesignSPHysics" type="462c0819:PsiDirectoryNode" />
             </path>
+            <path>
+              <item name="DesignSPHysics" type="b2602c69:ProjectViewProjectNode" />
+              <item name="DesignSPHysics" type="462c0819:PsiDirectoryNode" />
+              <item name="dsphfc" type="462c0819:PsiDirectoryNode" />
+            </path>
           </expand>
           <select />
         </subPane>
@@ -177,7 +223,7 @@
     <property name="js.eslint.eslintPackage" value="" />
     <property name="last_opened_file_path" value="$PROJECT_DIR$" />
     <property name="run.code.analysis.last.selected.profile" value="pProject Default" />
-    <property name="settings.editor.selected.configurable" value="configurable.group.build" />
+    <property name="settings.editor.selected.configurable" value="com.chrisrm.idea.config" />
   </component>
   <component name="RunDashboard">
     <option name="ruleStates">
@@ -524,44 +570,44 @@
     </todo-panel>
   </component>
   <component name="ToolWindowManager">
-    <frame x="0" y="0" width="2560" height="1080" extended-state="0" />
+    <frame x="0" y="0" width="2560" height="1080" extended-state="6" />
     <editor active="true" />
     <layout>
-      <window_info anchor="bottom" id="TODO" order="7" sideWeight="0.49156272" visible="true" weight="0.23406374" />
+      <window_info anchor="bottom" id="TODO" order="7" sideWeight="0.49156272" weight="0.25323275" />
       <window_info anchor="bottom" id="Event Log" order="6" sideWeight="0.5084373" side_tool="true" weight="0.22979552" />
-      <window_info anchor="bottom" id="Database Changes" show_stripe_button="false" />
-      <window_info anchor="bottom" id="Run" order="2" weight="0.32960895" />
+      <window_info anchor="bottom" id="Database Changes" order="8" show_stripe_button="false" />
       <window_info anchor="bottom" id="Version Control" order="10" sideWeight="0.4915751" weight="0.21314742" />
       <window_info anchor="bottom" id="Python Console" order="8" weight="0.32903865" />
+      <window_info anchor="bottom" id="Run" order="2" weight="0.32960895" />
       <window_info anchor="bottom" id="Terminal" order="9" weight="0.2061753" />
-      <window_info content_ui="combo" id="Project" order="0" sideWeight="0.4993498" visible="true" weight="0.10771065" />
-      <window_info anchor="bottom" id="Docker" show_stripe_button="false" />
-      <window_info anchor="right" id="Database" order="3" />
-      <window_info anchor="bottom" id="Find" order="1" weight="0.32903865" />
-      <window_info anchor="right" id="SciView" />
-      <window_info anchor="right" id="Structure" order="4" side_tool="true" visible="true" weight="0.17050874" />
-      <window_info anchor="bottom" id="Debug" order="3" weight="0.4" />
+      <window_info content_ui="combo" id="Project" order="0" sideWeight="0.4993498" visible="true" weight="0.10820313" />
+      <window_info anchor="bottom" id="Docker" order="8" show_stripe_button="false" />
+      <window_info anchor="right" id="Database" order="3" sideWeight="0.4992785" weight="0.3298887" />
+      <window_info anchor="bottom" id="Find" order="1" weight="0.32879376" />
+      <window_info anchor="right" id="SciView" order="3" sideWeight="0.4992785" weight="0.3298887" />
+      <window_info anchor="right" id="Structure" order="4" sideWeight="0.5007215" side_tool="true" visible="true" weight="0.09921875" />
       <window_info id="Favorites" order="1" sideWeight="0.50065017" side_tool="true" weight="0.10771065" />
+      <window_info anchor="bottom" id="Debug" order="3" weight="0.4" />
       <window_info anchor="right" content_ui="combo" id="Hierarchy" order="2" weight="0.25" />
       <window_info anchor="bottom" id="Inspection" order="5" weight="0.4" />
       <window_info x="2363" y="239" width="619" height="687" id="Notes" order="2" weight="0.30063966" />
-      <window_info anchor="right" id="Ant Build" order="1" weight="0.25" />
       <window_info anchor="right" id="Commander" order="0" weight="0.4" />
+      <window_info anchor="right" id="Ant Build" order="1" weight="0.25" />
       <window_info anchor="right" id="Data View" order="5" />
-      <window_info anchor="bottom" id="Cvs" order="4" weight="0.25" />
       <window_info anchor="bottom" id="Message" order="0" />
+      <window_info anchor="bottom" id="Cvs" order="4" weight="0.25" />
     </layout>
     <layout-to-restore>
       <window_info anchor="right" content_ui="combo" id="Hierarchy" order="2" weight="0.25" />
-      <window_info anchor="bottom" id="Run" order="2" weight="0.32960895" />
-      <window_info anchor="right" id="Ant Build" order="1" weight="0.25" />
       <window_info content_ui="combo" id="Project" order="0" weight="0.116204694" />
+      <window_info anchor="bottom" id="Run" order="2" weight="0.32960895" />
+      <window_info id="Favorites" order="1" side_tool="true" />
+      <window_info anchor="right" id="Data View" order="5" />
       <window_info anchor="right" id="Structure" order="4" visible="true" weight="0.1533006" />
       <window_info anchor="right" id="Commander" order="0" weight="0.4" />
+      <window_info anchor="right" id="Ant Build" order="1" weight="0.25" />
       <window_info anchor="bottom" id="TODO" order="6" weight="0.32887402" />
-      <window_info id="Favorites" order="1" side_tool="true" />
       <window_info anchor="bottom" id="Version Control" order="8" />
-      <window_info anchor="right" id="Data View" order="5" />
       <window_info anchor="bottom" id="Find" order="1" weight="0.32998884" />
       <window_info anchor="right" id="Database" order="3" />
       <window_info anchor="bottom" id="Terminal" order="10" />
@@ -616,9 +662,6 @@
     </breakpoint-manager>
   </component>
   <component name="editorHistoryManager">
-    <entry file="file://$PROJECT_DIR$/dsphfc/guiutils.py">
-      <provider selected="true" editor-type-id="text-editor" />
-    </entry>
     <entry file="file://$PROJECT_DIR$/DSPH.py" />
     <entry file="file://$PROJECT_DIR$/dsphfc/utils.py">
       <provider selected="true" editor-type-id="text-editor">
@@ -805,13 +848,7 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://C:/Program Files/FreeCAD 0.16/bin/Lib/multiprocessing/connection.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="360">
-          <caret line="440" column="6" selection-start-line="440" selection-start-column="6" selection-end-line="440" selection-end-column="6" />
-        </state>
-      </provider>
-    </entry>
+    <entry file="file://C:/Program Files/FreeCAD 0.16/bin/Lib/multiprocessing/connection.py" />
     <entry file="file://$PROJECT_DIR$/dsphfc/templates/template.bat">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="416">
@@ -854,20 +891,7 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/dsphfc/guiutils.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="19312">
-          <caret line="1214" column="42" selection-start-line="1214" selection-start-column="42" selection-end-line="1214" selection-end-column="42" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/dsphfc/utils.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="7120">
-          <caret line="464" column="26" selection-start-line="464" selection-start-column="26" selection-end-line="464" selection-end-column="26" />
-        </state>
-      </provider>
-    </entry>
+    <entry file="file://$PROJECT_DIR$/DSPH.py" />
     <entry file="file://$PROJECT_DIR$/installer/installer.py">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="242">
@@ -875,11 +899,30 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/DSPH.py" />
+    <entry file="file://$PROJECT_DIR$/dsphfc/utils.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="320">
+          <caret line="65" column="22" selection-start-line="65" selection-start-column="22" selection-end-line="65" selection-end-column="22" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/dsphfc/execution_parameters.py">
+      <provider selected="true" editor-type-id="text-editor" />
+    </entry>
     <entry file="file://$PROJECT_DIR$/DesignSPHysics.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="278">
-          <caret line="931" column="88" selection-start-line="931" selection-start-column="88" selection-end-line="931" selection-end-column="88" />
+        <state relative-caret-position="889">
+          <caret line="4900" column="61" selection-start-line="4900" selection-start-column="61" selection-end-line="4900" selection-end-column="61" />
+          <folding>
+            <element signature="e#286#300#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/dsphfc/guiutils.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="778">
+          <caret line="2139" column="28" selection-start-line="2139" selection-start-column="28" selection-end-line="2139" selection-end-column="28" />
         </state>
       </provider>
     </entry>

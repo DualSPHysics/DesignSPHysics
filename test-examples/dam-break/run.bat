@@ -13,7 +13,7 @@ set gencase="/home/ndrs/.FreeCAD/Mod/DesignSPHysics/dsphfc/../dualsphysics/EXECS
 set dualsphysics="/home/ndrs/.FreeCAD/Mod/DesignSPHysics/dsphfc/../dualsphysics/EXECS/DualSPHysics4_linux64"
 set partvtk="/home/ndrs/.FreeCAD/Mod/DesignSPHysics/dsphfc/../dualsphysics/EXECS/PartVTK4_linux64"
 
-echo "This script executes GenCase for the case saved, that generates output files in the *_Out dir. Then, executes a simulation on CPU/GPU of the case. Last, it exports all the geometry generated in VTK files for viewing with ParaView."
+echo "This script executes GenCase for the case saved, that generates output files in the *_out dir. Then, executes a simulation on CPU/GPU of the case. Last, it exports all the geometry generated in VTK files for viewing with ParaView."
 pause
 
 rem "dirout" is created to store results or it is removed if it already exists

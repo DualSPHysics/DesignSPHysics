@@ -21,6 +21,7 @@ sys.setdefaultencoding('utf-8')
 
 from PySide import QtGui, QtCore
 from execution_parameters import *
+
 """
 Copyright (C) 2016 - Andrés Vieira (anvieiravazquez@gmail.com)
 EPHYSLAB Environmental Physics Laboratory, Universidade de Vigo
@@ -1375,7 +1376,7 @@ def def_setup_window(data):
                     "I can't recognize GenCase in that executable.! "
                     "Check that the file corresponds with the appropriate tool and that you have permissions to execute it",
                     detailed_text="If you're working with GNU/Linux, you can give permissions to an executable from the terminal "
-                    "with: chmod +x /path/to/the/executable"
+                                  "with: chmod +x /path/to/the/executable"
                 )
 
     def on_dualsphysics_browse():
@@ -1406,7 +1407,7 @@ def def_setup_window(data):
                     "I can't recognize DualSPHysics in that executable.! "
                     "Check that the file corresponds with the appropriate tool and that you have permissions to execute it",
                     detailed_text="If you're working with GNU/Linux, you can give permissions to an executable from the terminal "
-                    "with: chmod +x /path/to/the/executable"
+                                  "with: chmod +x /path/to/the/executable"
                 )
 
     def on_partvtk4_browse():
@@ -1433,7 +1434,7 @@ def def_setup_window(data):
                     "I can't recognize PartVTK4 in that executable.! "
                     "Check that the file corresponds with the appropriate tool and that you have permissions to execute it",
                     detailed_text="If you're working with GNU/Linux, you can give permissions to an executable from the terminal "
-                    "with: chmod +x /path/to/the/executable"
+                                  "with: chmod +x /path/to/the/executable"
                 )
 
     def on_computeforces_browse():
@@ -1460,7 +1461,7 @@ def def_setup_window(data):
                     "I can't recognize ComputeForces in that executable.! "
                     "Check that the file corresponds with the appropriate tool and that you have permissions to execute it",
                     detailed_text="If you're working with GNU/Linux, you can give permissions to an executable from the terminal "
-                    "with: chmod +x /path/to/the/executable"
+                                  "with: chmod +x /path/to/the/executable"
                 )
 
     def on_floatinginfo_browse():
@@ -1487,7 +1488,7 @@ def def_setup_window(data):
                     "I can't recognize FloatingInfo in that executable.! "
                     "Check that the file corresponds with the appropriate tool and that you have permissions to execute it",
                     detailed_text="If you're working with GNU/Linux, you can give permissions to an executable from the terminal "
-                    "with: chmod +x /path/to/the/executable"
+                                  "with: chmod +x /path/to/the/executable"
                 )
 
     def on_measuretool_browse():
@@ -1514,7 +1515,7 @@ def def_setup_window(data):
                     "I can't recognize MeasureTool in that executable.! "
                     "Check that the file corresponds with the appropriate tool and that you have permissions to execute it",
                     detailed_text="If you're working with GNU/Linux, you can give permissions to an executable from the terminal "
-                    "with: chmod +x /path/to/the/executable"
+                                  "with: chmod +x /path/to/the/executable"
                 )
 
     def on_isosurface_browse():
@@ -1541,7 +1542,7 @@ def def_setup_window(data):
                     "I can't recognize IsoSurface in that executable.! "
                     "Check that the file corresponds with the appropriate tool and that you have permissions to execute it",
                     detailed_text="If you're working with GNU/Linux, you can give permissions to an executable from the terminal "
-                    "with: chmod +x /path/to/the/executable"
+                                  "with: chmod +x /path/to/the/executable"
                 )
 
     def on_boundaryvtk_browse():
@@ -1568,7 +1569,7 @@ def def_setup_window(data):
                     "I can't recognize BoundaryVTK in that executable.! "
                     "Check that the file corresponds with the appropriate tool and that you have permissions to execute it",
                     detailed_text="If you're working with GNU/Linux, you can give permissions to an executable from the terminal "
-                    "with: chmod +x /path/to/the/executable"
+                                  "with: chmod +x /path/to/the/executable"
                 )
 
     def on_flowtool_browse():
@@ -1595,7 +1596,7 @@ def def_setup_window(data):
                     "I can't recognize FlowTool in that executable.! "
                     "Check that the file corresponds with the appropriate tool and that you have permissions to execute it",
                     detailed_text="If you're working with GNU/Linux, you can give permissions to an executable from the terminal "
-                    "with: chmod +x /path/to/the/executable"
+                                  "with: chmod +x /path/to/the/executable"
                 )
 
     def on_paraview_browse():
@@ -1914,8 +1915,8 @@ def case_summary(orig_data):
 
     # Setting certain values to automatic
     for x in [
-            'hswl', 'speedsystem', 'speedsound', 'h', 'b', 'massfluid',
-            'massbound'
+        'hswl', 'speedsystem', 'speedsound', 'h', 'b', 'massfluid',
+        'massbound'
     ]:
         data[x] = '<u>Automatic</u>' if data[x + '_auto'] else data[x]
 
@@ -1932,13 +1933,13 @@ def case_summary(orig_data):
             is_floating = utils.__('Yes') if str(
                 value[0]) in data['floating_mks'].keys() else utils.__('No')
             is_floating = utils.__('No') if value[
-                1].lower() == "fluid" else is_floating
+                                                1].lower() == "fluid" else is_floating
             has_initials = utils.__('Yes') if str(
                 value[0]) in data['initials_mks'].keys() else utils.__('No')
             has_initials = utils.__('No') if value[
-                1].lower() == "bound" else has_initials
+                                                 1].lower() == "bound" else has_initials
             real_mk = value[0] + 11 if value[
-                1].lower() == "bound" else value[0] + 1
+                                           1].lower() == "bound" else value[0] + 1
             data['objects_info'] += "<li><b>{label}</b> (<i>{iname}</i>): <br/>" \
                                     "Type: {type} (MK{type}: <b>{mk}</b> ; MK: <b>{real_mk}</b>)<br/>" \
                                     "Fill mode: {fillmode}<br/>" \
@@ -1974,7 +1975,7 @@ def case_summary(orig_data):
 
             data['movement_info'] += "<li>{movtype} <u>{movname}</u><br/>" \
                                      "Applied to MKBound: {mklist}</li><br/>".format(
-                                         movtype=movtype, movname=mov.name, mklist=', '.join(mklist))
+                movtype=movtype, movname=mov.name, mklist=', '.join(mklist))
 
         data['movement_info'] += "</ul>"
     else:
@@ -2040,7 +2041,8 @@ def gencase_completed_dialog(particle_count=0, detail_text="No details", data=di
 
     # Main Layout elements
     info_message = QtGui.QLabel(
-        utils.__("Gencase exported {} particles. Press View Details to check the output").format(str(particle_count)))
+        utils.__("Gencase exported {} particles.\nPress \"View Details\" to check the output").format(
+            str(particle_count)))
 
     button_layout = QtGui.QHBoxLayout()
     bt_open_with_paraview = QtGui.QPushButton(utils.__("Open with Paraview"))
@@ -2051,13 +2053,13 @@ def gencase_completed_dialog(particle_count=0, detail_text="No details", data=di
     button_layout.addWidget(bt_ok)
 
     ck_mkcells = QtGui.QRadioButton(
-        utils.__("Open {}_MkCells").format(data['project_name']))
+        utils.__("Open {}_MkCells.vtk").format(data['project_name']))
     ck_all = QtGui.QRadioButton(
-        utils.__("Open {}_All").format(data['project_name']))
+        utils.__("Open {}_All.vtk").format(data['project_name']))
     ck_fluid = QtGui.QRadioButton(
-        utils.__("Open {}_Fluid").format(data['project_name']))
+        utils.__("Open {}_Fluid.vtk").format(data['project_name']))
     ck_bound = QtGui.QRadioButton(
-        utils.__("Open {}_Bound").format(data['project_name']))
+        utils.__("Open {}_Bound.vtk").format(data['project_name']))
 
     horizontal_separator = h_line_generator()
 
@@ -2100,10 +2102,12 @@ def gencase_completed_dialog(particle_count=0, detail_text="No details", data=di
             horizontal_separator.hide()
             detail_text_area.hide()
             bt_details.setText(utils.__("View Details"))
+            window.adjustSize()
         elif not horizontal_separator.isVisible():
             horizontal_separator.show()
             detail_text_area.show()
             bt_details.setText(utils.__("Hide Details"))
+            window.adjustSize()
 
     def on_open_paraview():
         suffix = "All"
@@ -2121,7 +2125,7 @@ def gencase_completed_dialog(particle_count=0, detail_text="No details", data=di
                 data['paraview_path'],
                 "--data={}\\{}".format(
                     data['project_path'] + '\\' +
-                    data['project_name'] + '_Out',
+                    data['project_name'] + '_out',
                     data['project_name'] + "_{}.vtk".format(suffix)
                 )
             ],
@@ -2133,5 +2137,6 @@ def gencase_completed_dialog(particle_count=0, detail_text="No details", data=di
     bt_open_with_paraview.clicked.connect(on_open_paraview)
 
     # Window scaffolding and execution
+    window.setFixedWidth(400)
     window.setLayout(main_layout)
     window.exec_()
