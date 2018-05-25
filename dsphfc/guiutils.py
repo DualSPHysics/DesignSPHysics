@@ -94,8 +94,8 @@ def ok_cancel_dialog(title, text):
     """Spawns an okay/cancel dialog with the title and text passed"""
 
     open_confirm_dialog = QtGui.QMessageBox()
-    open_confirm_dialog.setText(title)
-    open_confirm_dialog.setInformativeText(text)
+    open_confirm_dialog.setWindowTitle(title)
+    open_confirm_dialog.setText(text)
     open_confirm_dialog.setStandardButtons(QtGui.QMessageBox.Ok |
                                            QtGui.QMessageBox.Cancel)
     open_confirm_dialog.setDefaultButton(QtGui.QMessageBox.Ok)
@@ -2041,12 +2041,12 @@ def gencase_completed_dialog(particle_count=0, detail_text="No details", data=di
 
     # Main Layout elements
     info_message = QtGui.QLabel(
-        utils.__("Gencase exported {} particles.\nPress \"View Details\" to check the output").format(
+        utils.__("Gencase exported {} particles.\nPress \"Details\" to check the output").format(
             str(particle_count)))
 
     button_layout = QtGui.QHBoxLayout()
     bt_open_with_paraview = QtGui.QPushButton(utils.__("Open with Paraview"))
-    bt_details = QtGui.QPushButton(utils.__("View Details"))
+    bt_details = QtGui.QPushButton(utils.__("Details"))
     bt_ok = QtGui.QPushButton(utils.__("Ok"))
     button_layout.addWidget(bt_open_with_paraview)
     button_layout.addWidget(bt_details)
@@ -2101,12 +2101,12 @@ def gencase_completed_dialog(particle_count=0, detail_text="No details", data=di
         if horizontal_separator.isVisible():
             horizontal_separator.hide()
             detail_text_area.hide()
-            bt_details.setText(utils.__("View Details"))
+            bt_details.setText(utils.__("Details"))
             window.adjustSize()
         elif not horizontal_separator.isVisible():
             horizontal_separator.show()
             detail_text_area.show()
-            bt_details.setText(utils.__("Hide Details"))
+            bt_details.setText(utils.__("Details"))
             window.adjustSize()
 
     def on_open_paraview():
