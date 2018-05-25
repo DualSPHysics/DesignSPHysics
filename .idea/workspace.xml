@@ -6,18 +6,7 @@
   <component name="ChangeListManager">
     <list default="true" id="22d76f4b-310a-4afb-8788-a472c77b2c87" name="Default" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/DesignSPHysics.py" beforeDir="false" afterPath="$PROJECT_DIR$/DesignSPHysics.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/dsphfc/guiutils.py" beforeDir="false" afterPath="$PROJECT_DIR$/dsphfc/guiutils.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/dsphfc/lang/english.json" beforeDir="false" afterPath="$PROJECT_DIR$/dsphfc/lang/english.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/dsphfc/templates/template.bat" beforeDir="false" afterPath="$PROJECT_DIR$/dsphfc/templates/template.bat" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/dsphfc/templates/template.sh" beforeDir="false" afterPath="$PROJECT_DIR$/dsphfc/templates/template.sh" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/dsphfc/utils.py" beforeDir="false" afterPath="$PROJECT_DIR$/dsphfc/utils.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/test-examples/dam-break/run.bat" beforeDir="false" afterPath="$PROJECT_DIR$/test-examples/dam-break/run.bat" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/test-examples/dam-break/run.sh" beforeDir="false" afterPath="$PROJECT_DIR$/test-examples/dam-break/run.sh" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/test-examples/float_example/run.bat" beforeDir="false" afterPath="$PROJECT_DIR$/test-examples/float_example/run.bat" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/test-examples/float_example/run.sh" beforeDir="false" afterPath="$PROJECT_DIR$/test-examples/float_example/run.sh" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/test-examples/initials_example/run.bat" beforeDir="false" afterPath="$PROJECT_DIR$/test-examples/initials_example/run.bat" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/test-examples/initials_example/run.sh" beforeDir="false" afterPath="$PROJECT_DIR$/test-examples/initials_example/run.sh" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/dsphfc/templates/case_summary_template.html" beforeDir="false" afterPath="$PROJECT_DIR$/dsphfc/templates/case_summary_template.html" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="TRACKING_ENABLED" value="true" />
@@ -53,11 +42,11 @@
     <splitter split-orientation="horizontal" split-proportion="0.5">
       <split-first>
         <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
-          <file leaf-file-name="DesignSPHysics.py" pinned="false" current-in-tab="false">
+          <file leaf-file-name="DesignSPHysics.py" pinned="false" current-in-tab="true">
             <entry file="file://$PROJECT_DIR$/DesignSPHysics.py">
               <provider selected="true" editor-type-id="text-editor">
-                <state relative-caret-position="889">
-                  <caret line="4900" column="61" selection-start-line="4900" selection-start-column="61" selection-end-line="4900" selection-end-column="61" />
+                <state relative-caret-position="155">
+                  <caret line="4897" column="36" selection-start-line="4897" selection-start-column="36" selection-end-line="4897" selection-end-column="36" />
                   <folding>
                     <element signature="e#286#300#0" expanded="true" />
                   </folding>
@@ -65,11 +54,11 @@
               </provider>
             </entry>
           </file>
-          <file leaf-file-name="guiutils.py" pinned="false" current-in-tab="true">
+          <file leaf-file-name="guiutils.py" pinned="false" current-in-tab="false">
             <entry file="file://$PROJECT_DIR$/dsphfc/guiutils.py">
               <provider selected="true" editor-type-id="text-editor">
-                <state relative-caret-position="778">
-                  <caret line="2139" column="28" selection-start-line="2139" selection-start-column="28" selection-end-line="2139" selection-end-column="28" />
+                <state relative-caret-position="48944">
+                  <caret line="2135" column="47" selection-start-line="2135" selection-start-column="47" selection-end-line="2135" selection-end-column="47" />
                 </state>
               </provider>
             </entry>
@@ -78,11 +67,20 @@
       </split-first>
       <split-second>
         <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
-          <file leaf-file-name="utils.py" pinned="false" current-in-tab="true">
+          <file leaf-file-name="utils.py" pinned="false" current-in-tab="false">
             <entry file="file://$PROJECT_DIR$/dsphfc/utils.py">
               <provider selected="true" editor-type-id="text-editor">
                 <state relative-caret-position="320">
                   <caret line="65" column="22" selection-start-line="65" selection-start-column="22" selection-end-line="65" selection-end-column="22" />
+                </state>
+              </provider>
+            </entry>
+          </file>
+          <file leaf-file-name="case_summary_template.html" pinned="false" current-in-tab="true">
+            <entry file="file://$PROJECT_DIR$/dsphfc/templates/case_summary_template.html">
+              <provider selected="true" editor-type-id="text-editor">
+                <state relative-caret-position="359">
+                  <caret line="22" column="30" selection-start-line="22" selection-start-column="30" selection-end-line="22" selection-end-column="30" />
                 </state>
               </provider>
             </entry>
@@ -151,12 +149,12 @@
         <option value="$PROJECT_DIR$/LICENSE" />
         <option value="$PROJECT_DIR$/README.md" />
         <option value="$PROJECT_DIR$/dsphfc/properties.py" />
-        <option value="$PROJECT_DIR$/dsphfc/templates/case_summary_template.html" />
         <option value="$PROJECT_DIR$/DSPH.py" />
         <option value="$PROJECT_DIR$/installer/installer.py" />
         <option value="$PROJECT_DIR$/dsphfc/utils.py" />
         <option value="$PROJECT_DIR$/DesignSPHysics.py" />
         <option value="$PROJECT_DIR$/dsphfc/guiutils.py" />
+        <option value="$PROJECT_DIR$/dsphfc/templates/case_summary_template.html" />
       </list>
     </option>
   </component>
@@ -198,6 +196,7 @@
       <foldersAlwaysOnTop value="true" />
     </navigator>
     <panes>
+      <pane id="Scope" />
       <pane id="ProjectPane">
         <subPane>
           <expand>
@@ -210,11 +209,16 @@
               <item name="DesignSPHysics" type="462c0819:PsiDirectoryNode" />
               <item name="dsphfc" type="462c0819:PsiDirectoryNode" />
             </path>
+            <path>
+              <item name="DesignSPHysics" type="b2602c69:ProjectViewProjectNode" />
+              <item name="DesignSPHysics" type="462c0819:PsiDirectoryNode" />
+              <item name="dsphfc" type="462c0819:PsiDirectoryNode" />
+              <item name="templates" type="462c0819:PsiDirectoryNode" />
+            </path>
           </expand>
           <select />
         </subPane>
       </pane>
-      <pane id="Scope" />
     </panes>
   </component>
   <component name="PropertiesComponent">
@@ -557,7 +561,14 @@
       <option name="project" value="LOCAL" />
       <updated>1496054514055</updated>
     </task>
-    <option name="localTasksCounter" value="33" />
+    <task id="LOCAL-00033" summary="Cosmetic changes&#10;&#10;Changes _Out folder suffix with _out (capitalization).&#10;Changes Save &amp; Run GenCase dialog a bit.">
+      <created>1527237281435</created>
+      <option name="number" value="00033" />
+      <option name="presentableId" value="LOCAL-00033" />
+      <option name="project" value="LOCAL" />
+      <updated>1527237281436</updated>
+    </task>
+    <option name="localTasksCounter" value="34" />
     <servers />
   </component>
   <component name="TodoView">
@@ -576,16 +587,15 @@
       <window_info anchor="bottom" id="TODO" order="7" sideWeight="0.49156272" weight="0.25323275" />
       <window_info anchor="bottom" id="Event Log" order="6" sideWeight="0.5084373" side_tool="true" weight="0.22979552" />
       <window_info anchor="bottom" id="Database Changes" order="8" show_stripe_button="false" />
-      <window_info anchor="bottom" id="Version Control" order="10" sideWeight="0.4915751" weight="0.21314742" />
+      <window_info anchor="bottom" id="Version Control" order="10" sideWeight="0.4915751" weight="0.25472638" />
       <window_info anchor="bottom" id="Python Console" order="8" weight="0.32903865" />
       <window_info anchor="bottom" id="Run" order="2" weight="0.32960895" />
       <window_info anchor="bottom" id="Terminal" order="9" weight="0.2061753" />
-      <window_info content_ui="combo" id="Project" order="0" sideWeight="0.4993498" visible="true" weight="0.10820313" />
+      <window_info active="true" content_ui="combo" id="Project" order="0" sideWeight="0.4993498" visible="true" weight="0.11093439" />
       <window_info anchor="bottom" id="Docker" order="8" show_stripe_button="false" />
       <window_info anchor="right" id="Database" order="3" sideWeight="0.4992785" weight="0.3298887" />
-      <window_info anchor="bottom" id="Find" order="1" weight="0.32879376" />
       <window_info anchor="right" id="SciView" order="3" sideWeight="0.4992785" weight="0.3298887" />
-      <window_info anchor="right" id="Structure" order="4" sideWeight="0.5007215" side_tool="true" visible="true" weight="0.09921875" />
+      <window_info anchor="right" id="Structure" order="4" sideWeight="0.5007215" side_tool="true" visible="true" weight="0.100994036" />
       <window_info id="Favorites" order="1" sideWeight="0.50065017" side_tool="true" weight="0.10771065" />
       <window_info anchor="bottom" id="Debug" order="3" weight="0.4" />
       <window_info anchor="right" content_ui="combo" id="Hierarchy" order="2" weight="0.25" />
@@ -596,27 +606,28 @@
       <window_info anchor="right" id="Data View" order="5" />
       <window_info anchor="bottom" id="Message" order="0" />
       <window_info anchor="bottom" id="Cvs" order="4" weight="0.25" />
+      <window_info anchor="bottom" id="Find" order="1" weight="0.32879376" />
     </layout>
     <layout-to-restore>
       <window_info anchor="right" content_ui="combo" id="Hierarchy" order="2" weight="0.25" />
       <window_info content_ui="combo" id="Project" order="0" weight="0.116204694" />
       <window_info anchor="bottom" id="Run" order="2" weight="0.32960895" />
-      <window_info id="Favorites" order="1" side_tool="true" />
+      <window_info anchor="bottom" id="Cvs" order="4" weight="0.25" />
       <window_info anchor="right" id="Data View" order="5" />
       <window_info anchor="right" id="Structure" order="4" visible="true" weight="0.1533006" />
       <window_info anchor="right" id="Commander" order="0" weight="0.4" />
       <window_info anchor="right" id="Ant Build" order="1" weight="0.25" />
       <window_info anchor="bottom" id="TODO" order="6" weight="0.32887402" />
-      <window_info anchor="bottom" id="Version Control" order="8" />
+      <window_info anchor="bottom" id="Python Console" order="9" />
       <window_info anchor="bottom" id="Find" order="1" weight="0.32998884" />
       <window_info anchor="right" id="Database" order="3" />
       <window_info anchor="bottom" id="Terminal" order="10" />
       <window_info anchor="bottom" id="Event Log" order="7" side_tool="true" />
       <window_info anchor="bottom" id="Inspection" order="5" weight="0.4" />
-      <window_info anchor="bottom" id="Cvs" order="4" weight="0.25" />
+      <window_info anchor="bottom" id="Version Control" order="8" />
       <window_info anchor="bottom" id="Debug" order="3" weight="0.4" />
       <window_info anchor="bottom" id="Message" order="0" />
-      <window_info anchor="bottom" id="Python Console" order="9" />
+      <window_info id="Favorites" order="1" side_tool="true" />
     </layout-to-restore>
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -629,7 +640,6 @@
     <option name="myLimit" value="2678400000" />
   </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value="Fixed FreeCAD not finding libraries at start." />
     <MESSAGE value="Preparing to release in SPHERIC" />
     <MESSAGE value="Removed fixeddepth from XML export" />
     <MESSAGE value="Fixed a string on case summary." />
@@ -654,7 +664,8 @@
     <MESSAGE value="Updated case summary template to show new executable paths" />
     <MESSAGE value="Added IsoSurface support. Currently working on BoundaryVTK. Fixes #8" />
     <MESSAGE value="Changed the installer to not use threading. Hopefully fixes #9" />
-    <option name="LAST_COMMIT_MESSAGE" value="Changed the installer to not use threading. Hopefully fixes #9" />
+    <MESSAGE value="Cosmetic changes&#10;&#10;Changes _Out folder suffix with _out (capitalization).&#10;Changes Save &amp; Run GenCase dialog a bit." />
+    <option name="LAST_COMMIT_MESSAGE" value="Cosmetic changes&#10;&#10;Changes _Out folder suffix with _out (capitalization).&#10;Changes Save &amp; Run GenCase dialog a bit." />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
@@ -662,7 +673,6 @@
     </breakpoint-manager>
   </component>
   <component name="editorHistoryManager">
-    <entry file="file://$PROJECT_DIR$/DSPH.py" />
     <entry file="file://$PROJECT_DIR$/dsphfc/utils.py">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="7378">
@@ -884,13 +894,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/dsphfc/templates/case_summary_template.html">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="336">
-          <caret line="21" column="27" selection-start-line="21" selection-start-column="26" selection-end-line="21" selection-end-column="27" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/DSPH.py" />
     <entry file="file://$PROJECT_DIR$/installer/installer.py">
       <provider selected="true" editor-type-id="text-editor">
@@ -909,20 +912,32 @@
     <entry file="file://$PROJECT_DIR$/dsphfc/execution_parameters.py">
       <provider selected="true" editor-type-id="text-editor" />
     </entry>
+    <entry file="file://$PROJECT_DIR$/test-examples/dam-break/run.bat">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-134" />
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/dsphfc/guiutils.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="48944">
+          <caret line="2135" column="47" selection-start-line="2135" selection-start-column="47" selection-end-line="2135" selection-end-column="47" />
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/DesignSPHysics.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="889">
-          <caret line="4900" column="61" selection-start-line="4900" selection-start-column="61" selection-end-line="4900" selection-end-column="61" />
+        <state relative-caret-position="155">
+          <caret line="4897" column="36" selection-start-line="4897" selection-start-column="36" selection-end-line="4897" selection-end-column="36" />
           <folding>
             <element signature="e#286#300#0" expanded="true" />
           </folding>
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/dsphfc/guiutils.py">
+    <entry file="file://$PROJECT_DIR$/dsphfc/templates/case_summary_template.html">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="778">
-          <caret line="2139" column="28" selection-start-line="2139" selection-start-column="28" selection-end-line="2139" selection-end-column="28" />
+        <state relative-caret-position="359">
+          <caret line="22" column="30" selection-start-line="22" selection-start-column="30" selection-end-line="22" selection-end-column="30" />
         </state>
       </provider>
     </entry>
