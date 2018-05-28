@@ -2046,20 +2046,17 @@ def gencase_completed_dialog(particle_count=0, detail_text="No details", data=di
 
     button_layout = QtGui.QHBoxLayout()
     bt_open_with_paraview = QtGui.QPushButton(utils.__("Open with Paraview"))
+    bt_open_with_paraview_menu = QtGui.QMenu()
+    bt_open_with_paraview_menu.addAction("{}_MkCells.vtk".format(data['project_name']))
+    bt_open_with_paraview_menu.addAction("{}_All.vtk".format(data['project_name']))
+    bt_open_with_paraview_menu.addAction("{}_Fluid.vtk".format(data['project_name']))
+    bt_open_with_paraview_menu.addAction("{}_Bound.vtk".format(data['project_name']))
+    bt_open_with_paraview.setMenu(bt_open_with_paraview_menu)
     bt_details = QtGui.QPushButton(utils.__("Details"))
     bt_ok = QtGui.QPushButton(utils.__("Ok"))
     button_layout.addWidget(bt_open_with_paraview)
     button_layout.addWidget(bt_details)
     button_layout.addWidget(bt_ok)
-
-    ck_mkcells = QtGui.QRadioButton(
-        utils.__("Open {}_MkCells.vtk").format(data['project_name']))
-    ck_all = QtGui.QRadioButton(
-        utils.__("Open {}_All.vtk").format(data['project_name']))
-    ck_fluid = QtGui.QRadioButton(
-        utils.__("Open {}_Fluid.vtk").format(data['project_name']))
-    ck_bound = QtGui.QRadioButton(
-        utils.__("Open {}_Bound.vtk").format(data['project_name']))
 
     horizontal_separator = h_line_generator()
 
@@ -2068,10 +2065,6 @@ def gencase_completed_dialog(particle_count=0, detail_text="No details", data=di
 
     # Main Layout scaffolding
     main_layout.addWidget(info_message)
-    main_layout.addWidget(ck_mkcells)
-    main_layout.addWidget(ck_all)
-    main_layout.addWidget(ck_fluid)
-    main_layout.addWidget(ck_bound)
     main_layout.addLayout(button_layout)
     main_layout.addWidget(horizontal_separator)
     main_layout.addWidget(detail_text_area)
@@ -2079,20 +2072,11 @@ def gencase_completed_dialog(particle_count=0, detail_text="No details", data=di
     # Window logic
     horizontal_separator.hide()
     detail_text_area.hide()
-    ck_mkcells.setChecked(True)
 
     if len(data["paraview_path"]) > 1:
         bt_open_with_paraview.show()
-        ck_mkcells.show()
-        ck_all.show()
-        ck_fluid.show()
-        ck_bound.show()
     else:
         bt_open_with_paraview.hide()
-        ck_mkcells.hide()
-        ck_all.hide()
-        ck_fluid.hide()
-        ck_bound.hide()
 
     def on_ok():
         window.accept()
@@ -2109,32 +2093,22 @@ def gencase_completed_dialog(particle_count=0, detail_text="No details", data=di
             bt_details.setText(utils.__("Details"))
             window.adjustSize()
 
-    def on_open_paraview():
-        suffix = "All"
-        if ck_mkcells.isChecked():
-            suffix = "MkCells"
-        if ck_all.isChecked():
-            suffix = "All"
-        if ck_fluid.isChecked():
-            suffix = "Fluid"
-        if ck_bound.isChecked():
-            suffix = "Bound"
-
+    def on_open_paraview_menu(action):
         subprocess.Popen(
-            [
-                data['paraview_path'],
-                "--data={}\\{}".format(
-                    data['project_path'] + '\\' +
-                    data['project_name'] + '_out',
-                    data['project_name'] + "_{}.vtk".format(suffix)
-                )
-            ],
-            stdout=subprocess.PIPE)
+                [
+                    data['paraview_path'],
+                    "--data={}\\{}".format(
+                        data['project_path'] + '\\' +
+                        data['project_name'] + '_out',
+                        action.text()
+                    )
+                ],
+                stdout=subprocess.PIPE)
         window.accept()
 
     bt_ok.clicked.connect(on_ok)
     bt_details.clicked.connect(on_view_details)
-    bt_open_with_paraview.clicked.connect(on_open_paraview)
+    bt_open_with_paraview_menu.triggered.connect(on_open_paraview_menu)
 
     # Window scaffolding and execution
     window.setFixedWidth(400)
