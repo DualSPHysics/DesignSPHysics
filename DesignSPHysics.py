@@ -1749,8 +1749,8 @@ def floatinginfo_export(export_parameters):
         export_parameters['filename'], export_parameters['additional_parameters']
     ]
 
-    if len(export_parameters['onlymk']) > 0:
-        static_params_exp.append('-onlymk:' + export_parameters['onlymk'])
+    if len(export_parameters['onlyprocess']) > 0:
+        static_params_exp.append('-onlyprocess:' + export_parameters['onlyprocess'])
 
     export_process.start(data['floatinginfo_path'], static_params_exp)
     temp_data['current_export_process'] = export_process
@@ -1780,16 +1780,16 @@ def on_floatinginfo():
     floatinfo_tool_dialog.setWindowTitle(__("FloatingInfo Tool"))
     floatinfo_tool_layout = QtGui.QVBoxLayout()
 
-    finfo_onlymk_layout = QtGui.QHBoxLayout()
+    finfo_onlyprocess_layout = QtGui.QHBoxLayout()
     finfo_filename_layout = QtGui.QHBoxLayout()
     finfo_additional_parameters_layout = QtGui.QHBoxLayout()
     finfo_buttons_layout = QtGui.QHBoxLayout()
 
-    finfo_onlymk_label = QtGui.QLabel(__("MK to process (empty for all)"))
-    finfo_onlymk_text = QtGui.QLineEdit()
-    finfo_onlymk_text.setPlaceholderText("1,2,3 or 1-30")
-    finfo_onlymk_layout.addWidget(finfo_onlymk_label)
-    finfo_onlymk_layout.addWidget(finfo_onlymk_text)
+    finfo_onlyprocess_label = QtGui.QLabel(__("MK to process (empty for all)"))
+    finfo_onlyprocess_text = QtGui.QLineEdit()
+    finfo_onlyprocess_text.setPlaceholderText("1,2,3 or 1-30")
+    finfo_onlyprocess_layout.addWidget(finfo_onlyprocess_label)
+    finfo_onlyprocess_layout.addWidget(finfo_onlyprocess_text)
 
     finfo_filename_label = QtGui.QLabel(__("File Name"))
     finfo_filename_text = QtGui.QLineEdit()
@@ -1810,7 +1810,7 @@ def on_floatinginfo():
     finfo_buttons_layout.addWidget(finfo_export_button)
     finfo_buttons_layout.addWidget(finfo_cancel_button)
 
-    floatinfo_tool_layout.addLayout(finfo_onlymk_layout)
+    floatinfo_tool_layout.addLayout(finfo_onlyprocess_layout)
     floatinfo_tool_layout.addLayout(finfo_filename_layout)
     floatinfo_tool_layout.addLayout(finfo_additional_parameters_layout)
     floatinfo_tool_layout.addStretch(1)
@@ -1823,7 +1823,7 @@ def on_floatinginfo():
 
     def on_finfo_export():
         export_parameters = dict()
-        export_parameters['onlymk'] = finfo_onlymk_text.text()
+        export_parameters['onlyprocess'] = finfo_onlyprocess_text.text()
         export_parameters['filename'] = finfo_filename_text.text()
         export_parameters['additional_parameters'] = finfo_additional_parameters_text.text(
         )
@@ -1901,8 +1901,8 @@ def computeforces_export(export_parameters):
         export_parameters['filename'], export_parameters['additional_parameters']
     ]
 
-    if len(export_parameters['onlymk']) > 0:
-        static_params_exp.append('-onlymk:' + export_parameters['onlymk'])
+    if len(export_parameters['onlyprocess']) > 0:
+        static_params_exp.append(export_parameters['onlyprocess_tag'] + export_parameters['onlyprocess'])
 
     export_process.start(data['computeforces_path'], static_params_exp)
     temp_data['current_export_process'] = export_process
@@ -1933,7 +1933,7 @@ def on_computeforces():
     compforces_tool_layout = QtGui.QVBoxLayout()
 
     cfces_format_layout = QtGui.QHBoxLayout()
-    cfces_onlymk_layout = QtGui.QHBoxLayout()
+    cfces_onlyprocess_layout = QtGui.QHBoxLayout()
     cfces_filename_layout = QtGui.QHBoxLayout()
     cfces_additional_parameters_layout = QtGui.QHBoxLayout()
     cfces_buttons_layout = QtGui.QHBoxLayout()
@@ -1946,11 +1946,14 @@ def on_computeforces():
     cfces_format_layout.addStretch(1)
     cfces_format_layout.addWidget(outformat_combobox)
 
-    cfces_onlymk_label = QtGui.QLabel(__("MK's to process (empty for all)"))
-    cfces_onlymk_text = QtGui.QLineEdit()
-    cfces_onlymk_text.setPlaceholderText("1,2,3 or 1-30")
-    cfces_onlymk_layout.addWidget(cfces_onlymk_label)
-    cfces_onlymk_layout.addWidget(cfces_onlymk_text)
+    cfces_onlyprocess_selector = QtGui.QComboBox()
+    cfces_onlyprocess_selector.insertItems(0, ["mk", "id", "position"])
+    cfces_onlyprocess_label = QtGui.QLabel(__("to process (empty for all)"))
+    cfces_onlyprocess_text = QtGui.QLineEdit()
+    cfces_onlyprocess_text.setPlaceholderText("1,2,3 or 1-30")
+    cfces_onlyprocess_layout.addWidget(cfces_onlyprocess_selector)
+    cfces_onlyprocess_layout.addWidget(cfces_onlyprocess_label)
+    cfces_onlyprocess_layout.addWidget(cfces_onlyprocess_text)
 
     cfces_filename_label = QtGui.QLabel(__("File Name"))
     cfces_filename_text = QtGui.QLineEdit()
@@ -1972,7 +1975,7 @@ def on_computeforces():
     cfces_buttons_layout.addWidget(cfces_cancel_button)
 
     compforces_tool_layout.addLayout(cfces_format_layout)
-    compforces_tool_layout.addLayout(cfces_onlymk_layout)
+    compforces_tool_layout.addLayout(cfces_onlyprocess_layout)
     compforces_tool_layout.addLayout(cfces_filename_layout)
     compforces_tool_layout.addLayout(cfces_additional_parameters_layout)
     compforces_tool_layout.addStretch(1)
@@ -1986,15 +1989,36 @@ def on_computeforces():
     def on_cfces_export():
         export_parameters = dict()
         export_parameters['save_mode'] = outformat_combobox.currentIndex()
-        export_parameters['onlymk'] = cfces_onlymk_text.text()
+
+        if "mk" in cfces_onlyprocess_selector.currentText().lower():
+            export_parameters['onlyprocess_tag'] = "-onlymk:"
+        elif "id" in cfces_onlyprocess_selector.currentText().lower():
+            export_parameters['onlyprocess_tag'] = "-onlyid:"
+        elif "position" in cfces_onlyprocess_selector.currentText().lower():
+            export_parameters['onlyprocess_tag'] = "-onlyid:"
+
+        export_parameters['onlyprocess'] = cfces_onlyprocess_text.text()
         export_parameters['filename'] = cfces_filename_text.text()
         export_parameters['additional_parameters'] = cfces_additional_parameters_text.text(
         )
         computeforces_export(export_parameters)
         compforces_tool_dialog.accept()
 
+    def on_cfces_onlyprocess_changed():
+        if "mk" in cfces_onlyprocess_selector.currentText().lower():
+            cfces_onlyprocess_text.setText("")
+            cfces_onlyprocess_text.setPlaceholderText("1,2,3 or 1-30")
+        elif "id" in cfces_onlyprocess_selector.currentText().lower():
+            cfces_onlyprocess_text.setText("")
+            cfces_onlyprocess_text.setPlaceholderText("1,2,3 or 1-30")
+        elif "position" in cfces_onlyprocess_selector.currentText().lower():
+            cfces_onlyprocess_text.setText("")
+            cfces_onlyprocess_text.setPlaceholderText("xmin:ymin:zmin:xmax:ymax:zmax (m)")
+
+    cfces_onlyprocess_selector.currentIndexChanged.connect(on_cfces_onlyprocess_changed)
     cfces_export_button.clicked.connect(on_cfces_export)
     cfces_cancel_button.clicked.connect(on_cfces_cancel)
+    compforces_tool_dialog.setFixedWidth(430)
     compforces_tool_dialog.exec_()
 
 
