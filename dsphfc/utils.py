@@ -34,6 +34,7 @@ from PySide import QtGui, QtCore
 
 import guiutils
 import stl
+import os
 from properties import *
 from execution_parameters import *
 """
@@ -828,9 +829,15 @@ def dump_to_xml(data, save_name):
                     # Not a xml parametric object.  Needs exporting
                     __objs__ = list()
                     __objs__.append(o)
-                    Mesh.export(__objs__, save_name + "/" + o.Name + ".stl")
-                    f.write('\t\t\t\t\t<drawfilestl file="' + save_name + "/" +
-                            o.Name + ".stl" + '" objname="{}">\n'.format(o.Label))
+                    stl_file_path = save_name + "/" + o.Name + ".stl"
+                    Mesh.export(__objs__, stl_file_path)
+                    relative_file_path = os.path.relpath(
+                        stl_file_path,
+                        os.path.dirname(os.path.abspath(stl_file_path))
+                    )
+                    guiutils.warning_dialog("We're in {} trying to save {}.\n"
+                                            "Let's try {}".format(os.getcwd(), save_name + "/" + o.Name + ".stl", relative_file_path))
+                    f.write('\t\t\t\t\t<drawfilestl file="{}" objname="{}">\n'.format(relative_file_path, o.Label))
                     f.write(
                         '\t\t\t\t\t\t<drawscale x="0.001" y="0.001" z="0.001" />\n')
                     f.write('\t\t\t\t\t</drawfilestl>\n')

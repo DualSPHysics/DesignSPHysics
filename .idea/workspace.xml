@@ -1,11 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="BookmarkManager">
-    <bookmark url="file://$PROJECT_DIR$/DesignSPHysics.py" line="1481" mnemonic="1" />
+    <bookmark url="file://$PROJECT_DIR$/DesignSPHysics.py" line="434" mnemonic="1" />
   </component>
   <component name="ChangeListManager">
     <list default="true" id="22d76f4b-310a-4afb-8788-a472c77b2c87" name="Default" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/DesignSPHysics.py" beforeDir="false" afterPath="$PROJECT_DIR$/DesignSPHysics.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/dsphfc/utils.py" beforeDir="false" afterPath="$PROJECT_DIR$/dsphfc/utils.py" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
@@ -45,8 +46,8 @@
           <file leaf-file-name="DesignSPHysics.py" pinned="false" current-in-tab="true">
             <entry file="file://$PROJECT_DIR$/DesignSPHysics.py">
               <provider selected="true" editor-type-id="text-editor">
-                <state relative-caret-position="449">
-                  <caret line="391" column="50" selection-start-line="391" selection-start-column="50" selection-end-line="391" selection-end-column="50" />
+                <state relative-caret-position="411">
+                  <caret line="435" column="79" selection-start-line="435" selection-start-column="79" selection-end-line="435" selection-end-column="79" />
                   <folding>
                     <element signature="e#286#300#0" expanded="true" />
                   </folding>
@@ -79,8 +80,8 @@
           <file leaf-file-name="utils.py" pinned="false" current-in-tab="true">
             <entry file="file://$PROJECT_DIR$/dsphfc/utils.py">
               <provider selected="true" editor-type-id="text-editor">
-                <state relative-caret-position="23">
-                  <caret line="760" column="61" selection-start-line="760" selection-start-column="61" selection-end-line="760" selection-end-column="61" />
+                <state relative-caret-position="227">
+                  <caret line="134" column="4" selection-start-line="134" selection-start-column="4" selection-end-line="134" selection-end-column="4" />
                 </state>
               </provider>
             </entry>
@@ -100,9 +101,6 @@
   </component>
   <component name="FindInProjectRecents">
     <findStrings>
-      <find>unnoticing... name chan</find>
-      <find>mkgroup_prop.setValue</find>
-      <find>object_property_table</find>
       <find>isosurface_path</find>
       <find>pickle</find>
       <find>partvtk4_path</find>
@@ -130,6 +128,9 @@
       <find>guiutils.info_dialog</find>
       <find>execution</find>
       <find>&lt;move</find>
+      <find>drawfilestl</find>
+      <find>gencase</find>
+      <find>cwd</find>
     </findStrings>
     <replaceStrings>
       <replace>self.time_label</replace>
@@ -162,8 +163,8 @@
         <option value="$PROJECT_DIR$/dsphfc/templates/case_summary_template.html" />
         <option value="$PROJECT_DIR$/dsphfc/guiutils.py" />
         <option value="$PROJECT_DIR$/dsphfc/dsphwidgets.py" />
-        <option value="$PROJECT_DIR$/DesignSPHysics.py" />
         <option value="$PROJECT_DIR$/dsphfc/utils.py" />
+        <option value="$PROJECT_DIR$/DesignSPHysics.py" />
       </list>
     </option>
   </component>
@@ -591,7 +592,14 @@
       <option name="project" value="LOCAL" />
       <updated>1527249775913</updated>
     </task>
-    <option name="localTasksCounter" value="36" />
+    <task id="LOCAL-00036" summary="Filters move and rotate commands on the XML&#10;&#10;They no longer appear if the values don't make any difference.">
+      <created>1527495325100</created>
+      <option name="number" value="00036" />
+      <option name="presentableId" value="LOCAL-00036" />
+      <option name="project" value="LOCAL" />
+      <updated>1527495325100</updated>
+    </task>
+    <option name="localTasksCounter" value="37" />
     <servers />
   </component>
   <component name="TodoView" selected-index="4">
@@ -617,6 +625,7 @@
       <window_info content_ui="combo" id="Project" order="0" sideWeight="0.4993498" visible="true" weight="0.11172962" />
       <window_info anchor="bottom" id="Docker" order="8" show_stripe_button="false" />
       <window_info anchor="right" id="Database" order="3" sideWeight="0.49799734" weight="0.32962227" />
+      <window_info anchor="bottom" id="Find" order="1" weight="0.32879376" />
       <window_info anchor="right" id="SciView" order="3" sideWeight="0.4992785" weight="0.32962227" />
       <window_info anchor="right" id="Structure" order="4" sideWeight="0.50200266" side_tool="true" visible="true" weight="0.1304175" />
       <window_info id="Favorites" order="1" sideWeight="0.50065017" side_tool="true" weight="0.10771065" />
@@ -629,7 +638,6 @@
       <window_info anchor="right" id="Data View" order="5" />
       <window_info anchor="bottom" id="Message" order="0" />
       <window_info anchor="bottom" id="Cvs" order="4" weight="0.25" />
-      <window_info anchor="bottom" id="Find" order="1" weight="0.32879376" />
     </layout>
     <layout-to-restore>
       <window_info anchor="right" content_ui="combo" id="Hierarchy" order="2" weight="0.25" />
@@ -663,7 +671,6 @@
     <option name="myLimit" value="2678400000" />
   </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value="Fixed a string on case summary." />
     <MESSAGE value="Now post-processing tools can be used while executing to check current results." />
     <MESSAGE value="Added object names in XML definition.&#10;Preparing for release." />
     <MESSAGE value="Little patches for release" />
@@ -688,7 +695,8 @@
     <MESSAGE value="Cosmetic changes&#10;&#10;Changes _Out folder suffix with _out (capitalization).&#10;Changes Save &amp; Run GenCase dialog a bit." />
     <MESSAGE value="Adds FlowTool to Case Summary" />
     <MESSAGE value="Various fixes and additions&#10;&#10;Fixes typos in case summary.&#10;Adds new type of info dialog for post-processing.&#10;Disables batch script generation.&#10;Changes texts on some components." />
-    <option name="LAST_COMMIT_MESSAGE" value="Various fixes and additions&#10;&#10;Fixes typos in case summary.&#10;Adds new type of info dialog for post-processing.&#10;Disables batch script generation.&#10;Changes texts on some components." />
+    <MESSAGE value="Filters move and rotate commands on the XML&#10;&#10;They no longer appear if the values don't make any difference." />
+    <option name="LAST_COMMIT_MESSAGE" value="Filters move and rotate commands on the XML&#10;&#10;They no longer appear if the values don't make any difference." />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
@@ -947,20 +955,20 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/DesignSPHysics.py">
+    <entry file="file://$PROJECT_DIR$/dsphfc/utils.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="449">
-          <caret line="391" column="50" selection-start-line="391" selection-start-column="50" selection-end-line="391" selection-end-column="50" />
-          <folding>
-            <element signature="e#286#300#0" expanded="true" />
-          </folding>
+        <state relative-caret-position="227">
+          <caret line="134" column="4" selection-start-line="134" selection-start-column="4" selection-end-line="134" selection-end-column="4" />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/dsphfc/utils.py">
+    <entry file="file://$PROJECT_DIR$/DesignSPHysics.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="23">
-          <caret line="760" column="61" selection-start-line="760" selection-start-column="61" selection-end-line="760" selection-end-column="61" />
+        <state relative-caret-position="411">
+          <caret line="435" column="79" selection-start-line="435" selection-start-column="79" selection-end-line="435" selection-end-column="79" />
+          <folding>
+            <element signature="e#286#300#0" expanded="true" />
+          </folding>
         </state>
       </provider>
     </entry>
