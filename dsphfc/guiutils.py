@@ -2028,12 +2028,13 @@ def get_fc_view_object(internal_name):
     return FreeCADGui.getDocument("DSPH_Case").getObject(internal_name)
 
 
-def gencase_completed_dialog(particle_count=0, detail_text="No details", data=dict()):
+def gencase_completed_dialog(particle_count=0, detail_text="No details", data=dict(), temp_data=dict()):
     """ Creates a gencase save dialog with different options, like
     open the results with paraview, show details or dismiss. """
 
     # Window Creation
     window = QtGui.QDialog()
+    window.setWindowModality(QtCore.Qt.NonModal)
     window.setWindowTitle(utils.__("Save & GenCase"))
 
     # Main Layout creation
@@ -2046,32 +2047,35 @@ def gencase_completed_dialog(particle_count=0, detail_text="No details", data=di
 
     button_layout = QtGui.QHBoxLayout()
     bt_open_with_paraview = QtGui.QPushButton(utils.__("Open with Paraview"))
-    bt_open_with_paraview_menu = QtGui.QMenu()
-    bt_open_with_paraview_menu.addAction("{}_MkCells.vtk".format(data['project_name']))
-    bt_open_with_paraview_menu.addAction("{}_All.vtk".format(data['project_name']))
-    bt_open_with_paraview_menu.addAction("{}_Fluid.vtk".format(data['project_name']))
-    bt_open_with_paraview_menu.addAction("{}_Bound.vtk".format(data['project_name']))
-    bt_open_with_paraview.setMenu(bt_open_with_paraview_menu)
+    temp_data['widget_saver'] = QtGui.QMenu()
+    temp_data['widget_saver'].addAction("{}_MkCells.vtk".format(data['project_name']))
+    temp_data['widget_saver'].addAction("{}_All.vtk".format(data['project_name']))
+    temp_data['widget_saver'].addAction("{}_Fluid.vtk".format(data['project_name']))
+    temp_data['widget_saver'].addAction("{}_Bound.vtk".format(data['project_name']))
+    bt_open_with_paraview.setMenu(temp_data['widget_saver'])
     bt_details = QtGui.QPushButton(utils.__("Details"))
     bt_ok = QtGui.QPushButton(utils.__("Ok"))
     button_layout.addWidget(bt_open_with_paraview)
     button_layout.addWidget(bt_details)
     button_layout.addWidget(bt_ok)
 
-    horizontal_separator = h_line_generator()
+    # Details popup window
+    detail_text_dialog = QtGui.QDialog(None, QtCore.Qt.CustomizeWindowHint | QtCore.Qt.WindowTitleHint)
+    detail_text_dialog.setModal(False)
+    detail_text_dialog_layout = QtGui.QVBoxLayout()
 
     detail_text_area = QtGui.QTextEdit()
     detail_text_area.setText(detail_text)
 
+    detail_text_dialog_layout.addWidget(detail_text_area)
+    detail_text_dialog.setLayout(detail_text_dialog_layout)
+
     # Main Layout scaffolding
     main_layout.addWidget(info_message)
     main_layout.addLayout(button_layout)
-    main_layout.addWidget(horizontal_separator)
-    main_layout.addWidget(detail_text_area)
 
     # Window logic
-    horizontal_separator.hide()
-    detail_text_area.hide()
+    detail_text_dialog.hide()
 
     if len(data["paraview_path"]) > 1:
         bt_open_with_paraview.show()
@@ -2079,19 +2083,17 @@ def gencase_completed_dialog(particle_count=0, detail_text="No details", data=di
         bt_open_with_paraview.hide()
 
     def on_ok():
+        detail_text_dialog.hide()
         window.accept()
 
     def on_view_details():
-        if horizontal_separator.isVisible():
-            horizontal_separator.hide()
-            detail_text_area.hide()
-            bt_details.setText(utils.__("Details"))
-            window.adjustSize()
-        elif not horizontal_separator.isVisible():
-            horizontal_separator.show()
-            detail_text_area.show()
-            bt_details.setText(utils.__("Details"))
-            window.adjustSize()
+        if detail_text_dialog.isVisible():
+            detail_text_dialog.hide()
+        else:
+            detail_text_dialog.show()
+            detail_text_dialog.move(
+                window.x() - detail_text_dialog.width() - 15,
+                window.y() - abs(window.height() - detail_text_dialog.height()) / 2)
 
     def on_open_paraview_menu(action):
         subprocess.Popen(
@@ -2104,13 +2106,14 @@ def gencase_completed_dialog(particle_count=0, detail_text="No details", data=di
                     )
                 ],
                 stdout=subprocess.PIPE)
+        detail_text_dialog.hide()
         window.accept()
 
     bt_ok.clicked.connect(on_ok)
     bt_details.clicked.connect(on_view_details)
-    bt_open_with_paraview_menu.triggered.connect(on_open_paraview_menu)
+    temp_data['widget_saver'].triggered.connect(on_open_paraview_menu)
 
     # Window scaffolding and execution
     window.setFixedWidth(400)
     window.setLayout(main_layout)
-    window.exec_()
+    window.show()
