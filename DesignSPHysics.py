@@ -430,7 +430,12 @@ def on_save_with_gencase():
     data['gencase_done'] = False
     if data['gencase_path'] != "":
         process = QtCore.QProcess(fc_main_window)
-        process.start(data['gencase_path'], [
+        gencase_full_path = os.getcwd() + "/" + data['gencase_path']
+
+        process.setWorkingDirectory(data['project_path'])
+        guiutils.warning_dialog("Trying to set cwd to {}. Got {}".format(data['project_path'], process.workingDirectory()))
+
+        process.start(gencase_full_path, [
             data['project_path'] + '/' + data['project_name'] + '_Def', data['project_path'] +
             '/' + data['project_name'] + '_out/' + data['project_name'],
             '-save:+all'
