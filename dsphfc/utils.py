@@ -835,8 +835,6 @@ def dump_to_xml(data, save_name):
                         stl_file_path,
                         os.path.dirname(os.path.abspath(stl_file_path))
                     )
-                    guiutils.warning_dialog("We're in {} trying to save {}.\n"
-                                            "Let's try {}".format(os.getcwd(), save_name + "/" + o.Name + ".stl", relative_file_path))
                     f.write('\t\t\t\t\t<drawfilestl file="{}" objname="{}">\n'.format(relative_file_path, o.Label))
                     f.write(
                         '\t\t\t\t\t\t<drawscale x="0.001" y="0.001" z="0.001" />\n')
