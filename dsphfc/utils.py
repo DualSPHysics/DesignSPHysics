@@ -482,6 +482,7 @@ def get_default_data():
     temp_data['current_process'] = None
     temp_data['stored_selection'] = []
     temp_data['current_info_dialog'] = None
+    temp_data['widget_saver'] = None
     temp_data['export_numparts'] = ""
     temp_data['total_export_parts'] = -1
     temp_data['measuretool_points'] = list()

@@ -465,7 +465,7 @@ def on_save_with_gencase():
                 guiutils.gencase_completed_dialog(particle_count=total_particles,
                                                   detail_text=output.split(
                                                       "================================")[1],
-                                                  data=data)
+                                                  data=data, temp_data=temp_data)
             except ValueError:
                 # Not an expected result. GenCase had a not handled error
                 error_in_gen_case = True
