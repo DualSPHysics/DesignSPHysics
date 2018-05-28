@@ -755,10 +755,12 @@ def dump_to_xml(data, save_name):
             If special objects are found, exported in an specific manner (p.e FillBox)
             The rest of the things are exported in STL format."""
             if o.TypeId == "Part::Box":
-                f.write('\t\t\t\t\t<move x="' + str(o.Placement.Base.x / DIVIDER) + '" y="' + str(o.Placement.Base.y / DIVIDER) + '" z="' + str(
-                    o.Placement.Base.z / DIVIDER) + '" />\n')
-                f.write('\t\t\t\t\t<rotate ang="' + str(math.degrees(o.Placement.Rotation.Angle)) + '" x="' + str(-o.Placement.Rotation.Axis.x) + '" y="' +
-                        str(-o.Placement.Rotation.Axis.y) + '" z="' + str(-o.Placement.Rotation.Axis.z) + '" />\n')
+                if (abs(o.Placement.Base.x) + abs(o.Placement.Base.y) + abs(o.Placement.Base.z)) != 0:
+                    f.write('\t\t\t\t\t<move x="' + str(o.Placement.Base.x / DIVIDER) + '" y="' + str(o.Placement.Base.y / DIVIDER) + '" z="' + str(
+                        o.Placement.Base.z / DIVIDER) + '" />\n')
+                if math.degrees(o.Placement.Rotation.Angle) != 0:
+                    f.write('\t\t\t\t\t<rotate ang="' + str(math.degrees(o.Placement.Rotation.Angle)) + '" x="' + str(-o.Placement.Rotation.Axis.x) + '" y="' +
+                            str(-o.Placement.Rotation.Axis.y) + '" z="' + str(-o.Placement.Rotation.Axis.z) + '" />\n')
                 f.write('\t\t\t\t\t<drawbox objname="{}">\n'.format(o.Label))
                 f.write('\t\t\t\t\t\t<boxfill>solid</boxfill>\n')
                 f.write('\t\t\t\t\t\t<point x="0" y="0" z="0" />\n')
@@ -766,19 +768,23 @@ def dump_to_xml(data, save_name):
                     o.Height.Value / DIVIDER) + '" />\n')
                 f.write('\t\t\t\t\t</drawbox>\n')
             elif o.TypeId == "Part::Sphere":
-                f.write('\t\t\t\t\t<move x="' + str(o.Placement.Base.x / DIVIDER) + '" y="' + str(o.Placement.Base.y / DIVIDER) + '" z="' + str(
-                    o.Placement.Base.z / DIVIDER) + '" />\n')
-                f.write('\t\t\t\t\t<rotate ang="' + str(math.degrees(o.Placement.Rotation.Angle)) + '" x="' + str(-o.Placement.Rotation.Axis.x) + '" y="' +
-                        str(-o.Placement.Rotation.Axis.y) + '" z="' + str(-o.Placement.Rotation.Axis.z) + '" />\n')
+                if (abs(o.Placement.Base.x) + abs(o.Placement.Base.y) + abs(o.Placement.Base.z)) != 0:
+                    f.write('\t\t\t\t\t<move x="' + str(o.Placement.Base.x / DIVIDER) + '" y="' + str(o.Placement.Base.y / DIVIDER) + '" z="' + str(
+                        o.Placement.Base.z / DIVIDER) + '" />\n')
+                if math.degrees(o.Placement.Rotation.Angle) != 0:
+                    f.write('\t\t\t\t\t<rotate ang="' + str(math.degrees(o.Placement.Rotation.Angle)) + '" x="' + str(-o.Placement.Rotation.Axis.x) + '" y="' +
+                            str(-o.Placement.Rotation.Axis.y) + '" z="' + str(-o.Placement.Rotation.Axis.z) + '" />\n')
                 f.write('\t\t\t\t\t<drawsphere radius="' + str(o.Radius.Value /
                                                                DIVIDER) + '"  objname="{}">\n'.format(o.Label))
                 f.write('\t\t\t\t\t\t<point x="0" y="0" z="0" />\n')
                 f.write('\t\t\t\t\t</drawsphere>\n')
             elif o.TypeId == "Part::Cylinder":
-                f.write('\t\t\t\t\t<move x="' + str(o.Placement.Base.x / DIVIDER) + '" y="' + str(o.Placement.Base.y / DIVIDER) + '" z="' + str(
-                    o.Placement.Base.z / DIVIDER) + '" />\n')
-                f.write('\t\t\t\t\t<rotate ang="' + str(math.degrees(o.Placement.Rotation.Angle)) + '" x="' + str(-o.Placement.Rotation.Axis.x) + '" y="' +
-                        str(-o.Placement.Rotation.Axis.y) + '" z="' + str(-o.Placement.Rotation.Axis.z) + '" />\n')
+                if (abs(o.Placement.Base.x) + abs(o.Placement.Base.y) + abs(o.Placement.Base.z)) != 0:
+                    f.write('\t\t\t\t\t<move x="' + str(o.Placement.Base.x / DIVIDER) + '" y="' + str(o.Placement.Base.y / DIVIDER) + '" z="' + str(
+                        o.Placement.Base.z / DIVIDER) + '" />\n')
+                if math.degrees(o.Placement.Rotation.Angle) != 0:
+                    f.write('\t\t\t\t\t<rotate ang="' + str(math.degrees(o.Placement.Rotation.Angle)) + '" x="' + str(-o.Placement.Rotation.Axis.x) + '" y="' +
+                            str(-o.Placement.Rotation.Axis.y) + '" z="' + str(-o.Placement.Rotation.Axis.z) + '" />\n')
                 f.write('\t\t\t\t\t<drawcylinder radius="' + str(o.Radius.Value /
                                                                  DIVIDER) + '" objname="{}">\n'.format(o.Label))
                 f.write('\t\t\t\t\t\t<point x="0" y="0" z="0" />\n')
@@ -796,11 +802,13 @@ def dump_to_xml(data, save_name):
                         elif "fillpoint" in element.Name.lower():
                             fillpoint = element
                     if filllimits and fillpoint:
-                        f.write('\t\t\t\t\t<move x="' + str(filllimits.Placement.Base.x / DIVIDER) + '" y="' + str(filllimits.Placement.Base.y / DIVIDER) +
-                                '" z="' + str(filllimits.Placement.Base.z / DIVIDER) + '" />\n')
-                        f.write('\t\t\t\t\t<rotate ang="' + str(math.degrees(
-                            filllimits.Placement.Rotation.Angle)) + '" x="' + str(-filllimits.Placement.Rotation.Axis.x) + '" y="' +
-                            str(-filllimits.Placement.Rotation.Axis.y) + '" z="' + str(-filllimits.Placement.Rotation.Axis.z) + '" />\n')
+                        if (abs(filllimits.Placement.Base.x) + abs(filllimits.Placement.Base.y) + abs(filllimits.Placement.Base.z)) != 0:
+                            f.write('\t\t\t\t\t<move x="' + str(filllimits.Placement.Base.x / DIVIDER) + '" y="' + str(filllimits.Placement.Base.y / DIVIDER) +
+                                    '" z="' + str(filllimits.Placement.Base.z / DIVIDER) + '" />\n')
+                        if math.degrees(o.Placement.Rotation.Angle) != 0:
+                            f.write('\t\t\t\t\t<rotate ang="' + str(math.degrees(
+                                filllimits.Placement.Rotation.Angle)) + '" x="' + str(-filllimits.Placement.Rotation.Axis.x) + '" y="' +
+                                str(-filllimits.Placement.Rotation.Axis.y) + '" z="' + str(-filllimits.Placement.Rotation.Axis.z) + '" />\n')
                         f.write('\t\t\t\t\t<fillbox x="' + str((fillpoint.Placement.Base.x - filllimits.Placement.Base.x) / DIVIDER) + '" y="' + str(
                             (fillpoint.Placement.Base.y - filllimits.Placement.Base.y) / DIVIDER) + '" z="' + str(
                                 (fillpoint.Placement.Base.z - filllimits.Placement.Base.z) / DIVIDER) + '" objname="{}">\n'.format(o.Label))
