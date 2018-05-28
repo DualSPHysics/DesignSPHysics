@@ -431,10 +431,7 @@ def on_save_with_gencase():
     if data['gencase_path'] != "":
         process = QtCore.QProcess(fc_main_window)
         gencase_full_path = os.getcwd() + "/" + data['gencase_path']
-
         process.setWorkingDirectory(data['project_path'])
-        guiutils.warning_dialog("Trying to set cwd to {}. Got {}".format(data['project_path'], process.workingDirectory()))
-
         process.start(gencase_full_path, [
             data['project_path'] + '/' + data['project_name'] + '_Def', data['project_path'] +
             '/' + data['project_name'] + '_out/' + data['project_name'],
@@ -1746,8 +1743,8 @@ def floatinginfo_export(export_parameters):
     export_process.finished.connect(on_export_finished)
 
     static_params_exp = [
-        '-filexml ' + data['project_path'] + '/' + data['project_name'] +
-        '_out/' + data['project_name'] + '.xml', '-savemotion',
+        '-dirin ' + data['project_path'] + '/' + data['project_name'] +
+        '_out/', '-savemotion',
         '-savedata ' + data['project_path'] + '/' + data['project_name'] + '_out/' +
         export_parameters['filename'], export_parameters['additional_parameters']
     ]

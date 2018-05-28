@@ -1730,30 +1730,30 @@ class RegularPistonWaveMotionTimeline(QtGui.QWidget):
         self.awas_label = QtGui.QLabel(__("AWAS configuration"))
         self.awas_enabled = QtGui.QCheckBox(__("Enabled"))
 
-        self.awas_startawas_label = QtGui.QLabel(__("Start AWAS: "))
+        self.awas_startawas_label = QtGui.QLabel(__("Start AWAS (s): "))
         self.awas_startawas_input = QtGui.QLineEdit()
 
-        self.awas_swl_label = QtGui.QLabel(__("Still water level: "))
+        self.awas_swl_label = QtGui.QLabel(__("Still water level (m): "))
         self.awas_swl_input = QtGui.QLineEdit()
 
-        self.awas_elevation_label = QtGui.QLabel(__("Elevation: "))
+        self.awas_elevation_label = QtGui.QLabel(__("Elevation->Wave Order: "))
         self.awas_elevation_selector = QtGui.QComboBox()
         self.awas_elevation_selector.insertItems(
             0, [__("1st Order"), __("2nd Order")])
 
-        self.awas_gaugex_label = QtGui.QLabel(__("Gauge X: "))
+        self.awas_gaugex_label = QtGui.QLabel(__("Gauge X (coef*h): "))
         self.awas_gaugex_input = QtGui.QLineEdit()
 
-        self.awas_gaugey_label = QtGui.QLabel(__("Gauge Y: "))
+        self.awas_gaugey_label = QtGui.QLabel(__("Gauge Y (m): "))
         self.awas_gaugey_input = QtGui.QLineEdit()
 
-        self.awas_gaugezmin_label = QtGui.QLabel(__("Gauge Z Min: "))
+        self.awas_gaugezmin_label = QtGui.QLabel(__("Gauge Z Min (m): "))
         self.awas_gaugezmin_input = QtGui.QLineEdit()
 
-        self.awas_gaugezmax_label = QtGui.QLabel(__("Gauge Z Max: "))
+        self.awas_gaugezmax_label = QtGui.QLabel(__("Gauge Z Max (m): "))
         self.awas_gaugezmax_input = QtGui.QLineEdit()
 
-        self.awas_gaugedp_label = QtGui.QLabel(__("Gauge DP: "))
+        self.awas_gaugedp_label = QtGui.QLabel(__("Gauge dp: "))
         self.awas_gaugedp_input = QtGui.QLineEdit()
 
         self.awas_coefmasslimit_label = QtGui.QLabel(__("Coef. mass limit: "))
@@ -2156,30 +2156,30 @@ class IrregularPistonWaveMotionTimeline(QtGui.QWidget):
         self.awas_label = QtGui.QLabel(__("AWAS configuration"))
         self.awas_enabled = QtGui.QCheckBox(__("Enabled"))
 
-        self.awas_startawas_label = QtGui.QLabel(__("Start AWAS: "))
+        self.awas_startawas_label = QtGui.QLabel(__("Start AWAS (s): "))
         self.awas_startawas_input = QtGui.QLineEdit()
 
-        self.awas_swl_label = QtGui.QLabel(__("Still water level: "))
+        self.awas_swl_label = QtGui.QLabel(__("Still water level (m): "))
         self.awas_swl_input = QtGui.QLineEdit()
 
-        self.awas_elevation_label = QtGui.QLabel(__("Elevation: "))
+        self.awas_elevation_label = QtGui.QLabel(__("Elevation->Wave Order: "))
         self.awas_elevation_selector = QtGui.QComboBox()
         self.awas_elevation_selector.insertItems(
             0, [__("1st Order"), __("2nd Order")])
 
-        self.awas_gaugex_label = QtGui.QLabel(__("Gauge X: "))
+        self.awas_gaugex_label = QtGui.QLabel(__("Gauge X (coef*h): "))
         self.awas_gaugex_input = QtGui.QLineEdit()
 
-        self.awas_gaugey_label = QtGui.QLabel(__("Gauge Y: "))
+        self.awas_gaugey_label = QtGui.QLabel(__("Gauge Y (m): "))
         self.awas_gaugey_input = QtGui.QLineEdit()
 
-        self.awas_gaugezmin_label = QtGui.QLabel(__("Gauge Z Min: "))
+        self.awas_gaugezmin_label = QtGui.QLabel(__("Gauge Z Min (m): "))
         self.awas_gaugezmin_input = QtGui.QLineEdit()
 
-        self.awas_gaugezmax_label = QtGui.QLabel(__("Gauge Z Max: "))
+        self.awas_gaugezmax_label = QtGui.QLabel(__("Gauge Z Max (m): "))
         self.awas_gaugezmax_input = QtGui.QLineEdit()
 
-        self.awas_gaugedp_label = QtGui.QLabel(__("Gauge DP: "))
+        self.awas_gaugedp_label = QtGui.QLabel(__("Gauge dp: "))
         self.awas_gaugedp_input = QtGui.QLineEdit()
 
         self.awas_coefmasslimit_label = QtGui.QLabel(__("Coef. mass limit: "))
