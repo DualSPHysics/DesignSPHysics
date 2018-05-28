@@ -2505,7 +2505,7 @@ def isosurface_export(export_parameters):
     static_params_exp = [
         '-dirin ' + data['project_path'] +
         '/' + data['project_name'] + '_out/',
-        '-saveiso ' + data['project_path'] + '/' +
+        export_parameters["surface_or_slice"] + " " + data['project_path'] + '/' +
         data['project_name'] + '_out/' + export_parameters['file_name'],
         '-onlytype:' + export_parameters['save_types'] +
         " " + export_parameters['additional_parameters']
@@ -2564,6 +2564,13 @@ def on_isosurface():
     ]
     isosfc_types_groupbox.setLayout(isosfc_types_groupbox_layout)
 
+    isosfc_selector_layout = QtGui.QHBoxLayout()
+    isosfc_selector_label = QtGui.QLabel(__("Save: "))
+    isosfc_selector = QtGui.QComboBox()
+    isosfc_selector.insertItems(0, ["Surface", "Slice"])
+    isosfc_selector_layout.addWidget(isosfc_selector_label)
+    isosfc_selector_layout.addWidget(isosfc_selector)
+
     isosfc_file_name_label = QtGui.QLabel(__("File name"))
     isosfc_file_name_text = QtGui.QLineEdit()
     isosfc_file_name_text.setText('FileIso')
@@ -2582,6 +2589,7 @@ def on_isosurface():
 
     isosurface_tool_layout.addWidget(isosfc_types_groupbox)
     isosurface_tool_layout.addStretch(1)
+    isosurface_tool_layout.addLayout(isosfc_selector_layout)
     isosurface_tool_layout.addLayout(isosfc_filename_layout)
     isosurface_tool_layout.addLayout(isosfc_parameters_layout)
     isosurface_tool_layout.addLayout(isosfc_buttons_layout)
@@ -2610,6 +2618,11 @@ def on_isosurface():
 
         if export_parameters['save_types'] == '-all':
             export_parameters['save_types'] = '+all'
+
+        if "surface" in isosfc_selector.currentText().lower():
+            export_parameters['surface_or_slice'] = '-saveiso'
+        else:
+            export_parameters['surface_or_slice'] = '-saveslice'
 
         if len(isosfc_file_name_text.text()) > 0:
             export_parameters['file_name'] = isosfc_file_name_text.text()

@@ -1,13 +1,14 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="BookmarkManager">
-    <bookmark url="file://$PROJECT_DIR$/DesignSPHysics.py" line="434" mnemonic="1" />
+    <bookmark url="file://$PROJECT_DIR$/DesignSPHysics.py" line="2568" mnemonic="1" />
+    <bookmark url="file://$PROJECT_DIR$/DesignSPHysics.py" line="3640" mnemonic="2" />
   </component>
   <component name="ChangeListManager">
     <list default="true" id="22d76f4b-310a-4afb-8788-a472c77b2c87" name="Default" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/DesignSPHysics.py" beforeDir="false" afterPath="$PROJECT_DIR$/DesignSPHysics.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/dsphfc/utils.py" beforeDir="false" afterPath="$PROJECT_DIR$/dsphfc/utils.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/dsphfc/lang/english.json" beforeDir="false" afterPath="$PROJECT_DIR$/dsphfc/lang/english.json" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="TRACKING_ENABLED" value="true" />
@@ -46,8 +47,8 @@
           <file leaf-file-name="DesignSPHysics.py" pinned="false" current-in-tab="true">
             <entry file="file://$PROJECT_DIR$/DesignSPHysics.py">
               <provider selected="true" editor-type-id="text-editor">
-                <state relative-caret-position="411">
-                  <caret line="435" column="79" selection-start-line="435" selection-start-column="79" selection-end-line="435" selection-end-column="79" />
+                <state relative-caret-position="222">
+                  <caret line="2507" column="43" selection-start-line="2507" selection-start-column="43" selection-end-line="2507" selection-end-column="43" />
                   <folding>
                     <element signature="e#286#300#0" expanded="true" />
                   </folding>
@@ -67,8 +68,8 @@
           <file leaf-file-name="dsphwidgets.py" pinned="false" current-in-tab="false">
             <entry file="file://$PROJECT_DIR$/dsphfc/dsphwidgets.py">
               <provider selected="true" editor-type-id="text-editor">
-                <state relative-caret-position="80500">
-                  <caret line="3506" column="40" selection-start-line="3506" selection-start-column="40" selection-end-line="3506" selection-end-column="40" />
+                <state relative-caret-position="200">
+                  <caret line="2173" column="26" selection-start-line="2173" selection-start-column="26" selection-end-line="2173" selection-end-column="26" />
                 </state>
               </provider>
             </entry>
@@ -80,8 +81,8 @@
           <file leaf-file-name="utils.py" pinned="false" current-in-tab="true">
             <entry file="file://$PROJECT_DIR$/dsphfc/utils.py">
               <provider selected="true" editor-type-id="text-editor">
-                <state relative-caret-position="227">
-                  <caret line="134" column="4" selection-start-line="134" selection-start-column="4" selection-end-line="134" selection-end-column="4" />
+                <state relative-caret-position="245">
+                  <caret line="837" selection-start-line="837" selection-end-line="837" />
                 </state>
               </provider>
             </entry>
@@ -101,16 +102,6 @@
   </component>
   <component name="FindInProjectRecents">
     <findStrings>
-      <find>isosurface_path</find>
-      <find>pickle</find>
-      <find>partvtk4_path</find>
-      <find>.update</find>
-      <find>on_isosu</find>
-      <find>coupling</find>
-      <find>press View De</find>
-      <find>Out</find>
-      <find>_Out</find>
-      <find>Gencase exported</find>
       <find>CPU</find>
       <find>mass for bound</find>
       <find>H constant</find>
@@ -131,6 +122,16 @@
       <find>drawfilestl</find>
       <find>gencase</find>
       <find>cwd</find>
+      <find>dump</find>
+      <find>floatinginfo</find>
+      <find>filexml</find>
+      <find>we're</find>
+      <find>trying to se</find>
+      <find>Start A</find>
+      <find>QCombobox</find>
+      <find>on_isosurface</find>
+      <find>isosurface</find>
+      <find>surface_or</find>
     </findStrings>
     <replaceStrings>
       <replace>self.time_label</replace>
@@ -162,8 +163,8 @@
         <option value="$PROJECT_DIR$/installer/installer.py" />
         <option value="$PROJECT_DIR$/dsphfc/templates/case_summary_template.html" />
         <option value="$PROJECT_DIR$/dsphfc/guiutils.py" />
-        <option value="$PROJECT_DIR$/dsphfc/dsphwidgets.py" />
         <option value="$PROJECT_DIR$/dsphfc/utils.py" />
+        <option value="$PROJECT_DIR$/dsphfc/dsphwidgets.py" />
         <option value="$PROJECT_DIR$/DesignSPHysics.py" />
       </list>
     </option>
@@ -599,7 +600,21 @@
       <option name="project" value="LOCAL" />
       <updated>1527495325100</updated>
     </task>
-    <option name="localTasksCounter" value="37" />
+    <task id="LOCAL-00037" summary="Now STL files are referenced with relative paths">
+      <created>1527497545143</created>
+      <option name="number" value="00037" />
+      <option name="presentableId" value="LOCAL-00037" />
+      <option name="project" value="LOCAL" />
+      <updated>1527497545143</updated>
+    </task>
+    <task id="LOCAL-00038" summary="Changes AWAS config labels to show units">
+      <created>1527498169527</created>
+      <option name="number" value="00038" />
+      <option name="presentableId" value="LOCAL-00038" />
+      <option name="project" value="LOCAL" />
+      <updated>1527498169527</updated>
+    </task>
+    <option name="localTasksCounter" value="39" />
     <servers />
   </component>
   <component name="TodoView" selected-index="4">
@@ -671,8 +686,6 @@
     <option name="myLimit" value="2678400000" />
   </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value="Now post-processing tools can be used while executing to check current results." />
-    <MESSAGE value="Added object names in XML definition.&#10;Preparing for release." />
     <MESSAGE value="Little patches for release" />
     <MESSAGE value="Changes on readme and license" />
     <MESSAGE value="Added some help links and reworked the TODO timeline" />
@@ -696,7 +709,9 @@
     <MESSAGE value="Adds FlowTool to Case Summary" />
     <MESSAGE value="Various fixes and additions&#10;&#10;Fixes typos in case summary.&#10;Adds new type of info dialog for post-processing.&#10;Disables batch script generation.&#10;Changes texts on some components." />
     <MESSAGE value="Filters move and rotate commands on the XML&#10;&#10;They no longer appear if the values don't make any difference." />
-    <option name="LAST_COMMIT_MESSAGE" value="Filters move and rotate commands on the XML&#10;&#10;They no longer appear if the values don't make any difference." />
+    <MESSAGE value="Now STL files are referenced with relative paths" />
+    <MESSAGE value="Changes AWAS config labels to show units" />
+    <option name="LAST_COMMIT_MESSAGE" value="Changes AWAS config labels to show units" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
@@ -948,24 +963,24 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/dsphfc/dsphwidgets.py">
+    <entry file="file://$PROJECT_DIR$/dsphfc/utils.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="80500">
-          <caret line="3506" column="40" selection-start-line="3506" selection-start-column="40" selection-end-line="3506" selection-end-column="40" />
+        <state relative-caret-position="245">
+          <caret line="837" selection-start-line="837" selection-end-line="837" />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/dsphfc/utils.py">
+    <entry file="file://$PROJECT_DIR$/dsphfc/dsphwidgets.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="227">
-          <caret line="134" column="4" selection-start-line="134" selection-start-column="4" selection-end-line="134" selection-end-column="4" />
+        <state relative-caret-position="200">
+          <caret line="2173" column="26" selection-start-line="2173" selection-start-column="26" selection-end-line="2173" selection-end-column="26" />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/DesignSPHysics.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="411">
-          <caret line="435" column="79" selection-start-line="435" selection-start-column="79" selection-end-line="435" selection-end-column="79" />
+        <state relative-caret-position="222">
+          <caret line="2507" column="43" selection-start-line="2507" selection-start-column="43" selection-end-line="2507" selection-end-column="43" />
           <folding>
             <element signature="e#286#300#0" expanded="true" />
           </folding>
