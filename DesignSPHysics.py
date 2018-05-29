@@ -338,12 +338,6 @@ def on_save_case(save_as=None):
     else:
         save_name = data['project_path']
 
-    if " " in save_name:  # Spawn error if path contains any spaces.
-        guiutils.error_dialog(
-            __(
-                "The path you selected contains spaces. Due to DualSPHysics restrictions, you'll need to use a folder path without any spaces."))
-        return
-
     # Check if there is any path, a blank one meant the user cancelled the save file dialog
     if save_name != '':
         # Watch if folder already exists or create it
