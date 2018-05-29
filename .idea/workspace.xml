@@ -1,13 +1,15 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="BookmarkManager">
-    <bookmark url="file://$PROJECT_DIR$/DesignSPHysics.py" line="1997" mnemonic="1" />
     <bookmark url="file://$PROJECT_DIR$/DesignSPHysics.py" line="1904" mnemonic="2" />
+    <bookmark url="file://$PROJECT_DIR$/dsphfc/guiutils.py" line="2074" mnemonic="1" />
   </component>
   <component name="ChangeListManager">
     <list default="true" id="22d76f4b-310a-4afb-8788-a472c77b2c87" name="Default" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/dsphfc/guiutils.py" beforeDir="false" afterPath="$PROJECT_DIR$/dsphfc/guiutils.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/DSPH_Images/flowtool_template.jpg" beforeDir="false" afterPath="$PROJECT_DIR$/DSPH_Images/flowtool_template.jpg" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/DesignSPHysics.py" beforeDir="false" afterPath="$PROJECT_DIR$/DesignSPHysics.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/dsphfc/lang/english.json" beforeDir="false" afterPath="$PROJECT_DIR$/dsphfc/lang/english.json" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="TRACKING_ENABLED" value="true" />
@@ -43,11 +45,11 @@
     <splitter split-orientation="horizontal" split-proportion="0.5">
       <split-first>
         <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
-          <file leaf-file-name="DesignSPHysics.py" pinned="false" current-in-tab="false">
+          <file leaf-file-name="DesignSPHysics.py" pinned="false" current-in-tab="true">
             <entry file="file://$PROJECT_DIR$/DesignSPHysics.py">
               <provider selected="true" editor-type-id="text-editor">
-                <state relative-caret-position="245">
-                  <caret line="1599" column="60" selection-start-line="1599" selection-start-column="60" selection-end-line="1599" selection-end-column="60" />
+                <state relative-caret-position="222">
+                  <caret line="2874" lean-forward="true" selection-start-line="2874" selection-end-line="2874" />
                   <folding>
                     <element signature="e#286#300#0" expanded="true" />
                   </folding>
@@ -55,11 +57,11 @@
               </provider>
             </entry>
           </file>
-          <file leaf-file-name="guiutils.py" pinned="false" current-in-tab="true">
+          <file leaf-file-name="guiutils.py" pinned="false" current-in-tab="false">
             <entry file="file://$PROJECT_DIR$/dsphfc/guiutils.py">
               <provider selected="true" editor-type-id="text-editor">
-                <state relative-caret-position="391">
-                  <caret line="2051" column="55" selection-start-line="2051" selection-start-column="55" selection-end-line="2051" selection-end-column="55" />
+                <state relative-caret-position="46529">
+                  <caret line="2030" column="102" selection-start-line="2030" selection-start-column="102" selection-end-line="2030" selection-end-column="102" />
                 </state>
               </provider>
             </entry>
@@ -67,8 +69,8 @@
           <file leaf-file-name="dsphwidgets.py" pinned="false" current-in-tab="false">
             <entry file="file://$PROJECT_DIR$/dsphfc/dsphwidgets.py">
               <provider selected="true" editor-type-id="text-editor">
-                <state relative-caret-position="23">
-                  <caret line="2184" column="35" selection-start-line="2184" selection-start-column="35" selection-end-line="2184" selection-end-column="35" />
+                <state relative-caret-position="989">
+                  <caret line="3492" column="30" selection-start-line="3492" selection-start-column="13" selection-end-line="3492" selection-end-column="30" />
                 </state>
               </provider>
             </entry>
@@ -80,8 +82,8 @@
           <file leaf-file-name="utils.py" pinned="false" current-in-tab="true">
             <entry file="file://$PROJECT_DIR$/dsphfc/utils.py">
               <provider selected="true" editor-type-id="text-editor">
-                <state relative-caret-position="245">
-                  <caret line="837" selection-start-line="837" selection-end-line="837" />
+                <state relative-caret-position="23">
+                  <caret line="484" column="36" selection-start-line="484" selection-start-column="36" selection-end-line="484" selection-end-column="36" />
                 </state>
               </provider>
             </entry>
@@ -101,13 +103,11 @@
   </component>
   <component name="FindInProjectRecents">
     <findStrings>
-      <find>InfoDialog</find>
       <find>guiutils.info</find>
       <find>guiutils.info_dialog</find>
       <find>execution</find>
       <find>&lt;move</find>
       <find>drawfilestl</find>
-      <find>gencase</find>
       <find>cwd</find>
       <find>dump</find>
       <find>floatinginfo</find>
@@ -131,6 +131,8 @@
       <find>Open with Paraview</find>
       <find>Open</find>
       <find>ck</find>
+      <find>gencase</find>
+      <find>flowtool</find>
     </findStrings>
     <replaceStrings>
       <replace>self.time_label</replace>
@@ -161,10 +163,10 @@
         <option value="$PROJECT_DIR$/DSPH.py" />
         <option value="$PROJECT_DIR$/installer/installer.py" />
         <option value="$PROJECT_DIR$/dsphfc/templates/case_summary_template.html" />
-        <option value="$PROJECT_DIR$/dsphfc/utils.py" />
         <option value="$PROJECT_DIR$/dsphfc/dsphwidgets.py" />
-        <option value="$PROJECT_DIR$/DesignSPHysics.py" />
+        <option value="$PROJECT_DIR$/dsphfc/utils.py" />
         <option value="$PROJECT_DIR$/dsphfc/guiutils.py" />
+        <option value="$PROJECT_DIR$/DesignSPHysics.py" />
       </list>
     </option>
   </component>
@@ -206,7 +208,6 @@
       <foldersAlwaysOnTop value="true" />
     </navigator>
     <panes>
-      <pane id="Scope" />
       <pane id="ProjectPane">
         <subPane>
           <expand>
@@ -229,6 +230,7 @@
           <select />
         </subPane>
       </pane>
+      <pane id="Scope" />
     </panes>
   </component>
   <component name="PropertiesComponent">
@@ -627,7 +629,21 @@
       <option name="project" value="LOCAL" />
       <updated>1527502245379</updated>
     </task>
-    <option name="localTasksCounter" value="41" />
+    <task id="LOCAL-00041" summary="Changes open with paraview button from save menu">
+      <created>1527503792662</created>
+      <option name="number" value="00041" />
+      <option name="presentableId" value="LOCAL-00041" />
+      <option name="project" value="LOCAL" />
+      <updated>1527503792662</updated>
+    </task>
+    <task id="LOCAL-00042" summary="Makes details dialog on GenCase saving a popup.&#10;&#10;Hacked through the garbage collector to do it, so the menu appears&#10;when the dialog is not modal, avoiding using exec_()">
+      <created>1527505678322</created>
+      <option name="number" value="00042" />
+      <option name="presentableId" value="LOCAL-00042" />
+      <option name="project" value="LOCAL" />
+      <updated>1527505678322</updated>
+    </task>
+    <option name="localTasksCounter" value="43" />
     <servers />
   </component>
   <component name="TodoView" selected-index="4">
@@ -650,10 +666,9 @@
       <window_info anchor="bottom" id="Python Console" order="8" weight="0.32903865" />
       <window_info anchor="bottom" id="Run" order="2" weight="0.32960895" />
       <window_info anchor="bottom" id="Terminal" order="9" weight="0.2061753" />
-      <window_info content_ui="combo" id="Project" order="0" sideWeight="0.4993498" visible="true" weight="0.11172962" />
+      <window_info content_ui="combo" id="Project" order="0" sideWeight="0.4993498" visible="true" weight="0.11252485" />
       <window_info anchor="bottom" id="Docker" order="8" show_stripe_button="false" />
       <window_info anchor="right" id="Database" order="3" sideWeight="0.49799734" weight="0.32962227" />
-      <window_info anchor="bottom" id="Find" order="1" weight="0.32879376" />
       <window_info anchor="right" id="SciView" order="3" sideWeight="0.4992785" weight="0.32962227" />
       <window_info anchor="right" id="Structure" order="4" sideWeight="0.50200266" side_tool="true" visible="true" weight="0.1304175" />
       <window_info id="Favorites" order="1" sideWeight="0.50065017" side_tool="true" weight="0.10771065" />
@@ -666,27 +681,28 @@
       <window_info anchor="right" id="Data View" order="5" />
       <window_info anchor="bottom" id="Message" order="0" />
       <window_info anchor="bottom" id="Cvs" order="4" weight="0.25" />
+      <window_info anchor="bottom" id="Find" order="1" weight="0.32879376" />
     </layout>
     <layout-to-restore>
       <window_info anchor="right" content_ui="combo" id="Hierarchy" order="2" weight="0.25" />
       <window_info content_ui="combo" id="Project" order="0" weight="0.116204694" />
       <window_info anchor="bottom" id="Run" order="2" weight="0.32960895" />
-      <window_info id="Favorites" order="1" side_tool="true" />
+      <window_info anchor="bottom" id="Cvs" order="4" weight="0.25" />
       <window_info anchor="right" id="Data View" order="5" />
       <window_info anchor="right" id="Structure" order="4" visible="true" weight="0.1533006" />
       <window_info anchor="right" id="Commander" order="0" weight="0.4" />
       <window_info anchor="right" id="Ant Build" order="1" weight="0.25" />
       <window_info anchor="bottom" id="TODO" order="6" weight="0.32887402" />
-      <window_info anchor="bottom" id="Version Control" order="8" />
+      <window_info anchor="bottom" id="Python Console" order="9" />
       <window_info anchor="bottom" id="Find" order="1" weight="0.32998884" />
       <window_info anchor="right" id="Database" order="3" />
       <window_info anchor="bottom" id="Terminal" order="10" />
       <window_info anchor="bottom" id="Event Log" order="7" side_tool="true" />
       <window_info anchor="bottom" id="Inspection" order="5" weight="0.4" />
-      <window_info anchor="bottom" id="Cvs" order="4" weight="0.25" />
+      <window_info anchor="bottom" id="Version Control" order="8" />
       <window_info anchor="bottom" id="Debug" order="3" weight="0.4" />
       <window_info anchor="bottom" id="Message" order="0" />
-      <window_info anchor="bottom" id="Python Console" order="9" />
+      <window_info id="Favorites" order="1" side_tool="true" />
     </layout-to-restore>
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -699,8 +715,6 @@
     <option name="myLimit" value="2678400000" />
   </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value="Added some help links and reworked the TODO timeline" />
-    <MESSAGE value="Implemented fluid &amp; solid support for fillboxes" />
     <MESSAGE value="Increased default Fillbox size to 1 cubic meter. Fixes #6" />
     <MESSAGE value="Now the actions list in motion configuration is disabled when viewing a Wave Generator or Movement from a file. Fixes #4" />
     <MESSAGE value="Implemented a total maximum particle count before saving, so it warns the user passed a certain threshold" />
@@ -724,7 +738,9 @@
     <MESSAGE value="Changes AWAS config labels to show units" />
     <MESSAGE value="Adds Slice or Surface selector to IsoSurface post-processing tool" />
     <MESSAGE value="Adds mk/id/position selector to ComputeForces export" />
-    <option name="LAST_COMMIT_MESSAGE" value="Adds mk/id/position selector to ComputeForces export" />
+    <MESSAGE value="Changes open with paraview button from save menu" />
+    <MESSAGE value="Makes details dialog on GenCase saving a popup.&#10;&#10;Hacked through the garbage collector to do it, so the menu appears&#10;when the dialog is not modal, avoiding using exec_()" />
+    <option name="LAST_COMMIT_MESSAGE" value="Makes details dialog on GenCase saving a popup.&#10;&#10;Hacked through the garbage collector to do it, so the menu appears&#10;when the dialog is not modal, avoiding using exec_()" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
@@ -971,32 +987,32 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/dsphfc/utils.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="245">
-          <caret line="837" selection-start-line="837" selection-end-line="837" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/DesignSPHysics.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="245">
-          <caret line="1599" column="60" selection-start-line="1599" selection-start-column="60" selection-end-line="1599" selection-end-column="60" />
-          <folding>
-            <element signature="e#286#300#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/dsphfc/dsphwidgets.py">
-      <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="23">
-          <caret line="2184" column="35" selection-start-line="2184" selection-start-column="35" selection-end-line="2184" selection-end-column="35" />
+          <caret line="484" column="36" selection-start-line="484" selection-start-column="36" selection-end-line="484" selection-end-column="36" />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/dsphfc/guiutils.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="391">
-          <caret line="2051" column="55" selection-start-line="2051" selection-start-column="55" selection-end-line="2051" selection-end-column="55" />
+        <state relative-caret-position="46529">
+          <caret line="2030" column="102" selection-start-line="2030" selection-start-column="102" selection-end-line="2030" selection-end-column="102" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/dsphfc/dsphwidgets.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="989">
+          <caret line="3492" column="30" selection-start-line="3492" selection-start-column="13" selection-end-line="3492" selection-end-column="30" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/DesignSPHysics.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="222">
+          <caret line="2874" lean-forward="true" selection-start-line="2874" selection-end-line="2874" />
+          <folding>
+            <element signature="e#286#300#0" expanded="true" />
+          </folding>
         </state>
       </provider>
     </entry>
