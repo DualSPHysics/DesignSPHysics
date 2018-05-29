@@ -2870,7 +2870,7 @@ def on_flowtool():
         box_edit_name_layout.addWidget(box_edit_name_input)
 
         box_edit_description = QtGui.QLabel(__(
-            "Using multiple boxes with the same\nwill produce only one volume to measure.\nUse that to create prisms and complex forms."))
+            "Using multiple boxes with the same name will produce only one volume to measure.\nUse that to create prisms and complex forms. All points are specified in meters."))
         box_edit_description.setAlignment(QtCore.Qt.AlignCenter)
 
         # Reference image
