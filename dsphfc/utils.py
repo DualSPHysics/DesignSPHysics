@@ -64,7 +64,7 @@ DEBUGGING = True
 VERBOSE = False
 DIVIDER = 1000
 PICKLE_PROTOCOL = 1  # Binary mode
-VERSION = "0.4.1805-24-develop"
+VERSION = "0.4.1805-29-develop"
 WIDTH_2D = 0.001
 MAX_PARTICLE_WARNING = 2000000
 HELP_WEBPAGE = "https://github.com/ndrs92/DesignSPHysics/wiki"
@@ -273,6 +273,21 @@ def check_executables(data):
     else:
         execs_correct = False
         data['boundaryvtk_path'] = ""
+
+    # Tries to identify flowtool
+    if os.path.isfile(data['flowtool_path']):
+        process = QtCore.QProcess(FreeCADGui.getMainWindow())
+        process.start('"{}"'.format(data['flowtool_path']))
+        process.waitForFinished()
+        output = str(process.readAllStandardOutput())
+        if "flowtool" in output.lower():
+            log("Found correct FlowTool.")
+        else:
+            execs_correct = False
+            data['flowtool_path'] = ""
+    else:
+        execs_correct = False
+        data['flowtool_path'] = ""
 
     if not execs_correct:
         bundled_execs_present = are_executables_bundled()
