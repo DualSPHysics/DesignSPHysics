@@ -822,7 +822,7 @@ def dump_to_xml(data, save_name):
                         if (abs(filllimits.Placement.Base.x) + abs(filllimits.Placement.Base.y) + abs(filllimits.Placement.Base.z)) != 0:
                             f.write('\t\t\t\t\t<move x="' + str(filllimits.Placement.Base.x / DIVIDER) + '" y="' + str(filllimits.Placement.Base.y / DIVIDER) +
                                     '" z="' + str(filllimits.Placement.Base.z / DIVIDER) + '" />\n')
-                        if math.degrees(o.Placement.Rotation.Angle) != 0:
+                        if math.degrees(filllimits.Placement.Rotation.Angle) != 0:
                             f.write('\t\t\t\t\t<rotate ang="' + str(math.degrees(
                                 filllimits.Placement.Rotation.Angle)) + '" x="' + str(-filllimits.Placement.Rotation.Axis.x) + '" y="' +
                                 str(-filllimits.Placement.Rotation.Axis.y) + '" z="' + str(-filllimits.Placement.Rotation.Axis.z) + '" />\n')

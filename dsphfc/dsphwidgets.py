@@ -1723,9 +1723,9 @@ class RegularPistonWaveMotionTimeline(QtGui.QWidget):
         self.disksave_periodsteps = QtGui.QLineEdit()
         self.disksave_periodsteps_label = QtGui.QLabel(__("Period Steps: "))
         self.disksave_xpos = QtGui.QLineEdit()
-        self.disksave_xpos_label = QtGui.QLabel(__("X Pos: "))
+        self.disksave_xpos_label = QtGui.QLabel(__("X Pos (m): "))
         self.disksave_zpos = QtGui.QLineEdit()
-        self.disksave_zpos_label = QtGui.QLabel(__("Z Pos: "))
+        self.disksave_zpos_label = QtGui.QLabel(__("Z Pos (m): "))
 
         self.awas_label = QtGui.QLabel(__("AWAS configuration"))
         self.awas_enabled = QtGui.QCheckBox(__("Enabled"))
@@ -1736,7 +1736,7 @@ class RegularPistonWaveMotionTimeline(QtGui.QWidget):
         self.awas_swl_label = QtGui.QLabel(__("Still water level (m): "))
         self.awas_swl_input = QtGui.QLineEdit()
 
-        self.awas_elevation_label = QtGui.QLabel(__("Elevation->Wave Order: "))
+        self.awas_elevation_label = QtGui.QLabel(__("Wave order: "))
         self.awas_elevation_selector = QtGui.QComboBox()
         self.awas_elevation_selector.insertItems(
             0, [__("1st Order"), __("2nd Order")])
@@ -1767,7 +1767,7 @@ class RegularPistonWaveMotionTimeline(QtGui.QWidget):
         self.awas_limitace_label = QtGui.QLabel(__("Limit acceleration: "))
         self.awas_limitace_input = QtGui.QLineEdit()
 
-        self.awas_correction_label = QtGui.QLabel(__("Correction: "))
+        self.awas_correction_label = QtGui.QLabel(__("Drift correction: "))
         self.awas_correction_enabled = QtGui.QCheckBox(__("Enabled"))
 
         self.awas_correction_coefstroke_label = QtGui.QLabel(__("Coefstroke"))
@@ -2131,9 +2131,9 @@ class IrregularPistonWaveMotionTimeline(QtGui.QWidget):
         self.savemotion_timedt_input = QtGui.QLineEdit()
         self.savemotion_timedt_label = QtGui.QLabel(__("DT Time (s): "))
         self.savemotion_xpos_input = QtGui.QLineEdit()
-        self.savemotion_xpos_label = QtGui.QLabel(__("X Pos: "))
+        self.savemotion_xpos_label = QtGui.QLabel(__("X Pos (m): "))
         self.savemotion_zpos_input = QtGui.QLineEdit()
-        self.savemotion_zpos_label = QtGui.QLabel(__("Z Pos: "))
+        self.savemotion_zpos_label = QtGui.QLabel(__("Z Pos (m): "))
 
         self.saveserie_label = QtGui.QLabel(__("Save serie > "))
         self.saveserie_timemin_input = QtGui.QLineEdit()
@@ -2143,7 +2143,7 @@ class IrregularPistonWaveMotionTimeline(QtGui.QWidget):
         self.saveserie_timedt_input = QtGui.QLineEdit()
         self.saveserie_timedt_label = QtGui.QLabel(__("DT Time (s): "))
         self.saveserie_xpos_input = QtGui.QLineEdit()
-        self.saveserie_xpos_label = QtGui.QLabel(__("X Pos: "))
+        self.saveserie_xpos_label = QtGui.QLabel(__("X Pos (m): "))
 
         self.saveseriewaves_label = QtGui.QLabel(__("Save serie waves > "))
         self.saveseriewaves_timemin_input = QtGui.QLineEdit()
@@ -2151,7 +2151,7 @@ class IrregularPistonWaveMotionTimeline(QtGui.QWidget):
         self.saveseriewaves_timemax_input = QtGui.QLineEdit()
         self.saveseriewaves_timemax_label = QtGui.QLabel(__("Max. Time (s): "))
         self.saveseriewaves_xpos_input = QtGui.QLineEdit()
-        self.saveseriewaves_xpos_label = QtGui.QLabel(__("X Pos: "))
+        self.saveseriewaves_xpos_label = QtGui.QLabel(__("X Pos (m): "))
 
         self.awas_label = QtGui.QLabel(__("AWAS configuration"))
         self.awas_enabled = QtGui.QCheckBox(__("Enabled"))
@@ -2162,7 +2162,7 @@ class IrregularPistonWaveMotionTimeline(QtGui.QWidget):
         self.awas_swl_label = QtGui.QLabel(__("Still water level (m): "))
         self.awas_swl_input = QtGui.QLineEdit()
 
-        self.awas_elevation_label = QtGui.QLabel(__("Elevation->Wave Order: "))
+        self.awas_elevation_label = QtGui.QLabel(__("Wave order: "))
         self.awas_elevation_selector = QtGui.QComboBox()
         self.awas_elevation_selector.insertItems(
             0, [__("1st Order"), __("2nd Order")])
@@ -2193,7 +2193,7 @@ class IrregularPistonWaveMotionTimeline(QtGui.QWidget):
         self.awas_limitace_label = QtGui.QLabel(__("Limit acceleration: "))
         self.awas_limitace_input = QtGui.QLineEdit()
 
-        self.awas_correction_label = QtGui.QLabel(__("Correction: "))
+        self.awas_correction_label = QtGui.QLabel(__("Drift correction: "))
         self.awas_correction_enabled = QtGui.QCheckBox(__("Enabled"))
 
         self.awas_correction_coefstroke_label = QtGui.QLabel(__("Coefstroke"))
@@ -2633,9 +2633,9 @@ class RegularFlapWaveMotionTimeline(QtGui.QWidget):
         self.disksave_periodsteps = QtGui.QLineEdit()
         self.disksave_periodsteps_label = QtGui.QLabel(__("Period Steps: "))
         self.disksave_xpos = QtGui.QLineEdit()
-        self.disksave_xpos_label = QtGui.QLabel(__("X Pos: "))
+        self.disksave_xpos_label = QtGui.QLabel(__("X Pos (m): "))
         self.disksave_zpos = QtGui.QLineEdit()
-        self.disksave_zpos_label = QtGui.QLabel(__("Z Pos: "))
+        self.disksave_zpos_label = QtGui.QLabel(__("Z Pos (m): "))
 
         self.root_layout = QtGui.QHBoxLayout()
         self.root_layout.addWidget(self.root_label)
@@ -2871,9 +2871,9 @@ class IrregularFlapWaveMotionTimeline(QtGui.QWidget):
         self.savemotion_timedt_input = QtGui.QLineEdit()
         self.savemotion_timedt_label = QtGui.QLabel(__("DT Time (s): "))
         self.savemotion_xpos_input = QtGui.QLineEdit()
-        self.savemotion_xpos_label = QtGui.QLabel(__("X Pos: "))
+        self.savemotion_xpos_label = QtGui.QLabel(__("X Pos (m): "))
         self.savemotion_zpos_input = QtGui.QLineEdit()
-        self.savemotion_zpos_label = QtGui.QLabel(__("Z Pos: "))
+        self.savemotion_zpos_label = QtGui.QLabel(__("Z Pos (m): "))
 
         self.saveserie_label = QtGui.QLabel(__("Save serie > "))
         self.saveserie_timemin_input = QtGui.QLineEdit()
@@ -2883,7 +2883,7 @@ class IrregularFlapWaveMotionTimeline(QtGui.QWidget):
         self.saveserie_timedt_input = QtGui.QLineEdit()
         self.saveserie_timedt_label = QtGui.QLabel(__("DT Time (s): "))
         self.saveserie_xpos_input = QtGui.QLineEdit()
-        self.saveserie_xpos_label = QtGui.QLabel(__("X Pos: "))
+        self.saveserie_xpos_label = QtGui.QLabel(__("X Pos (m): "))
 
         self.saveseriewaves_label = QtGui.QLabel(__("Save serie waves > "))
         self.saveseriewaves_timemin_input = QtGui.QLineEdit()
@@ -2891,7 +2891,7 @@ class IrregularFlapWaveMotionTimeline(QtGui.QWidget):
         self.saveseriewaves_timemax_input = QtGui.QLineEdit()
         self.saveseriewaves_timemax_label = QtGui.QLabel(__("Max. Time (s): "))
         self.saveseriewaves_xpos_input = QtGui.QLineEdit()
-        self.saveseriewaves_xpos_label = QtGui.QLabel(__("X Pos: "))
+        self.saveseriewaves_xpos_label = QtGui.QLabel(__("X Pos (m): "))
 
         self.root_layout = QtGui.QHBoxLayout()
         self.root_layout.addWidget(self.root_label)

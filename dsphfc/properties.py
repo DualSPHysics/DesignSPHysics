@@ -257,7 +257,7 @@ class AWAS(object):
 class AWASCorrection(object):
     """ AWAS drift correction property """
 
-    def __init__(self, enabled=False, coefstroke=0, coefperiod=0, powerfunc=0):
+    def __init__(self, enabled=False, coefstroke=1.8, coefperiod=1, powerfunc=3):
         self.enabled = enabled
         self.coefstroke = coefstroke
         self.coefperiod = coefperiod
