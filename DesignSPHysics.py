@@ -669,21 +669,21 @@ def on_add_damping_zone():
     limitsv.ArrowType = "Dot"
 
     # Overlimit line
-    points = [FreeCAD.Vector(*limits.Start), FreeCAD.Vector(2000, 2000, 2000)]
-    overlimit = Draft.makeWire(points, closed=False, face=False, support=None)
-    Draft.autogroup(overlimit)
-    overlimit.Label = "Overlimit"
-    overlimitv = FreeCADGui.ActiveDocument.getObject(overlimit.Name)
-    overlimitv.DrawStyle = "Dotted"
-    overlimitv.ShapeColor = (0.32, 1.00, 0.00)
-    overlimitv.LineColor = (0.32, 1.00, 0.00)
-    overlimitv.PointColor = (0.32, 1.00, 0.00)
-    overlimitv.EndArrow = True
-    overlimitv.ArrowSize = "10 mm"
-    overlimitv.ArrowType = "Dot"
+    # points = [FreeCAD.Vector(*limits.Start), FreeCAD.Vector(2000, 2000, 2000)]
+    # overlimit = Draft.makeWire(points, closed=False, face=False, support=None)
+    # Draft.autogroup(overlimit)
+    # overlimit.Label = "Overlimit"
+    # overlimitv = FreeCADGui.ActiveDocument.getObject(overlimit.Name)
+    # overlimitv.DrawStyle = "Dotted"
+    # overlimitv.ShapeColor = (0.32, 1.00, 0.00)
+    # overlimitv.LineColor = (0.32, 1.00, 0.00)
+    # overlimitv.PointColor = (0.32, 1.00, 0.00)
+    # overlimitv.EndArrow = True
+    # overlimitv.ArrowSize = "10 mm"
+    # overlimitv.ArrowType = "Dot"
 
     damping_group.addObject(limits)
-    damping_group.addObject(overlimit)
+    # damping_group.addObject(overlimit)
 
     FreeCAD.ActiveDocument.recompute()
     FreeCADGui.SendMsgToActiveView("ViewFit")
