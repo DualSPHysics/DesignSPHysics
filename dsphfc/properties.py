@@ -767,6 +767,24 @@ class MLPiston1D(object):
         self.smooth = smooth
 
 
+class MLPiston2DVeldata(object):
+    """ VelData attribute for MLPiston2D """
+    def __init__(self, filevelx="", posy=0, timedataini=0):
+        self.filevelx = filevelx
+        self.posy = posy
+        self.timedataini = timedataini
+
+
+class MLPiston2D(object):
+    """ Multi-Layer Pistons using external velocity (for example, from SWASH) """
+
+    def __init__(self, incz=0, smoothz=0, smoothy=0, veldata=None):
+        self.incz = incz
+        self.smoothz = smoothz
+        self.smoothy = smoothy
+        self.veldata = list() if veldata is None else veldata
+
+
 class RelaxationZoneRegular(object):
     """ Relaxation zone for regular wave generation """
 
