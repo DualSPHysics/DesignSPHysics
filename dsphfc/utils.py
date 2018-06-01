@@ -27,6 +27,7 @@ from sys import platform
 from datetime import datetime
 
 import sys
+
 reload(sys)
 sys.setdefaultencoding('utf-8')
 
@@ -37,6 +38,7 @@ import stl
 import os
 from properties import *
 from execution_parameters import *
+
 """
 Copyright (C) 2016 - Andrés Vieira (anvieiravazquez@gmail.com)
 EPHYSLAB Environmental Physics Laboratory, Universidade de Vigo
@@ -68,6 +70,7 @@ VERSION = "0.4.1805-29-develop"
 WIDTH_2D = 0.001
 MAX_PARTICLE_WARNING = 2000000
 HELP_WEBPAGE = "https://github.com/ndrs92/DesignSPHysics/wiki"
+
 
 # ------ END CONSTANTS DEFINITION ------
 
@@ -293,7 +296,8 @@ def check_executables(data):
         bundled_execs_present = are_executables_bundled()
 
         if bundled_execs_present:
-            user_selection = guiutils.ok_cancel_dialog(APP_NAME, "One or more of the executables in the setup is not correct. \n"
+            user_selection = guiutils.ok_cancel_dialog(APP_NAME,
+                                                       "One or more of the executables in the setup is not correct. \n"
                                                        "A DualSPHysics package was detected on your installation. Do you want \n"
                                                        "to load the default configuration?")
             if user_selection == QtGui.QMessageBox.Ok:
@@ -492,6 +496,12 @@ def get_default_data():
     # FlowTool Boxes: [ [id, "name", x1, x2,..., x8], ... ]
     # id is an UUID
     data['flowtool_boxes'] = list()
+
+    # MultiLayer Pistons: {mk: MLPistonObject}
+    data['mlayerpistons'] = dict()
+
+    # Relaxation zones for the case. Can only set one. None means no RZ is set
+    data['relaxationzone'] = None
 
     # Temporal data dict to control execution features.
     temp_data['current_process'] = None
@@ -702,7 +712,8 @@ def dump_to_xml(data, save_name):
     f.write('\t\t<constantsdef>\n')
     f.write('\t\t\t<lattice bound="' +
             str(data['lattice_bound']) + '" fluid="' + str(data['lattice_fluid']) + '" />\n')
-    f.write('\t\t\t<gravity x="' + str(data['gravity'][0]) + '" y="' + str(data['gravity'][1]) + '" z="' + str(data['gravity'][2]) +
+    f.write('\t\t\t<gravity x="' + str(data['gravity'][0]) + '" y="' + str(data['gravity'][1]) + '" z="' + str(
+        data['gravity'][2]) +
             '" comment="Gravitational acceleration" units_comment="m/s^2" />\n')
     f.write('\t\t\t<rhop0 value="' +
             str(data['rhop0']) + '" comment="Reference density of the fluid" units_comment="kg/m^3" />\n')
@@ -711,15 +722,17 @@ def dump_to_xml(data, save_name):
             'units_comment="metres (m)"  />\n')
     f.write('\t\t\t<gamma value="' +
             str(data['gamma']) + '" comment="Polytropic constant for water used in the state equation" />\n')
-    f.write('\t\t\t<speedsystem value="' + str(data['speedsystem']) + '" auto="' + str(data['speedsystem_auto']).lower() +
-            '" comment="Maximum system speed (by default the dam-break propagation is used)" />\n')
+    f.write(
+        '\t\t\t<speedsystem value="' + str(data['speedsystem']) + '" auto="' + str(data['speedsystem_auto']).lower() +
+        '" comment="Maximum system speed (by default the dam-break propagation is used)" />\n')
     f.write('\t\t\t<coefsound value="' +
             str(data['coefsound']) + '" comment="Coefficient to multiply speedsystem" />\n')
     f.write('\t\t\t<speedsound value="' + str(data['speedsound']) + '" auto="' + str(data['speedsound_auto']).lower() +
             '" comment="Speed of sound to use in the simulation '
             '(by default speedofsound=coefsound*speedsystem)" />\n')
     f.write('\t\t\t<coefh value="' +
-            str(data['coefh']) + '" comment="Coefficient to calculate the smoothing length (h=coefh*sqrt(3*dp^2) in 3D)" />\n')
+            str(data[
+                    'coefh']) + '" comment="Coefficient to calculate the smoothing length (h=coefh*sqrt(3*dp^2) in 3D)" />\n')
     f.write('\t\t\t<cflnumber value="' +
             str(data['cflnumber']) + '" comment="Coefficient to multiply dt" />\n')
     f.write('\t\t\t<h value="' + str(data['h']) + '" auto="' + str(
@@ -741,11 +754,15 @@ def dump_to_xml(data, save_name):
     f.write('\t\t\t\t<pointmin x="' + str((min_point.x / DIVIDER)) + '" y="' +
             str((min_point.y / DIVIDER)) + '" z="' + str((min_point.z / DIVIDER)) + '" />\n')
     if data['3dmode']:
-        f.write('\t\t\t\t<pointmax x="' + str((min_point.x / DIVIDER + max_point.Length.Value / DIVIDER)) + '" y="' + str(
-            (min_point.y / DIVIDER + max_point.Width.Value / DIVIDER)) + '" z="' + str((min_point.z / DIVIDER + max_point.Height.Value / DIVIDER)) + '" />\n')
+        f.write(
+            '\t\t\t\t<pointmax x="' + str((min_point.x / DIVIDER + max_point.Length.Value / DIVIDER)) + '" y="' + str(
+                (min_point.y / DIVIDER + max_point.Width.Value / DIVIDER)) + '" z="' + str(
+                (min_point.z / DIVIDER + max_point.Height.Value / DIVIDER)) + '" />\n')
     else:
-        f.write('\t\t\t\t<pointmax x="' + str((min_point.x / DIVIDER + max_point.Length.Value / DIVIDER)) + '" y="' + str((min_point.y / DIVIDER)) + '" z="' +
-                str((min_point.z / DIVIDER + max_point.Height.Value / DIVIDER)) + '" />\n')
+        f.write(
+            '\t\t\t\t<pointmax x="' + str((min_point.x / DIVIDER + max_point.Length.Value / DIVIDER)) + '" y="' + str(
+                (min_point.y / DIVIDER)) + '" z="' +
+            str((min_point.z / DIVIDER + max_point.Height.Value / DIVIDER)) + '" />\n')
     f.write('\t\t\t</definition>\n')
     f.write('\t\t\t<commands>\n')
     f.write('\t\t\t\t<mainlist>\n')
@@ -773,23 +790,28 @@ def dump_to_xml(data, save_name):
             The rest of the things are exported in STL format."""
             if o.TypeId == "Part::Box":
                 if (abs(o.Placement.Base.x) + abs(o.Placement.Base.y) + abs(o.Placement.Base.z)) != 0:
-                    f.write('\t\t\t\t\t<move x="' + str(o.Placement.Base.x / DIVIDER) + '" y="' + str(o.Placement.Base.y / DIVIDER) + '" z="' + str(
+                    f.write('\t\t\t\t\t<move x="' + str(o.Placement.Base.x / DIVIDER) + '" y="' + str(
+                        o.Placement.Base.y / DIVIDER) + '" z="' + str(
                         o.Placement.Base.z / DIVIDER) + '" />\n')
                 if math.degrees(o.Placement.Rotation.Angle) != 0:
-                    f.write('\t\t\t\t\t<rotate ang="' + str(math.degrees(o.Placement.Rotation.Angle)) + '" x="' + str(-o.Placement.Rotation.Axis.x) + '" y="' +
+                    f.write('\t\t\t\t\t<rotate ang="' + str(math.degrees(o.Placement.Rotation.Angle)) + '" x="' + str(
+                        -o.Placement.Rotation.Axis.x) + '" y="' +
                             str(-o.Placement.Rotation.Axis.y) + '" z="' + str(-o.Placement.Rotation.Axis.z) + '" />\n')
                 f.write('\t\t\t\t\t<drawbox objname="{}">\n'.format(o.Label))
                 f.write('\t\t\t\t\t\t<boxfill>solid</boxfill>\n')
                 f.write('\t\t\t\t\t\t<point x="0" y="0" z="0" />\n')
-                f.write('\t\t\t\t\t\t<size x="' + str(o.Length.Value / DIVIDER) + '" y="' + str(o.Width.Value / DIVIDER) + '" z="' + str(
+                f.write('\t\t\t\t\t\t<size x="' + str(o.Length.Value / DIVIDER) + '" y="' + str(
+                    o.Width.Value / DIVIDER) + '" z="' + str(
                     o.Height.Value / DIVIDER) + '" />\n')
                 f.write('\t\t\t\t\t</drawbox>\n')
             elif o.TypeId == "Part::Sphere":
                 if (abs(o.Placement.Base.x) + abs(o.Placement.Base.y) + abs(o.Placement.Base.z)) != 0:
-                    f.write('\t\t\t\t\t<move x="' + str(o.Placement.Base.x / DIVIDER) + '" y="' + str(o.Placement.Base.y / DIVIDER) + '" z="' + str(
+                    f.write('\t\t\t\t\t<move x="' + str(o.Placement.Base.x / DIVIDER) + '" y="' + str(
+                        o.Placement.Base.y / DIVIDER) + '" z="' + str(
                         o.Placement.Base.z / DIVIDER) + '" />\n')
                 if math.degrees(o.Placement.Rotation.Angle) != 0:
-                    f.write('\t\t\t\t\t<rotate ang="' + str(math.degrees(o.Placement.Rotation.Angle)) + '" x="' + str(-o.Placement.Rotation.Axis.x) + '" y="' +
+                    f.write('\t\t\t\t\t<rotate ang="' + str(math.degrees(o.Placement.Rotation.Angle)) + '" x="' + str(
+                        -o.Placement.Rotation.Axis.x) + '" y="' +
                             str(-o.Placement.Rotation.Axis.y) + '" z="' + str(-o.Placement.Rotation.Axis.z) + '" />\n')
                 f.write('\t\t\t\t\t<drawsphere radius="' + str(o.Radius.Value /
                                                                DIVIDER) + '"  objname="{}">\n'.format(o.Label))
@@ -797,10 +819,12 @@ def dump_to_xml(data, save_name):
                 f.write('\t\t\t\t\t</drawsphere>\n')
             elif o.TypeId == "Part::Cylinder":
                 if (abs(o.Placement.Base.x) + abs(o.Placement.Base.y) + abs(o.Placement.Base.z)) != 0:
-                    f.write('\t\t\t\t\t<move x="' + str(o.Placement.Base.x / DIVIDER) + '" y="' + str(o.Placement.Base.y / DIVIDER) + '" z="' + str(
+                    f.write('\t\t\t\t\t<move x="' + str(o.Placement.Base.x / DIVIDER) + '" y="' + str(
+                        o.Placement.Base.y / DIVIDER) + '" z="' + str(
                         o.Placement.Base.z / DIVIDER) + '" />\n')
                 if math.degrees(o.Placement.Rotation.Angle) != 0:
-                    f.write('\t\t\t\t\t<rotate ang="' + str(math.degrees(o.Placement.Rotation.Angle)) + '" x="' + str(-o.Placement.Rotation.Axis.x) + '" y="' +
+                    f.write('\t\t\t\t\t<rotate ang="' + str(math.degrees(o.Placement.Rotation.Angle)) + '" x="' + str(
+                        -o.Placement.Rotation.Axis.x) + '" y="' +
                             str(-o.Placement.Rotation.Axis.y) + '" z="' + str(-o.Placement.Rotation.Axis.z) + '" />\n')
                 f.write('\t\t\t\t\t<drawcylinder radius="' + str(o.Radius.Value /
                                                                  DIVIDER) + '" objname="{}">\n'.format(o.Label))
@@ -819,19 +843,27 @@ def dump_to_xml(data, save_name):
                         elif "fillpoint" in element.Name.lower():
                             fillpoint = element
                     if filllimits and fillpoint:
-                        if (abs(filllimits.Placement.Base.x) + abs(filllimits.Placement.Base.y) + abs(filllimits.Placement.Base.z)) != 0:
-                            f.write('\t\t\t\t\t<move x="' + str(filllimits.Placement.Base.x / DIVIDER) + '" y="' + str(filllimits.Placement.Base.y / DIVIDER) +
+                        if (abs(filllimits.Placement.Base.x) + abs(filllimits.Placement.Base.y) + abs(
+                                filllimits.Placement.Base.z)) != 0:
+                            f.write('\t\t\t\t\t<move x="' + str(filllimits.Placement.Base.x / DIVIDER) + '" y="' + str(
+                                filllimits.Placement.Base.y / DIVIDER) +
                                     '" z="' + str(filllimits.Placement.Base.z / DIVIDER) + '" />\n')
                         if math.degrees(filllimits.Placement.Rotation.Angle) != 0:
                             f.write('\t\t\t\t\t<rotate ang="' + str(math.degrees(
-                                filllimits.Placement.Rotation.Angle)) + '" x="' + str(-filllimits.Placement.Rotation.Axis.x) + '" y="' +
-                                str(-filllimits.Placement.Rotation.Axis.y) + '" z="' + str(-filllimits.Placement.Rotation.Axis.z) + '" />\n')
-                        f.write('\t\t\t\t\t<fillbox x="' + str((fillpoint.Placement.Base.x - filllimits.Placement.Base.x) / DIVIDER) + '" y="' + str(
+                                filllimits.Placement.Rotation.Angle)) + '" x="' + str(
+                                -filllimits.Placement.Rotation.Axis.x) + '" y="' +
+                                    str(-filllimits.Placement.Rotation.Axis.y) + '" z="' + str(
+                                -filllimits.Placement.Rotation.Axis.z) + '" />\n')
+                        f.write('\t\t\t\t\t<fillbox x="' + str(
+                            (fillpoint.Placement.Base.x - filllimits.Placement.Base.x) / DIVIDER) + '" y="' + str(
                             (fillpoint.Placement.Base.y - filllimits.Placement.Base.y) / DIVIDER) + '" z="' + str(
-                                (fillpoint.Placement.Base.z - filllimits.Placement.Base.z) / DIVIDER) + '" objname="{}">\n'.format(o.Label))
+                            (
+                                    fillpoint.Placement.Base.z - filllimits.Placement.Base.z) / DIVIDER) + '" objname="{}">\n'.format(
+                            o.Label))
                         f.write('\t\t\t\t\t\t<modefill>void</modefill>\n')
                         f.write('\t\t\t\t\t\t<point x="0" y="0" z="0" />\n')
-                        f.write('\t\t\t\t\t\t<size x="' + str(filllimits.Length.Value / DIVIDER) + '" y="' + str(filllimits.Width.Value / DIVIDER) + '" z="' +
+                        f.write('\t\t\t\t\t\t<size x="' + str(filllimits.Length.Value / DIVIDER) + '" y="' + str(
+                            filllimits.Width.Value / DIVIDER) + '" z="' +
                                 str(filllimits.Height.Value / DIVIDER) + '" />\n')
                         f.write('\t\t\t\t\t\t<matrixreset />\n')
                         f.write('\t\t\t\t\t</fillbox>\n')
@@ -864,7 +896,8 @@ def dump_to_xml(data, save_name):
     if len(data["initials_mks"].keys()) > 0:
         f.write('\t\t<initials>\n')
         for key, value in data["initials_mks"].iteritems():
-            f.write('\t\t\t<velocity mkfluid="' + str(key) + '" x="' + str(value.force[0]) + '" y="' + str(value.force[1]) + '" z="' + str(value.force[2]) +
+            f.write('\t\t\t<velocity mkfluid="' + str(key) + '" x="' + str(value.force[0]) + '" y="' + str(
+                value.force[1]) + '" z="' + str(value.force[2]) +
                     '"/>\n')
         f.write('\t\t</initials>\n')
     # Writes floatings
@@ -881,26 +914,36 @@ def dump_to_xml(data, save_name):
                 f.write('\t\t\t<floating mkbound="' + str(key) +
                         '" rhopbody="' + str(value.mass_density_value) + '">\n')
             if len(value.gravity_center) != 0:
-                f.write('\t\t\t\t<center x="' + str(value.gravity_center[0]) + '" y="' + str(value.gravity_center[1]) + '" z="' + str(value.gravity_center[2]) +
+                f.write('\t\t\t\t<center x="' + str(value.gravity_center[0]) + '" y="' + str(
+                    value.gravity_center[1]) + '" z="' + str(value.gravity_center[2]) +
                         '" />\n')
             if len(value.inertia) != 0:
                 f.write('\t\t\t\t<inertia x="' + str(value.inertia[0]) + '" y="' + str(
                     value.inertia[1]) + '" z="' + str(value.inertia[2]) + '" />\n')
             if len(value.initial_linear_velocity) != 0:
-                f.write('\t\t\t\t<velini x="' + str(value.initial_linear_velocity[0]) + '" y="' + str(value.initial_linear_velocity[1]) + '" z="' + str(
+                f.write('\t\t\t\t<velini x="' + str(value.initial_linear_velocity[0]) + '" y="' + str(
+                    value.initial_linear_velocity[1]) + '" z="' + str(
                     value.initial_linear_velocity[2]) + '" />\n')
             if len(value.initial_angular_velocity) != 0:
-                f.write('\t\t\t\t<omegaini x="' + str(value.initial_angular_velocity[0]) + '" y="' + str(value.initial_angular_velocity[1]) + '" z="' + str(
+                f.write('\t\t\t\t<omegaini x="' + str(value.initial_angular_velocity[0]) + '" y="' + str(
+                    value.initial_angular_velocity[1]) + '" z="' + str(
                     value.initial_angular_velocity[2]) + '" />\n')
             f.write('\t\t\t</floating>\n')
         f.write('\t\t</floatings>\n')
 
     # Writes motions
-    if len(data["motion_mks"]) > 0:
+    if len(data["motion_mks"]) > 0 or len(data['mlayerpistons'].keys()) > 0:
         f.write('\t\t<motion>\n')
+        mov_counter = 1
+        for key, value in data['mlayerpistons'].iteritems():
+            f.write('\t\t\t<objreal ref="' + str(key) + '">\n')
+            f.write('\t\t\t\t<begin mov="{}" start="0"/>\n'.format(mov_counter))
+            f.write('\t\t\t\t<mvnull id="{}" />\n'.format(mov_counter))
+            f.write('\t\t\t</objreal>\n')
+            mov_counter += 1
+
         for key, value in data["motion_mks"].iteritems():
             f.write('\t\t\t<objreal ref="' + str(key) + '">\n')
-            mov_counter = 1
             mot_counter = 1
             for movement in value:
                 f.write('\t\t\t\t<!-- Movement Name: {} -->\n'.format(movement.name))
@@ -1041,14 +1084,16 @@ def dump_to_xml(data, save_name):
                                 except AttributeError:
                                     is_looping = False
                                 if is_looping:
-                                    f.write('\t\t\t\t<mvrotsinu id="{}" duration="{}" anglesunits="radians" next="{}" >\n'.format(
-                                        mot_counter, motion.duration, first_series_motion))
+                                    f.write(
+                                        '\t\t\t\t<mvrotsinu id="{}" duration="{}" anglesunits="radians" next="{}" >\n'.format(
+                                            mot_counter, motion.duration, first_series_motion))
                                 else:
                                     f.write('\t\t\t\t<mvrotsinu id="{}" duration="{}" anglesunits="radians">\n'.format(
                                         mot_counter, motion.duration))
                             else:
-                                f.write('\t\t\t\t<mvrotsinu id="{}" duration="{}" anglesunits="radians" next="{}">\n'.format(
-                                    mot_counter, motion.duration, mot_counter + 1))
+                                f.write(
+                                    '\t\t\t\t<mvrotsinu id="{}" duration="{}" anglesunits="radians" next="{}">\n'.format(
+                                        mot_counter, motion.duration, mot_counter + 1))
 
                             f.write(
                                 '\t\t\t\t\t<freq v="{}"/>\n'.format(motion.freq))
@@ -1120,11 +1165,15 @@ def dump_to_xml(data, save_name):
                         f.write('\t\t\t\t<mvfile id="{}" duration="{}">\n '.format(
                             mov_counter, movement.generator.duration))
                         f.write('\t\t\t\t\t<file name="{}" fields="{}" fieldtime="{}" '
-                                'fieldx="{}" fieldy="{}" />\n '.format(movement.generator.filename, movement.generator.fields, movement.generator.fieldtime,
-                                                                       movement.generator.fieldx, movement.generator.fieldy))
+                                'fieldx="{}" fieldy="{}" />\n '.format(movement.generator.filename,
+                                                                       movement.generator.fields,
+                                                                       movement.generator.fieldtime,
+                                                                       movement.generator.fieldx,
+                                                                       movement.generator.fieldy))
                         f.write('\t\t\t\t</mvfile>\n ')
                     elif isinstance(movement.generator, RotationFileGen):
-                        f.write('\t\t\t\t<mvrotfile id="{}" duration="{}" anglesunits="{}">\n '.format(mov_counter, movement.generator.duration,
+                        f.write('\t\t\t\t<mvrotfile id="{}" duration="{}" anglesunits="{}">\n '.format(mov_counter,
+                                                                                                       movement.generator.duration,
                                                                                                        movement.generator.anglesunits))
                         f.write(
                             '\t\t\t\t\t<file name="{}" />\n '.format(movement.generator.filename))
@@ -1145,29 +1194,30 @@ def dump_to_xml(data, save_name):
 
     f.write('\t\t<special>\n')
     # Damping support
-    f.write('\t\t\t\t<damping>\n')
-    for objname, damping_object in data["damping"].iteritems():
-        fc_obj = FreeCAD.ActiveDocument.getObject(objname)
-        if fc_obj is not None and damping_object.enabled:
-            f.write('\t\t\t\t\t<dampingzone>\n')
-            f.write(
-                '\t\t\t\t\t\t<limitmin x="{}" y="{}" z="{}" />\n'.format(
-                    str(fc_obj.Placement.Base.x / DIVIDER),
-                    str(fc_obj.Placement.Base.y / DIVIDER),
-                    str(fc_obj.Placement.Base.z / DIVIDER)
-                ))
-            f.write(
-                '\t\t\t\t\t\t<limitmax x="{}" y="{}" z="{}" />\n'.format(
-                    str(fc_obj.Length.Value / DIVIDER),
-                    str(fc_obj.Width.Value / DIVIDER),
-                    str(fc_obj.Height.Value / DIVIDER)
-                ))
-            f.write(
-                '\t\t\t\t\t\t<overlimit value="{}" />\n'.format(damping_object.overlimit))
-            f.write(
-                '\t\t\t\t\t\t<redumax value="{}" />\n'.format(damping_object.redumax))
-            f.write('\t\t\t\t\t</dampingzone>\n')
-    f.write('\t\t\t\t</damping>\n')
+    if len(data['damping']) > 0:
+        f.write('\t\t\t<damping>\n')
+        for objname, damping_object in data["damping"].iteritems():
+            fc_obj = FreeCAD.ActiveDocument.getObject(objname)
+            if fc_obj is not None and damping_object.enabled:
+                f.write('\t\t\t\t<dampingzone>\n')
+                f.write(
+                    '\t\t\t\t\t<limitmin x="{}" y="{}" z="{}" />\n'.format(
+                        str(fc_obj.OutList[0].Start[0] / DIVIDER),
+                        str(fc_obj.OutList[0].Start[1] / DIVIDER),
+                        str(fc_obj.OutList[0].Start[2] / DIVIDER)
+                    ))
+                f.write(
+                    '\t\t\t\t\t<limitmax x="{}" y="{}" z="{}" />\n'.format(
+                        str(fc_obj.OutList[0].End[0] / DIVIDER),
+                        str(fc_obj.OutList[0].End[1] / DIVIDER),
+                        str(fc_obj.OutList[0].End[2] / DIVIDER)
+                    ))
+                f.write(
+                    '\t\t\t\t\t<overlimit value="{}" />\n'.format(damping_object.overlimit))
+                f.write(
+                    '\t\t\t\t\t<redumax value="{}" />\n'.format(damping_object.redumax))
+                f.write('\t\t\t\t</dampingzone>\n')
+        f.write('\t\t\t</damping>\n')
 
     # A counter for special movements. Controls when and how to open/close tags
     written_movements_counter = 0
@@ -1182,256 +1232,390 @@ def dump_to_xml(data, save_name):
 
             # Open tags only for the first movement
             if written_movements_counter == 0:
-                f.write('\t\t\t\t<wavepaddles>\n')
+                f.write('\t\t\t<wavepaddles>\n')
 
             if isinstance(mot, RegularPistonWaveGen):
-                f.write('\t\t\t\t\t<piston>\n')
+                f.write('\t\t\t\t<piston>\n')
                 f.write(
-                    '\t\t\t\t\t\t<mkbound value="{}" comment="Mk-Bound of selected particles" />\n'.format(mk))
-                f.write('\t\t\t\t\t\t<waveorder value="{}" ' 'comment="Order wave generation 1:1st order, 2:2nd order (def=1)" />\n'.format(mot.wave_order))
+                    '\t\t\t\t\t<mkbound value="{}" comment="Mk-Bound of selected particles" />\n'.format(mk))
                 f.write(
-                    '\t\t\t\t\t\t<start value="{}" comment="Start time (def=0)" />\n'.format(mot.start))
+                    '\t\t\t\t\t<waveorder value="{}" ' 'comment="Order wave generation 1:1st order, 2:2nd order (def=1)" />\n'.format(
+                        mot.wave_order))
                 f.write(
-                    '\t\t\t\t\t\t<duration value="{}" ' 'comment="Movement duration, Zero is the end of simulation (def=0)" />\n'.format(mot.duration))
+                    '\t\t\t\t\t<start value="{}" comment="Start time (def=0)" />\n'.format(mot.start))
                 f.write(
-                    '\t\t\t\t\t\t<depth value="{}" comment="Fluid depth (def=0)" />\n'.format(mot.depth))
+                    '\t\t\t\t\t<duration value="{}" ' 'comment="Movement duration, Zero is the end of simulation (def=0)" />\n'.format(
+                        mot.duration))
                 f.write(
-                    '\t\t\t\t\t\t<pistondir x="{}" y="{}" z="{}" ' 'comment="Movement direction (def=(1,0,0))" />\n'.format(*mot.piston_dir))
+                    '\t\t\t\t\t<depth value="{}" comment="Fluid depth (def=0)" />\n'.format(mot.depth))
                 f.write(
-                    '\t\t\t\t\t\t<waveheight value="{}" comment="Wave height" />\n'.format(mot.wave_height))
+                    '\t\t\t\t\t<pistondir x="{}" y="{}" z="{}" ' 'comment="Movement direction (def=(1,0,0))" />\n'.format(
+                        *mot.piston_dir))
                 f.write(
-                    '\t\t\t\t\t\t<waveperiod value="{}" comment="Wave period" />\n'.format(mot.wave_period))
+                    '\t\t\t\t\t<waveheight value="{}" comment="Wave height" />\n'.format(mot.wave_height))
                 f.write(
-                    '\t\t\t\t\t\t<phase value="{}" ' 'comment="Initial wave phase in function of PI (def=0)" />\n'.format(mot.phase))
+                    '\t\t\t\t\t<waveperiod value="{}" comment="Wave period" />\n'.format(mot.wave_period))
                 f.write(
-                    '\t\t\t\t\t\t<ramp value="{}" comment="Periods of ramp (def=0)" />\n'.format(mot.ramp))
-                f.write('\t\t\t\t\t\t<savemotion periods="{}" periodsteps="{}" xpos="{}" zpos="{}" '
+                    '\t\t\t\t\t<phase value="{}" ' 'comment="Initial wave phase in function of PI (def=0)" />\n'.format(
+                        mot.phase))
+                f.write(
+                    '\t\t\t\t\t<ramp value="{}" comment="Periods of ramp (def=0)" />\n'.format(mot.ramp))
+                f.write('\t\t\t\t\t<savemotion periods="{}" periodsteps="{}" xpos="{}" zpos="{}" '
                         'comment="Saves motion data. xpos and zpos are optional. '
-                        'zpos=-depth of the measuring point" />\n'.format(mot.disksave_periods, mot.disksave_periodsteps, mot.disksave_xpos, mot.disksave_zpos))
+                        'zpos=-depth of the measuring point" />\n'.format(mot.disksave_periods,
+                                                                          mot.disksave_periodsteps, mot.disksave_xpos,
+                                                                          mot.disksave_zpos))
                 if mot.awas.enabled:
-                    f.write('\t\t\t\t\t\t<awas_zsurf>\n')
-                    f.write('\t\t\t\t\t\t\t<startawas value = "{}" comment = "Time to start AWAS correction (def=ramp*waveperiod)" />\n'.format(
-                        float(mot.awas.startawas)
-                    ))
-                    f.write('\t\t\t\t\t\t\t<swl value = "{}" comment = "Still water level (free-surface water)" />\n'.format(
-                        float(mot.awas.swl)
-                    ))
-                    f.write('\t\t\t\t\t\t\t<elevation value = "{}" comment = "Order wave to calculate elevation 1:1st order, 2:2nd order (def=2)" />\n'.format(
-                        int(mot.awas.elevation)
-                    ))
-                    f.write('\t\t\t\t\t\t\t<gaugex valueh = "{}" comment = "Position in X from piston to measure free-surface water (def=5*Dp)" />\n'.format(
-                        float(mot.awas.gaugex)
-                    ))
+                    f.write('\t\t\t\t\t<awas_zsurf>\n')
                     f.write(
-                        '\t\t\t\t\t\t\t<gaugey value = "{}" comment = "Position in Y to measure free-surface water" />\n'.format(
+                        '\t\t\t\t\t\t<startawas value = "{}" comment = "Time to start AWAS correction (def=ramp*waveperiod)" />\n'.format(
+                            float(mot.awas.startawas)
+                        ))
+                    f.write(
+                        '\t\t\t\t\t\t<swl value = "{}" comment = "Still water level (free-surface water)" />\n'.format(
+                            float(mot.awas.swl)
+                        ))
+                    f.write(
+                        '\t\t\t\t\t\t<elevation value = "{}" comment = "Order wave to calculate elevation 1:1st order, 2:2nd order (def=2)" />\n'.format(
+                            int(mot.awas.elevation)
+                        ))
+                    f.write(
+                        '\t\t\t\t\t\t<gaugex valueh = "{}" comment = "Position in X from piston to measure free-surface water (def=5*Dp)" />\n'.format(
+                            float(mot.awas.gaugex)
+                        ))
+                    f.write(
+                        '\t\t\t\t\t\t<gaugey value = "{}" comment = "Position in Y to measure free-surface water" />\n'.format(
                             float(mot.awas.gaugey)
                         ))
-                    f.write('\t\t\t\t\t\t\t<gaugezmin value = "{}" comment = "Minimum position in Z to measure free-surface water, it must be in water (def=domain limits)" />\n'.format(
-                        float(mot.awas.gaugezmin)
-                    ))
-                    f.write('\t\t\t\t\t\t\t<gaugezmax value = "{}" comment = "Maximum position in Z to measure free-surface water (def=domain limits)" />\n'.format(
-                        float(mot.awas.gaugezmax)
-                    ))
-                    f.write('\t\t\t\t\t\t\t<gaugedp value = "{}" comment = "Resolution to measure free-surface water, it uses Dp*gaugedp (def=0.1)" />\n'.format(
-                        float(mot.awas.gaugedp)
-                    ))
-                    f.write('\t\t\t\t\t\t\t<coefmasslimit value = "{}" comment = "Coefficient to calculate mass of free-surface (def=0.5 on 3D and 0.4 on 2D)" />\n'.format(
-                        float(mot.awas.coefmasslimit)
-                    ))
-                    f.write('\t\t\t\t\t\t\t<savedata value = "{}" comment = "Saves CSV with information 1:by part, 2:more info 3:by step (def=0)" />\n'.format(
-                        int(mot.awas.savedata)
-                    ))
-                    f.write('\t\t\t\t\t\t\t<limitace value = "{}" comment = "Factor to limit maximum value of acceleration, with 0 disabled (def=2)" />\n'.format(
-                        float(mot.awas.limitace)
-                    ))
-                    f.write('\t\t\t\t\t\t\t<{}correction coefstroke = "{}" coefperiod = "{}" powerfunc = "{}" comment = "Drift correction configuration (def=no applied)" />\n'.format(
-                        "" if mot.awas.correction.enabled else "_",
-                        float(mot.awas.correction.coefstroke),
-                        float(mot.awas.correction.coefperiod),
-                        float(mot.awas.correction.powerfunc)
-                    ))
-                    f.write('\t\t\t\t\t\t</awas_zsurf>\n')
-                f.write('\t\t\t\t\t</piston>\n')
+                    f.write(
+                        '\t\t\t\t\t\t<gaugezmin value = "{}" comment = "Minimum position in Z to measure free-surface water, it must be in water (def=domain limits)" />\n'.format(
+                            float(mot.awas.gaugezmin)
+                        ))
+                    f.write(
+                        '\t\t\t\t\t\t<gaugezmax value = "{}" comment = "Maximum position in Z to measure free-surface water (def=domain limits)" />\n'.format(
+                            float(mot.awas.gaugezmax)
+                        ))
+                    f.write(
+                        '\t\t\t\t\t\t<gaugedp value = "{}" comment = "Resolution to measure free-surface water, it uses Dp*gaugedp (def=0.1)" />\n'.format(
+                            float(mot.awas.gaugedp)
+                        ))
+                    f.write(
+                        '\t\t\t\t\t\t<coefmasslimit value = "{}" comment = "Coefficient to calculate mass of free-surface (def=0.5 on 3D and 0.4 on 2D)" />\n'.format(
+                            float(mot.awas.coefmasslimit)
+                        ))
+                    f.write(
+                        '\t\t\t\t\t\t<savedata value = "{}" comment = "Saves CSV with information 1:by part, 2:more info 3:by step (def=0)" />\n'.format(
+                            int(mot.awas.savedata)
+                        ))
+                    f.write(
+                        '\t\t\t\t\t\t<limitace value = "{}" comment = "Factor to limit maximum value of acceleration, with 0 disabled (def=2)" />\n'.format(
+                            float(mot.awas.limitace)
+                        ))
+                    f.write(
+                        '\t\t\t\t\t\t<{}correction coefstroke = "{}" coefperiod = "{}" powerfunc = "{}" comment = "Drift correction configuration (def=no applied)" />\n'.format(
+                            "" if mot.awas.correction.enabled else "_",
+                            float(mot.awas.correction.coefstroke),
+                            float(mot.awas.correction.coefperiod),
+                            float(mot.awas.correction.powerfunc)
+                        ))
+                    f.write('\t\t\t\t\t</awas_zsurf>\n')
+                f.write('\t\t\t\t</piston>\n')
                 written_movements_counter += 1
 
             elif isinstance(mot, IrregularPistonWaveGen):
-                f.write('\t\t\t\t\t<piston_spectrum>\n')
+                f.write('\t\t\t\t<piston_spectrum>\n')
                 f.write(
-                    '\t\t\t\t\t\t<mkbound value="{}" comment="Mk-Bound of selected particles" />\n'.format(mk))
-                f.write('\t\t\t\t\t\t<waveorder value="{}" ' 'comment="Order wave generation 1:1st order, 2:2nd order (def=1)" />\n'.format(mot.wave_order))
+                    '\t\t\t\t\t<mkbound value="{}" comment="Mk-Bound of selected particles" />\n'.format(mk))
                 f.write(
-                    '\t\t\t\t\t\t<start value="{}" comment="Start time (def=0)" />\n'.format(mot.start))
+                    '\t\t\t\t\t<waveorder value="{}" ' 'comment="Order wave generation 1:1st order, 2:2nd order (def=1)" />\n'.format(
+                        mot.wave_order))
                 f.write(
-                    '\t\t\t\t\t\t<duration value="{}" ' 'comment="Movement duration, Zero is the end of simulation (def=0)" />\n'.format(mot.duration))
+                    '\t\t\t\t\t<start value="{}" comment="Start time (def=0)" />\n'.format(mot.start))
                 f.write(
-                    '\t\t\t\t\t\t<depth value="{}" comment="Fluid depth (def=0)" />\n'.format(mot.depth))
+                    '\t\t\t\t\t<duration value="{}" ' 'comment="Movement duration, Zero is the end of simulation (def=0)" />\n'.format(
+                        mot.duration))
                 f.write(
-                    '\t\t\t\t\t\t<fixeddepth value="{}" ' 'comment="Fluid depth without paddle (def=0)" />\n'.format(mot.fixed_depth))
+                    '\t\t\t\t\t<depth value="{}" comment="Fluid depth (def=0)" />\n'.format(mot.depth))
                 f.write(
-                    '\t\t\t\t\t\t<pistondir x="{}" y="{}" z="{}" ' 'comment="Movement direction (def=(1,0,0))" />\n'.format(*mot.piston_dir))
-                f.write('\t\t\t\t\t\t<spectrum value="{}" '
-                        'comment="Spectrum type: jonswap,pierson-moskowitz" />\n'.format(['jonswap', 'pierson-moskowitz'][mot.spectrum]))
-                f.write('\t\t\t\t\t\t<discretization value="{}" '
+                    '\t\t\t\t\t<fixeddepth value="{}" ' 'comment="Fluid depth without paddle (def=0)" />\n'.format(
+                        mot.fixed_depth))
+                f.write(
+                    '\t\t\t\t\t<pistondir x="{}" y="{}" z="{}" ' 'comment="Movement direction (def=(1,0,0))" />\n'.format(
+                        *mot.piston_dir))
+                f.write('\t\t\t\t\t<spectrum value="{}" '
+                        'comment="Spectrum type: jonswap,pierson-moskowitz" />\n'.format(
+                    ['jonswap', 'pierson-moskowitz'][mot.spectrum]))
+                f.write('\t\t\t\t\t<discretization value="{}" '
                         'comment="Spectrum discretization: regular,random,stretched,cosstretched '
-                        '(def=stretched)" />\n'.format(['regular', 'random', 'stretched', 'cosstretched'][mot.discretization]))
+                        '(def=stretched)" />\n'.format(
+                    ['regular', 'random', 'stretched', 'cosstretched'][mot.discretization]))
                 f.write(
-                    '\t\t\t\t\t\t<waveheight value="{}" comment="Wave height" />\n'.format(mot.wave_height))
+                    '\t\t\t\t\t<waveheight value="{}" comment="Wave height" />\n'.format(mot.wave_height))
                 f.write(
-                    '\t\t\t\t\t\t<waveperiod value="{}" comment="Wave period" />\n'.format(mot.wave_period))
+                    '\t\t\t\t\t<waveperiod value="{}" comment="Wave period" />\n'.format(mot.wave_period))
                 f.write(
-                    '\t\t\t\t\t\t<peakcoef value="{}" comment="Peak enhancement coefficient (def=3.3)" />\n'.format(mot.peak_coef))
+                    '\t\t\t\t\t<peakcoef value="{}" comment="Peak enhancement coefficient (def=3.3)" />\n'.format(
+                        mot.peak_coef))
                 f.write(
-                    '\t\t\t\t\t\t<waves value="{}" ' 'comment="Number of waves to create irregular waves (def=50)" />\n'.format(mot.waves))
-                f.write('\t\t\t\t\t\t<randomseed value="{}" ' 'comment="Random seed to initialize a pseudorandom number generator" />\n'.format(mot.randomseed))
-                f.write('\t\t\t\t\t\t<serieini value="{}" autofit="{}" '
+                    '\t\t\t\t\t<waves value="{}" ' 'comment="Number of waves to create irregular waves (def=50)" />\n'.format(
+                        mot.waves))
+                f.write(
+                    '\t\t\t\t\t<randomseed value="{}" ' 'comment="Random seed to initialize a pseudorandom number generator" />\n'.format(
+                        mot.randomseed))
+                f.write('\t\t\t\t\t<serieini value="{}" autofit="{}" '
                         'comment="Initial time in irregular wave serie (default=0 and autofit=false)" />\n'.format(
-                            mot.serieini, str(mot.serieini_autofit).lower()))
+                    mot.serieini, str(mot.serieini_autofit).lower()))
                 f.write(
-                    '\t\t\t\t\t\t<ramptime value="{}" comment="Time of ramp (def=0)" />\n'.format(mot.ramptime))
-                f.write('\t\t\t\t\t\t<savemotion time="{}" timedt="{}" xpos="{}" zpos="{}" '
+                    '\t\t\t\t\t<ramptime value="{}" comment="Time of ramp (def=0)" />\n'.format(mot.ramptime))
+                f.write('\t\t\t\t\t<savemotion time="{}" timedt="{}" xpos="{}" zpos="{}" '
                         'comment="Saves motion data. xpos and zpos are optional. '
-                        'zpos=-depth of the measuring point" />\n'.format(mot.savemotion_time, mot.savemotion_timedt, mot.savemotion_xpos, mot.savemotion_zpos))
-                f.write('\t\t\t\t\t\t<saveserie timemin="{}" timemax="{}" timedt="{}" xpos="{}"'
-                        ' comment="Saves serie data (optional)" />\n'.format(mot.saveserie_timemin, mot.saveserie_timemax, mot.saveserie_timedt,
+                        'zpos=-depth of the measuring point" />\n'.format(mot.savemotion_time, mot.savemotion_timedt,
+                                                                          mot.savemotion_xpos, mot.savemotion_zpos))
+                f.write('\t\t\t\t\t<saveserie timemin="{}" timemax="{}" timedt="{}" xpos="{}"'
+                        ' comment="Saves serie data (optional)" />\n'.format(mot.saveserie_timemin,
+                                                                             mot.saveserie_timemax,
+                                                                             mot.saveserie_timedt,
                                                                              mot.saveserie_xpos))
-                f.write('\t\t\t\t\t\t<saveseriewaves timemin="{}" timemax="{}" xpos="{}" '
-                        'comment="Saves serie heights" />\n'.format(mot.saveseriewaves_timemin, mot.saveseriewaves_timemax, mot.saveseriewaves_xpos))
+                f.write('\t\t\t\t\t<saveseriewaves timemin="{}" timemax="{}" xpos="{}" '
+                        'comment="Saves serie heights" />\n'.format(mot.saveseriewaves_timemin,
+                                                                    mot.saveseriewaves_timemax,
+                                                                    mot.saveseriewaves_xpos))
                 if mot.awas.enabled:
-                    f.write('\t\t\t\t\t\t<awas_zsurf>\n')
-                    f.write('\t\t\t\t\t\t\t<startawas value = "{}" comment = "Time to start AWAS correction (def=ramp*waveperiod)" />\n'.format(
-                        float(mot.awas.startawas)
-                    ))
-                    f.write('\t\t\t\t\t\t\t<swl value = "{}" comment = "Still water level (free-surface water)" />\n'.format(
-                        float(mot.awas.swl)
-                    ))
-                    f.write('\t\t\t\t\t\t\t<elevation value = "{}" comment = "Order wave to calculate elevation 1:1st order, 2:2nd order (def=2)" />\n'.format(
-                        int(mot.awas.elevation)
-                    ))
-                    f.write('\t\t\t\t\t\t\t<gaugex valueh = "{}" comment = "Position in X from piston to measure free-surface water (def=5*Dp)" />\n'.format(
-                        float(mot.awas.gaugex)
-                    ))
+                    f.write('\t\t\t\t\t<awas_zsurf>\n')
                     f.write(
-                        '\t\t\t\t\t\t\t<gaugey value = "{}" comment = "Position in Y to measure free-surface water" />\n'.format(
+                        '\t\t\t\t\t\t<startawas value = "{}" comment = "Time to start AWAS correction (def=ramp*waveperiod)" />\n'.format(
+                            float(mot.awas.startawas)
+                        ))
+                    f.write(
+                        '\t\t\t\t\t\t<swl value = "{}" comment = "Still water level (free-surface water)" />\n'.format(
+                            float(mot.awas.swl)
+                        ))
+                    f.write(
+                        '\t\t\t\t\t\t<elevation value = "{}" comment = "Order wave to calculate elevation 1:1st order, 2:2nd order (def=2)" />\n'.format(
+                            int(mot.awas.elevation)
+                        ))
+                    f.write(
+                        '\t\t\t\t\t\t<gaugex valueh = "{}" comment = "Position in X from piston to measure free-surface water (def=5*Dp)" />\n'.format(
+                            float(mot.awas.gaugex)
+                        ))
+                    f.write(
+                        '\t\t\t\t\t\t<gaugey value = "{}" comment = "Position in Y to measure free-surface water" />\n'.format(
                             float(mot.awas.gaugey)
                         ))
-                    f.write('\t\t\t\t\t\t\t<gaugezmin value = "{}" comment = "Minimum position in Z to measure free-surface water, it must be in water (def=domain limits)" />\n'.format(
-                        float(mot.awas.gaugezmin)
-                    ))
-                    f.write('\t\t\t\t\t\t\t<gaugezmax value = "{}" comment = "Maximum position in Z to measure free-surface water (def=domain limits)" />\n'.format(
-                        float(mot.awas.gaugezmax)
-                    ))
-                    f.write('\t\t\t\t\t\t\t<gaugedp value = "{}" comment = "Resolution to measure free-surface water, it uses Dp*gaugedp (def=0.1)" />\n'.format(
-                        float(mot.awas.gaugedp)
-                    ))
-                    f.write('\t\t\t\t\t\t\t<coefmasslimit value = "{}" comment = "Coefficient to calculate mass of free-surface (def=0.5 on 3D and 0.4 on 2D)" />\n'.format(
-                        float(mot.awas.coefmasslimit)
-                    ))
-                    f.write('\t\t\t\t\t\t\t<savedata value = "{}" comment = "Saves CSV with information 1:by part, 2:more info 3:by step (def=0)" />\n'.format(
-                        int(mot.awas.savedata)
-                    ))
-                    f.write('\t\t\t\t\t\t\t<limitace value = "{}" comment = "Factor to limit maximum value of acceleration, with 0 disabled (def=2)" />\n'.format(
-                        float(mot.awas.limitace)
-                    ))
-                    f.write('\t\t\t\t\t\t\t<{}correction coefstroke = "{}" coefperiod = "{}" powerfunc = "{}" comment = "Drift correction configuration (def=no applied)" />\n'.format(
-                        "" if mot.awas.correction.enabled else "_",
-                        float(mot.awas.correction.coefstroke),
-                        float(mot.awas.correction.coefperiod),
-                        float(mot.awas.correction.powerfunc)
-                    ))
-                    f.write('\t\t\t\t\t\t</awas_zsurf>\n')
-                f.write('\t\t\t\t\t</piston_spectrum>\n')
+                    f.write(
+                        '\t\t\t\t\t\t<gaugezmin value = "{}" comment = "Minimum position in Z to measure free-surface water, it must be in water (def=domain limits)" />\n'.format(
+                            float(mot.awas.gaugezmin)
+                        ))
+                    f.write(
+                        '\t\t\t\t\t\t<gaugezmax value = "{}" comment = "Maximum position in Z to measure free-surface water (def=domain limits)" />\n'.format(
+                            float(mot.awas.gaugezmax)
+                        ))
+                    f.write(
+                        '\t\t\t\t\t\t<gaugedp value = "{}" comment = "Resolution to measure free-surface water, it uses Dp*gaugedp (def=0.1)" />\n'.format(
+                            float(mot.awas.gaugedp)
+                        ))
+                    f.write(
+                        '\t\t\t\t\t\t<coefmasslimit value = "{}" comment = "Coefficient to calculate mass of free-surface (def=0.5 on 3D and 0.4 on 2D)" />\n'.format(
+                            float(mot.awas.coefmasslimit)
+                        ))
+                    f.write(
+                        '\t\t\t\t\t\t<savedata value = "{}" comment = "Saves CSV with information 1:by part, 2:more info 3:by step (def=0)" />\n'.format(
+                            int(mot.awas.savedata)
+                        ))
+                    f.write(
+                        '\t\t\t\t\t\t<limitace value = "{}" comment = "Factor to limit maximum value of acceleration, with 0 disabled (def=2)" />\n'.format(
+                            float(mot.awas.limitace)
+                        ))
+                    f.write(
+                        '\t\t\t\t\t\t<{}correction coefstroke = "{}" coefperiod = "{}" powerfunc = "{}" comment = "Drift correction configuration (def=no applied)" />\n'.format(
+                            "" if mot.awas.correction.enabled else "_",
+                            float(mot.awas.correction.coefstroke),
+                            float(mot.awas.correction.coefperiod),
+                            float(mot.awas.correction.powerfunc)
+                        ))
+                    f.write('\t\t\t\t\t</awas_zsurf>\n')
+                f.write('\t\t\t\t</piston_spectrum>\n')
                 written_movements_counter += 1
 
             elif isinstance(mot, RegularFlapWaveGen):
-                f.write('\t\t\t\t\t<flap>\n')
+                f.write('\t\t\t\t<flap>\n')
                 f.write(
-                    '\t\t\t\t\t\t<mkbound value="{}" comment="Mk-Bound of selected particles" />\n'.format(mk))
-                f.write('\t\t\t\t\t\t<waveorder value="{}" ' 'comment="Order wave generation 1:1st order, 2:2nd order (def=1)" />\n'.format(mot.wave_order))
+                    '\t\t\t\t\t<mkbound value="{}" comment="Mk-Bound of selected particles" />\n'.format(mk))
                 f.write(
-                    '\t\t\t\t\t\t<start value="{}" comment="Start time (def=0)" />\n'.format(mot.start))
+                    '\t\t\t\t\t<waveorder value="{}" ' 'comment="Order wave generation 1:1st order, 2:2nd order (def=1)" />\n'.format(
+                        mot.wave_order))
                 f.write(
-                    '\t\t\t\t\t\t<duration value="{}" ' 'comment="Movement duration, Zero is the end of simulation (def=0)" />\n'.format(mot.duration))
+                    '\t\t\t\t\t<start value="{}" comment="Start time (def=0)" />\n'.format(mot.start))
                 f.write(
-                    '\t\t\t\t\t\t<depth value="{}" comment="Fluid depth (def=0)" />\n'.format(mot.depth))
+                    '\t\t\t\t\t<duration value="{}" ' 'comment="Movement duration, Zero is the end of simulation (def=0)" />\n'.format(
+                        mot.duration))
                 f.write(
-                    '\t\t\t\t\t\t<variabledraft value="{}" comment="Position of the wavemaker hinge (above the bottom <0; below the bottom >0) (default=0)" />\n'.format(mot.variable_draft))
+                    '\t\t\t\t\t<depth value="{}" comment="Fluid depth (def=0)" />\n'.format(mot.depth))
                 f.write(
-                    '\t\t\t\t\t\t<flapaxis0 x="{}" y="{}" z="{}" comment="Point 0 of axis rotation" />\n'.format(mot.flapaxis0[0], mot.flapaxis0[1], mot.flapaxis0[2]))
+                    '\t\t\t\t\t<variabledraft value="{}" comment="Position of the wavemaker hinge (above the bottom <0; below the bottom >0) (default=0)" />\n'.format(
+                        mot.variable_draft))
                 f.write(
-                    '\t\t\t\t\t\t<flapaxis1 x="{}" y="{}" z="{}" comment="Point 1 of axis rotation" />\n'.format(mot.flapaxis1[0], mot.flapaxis1[1], mot.flapaxis1[2]))
+                    '\t\t\t\t\t<flapaxis0 x="{}" y="{}" z="{}" comment="Point 0 of axis rotation" />\n'.format(
+                        mot.flapaxis0[0], mot.flapaxis0[1], mot.flapaxis0[2]))
                 f.write(
-                    '\t\t\t\t\t\t<waveheight value="{}" comment="Wave height" />\n'.format(mot.wave_height))
+                    '\t\t\t\t\t<flapaxis1 x="{}" y="{}" z="{}" comment="Point 1 of axis rotation" />\n'.format(
+                        mot.flapaxis1[0], mot.flapaxis1[1], mot.flapaxis1[2]))
                 f.write(
-                    '\t\t\t\t\t\t<waveperiod value="{}" comment="Wave period" />\n'.format(mot.wave_period))
+                    '\t\t\t\t\t<waveheight value="{}" comment="Wave height" />\n'.format(mot.wave_height))
                 f.write(
-                    '\t\t\t\t\t\t<phase value="{}" ' 'comment="Initial wave phase in function of PI (def=0)" />\n'.format(mot.phase))
+                    '\t\t\t\t\t<waveperiod value="{}" comment="Wave period" />\n'.format(mot.wave_period))
                 f.write(
-                    '\t\t\t\t\t\t<ramp value="{}" comment="Periods of ramp (def=0)" />\n'.format(mot.ramp))
-                f.write('\t\t\t\t\t\t<savemotion periods="{}" periodsteps="{}" xpos="{}" zpos="{}" '
+                    '\t\t\t\t\t<phase value="{}" ' 'comment="Initial wave phase in function of PI (def=0)" />\n'.format(
+                        mot.phase))
+                f.write(
+                    '\t\t\t\t\t<ramp value="{}" comment="Periods of ramp (def=0)" />\n'.format(mot.ramp))
+                f.write('\t\t\t\t\t<savemotion periods="{}" periodsteps="{}" xpos="{}" zpos="{}" '
                         'comment="Saves motion data. xpos and zpos are optional. '
-                        'zpos=-depth of the measuring point" />\n'.format(mot.disksave_periods, mot.disksave_periodsteps, mot.disksave_xpos, mot.disksave_zpos))
-                f.write('\t\t\t\t\t</flap>\n')
+                        'zpos=-depth of the measuring point" />\n'.format(mot.disksave_periods,
+                                                                          mot.disksave_periodsteps, mot.disksave_xpos,
+                                                                          mot.disksave_zpos))
+                f.write('\t\t\t\t</flap>\n')
                 written_movements_counter += 1
 
             elif isinstance(mot, IrregularFlapWaveGen):
-                f.write('\t\t\t\t\t<flap_spectrum>\n')
+                f.write('\t\t\t\t<flap_spectrum>\n')
                 f.write(
-                    '\t\t\t\t\t\t<mkbound value="{}" comment="Mk-Bound of selected particles" />\n'.format(mk))
-                f.write('\t\t\t\t\t\t<waveorder value="{}" ' 'comment="Order wave generation 1:1st order, 2:2nd order (def=1)" />\n'.format(mot.wave_order))
+                    '\t\t\t\t\t<mkbound value="{}" comment="Mk-Bound of selected particles" />\n'.format(mk))
                 f.write(
-                    '\t\t\t\t\t\t<start value="{}" comment="Start time (def=0)" />\n'.format(mot.start))
+                    '\t\t\t\t\t<waveorder value="{}" ' 'comment="Order wave generation 1:1st order, 2:2nd order (def=1)" />\n'.format(
+                        mot.wave_order))
                 f.write(
-                    '\t\t\t\t\t\t<duration value="{}" ' 'comment="Movement duration, Zero is the end of simulation (def=0)" />\n'.format(mot.duration))
+                    '\t\t\t\t\t<start value="{}" comment="Start time (def=0)" />\n'.format(mot.start))
                 f.write(
-                    '\t\t\t\t\t\t<depth value="{}" comment="Fluid depth (def=0)" />\n'.format(mot.depth))
+                    '\t\t\t\t\t<duration value="{}" ' 'comment="Movement duration, Zero is the end of simulation (def=0)" />\n'.format(
+                        mot.duration))
                 f.write(
-                    '\t\t\t\t\t\t<fixeddepth value="{}" ' 'comment="Fluid depth without paddle (def=0)" />\n'.format(mot.fixed_depth))
+                    '\t\t\t\t\t<depth value="{}" comment="Fluid depth (def=0)" />\n'.format(mot.depth))
                 f.write(
-                    '\t\t\t\t\t\t<variabledraft value="{}" comment="Position of the wavemaker hinge (above the bottom <0; below the bottom >0) (default=0)" />\n'.format(mot.variable_draft))
+                    '\t\t\t\t\t<fixeddepth value="{}" ' 'comment="Fluid depth without paddle (def=0)" />\n'.format(
+                        mot.fixed_depth))
                 f.write(
-                    '\t\t\t\t\t\t<flapaxis0 x="{}" y="{}" z="{}" comment="Point 0 of axis rotation" />\n'.format(mot.flapaxis0[0], mot.flapaxis0[1], mot.flapaxis0[2]))
+                    '\t\t\t\t\t<variabledraft value="{}" comment="Position of the wavemaker hinge (above the bottom <0; below the bottom >0) (default=0)" />\n'.format(
+                        mot.variable_draft))
                 f.write(
-                    '\t\t\t\t\t\t<flapaxis1 x="{}" y="{}" z="{}" comment="Point 1 of axis rotation" />\n'.format(mot.flapaxis1[0], mot.flapaxis1[1], mot.flapaxis1[2]))
-                f.write('\t\t\t\t\t\t<spectrum value="{}" '
-                        'comment="Spectrum type: jonswap,pierson-moskowitz" />\n'.format(['jonswap', 'pierson-moskowitz'][mot.spectrum]))
-                f.write('\t\t\t\t\t\t<discretization value="{}" '
+                    '\t\t\t\t\t<flapaxis0 x="{}" y="{}" z="{}" comment="Point 0 of axis rotation" />\n'.format(
+                        mot.flapaxis0[0], mot.flapaxis0[1], mot.flapaxis0[2]))
+                f.write(
+                    '\t\t\t\t\t<flapaxis1 x="{}" y="{}" z="{}" comment="Point 1 of axis rotation" />\n'.format(
+                        mot.flapaxis1[0], mot.flapaxis1[1], mot.flapaxis1[2]))
+                f.write('\t\t\t\t\t<spectrum value="{}" '
+                        'comment="Spectrum type: jonswap,pierson-moskowitz" />\n'.format(
+                    ['jonswap', 'pierson-moskowitz'][mot.spectrum]))
+                f.write('\t\t\t\t\t<discretization value="{}" '
                         'comment="Spectrum discretization: regular,random,stretched,cosstretched '
-                        '(def=stretched)" />\n'.format(['regular', 'random', 'stretched', 'cosstretched'][mot.discretization]))
+                        '(def=stretched)" />\n'.format(
+                    ['regular', 'random', 'stretched', 'cosstretched'][mot.discretization]))
                 f.write(
-                    '\t\t\t\t\t\t<waveheight value="{}" comment="Wave height" />\n'.format(mot.wave_height))
+                    '\t\t\t\t\t<waveheight value="{}" comment="Wave height" />\n'.format(mot.wave_height))
                 f.write(
-                    '\t\t\t\t\t\t<waveperiod value="{}" comment="Wave period" />\n'.format(mot.wave_period))
+                    '\t\t\t\t\t<waveperiod value="{}" comment="Wave period" />\n'.format(mot.wave_period))
                 f.write(
-                    '\t\t\t\t\t\t<peakcoef value="{}" comment="Peak enhancement coefficient (def=3.3)" />\n'.format(mot.peak_coef))
+                    '\t\t\t\t\t<peakcoef value="{}" comment="Peak enhancement coefficient (def=3.3)" />\n'.format(
+                        mot.peak_coef))
                 f.write(
-                    '\t\t\t\t\t\t<waves value="{}" ' 'comment="Number of waves to create irregular waves (def=50)" />\n'.format(mot.waves))
-                f.write('\t\t\t\t\t\t<randomseed value="{}" ' 'comment="Random seed to initialize a pseudorandom number generator" />\n'.format(mot.randomseed))
-                f.write('\t\t\t\t\t\t<serieini value="{}" autofit="{}" '
+                    '\t\t\t\t\t<waves value="{}" ' 'comment="Number of waves to create irregular waves (def=50)" />\n'.format(
+                        mot.waves))
+                f.write(
+                    '\t\t\t\t\t<randomseed value="{}" ' 'comment="Random seed to initialize a pseudorandom number generator" />\n'.format(
+                        mot.randomseed))
+                f.write('\t\t\t\t\t<serieini value="{}" autofit="{}" '
                         'comment="Initial time in irregular wave serie (default=0 and autofit=false)" />\n'.format(
-                            mot.serieini, str(mot.serieini_autofit).lower()))
+                    mot.serieini, str(mot.serieini_autofit).lower()))
                 f.write(
-                    '\t\t\t\t\t\t<ramptime value="{}" comment="Time of ramp (def=0)" />\n'.format(mot.ramptime))
-                f.write('\t\t\t\t\t\t<savemotion time="{}" timedt="{}" xpos="{}" zpos="{}" '
+                    '\t\t\t\t\t<ramptime value="{}" comment="Time of ramp (def=0)" />\n'.format(mot.ramptime))
+                f.write('\t\t\t\t\t<savemotion time="{}" timedt="{}" xpos="{}" zpos="{}" '
                         'comment="Saves motion data. xpos and zpos are optional. '
-                        'zpos=-depth of the measuring point" />\n'.format(mot.savemotion_time, mot.savemotion_timedt, mot.savemotion_xpos, mot.savemotion_zpos))
-                f.write('\t\t\t\t\t\t<saveserie timemin="{}" timemax="{}" timedt="{}" xpos="{}"'
-                        ' comment="Saves serie data (optional)" />\n'.format(mot.saveserie_timemin, mot.saveserie_timemax, mot.saveserie_timedt,
+                        'zpos=-depth of the measuring point" />\n'.format(mot.savemotion_time, mot.savemotion_timedt,
+                                                                          mot.savemotion_xpos, mot.savemotion_zpos))
+                f.write('\t\t\t\t\t<saveserie timemin="{}" timemax="{}" timedt="{}" xpos="{}"'
+                        ' comment="Saves serie data (optional)" />\n'.format(mot.saveserie_timemin,
+                                                                             mot.saveserie_timemax,
+                                                                             mot.saveserie_timedt,
                                                                              mot.saveserie_xpos))
-                f.write('\t\t\t\t\t\t<saveseriewaves timemin="{}" timemax="{}" xpos="{}" '
-                        'comment="Saves serie heights" />\n'.format(mot.saveseriewaves_timemin, mot.saveseriewaves_timemax, mot.saveseriewaves_xpos))
-                f.write('\t\t\t\t\t</flap_spectrum>\n')
+                f.write('\t\t\t\t\t<saveseriewaves timemin="{}" timemax="{}" xpos="{}" '
+                        'comment="Saves serie heights" />\n'.format(mot.saveseriewaves_timemin,
+                                                                    mot.saveseriewaves_timemax,
+                                                                    mot.saveseriewaves_xpos))
+                f.write('\t\t\t\t</flap_spectrum>\n')
                 written_movements_counter += 1
 
     # Close tags only if at least one movement was written.
     if written_movements_counter > 0:
-        f.write('\t\t\t\t</wavepaddles>\n')
+        f.write('\t\t\t</wavepaddles>\n')
+
+    if len(data['mlayerpistons'].keys()) > 0:
+        f.write('\t\t\t<mlayerpistons>\n')
+        for mk, pistonobject in data['mlayerpistons'].iteritems():
+            if isinstance(pistonobject, MLPiston1D):
+                f.write('\t\t\t\t<piston1d>\n')
+                f.write('\t\t\t\t\t<mkbound value="{}" comment="Mk-Bound of selected particles" />\n'.format(mk))
+                f.write('\t\t\t\t\t<filevelx value="{}" comment="File name with X velocity" />\n'.format(
+                    pistonobject.filevelx))
+                f.write('\t\t\t\t\t<incz value="{}" comment="Z offset (def=0)" />\n'.format(pistonobject.incz))
+                f.write('\t\t\t\t\t<timedataini value="{}" comment="Time offset (def=0)" />\n'.format(
+                    pistonobject.timedataini))
+                f.write('\t\t\t\t\t<smooth value="{}" comment="Smooth motion level (def=0)" />\n'.format(
+                    pistonobject.smooth))
+                f.write('\t\t\t\t</piston1d>\n')
+        #     TODO: Add other piston objects
+        f.write('\t\t\t</mlayerpistons>\n')
+
+    if data['relaxationzone'] is not None:
+        f.write('\t\t\t<relaxationzones>\n')
+        rzobject = data['relaxationzone']
+        if isinstance(rzobject, RelaxationZoneRegular):
+            f.write('\t\t\t\t<rzwaves_regular>\n')
+            f.write('\t\t\t\t\t<start value="{}" comment="Start time (def=0)" />\n'.format(rzobject.start))
+            f.write(
+                '\t\t\t\t\t<duration value="{}" comment="Movement duration, Zero is the end of simulation (def=0)" />\n'.format(
+                    rzobject.duration))
+            f.write(
+                '\t\t\t\t\t<waveorder value="{}" comment="Order wave generation 1:1st order, 2:2nd order (def=1)" />\n'.format(
+                    rzobject.waveorder))
+            f.write('\t\t\t\t\t<waveheight value="{}" comment="Wave height" />\n'.format(rzobject.waveheight))
+            f.write('\t\t\t\t\t<waveperiod value="{}" comment="Wave period" />\n'.format(rzobject.waveperiod))
+            f.write('\t\t\t\t\t<depth value="{}" comment="Fluid depth (def=0)" />\n'.format(rzobject.depth))
+            f.write('\t\t\t\t\t<swl value="{}" comment="Still water level (free-surface water)" />\n'.format(
+                rzobject.swl))
+            f.write(
+                '\t\t\t\t\t<center x="{}" y="{}" z="{}" comment="Central point of application" />\n'.format(
+                    *rzobject.center))
+            f.write('\t\t\t\t\t<width value="{}" comment="Width for generation" />\n'.format(rzobject.width))
+            f.write('\t\t\t\t\t<phase value="{}" comment="Initial wave phase in function of PI (def=0)" />\n'.format(
+                rzobject.phase))
+            f.write('\t\t\t\t\t<ramp value="{}" comment="Periods of ramp (def=0)" />\n'.format(rzobject.ramp))
+            f.write(
+                '\t\t\t\t\t<savemotion periods="{}" periodsteps="{}" xpos="{}" zpos="{}" comment="Saves motion data. xpos and zpos are optional. zpos=-depth of the measuring point" />\n'.format(
+                    rzobject.savemotion_periods, rzobject.savemotion_periodsteps, rzobject.savemotion_xpos,
+                    rzobject.savemotion_zpos))
+            f.write(
+                '\t\t\t\t\t<coefdir x="{}" y="{}" z="{}" comment="Coefficients for each direction (default=(1,0,0))" />\n'.format(
+                    *rzobject.coefdir))
+            f.write(
+                '\t\t\t\t\t<coefdt value="{}" comment="Multiplies by dt value in the calculation (using 0 is not applied) (default=1000)" />\n'.format(
+                    rzobject.coefdt))
+            f.write(
+                '\t\t\t\t\t<function psi="{}" beta="{}" comment="Coefficients in funtion for velocity (def. psi=0.9, beta=1)" />\n'.format(
+                    rzobject.function_psi, rzobject.function_beta))
+            f.write(
+                '\t\t\t\t\t<driftcorrection value="{}" comment="Coefficient of drift correction applied in velocity X. 0:Disabled, 1:Full correction (def=0)" />\n'.format(
+                    rzobject.driftcorrection))
+            f.write('\t\t\t\t</rzwaves_regular>\n')
+        #     TODO: Add other RZ objects
+        f.write('\t\t\t</relaxationzones>\n')
 
     f.write('\t\t</special>\n')
 
     f.write('\t\t<parameters>\n')
     # Writes parameters as user introduced
-    f.write('\t\t\t<parameter key="PosDouble" value="' + str(data['posdouble']) + '" comment="Precision in particle interaction '
-            '0:Simple, 1:Double, 2:Uses and saves double (default=0)" />\n')
+    f.write('\t\t\t<parameter key="PosDouble" value="' + str(
+        data['posdouble']) + '" comment="Precision in particle interaction '
+                             '0:Simple, 1:Double, 2:Uses and saves double (default=0)" />\n')
     f.write('\t\t\t<parameter key="StepAlgorithm" value="' +
             str(data['stepalgorithm']) + '" comment="Step Algorithm 1:Verlet, 2:Symplectic (default=1)" />\n')
     f.write('\t\t\t<parameter key="VerletSteps" value="' + str(data['verletsteps']) +
@@ -1440,8 +1624,9 @@ def dump_to_xml(data, save_name):
             str(data['kernel']) + '" comment="Interaction Kernel 1:Cubic Spline, 2:Wendland (default=2)" />\n')
     f.write('\t\t\t<parameter key="ViscoTreatment" value="' + str(data['viscotreatment']) +
             '" comment="Viscosity formulation 1:Artificial, 2:Laminar+SPS (default=1)" />\n')
-    f.write('\t\t\t<parameter key="Visco" value="' + str(data['visco']) + '" comment="Viscosity value" /> % Note alpha can depend on the resolution. '
-            'A value of 0.01 is recommended for near irrotational flows.\n')
+    f.write('\t\t\t<parameter key="Visco" value="' + str(
+        data['visco']) + '" comment="Viscosity value" /> % Note alpha can depend on the resolution. '
+                         'A value of 0.01 is recommended for near irrotational flows.\n')
     f.write('\t\t\t<parameter key="ViscoBoundFactor" value="' + str(data['viscoboundfactor']) +
             '" comment="Multiply viscosity value with boundary (default=1)" />\n')
     f.write('\t\t\t<parameter key="DeltaSPH" value="' + str(data['deltasph']) +
@@ -1454,8 +1639,9 @@ def dump_to_xml(data, save_name):
             '" comment="Threshold to detect free surface. Typically 1.5 for 2D and 2.75 for 3D (default=0)" />\n')
     f.write('\t\t\t<parameter key="RigidAlgorithm" value="' +
             str(data['rigidalgorithm']) + '" comment="Rigid Algorithm 1:SPH, 2:DEM (default=1)" />\n')
-    f.write('\t\t\t<parameter key="FtPause" value="' + str(data['ftpause']) + '" comment="Time to freeze the floatings at simulation start'
-            ' (warmup) (default=0)" units_comment="seconds" />\n')
+    f.write('\t\t\t<parameter key="FtPause" value="' + str(
+        data['ftpause']) + '" comment="Time to freeze the floatings at simulation start'
+                           ' (warmup) (default=0)" units_comment="seconds" />\n')
     f.write('\t\t\t<parameter key="CoefDtMin" value="' + str(data['coefdtmin']) +
             '" comment="Coefficient to calculate minimum time step dtmin=coefdtmin*h/speedsound (default=0.05)" />\n')
     if data["dtini_auto"]:
@@ -1480,8 +1666,9 @@ def dump_to_xml(data, save_name):
             str(data['timeout']) + '" comment="Time out data" units_comment="seconds" />\n')
     f.write('\t\t\t<parameter key="IncZ" value="' +
             str(data['incz']) + '" comment="Increase of Z+" units_comment="decimal" />\n')
-    f.write('\t\t\t<parameter key="PartsOutMax" value="' + str(data['partsoutmax']) + '" comment="%/100 of fluid particles allowed to be excluded from domain '
-            '(default=1)" units_comment="decimal" />\n')
+    f.write('\t\t\t<parameter key="PartsOutMax" value="' + str(
+        data['partsoutmax']) + '" comment="%/100 of fluid particles allowed to be excluded from domain '
+                               '(default=1)" units_comment="decimal" />\n')
     f.write('\t\t\t<parameter key="RhopOutMin" value="' +
             str(data['rhopoutmin']) + '" comment="Minimum rhop valid (default=700)" units_comment="kg/m^3" />\n')
     f.write('\t\t\t<parameter key="RhopOutMax" value="' +
@@ -1505,17 +1692,23 @@ def dump_to_xml(data, save_name):
                     str(data['period_z'][2]) + '"/>\n')
     if data['domainfixed'].enabled:
         f.write(
-            '\t\t\t<parameter key="DomainFixedXmin" value="{}" comment="The domain is fixed in the specified limit (default=not applied)" units_comment="metres (m)" />\n'.format(data['domainfixed'].xmin))
+            '\t\t\t<parameter key="DomainFixedXmin" value="{}" comment="The domain is fixed in the specified limit (default=not applied)" units_comment="metres (m)" />\n'.format(
+                data['domainfixed'].xmin))
         f.write(
-            '\t\t\t<parameter key="DomainFixedXmax" value="{}" comment="The domain is fixed in the specified limit (default=not applied)" units_comment="metres (m)" />\n'.format(data['domainfixed'].xmax))
+            '\t\t\t<parameter key="DomainFixedXmax" value="{}" comment="The domain is fixed in the specified limit (default=not applied)" units_comment="metres (m)" />\n'.format(
+                data['domainfixed'].xmax))
         f.write(
-            '\t\t\t<parameter key="DomainFixedYmin" value="{}" comment="The domain is fixed in the specified limit (default=not applied)" units_comment="metres (m)" />\n'.format(data['domainfixed'].ymin))
+            '\t\t\t<parameter key="DomainFixedYmin" value="{}" comment="The domain is fixed in the specified limit (default=not applied)" units_comment="metres (m)" />\n'.format(
+                data['domainfixed'].ymin))
         f.write(
-            '\t\t\t<parameter key="DomainFixedYmax" value="{}" comment="The domain is fixed in the specified limit (default=not applied)" units_comment="metres (m)" />\n'.format(data['domainfixed'].ymax))
+            '\t\t\t<parameter key="DomainFixedYmax" value="{}" comment="The domain is fixed in the specified limit (default=not applied)" units_comment="metres (m)" />\n'.format(
+                data['domainfixed'].ymax))
         f.write(
-            '\t\t\t<parameter key="DomainFixedZmin" value="{}" comment="The domain is fixed in the specified limit (default=not applied)" units_comment="metres (m)" />\n'.format(data['domainfixed'].zmin))
+            '\t\t\t<parameter key="DomainFixedZmin" value="{}" comment="The domain is fixed in the specified limit (default=not applied)" units_comment="metres (m)" />\n'.format(
+                data['domainfixed'].zmin))
         f.write(
-            '\t\t\t<parameter key="DomainFixedZmax" value="{}" comment="The domain is fixed in the specified limit (default=not applied)" units_comment="metres (m)" />\n'.format(data['domainfixed'].zmax))
+            '\t\t\t<parameter key="DomainFixedZmax" value="{}" comment="The domain is fixed in the specified limit (default=not applied)" units_comment="metres (m)" />\n'.format(
+                data['domainfixed'].zmax))
     f.write('\t\t</parameters>\n')
     f.write('\t</execution>\n')
     f.write('</case>\n')
@@ -1533,7 +1726,8 @@ def batch_generator(full_path, case_name, gcpath, dsphpath, pvtkpath, exec_param
     lib_folder = os.path.dirname(os.path.realpath(__file__))
     with open('{}/templates/template.bat'.format(lib_folder), 'r') as content_file:
         win_template = content_file.read().format(
-            app_name=APP_NAME, case_name=case_name.encode('utf-8'), gcpath=gcpath, dsphpath=dsphpath, pvtkpath=pvtkpath, exec_params=exec_params)
+            app_name=APP_NAME, case_name=case_name.encode('utf-8'), gcpath=gcpath, dsphpath=dsphpath, pvtkpath=pvtkpath,
+            exec_params=exec_params)
     with open('{}/templates/template.sh'.format(lib_folder), 'r') as content_file:
         linux_template = content_file.read().format(
             app_name=APP_NAME,
@@ -1575,7 +1769,7 @@ def import_stl(filename=None, scale_x=1, scale_y=1, scale_z=1, name=None):
     target.z *= scale_z
     if not name:
         temp_file_name = tempfile.gettempdir() + "/" + \
-            str(random.randrange(100, 1000, 1)) + ".stl"
+                         str(random.randrange(100, 1000, 1)) + ".stl"
     else:
         temp_file_name = tempfile.gettempdir() + "/" + name + ".stl"
 
