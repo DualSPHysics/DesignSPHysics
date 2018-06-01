@@ -363,6 +363,40 @@ def on_save_case(save_as=None):
                             # Probably already copied the file.
                             pass
 
+        # Copy files from pistons and change paths to be inside the project.
+        for key, piston in data["mlayerpistons"].iteritems():
+            if isinstance(piston, MLPiston1D):
+                filename = piston.filevelx
+                utils.debug("Copying {} to {}".format(
+                    filename, save_name + "/" + save_name.split('/')[-1] + "_out"))
+                try:
+                    shutil.copy2(filename, save_name + "/" + save_name.split('/')[-1] + "_out")
+                    piston.filevelx = filename.split("/")[-1]
+                except IOError:
+                    utils.error("Unable to copy {} into {}".format(
+                        filename, save_name + "/" + save_name.split('/')[-1] + "_out"))
+                except shutil.Error:
+                    # Probably already copied the file.
+                    pass
+
+            if isinstance(piston, MLPiston2D):
+                veldata = piston.veldata
+                for v in veldata:
+                    filename = v.filevelx
+                    utils.debug("Copying {} to {}".format(
+                        filename, save_name + "/" + save_name.split('/')[-1] + "_out"))
+                    try:
+                        shutil.copy2(filename, save_name + "/" + save_name.split('/')[-1] + "_out")
+                        v.filevelx = filename.split("/")[-1]
+                    except IOError:
+                        utils.error("Unable to copy {} into {}".format(
+                            filename, save_name + "/" + save_name.split('/')[-1] + "_out"))
+                    except shutil.Error:
+                        # Probably already copied the file.
+                        pass
+
+        # TODO: Copy files for RZs
+
         # Dumps all the case data to an XML file.
         utils.dump_to_xml(data, save_name)
 
@@ -996,18 +1030,33 @@ def on_special_button():
         # Get selection mk
         selection_mk = data["simobjects"][selection.Name][0]
 
+        # Check that this mk has no other motions applied
+        if selection_mk in data['motion_mks'].keys():
+            # MK has motions applied. Warn the user and delete them
+            motion_delete_warning = guiutils.ok_cancel_dialog(
+                utils.APP_NAME,
+                __("This mk already has motions applied. "
+                   "Setting a Multi-layered piston will delete all of its movement. "
+                   "Are you sure?"))
+            if motion_delete_warning == QtGui.QMessageBox.Cancel:
+                return
+            else:
+                data['motion_mks'].pop(selection_mk, None)
+
         # 1D or 2D piston
-        if "1" in action.text():
+        if __("1 Dimension") in action.text():
+            # Check that there's no other multilayered piston for this mk
             if selection_mk in data['mlayerpistons'].keys():
                 if not isinstance(data['mlayerpistons'][selection_mk], MLPiston1D):
                     overwrite_warn = guiutils.ok_cancel_dialog(
-                        __("You're about to overwrite a previous coupling movement for this mk. Are you sure?"))
+                        utils.APP_NAME,
+                        __("You're about to overwrite a previous coupling movement for this mk. Are you sure?")
+                    )
                     if overwrite_warn == QtGui.QMessageBox.Cancel:
                         return
 
-            # TODO: Warn the user about all of this MK movements being removed
-            # TODO: Remove all movements for this mk
-            if selection_mk in data['mlayerpistons'].keys():
+            if selection_mk in data['mlayerpistons'].keys() and isinstance(data['mlayerpistons'][selection_mk],
+                                                                           MLPiston1D):
                 config_dialog = dsphwidgets.MLPiston1DConfigDialog(
                     selection_mk, data['mlayerpistons'][selection_mk]
                 )
@@ -1024,9 +1073,34 @@ def on_special_button():
             else:
                 data['mlayerpistons'][selection_mk] = config_dialog.mlpiston1d
 
-        if "2" in action.text():
-            # TODO: Implement this
-            guiutils.warning_dialog("Not implemented yet")
+        if __("2 Dimensions") in action.text():
+            # Check that there's no other multilayered piston for this mk
+            if selection_mk in data['mlayerpistons'].keys():
+                if not isinstance(data['mlayerpistons'][selection_mk], MLPiston2D):
+                    overwrite_warn = guiutils.ok_cancel_dialog(
+                        utils.APP_NAME,
+                        __("You're about to overwrite a previous coupling movement for this mk. Are you sure?")
+                    )
+                    if overwrite_warn == QtGui.QMessageBox.Cancel:
+                        return
+
+            if selection_mk in data['mlayerpistons'].keys() and isinstance(data['mlayerpistons'][selection_mk],
+                                                                           MLPiston2D):
+                config_dialog = dsphwidgets.MLPiston2DConfigDialog(
+                    selection_mk, data['mlayerpistons'][selection_mk]
+                )
+            else:
+                config_dialog = dsphwidgets.MLPiston2DConfigDialog(
+                    selection_mk, None
+                )
+
+            if config_dialog.result() == QtGui.QDialog.Accepted:
+                guiutils.warning_dialog(__("All changes have been applied for mk = {}").format(selection_mk))
+
+            if config_dialog.mlpiston2d is None:
+                data['mlayerpistons'].pop(selection_mk, None)
+            else:
+                data['mlayerpistons'][selection_mk] = config_dialog.mlpiston2d
 
         sp_window.accept()
 
@@ -1053,7 +1127,6 @@ def on_special_button():
         if action.text() == __("External waves"):
             # TODO: Implement this
             guiutils.warning_dialog("Not implemented yet")
-
 
         sp_window.accept()
 

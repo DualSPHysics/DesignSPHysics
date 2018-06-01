@@ -1562,7 +1562,23 @@ def dump_to_xml(data, save_name):
                 f.write('\t\t\t\t\t<smooth value="{}" comment="Smooth motion level (def=0)" />\n'.format(
                     pistonobject.smooth))
                 f.write('\t\t\t\t</piston1d>\n')
-        #     TODO: Add other piston objects
+            if isinstance(pistonobject, MLPiston2D):
+                f.write('\t\t\t\t<piston2d>\n')
+                f.write('\t\t\t\t\t<mkbound value="{}" comment="Mk-Bound of selected particles" />\n'.format(mk))
+                f.write('\t\t\t\t\t<incz value="{}" comment="Z offset (def=0)" />\n'.format(pistonobject.incz))
+                f.write('\t\t\t\t\t<smoothz value="{}" comment="Smooth motion level (def=0)" />\n'.format(
+                    pistonobject.smoothz))
+                f.write('\t\t\t\t\t<smoothy value="{}" comment="Smooth motion level (def=0)" />\n'.format(
+                    pistonobject.smoothy))
+                for veldata in pistonobject.veldata:
+                    f.write('\t\t\t\t\t<veldata>\n')
+                    f.write('\t\t\t\t\t\t<filevelx value="{}" comment="File name with X velocity" />\n'.format(
+                        veldata.filevelx))
+                    f.write('\t\t\t\t\t\t<posy value="{}" comment="Position Y of data" />\n'.format(veldata.posy))
+                    f.write('\t\t\t\t\t\t<timedataini value="{}" comment="Time offset (def=0)" />\n'.format(veldata.timedataini))
+                    f.write('\t\t\t\t\t</veldata>\n')
+
+                f.write('\t\t\t\t</piston2d>\n')
         f.write('\t\t\t</mlayerpistons>\n')
 
     if data['relaxationzone'] is not None:
