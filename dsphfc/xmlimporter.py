@@ -261,7 +261,6 @@ def create_fc_objects(f, path):
             # Imports the stl file as good as it can
             stl_path = path + "/" + command.attrib["file"]
             Mesh.insert(stl_path, "DSPH_Case")
-            # TODO: Find a way to reference the mesh imported for adding it to sim.  For now it can't
             # toAddDSPH["STL" + str(elementnum)] = [int(mk[1]), mk[0], drawmode]
             pass
         else:

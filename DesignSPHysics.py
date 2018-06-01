@@ -10,6 +10,7 @@ More info in http://design.sphysics.org/
 
 import FreeCAD
 import FreeCADGui
+import Draft
 import glob
 import os
 import sys
@@ -260,13 +261,6 @@ summary_bt.setToolTip(
 widget_state_elements['summary_bt'] = summary_bt
 summary_bt.setEnabled(False)
 
-# Properties button
-properties_bt = QtGui.QPushButton(__("Properties"))
-properties_bt.setToolTip(
-    __("Shows a window with properties defined for the current case."))
-widget_state_elements['properties_bt'] = properties_bt
-properties_bt.setEnabled(False)
-
 # Toggle 3D/2D button
 toggle3dbutton = QtGui.QPushButton(__("Change 3D/2D"))
 toggle3dbutton.setToolTip(
@@ -406,14 +400,16 @@ def on_save_with_gencase():
     case_maximum_particles = utils.get_maximum_particles(data['dp'])
     utils.debug("Max number of particles that can be created is: {}".format(
         case_maximum_particles))
-    if case_maximum_particles > utils.MAX_PARTICLE_WARNING:
-        # Spawn a dialog warning the user
-        max_particle_warning = guiutils.ok_cancel_dialog(
-            __('Are you sure?'),
-            __("With that Case Limits size and DP you can generate as much as {} particles.\n\n"
-               "Are you sure you want to continue saving?").format(case_maximum_particles))
-        if max_particle_warning == QtGui.QMessageBox.Cancel:
-            return
+
+    # Disabled for now.
+    # if case_maximum_particles > utils.MAX_PARTICLE_WARNING:
+    #     # Spawn a dialog warning the user
+    #     max_particle_warning = guiutils.ok_cancel_dialog(
+    #         __('Are you sure?'),
+    #         __("With that Case Limits size and DP you can generate as much as {} particles.\n\n"
+    #            "Are you sure you want to continue saving?").format(case_maximum_particles))
+    #     if max_particle_warning == QtGui.QMessageBox.Cancel:
+    #         return
 
     # Save Case
     on_save_case()
@@ -623,15 +619,42 @@ def on_add_fillbox():
 
 
 def on_add_damping_zone():
-    damping_limits = FreeCAD.ActiveDocument.addObject("Part::Box", "DampingZone")
-    damping_limits.Length = '500 mm'
-    damping_limits.Width = '500 mm'
-    damping_limits.Height = '500 mm'
-    damping_limits.ViewObject.DisplayMode = "Wireframe"
-    damping_limits.ViewObject.LineColor = (0.53, 1.00, 0.08)
+    damping_group = FreeCAD.ActiveDocument.addObject("App::DocumentObjectGroup", "DampingZone")
+
+    # Limits line
+    points = [FreeCAD.Vector(0, 0, 0), FreeCAD.Vector(1000, 1000, 1000)]
+    limits = Draft.makeWire(points, closed=False, face=False, support=None)
+    Draft.autogroup(limits)
+    limits.Label = "Limits"
+    limitsv = FreeCADGui.ActiveDocument.getObject(limits.Name)
+    limitsv.ShapeColor = (0.32, 1.00, 0.00)
+    limitsv.LineColor = (0.32, 1.00, 0.00)
+    limitsv.PointColor = (0.32, 1.00, 0.00)
+    limitsv.EndArrow = True
+    limitsv.ArrowSize = "10 mm"
+    limitsv.ArrowType = "Dot"
+
+    # Overlimit line
+    points = [FreeCAD.Vector(*limits.Start), FreeCAD.Vector(2000, 2000, 2000)]
+    overlimit = Draft.makeWire(points, closed=False, face=False, support=None)
+    Draft.autogroup(overlimit)
+    overlimit.Label = "Overlimit"
+    overlimitv = FreeCADGui.ActiveDocument.getObject(overlimit.Name)
+    overlimitv.DrawStyle = "Dotted"
+    overlimitv.ShapeColor = (0.32, 1.00, 0.00)
+    overlimitv.LineColor = (0.32, 1.00, 0.00)
+    overlimitv.PointColor = (0.32, 1.00, 0.00)
+    overlimitv.EndArrow = True
+    overlimitv.ArrowSize = "10 mm"
+    overlimitv.ArrowType = "Dot"
+
+    damping_group.addObject(limits)
+    damping_group.addObject(overlimit)
+
     FreeCAD.ActiveDocument.recompute()
     FreeCADGui.SendMsgToActiveView("ViewFit")
-    data["damping"][damping_limits.Name] = Damping()
+    data["damping"][damping_group.Name] = Damping()
+    guiutils.damping_config_window(data, damping_group.Name)
 
 
 def on_add_stl():
@@ -923,101 +946,6 @@ def on_2d_toggle():
         utils.error("Not a valid case environment")
 
 
-def on_properties():
-    # TODO: Create a copy o global properties and edit that in this window. On Cancel, discard, on OK, replace global properties with the temporal copy
-    # TODO: Custom delete button that handles in which row it is
-    # TODO: Custom MK input with placeholder and row placement. Each time it's changed change temporal property object
-
-    guiutils.info_dialog(
-        "Not implemented yet", detailed_text="This feature is not implemented yet. Sorry for the inconvenience")
-    return
-
-    property_window = QtGui.QDialog()
-    property_window.setMinimumSize(1400, 600)
-    property_window.setWindowTitle(__("Property configuration"))
-    ok_button = QtGui.QPushButton(__("Ok"))
-    cancel_button = QtGui.QPushButton(__("Cancel"))
-
-    property_window_layout = QtGui.QVBoxLayout()
-    property_window_groupboxes_layout = QtGui.QHBoxLayout()
-    property_window_buttons_layout = QtGui.QHBoxLayout()
-
-    property_list_gb = QtGui.QGroupBox(__("Global property list"))
-    property_list_gb.setMaximumWidth(450)
-    property_list_layout = QtGui.QVBoxLayout()
-    property_list_table = QtGui.QTableWidget()
-    property_list_layout.addWidget(property_list_table)
-
-    property_list_table.setColumnCount(3)
-    property_list_table.setHorizontalHeaderLabels(
-        [__("Name"), __("Applied to MK"), ""])
-    property_list_table.setSelectionMode(
-        QtGui.QAbstractItemView.SingleSelection)
-    property_list_table.horizontalHeader().setResizeMode(QtGui.QHeaderView.Stretch)
-    property_list_table.horizontalHeader().setResizeMode(0, QtGui.QHeaderView.Stretch)
-    property_list_table.horizontalHeader().setResizeMode(
-        1, QtGui.QHeaderView.ResizeToContents)
-    property_list_table.horizontalHeader().setResizeMode(
-        2, QtGui.QHeaderView.ResizeToContents)
-    property_list_table.verticalHeader().setVisible(False)
-
-    property_details_gb = QtGui.QGroupBox(__("Selected property details"))
-    property_details_layout = QtGui.QVBoxLayout()
-
-    property_details_gb.setLayout(property_details_layout)
-    property_list_gb.setLayout(property_list_layout)
-
-    property_window_groupboxes_layout.addWidget(property_list_gb)
-    property_window_groupboxes_layout.addWidget(property_details_gb)
-
-    property_window_buttons_layout.addStretch(1)
-    property_window_buttons_layout.addWidget(ok_button)
-    property_window_buttons_layout.addWidget(cancel_button)
-
-    property_window_layout.addLayout(property_window_groupboxes_layout)
-    property_window_layout.addLayout(property_window_buttons_layout)
-
-    def on_ok():
-        property_window.accept()
-
-    def on_cancel():
-        property_window.reject()
-
-    ok_button.clicked.connect(on_ok)
-    cancel_button.clicked.connect(on_cancel)
-
-    def create_new_property():
-        data['global_properties'].append(CustomProperty(name="New Property"))
-        refresh_properties_table()
-
-    def refresh_properties_table():
-        """ Refreshes the properties table. """
-        property_list_table.clearContents()
-        property_list_table.setRowCount(len(data["global_properties"]) + 1)
-        current_row = 0
-
-        for cur_property in data["global_properties"]:
-            property_list_table.setItem(
-                current_row, 0, QtGui.QTableWidgetItem(cur_property.name))
-            property_list_table.setItem(
-                current_row, 1, QtGui.QTableWidgetItem(cur_property.mkapplied))
-            property_list_table.setCellWidget(
-                current_row, 2, QtGui.QPushButton("D"))
-            current_row += 1
-
-        create_new_property_button = QtGui.QPushButton("Create New")
-        create_new_property_button.clicked.connect(create_new_property)
-        property_list_table.setCellWidget(current_row, 0, QtGui.QWidget())
-        property_list_table.setCellWidget(current_row, 1, QtGui.QWidget())
-        property_list_table.setCellWidget(
-            current_row, 2, create_new_property_button)
-
-    refresh_properties_table()
-
-    property_window.setLayout(property_window_layout)
-    property_window.exec_()
-
-
 def on_special_button():
     """ Spawns a dialog with special options """
     sp_window = QtGui.QDialog()
@@ -1030,15 +958,108 @@ def on_special_button():
     sp_chrono_button = QtGui.QPushButton(__("Coupling CHRONO"))
     sp_chrono_button.setEnabled(False)
     sp_multilayeredmb_button = QtGui.QPushButton(__("Multi-layered Piston"))
-    sp_multilayeredmb_button.setEnabled(False)
+    sp_multilayeredmb_menu = QtGui.QMenu()
+    sp_multilayeredmb_menu.addAction(__("1 Dimension"))
+    sp_multilayeredmb_menu.addAction(__("2 Dimensions"))
+    sp_multilayeredmb_button.setMenu(sp_multilayeredmb_menu)
+
     sp_relaxationzone_button = QtGui.QPushButton(__("Relaxation Zone"))
-    sp_relaxationzone_button.setEnabled(False)
+    sp_relaxationzone_menu = QtGui.QMenu()
+    sp_relaxationzone_menu.addAction(__("Regular waves"))
+    sp_relaxationzone_menu.addAction(__("Irregular waves"))
+    sp_relaxationzone_menu.addAction(__("External waves"))
+    sp_relaxationzone_button.setMenu(sp_relaxationzone_menu)
 
     def on_damping_option():
         on_add_damping_zone()
         sp_window.accept()
 
+    def on_multilayeredmb_menu(action):
+        # Get currently selected object
+        try:
+            selection = FreeCADGui.Selection.getSelection()[0]
+        except IndexError:
+            guiutils.error_dialog(__("You must select an object"))
+            return
+
+        # Check if object is in the simulation
+        if selection.Name not in data['simobjects'].keys():
+            guiutils.error_dialog(__("The selected object must be added to the simulation"))
+            return
+
+        # Check if it is fluid and warn the user.
+        if "fluid" in data["simobjects"][selection.Name][1].lower():
+            guiutils.error_dialog(
+                __("You can't apply a piston movement to a fluid.\nPlease select a boundary and try again"))
+            return
+
+        # Get selection mk
+        selection_mk = data["simobjects"][selection.Name][0]
+
+        # 1D or 2D piston
+        if "1" in action.text():
+            if selection_mk in data['mlayerpistons'].keys():
+                if not isinstance(data['mlayerpistons'][selection_mk], MLPiston1D):
+                    overwrite_warn = guiutils.ok_cancel_dialog(
+                        __("You're about to overwrite a previous coupling movement for this mk. Are you sure?"))
+                    if overwrite_warn == QtGui.QMessageBox.Cancel:
+                        return
+
+            # TODO: Warn the user about all of this MK movements being removed
+            # TODO: Remove all movements for this mk
+            if selection_mk in data['mlayerpistons'].keys():
+                config_dialog = dsphwidgets.MLPiston1DConfigDialog(
+                    selection_mk, data['mlayerpistons'][selection_mk]
+                )
+            else:
+                config_dialog = dsphwidgets.MLPiston1DConfigDialog(
+                    selection_mk, None
+                )
+
+            if config_dialog.result() == QtGui.QDialog.Accepted:
+                guiutils.warning_dialog(__("All changes have been applied for mk = {}").format(selection_mk))
+
+            if config_dialog.mlpiston1d is None:
+                data['mlayerpistons'].pop(selection_mk, None)
+            else:
+                data['mlayerpistons'][selection_mk] = config_dialog.mlpiston1d
+
+        if "2" in action.text():
+            # TODO: Implement this
+            guiutils.warning_dialog("Not implemented yet")
+
+        sp_window.accept()
+
+    def on_relaxationzone_menu(action):
+        # Which type of relaxationzone
+        if action.text() == __("Regular waves"):
+            if data['relaxationzone'] is not None:
+                if not isinstance(data['relaxationzone'], RelaxationZoneRegular):
+                    overwrite_warn = guiutils.ok_cancel_dialog(
+                        __("There's already another type of Relaxation Zone defined. "
+                           "Continuing will overwrite it. Are you sure?"))
+                    if overwrite_warn == QtGui.QMessageBox.Cancel:
+                        return
+
+            config_dialog = dsphwidgets.RelaxationZoneRegularConfigDialog(
+                data['relaxationzone']
+            )
+
+            # Set the relaxation zone. Can be an object or be None
+            data['relaxationzone'] = config_dialog.relaxationzone
+        if action.text() == __("Irregular waves"):
+            # TODO: Implement this
+            guiutils.warning_dialog("Not implemented yet")
+        if action.text() == __("External waves"):
+            # TODO: Implement this
+            guiutils.warning_dialog("Not implemented yet")
+
+
+        sp_window.accept()
+
     sp_damping_button.clicked.connect(on_damping_option)
+    sp_multilayeredmb_menu.triggered.connect(on_multilayeredmb_menu)
+    sp_relaxationzone_menu.triggered.connect(on_relaxationzone_menu)
 
     [sp_window_layout.addWidget(x) for x in
      [sp_damping_button, sp_inlet_button, sp_chrono_button, sp_multilayeredmb_button, sp_relaxationzone_button]]
@@ -1056,7 +1077,6 @@ casecontrols_bt_addfillbox.clicked.connect(on_add_fillbox)
 casecontrols_bt_addstl.clicked.connect(on_add_stl)
 casecontrols_bt_importxml.clicked.connect(on_import_xml)
 summary_bt.clicked.connect(on_summary)
-properties_bt.clicked.connect(on_properties)
 toggle3dbutton.clicked.connect(on_2d_toggle)
 casecontrols_bt_special.clicked.connect(on_special_button)
 
@@ -1066,7 +1086,6 @@ ccfilebuttons_layout.addWidget(casecontrols_bt_newdoc)
 ccfilebuttons_layout.addWidget(casecontrols_bt_savedoc)
 ccfilebuttons_layout.addWidget(casecontrols_bt_loaddoc)
 ccsecondrow_layout.addWidget(summary_bt)
-# ccsecondrow.addWidget(properties_bt)
 ccsecondrow_layout.addWidget(toggle3dbutton)
 ccthirdrow_layout.addWidget(casecontrols_bt_addfillbox)
 ccthirdrow_layout.addWidget(casecontrols_bt_addstl)
@@ -3107,7 +3126,6 @@ def on_boundaryvtk():
     """ Opens a dialog with BoundaryVTK exporting options """
     boundaryvtk_tool_dialog = QtGui.QDialog()
 
-    # TODO: Remove this
     guiutils.warning_dialog("Not implemented yet")
     return
 
@@ -4737,7 +4755,7 @@ def on_tree_item_selection_change():
                 damping_config_button.hide()
                 properties_widget.setMinimumHeight(100)
                 properties_widget.setMaximumHeight(100)
-            elif "dampingzone" in selection[0].Name.lower():
+            elif "dampingzone" in selection[0].Name.lower() and selection[0].Name in data['damping'].keys():
                 object_property_table.hide()
                 addtodsph_button.hide()
                 removefromdsph_button.hide()
@@ -4951,6 +4969,8 @@ def selection_monitor():
                     case_limits_obj.LineColor = (1.00, 0.00, 0.00)
                 if case_limits_obj.Selectable:
                     case_limits_obj.Selectable = False
+
+        #     TODO: Watch damping and update it if changed
         except NameError:
             # DSPH Case not opened, disable things
             guiutils.widget_state_config(widget_state_elements, "no case")

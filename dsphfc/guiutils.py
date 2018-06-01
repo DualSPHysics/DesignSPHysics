@@ -1670,6 +1670,20 @@ def damping_config_window(data, object_key):
     main_groupbox = QtGui.QGroupBox("Damping parameters")
     main_groupbox_layout = QtGui.QVBoxLayout()
 
+    limitmin_layout = QtGui.QHBoxLayout()
+    limitmin_label = QtGui.QLabel("Limit Min. (X, Y, Z) (m): ")
+    limitmin_input_x = QtGui.QLineEdit()
+    limitmin_input_y = QtGui.QLineEdit()
+    limitmin_input_z = QtGui.QLineEdit()
+    [limitmin_layout.addWidget(x) for x in [limitmin_label, limitmin_input_x, limitmin_input_y, limitmin_input_z]]
+
+    limitmax_layout = QtGui.QHBoxLayout()
+    limitmax_label = QtGui.QLabel("Limit Max. (X, Y, Z) (m): ")
+    limitmax_input_x = QtGui.QLineEdit()
+    limitmax_input_y = QtGui.QLineEdit()
+    limitmax_input_z = QtGui.QLineEdit()
+    [limitmax_layout.addWidget(x) for x in [limitmax_label, limitmax_input_x, limitmax_input_y, limitmax_input_z]]
+
     overlimit_layout = QtGui.QHBoxLayout()
     overlimit_label = QtGui.QLabel("Overlimit: ")
     overlimit_input = QtGui.QLineEdit()
@@ -1680,6 +1694,8 @@ def damping_config_window(data, object_key):
     redumax_input = QtGui.QLineEdit()
     [redumax_layout.addWidget(x) for x in [redumax_label, redumax_input]]
 
+    main_groupbox_layout.addLayout(limitmin_layout)
+    main_groupbox_layout.addLayout(limitmax_layout)
     main_groupbox_layout.addLayout(overlimit_layout)
     main_groupbox_layout.addLayout(redumax_layout)
 
@@ -1701,6 +1717,15 @@ def damping_config_window(data, object_key):
         data["damping"][object_key].enabled = enabled_checkbox.isChecked()
         data["damping"][object_key].overlimit = float(overlimit_input.text())
         data["damping"][object_key].redumax = float(redumax_input.text())
+        damping_group = FreeCAD.ActiveDocument.getObject(object_key)
+        damping_group.OutList[0].Start = (float(limitmin_input_x.text()) * 1000,
+                                                              float(limitmin_input_y.text()) * 1000,
+                                                              float(limitmin_input_z.text()) * 1000)
+        damping_group.OutList[0].End = (float(limitmax_input_x.text()) * 1000,
+                                                            float(limitmax_input_y.text()) * 1000,
+                                                            float(limitmax_input_z.text()) * 1000)
+        # TODO: Update overlimit
+        FreeCAD.ActiveDocument.recompute()
         damping_window.accept()
 
     def on_cancel():
@@ -1713,7 +1738,9 @@ def damping_config_window(data, object_key):
             main_groupbox.setEnabled(False)
 
     def on_value_change():
-        [x.setText(x.text().replace(",", ".")) for x in [overlimit_input, redumax_input]]
+        [x.setText(x.text().replace(",", ".")) for x in
+         [overlimit_input, redumax_input, limitmin_input_x, limitmin_input_y, limitmin_input_z, limitmax_input_x,
+          limitmax_input_y, limitmax_input_z]]
 
     ok_button.clicked.connect(on_ok)
     cancel_button.clicked.connect(on_cancel)
@@ -1722,7 +1749,16 @@ def damping_config_window(data, object_key):
 
     # Fill fields with case data
     enabled_checkbox.setChecked(data["damping"][object_key].enabled)
+    group = FreeCAD.ActiveDocument.getObject(object_key)
+    limitmin_input_x.setText(str(group.OutList[0].Start[0] / 1000))
+    limitmin_input_y.setText(str(group.OutList[0].Start[1] / 1000))
+    limitmin_input_z.setText(str(group.OutList[0].Start[2] / 1000))
+    limitmax_input_x.setText(str(group.OutList[0].End[0] / 1000))
+    limitmax_input_y.setText(str(group.OutList[0].End[1] / 1000))
+    limitmax_input_z.setText(str(group.OutList[0].End[2] / 1000))
+    # TODO: Compute overlimit
     overlimit_input.setText(str(data["damping"][object_key].overlimit))
+    redumax_input.setText(str(data["damping"][object_key].redumax))
     redumax_input.setText(str(data["damping"][object_key].redumax))
     on_enable_chk(
         QtCore.Qt.Checked if data["damping"][object_key].enabled else QtCore.Qt.Unchecked)
@@ -1773,7 +1809,6 @@ def widget_state_config(widgets, config):
         widgets["casecontrols_bt_addstl"].setEnabled(True)
         widgets["summary_bt"].setEnabled(True)
         widgets["toggle3dbutton"].setEnabled(True)
-        widgets["properties_bt"].setEnabled(True)
         widgets["dampingbutton"].setEnabled(True)
     elif config == "gencase done":
         widgets["ex_selector_combo"].setEnabled(True)
@@ -1792,7 +1827,6 @@ def widget_state_config(widgets, config):
         widgets["casecontrols_bt_addstl"].setEnabled(True)
         widgets["summary_bt"].setEnabled(True)
         widgets["toggle3dbutton"].setEnabled(True)
-        widgets["properties_bt"].setEnabled(True)
         widgets["dampingbutton"].setEnabled(True)
     elif config == "simulation done":
         widgets['post_proc_partvtk_button'].setEnabled(True)
@@ -2097,15 +2131,15 @@ def gencase_completed_dialog(particle_count=0, detail_text="No details", data=di
 
     def on_open_paraview_menu(action):
         subprocess.Popen(
-                [
-                    data['paraview_path'],
-                    "--data={}\\{}".format(
-                        data['project_path'] + '\\' +
-                        data['project_name'] + '_out',
-                        action.text()
-                    )
-                ],
-                stdout=subprocess.PIPE)
+            [
+                data['paraview_path'],
+                "--data={}\\{}".format(
+                    data['project_path'] + '\\' +
+                    data['project_name'] + '_out',
+                    action.text()
+                )
+            ],
+            stdout=subprocess.PIPE)
         detail_text_dialog.hide()
         window.accept()
 

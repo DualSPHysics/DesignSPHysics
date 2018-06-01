@@ -8,6 +8,7 @@ in a DSPH related case.
 """
 
 import sys
+
 reload(sys)
 sys.setdefaultencoding('utf-8')
 import random
@@ -175,7 +176,8 @@ class WaveGen(object):
         wave_period: Wave period (def 1)
     """
 
-    def __init__(self, parent_movement=None, wave_order=1, start=0, duration=0, depth=0, fixed_depth=0, wave_height=0.5, wave_period=1):
+    def __init__(self, parent_movement=None, wave_order=1, start=0, duration=0, depth=0, fixed_depth=0, wave_height=0.5,
+                 wave_period=1):
         super(WaveGen, self).__init__()
         self.parent_movement = parent_movement
         self.type = "Base Wave Generator"
@@ -202,9 +204,9 @@ class RegularPistonWaveGen(WaveGen):
         awas: AWAS object
     """
 
-    def __init__(self, parent_movement=None, wave_order=2, start=0, duration=0, depth=0, fixed_depth=0, wave_height=0.5, wave_period=1, phase=0, ramp=0, disksave_periods=24,
+    def __init__(self, parent_movement=None, wave_order=2, start=0, duration=0, depth=0, fixed_depth=0, wave_height=0.5,
+                 wave_period=1, phase=0, ramp=0, disksave_periods=24,
                  disksave_periodsteps=20, disksave_xpos=2, disksave_zpos=-0.15, piston_dir=None, awas=None):
-
         super(RegularPistonWaveGen, self).__init__(parent_movement, wave_order, start,
                                                    duration, depth, fixed_depth, wave_height, wave_period)
         self.type = "Regular Piston Wave Generator"
@@ -278,7 +280,8 @@ class IrregularPistonWaveGen(WaveGen):
         piston_dir: Movement direction (def [1,0,0])
     """
 
-    def __init__(self, parent_movement=None, wave_order=1, start=0, duration=0, depth=0, fixed_depth=0, wave_height=0.5, wave_period=1, spectrum=IrregularSpectrum.JONSWAP,
+    def __init__(self, parent_movement=None, wave_order=1, start=0, duration=0, depth=0, fixed_depth=0, wave_height=0.5,
+                 wave_period=1, spectrum=IrregularSpectrum.JONSWAP,
                  discretization=IrregularDiscretization.STRETCHED,
                  peak_coef=0.1, waves=50, randomseed=random.randint(0, 9999), serieini=0, ramptime=0,
                  serieini_autofit=True, savemotion_time=30, savemotion_timedt=0.05, savemotion_xpos=2,
@@ -322,8 +325,10 @@ class RegularFlapWaveGen(WaveGen):
         flapaxis1: Point 1 of axis rotation
     """
 
-    def __init__(self, parent_movement=None, wave_order=2, start=0, duration=0, depth=0, fixed_depth=0, wave_height=0.5, wave_period=1, phase=0, ramp=0, disksave_periods=24,
-                 disksave_periodsteps=20, disksave_xpos=2, disksave_zpos=-0.15, variable_draft=0.0, flapaxis0=None, flapaxis1=None):
+    def __init__(self, parent_movement=None, wave_order=2, start=0, duration=0, depth=0, fixed_depth=0, wave_height=0.5,
+                 wave_period=1, phase=0, ramp=0, disksave_periods=24,
+                 disksave_periodsteps=20, disksave_xpos=2, disksave_zpos=-0.15, variable_draft=0.0, flapaxis0=None,
+                 flapaxis1=None):
         super(RegularFlapWaveGen, self).__init__(parent_movement, wave_order,
                                                  start, duration, depth, fixed_depth, wave_height, wave_period)
         self.type = "Regular Flap Wave Generator"
@@ -354,12 +359,14 @@ class IrregularFlapWaveGen(WaveGen):
         flapaxis1: Point 1 of axis rotation
     """
 
-    def __init__(self, parent_movement=None, wave_order=1, start=0, duration=0, depth=0, fixed_depth=0, wave_height=0.5, wave_period=1, spectrum=IrregularSpectrum.JONSWAP,
+    def __init__(self, parent_movement=None, wave_order=1, start=0, duration=0, depth=0, fixed_depth=0, wave_height=0.5,
+                 wave_period=1, spectrum=IrregularSpectrum.JONSWAP,
                  discretization=IrregularDiscretization.STRETCHED,
                  peak_coef=0.1, waves=50, randomseed=random.randint(0, 9999), serieini=0, ramptime=0,
                  serieini_autofit=True, savemotion_time=30, savemotion_timedt=0.05, savemotion_xpos=2,
                  savemotion_zpos=-0.15, saveserie_timemin=0, saveserie_timemax=1300, saveserie_timedt=0.05,
-                 saveserie_xpos=0, saveseriewaves_timemin=0, saveseriewaves_timemax=1000, saveseriewaves_xpos=2, variable_draft=0.0, flapaxis0=None, flapaxis1=None):
+                 saveserie_xpos=0, saveseriewaves_timemin=0, saveseriewaves_timemax=1000, saveseriewaves_xpos=2,
+                 variable_draft=0.0, flapaxis0=None, flapaxis1=None):
         super(IrregularFlapWaveGen, self).__init__(parent_movement, wave_order, start,
                                                    duration, depth, fixed_depth, wave_height, wave_period)
         self.type = "Irregular Flap Wave Generator"
@@ -400,7 +407,8 @@ class FileGen(WaveGen):
         fieldz: Column with Z-position
     """
 
-    def __init__(self, parent_movement=None, duration=0, filename="", fields=0, fieldtime=0, fieldx=0, fieldy=0, fieldz=0):
+    def __init__(self, parent_movement=None, duration=0, filename="", fields=0, fieldtime=0, fieldx=0, fieldy=0,
+                 fieldz=0):
         super(FileGen, self).__init__(parent_movement)
         self.duration = duration
         self.name = "File Wave Generator"
@@ -732,25 +740,10 @@ class RectSinuMotion(BaseMotion):
             self.phase)
 
 
-class CustomProperty(object):
-    """ DualSPHysics compatible custom property.
-
-            Attributes:
-                name: Name of the property
-                mkapplied: String with MK ranges and list
-            """
-
-    # TODO: Finish this.
-
-    def __init__(self, name="New Property", mkapplied=""):
-        self.name = name
-        self.mkapplied = mkapplied
-
-
 class Damping(object):
     """ DualSPHysics damping settings """
 
-    def __init__(self, enabled=False, overlimit=1, redumax=10):
+    def __init__(self, enabled=True, overlimit=1, redumax=10):
         self.enabled = enabled
         self.overlimit = overlimit
         self.redumax = redumax
@@ -762,3 +755,42 @@ class Damping(object):
         to_ret += "Overlimit: {}\n".format(self.overlimit)
         to_ret += "Redumax: {}".format(self.redumax)
         return to_ret
+
+
+class MLPiston1D(object):
+    """ Multi-Layer Pistons using external velocity (for example, from SWASH) """
+
+    def __init__(self, filevelx=None, incz=0, timedataini=0, smooth=0):
+        self.filevelx = filevelx
+        self.incz = incz
+        self.timedataini = timedataini
+        self.smooth = smooth
+
+
+class RelaxationZoneRegular(object):
+    """ Relaxation zone for regular wave generation """
+
+    def __init__(self, start=0, duration=0, waveorder=1, waveheight=1, waveperiod=2, depth=1, swl=1, center=None,
+                 width=0.5, phase=0, ramp=0,
+                 savemotion_periods=24, savemotion_periodsteps=20, savemotion_xpos=0, savemotion_zpos=0,
+                 coefdir=None, coefdt=1000, function_psi=0.9, function_beta=1, driftcorrection=0):
+        self.start = start
+        self.duration = duration
+        self.waveorder = waveorder
+        self.waveheight = waveheight
+        self.waveperiod = waveperiod
+        self.depth = depth
+        self.swl = swl
+        self.center = [0, 0, 0] if center is None else center
+        self.width = width
+        self.phase = phase
+        self.ramp = ramp
+        self.savemotion_periods = savemotion_periods
+        self.savemotion_periodsteps = savemotion_periodsteps
+        self.savemotion_xpos = savemotion_xpos
+        self.savemotion_zpos = savemotion_zpos
+        self.coefdir = [1, 0, 0] if coefdir is None else coefdir
+        self.coefdt = coefdt
+        self.function_psi = function_psi
+        self.function_beta = function_beta
+        self.driftcorrection = driftcorrection
