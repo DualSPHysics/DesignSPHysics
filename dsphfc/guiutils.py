@@ -2150,6 +2150,5 @@ def gencase_completed_dialog(particle_count=0, detail_text="No details", data=di
     temp_data['widget_saver'].triggered.connect(on_open_paraview_menu)
 
     # Window scaffolding and execution
-    window.setFixedWidth(400)
     window.setLayout(main_layout)
     window.show()
