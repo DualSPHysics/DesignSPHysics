@@ -1719,11 +1719,11 @@ def damping_config_window(data, object_key):
         data["damping"][object_key].redumax = float(redumax_input.text())
         damping_group = FreeCAD.ActiveDocument.getObject(object_key)
         damping_group.OutList[0].Start = (float(limitmin_input_x.text()) * 1000,
-                                                              float(limitmin_input_y.text()) * 1000,
-                                                              float(limitmin_input_z.text()) * 1000)
+                                          float(limitmin_input_y.text()) * 1000,
+                                          float(limitmin_input_z.text()) * 1000)
         damping_group.OutList[0].End = (float(limitmax_input_x.text()) * 1000,
-                                                            float(limitmax_input_y.text()) * 1000,
-                                                            float(limitmax_input_z.text()) * 1000)
+                                        float(limitmax_input_y.text()) * 1000,
+                                        float(limitmax_input_z.text()) * 1000)
         # TODO: Update overlimit
         FreeCAD.ActiveDocument.recompute()
         damping_window.accept()
@@ -2028,6 +2028,8 @@ def case_summary(orig_data):
         data['mkboundused']) if len(data['mkboundused']) > 0 else "None"
     data['mkfluidused'] = ", ".join(
         data['mkfluidused']) if len(data['mkfluidused']) > 0 else "None"
+
+    data['last_number_particles'] = data['last_number_particles'] if data['last_number_particles'] >= 0 else "GenCase wasn't executed"
 
     # endregion Formatting movement info
 
