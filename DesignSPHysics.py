@@ -1773,6 +1773,13 @@ def on_partvtk():
         if state == QtCore.Qt.Checked:
             pvtk_types_chk_all.setCheckState(QtCore.Qt.Unchecked)
 
+    def on_pvtk_export_format_change(index):
+        if "vtk" in outformat_combobox.currentText().lower() and data['paraview_path'] != "":
+            pvtk_open_at_end.setEnabled(True)
+        else:
+            pvtk_open_at_end.setEnabled(False)
+
+    outformat_combobox.currentIndexChanged.connect(on_pvtk_export_format_change)
     pvtk_types_chk_all.stateChanged.connect(on_pvtk_type_all_change)
     pvtk_types_chk_bound.stateChanged.connect(on_pvtk_type_bound_change)
     pvtk_types_chk_fluid.stateChanged.connect(on_pvtk_type_fluid_change)
