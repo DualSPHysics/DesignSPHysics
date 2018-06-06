@@ -486,6 +486,7 @@ def on_save_with_gencase():
                 guiutils.widget_state_config(
                     widget_state_elements, "gencase done")
 
+                data["last_number_particles"] = int(total_particles)
                 guiutils.gencase_completed_dialog(particle_count=total_particles,
                                                   detail_text=output.split(
                                                       "================================")[1],

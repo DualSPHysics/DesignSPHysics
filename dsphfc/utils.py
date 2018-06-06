@@ -475,6 +475,9 @@ def get_default_data():
     data['gencase_done'] = False
     data['simulation_done'] = False
 
+    # Last generated number of particles
+    data['last_number_particles'] = -1
+
     # Simulation objects with its parameters.  Without order.
     # format is: {'key': ['mk', 'type', 'fill']}
     data['simobjects'] = dict()
