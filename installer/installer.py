@@ -156,11 +156,6 @@ def main():
                     # Directory does not exists.  Ignoring
                     pass
                 try:
-                    shutil.rmtree(macro_dir + '/test-examples')
-                except OSError:
-                    # Directory does not exists.  Ignoring
-                    pass
-                try:
                     shutil.rmtree(fc_default_mod_dir + '/DesignSPHysics')
                 except OSError:
                     # Directory does not exists.  Ignoring
@@ -182,7 +177,6 @@ def main():
                 shutil.copy("./resource/default-config.json", fc_default_mod_dir + '/DesignSPHysics')
                 shutil.copytree("./resource/DSPH_Images", fc_default_mod_dir + '/DesignSPHysics' + '/DSPH_Images')
                 shutil.copytree("./resource/dsphfc", fc_default_mod_dir + '/DesignSPHysics' + '/dsphfc')
-                shutil.copytree("./resource/test-examples", fc_default_mod_dir + '/DesignSPHysics' + '/test-examples')
 
                 if installopts_selector.currentIndex() is 0:
                     try:

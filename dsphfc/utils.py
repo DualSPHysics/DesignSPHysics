@@ -62,16 +62,14 @@ along with DesignSPHysics.  If not, see <http://www.gnu.org/licenses/>.
 # ------ CONSTANTS DEFINITION ------
 FREECAD_MIN_VERSION = "016"
 APP_NAME = "DesignSPHysics"
-DEBUGGING = True
+DEBUGGING = False
 VERBOSE = False
 DIVIDER = 1000
 PICKLE_PROTOCOL = 1  # Binary mode
-VERSION = "0.4.1805-29-develop"
+VERSION = "0.5.1806-06"
 WIDTH_2D = 0.001
 MAX_PARTICLE_WARNING = 2000000
 HELP_WEBPAGE = "https://github.com/ndrs92/DesignSPHysics/wiki"
-
-
 # ------ END CONSTANTS DEFINITION ------
 
 
