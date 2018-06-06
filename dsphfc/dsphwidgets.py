@@ -3473,7 +3473,6 @@ class InfoDialogDetails(QtGui.QDialog):
         super(InfoDialogDetails, self).__init__(None, QtCore.Qt.CustomizeWindowHint | QtCore.Qt.WindowTitleHint)
         self.setModal(False)
         self.setWindowTitle(__("Details"))
-        self.setFixedSize(550, 273)
         self.main_layout = QtGui.QVBoxLayout()
 
         self.details_text = QtGui.QTextEdit()
@@ -3513,7 +3512,6 @@ class InfoDialog(QtGui.QDialog):
         self.main_layout.addWidget(guiutils.h_line_generator())
         self.main_layout.addLayout(self.button_layout)
         self.setLayout(self.main_layout)
-        self.setFixedSize(300, 80)
 
         self.connections()
         self.show()

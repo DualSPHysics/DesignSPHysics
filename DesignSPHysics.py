@@ -987,7 +987,6 @@ def on_2d_toggle():
 def on_special_button():
     """ Spawns a dialog with special options """
     sp_window = QtGui.QDialog()
-    sp_window.setFixedWidth(200)
     sp_window_layout = QtGui.QVBoxLayout()
 
     sp_damping_button = QtGui.QPushButton(__("Damping"))
@@ -1183,7 +1182,6 @@ run_watcher = QtCore.QFileSystemWatcher()
 # Title and size
 run_dialog.setModal(False)
 run_dialog.setWindowTitle(__("DualSPHysics Simulation: {}%").format("0"))
-run_dialog.setFixedSize(550, 273)
 run_dialog_layout = QtGui.QVBoxLayout()
 
 # Information GroupBox
@@ -1233,7 +1231,6 @@ run_details = QtGui.QDialog(
     None, QtCore.Qt.CustomizeWindowHint | QtCore.Qt.WindowTitleHint)
 run_details.setModal(False)
 run_details.setWindowTitle(__("Simulation details"))
-run_details.setFixedSize(550, 273)
 run_details_layout = QtGui.QVBoxLayout()
 
 run_details_text = QtGui.QTextEdit()
@@ -1455,7 +1452,6 @@ def on_additional_parameters():
     additional_parameters_layout.addStretch(1)
     additional_parameters_layout.addLayout(eo_button_layout)
 
-    additional_parameters_window.setFixedSize(600, 110)
     additional_parameters_window.setLayout(additional_parameters_layout)
     additional_parameters_window.exec_()
 
@@ -1505,7 +1501,6 @@ export_dialog = QtGui.QDialog(
 
 export_dialog.setModal(False)
 export_dialog.setWindowTitle(__("Exporting: {}%").format("0"))
-export_dialog.setFixedSize(550, 143)
 export_dialog_layout = QtGui.QVBoxLayout()
 
 export_progbar_layout = QtGui.QHBoxLayout()
@@ -2115,7 +2110,6 @@ def on_computeforces():
     cfces_onlyprocess_selector.currentIndexChanged.connect(on_cfces_onlyprocess_changed)
     cfces_export_button.clicked.connect(on_cfces_export)
     cfces_cancel_button.clicked.connect(on_cfces_cancel)
-    compforces_tool_dialog.setFixedWidth(430)
     compforces_tool_dialog.exec_()
 
 
@@ -3399,7 +3393,6 @@ if previous_dock:
 
 # Creation of the widget and scaffolding
 properties_widget = QtGui.QDockWidget()
-properties_widget.setMinimumHeight(100)
 properties_widget.setObjectName("DSPH_Properties")
 properties_widget.setWindowTitle(__("DSPH Object Properties"))
 
@@ -4781,8 +4774,6 @@ def on_tree_item_selection_change():
                 addtodsph_button.hide()
                 removefromdsph_button.hide()
                 damping_config_button.hide()
-                properties_widget.setMinimumHeight(100)
-                properties_widget.setMaximumHeight(100)
             elif "dampingzone" in selection[0].Name.lower() and selection[0].Name in data['damping'].keys():
                 object_property_table.hide()
                 addtodsph_button.hide()
@@ -4794,8 +4785,6 @@ def on_tree_item_selection_change():
                 addtodsph_button.hide()
                 removefromdsph_button.show()
                 damping_config_button.hide()
-                properties_widget.setMinimumHeight(300)
-                properties_widget.setMaximumHeight(300)
 
                 # MK config
                 mkgroup_prop.setRange(0, 240)
@@ -4885,8 +4874,6 @@ def on_tree_item_selection_change():
                         to_change.setEnabled(True)
 
             else:
-                properties_widget.setMinimumHeight(100)
-                properties_widget.setMaximumHeight(100)
                 if selection[0].InList == list():
                     # Show button to add to simulation
                     addtodsph_button.setText(__("Add to DSPH Simulation"))

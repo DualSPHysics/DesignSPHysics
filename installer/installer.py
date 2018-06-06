@@ -61,7 +61,6 @@ def main():
 
     w = QtGui.QDialog()
     QtCore.QTextCodec.setCodecForCStrings(QtCore.QTextCodec.codecForName('UTF-8'))
-    w.setFixedSize(400, 500)
 
     w.setWindowFlags(QtCore.Qt.Dialog)
     w.setWindowTitle('DualSPHysics Installer')

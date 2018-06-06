@@ -1271,51 +1271,51 @@ def dump_to_xml(data, save_name):
                 if mot.awas.enabled:
                     f.write('\t\t\t\t\t<awas_zsurf>\n')
                     f.write(
-                        '\t\t\t\t\t\t<startawas value = "{}" comment = "Time to start AWAS correction (def=ramp*waveperiod)" />\n'.format(
+                        '\t\t\t\t\t\t<startawas value="{}" comment="Time to start AWAS correction (def=ramp*waveperiod)" />\n'.format(
                             float(mot.awas.startawas)
                         ))
                     f.write(
-                        '\t\t\t\t\t\t<swl value = "{}" comment = "Still water level (free-surface water)" />\n'.format(
+                        '\t\t\t\t\t\t<swl value="{}" comment="Still water level (free-surface water)" />\n'.format(
                             float(mot.awas.swl)
                         ))
                     f.write(
-                        '\t\t\t\t\t\t<elevation value = "{}" comment = "Order wave to calculate elevation 1:1st order, 2:2nd order (def=2)" />\n'.format(
+                        '\t\t\t\t\t\t<elevation value="{}" comment="Order wave to calculate elevation 1:1st order, 2:2nd order (def=2)" />\n'.format(
                             int(mot.awas.elevation)
                         ))
                     f.write(
-                        '\t\t\t\t\t\t<gaugex valueh = "{}" comment = "Position in X from piston to measure free-surface water (def=5*Dp)" />\n'.format(
+                        '\t\t\t\t\t\t<gaugex valueh="{}" comment="Position in X from piston to measure free-surface water (def=5*Dp)" />\n'.format(
                             float(mot.awas.gaugex)
                         ))
                     f.write(
-                        '\t\t\t\t\t\t<gaugey value = "{}" comment = "Position in Y to measure free-surface water" />\n'.format(
+                        '\t\t\t\t\t\t<gaugey value="{}" comment="Position in Y to measure free-surface water" />\n'.format(
                             float(mot.awas.gaugey)
                         ))
                     f.write(
-                        '\t\t\t\t\t\t<gaugezmin value = "{}" comment = "Minimum position in Z to measure free-surface water, it must be in water (def=domain limits)" />\n'.format(
+                        '\t\t\t\t\t\t<gaugezmin value="{}" comment="Minimum position in Z to measure free-surface water, it must be in water (def=domain limits)" />\n'.format(
                             float(mot.awas.gaugezmin)
                         ))
                     f.write(
-                        '\t\t\t\t\t\t<gaugezmax value = "{}" comment = "Maximum position in Z to measure free-surface water (def=domain limits)" />\n'.format(
+                        '\t\t\t\t\t\t<gaugezmax value="{}" comment="Maximum position in Z to measure free-surface water (def=domain limits)" />\n'.format(
                             float(mot.awas.gaugezmax)
                         ))
                     f.write(
-                        '\t\t\t\t\t\t<gaugedp value = "{}" comment = "Resolution to measure free-surface water, it uses Dp*gaugedp (def=0.1)" />\n'.format(
+                        '\t\t\t\t\t\t<gaugedp value="{}" comment="Resolution to measure free-surface water, it uses Dp*gaugedp (def=0.1)" />\n'.format(
                             float(mot.awas.gaugedp)
                         ))
                     f.write(
-                        '\t\t\t\t\t\t<coefmasslimit value = "{}" comment = "Coefficient to calculate mass of free-surface (def=0.5 on 3D and 0.4 on 2D)" />\n'.format(
+                        '\t\t\t\t\t\t<coefmasslimit value="{}" comment="Coefficient to calculate mass of free-surface (def=0.5 on 3D and 0.4 on 2D)" />\n'.format(
                             float(mot.awas.coefmasslimit)
                         ))
                     f.write(
-                        '\t\t\t\t\t\t<savedata value = "{}" comment = "Saves CSV with information 1:by part, 2:more info 3:by step (def=0)" />\n'.format(
+                        '\t\t\t\t\t\t<savedata value="{}" comment="Saves CSV with information 1:by part, 2:more info 3:by step (def=0)" />\n'.format(
                             int(mot.awas.savedata)
                         ))
                     f.write(
-                        '\t\t\t\t\t\t<limitace value = "{}" comment = "Factor to limit maximum value of acceleration, with 0 disabled (def=2)" />\n'.format(
+                        '\t\t\t\t\t\t<limitace value="{}" comment="Factor to limit maximum value of acceleration, with 0 disabled (def=2)" />\n'.format(
                             float(mot.awas.limitace)
                         ))
                     f.write(
-                        '\t\t\t\t\t\t<{}correction coefstroke = "{}" coefperiod = "{}" powerfunc = "{}" comment = "Drift correction configuration (def=no applied)" />\n'.format(
+                        '\t\t\t\t\t\t<{}correction coefstroke="{}" coefperiod="{}" powerfunc="{}" comment="Drift correction configuration (def=no applied)" />\n'.format(
                             "" if mot.awas.correction.enabled else "_",
                             float(mot.awas.correction.coefstroke),
                             float(mot.awas.correction.coefperiod),
@@ -1386,51 +1386,51 @@ def dump_to_xml(data, save_name):
                 if mot.awas.enabled:
                     f.write('\t\t\t\t\t<awas_zsurf>\n')
                     f.write(
-                        '\t\t\t\t\t\t<startawas value = "{}" comment = "Time to start AWAS correction (def=ramp*waveperiod)" />\n'.format(
+                        '\t\t\t\t\t\t<startawas value="{}" comment="Time to start AWAS correction (def=ramp*waveperiod)" />\n'.format(
                             float(mot.awas.startawas)
                         ))
                     f.write(
-                        '\t\t\t\t\t\t<swl value = "{}" comment = "Still water level (free-surface water)" />\n'.format(
+                        '\t\t\t\t\t\t<swl value="{}" comment="Still water level (free-surface water)" />\n'.format(
                             float(mot.awas.swl)
                         ))
                     f.write(
-                        '\t\t\t\t\t\t<elevation value = "{}" comment = "Order wave to calculate elevation 1:1st order, 2:2nd order (def=2)" />\n'.format(
+                        '\t\t\t\t\t\t<elevation value="{}" comment="Order wave to calculate elevation 1:1st order, 2:2nd order (def=2)" />\n'.format(
                             int(mot.awas.elevation)
                         ))
                     f.write(
-                        '\t\t\t\t\t\t<gaugex valueh = "{}" comment = "Position in X from piston to measure free-surface water (def=5*Dp)" />\n'.format(
+                        '\t\t\t\t\t\t<gaugex valueh="{}" comment="Position in X from piston to measure free-surface water (def=5*Dp)" />\n'.format(
                             float(mot.awas.gaugex)
                         ))
                     f.write(
-                        '\t\t\t\t\t\t<gaugey value = "{}" comment = "Position in Y to measure free-surface water" />\n'.format(
+                        '\t\t\t\t\t\t<gaugey value="{}" comment="Position in Y to measure free-surface water" />\n'.format(
                             float(mot.awas.gaugey)
                         ))
                     f.write(
-                        '\t\t\t\t\t\t<gaugezmin value = "{}" comment = "Minimum position in Z to measure free-surface water, it must be in water (def=domain limits)" />\n'.format(
+                        '\t\t\t\t\t\t<gaugezmin value="{}" comment="Minimum position in Z to measure free-surface water, it must be in water (def=domain limits)" />\n'.format(
                             float(mot.awas.gaugezmin)
                         ))
                     f.write(
-                        '\t\t\t\t\t\t<gaugezmax value = "{}" comment = "Maximum position in Z to measure free-surface water (def=domain limits)" />\n'.format(
+                        '\t\t\t\t\t\t<gaugezmax value="{}" comment="Maximum position in Z to measure free-surface water (def=domain limits)" />\n'.format(
                             float(mot.awas.gaugezmax)
                         ))
                     f.write(
-                        '\t\t\t\t\t\t<gaugedp value = "{}" comment = "Resolution to measure free-surface water, it uses Dp*gaugedp (def=0.1)" />\n'.format(
+                        '\t\t\t\t\t\t<gaugedp value="{}" comment="Resolution to measure free-surface water, it uses Dp*gaugedp (def=0.1)" />\n'.format(
                             float(mot.awas.gaugedp)
                         ))
                     f.write(
-                        '\t\t\t\t\t\t<coefmasslimit value = "{}" comment = "Coefficient to calculate mass of free-surface (def=0.5 on 3D and 0.4 on 2D)" />\n'.format(
+                        '\t\t\t\t\t\t<coefmasslimit value="{}" comment="Coefficient to calculate mass of free-surface (def=0.5 on 3D and 0.4 on 2D)" />\n'.format(
                             float(mot.awas.coefmasslimit)
                         ))
                     f.write(
-                        '\t\t\t\t\t\t<savedata value = "{}" comment = "Saves CSV with information 1:by part, 2:more info 3:by step (def=0)" />\n'.format(
+                        '\t\t\t\t\t\t<savedata value="{}" comment="Saves CSV with information 1:by part, 2:more info 3:by step (def=0)" />\n'.format(
                             int(mot.awas.savedata)
                         ))
                     f.write(
-                        '\t\t\t\t\t\t<limitace value = "{}" comment = "Factor to limit maximum value of acceleration, with 0 disabled (def=2)" />\n'.format(
+                        '\t\t\t\t\t\t<limitace value="{}" comment="Factor to limit maximum value of acceleration, with 0 disabled (def=2)" />\n'.format(
                             float(mot.awas.limitace)
                         ))
                     f.write(
-                        '\t\t\t\t\t\t<{}correction coefstroke = "{}" coefperiod = "{}" powerfunc = "{}" comment = "Drift correction configuration (def=no applied)" />\n'.format(
+                        '\t\t\t\t\t\t<{}correction coefstroke="{}" coefperiod="{}" powerfunc="{}" comment="Drift correction configuration (def=no applied)" />\n'.format(
                             "" if mot.awas.correction.enabled else "_",
                             float(mot.awas.correction.coefstroke),
                             float(mot.awas.correction.coefperiod),
