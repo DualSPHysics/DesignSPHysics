@@ -510,6 +510,9 @@ def on_save_with_gencase():
             gencase_failed_dialog.exec_()
             utils.warning(__("GenCase Failed."))
 
+        # Save results
+        on_save_case()
+
 
 def on_newdoc_menu(action):
     """ Handles the new document button and its dropdown items. """
@@ -2608,6 +2611,16 @@ def isosurface_export(export_parameters):
             guiutils.error_dialog(
                 __("There was an error on the post-processing."), detailed_text=temp_data['current_output'])
 
+        # Bit of code that tries to open ParaView if the option was selected.
+        if export_parameters['open_paraview']:
+            subprocess.Popen(
+                [
+                    data['paraview_path'],
+                    "--data={}\\{}_..{}".format(data['project_path'] + '\\' + data['project_name'] + '_out',
+                                                export_parameters['file_name'], "vtk")
+                ],
+                stdout=subprocess.PIPE)
+
     temp_data['current_output'] = ""
     export_process = QtCore.QProcess(dsph_main_dock)
     export_process.finished.connect(on_export_finished)
@@ -2617,8 +2630,7 @@ def isosurface_export(export_parameters):
         '-dirin ' + data['project_path'] +
         '/' + data['project_name'] + '_out/',
         export_parameters["surface_or_slice"] + " " + data['project_path'] + '/' +
-        data['project_name'] + '_out/' + export_parameters['file_name'],
-        '-onlytype:' + export_parameters['save_types'] +
+        data['project_name'] + '_out/' + export_parameters['file_name'] +
         " " + export_parameters['additional_parameters']
     ]
 
@@ -2654,26 +2666,9 @@ def on_isosurface():
     isosurface_tool_dialog.setWindowTitle(__("IsoSurface Tool"))
     isosurface_tool_layout = QtGui.QVBoxLayout()
 
-    isosfc_types_groupbox = QtGui.QGroupBox(__("Types to export"))
     isosfc_filename_layout = QtGui.QHBoxLayout()
     isosfc_parameters_layout = QtGui.QHBoxLayout()
     isosfc_buttons_layout = QtGui.QHBoxLayout()
-
-    isosfc_types_groupbox_layout = QtGui.QVBoxLayout()
-    isosfc_types_chk_all = QtGui.QCheckBox(__("All"))
-    isosfc_types_chk_all.setCheckState(QtCore.Qt.Checked)
-    isosfc_types_chk_bound = QtGui.QCheckBox(__("Bound"))
-    isosfc_types_chk_fluid = QtGui.QCheckBox(__("Fluid"))
-    isosfc_types_chk_fixed = QtGui.QCheckBox(__("Fixed"))
-    isosfc_types_chk_moving = QtGui.QCheckBox(__("Moving"))
-    isosfc_types_chk_floating = QtGui.QCheckBox(__("Floating"))
-    [
-        isosfc_types_groupbox_layout.addWidget(x)
-        for x in
-        [isosfc_types_chk_all, isosfc_types_chk_bound, isosfc_types_chk_fluid,
-         isosfc_types_chk_fixed, isosfc_types_chk_moving, isosfc_types_chk_floating]
-    ]
-    isosfc_types_groupbox.setLayout(isosfc_types_groupbox_layout)
 
     isosfc_selector_layout = QtGui.QHBoxLayout()
     isosfc_selector_label = QtGui.QLabel(__("Save: "))
@@ -2693,16 +2688,19 @@ def on_isosurface():
     isosfc_parameters_layout.addWidget(isosfc_parameters_label)
     isosfc_parameters_layout.addWidget(isosfc_parameters_text)
 
+    isosfc_open_at_end = QtGui.QCheckBox("Open with ParaView")
+    isosfc_open_at_end.setEnabled(data['paraview_path'] != "")
+
     isosfc_export_button = QtGui.QPushButton(__("Export"))
     isosfc_cancel_button = QtGui.QPushButton(__("Cancel"))
     isosfc_buttons_layout.addWidget(isosfc_export_button)
     isosfc_buttons_layout.addWidget(isosfc_cancel_button)
 
-    isosurface_tool_layout.addWidget(isosfc_types_groupbox)
-    isosurface_tool_layout.addStretch(1)
     isosurface_tool_layout.addLayout(isosfc_selector_layout)
     isosurface_tool_layout.addLayout(isosfc_filename_layout)
     isosurface_tool_layout.addLayout(isosfc_parameters_layout)
+    isosurface_tool_layout.addWidget(isosfc_open_at_end)
+    isosurface_tool_layout.addStretch(1)
     isosurface_tool_layout.addLayout(isosfc_buttons_layout)
 
     isosurface_tool_dialog.setLayout(isosurface_tool_layout)
@@ -2712,23 +2710,6 @@ def on_isosurface():
 
     def on_isosfc_export():
         export_parameters = dict()
-        export_parameters['save_types'] = '-all'
-        if isosfc_types_chk_all.isChecked():
-            export_parameters['save_types'] = '+all'
-        else:
-            if isosfc_types_chk_bound.isChecked():
-                export_parameters['save_types'] += ',+bound'
-            if isosfc_types_chk_fluid.isChecked():
-                export_parameters['save_types'] += ',+fluid'
-            if isosfc_types_chk_fixed.isChecked():
-                export_parameters['save_types'] += ',+fixed'
-            if isosfc_types_chk_moving.isChecked():
-                export_parameters['save_types'] += ',+moving'
-            if isosfc_types_chk_floating.isChecked():
-                export_parameters['save_types'] += ',+floating'
-
-        if export_parameters['save_types'] == '-all':
-            export_parameters['save_types'] = '+all'
 
         if "surface" in isosfc_selector.currentText().lower():
             export_parameters['surface_or_slice'] = '-saveiso'
@@ -2746,45 +2727,11 @@ def on_isosurface():
         else:
             export_parameters['additional_parameters'] = ''
 
+        export_parameters['open_paraview'] = isosfc_open_at_end.isChecked()
+
         isosurface_export(export_parameters)
         isosurface_tool_dialog.accept()
 
-    def on_isosfc_type_all_change(state):
-        if state == QtCore.Qt.Checked:
-            [
-                chk.setCheckState(QtCore.Qt.Unchecked)
-                for chk in
-                [isosfc_types_chk_bound, isosfc_types_chk_fluid, isosfc_types_chk_fixed, isosfc_types_chk_moving,
-                 isosfc_types_chk_floating]
-            ]
-
-    def on_isosfc_type_bound_change(state):
-        if state == QtCore.Qt.Checked:
-            isosfc_types_chk_all.setCheckState(QtCore.Qt.Unchecked)
-
-    def on_isosfc_type_fluid_change(state):
-        if state == QtCore.Qt.Checked:
-            isosfc_types_chk_all.setCheckState(QtCore.Qt.Unchecked)
-
-    def on_isosfc_type_fixed_change(state):
-        if state == QtCore.Qt.Checked:
-            isosfc_types_chk_all.setCheckState(QtCore.Qt.Unchecked)
-
-    def on_isosfc_type_moving_change(state):
-        if state == QtCore.Qt.Checked:
-            isosfc_types_chk_all.setCheckState(QtCore.Qt.Unchecked)
-
-    def on_isosfc_type_floating_change(state):
-        if state == QtCore.Qt.Checked:
-            isosfc_types_chk_all.setCheckState(QtCore.Qt.Unchecked)
-
-    isosfc_types_chk_all.stateChanged.connect(on_isosfc_type_all_change)
-    isosfc_types_chk_bound.stateChanged.connect(on_isosfc_type_bound_change)
-    isosfc_types_chk_fluid.stateChanged.connect(on_isosfc_type_fluid_change)
-    isosfc_types_chk_fixed.stateChanged.connect(on_isosfc_type_fixed_change)
-    isosfc_types_chk_moving.stateChanged.connect(on_isosfc_type_moving_change)
-    isosfc_types_chk_floating.stateChanged.connect(
-        on_isosfc_type_floating_change)
     isosfc_export_button.clicked.connect(on_isosfc_export)
     isosfc_cancel_button.clicked.connect(on_isosfc_cancel)
     isosurface_tool_dialog.exec_()
