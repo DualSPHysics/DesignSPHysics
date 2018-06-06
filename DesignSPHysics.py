@@ -1847,7 +1847,7 @@ def floatinginfo_export(export_parameters):
     ]
 
     if len(export_parameters['onlyprocess']) > 0:
-        static_params_exp.append('-onlyprocess:' + export_parameters['onlyprocess'])
+        static_params_exp.append('-onlymk:' + export_parameters['onlyprocess'])
 
     export_process.start(data['floatinginfo_path'], static_params_exp)
     temp_data['current_export_process'] = export_process
