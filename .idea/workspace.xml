@@ -9,32 +9,34 @@
   <component name="ChangeListManager">
     <list default="true" id="22d76f4b-310a-4afb-8788-a472c77b2c87" name="Default" comment="Prepares">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/DesignSPHysics.py" beforeDir="false" afterPath="$PROJECT_DIR$/DesignSPHysics.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/build-release.bat" beforeDir="false" afterPath="$PROJECT_DIR$/build-release.bat" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/build-release.sh" beforeDir="false" afterPath="$PROJECT_DIR$/build-release.sh" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/dsphfc/utils.py" beforeDir="false" afterPath="$PROJECT_DIR$/dsphfc/utils.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/installer/installer.py" beforeDir="false" afterPath="$PROJECT_DIR$/installer/installer.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/test-examples/.directory" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/test-examples/dam-break/DSPH_Case.FCStd" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/test-examples/dam-break/casedata.dsphdata" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/test-examples/dam-break/dam-break_Def.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/test-examples/dam-break/dam-break_Out/dam-break.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/test-examples/dam-break/run.bat" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/test-examples/dam-break/run.sh" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/test-examples/float_example/DSPH_Case.FCStd" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/test-examples/float_example/casedata.dsphdata" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/test-examples/float_example/float_example_Def.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/test-examples/float_example/float_example_Out/float_example.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/test-examples/float_example/run.bat" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/test-examples/float_example/run.sh" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/test-examples/initials_example/DSPH_Case.FCStd" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/test-examples/initials_example/DSPH_Case.FCStd1" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/test-examples/initials_example/casedata.dsphdata" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/test-examples/initials_example/casing.stl" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/test-examples/initials_example/initials_example_Def.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/test-examples/initials_example/initials_example_Out/initials_example.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/test-examples/initials_example/run.bat" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/test-examples/initials_example/run.sh" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/dualsphysics/EXECS/BoundaryVTK4_linux64" beforeDir="false" afterPath="$PROJECT_DIR$/dualsphysics/EXECS/BoundaryVTK4_linux64" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/dualsphysics/EXECS/ComputeForces4_linux64" beforeDir="false" afterPath="$PROJECT_DIR$/dualsphysics/EXECS/ComputeForces4_linux64" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/dualsphysics/EXECS/DsphConfig.xml" beforeDir="false" afterPath="$PROJECT_DIR$/dualsphysics/EXECS/DsphConfig.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/dualsphysics/EXECS/DualSPHysics3.4_LiquidSediment_linux64" beforeDir="false" afterPath="$PROJECT_DIR$/dualsphysics/EXECS/DualSPHysics3.4_LiquidSediment_linux64" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/dualsphysics/EXECS/DualSPHysics4.0_LiquidGasCPU_linux64" beforeDir="false" afterPath="$PROJECT_DIR$/dualsphysics/EXECS/DualSPHysics4.0_LiquidGasCPU_linux64" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/dualsphysics/EXECS/DualSPHysics4.0_LiquidGas_linux64" beforeDir="false" afterPath="$PROJECT_DIR$/dualsphysics/EXECS/DualSPHysics4.0_LiquidGas_linux64" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/dualsphysics/EXECS/DualSPHysics4.2CPU_linux64" beforeDir="false" afterPath="$PROJECT_DIR$/dualsphysics/EXECS/DualSPHysics4.2CPU_linux64" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/dualsphysics/EXECS/DualSPHysics4.2CPU_win64.exe" beforeDir="false" afterPath="$PROJECT_DIR$/dualsphysics/EXECS/DualSPHysics4.2CPU_win64.exe" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/dualsphysics/EXECS/DualSPHysics4.2_linux64" beforeDir="false" afterPath="$PROJECT_DIR$/dualsphysics/EXECS/DualSPHysics4.2_linux64" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/dualsphysics/EXECS/DualSPHysics4.2_win64.exe" beforeDir="false" afterPath="$PROJECT_DIR$/dualsphysics/EXECS/DualSPHysics4.2_win64.exe" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/dualsphysics/EXECS/FloatingInfo4_linux64" beforeDir="false" afterPath="$PROJECT_DIR$/dualsphysics/EXECS/FloatingInfo4_linux64" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/dualsphysics/EXECS/FlowTool4_linux64" beforeDir="false" afterPath="$PROJECT_DIR$/dualsphysics/EXECS/FlowTool4_linux64" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/dualsphysics/EXECS/GenCase4_MkWord_linux64" beforeDir="false" afterPath="$PROJECT_DIR$/dualsphysics/EXECS/GenCase4_MkWord_linux64" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/dualsphysics/EXECS/GenCase4_linux64" beforeDir="false" afterPath="$PROJECT_DIR$/dualsphysics/EXECS/GenCase4_linux64" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/dualsphysics/EXECS/IsoSurface4_linux64" beforeDir="false" afterPath="$PROJECT_DIR$/dualsphysics/EXECS/IsoSurface4_linux64" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/dualsphysics/EXECS/MeasureTool4_linux64" beforeDir="false" afterPath="$PROJECT_DIR$/dualsphysics/EXECS/MeasureTool4_linux64" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/dualsphysics/EXECS/PartVTK4_linux64" beforeDir="false" afterPath="$PROJECT_DIR$/dualsphysics/EXECS/PartVTK4_linux64" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/dualsphysics/EXECS/PartVTK4_win64.exe" beforeDir="false" afterPath="$PROJECT_DIR$/dualsphysics/EXECS/PartVTK4_win64.exe" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/dualsphysics/EXECS/PartVTKOut4_linux64" beforeDir="false" afterPath="$PROJECT_DIR$/dualsphysics/EXECS/PartVTKOut4_linux64" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/dualsphysics/EXECS/ReadSwash2_win64.exe" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/dualsphysics/EXECS/RedistPackage/info.txt" beforeDir="false" afterPath="$PROJECT_DIR$/dualsphysics/EXECS/RedistPackage/info.txt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/dualsphysics/EXECS/RedistPackage/vcredist_x64_VC2008.exe" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/dualsphysics/EXECS/VERSION_INFO.txt" beforeDir="false" afterPath="$PROJECT_DIR$/dualsphysics/EXECS/VERSION_INFO.txt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/dualsphysics/EXECS/cudart64_75.dll" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/dualsphysics/EXECS/cudart64_91.dll" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/dualsphysics/EXECS/libcudart.so.9.1" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/dualsphysics/EXECS/swash314AB.exe" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/dualsphysics/EXECS/vcomp120.dll" beforeDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="TRACKING_ENABLED" value="true" />
@@ -73,7 +75,7 @@
           <file leaf-file-name="DesignSPHysics.py" pinned="false" current-in-tab="false">
             <entry file="file://$PROJECT_DIR$/DesignSPHysics.py">
               <provider selected="true" editor-type-id="text-editor">
-                <state relative-caret-position="273">
+                <state relative-caret-position="22632">
                   <caret line="997" column="45" selection-start-line="997" selection-start-column="45" selection-end-line="997" selection-end-column="45" />
                   <folding>
                     <element signature="e#286#300#0" expanded="true" />
@@ -85,8 +87,8 @@
           <file leaf-file-name="installer.py" pinned="false" current-in-tab="true">
             <entry file="file://$PROJECT_DIR$/installer/installer.py">
               <provider selected="true" editor-type-id="text-editor">
-                <state relative-caret-position="245">
-                  <caret line="180" column="23" selection-start-line="180" selection-start-column="23" selection-end-line="180" selection-end-column="23" />
+                <state relative-caret-position="200">
+                  <caret line="189" column="30" selection-start-line="189" selection-start-column="30" selection-end-line="189" selection-end-column="30" />
                 </state>
               </provider>
             </entry>
@@ -103,7 +105,7 @@
           <file leaf-file-name="guiutils.py" pinned="false" current-in-tab="false">
             <entry file="file://$PROJECT_DIR$/dsphfc/guiutils.py">
               <provider selected="true" editor-type-id="text-editor">
-                <state relative-caret-position="245">
+                <state relative-caret-position="31027">
                   <caret line="1356" column="18" selection-start-line="1356" selection-start-column="18" selection-end-line="1356" selection-end-column="18" />
                 </state>
               </provider>
@@ -112,7 +114,7 @@
           <file leaf-file-name="dsphwidgets.py" pinned="false" current-in-tab="false">
             <entry file="file://$PROJECT_DIR$/dsphfc/dsphwidgets.py">
               <provider selected="true" editor-type-id="text-editor">
-                <state relative-caret-position="227">
+                <state relative-caret-position="80661">
                   <caret line="3514" selection-start-line="3514" selection-end-line="3514" />
                   <folding>
                     <element signature="e#273#287#0" expanded="true" />
@@ -124,7 +126,7 @@
           <file leaf-file-name="utils.py" pinned="false" current-in-tab="false">
             <entry file="file://$PROJECT_DIR$/dsphfc/utils.py">
               <provider selected="true" editor-type-id="text-editor">
-                <state relative-caret-position="368">
+                <state relative-caret-position="1265">
                   <caret line="71" column="62" selection-start-line="71" selection-start-column="62" selection-end-line="71" selection-end-column="62" />
                 </state>
               </provider>
@@ -137,8 +139,8 @@
           <file leaf-file-name="xmlimporter.py" pinned="false" current-in-tab="true">
             <entry file="file://$PROJECT_DIR$/dsphfc/xmlimporter.py">
               <provider selected="true" editor-type-id="text-editor">
-                <state relative-caret-position="269">
-                  <caret line="262" column="46" selection-start-line="262" selection-start-column="46" selection-end-line="262" selection-end-column="46" />
+                <state relative-caret-position="430">
+                  <caret line="268" selection-start-line="268" selection-end-line="268" />
                 </state>
               </provider>
             </entry>
@@ -155,7 +157,7 @@
           <file leaf-file-name="properties.py" pinned="false" current-in-tab="false">
             <entry file="file://$PROJECT_DIR$/dsphfc/properties.py">
               <provider selected="true" editor-type-id="text-editor">
-                <state relative-caret-position="23">
+                <state relative-caret-position="17779">
                   <caret line="773" column="24" selection-start-line="773" selection-start-column="24" selection-end-line="773" selection-end-column="24" />
                 </state>
               </provider>
@@ -213,6 +215,11 @@
       </list>
     </option>
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+    <option name="RECENT_BRANCH_BY_REPOSITORY">
+      <map>
+        <entry key="$PROJECT_DIR$" value="master" />
+      </map>
+    </option>
   </component>
   <component name="HighlightingSettingsPerFile">
     <setting file="file://$PROJECT_DIR$/dsphfc/dsphwidgets.py" root0="FORCE_HIGHLIGHTING" />
@@ -768,20 +775,17 @@
   </component>
   <component name="ToolWindowManager">
     <frame x="0" y="0" width="2560" height="1080" extended-state="0" />
-    <editor active="true" />
     <layout>
       <window_info anchor="bottom" id="TODO" order="7" sideWeight="0.49156272" weight="0.25273633" />
-      <window_info anchor="bottom" id="Messages" />
       <window_info anchor="bottom" id="Event Log" order="6" sideWeight="0.5084373" side_tool="true" weight="0.22979552" />
       <window_info anchor="bottom" id="Database Changes" order="10" show_stripe_button="false" />
-      <window_info anchor="bottom" id="Version Control" order="12" sideWeight="0.4915751" visible="true" weight="0.25472638" />
+      <window_info active="true" anchor="bottom" id="Version Control" order="12" sideWeight="0.4915751" visible="true" weight="0.25472638" />
       <window_info anchor="bottom" id="Python Console" order="9" weight="0.3283582" />
       <window_info anchor="bottom" id="Run" order="2" weight="0.32960895" />
       <window_info anchor="bottom" id="Terminal" order="11" weight="0.20597015" />
-      <window_info active="true" content_ui="combo" id="Project" order="0" sideWeight="0.4993498" visible="true" weight="0.11729623" />
+      <window_info content_ui="combo" id="Project" order="0" sideWeight="0.4993498" visible="true" weight="0.11968191" />
       <window_info anchor="bottom" id="Docker" order="8" show_stripe_button="false" />
       <window_info anchor="right" id="Database" order="3" sideWeight="0.49799734" weight="0.32962227" />
-      <window_info anchor="bottom" id="Find" order="1" weight="0.3283582" />
       <window_info anchor="right" id="SciView" order="4" sideWeight="0.4992785" weight="0.32962227" />
       <window_info anchor="right" id="Structure" order="5" sideWeight="0.50200266" side_tool="true" visible="true" weight="0.1304175" />
       <window_info id="Favorites" order="1" sideWeight="0.50065017" side_tool="true" weight="0.10771065" />
@@ -792,8 +796,10 @@
       <window_info anchor="right" id="Commander" order="0" weight="0.4" />
       <window_info anchor="right" id="Ant Build" order="1" weight="0.25" />
       <window_info anchor="right" id="Data View" order="6" />
+      <window_info anchor="bottom" id="Messages" order="8" />
       <window_info anchor="bottom" id="Message" order="0" />
       <window_info anchor="bottom" id="Cvs" order="4" weight="0.25" />
+      <window_info anchor="bottom" id="Find" order="1" weight="0.3283582" />
     </layout>
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -801,6 +807,32 @@
   </component>
   <component name="UnknownFeatures">
     <option featureType="com.intellij.fileTypeFactory" implementationName="*.md" />
+  </component>
+  <component name="Vcs.Log.Tabs.Properties">
+    <option name="TAB_STATES">
+      <map>
+        <entry key="MAIN">
+          <value>
+            <State>
+              <option name="RECENTLY_FILTERED_USER_GROUPS">
+                <collection />
+              </option>
+              <option name="RECENTLY_FILTERED_BRANCH_GROUPS">
+                <collection />
+              </option>
+              <option name="COLUMN_ORDER">
+                <list>
+                  <option value="0" />
+                  <option value="1" />
+                  <option value="2" />
+                  <option value="3" />
+                </list>
+              </option>
+            </State>
+          </value>
+        </entry>
+      </map>
+    </option>
   </component>
   <component name="VcsContentAnnotationSettings">
     <option name="myLimit" value="2678400000" />
@@ -1018,29 +1050,11 @@
     <entry file="file://$PROJECT_DIR$/dsphfc/execution_parameters.py">
       <provider selected="true" editor-type-id="text-editor" />
     </entry>
-    <entry file="file://$PROJECT_DIR$/test-examples/dam-break/run.bat">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-134" />
-      </provider>
-    </entry>
+    <entry file="file://$PROJECT_DIR$/test-examples/dam-break/run.bat" />
     <entry file="file://$PROJECT_DIR$/dsphfc/lang/english.json">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="598">
           <caret line="26" column="47" selection-start-line="26" selection-start-column="47" selection-end-line="26" selection-end-column="47" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/default-config.json">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="483">
-          <caret line="21" column="22" selection-start-line="21" selection-start-column="9" selection-end-line="21" selection-end-column="22" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/dsphfc/propenums.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="345">
-          <caret line="15" column="30" selection-start-line="15" selection-start-column="30" selection-end-line="15" selection-end-column="30" />
         </state>
       </provider>
     </entry>
@@ -1051,48 +1065,10 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/dsphfc/properties.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="23">
-          <caret line="773" column="24" selection-start-line="773" selection-start-column="24" selection-end-line="773" selection-end-column="24" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/dsphfc/dsphwidgets.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="227">
-          <caret line="3514" selection-start-line="3514" selection-end-line="3514" />
-          <folding>
-            <element signature="e#273#287#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/dsphfc/guiutils.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="245">
-          <caret line="1356" column="18" selection-start-line="1356" selection-start-column="18" selection-end-line="1356" selection-end-column="18" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/dsphfc/templates/case_summary_template.html">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="69">
           <caret line="3" column="55" lean-forward="true" selection-start-line="3" selection-start-column="55" selection-end-line="3" selection-end-column="55" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/dsphfc/xmlimporter.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="269">
-          <caret line="262" column="46" selection-start-line="262" selection-start-column="46" selection-end-line="262" selection-end-column="46" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/dsphfc/utils.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="368">
-          <caret line="71" column="62" selection-start-line="71" selection-start-column="62" selection-end-line="71" selection-end-column="62" />
         </state>
       </provider>
     </entry>
@@ -1101,7 +1077,7 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/DesignSPHysics.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="273">
+        <state relative-caret-position="22632">
           <caret line="997" column="45" selection-start-line="997" selection-start-column="45" selection-end-line="997" selection-end-column="45" />
           <folding>
             <element signature="e#286#300#0" expanded="true" />
@@ -1109,10 +1085,62 @@
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/default-config.json">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="483">
+          <caret line="21" column="22" selection-start-line="21" selection-start-column="9" selection-end-line="21" selection-end-column="22" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/dsphfc/guiutils.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="31027">
+          <caret line="1356" column="18" selection-start-line="1356" selection-start-column="18" selection-end-line="1356" selection-end-column="18" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/dsphfc/dsphwidgets.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="80661">
+          <caret line="3514" selection-start-line="3514" selection-end-line="3514" />
+          <folding>
+            <element signature="e#273#287#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/dsphfc/utils.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="1265">
+          <caret line="71" column="62" selection-start-line="71" selection-start-column="62" selection-end-line="71" selection-end-column="62" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/dsphfc/xmlimporter.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="430">
+          <caret line="268" selection-start-line="268" selection-end-line="268" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/dsphfc/propenums.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="345">
+          <caret line="15" column="30" selection-start-line="15" selection-start-column="30" selection-end-line="15" selection-end-column="30" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/dsphfc/properties.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="17779">
+          <caret line="773" column="24" selection-start-line="773" selection-start-column="24" selection-end-line="773" selection-end-column="24" />
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/installer/installer.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="245">
-          <caret line="180" column="23" selection-start-line="180" selection-start-column="23" selection-end-line="180" selection-end-column="23" />
+        <state relative-caret-position="200">
+          <caret line="189" column="30" selection-start-line="189" selection-start-column="30" selection-end-line="189" selection-end-column="30" />
         </state>
       </provider>
     </entry>
