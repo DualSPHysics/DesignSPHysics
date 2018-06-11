@@ -1326,8 +1326,9 @@ def on_ex_simulate():
                     widget_state_elements, "sim error")
                 execution_error_dialog = QtGui.QMessageBox()
                 execution_error_dialog.setText(
-                    __("There was an error in execution. Make sure you set the parameters right (and they exist). "
-                       "Also, make sure that your computer has the right hardware to simulate. Check the details for more information."))
+                    __("An error occurred during execution. Make sure that parameters exist and are properly defined. "
+                       "You can also check your execution device (update the driver of your GPU). "
+                       "Read the details for more information."))
                 execution_error_dialog.setDetailedText(
                     str(output).split("================================")[1])
                 execution_error_dialog.setIcon(QtGui.QMessageBox.Critical)
@@ -2051,7 +2052,7 @@ def on_computeforces():
 
     cfces_filename_label = QtGui.QLabel(__("File Name"))
     cfces_filename_text = QtGui.QLineEdit()
-    cfces_filename_text.setText("FloatingForce")
+    cfces_filename_text.setText("Force")
     cfces_filename_layout.addWidget(cfces_filename_label)
     cfces_filename_layout.addWidget(cfces_filename_text)
 
