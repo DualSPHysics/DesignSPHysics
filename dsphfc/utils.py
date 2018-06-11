@@ -295,9 +295,10 @@ def check_executables(data):
 
         if bundled_execs_present:
             user_selection = guiutils.ok_cancel_dialog(APP_NAME,
-                                                       "One or more of the executables in the setup is not correct. \n"
-                                                       "A DualSPHysics package was detected on your installation. Do you want \n"
-                                                       "to load the default configuration?")
+                                                       "The path of some of the executables "
+                                                       "in “Setup Plugin” is not correct.\n"
+                                                       "DualSPHysics was detected. "
+                                                       "Do you want to load the default configuration?")
             if user_selection == QtGui.QMessageBox.Ok:
                 # Auto-fill executables.
                 filled_data = get_default_config_file()
