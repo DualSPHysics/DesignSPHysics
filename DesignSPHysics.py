@@ -4103,10 +4103,10 @@ def motion_change():
     has_motion_layout.addWidget(has_motion_helplabel)
     has_motion_layout.addWidget(has_motion_targetlabel)
 
-    motion_features_layout = QtGui.QHBoxLayout()
+    motion_features_layout = QtGui.QVBoxLayout()
+    motion_features_splitter = QtGui.QSplitter()
 
     movement_list_groupbox = QtGui.QGroupBox(__("Global Movements"))
-    movement_list_groupbox.setMaximumWidth(310)
     movement_list_groupbox_layout = QtGui.QVBoxLayout()
 
     movement_list_table = QtGui.QTableWidget(1, 2)
@@ -4141,7 +4141,6 @@ def motion_change():
     timeline_groupbox.setLayout(timeline_groupbox_layout)
 
     actions_groupbox = QtGui.QGroupBox(__("Available actions"))
-    actions_groupbox.setMaximumWidth(310)
     actions_groupbox_layout = QtGui.QVBoxLayout()
 
     actions_groupbox_table = QtGui.QTableWidget(0, 1)
@@ -4152,9 +4151,11 @@ def motion_change():
     actions_groupbox_layout.addWidget(actions_groupbox_table)
     actions_groupbox.setLayout(actions_groupbox_layout)
 
-    motion_features_layout.addWidget(movement_list_groupbox)
-    motion_features_layout.addWidget(timeline_groupbox)
-    motion_features_layout.addWidget(actions_groupbox)
+    motion_features_splitter.addWidget(movement_list_groupbox)
+    motion_features_splitter.addWidget(timeline_groupbox)
+    motion_features_splitter.addWidget(actions_groupbox)
+    motion_features_splitter.setSizePolicy(QtGui.QSizePolicy.Expanding, QtGui.QSizePolicy.Expanding)
+    motion_features_layout.addWidget(motion_features_splitter)
 
     buttons_layout = QtGui.QHBoxLayout()
     buttons_layout.addWidget(notice_label)
