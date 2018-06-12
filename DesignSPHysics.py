@@ -98,6 +98,7 @@ dsph_main_dock_scaff_widget = QtGui.QWidget()
 
 # Executes the default data function the first time and merges results with current data structure.
 default_data, default_temp_data = utils.get_default_data()
+
 data.update(default_data)
 temp_data.update(default_temp_data)
 

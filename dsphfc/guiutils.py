@@ -1339,13 +1339,13 @@ def def_setup_window(data):
         data['boundaryvtk_path'] = boundaryvtk_input.text()
         data['flowtool_path'] = flowtool_input.text()
         data['paraview_path'] = paraview_input.text()
+        data_to_merge, state = utils.check_executables(data)
+        data.update(data_to_merge)
         with open(FreeCAD.getUserAppDataDir() + '/dsph_data-{}.dsphdata'.format(utils.VERSION),
                   'wb') as picklefile:
             pickle.dump(data, picklefile, utils.PICKLE_PROTOCOL)
         utils.log("Setup changed. Saved to " + FreeCAD.getUserAppDataDir() +
                   '/dsph_data-{}.dsphdata'.format(utils.VERSION))
-        data_to_merge, state = utils.check_executables(data)
-        data.update(data_to_merge)
         setup_window.accept()
 
     def on_cancel():

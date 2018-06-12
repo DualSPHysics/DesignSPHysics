@@ -533,6 +533,7 @@ def get_default_data():
                 data['measuretool_path'] = disk_data['measuretool_path']
                 data['isosurface_path'] = disk_data['isosurface_path']
                 data['boundaryvtk_path'] = disk_data['boundaryvtk_path']
+                data['flowtool_path'] = disk_data['flowtool_path']
                 data['paraview_path'] = disk_data['paraview_path']
 
         except Exception:
@@ -547,10 +548,14 @@ def get_default_data():
             data['measuretool_path'] = ""
             data['isosurface_path'] = ""
             data['boundaryvtk_path'] = ""
+            data['flowtool_path'] = ""
             data['paraview_path'] = ""
             data.update(get_default_config_file())
 
         data, state = check_executables(data)
+        with open(FreeCAD.getUserAppDataDir() + '/dsph_data-{}.dsphdata'.format(VERSION),
+                  'wb') as picklefile:
+            pickle.dump(data, picklefile, PICKLE_PROTOCOL)
     else:
         # Settings file not created. Merging with default one inf default-config.json
         data["project_path"] = ""
