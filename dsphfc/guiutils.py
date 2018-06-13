@@ -2096,7 +2096,7 @@ def gencase_completed_dialog(particle_count=0, detail_text="No details", data=di
     button_layout.addWidget(bt_ok)
 
     # Details popup window
-    detail_text_dialog = QtGui.QDialog(None, QtCore.Qt.CustomizeWindowHint | QtCore.Qt.WindowTitleHint)
+    detail_text_dialog = QtGui.QDialog()
     detail_text_dialog.setModal(False)
     detail_text_dialog_layout = QtGui.QVBoxLayout()
 
