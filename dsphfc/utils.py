@@ -872,7 +872,6 @@ def dump_to_xml(data, save_name):
                         f.write('\t\t\t\t\t\t<size x="' + str(filllimits.Length.Value / DIVIDER) + '" y="' + str(
                             filllimits.Width.Value / DIVIDER) + '" z="' +
                                 str(filllimits.Height.Value / DIVIDER) + '" />\n')
-                        f.write('\t\t\t\t\t\t<matrixreset />\n')
                         f.write('\t\t\t\t\t</fillbox>\n')
                     else:
                         # Something went wrong, one of the needed objects is not
