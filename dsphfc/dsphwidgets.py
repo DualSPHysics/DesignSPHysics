@@ -3470,7 +3470,7 @@ class InfoDialogDetails(QtGui.QDialog):
     """ A popup dialog with a text box to show details."""
 
     def __init__(self, text=None):
-        super(InfoDialogDetails, self).__init__(None, QtCore.Qt.CustomizeWindowHint | QtCore.Qt.WindowTitleHint)
+        super(InfoDialogDetails, self).__init__()
         self.setModal(False)
         self.setWindowTitle(__("Details"))
         self.main_layout = QtGui.QVBoxLayout()

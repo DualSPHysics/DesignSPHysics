@@ -355,8 +355,8 @@ def on_save_case(save_as=None):
                             filename, save_name))
                         try:
                             shutil.copy2(filename, save_name)
-                            movement.generator.filename = "{}/{}".format(
-                                save_name, filename.split("/")[-1])
+                            movement.generator.filename = "{}".format(
+                                filename.split("/")[-1])
                         except IOError:
                             utils.error("Unable to copy {} into {}".format(
                                 filename, save_name))
@@ -1178,8 +1178,7 @@ cc_layout.addLayout(ccsecondrow_layout)
 cc_layout.addLayout(ccfourthrow_layout)
 
 # Defines run window dialog
-run_dialog = QtGui.QDialog(
-    None, QtCore.Qt.CustomizeWindowHint | QtCore.Qt.WindowTitleHint)
+run_dialog = QtGui.QDialog()
 run_watcher = QtCore.QFileSystemWatcher()
 
 # Title and size
@@ -1230,8 +1229,7 @@ run_dialog_layout.addLayout(run_button_layout)
 run_dialog.setLayout(run_dialog_layout)
 
 # Defines run details
-run_details = QtGui.QDialog(
-    None, QtCore.Qt.CustomizeWindowHint | QtCore.Qt.WindowTitleHint)
+run_details = QtGui.QDialog()
 run_details.setModal(False)
 run_details.setWindowTitle(__("Simulation details"))
 run_details_layout = QtGui.QVBoxLayout()
@@ -1500,8 +1498,7 @@ ex_layout.addLayout(ex_button_layout)
 
 # Defines export window dialog.
 # This dialog is used in each <tool>_export function as a generic progress information
-export_dialog = QtGui.QDialog(
-    None, QtCore.Qt.CustomizeWindowHint | QtCore.Qt.WindowTitleHint)
+export_dialog = QtGui.QDialog()
 
 export_dialog.setModal(False)
 export_dialog.setWindowTitle(__("Exporting: {}%").format("0"))
