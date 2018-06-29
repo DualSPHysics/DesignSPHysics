@@ -1685,7 +1685,7 @@ def damping_config_window(data, object_key):
     [limitmax_layout.addWidget(x) for x in [limitmax_label, limitmax_input_x, limitmax_input_y, limitmax_input_z]]
 
     overlimit_layout = QtGui.QHBoxLayout()
-    overlimit_label = QtGui.QLabel("Overlimit: ")
+    overlimit_label = QtGui.QLabel("Overlimit (m): ")
     overlimit_input = QtGui.QLineEdit()
     [overlimit_layout.addWidget(x) for x in [overlimit_label, overlimit_input]]
 
@@ -1724,7 +1724,14 @@ def damping_config_window(data, object_key):
         damping_group.OutList[0].End = (float(limitmax_input_x.text()) * 1000,
                                         float(limitmax_input_y.text()) * 1000,
                                         float(limitmax_input_z.text()) * 1000)
-        # TODO: Update overlimit
+        damping_group.OutList[1].Start = damping_group.OutList[0].End
+
+        overlimit_vector = FreeCAD.Vector(*damping_group.OutList[0].End) - FreeCAD.Vector(*damping_group.OutList[0].Start)
+        overlimit_vector.normalize()
+        overlimit_vector = overlimit_vector * data["damping"][object_key].overlimit * 1000
+        overlimit_vector = overlimit_vector + FreeCAD.Vector(*damping_group.OutList[0].End)
+
+        damping_group.OutList[1].End = (overlimit_vector.x, overlimit_vector.y, overlimit_vector.z)
         FreeCAD.ActiveDocument.recompute()
         damping_window.accept()
 
@@ -1756,8 +1763,7 @@ def damping_config_window(data, object_key):
     limitmax_input_x.setText(str(group.OutList[0].End[0] / 1000))
     limitmax_input_y.setText(str(group.OutList[0].End[1] / 1000))
     limitmax_input_z.setText(str(group.OutList[0].End[2] / 1000))
-    # TODO: Compute overlimit
-    overlimit_input.setText(str(data["damping"][object_key].overlimit))
+    overlimit_input.setText(str(group.OutList[1].Length.Value / 1000))
     redumax_input.setText(str(data["damping"][object_key].redumax))
     redumax_input.setText(str(data["damping"][object_key].redumax))
     on_enable_chk(

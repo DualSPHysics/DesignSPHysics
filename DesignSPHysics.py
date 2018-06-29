@@ -354,7 +354,7 @@ def on_save_case(save_as=None):
                         utils.debug("Copying {} to {}".format(
                             filename, save_name))
                         try:
-                            shutil.copy2(filename, save_name)
+                            shutil.copy2(filename, save_name + "/" + save_name.split('/')[-1] + "_out")
                             movement.generator.filename = "{}".format(
                                 filename.split("/")[-1])
                         except IOError:
@@ -674,21 +674,21 @@ def on_add_damping_zone():
     limitsv.ArrowType = "Dot"
 
     # Overlimit line
-    # points = [FreeCAD.Vector(*limits.Start), FreeCAD.Vector(2000, 2000, 2000)]
-    # overlimit = Draft.makeWire(points, closed=False, face=False, support=None)
-    # Draft.autogroup(overlimit)
-    # overlimit.Label = "Overlimit"
-    # overlimitv = FreeCADGui.ActiveDocument.getObject(overlimit.Name)
-    # overlimitv.DrawStyle = "Dotted"
-    # overlimitv.ShapeColor = (0.32, 1.00, 0.00)
-    # overlimitv.LineColor = (0.32, 1.00, 0.00)
-    # overlimitv.PointColor = (0.32, 1.00, 0.00)
-    # overlimitv.EndArrow = True
-    # overlimitv.ArrowSize = "10 mm"
-    # overlimitv.ArrowType = "Dot"
+    points = [FreeCAD.Vector(*limits.End), FreeCAD.Vector(1580, 1577.35, 1577.35)]
+    overlimit = Draft.makeWire(points, closed=False, face=False, support=None)
+    Draft.autogroup(overlimit)
+    overlimit.Label = "Overlimit"
+    overlimitv = FreeCADGui.ActiveDocument.getObject(overlimit.Name)
+    overlimitv.DrawStyle = "Dotted"
+    overlimitv.ShapeColor = (0.32, 1.00, 0.00)
+    overlimitv.LineColor = (0.32, 1.00, 0.00)
+    overlimitv.PointColor = (0.32, 1.00, 0.00)
+    overlimitv.EndArrow = True
+    overlimitv.ArrowSize = "10 mm"
+    overlimitv.ArrowType = "Dot"
 
     damping_group.addObject(limits)
-    # damping_group.addObject(overlimit)
+    damping_group.addObject(overlimit)
 
     FreeCAD.ActiveDocument.recompute()
     FreeCADGui.SendMsgToActiveView("ViewFit")
@@ -996,14 +996,12 @@ def on_special_button():
     sp_chrono_button = QtGui.QPushButton(__("Coupling CHRONO"))
     sp_chrono_button.setEnabled(False)
     sp_multilayeredmb_button = QtGui.QPushButton(__("Multi-layered Piston"))
-    sp_multilayeredmb_button.setEnabled(False)
     sp_multilayeredmb_menu = QtGui.QMenu()
     sp_multilayeredmb_menu.addAction(__("1 Dimension"))
     sp_multilayeredmb_menu.addAction(__("2 Dimensions"))
     sp_multilayeredmb_button.setMenu(sp_multilayeredmb_menu)
 
     sp_relaxationzone_button = QtGui.QPushButton(__("Relaxation Zone"))
-    sp_relaxationzone_button.setEnabled(False)
     sp_relaxationzone_menu = QtGui.QMenu()
     sp_relaxationzone_menu.addAction(__("Regular waves"))
     sp_relaxationzone_menu.addAction(__("Irregular waves"))
@@ -3403,6 +3401,7 @@ property_widget_layout = QtGui.QVBoxLayout()
 
 # Property table
 object_property_table = QtGui.QTableWidget(6, 2)
+object_property_table.setMinimumHeight(220)
 object_property_table.setHorizontalHeaderLabels(
     [__("Property Name"), __("Value")])
 object_property_table.verticalHeader().setVisible(False)
@@ -4945,6 +4944,8 @@ def on_tree_item_selection_change():
             # Not in list, probably because now is part of a compound object
             pass
         data['export_order'].remove(each)
+    properties_scaff_widget.adjustSize()
+    properties_widget.adjustSize()
 
 
 for item in trees:
@@ -4987,7 +4988,11 @@ def selection_monitor():
                 if case_limits_obj.Selectable:
                     case_limits_obj.Selectable = False
 
-        #     TODO: Watch damping and update it if changed
+            #     TODO: Watch damping and update it if changed
+            for gn in data["damping"]:
+                damping_group = FreeCAD.ActiveDocument.getObject(gn)
+                data["damping"][gn].overlimit = damping_group.OutList[1].Length.Value
+
         except NameError:
             # DSPH Case not opened, disable things
             guiutils.widget_state_config(widget_state_elements, "no case")
