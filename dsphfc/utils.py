@@ -70,6 +70,8 @@ VERSION = "0.5.1806-29"
 WIDTH_2D = 0.001
 MAX_PARTICLE_WARNING = 2000000
 HELP_WEBPAGE = "https://github.com/ndrs92/DesignSPHysics/wiki"
+
+
 # ------ END CONSTANTS DEFINITION ------
 
 
@@ -504,6 +506,9 @@ def get_default_data():
 
     # Relaxation zones for the case. Can only set one. None means no RZ is set
     data['relaxationzone'] = None
+
+    # Acceleration Input
+    data['accinput'] = AccelerationInput()
 
     # Temporal data dict to control execution features.
     temp_data['current_process'] = None
@@ -1199,6 +1204,22 @@ def dump_to_xml(data, save_name):
     f.write('\t<execution>\n')
 
     f.write('\t\t<special>\n')
+
+    # Acceleration Input
+    if data['accinput'].enabled:
+        f.write('\t\t\t<accinputs>\n')
+        for aid in data['accinput'].acclist:
+            f.write('\t\t\t\t<accinput>\n')
+            f.write('\t\t\t\t\t<mkfluid value="{}" comment="Mk-Fluid of selected particles" />\n'.format(aid.mkfluid))
+            f.write(
+                '\t\t\t\t\t<acccentre x="{}" y="{}" z="{}" comment="Center of acceleration" />\n'.format(*aid.acccentre))
+            f.write(
+                '\t\t\t\t\t<globalgravity value="{}" comment="Global gravity enabled (1) or disabled (0)" />\n'.format(
+                    "1" if aid.globalgravity else "0"))
+            f.write('\t\t\t\t\t<datafile value="{}" comment="File with acceleration data" />\n'.format(aid.datafile))
+        f.write('\t\t\t\t</accinput>\n')
+    f.write('\t\t\t</accinputs>\n')
+
     # Damping support
     if len(data['damping']) > 0:
         f.write('\t\t\t<damping>\n')
@@ -1342,9 +1363,9 @@ def dump_to_xml(data, save_name):
                         mot.duration))
                 f.write(
                     '\t\t\t\t\t<depth value="{}" comment="Fluid depth (def=0)" />\n'.format(mot.depth))
-                f.write(
-                    '\t\t\t\t\t<fixeddepth value="{}" ' 'comment="Fluid depth without paddle (def=0)" />\n'.format(
-                        mot.fixed_depth))
+                # f.write(
+                #     '\t\t\t\t\t<fixeddepth value="{}" ' 'comment="Fluid depth without paddle (def=0)" />\n'.format(
+                #         mot.fixed_depth))
                 f.write(
                     '\t\t\t\t\t<pistondir x="{}" y="{}" z="{}" ' 'comment="Movement direction (def=(1,0,0))" />\n'.format(
                         *mot.piston_dir))
@@ -1497,9 +1518,9 @@ def dump_to_xml(data, save_name):
                         mot.duration))
                 f.write(
                     '\t\t\t\t\t<depth value="{}" comment="Fluid depth (def=0)" />\n'.format(mot.depth))
-                f.write(
-                    '\t\t\t\t\t<fixeddepth value="{}" ' 'comment="Fluid depth without paddle (def=0)" />\n'.format(
-                        mot.fixed_depth))
+                # f.write(
+                #     '\t\t\t\t\t<fixeddepth value="{}" ' 'comment="Fluid depth without paddle (def=0)" />\n'.format(
+                #         mot.fixed_depth))
                 f.write(
                     '\t\t\t\t\t<variabledraft value="{}" comment="Position of the wavemaker hinge (above the bottom <0; below the bottom >0) (default=0)" />\n'.format(
                         mot.variable_draft))
@@ -1581,7 +1602,8 @@ def dump_to_xml(data, save_name):
                     f.write('\t\t\t\t\t\t<filevelx value="{}" comment="File name with X velocity" />\n'.format(
                         veldata.filevelx))
                     f.write('\t\t\t\t\t\t<posy value="{}" comment="Position Y of data" />\n'.format(veldata.posy))
-                    f.write('\t\t\t\t\t\t<timedataini value="{}" comment="Time offset (def=0)" />\n'.format(veldata.timedataini))
+                    f.write('\t\t\t\t\t\t<timedataini value="{}" comment="Time offset (def=0)" />\n'.format(
+                        veldata.timedataini))
                     f.write('\t\t\t\t\t</veldata>\n')
 
                 f.write('\t\t\t\t</piston2d>\n')
@@ -1628,6 +1650,68 @@ def dump_to_xml(data, save_name):
                 '\t\t\t\t\t<driftcorrection value="{}" comment="Coefficient of drift correction applied in velocity X. 0:Disabled, 1:Full correction (def=0)" />\n'.format(
                     rzobject.driftcorrection))
             f.write('\t\t\t\t</rzwaves_regular>\n')
+        if isinstance(rzobject, RelaxationZoneIrregular):
+            f.write('\t\t\t\t<rzwaves_spectrum>\n')
+            f.write('\t\t\t\t\t<start value="{}" comment="Start time (def=0)" />\n'.format(rzobject.start))
+            f.write(
+                '\t\t\t\t\t<duration value="{}" comment="Movement duration, Zero is the end of simulation (def=0)" />\n'.format(
+                    rzobject.duration))
+            f.write('\t\t\t\t\t<peakcoef value="{}" comment="Peak enhancement coefficient (default=3.3)" />\n'.format(
+                rzobject.peakcoef))
+            f.write('\t\t\t\t\t<spectrum value="{}" comment="Spectrum type: jonswap,pierson-moskowitz" />\n'.format(
+                ["jonswap", "pierson-moskowitz"][rzobject.spectrum]
+            ))
+            f.write(
+                '\t\t\t\t\t<discretization value="{}" comment="Spectrum discretization: regular,random,stretched,cosstretched (default=stretched)" />\n'.format(
+                    ["regular", "random", "stretched", "cosstretched"][rzobject.discretization]
+                ))
+            f.write(
+                '\t\t\t\t\t<waveorder value="{}" comment="Order wave generation 1:1st order, 2:2nd order (def=1)" />\n'.format(
+                    rzobject.waveorder))
+            f.write('\t\t\t\t\t<waveheight value="{}" comment="Wave height" />\n'.format(rzobject.waveheight))
+            f.write('\t\t\t\t\t<waveperiod value="{}" comment="Wave period" />\n'.format(rzobject.waveperiod))
+            f.write(
+                '\t\t\t\t\t<waves value="{}" comment="Number of waves to create irregular waves (default=50)" />\n'.format(
+                    rzobject.waves))
+            f.write(
+                '\t\t\t\t\t<randomseed value="{}" comment="Random seed to initialize a pseudorandom number generator" />\n'.format(
+                    rzobject.randomseed))
+            f.write('\t\t\t\t\t<depth value="{}" comment="Fluid depth (def=0)" />\n'.format(rzobject.depth))
+            f.write('\t\t\t\t\t<swl value="{}" comment="Still water level (free-surface water)" />\n'.format(
+                rzobject.swl))
+            f.write(
+                '\t\t\t\t\t<center x="{}" y="{}" z="{}" comment="Central point of application" />\n'.format(
+                    *rzobject.center))
+            f.write('\t\t\t\t\t<width value="{}" comment="Width for generation" />\n'.format(rzobject.width))
+            f.write('\t\t\t\t\t<ramptime value="{}" comment="Time of initial ramp (default=0)" />\n'.format(
+                rzobject.ramptime))
+            f.write(
+                '\t\t\t\t\t<serieini value="{}" comment="Initial time in irregular wave serie (default=0)" />\n'.format(
+                    rzobject.serieini))
+            f.write(
+                '\t\t\t\t\t<savemotion periods="{}" periodsteps="{}" xpos="{}" zpos="{}" comment="Saves motion data. xpos and zpos are optional. zpos=-depth of the measuring point" />\n'.format(
+                    rzobject.savemotion_periods, rzobject.savemotion_periodsteps, rzobject.savemotion_xpos,
+                    rzobject.savemotion_zpos))
+            f.write(
+                '\t\t\t\t\t<saveserie timemin="{}" timemax="{}" timedt="{}" xpos="{}" comment="Saves serie data (optional)" />\n'.format(
+                    rzobject.saveserie_timemin, rzobject.saveserie_timemax, rzobject.saveserie_timedt,
+                    rzobject.saveserie_xpos))
+            f.write(
+                '\t\t\t\t\t<saveseriewaves timemin="{}" timemax="{}" xpos="{}" comment="Saves serie heights" />\n'.format(
+                    rzobject.saveseriewaves_timemin, rzobject.saveseriewaves_timemax, rzobject.saveseriewaves_xpos))
+            f.write(
+                '\t\t\t\t\t<coefdir x="{}" y="{}" z="{}" comment="Coefficients for each direction (default=(1,0,0))" />\n'.format(
+                    *rzobject.coefdir))
+            f.write(
+                '\t\t\t\t\t<coefdt value="{}" comment="Multiplies by dt value in the calculation (using 0 is not applied) (default=1000)" />\n'.format(
+                    rzobject.coefdt))
+            f.write(
+                '\t\t\t\t\t<function psi="{}" beta="{}" comment="Coefficients in funtion for velocity (def. psi=0.9, beta=1)" />\n'.format(
+                    rzobject.function_psi, rzobject.function_beta))
+            f.write(
+                '\t\t\t\t\t<driftcorrection value="{}" comment="Coefficient of drift correction applied in velocity X. 0:Disabled, 1:Full correction (def=0)" />\n'.format(
+                    rzobject.driftcorrection))
+            f.write('\t\t\t\t</rzwaves_spectrum>\n')
         #     TODO: Add other RZ objects
         f.write('\t\t\t</relaxationzones>\n')
 
