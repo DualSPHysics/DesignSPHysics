@@ -769,6 +769,7 @@ class MLPiston1D(object):
 
 class MLPiston2DVeldata(object):
     """ VelData attribute for MLPiston2D """
+
     def __init__(self, filevelx="", posy=0, timedataini=0):
         self.filevelx = filevelx
         self.posy = posy
@@ -812,3 +813,126 @@ class RelaxationZoneRegular(object):
         self.function_psi = function_psi
         self.function_beta = function_beta
         self.driftcorrection = driftcorrection
+
+
+class RelaxationZoneIrregular(object):
+    """ Relaxation zone for irregular wave generation """
+
+    def __init__(self, start=0, duration=0, peakcoef=3.3, spectrum=IrregularSpectrum.JONSWAP,
+                 discretization=IrregularDiscretization.REGULAR, waveorder=1, waveheight=1,
+                 waveperiod=2, waves=50, randomseed=random.randint(0, 9999), depth=1, swl=1, center=None,
+                 width=0.5, ramptime=0, serieini=0,
+                 savemotion_periods=24, savemotion_periodsteps=20, savemotion_xpos=0, savemotion_zpos=0,
+                 saveserie_timemin=0, saveserie_timemax=100, saveserie_timedt=0.1, saveserie_xpos=0,
+                 saveseriewaves_timemin=0, saveseriewaves_timemax=1000, saveseriewaves_xpos=0,
+                 coefdir=None, coefdt=1000, function_psi=0.9, function_beta=1, driftcorrection=0):
+        self.start = start
+        self.duration = duration
+        self.peakcoef = peakcoef
+        self.spectrum = spectrum
+        self.discretization = discretization
+        self.waveorder = waveorder
+        self.waveheight = waveheight
+        self.waveperiod = waveperiod
+        self.waves = waves
+        self.randomseed = randomseed
+        self.depth = depth
+        self.swl = swl
+        self.center = [0, 0, 0] if center is None else center
+        self.width = width
+        self.ramptime = ramptime
+        self.serieini = serieini
+        self.savemotion_periods = savemotion_periods
+        self.savemotion_periodsteps = savemotion_periodsteps
+        self.savemotion_xpos = savemotion_xpos
+        self.savemotion_zpos = savemotion_zpos
+        self.saveserie_timemin = saveserie_timemin
+        self.saveserie_timemax = saveserie_timemax
+        self.saveserie_timedt = saveserie_timedt
+        self.saveserie_xpos = saveserie_xpos
+        self.saveseriewaves_timemin = saveseriewaves_timemin
+        self.saveseriewaves_timemax = saveseriewaves_timemax
+        self.saveseriewaves_xpos = saveseriewaves_xpos
+        self.coefdir = [1, 0, 0] if coefdir is None else coefdir
+        self.coefdt = coefdt
+        self.function_psi = function_psi
+        self.function_beta = function_beta
+        self.driftcorrection = driftcorrection
+
+
+class RelaxationZoneFile(object):
+    """ Relaxation zone with external file wave definition """
+
+    # TOOD: Fix this
+    def __init__(self, start=0, duration=0, depth=1, swl=1, filesvel="", filesvelx_initial=0,
+                 filesvelx_count=5, usevelz=False, movedata=None, dpz=2, smooth=0, center=None, width=0.5,
+                 coefdir=None, coefdt=1000, function_psi=0.9, function_beta=1, driftcorrection=0,
+                 driftinitialramp=0):
+        self.driftinitialramp = driftinitialramp
+        self.smooth = smooth
+        self.dpz = dpz
+        self.movedata = [0, 0, 0] if movedata is None else movedata
+        self.usevelz = usevelz
+        self.filesvelx_count = filesvelx_count
+        self.filesvelx_initial = filesvelx_initial
+        self.filesvel = filesvel
+        self.start = start
+        self.duration = duration
+        self.peakcoef = peakcoef
+        self.spectrum = spectrum
+        self.discretization = discretization
+        self.waveorder = waveorder
+        self.waveheight = waveheight
+        self.waveperiod = waveperiod
+        self.waves = waves
+        self.randomseed = randomseed
+        self.depth = depth
+        self.swl = swl
+        self.center = [0, 0, 0] if center is None else center
+        self.width = width
+        self.ramptime = ramptime
+        self.serieini = serieini
+        self.phase = phase
+        self.ramp = ramp
+        self.savemotion_periods = savemotion_periods
+        self.savemotion_periodsteps = savemotion_periodsteps
+        self.savemotion_xpos = savemotion_xpos
+        self.savemotion_zpos = savemotion_zpos
+        self.saveserie_timemin = saveserie_timemin
+        self.saveserie_timemax = saveserie_timemax
+        self.saveserie_timedt = saveserie_timedt
+        self.saveserie_xpos = saveserie_xpos
+        self.saveseriewaves_timemin = saveseriewaves_timemin
+        self.saveseriewaves_timemax = saveseriewaves_timemax
+        self.saveseriewaves_xpos = saveseriewaves_xpos
+        self.coefdir = [1, 0, 0] if coefdir is None else coefdir
+        self.coefdt = coefdt
+        self.function_psi = function_psi
+        self.function_beta = function_beta
+        self.driftcorrection = driftcorrection
+
+
+class AccelerationInput(object):
+    """ Acceleration Input control structure. Includes enabling/disabling and a list
+    of AccelerationInputData objects"""
+
+    def __init__(self, enabled=False, acclist=None):
+        self.enabled = enabled
+        self.acclist = acclist if acclist is not None else list()
+
+    def set_list(self, acclist):
+        self.acclist = acclist
+
+    def set_enabled(self, state):
+        self.enabled = state
+
+
+class AccelerationInputData(object):
+    """ Acceleration Input Data """
+
+    def __init__(self, label="Acceleration Input", mkfluid=0, acccentre=None, globalgravity=True, datafile=""):
+        self.label = label
+        self.mkfluid = mkfluid
+        self.acccentre = acccentre if acccentre is not None else [0, 0, 0]
+        self.globalgravity = globalgravity
+        self.datafile = datafile

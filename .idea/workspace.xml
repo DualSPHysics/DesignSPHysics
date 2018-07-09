@@ -1,17 +1,19 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="BookmarkManager">
-    <bookmark url="file://$PROJECT_DIR$/dsphfc/utils.py" line="501" mnemonic="9" />
-    <bookmark url="file://$PROJECT_DIR$/DesignSPHysics.py" line="1725" mnemonic="3" />
-    <bookmark url="file://$PROJECT_DIR$/DesignSPHysics.py" line="4947" mnemonic="2" />
-    <bookmark url="file://$PROJECT_DIR$/DesignSPHysics.py" line="4993" mnemonic="1" />
+    <bookmark url="file://$PROJECT_DIR$/dsphfc/utils.py" line="503" mnemonic="9" />
+    <bookmark url="file://$PROJECT_DIR$/DesignSPHysics.py" line="1780" mnemonic="3" />
+    <bookmark url="file://$PROJECT_DIR$/DesignSPHysics.py" line="1159" mnemonic="2" />
+    <bookmark url="file://$PROJECT_DIR$/DesignSPHysics.py" line="1192" mnemonic="1" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="22d76f4b-310a-4afb-8788-a472c77b2c87" name="Default" comment="Set min">
+    <list default="true" id="22d76f4b-310a-4afb-8788-a472c77b2c87" name="Default" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/DesignSPHysics.py" beforeDir="false" afterPath="$PROJECT_DIR$/DesignSPHysics.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/dsphfc/guiutils.py" beforeDir="false" afterPath="$PROJECT_DIR$/dsphfc/guiutils.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/dsphfc/dsphwidgets.py" beforeDir="false" afterPath="$PROJECT_DIR$/dsphfc/dsphwidgets.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/dsphfc/lang/english.json" beforeDir="false" afterPath="$PROJECT_DIR$/dsphfc/lang/english.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/dsphfc/properties.py" beforeDir="false" afterPath="$PROJECT_DIR$/dsphfc/properties.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/dsphfc/utils.py" beforeDir="false" afterPath="$PROJECT_DIR$/dsphfc/utils.py" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="TRACKING_ENABLED" value="true" />
@@ -50,8 +52,8 @@
           <file leaf-file-name="DesignSPHysics.py" pinned="false" current-in-tab="false">
             <entry file="file://$PROJECT_DIR$/DesignSPHysics.py">
               <provider selected="true" editor-type-id="text-editor">
-                <state relative-caret-position="320">
-                  <caret line="4689" column="26" selection-start-line="4689" selection-start-column="26" selection-end-line="4689" selection-end-column="26" />
+                <state relative-caret-position="580">
+                  <caret line="379" column="20" lean-forward="true" selection-start-line="379" selection-start-column="20" selection-end-line="379" selection-end-column="20" />
                   <folding>
                     <element signature="e#286#300#0" expanded="true" />
                   </folding>
@@ -59,11 +61,35 @@
               </provider>
             </entry>
           </file>
-          <file leaf-file-name="guiutils.py" pinned="false" current-in-tab="true">
+          <file leaf-file-name="dsphwidgets.py" pinned="false" current-in-tab="false">
+            <entry file="file://$PROJECT_DIR$/dsphfc/dsphwidgets.py">
+              <provider selected="true" editor-type-id="text-editor">
+                <state relative-caret-position="507">
+                  <caret line="4449" column="63" selection-start-line="4449" selection-start-column="63" selection-end-line="4449" selection-end-column="63" />
+                  <folding>
+                    <element signature="e#198196#215740#0" />
+                  </folding>
+                </state>
+              </provider>
+            </entry>
+          </file>
+          <file leaf-file-name="guiutils.py" pinned="false" current-in-tab="false">
             <entry file="file://$PROJECT_DIR$/dsphfc/guiutils.py">
               <provider selected="true" editor-type-id="text-editor">
-                <state relative-caret-position="481">
-                  <caret line="1765" column="47" selection-start-line="1765" selection-start-column="47" selection-end-line="1765" selection-end-column="47" />
+                <state relative-caret-position="23">
+                  <caret line="92" column="4" selection-start-line="92" selection-start-column="4" selection-end-line="92" selection-end-column="4" />
+                </state>
+              </provider>
+            </entry>
+          </file>
+          <file leaf-file-name="utils.py" pinned="false" current-in-tab="true">
+            <entry file="file://$PROJECT_DIR$/dsphfc/utils.py">
+              <provider selected="true" editor-type-id="text-editor">
+                <state relative-caret-position="268">
+                  <caret line="1211" column="23" selection-start-line="1211" selection-start-column="23" selection-end-line="1211" selection-end-column="23" />
+                  <folding>
+                    <element signature="e#253#267#0" expanded="true" />
+                  </folding>
                 </state>
               </provider>
             </entry>
@@ -75,8 +101,20 @@
           <file leaf-file-name="properties.py" pinned="false" current-in-tab="true">
             <entry file="file://$PROJECT_DIR$/dsphfc/properties.py">
               <provider selected="true" editor-type-id="text-editor">
-                <state relative-caret-position="228">
-                  <caret line="742" column="6" selection-start-line="742" selection-start-column="6" selection-end-line="742" selection-end-column="6" />
+                <state relative-caret-position="599">
+                  <caret line="934" column="20" lean-forward="true" selection-start-line="934" selection-start-column="8" selection-end-line="934" selection-end-column="20" />
+                  <caret line="935" column="22" lean-forward="true" selection-start-line="935" selection-start-column="8" selection-end-line="935" selection-end-column="22" />
+                  <caret line="936" column="26" lean-forward="true" selection-start-line="936" selection-start-column="8" selection-end-line="936" selection-end-column="26" />
+                  <caret line="937" column="21" lean-forward="true" selection-start-line="937" selection-start-column="8" selection-end-line="937" selection-end-column="21" />
+                </state>
+              </provider>
+            </entry>
+          </file>
+          <file leaf-file-name="propenums.py" pinned="false" current-in-tab="false">
+            <entry file="file://$PROJECT_DIR$/dsphfc/propenums.py">
+              <provider selected="true" editor-type-id="text-editor">
+                <state relative-caret-position="782">
+                  <caret line="34" column="12" lean-forward="true" selection-start-line="34" selection-start-column="12" selection-end-line="34" selection-end-column="12" />
                 </state>
               </provider>
             </entry>
@@ -87,23 +125,8 @@
   </component>
   <component name="FindInProjectRecents">
     <findStrings>
-      <find>pickle</find>
-      <find>STL</find>
-      <find>co</find>
-      <find>file</find>
-      <find>FileMot</find>
-      <find>copy2</find>
-      <find>SpecialMo</find>
-      <find>BaseMotion</find>
-      <find>Movement</find>
-      <find>Movement(</find>
-      <find>File</find>
-      <find>FileGen</find>
-      <find>SpecialMovement</find>
-      <find>Hint</find>
       <find>dump_to</find>
       <find>fillbox</find>
-      <find>fixed</find>
       <find>measuretool</find>
       <find>object pro</find>
       <find>Expan</find>
@@ -117,6 +140,21 @@
       <find>Damping()</find>
       <find>data['damping</find>
       <find>damping_con</find>
+      <find>randomseed</find>
+      <find>re</find>
+      <find>Irregular waves</find>
+      <find>combob</find>
+      <find>not im</find>
+      <find>&lt;relaxation</find>
+      <find>fixeddepth</find>
+      <find>fixedd</find>
+      <find>fixed</find>
+      <find>fixed_depth</find>
+      <find>special</find>
+      <find>FileDialog</find>
+      <find>&lt;special</find>
+      <find>0</find>
+      <find>shutil.c</find>
     </findStrings>
     <replaceStrings>
       <replace>self.time_label</replace>
@@ -158,14 +196,14 @@
         <option value="$PROJECT_DIR$/README.md" />
         <option value="$PROJECT_DIR$/DSPH.py" />
         <option value="$PROJECT_DIR$/dsphfc/xmlimporter.py" />
-        <option value="$PROJECT_DIR$/dsphfc/properties.py" />
         <option value="$PROJECT_DIR$/dsphfc/templates/case_summary_template.html" />
         <option value="$PROJECT_DIR$/installer/installer.py" />
-        <option value="$PROJECT_DIR$/dsphfc/dsphwidgets.py" />
-        <option value="$PROJECT_DIR$/dsphfc/utils.py" />
         <option value="$APPLICATION_CONFIG_DIR$/pycharm64.exe.vmoptions" />
-        <option value="$PROJECT_DIR$/DesignSPHysics.py" />
         <option value="$PROJECT_DIR$/dsphfc/guiutils.py" />
+        <option value="$PROJECT_DIR$/dsphfc/properties.py" />
+        <option value="$PROJECT_DIR$/dsphfc/dsphwidgets.py" />
+        <option value="$PROJECT_DIR$/DesignSPHysics.py" />
+        <option value="$PROJECT_DIR$/dsphfc/utils.py" />
       </list>
     </option>
   </component>
@@ -178,7 +216,7 @@
   <component name="NodePackageJsonFileManager">
     <packageJsonPaths />
   </component>
-  <component name="ProjectFrameBounds" fullScreen="true">
+  <component name="ProjectFrameBounds" extendedState="6" fullScreen="true">
     <option name="x" value="-7" />
     <option name="width" value="1294" />
     <option name="height" value="1057" />
@@ -336,13 +374,6 @@
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
       <updated>1486981492000</updated>
-    </task>
-    <task id="LOCAL-00012" summary="Executable paths no longer get loaded from a file if you already have correct ones&#10;Export to VTK is now disabled if you cancel the running simulation">
-      <created>1489742868423</created>
-      <option name="number" value="00012" />
-      <option name="presentableId" value="LOCAL-00012" />
-      <option name="project" value="LOCAL" />
-      <updated>1489742868423</updated>
     </task>
     <task id="LOCAL-00013" summary="Complex meshes can now be used as fluids (only with face mode)">
       <created>1489745294418</created>
@@ -680,7 +711,14 @@
       <option name="project" value="LOCAL" />
       <updated>1528887518217</updated>
     </task>
-    <option name="localTasksCounter" value="61" />
+    <task id="LOCAL-00061" summary="Implemented Damping with overlimit">
+      <created>1530269291510</created>
+      <option name="number" value="00061" />
+      <option name="presentableId" value="LOCAL-00061" />
+      <option name="project" value="LOCAL" />
+      <updated>1530269291511</updated>
+    </task>
+    <option name="localTasksCounter" value="62" />
     <servers />
   </component>
   <component name="TodoView">
@@ -693,22 +731,21 @@
     </todo-panel>
   </component>
   <component name="ToolWindowManager">
-    <frame x="0" y="0" width="2560" height="1080" extended-state="0" />
+    <frame x="0" y="0" width="2560" height="1080" extended-state="6" />
     <editor active="true" />
     <layout>
-      <window_info active="true" anchor="bottom" id="TODO" order="7" sideWeight="0.49156272" visible="true" weight="0.25273633" />
-      <window_info anchor="bottom" id="Event Log" order="6" sideWeight="0.5084373" side_tool="true" weight="0.22979552" />
+      <window_info anchor="bottom" id="TODO" order="7" sideWeight="0.49156272" weight="0.25273633" />
+      <window_info anchor="bottom" id="Event Log" order="6" sideWeight="0.5089463" side_tool="true" weight="0.1641791" />
       <window_info anchor="bottom" id="Database Changes" order="10" show_stripe_button="false" />
-      <window_info anchor="bottom" id="Version Control" order="12" sideWeight="0.4915751" weight="0.1641791" />
+      <window_info anchor="bottom" id="Version Control" order="12" sideWeight="0.49105367" visible="true" weight="0.1641791" />
       <window_info anchor="bottom" id="Python Console" order="9" weight="0.3283582" />
       <window_info anchor="bottom" id="Run" order="2" weight="0.32960895" />
       <window_info anchor="bottom" id="Terminal" order="11" weight="0.20597015" />
-      <window_info content_ui="combo" id="Project" order="0" sideWeight="0.4993498" visible="true" weight="0.13439363" />
+      <window_info content_ui="combo" id="Project" order="0" sideWeight="0.4993498" visible="true" weight="0.13916501" />
       <window_info anchor="bottom" id="Docker" order="8" show_stripe_button="false" />
-      <window_info anchor="bottom" id="Find" order="1" weight="0.3283582" />
       <window_info anchor="right" id="Database" order="3" sideWeight="0.49799734" weight="0.32962227" />
       <window_info anchor="right" id="SciView" order="4" sideWeight="0.4992785" weight="0.32962227" />
-      <window_info anchor="right" id="Structure" order="5" sideWeight="0.50200266" side_tool="true" visible="true" weight="0.1304175" />
+      <window_info active="true" anchor="right" id="Structure" order="5" sideWeight="0.50200266" side_tool="true" visible="true" weight="0.1304175" />
       <window_info id="Favorites" order="1" sideWeight="0.50065017" side_tool="true" weight="0.10771065" />
       <window_info anchor="bottom" id="Debug" order="3" weight="0.4" />
       <window_info anchor="right" content_ui="combo" id="Hierarchy" order="2" weight="0.25" />
@@ -720,6 +757,7 @@
       <window_info anchor="bottom" id="Messages" order="8" />
       <window_info anchor="bottom" id="Message" order="0" />
       <window_info anchor="bottom" id="Cvs" order="4" weight="0.25" />
+      <window_info anchor="bottom" id="Find" order="1" weight="0.3283582" />
     </layout>
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -758,7 +796,6 @@
     <option name="myLimit" value="2678400000" />
   </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value="Filters move and rotate commands on the XML&#10;&#10;They no longer appear if the values don't make any difference." />
     <MESSAGE value="Now STL files are referenced with relative paths" />
     <MESSAGE value="Changes AWAS config labels to show units" />
     <MESSAGE value="Adds Slice or Surface selector to IsoSurface post-processing tool" />
@@ -783,11 +820,12 @@
     <MESSAGE value="Now linear and rotational motions from file uses relative paths." />
     <MESSAGE value="Removes matrixreset from fillboxes" />
     <MESSAGE value="Changes version" />
-    <option name="LAST_COMMIT_MESSAGE" value="Changes version" />
+    <MESSAGE value="Implemented Damping with overlimit" />
+    <option name="LAST_COMMIT_MESSAGE" value="Implemented Damping with overlimit" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
-      <option name="time" value="31" />
+      <option name="time" value="32" />
     </breakpoint-manager>
   </component>
   <component name="editorHistoryManager">
@@ -1002,27 +1040,10 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/dsphfc/propenums.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="345">
-          <caret line="15" column="30" selection-start-line="15" selection-start-column="30" selection-end-line="15" selection-end-column="30" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/installer/installer.py">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="23">
           <caret line="180" column="23" selection-start-line="180" selection-start-column="23" selection-end-line="180" selection-end-column="23" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/dsphfc/dsphwidgets.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="315">
-          <caret line="3472" column="48" selection-start-line="3472" selection-start-column="48" selection-end-line="3472" selection-end-column="48" />
-          <folding>
-            <element signature="e#273#287#0" expanded="true" />
-          </folding>
         </state>
       </provider>
     </entry>
@@ -1033,37 +1054,57 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/dsphfc/properties.py">
+    <entry file="file://$PROJECT_DIR$/dsphfc/propenums.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="228">
-          <caret line="742" column="6" selection-start-line="742" selection-start-column="6" selection-end-line="742" selection-end-column="6" />
+        <state relative-caret-position="782">
+          <caret line="34" column="12" lean-forward="true" selection-start-line="34" selection-start-column="12" selection-end-line="34" selection-end-column="12" />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/dsphfc/utils.py">
+    <entry file="file://$PROJECT_DIR$/dsphfc/guiutils.py">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="23">
-          <caret line="1630" column="14" selection-start-line="1630" selection-start-column="14" selection-end-line="1630" selection-end-column="14" />
+          <caret line="92" column="4" selection-start-line="92" selection-start-column="4" selection-end-line="92" selection-end-column="4" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/dsphfc/properties.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="599">
+          <caret line="934" column="20" lean-forward="true" selection-start-line="934" selection-start-column="8" selection-end-line="934" selection-end-column="20" />
+          <caret line="935" column="22" lean-forward="true" selection-start-line="935" selection-start-column="8" selection-end-line="935" selection-end-column="22" />
+          <caret line="936" column="26" lean-forward="true" selection-start-line="936" selection-start-column="8" selection-end-line="936" selection-end-column="26" />
+          <caret line="937" column="21" lean-forward="true" selection-start-line="937" selection-start-column="8" selection-end-line="937" selection-end-column="21" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/dsphfc/dsphwidgets.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="507">
+          <caret line="4449" column="63" selection-start-line="4449" selection-start-column="63" selection-end-line="4449" selection-end-column="63" />
           <folding>
-            <element signature="e#253#267#0" expanded="true" />
+            <element signature="e#198196#215740#0" />
           </folding>
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/DesignSPHysics.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="320">
-          <caret line="4689" column="26" selection-start-line="4689" selection-start-column="26" selection-end-line="4689" selection-end-column="26" />
+        <state relative-caret-position="580">
+          <caret line="379" column="20" lean-forward="true" selection-start-line="379" selection-start-column="20" selection-end-line="379" selection-end-column="20" />
           <folding>
             <element signature="e#286#300#0" expanded="true" />
           </folding>
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/dsphfc/guiutils.py">
+    <entry file="file://$PROJECT_DIR$/dsphfc/utils.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="481">
-          <caret line="1765" column="47" selection-start-line="1765" selection-start-column="47" selection-end-line="1765" selection-end-column="47" />
+        <state relative-caret-position="268">
+          <caret line="1211" column="23" selection-start-line="1211" selection-start-column="23" selection-end-line="1211" selection-end-column="23" />
+          <folding>
+            <element signature="e#253#267#0" expanded="true" />
+          </folding>
         </state>
       </provider>
     </entry>

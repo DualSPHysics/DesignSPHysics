@@ -364,7 +364,22 @@ def on_save_case(save_as=None):
                             # Probably already copied the file.
                             pass
 
-        # Copy files from pistons and change paths to be inside the project.
+        # Copy files from Acceleration input and change paths to be inside the project folder.
+        for aid in data['accinput'].acclist:
+            filename = aid.datafile
+            utils.debug("Copying {} to {}".format(
+                filename, save_name + "/" + save_name.split('/')[-1] + "_out"))
+            try:
+                shutil.copy2(filename, save_name + "/" + save_name.split('/')[-1] + "_out")
+                aid.datafile = filename.split("/")[-1]
+            except IOError:
+                utils.error("Unable to copy {} into {}".format(
+                    filename, save_name + "/" + save_name.split('/')[-1] + "_out"))
+            except shutil.Error:
+                # Probably already copied the file.
+                pass
+
+        # Copy files from pistons and change paths to be inside the project folder.
         for key, piston in data["mlayerpistons"].iteritems():
             if isinstance(piston, MLPiston1D):
                 filename = piston.filevelx
@@ -1008,6 +1023,8 @@ def on_special_button():
     sp_relaxationzone_menu.addAction(__("External waves"))
     sp_relaxationzone_button.setMenu(sp_relaxationzone_menu)
 
+    sp_accinput_button = QtGui.QPushButton(__("Acceleration Inputs"))
+
     def on_damping_option():
         on_add_damping_zone()
         sp_window.accept()
@@ -1113,9 +1130,10 @@ def on_special_button():
         if action.text() == __("Regular waves"):
             if data['relaxationzone'] is not None:
                 if not isinstance(data['relaxationzone'], RelaxationZoneRegular):
-                    overwrite_warn = guiutils.ok_cancel_dialog(
+                    overwrite_warn = guiutils.ok_cancel_dialog(__("Relaxation Zone"),
                         __("There's already another type of Relaxation Zone defined. "
                            "Continuing will overwrite it. Are you sure?"))
+                    data['relaxationzone'] = RelaxationZoneRegular()
                     if overwrite_warn == QtGui.QMessageBox.Cancel:
                         return
 
@@ -1126,20 +1144,57 @@ def on_special_button():
             # Set the relaxation zone. Can be an object or be None
             data['relaxationzone'] = config_dialog.relaxationzone
         if action.text() == __("Irregular waves"):
-            # TODO: Implement this
-            guiutils.warning_dialog("Not implemented yet")
+            if data['relaxationzone'] is not None:
+                if not isinstance(data['relaxationzone'], RelaxationZoneIrregular):
+                    overwrite_warn = guiutils.ok_cancel_dialog(__("Relaxation Zone"),
+                        __("There's already another type of Relaxation Zone defined. "
+                           "Continuing will overwrite it. Are you sure?"))
+                    data['relaxationzone'] = RelaxationZoneIrregular()
+                    if overwrite_warn == QtGui.QMessageBox.Cancel:
+                        return
+
+            config_dialog = dsphwidgets.RelaxationZoneIrregularConfigDialog(
+                data['relaxationzone']
+            )
+
+            # Set the relaxation zone. Can be an object or be None
+            data['relaxationzone'] = config_dialog.relaxationzone
         if action.text() == __("External waves"):
-            # TODO: Implement this
+            # TODO: Remove this
             guiutils.warning_dialog("Not implemented yet")
+            return
+            if data['relaxationzone'] is not None:
+                if not isinstance(data['relaxationzone'], RelaxationZoneFile):
+                    overwrite_warn = guiutils.ok_cancel_dialog(__("Relaxation Zone"),
+                        __("There's already another type of Relaxation Zone defined. "
+                           "Continuing will overwrite it. Are you sure?"))
+                    data['relaxationzone'] = RelaxationZoneFile()
+                    if overwrite_warn == QtGui.QMessageBox.Cancel:
+                        return
+
+            config_dialog = dsphwidgets.RelaxationZoneFileConfigDialog(
+                data['relaxationzone']
+            )
+
+            # Set the relaxation zone. Can be an object or be None
+            data['relaxationzone'] = config_dialog.relaxationzone
 
         sp_window.accept()
+
+    def on_accinput_button():
+        accinput_dialog = dsphwidgets.AccelerationInputDialog(data['accinput'])
+        result = accinput_dialog.exec_()
+        if result == QtGui.QDialog.Accepted:
+            data['accinput'] = accinput_dialog.get_result()
 
     sp_damping_button.clicked.connect(on_damping_option)
     sp_multilayeredmb_menu.triggered.connect(on_multilayeredmb_menu)
     sp_relaxationzone_menu.triggered.connect(on_relaxationzone_menu)
+    sp_accinput_button.clicked.connect(on_accinput_button)
 
     [sp_window_layout.addWidget(x) for x in
-     [sp_damping_button, sp_inlet_button, sp_chrono_button, sp_multilayeredmb_button, sp_relaxationzone_button]]
+     [sp_damping_button, sp_inlet_button, sp_chrono_button, sp_multilayeredmb_button, sp_relaxationzone_button,
+      sp_accinput_button]]
     sp_window.setLayout(sp_window_layout)
     sp_window.exec_()
 

@@ -4002,3 +4002,505 @@ class RelaxationZoneRegularConfigDialog(QtGui.QDialog):
         self.function_psi_input.setText(str(self.temp_relaxationzone.function_psi))
         self.function_beta_input.setText(str(self.temp_relaxationzone.function_beta))
         self.driftcorrection_input.setText(str(self.temp_relaxationzone.driftcorrection))
+
+
+class RelaxationZoneIrregularConfigDialog(QtGui.QDialog):
+    def __init__(self, relaxationzone=None):
+        super(RelaxationZoneIrregularConfigDialog, self).__init__()
+        self.temp_relaxationzone = relaxationzone if relaxationzone is not None else RelaxationZoneIrregular()
+        self.relaxationzone = relaxationzone
+
+        self.main_layout = QtGui.QVBoxLayout()
+        self.data_layout = QtGui.QVBoxLayout()
+        self.button_layout = QtGui.QHBoxLayout()
+
+        self.start_layout = QtGui.QHBoxLayout()
+        self.start_label = QtGui.QLabel(__("Start time (s):"))
+        self.start_input = QtGui.QLineEdit()
+        [self.start_layout.addWidget(x) for x in [self.start_label, self.start_input]]
+
+        self.duration_layout = QtGui.QHBoxLayout()
+        self.duration_label = QtGui.QLabel(__("Movement duration (0 for end of simulation):"))
+        self.duration_input = QtGui.QLineEdit()
+        [self.duration_layout.addWidget(x) for x in [self.duration_label, self.duration_input]]
+
+        self.peakcoef_layout = QtGui.QHBoxLayout()
+        self.peakcoef_label = QtGui.QLabel(__("Peak enhancement coefficient:"))
+        self.peakcoef_input = QtGui.QLineEdit()
+        [self.peakcoef_layout.addWidget(x) for x in [self.peakcoef_label, self.peakcoef_input]]
+
+        self.spectrum_layout = QtGui.QHBoxLayout()
+        self.spectrum_label = QtGui.QLabel(__("Spectrum type:"))
+        self.spectrum_selector = QtGui.QComboBox()
+        self.spectrum_selector.insertItems(
+            0, [__("Jonswap"), __("Pierson-Moskowitz")])
+        [self.spectrum_layout.addWidget(x) for x in [self.spectrum_label, self.spectrum_selector]]
+
+        self.discretization_layout = QtGui.QHBoxLayout()
+        self.discretization_label = QtGui.QLabel(__("Spectrum discretization:"))
+        self.discretization_selector = QtGui.QComboBox()
+        self.discretization_selector.insertItems(
+            0, [__("Regular"), __("Random"), __("Stretched"), __("Cosstretched")])
+        [self.discretization_layout.addWidget(x) for x in [self.discretization_label, self.discretization_selector]]
+
+        self.waveorder_layout = QtGui.QHBoxLayout()
+        self.waveorder_label = QtGui.QLabel(__("Order wave generation:"))
+        self.waveorder_input = QtGui.QLineEdit()
+        [self.waveorder_layout.addWidget(x) for x in [self.waveorder_label, self.waveorder_input]]
+
+        self.waveheight_layout = QtGui.QHBoxLayout()
+        self.waveheight_label = QtGui.QLabel(__("Wave Height:"))
+        self.waveheight_input = QtGui.QLineEdit()
+        [self.waveheight_layout.addWidget(x) for x in [self.waveheight_label, self.waveheight_input]]
+
+        self.waveperiod_layout = QtGui.QHBoxLayout()
+        self.waveperiod_label = QtGui.QLabel(__("Wave Period:"))
+        self.waveperiod_input = QtGui.QLineEdit()
+        [self.waveperiod_layout.addWidget(x) for x in [self.waveperiod_label, self.waveperiod_input]]
+
+        self.waves_layout = QtGui.QHBoxLayout()
+        self.waves_label = QtGui.QLabel(__("Number of waves:"))
+        self.waves_input = QtGui.QLineEdit()
+        [self.waves_layout.addWidget(x) for x in [self.waves_label, self.waves_input]]
+
+        self.randomseed_layout = QtGui.QHBoxLayout()
+        self.randomseed_label = QtGui.QLabel(__("Random seed:"))
+        self.randomseed_input = QtGui.QLineEdit()
+        [self.randomseed_layout.addWidget(x) for x in [self.randomseed_label, self.randomseed_input]]
+
+        self.depth_layout = QtGui.QHBoxLayout()
+        self.depth_label = QtGui.QLabel(__("Water depth:"))
+        self.depth_input = QtGui.QLineEdit()
+        [self.depth_layout.addWidget(x) for x in [self.depth_label, self.depth_input]]
+
+        self.swl_layout = QtGui.QHBoxLayout()
+        self.swl_label = QtGui.QLabel(__("Still water level:"))
+        self.swl_input = QtGui.QLineEdit()
+        [self.swl_layout.addWidget(x) for x in [self.swl_label, self.swl_input]]
+
+        self.center_layout = QtGui.QHBoxLayout()
+        self.center_label = QtGui.QLabel(__("Central point (X, Y, Z):"))
+        self.center_x = QtGui.QLineEdit()
+        self.center_y = QtGui.QLineEdit()
+        self.center_z = QtGui.QLineEdit()
+        [self.center_layout.addWidget(x) for x in [self.center_label, self.center_x, self.center_y, self.center_z]]
+
+        self.width_layout = QtGui.QHBoxLayout()
+        self.width_label = QtGui.QLabel(__("Width for generation:"))
+        self.width_input = QtGui.QLineEdit()
+        [self.width_layout.addWidget(x) for x in [self.width_label, self.width_input]]
+
+        self.ramptime_layout = QtGui.QHBoxLayout()
+        self.ramptime_label = QtGui.QLabel(__("Time of initial ramp:"))
+        self.ramptime_input = QtGui.QLineEdit()
+        [self.ramptime_layout.addWidget(x) for x in [self.ramptime_label, self.ramptime_input]]
+
+        self.serieini_layout = QtGui.QHBoxLayout()
+        self.serieini_label = QtGui.QLabel(__("Initial time:"))
+        self.serieini_input = QtGui.QLineEdit()
+        [self.serieini_layout.addWidget(x) for x in [self.serieini_label, self.serieini_input]]
+
+        self.savemotion_layout = QtGui.QHBoxLayout()
+        self.savemotion_label = QtGui.QLabel(__("Save motion data ->"))
+        self.savemotion_periods_label = QtGui.QLabel(__("Periods: "))
+        self.savemotion_periods_input = QtGui.QLineEdit()
+        self.savemotion_periodsteps_label = QtGui.QLabel(__("Period steps: "))
+        self.savemotion_periodsteps_input = QtGui.QLineEdit()
+        self.savemotion_xpos_label = QtGui.QLabel(__("X Position: "))
+        self.savemotion_xpos_input = QtGui.QLineEdit()
+        self.savemotion_zpos_label = QtGui.QLabel(__("Z Position: "))
+        self.savemotion_zpos_input = QtGui.QLineEdit()
+        [self.savemotion_layout.addWidget(x) for x in [
+            self.savemotion_label,
+            self.savemotion_periods_label,
+            self.savemotion_periods_input,
+            self.savemotion_periodsteps_label,
+            self.savemotion_periodsteps_input,
+            self.savemotion_xpos_label,
+            self.savemotion_xpos_input,
+            self.savemotion_zpos_label,
+            self.savemotion_zpos_input
+        ]]
+
+        self.saveserie_layout = QtGui.QHBoxLayout()
+        self.saveserie_label = QtGui.QLabel(__("Save serie data ->"))
+        self.saveserie_timemin_label = QtGui.QLabel(__("Time min.: "))
+        self.saveserie_timemin_input = QtGui.QLineEdit()
+        self.saveserie_timemax_label = QtGui.QLabel(__("Time max.: "))
+        self.saveserie_timemax_input = QtGui.QLineEdit()
+        self.saveserie_timedt_label = QtGui.QLabel(__("Time max.: "))
+        self.saveserie_timedt_input = QtGui.QLineEdit()
+        self.saveserie_xpos_label = QtGui.QLabel(__("X Position: "))
+        self.saveserie_xpos_input = QtGui.QLineEdit()
+        [self.saveserie_layout.addWidget(x) for x in [
+            self.saveserie_label,
+            self.saveserie_timemin_label,
+            self.saveserie_timemin_input,
+            self.saveserie_timemax_label,
+            self.saveserie_timemax_input,
+            self.saveserie_timedt_label,
+            self.saveserie_timedt_input,
+            self.saveserie_xpos_label,
+            self.saveserie_xpos_input
+        ]]
+
+        self.saveseriewaves_layout = QtGui.QHBoxLayout()
+        self.saveseriewaves_label = QtGui.QLabel(__("Save serie heights ->"))
+        self.saveseriewaves_timemin_label = QtGui.QLabel(__("Time min.: "))
+        self.saveseriewaves_timemin_input = QtGui.QLineEdit()
+        self.saveseriewaves_timemax_label = QtGui.QLabel(__("Time max.: "))
+        self.saveseriewaves_timemax_input = QtGui.QLineEdit()
+        self.saveseriewaves_xpos_label = QtGui.QLabel(__("X Position: "))
+        self.saveseriewaves_xpos_input = QtGui.QLineEdit()
+        [self.saveseriewaves_layout.addWidget(x) for x in [
+            self.saveseriewaves_label,
+            self.saveseriewaves_timemin_label,
+            self.saveseriewaves_timemin_input,
+            self.saveseriewaves_timemax_label,
+            self.saveseriewaves_timemax_input,
+            self.saveseriewaves_xpos_label,
+            self.saveseriewaves_xpos_input
+        ]]
+
+        self.coefdir_layout = QtGui.QHBoxLayout()
+        self.coefdir_label = QtGui.QLabel(__("Coefficient for each direction (X, Y, Z):"))
+        self.coefdir_x = QtGui.QLineEdit()
+        self.coefdir_x.setEnabled(False)
+        self.coefdir_y = QtGui.QLineEdit()
+        self.coefdir_y.setEnabled(False)
+        self.coefdir_z = QtGui.QLineEdit()
+        self.coefdir_z.setEnabled(False)
+        [self.coefdir_layout.addWidget(x) for x in [self.coefdir_label, self.coefdir_x, self.coefdir_y, self.coefdir_z]]
+
+        self.coefdt_layout = QtGui.QHBoxLayout()
+        self.coefdt_label = QtGui.QLabel(__("Multiplier for dt value in each direction:"))
+        self.coefdt_input = QtGui.QLineEdit()
+        self.coefdt_input.setEnabled(False)
+        [self.coefdt_layout.addWidget(x) for x in [self.coefdt_label, self.coefdt_input]]
+
+        self.function_layout = QtGui.QHBoxLayout()
+        self.function_label = QtGui.QLabel(__("Coefficients in function for velocity ->"))
+        self.function_psi_label = QtGui.QLabel(__("Psi: "))
+        self.function_psi_input = QtGui.QLineEdit()
+        self.function_beta_label = QtGui.QLabel(__("Beta: "))
+        self.function_beta_input = QtGui.QLineEdit()
+        [self.function_layout.addWidget(x) for x in [
+            self.function_label,
+            self.function_psi_label,
+            self.function_psi_input,
+            self.function_beta_label,
+            self.function_beta_input
+        ]]
+
+        self.driftcorrection_layout = QtGui.QHBoxLayout()
+        self.driftcorrection_label = QtGui.QLabel(__("Coefficient of drift correction (for X):"))
+        self.driftcorrection_input = QtGui.QLineEdit()
+        [self.driftcorrection_layout.addWidget(x) for x in [self.driftcorrection_label, self.driftcorrection_input]]
+
+        [self.data_layout.addLayout(x) for x in [
+            self.start_layout,
+            self.duration_layout,
+            self.peakcoef_layout,
+            self.spectrum_layout,
+            self.discretization_layout,
+            self.waveorder_layout,
+            self.waveheight_layout,
+            self.waveperiod_layout,
+            self.waves_layout,
+            self.randomseed_layout,
+            self.depth_layout,
+            self.swl_layout,
+            self.center_layout,
+            self.width_layout,
+            self.ramptime_layout,
+            self.savemotion_layout,
+            self.saveserie_layout,
+            self.saveseriewaves_layout,
+            self.coefdir_layout,
+            self.coefdt_layout,
+            self.function_layout,
+            self.driftcorrection_layout
+        ]]
+
+        self.delete_button = QtGui.QPushButton(__("Delete RZ configuration"))
+        self.apply_button = QtGui.QPushButton(__("Apply this configuration"))
+        self.button_layout.addStretch(1)
+        self.button_layout.addWidget(self.delete_button)
+        self.button_layout.addWidget(self.apply_button)
+
+        self.main_layout.addLayout(self.data_layout)
+        self.main_layout.addStretch(1)
+        self.main_layout.addLayout(self.button_layout)
+        self.apply_button.clicked.connect(self.on_apply)
+        self.delete_button.clicked.connect(self.on_delete)
+        self.setLayout(self.main_layout)
+        self.fill_data()
+        self.exec_()
+
+    def on_apply(self):
+        # TODO: fix this
+        self.temp_relaxationzone.start = float(self.start_input.text())
+        self.temp_relaxationzone.duration = float(self.duration_input.text())
+        self.temp_relaxationzone.peakcoef = float(self.peakcoef_input.text())
+        self.temp_relaxationzone.spectrum = self.spectrum_selector.currentIndex()
+        self.temp_relaxationzone.discretization = self.discretization_selector.currentIndex()
+        self.temp_relaxationzone.waveorder = float(self.waveorder_input.text())
+        self.temp_relaxationzone.waveheight = float(self.waveheight_input.text())
+        self.temp_relaxationzone.waveperiod = float(self.waveperiod_input.text())
+        self.temp_relaxationzone.waves = float(self.waves_input.text())
+        self.temp_relaxationzone.randomseed = float(self.waveperiod_input.text())
+        self.temp_relaxationzone.depth = float(self.depth_input.text())
+        self.temp_relaxationzone.swl = float(self.swl_input.text())
+        self.temp_relaxationzone.center[0] = float(self.center_x.text())
+        self.temp_relaxationzone.center[1] = float(self.center_y.text())
+        self.temp_relaxationzone.center[2] = float(self.center_z.text())
+        self.temp_relaxationzone.width = float(self.width_input.text())
+        self.temp_relaxationzone.ramptime = float(self.ramptime_input.text())
+        self.temp_relaxationzone.serieini = float(self.serieini_input.text())
+        self.temp_relaxationzone.savemotion_periods = float(self.savemotion_periods_input.text())
+        self.temp_relaxationzone.savemotion_periodsteps = float(self.savemotion_periodsteps_input.text())
+        self.temp_relaxationzone.savemotion_xpos = float(self.savemotion_xpos_input.text())
+        self.temp_relaxationzone.savemotion_zpos = float(self.savemotion_zpos_input.text())
+        self.temp_relaxationzone.saveserie_timemin = float(self.saveserie_timemin_input.text())
+        self.temp_relaxationzone.saveserie_timemax = float(self.saveserie_timemax_input.text())
+        self.temp_relaxationzone.saveserie_timedt = float(self.saveserie_timedt_input.text())
+        self.temp_relaxationzone.saveserie_xpos = float(self.saveserie_xpos_input.text())
+        self.temp_relaxationzone.saveseriewaves_timemin = float(self.saveseriewaves_timemin_input.text())
+        self.temp_relaxationzone.saveseriewaves_timemax = float(self.saveseriewaves_timemax_input.text())
+        self.temp_relaxationzone.saveseriewaves_xpos = float(self.saveseriewaves_xpos_input.text())
+        self.temp_relaxationzone.coefdir[0] = float(self.coefdir_x.text())
+        self.temp_relaxationzone.coefdir[1] = float(self.coefdir_y.text())
+        self.temp_relaxationzone.coefdir[2] = float(self.coefdir_z.text())
+        self.temp_relaxationzone.coefdt = float(self.coefdt_input.text())
+        self.temp_relaxationzone.function_psi = float(self.function_psi_input.text())
+        self.temp_relaxationzone.function_beta = float(self.function_beta_input.text())
+        self.temp_relaxationzone.driftcorrection = float(self.driftcorrection_input.text())
+        self.relaxationzone = self.temp_relaxationzone
+        self.accept()
+
+    def on_delete(self):
+        self.relaxationzone = None
+        self.reject()
+
+    def fill_data(self):
+        self.start_input.setText(str(self.temp_relaxationzone.start))
+        self.duration_input.setText(str(self.temp_relaxationzone.duration))
+        self.peakcoef_input.setText(str(self.temp_relaxationzone.peakcoef))
+        self.spectrum_selector.setCurrentIndex(self.temp_relaxationzone.spectrum)
+        self.discretization_selector.setCurrentIndex(self.temp_relaxationzone.discretization)
+        self.waveorder_input.setText(str(self.temp_relaxationzone.waveorder))
+        self.waveheight_input.setText(str(self.temp_relaxationzone.waveheight))
+        self.waveperiod_input.setText(str(self.temp_relaxationzone.waveperiod))
+        self.waves_input.setText(str(self.temp_relaxationzone.waves))
+        self.randomseed_input.setText(str(self.temp_relaxationzone.randomseed))
+        self.depth_input.setText(str(self.temp_relaxationzone.depth))
+        self.swl_input.setText(str(self.temp_relaxationzone.swl))
+        self.center_x.setText(str(self.temp_relaxationzone.center[0]))
+        self.center_y.setText(str(self.temp_relaxationzone.center[1]))
+        self.center_z.setText(str(self.temp_relaxationzone.center[2]))
+        self.width_input.setText(str(self.temp_relaxationzone.width))
+        self.ramptime_input.setText(str(self.temp_relaxationzone.ramptime))
+        self.serieini_input.setText(str(self.temp_relaxationzone.serieini))
+        self.savemotion_periods_input.setText(str(self.temp_relaxationzone.savemotion_periods))
+        self.savemotion_periodsteps_input.setText(str(self.temp_relaxationzone.savemotion_periodsteps))
+        self.savemotion_xpos_input.setText(str(self.temp_relaxationzone.savemotion_xpos))
+        self.savemotion_zpos_input.setText(str(self.temp_relaxationzone.savemotion_zpos))
+        self.saveserie_timemin_input.setText(str(self.temp_relaxationzone.saveserie_timemin))
+        self.saveserie_timemax_input.setText(str(self.temp_relaxationzone.saveserie_timemax))
+        self.saveserie_timedt_input.setText(str(self.temp_relaxationzone.saveserie_timedt))
+        self.saveserie_xpos_input.setText(str(self.temp_relaxationzone.saveserie_xpos))
+        self.saveseriewaves_timemin_input.setText(str(self.temp_relaxationzone.saveseriewaves_timemin))
+        self.saveseriewaves_timemax_input.setText(str(self.temp_relaxationzone.saveseriewaves_timemax))
+        self.saveseriewaves_xpos_input.setText(str(self.temp_relaxationzone.saveseriewaves_xpos))
+        self.coefdir_x.setText(str(self.temp_relaxationzone.coefdir[0]))
+        self.coefdir_y.setText(str(self.temp_relaxationzone.coefdir[1]))
+        self.coefdir_z.setText(str(self.temp_relaxationzone.coefdir[2]))
+        self.coefdt_input.setText(str(self.temp_relaxationzone.coefdt))
+        self.function_psi_input.setText(str(self.temp_relaxationzone.function_psi))
+        self.function_beta_input.setText(str(self.temp_relaxationzone.function_beta))
+        self.driftcorrection_input.setText(str(self.temp_relaxationzone.driftcorrection))
+
+
+class AccelerationInputDialog(QtGui.QDialog):
+    """ A Dialog which shows the contents of the case AccelerationInput object.
+    Shows a list with the AccelerationInputData objects defined for the case and
+    its details when clicked.
+    Returns: AccelerationInput object"""
+
+    def __init__(self, accinput):
+        super(AccelerationInputDialog, self).__init__()
+        self.accinput = accinput
+        self.setWindowTitle(__("Acceleration Input List"))
+
+        self.main_layout = QtGui.QVBoxLayout()
+
+        self.enabled_check = QtGui.QCheckBox(__("Enabled"))
+
+        self.accinput_layout = QtGui.QHBoxLayout()
+
+        self.accinput_list_groupbox = QtGui.QGroupBox(__("Acceleration Input list"))
+        self.accinput_list_layout = QtGui.QVBoxLayout()
+        self.accinput_list = QtGui.QListWidget()
+        self.accinput_list_button_layout = QtGui.QHBoxLayout()
+        self.accinput_list_add_button = QtGui.QPushButton("Add new")
+        self.accinput_list_remove_button = QtGui.QPushButton("Remove selected")
+        [self.accinput_list_button_layout.addWidget(x) for x in [
+            self.accinput_list_add_button,
+            self.accinput_list_remove_button
+        ]]
+        self.accinput_list_layout.addWidget(self.accinput_list)
+        self.accinput_list_layout.addLayout(self.accinput_list_button_layout)
+        self.accinput_list_groupbox.setLayout(self.accinput_list_layout)
+
+        self.accinput_data_groupbox = QtGui.QGroupBox(__("Acceleration Input data"))
+        self.accinput_data_layout = QtGui.QVBoxLayout()
+
+        self.accinput_label_layout = QtGui.QHBoxLayout()
+        self.accinput_label_label = QtGui.QLabel(__("Label:"))
+        self.accinput_label_input = QtGui.QLineEdit()
+        self.accinput_label_layout.addWidget(self.accinput_label_label)
+        self.accinput_label_layout.addWidget(self.accinput_label_input)
+
+        self.accinput_mkfluid_layout = QtGui.QHBoxLayout()
+        self.accinput_mkfluid_label = QtGui.QLabel(__("Mk-fluid of selected particles:"))
+        self.accinput_mkfluid_input = QtGui.QLineEdit()
+        self.accinput_mkfluid_layout.addWidget(self.accinput_mkfluid_label)
+        self.accinput_mkfluid_layout.addWidget(self.accinput_mkfluid_input)
+
+        self.accinput_acccentre_layout = QtGui.QHBoxLayout()
+        self.accinput_acccentre_label = QtGui.QLabel(__("Center of acceleration [X,Y,Z] (m):"))
+        self.accinput_acccentre_x = QtGui.QLineEdit()
+        self.accinput_acccentre_y = QtGui.QLineEdit()
+        self.accinput_acccentre_z = QtGui.QLineEdit()
+        [self.accinput_acccentre_layout.addWidget(x) for x in [
+            self.accinput_acccentre_label,
+            self.accinput_acccentre_x,
+            self.accinput_acccentre_y,
+            self.accinput_acccentre_z,
+        ]]
+
+        self.accinput_globalgravity_layout = QtGui.QHBoxLayout()
+        self.accinput_globalgravity_check = QtGui.QCheckBox(__("Global Gravity"))
+        self.accinput_globalgravity_layout.addWidget(self.accinput_globalgravity_check)
+
+        self.accinput_datafile_layout = QtGui.QHBoxLayout()
+        self.accinput_datafile_label = QtGui.QLabel(__("File with acceleration data:"))
+        self.accinput_datafile_input = QtGui.QLineEdit()
+        self.accinput_datafile_button = QtGui.QPushButton(__("..."))
+        self.accinput_datafile_layout.addWidget(self.accinput_datafile_label)
+        self.accinput_datafile_layout.addWidget(self.accinput_datafile_input)
+        self.accinput_datafile_layout.addWidget(self.accinput_datafile_button)
+
+        self.accinput_save_layout = QtGui.QHBoxLayout()
+        self.accinput_save_button = QtGui.QPushButton(__("Save Data"))
+        self.accinput_save_layout.addStretch(1)
+        self.accinput_save_layout.addWidget(self.accinput_save_button)
+
+        [self.accinput_data_layout.addLayout(x) for x in [
+            self.accinput_label_layout,
+            self.accinput_mkfluid_layout,
+            self.accinput_acccentre_layout,
+            self.accinput_globalgravity_layout,
+            self.accinput_datafile_layout,
+            self.accinput_save_layout
+        ]]
+
+        self.accinput_data_groupbox.setLayout(self.accinput_data_layout)
+
+        self.accinput_layout.addWidget(self.accinput_list_groupbox)
+        self.accinput_layout.addWidget(self.accinput_data_groupbox)
+
+        self.button_layout = QtGui.QHBoxLayout()
+        self.ok_button = QtGui.QPushButton(__("Ok"))
+        self.button_layout.addStretch(1)
+        self.button_layout.addWidget(self.ok_button)
+
+        self.main_layout.addWidget(self.enabled_check)
+        self.main_layout.addLayout(self.accinput_layout)
+        self.main_layout.addLayout(self.button_layout)
+
+        self.setLayout(self.main_layout)
+
+        self.fill_data()
+        self.init_connections()
+
+    def get_result(self):
+        """ Returns the AccelerationInput object """
+        return self.accinput
+
+    def fill_data(self):
+        self.list_refresh()
+        self.on_list_select()
+        self.enabled_check.setCheckState(QtCore.Qt.Checked if self.accinput.enabled else QtCore.Qt.Unchecked)
+        self.on_enable()
+
+    def init_connections(self):
+        self.ok_button.clicked.connect(self.on_ok)
+        self.accinput_datafile_button.clicked.connect(self.on_browse)
+        self.accinput_list_add_button.clicked.connect(self.on_add)
+        self.accinput_list_remove_button.clicked.connect(self.on_remove)
+        self.accinput_list.itemSelectionChanged.connect(self.on_list_select)
+        self.accinput_save_button.clicked.connect(self.on_save_data)
+        self.enabled_check.stateChanged.connect(self.on_enable)
+
+    def on_ok(self):
+        self.accept()
+
+    def on_browse(self):
+        file_name, _ = QtGui.QFileDialog().getOpenFileName(self,
+                                                           "Select file to use", QtCore.QDir.homePath())
+        self.accinput_datafile_input.setText(file_name)
+
+    def on_add(self):
+        self.accinput.acclist.append(AccelerationInputData())
+        self.list_refresh()
+
+    def on_remove(self):
+        if len(self.accinput.acclist) is 0:
+            return
+        index = self.accinput_list.currentRow()
+        self.accinput.acclist.pop(index)
+        self.list_refresh()
+
+    def on_list_select(self):
+        if len(self.accinput.acclist) is 0:
+            return
+        index = self.accinput_list.currentRow()
+        item = self.accinput.acclist[index]
+        self.accinput_label_input.setText(item.label)
+        self.accinput_mkfluid_input.setText(str(item.mkfluid))
+        self.accinput_acccentre_x.setText(str(item.acccentre[0]))
+        self.accinput_acccentre_y.setText(str(item.acccentre[1]))
+        self.accinput_acccentre_z.setText(str(item.acccentre[2]))
+        self.accinput_globalgravity_check.setChecked(bool(item.globalgravity))
+        self.accinput_datafile_input.setText(item.datafile)
+
+    def list_refresh(self):
+        self.accinput_list.clear()
+        self.accinput_list.insertItems(0, [x.label for x in self.accinput.acclist])
+        self.accinput_list.setCurrentRow(0)
+
+    def on_save_data(self):
+        if len(self.accinput.acclist) is 0:
+            return
+        index = self.accinput_list.currentRow()
+        item = self.accinput.acclist[index]
+
+        item.label = str(self.accinput_label_input.text())
+        item.mkfluid = int(self.accinput_mkfluid_input.text())
+        item.acccentre = [float(self.accinput_acccentre_x.text()),
+                          float(self.accinput_acccentre_y.text()),
+                          float(self.accinput_acccentre_z.text())]
+        item.globalgravity = bool(self.accinput_globalgravity_check.isChecked())
+        item.datafile = str(self.accinput_datafile_input.text())
+
+        self.accinput.acclist[index] = item
+        self.list_refresh()
+
+    def on_enable(self):
+        self.accinput.enabled = self.enabled_check.isChecked()
+        self.accinput_list_groupbox.setEnabled(self.accinput.enabled)
+        self.accinput_data_groupbox.setEnabled(self.accinput.enabled)
+
+# TODO: Implement RelaxationZoneIrregularConfigDialog
+# TODO: Implement RelaxationZoneFileConfigDialog
