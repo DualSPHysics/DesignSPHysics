@@ -1209,6 +1209,7 @@ def dump_to_xml(data, save_name):
     if data['accinput'].enabled:
         f.write('\t\t\t<accinputs>\n')
         for aid in data['accinput'].acclist:
+            f.write('\t\t\t\t<!-- Input label: {} -->\n'.format(aid.label))
             f.write('\t\t\t\t<accinput>\n')
             f.write('\t\t\t\t\t<mkfluid value="{}" comment="Mk-Fluid of selected particles" />\n'.format(aid.mkfluid))
             f.write(

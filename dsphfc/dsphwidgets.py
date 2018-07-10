@@ -4542,7 +4542,7 @@ class RelaxationZoneUniformConfigDialog(QtGui.QDialog):
         self.domainbox_layout.addLayout(self.domainbox_point_layout)
 
         self.domainbox_size_layout = QtGui.QHBoxLayout()
-        self.domainbox_size_label = QtGui.QLabel(__("Point [X, Y, Z] (m): "))
+        self.domainbox_size_label = QtGui.QLabel(__("Size [X, Y, Z] (m): "))
         self.domainbox_size_x = QtGui.QLineEdit()
         self.domainbox_size_y = QtGui.QLineEdit()
         self.domainbox_size_z = QtGui.QLineEdit()
@@ -4555,7 +4555,7 @@ class RelaxationZoneUniformConfigDialog(QtGui.QDialog):
         self.domainbox_layout.addLayout(self.domainbox_size_layout)
 
         self.domainbox_direction_layout = QtGui.QHBoxLayout()
-        self.domainbox_direction_label = QtGui.QLabel(__("Point [X, Y, Z] (m): "))
+        self.domainbox_direction_label = QtGui.QLabel(__("Direction [X, Y, Z] (m): "))
         self.domainbox_direction_x = QtGui.QLineEdit()
         self.domainbox_direction_y = QtGui.QLineEdit()
         self.domainbox_direction_z = QtGui.QLineEdit()
