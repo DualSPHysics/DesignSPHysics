@@ -863,7 +863,7 @@ class RelaxationZoneIrregular(object):
 class RelaxationZoneFile(object):
     """ Relaxation zone with external file wave definition """
 
-    # TOOD: Fix this
+    # TODO: Implement this
     def __init__(self, start=0, duration=0, depth=1, swl=1, filesvel="", filesvelx_initial=0,
                  filesvelx_count=5, usevelz=False, movedata=None, dpz=2, smooth=0, center=None, width=0.5,
                  coefdir=None, coefdt=1000, function_psi=0.9, function_beta=1, driftcorrection=0,
@@ -910,6 +910,30 @@ class RelaxationZoneFile(object):
         self.function_psi = function_psi
         self.function_beta = function_beta
         self.driftcorrection = driftcorrection
+
+
+class RelaxationZoneUniform(object):
+    """ Relaxation zone for uniform velocity wave generation """
+
+    def __init__(self, start=0, duration=0, domainbox_point=None, domainbox_size=None, domainbox_direction=None,
+                 domainbox_rotateaxis_angle=0, domainbox_rotateaxis_point1=None, domainbox_rotateaxis_point2=None,
+                 use_velocity=True, velocity=0, velocity_times=None, coefdt=1000, function_psi=0.9, function_beta=1):
+        self.start = start
+        self.duration = duration
+        self.domainbox_point = domainbox_point if domainbox_point is not None else [0, 0, 0]
+        self.domainbox_size = domainbox_size if domainbox_size is not None else [0, 0, 0]
+        self.domainbox_direction = domainbox_direction if domainbox_direction is not None else [0, 0, 0]
+        self.domainbox_rotateaxis_angle = domainbox_rotateaxis_angle
+        self.domainbox_rotateaxis_point1 = domainbox_rotateaxis_point1 if domainbox_rotateaxis_point1 is not None else [
+            0, 0, 0]
+        self.domainbox_rotateaxis_point2 = domainbox_rotateaxis_point2 if domainbox_rotateaxis_point2 is not None else [
+            0, 0, 0]
+        self.use_velocity = use_velocity
+        self.velocity = velocity
+        self.velocity_times = velocity_times if velocity_times is not None else list()
+        self.coefdt = coefdt
+        self.function_psi = function_psi
+        self.function_beta = function_beta
 
 
 class AccelerationInput(object):

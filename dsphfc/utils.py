@@ -1712,6 +1712,30 @@ def dump_to_xml(data, save_name):
                 '\t\t\t\t\t<driftcorrection value="{}" comment="Coefficient of drift correction applied in velocity X. 0:Disabled, 1:Full correction (def=0)" />\n'.format(
                     rzobject.driftcorrection))
             f.write('\t\t\t\t</rzwaves_spectrum>\n')
+        if isinstance(rzobject, RelaxationZoneUniform):
+            f.write('\t\t\t\t<rzwaves_uniform>\n')
+            f.write('\t\t\t\t\t<start value="{}" comment="Start time (default=0)" />\n'.format(str(rzobject.start)))
+            f.write('\t\t\t\t\t<duration value="{}" comment="Duration, Zero is the end of simulation (default=0)" />\n'.format(str(rzobject.duration)))
+            f.write('\t\t\t\t\t<domainbox>\n')
+            f.write('\t\t\t\t\t\t<point x="{}" y="{}" z="{}" />\n'.format(*rzobject.domainbox_point))
+            f.write('\t\t\t\t\t\t<size x="{}" y="{}" z="{}" />\n'.format(*rzobject.domainbox_size))
+            f.write('\t\t\t\t\t\t<direction x="{}" y="{}" z="{}" />\n'.format(*rzobject.domainbox_direction))
+            f.write('\t\t\t\t\t\t<rotateaxis angle="{}" anglesunits="degrees">\n'.format(str(rzobject.domainbox_rotateaxis_angle)))
+            f.write('\t\t\t\t\t\t\t<point1 x="{}" y="{}" z="{}" />\n'.format(*rzobject.domainbox_rotateaxis_point1))
+            f.write('\t\t\t\t\t\t\t<point2 x="{}" y="{}" z="{}" />\n'.format(*rzobject.domainbox_rotateaxis_point2))
+            f.write('\t\t\t\t\t\t</rotateaxis>\n')
+            f.write('\t\t\t\t\t</domainbox>\n')
+            if rzobject.use_velocity:
+                f.write('\t\t\t\t\t<velocity value="{}" comment="Velocity to impose (it is ignored when velocitytimes is defined)" />\n'.format(str(rzobject.velocity)))
+            else:
+                f.write('\t\t\t\t\t<velocitytimes comment="Uniform velocity in time">\n')
+                for tv in rzobject.velocity_times:
+                    f.write('\t\t\t\t\t\t<timevalue time="{}" v="{}" />\n'.format(str(tv[0]), str(tv[1])))
+                f.write('\t\t\t\t\t</velocitytimes>\n')
+            f.write('\t\t\t\t\t<coefdt value="{}" comment="Multiplies by dt value in the calculation (using 0 is not applied) (default=1000)" />\n'.format(str(rzobject.coefdt)))
+            f.write('\t\t\t\t\t<function psi="{}" beta="{}" comment="Coefficients in funtion for velocity (def. psi=0.9, beta=1)" />\n'.format(str(rzobject.function_psi), str(rzobject.function_beta)))
+            f.write('\t\t\t\t</rzwaves_uniform>\n')
+
         #     TODO: Add other RZ objects
         f.write('\t\t\t</relaxationzones>\n')
 
