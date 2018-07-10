@@ -1217,8 +1217,8 @@ def dump_to_xml(data, save_name):
                 '\t\t\t\t\t<globalgravity value="{}" comment="Global gravity enabled (1) or disabled (0)" />\n'.format(
                     "1" if aid.globalgravity else "0"))
             f.write('\t\t\t\t\t<datafile value="{}" comment="File with acceleration data" />\n'.format(aid.datafile))
-        f.write('\t\t\t\t</accinput>\n')
-    f.write('\t\t\t</accinputs>\n')
+            f.write('\t\t\t\t</accinput>\n')
+        f.write('\t\t\t</accinputs>\n')
 
     # Damping support
     if len(data['damping']) > 0:
