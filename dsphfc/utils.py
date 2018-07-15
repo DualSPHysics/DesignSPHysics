@@ -1255,7 +1255,7 @@ def dump_to_xml(data, save_name):
             continue
         if isinstance(motlist[0], SpecialMovement):
             mot = motlist[0].generator
-            if isinstance(mot, FileGen):
+            if isinstance(mot, FileGen) or isinstance(mot, RotationFileGen):
                 continue
 
             # Open tags only for the first movement
