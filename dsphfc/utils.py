@@ -958,7 +958,7 @@ def dump_to_xml(data, save_name):
             mot_counter = 1
             for movement in value:
                 f.write('\t\t\t\t<!-- Movement Name: {} -->\n'.format(movement.name))
-                f.write('\t\t\t\t<begin mov="{}" start="0"/>\n'.format(mov_counter))
+                f.write('\t\t\t\t<begin mov="{}" start="0"/>\n'.format(mot_counter))
                 first_series_motion = mot_counter
                 if isinstance(movement, Movement):
                     for motion_index, motion in enumerate(movement.motion_list):
