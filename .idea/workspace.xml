@@ -7,9 +7,9 @@
     <bookmark url="file://$PROJECT_DIR$/DesignSPHysics.py" line="1219" mnemonic="1" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="22d76f4b-310a-4afb-8788-a472c77b2c87" name="Default" comment="Fixes GUI texts for Unform velocity RZ and adds label to accinput">
+    <list default="true" id="22d76f4b-310a-4afb-8788-a472c77b2c87" name="Default" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/dsphfc/properties.py" beforeDir="false" afterPath="$PROJECT_DIR$/dsphfc/properties.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/dsphfc/utils.py" beforeDir="false" afterPath="$PROJECT_DIR$/dsphfc/utils.py" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="TRACKING_ENABLED" value="true" />
@@ -84,10 +84,12 @@
           <file leaf-file-name="utils.py" pinned="false" current-in-tab="true">
             <entry file="file://$PROJECT_DIR$/dsphfc/utils.py">
               <provider selected="true" editor-type-id="text-editor">
-                <state relative-caret-position="599">
-                  <caret line="1257" column="39" selection-start-line="1257" selection-start-column="39" selection-end-line="1257" selection-end-column="39" />
+                <state relative-caret-position="668">
+                  <caret line="1221" column="39" lean-forward="true" selection-start-line="1221" selection-start-column="39" selection-end-line="1221" selection-end-column="39" />
                   <folding>
                     <element signature="e#253#267#0" expanded="true" />
+                    <element signature="e#41443#55680#0" />
+                    <element signature="e#55761#57675#0" />
                     <element signature="e#57947#58804#0" />
                     <element signature="e#58869#60105#0" />
                     <element signature="e#60772#66409#0" />
@@ -125,8 +127,8 @@
           <file leaf-file-name="properties.py" pinned="false" current-in-tab="true">
             <entry file="file://$PROJECT_DIR$/dsphfc/properties.py">
               <provider selected="true" editor-type-id="text-editor">
-                <state relative-caret-position="253">
-                  <caret line="428" column="24" selection-start-line="428" selection-start-column="24" selection-end-line="428" selection-end-column="24" />
+                <state relative-caret-position="391">
+                  <caret line="419" column="19" lean-forward="true" selection-start-line="419" selection-start-column="19" selection-end-line="419" selection-end-column="19" />
                 </state>
               </provider>
             </entry>
@@ -137,8 +139,6 @@
   </component>
   <component name="FindInProjectRecents">
     <findStrings>
-      <find>Multi-</find>
-      <find>Overlimit:</find>
       <find>overlimit_v</find>
       <find>on_dampi</find>
       <find>damping</find>
@@ -165,8 +165,10 @@
       <find>accinput</find>
       <find>wavepadd</find>
       <find>wavepaddles</find>
-      <find>FileGen(</find>
       <find>rotation</find>
+      <find>(FileGen)</find>
+      <find>FileGen(</find>
+      <find>begin</find>
     </findStrings>
     <replaceStrings>
       <replace>self.time_label</replace>
@@ -214,8 +216,8 @@
         <option value="$PROJECT_DIR$/dsphfc/guiutils.py" />
         <option value="$PROJECT_DIR$/DesignSPHysics.py" />
         <option value="$PROJECT_DIR$/dsphfc/dsphwidgets.py" />
-        <option value="$PROJECT_DIR$/dsphfc/utils.py" />
         <option value="$PROJECT_DIR$/dsphfc/properties.py" />
+        <option value="$PROJECT_DIR$/dsphfc/utils.py" />
       </list>
     </option>
   </component>
@@ -396,13 +398,6 @@
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
       <updated>1486981492000</updated>
-    </task>
-    <task id="LOCAL-00015" summary="Fixed an error where an object with movement enabled but no movements selected caused saving to fail.">
-      <created>1490182385252</created>
-      <option name="number" value="00015" />
-      <option name="presentableId" value="LOCAL-00015" />
-      <option name="project" value="LOCAL" />
-      <updated>1490182385252</updated>
     </task>
     <task id="LOCAL-00016" summary="Fixed a critical error in movements that caused multiple movements to fail">
       <created>1490187368867</created>
@@ -740,7 +735,14 @@
       <option name="project" value="LOCAL" />
       <updated>1531234368686</updated>
     </task>
-    <option name="localTasksCounter" value="64" />
+    <task id="LOCAL-00064" summary="Fixes rotation from a file (Movement) being detected as wave generator">
+      <created>1531686837658</created>
+      <option name="number" value="00064" />
+      <option name="presentableId" value="LOCAL-00064" />
+      <option name="project" value="LOCAL" />
+      <updated>1531686837659</updated>
+    </task>
+    <option name="localTasksCounter" value="65" />
     <servers />
   </component>
   <component name="TodoView" selected-index="4">
@@ -754,7 +756,6 @@
   </component>
   <component name="ToolWindowManager">
     <frame x="0" y="0" width="2560" height="1080" extended-state="0" />
-    <editor active="true" />
     <layout>
       <window_info anchor="bottom" id="TODO" order="7" sideWeight="0.49156272" weight="0.25273633" />
       <window_info anchor="bottom" id="Event Log" order="6" sideWeight="0.5089463" side_tool="true" weight="0.1641791" />
@@ -848,7 +849,6 @@
   </component>
   <component name="VcsManagerConfiguration">
     <option name="RELOAD_CONTEXT" value="false" />
-    <MESSAGE value="Adds Slice or Surface selector to IsoSurface post-processing tool" />
     <MESSAGE value="Adds mk/id/position selector to ComputeForces export" />
     <MESSAGE value="Changes open with paraview button from save menu" />
     <MESSAGE value="Makes details dialog on GenCase saving a popup.&#10;&#10;Hacked through the garbage collector to do it, so the menu appears&#10;when the dialog is not modal, avoiding using exec_()" />
@@ -873,7 +873,8 @@
     <MESSAGE value="Implemented Damping with overlimit" />
     <MESSAGE value="Fixes XML end tags on Acceleration Inputs" />
     <MESSAGE value="Implemented Uniform Velocity Relaxation Zone" />
-    <option name="LAST_COMMIT_MESSAGE" value="Implemented Uniform Velocity Relaxation Zone" />
+    <MESSAGE value="Fixes rotation from a file (Movement) being detected as wave generator" />
+    <option name="LAST_COMMIT_MESSAGE" value="Fixes rotation from a file (Movement) being detected as wave generator" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
@@ -1145,17 +1146,19 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/dsphfc/properties.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="253">
-          <caret line="428" column="24" selection-start-line="428" selection-start-column="24" selection-end-line="428" selection-end-column="24" />
+        <state relative-caret-position="391">
+          <caret line="419" column="19" lean-forward="true" selection-start-line="419" selection-start-column="19" selection-end-line="419" selection-end-column="19" />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/dsphfc/utils.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="599">
-          <caret line="1257" column="39" selection-start-line="1257" selection-start-column="39" selection-end-line="1257" selection-end-column="39" />
+        <state relative-caret-position="668">
+          <caret line="1221" column="39" lean-forward="true" selection-start-line="1221" selection-start-column="39" selection-end-line="1221" selection-end-column="39" />
           <folding>
             <element signature="e#253#267#0" expanded="true" />
+            <element signature="e#41443#55680#0" />
+            <element signature="e#55761#57675#0" />
             <element signature="e#57947#58804#0" />
             <element signature="e#58869#60105#0" />
             <element signature="e#60772#66409#0" />
