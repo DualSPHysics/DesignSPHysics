@@ -863,7 +863,6 @@ class RelaxationZoneIrregular(object):
 class RelaxationZoneFile(object):
     """ Relaxation zone with external file wave definition """
 
-    # TODO: Implement this
     def __init__(self, start=0, duration=0, depth=1, swl=1, filesvel="", filesvelx_initial=0,
                  filesvelx_count=5, usevelz=False, movedata=None, dpz=2, smooth=0, center=None, width=0.5,
                  coefdir=None, coefdt=1000, function_psi=0.9, function_beta=1, driftcorrection=0,
@@ -878,33 +877,10 @@ class RelaxationZoneFile(object):
         self.filesvel = filesvel
         self.start = start
         self.duration = duration
-        self.peakcoef = peakcoef
-        self.spectrum = spectrum
-        self.discretization = discretization
-        self.waveorder = waveorder
-        self.waveheight = waveheight
-        self.waveperiod = waveperiod
-        self.waves = waves
-        self.randomseed = randomseed
         self.depth = depth
         self.swl = swl
         self.center = [0, 0, 0] if center is None else center
         self.width = width
-        self.ramptime = ramptime
-        self.serieini = serieini
-        self.phase = phase
-        self.ramp = ramp
-        self.savemotion_periods = savemotion_periods
-        self.savemotion_periodsteps = savemotion_periodsteps
-        self.savemotion_xpos = savemotion_xpos
-        self.savemotion_zpos = savemotion_zpos
-        self.saveserie_timemin = saveserie_timemin
-        self.saveserie_timemax = saveserie_timemax
-        self.saveserie_timedt = saveserie_timedt
-        self.saveserie_xpos = saveserie_xpos
-        self.saveseriewaves_timemin = saveseriewaves_timemin
-        self.saveseriewaves_timemax = saveseriewaves_timemax
-        self.saveseriewaves_xpos = saveseriewaves_xpos
         self.coefdir = [1, 0, 0] if coefdir is None else coefdir
         self.coefdt = coefdt
         self.function_psi = function_psi

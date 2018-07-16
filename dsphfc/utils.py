@@ -1651,6 +1651,42 @@ def dump_to_xml(data, save_name):
                 '\t\t\t\t\t<driftcorrection value="{}" comment="Coefficient of drift correction applied in velocity X. 0:Disabled, 1:Full correction (def=0)" />\n'.format(
                     rzobject.driftcorrection))
             f.write('\t\t\t\t</rzwaves_regular>\n')
+        if isinstance(rzobject, RelaxationZoneFile):
+            f.write('\t\t\t\t<rzwaves_external_1d>\n')
+            f.write('\t\t\t\t\t<start value="{}" comment="Start time (def=0)" />\n'.format(rzobject.start))
+            f.write(
+                '\t\t\t\t\t<duration value="{}" comment="Movement duration, Zero is the end of simulation (def=0)" />\n'.format(
+                    rzobject.duration))
+            f.write('\t\t\t\t\t<depth value="{}" comment="Fluid depth (def=0)" />\n'.format(rzobject.depth))
+            f.write('\t\t\t\t\t<swl value="{}" comment="Still water level (free-surface water)" />\n'.format(
+                rzobject.swl))
+            f.write('\t\t\t\t\t<filesvel value="{}" comment="Main name of files with velocity to use" />\n'.format(rzobject.filesvel))
+            f.write('\t\t\t\t\t<filesvelx initial="{}" count="{}" comment="First file and count to use" />\n'.format(rzobject.filesvelx_initial,
+                                                                                                                     rzobject.filesvelx_count))
+            f.write('\t\t\t\t\t<usevelz value="{}" comment="Use velocity in Z or not (def=false)" />\n'.format("true" if rzobject.usevelz else "false"))
+            f.write('\t\t\t\t\t<movedata x="{}" y="{}" z="{}" comment="Movement of data in CSV files" />\n'.format(*rzobject.movedata))
+            f.write('\t\t\t\t\t<dpz valuedp="{}" comment="Distance between key points in Z (def=2)" />\n'.format(rzobject.dpz))
+            f.write('\t\t\t\t\t<smooth value="{}" comment="Smooth motion level (def=0)" />\n'.format(rzobject.smooth))
+            f.write(
+                '\t\t\t\t\t<center x="{}" y="{}" z="{}" comment="Central point of application" />\n'.format(
+                    *rzobject.center))
+            f.write('\t\t\t\t\t<width value="{}" comment="Width for generation" />\n'.format(rzobject.width))
+            f.write(
+                '\t\t\t\t\t<coefdir x="{}" y="{}" z="{}" comment="Coefficients for each direction (default=(1,0,0))" />\n'.format(
+                    *rzobject.coefdir))
+            f.write(
+                '\t\t\t\t\t<coefdt value="{}" comment="Multiplies by dt value in the calculation (using 0 is not applied) (default=1000)" />\n'.format(
+                    rzobject.coefdt))
+            f.write(
+                '\t\t\t\t\t<function psi="{}" beta="{}" comment="Coefficients in funtion for velocity (def. psi=0.9, beta=1)" />\n'.format(
+                    rzobject.function_psi, rzobject.function_beta))
+            f.write(
+                '\t\t\t\t\t<driftcorrection value="{}" comment="Coefficient of drift correction applied in velocity X. 0:Disabled, 1:Full correction (def=0)" />\n'.format(
+                    rzobject.driftcorrection))
+            f.write(
+                '\t\t\t\t\t<driftinitialramp value="{}" comment="Ignore waves from external data in initial seconds (def=0)" />\n'.format(
+                    rzobject.driftinitialramp))
+            f.write('\t\t\t\t</rzwaves_external_1d>\n')
         if isinstance(rzobject, RelaxationZoneIrregular):
             f.write('\t\t\t\t<rzwaves_spectrum>\n')
             f.write('\t\t\t\t\t<start value="{}" comment="Start time (def=0)" />\n'.format(rzobject.start))
