@@ -1165,14 +1165,11 @@ def on_special_button():
             # Set the relaxation zone. Can be an object or be None
             data['relaxationzone'] = config_dialog.relaxationzone
         if action.text() == __("External waves"):
-            # TODO: Remove this
-            guiutils.warning_dialog("Not implemented yet")
-            return
             if data['relaxationzone'] is not None:
                 if not isinstance(data['relaxationzone'], RelaxationZoneFile):
                     overwrite_warn = guiutils.ok_cancel_dialog(__("Relaxation Zone"),
-                                                               __(
-                                                                   "There's already another type of Relaxation Zone defined. "
+                                                               __("There's already another type of "
+                                                                   "Relaxation Zone defined. "
                                                                    "Continuing will overwrite it. Are you sure?"))
                     if overwrite_warn == QtGui.QMessageBox.Cancel:
                         return
