@@ -4481,10 +4481,16 @@ class RelaxationZoneFileConfigDialog(QtGui.QDialog):
         self.exec_()
 
     def on_browse(self):
-        file_name, _ = QtGui.QFileDialog().getOpenFileName(self,
-                                                           "Select file to use", QtCore.QDir.homePath())
-        # Takes only the filename without extension (or the entire name if it does not have extension)
-        filtered_filename = ".".join(file_name.split(".")[:-1]) if "." in file_name else file_name
+        # noinspection PyArgumentList
+        file_name, _ = QtGui.QFileDialog.getOpenFileName(
+            self,
+            __("Open a file from the serie"),
+            QtCore.QDir.homePath(),
+            "External velocity data (*_x*_y*.csv)")
+        if len(file_name) < 1:
+            return
+        # Takes only the filename without the serie data in its name
+        filtered_filename = file_name.split("_x")[0]
         self.filesvel_input.setText(filtered_filename)
 
     def on_apply(self):

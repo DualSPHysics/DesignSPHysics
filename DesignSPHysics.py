@@ -411,7 +411,21 @@ def on_save_case(save_as=None):
                         # Probably already copied the file.
                         pass
 
-        # TODO: Copy files for RZs
+        if isinstance(data['relaxationzone'], RelaxationZoneFile):
+            # Need to copy the abc_x*_y*.csv file series to the out folder
+            filename = data['relaxationzone'].filesvel
+            for f in glob.glob("{}*".format(filename)):
+                utils.debug("Copying {} to {}".format(
+                    filename, save_name + "/" + save_name.split('/')[-1] + "_out"))
+                try:
+                    shutil.copy2(f, save_name + "/" + save_name.split('/')[-1] + "_out")
+                except IOError:
+                    utils.error("Unable to copy {} into {}".format(
+                        filename, save_name + "/" + save_name.split('/')[-1] + "_out"))
+                except shutil.Error:
+                    # Probably already copied the file.
+                    pass
+            data['relaxationzone'].filesvel = filename.split("/")[-1]
 
         # Dumps all the case data to an XML file.
         utils.dump_to_xml(data, save_name)
