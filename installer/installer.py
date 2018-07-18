@@ -100,7 +100,7 @@ def main():
         install_button.setText('Installing...')
         system = platform.system()
         try:
-            if os.path.isdir("./resource/DSPH_Images") and os.path.isfile("./resource/DesignSPHysics.py"):
+            if os.path.isdir("./resource/images") and os.path.isfile("./resource/DesignSPHysics.py"):
 
                 # Set the directory depending on the system.
                 if 'windows' in system.lower():
@@ -146,12 +146,12 @@ def main():
                     # File does not exists.  Ignoring
                     pass
                 try:
-                    shutil.rmtree(macro_dir + '/DSPH_Images')
+                    shutil.rmtree(macro_dir + '/images')
                 except OSError:
                     # Directory does not exists.  Ignoring
                     pass
                 try:
-                    shutil.rmtree(macro_dir + '/dsphfc')
+                    shutil.rmtree(macro_dir + '/ds_modules')
                 except OSError:
                     # Directory does not exists.  Ignoring
                     pass
@@ -175,8 +175,8 @@ def main():
                 shutil.copy("./resource/LICENSE", fc_default_mod_dir + '/DesignSPHysics')
                 shutil.copy("./resource/DesignSPHysics.FCMacro", macro_dir)
                 shutil.copy("./resource/default-config.json", fc_default_mod_dir + '/DesignSPHysics')
-                shutil.copytree("./resource/DSPH_Images", fc_default_mod_dir + '/DesignSPHysics' + '/DSPH_Images')
-                shutil.copytree("./resource/dsphfc", fc_default_mod_dir + '/DesignSPHysics' + '/dsphfc')
+                shutil.copytree("./resource/images", fc_default_mod_dir + '/DesignSPHysics' + '/images')
+                shutil.copytree("./resource/ds_modules", fc_default_mod_dir + '/DesignSPHysics' + '/ds_modules')
 
                 if installopts_selector.currentIndex() is 0:
                     try:
@@ -195,7 +195,7 @@ def main():
                 sys.exit(0)
                 return
             else:
-                raise Exception('DSPH_Images or DesignSPHysics.py are not in the resource folder.')
+                raise Exception('images or DesignSPHysics.py are not in the resource folder.')
         except Exception as e:
             # Something failed, show error
             install_button.setText('ERROR :(')

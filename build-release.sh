@@ -9,8 +9,8 @@ cp ../DesignSPHysics.py ./resource/
 cp ../DesignSPHysics.FCMacro ./resource/
 cp ../default-config.json ./resource/
 cp ../LICENSE ./resource/
-cp -rf ../DSPH_Images/ ./resource/
-cp -rf ../dsphfc/ ./resource/
+cp -rf ../images/ ./resource/
+cp -rf ../ds_modules/ ./resource/
 cp -rf ../dualsphysics/ ./resource/
 rm ./installer.spec
 rm -rf ./build
