@@ -28,14 +28,14 @@ sys.setdefaultencoding('utf-8')
 
 # Fix FreeCAD not searching in the user-set macro folder.
 try:
-    from dsphfc.properties import *
-    from dsphfc import utils, guiutils, xmlimporter, dsphwidgets
-    from dsphfc.utils import __
+    from ds_modules.properties import *
+    from ds_modules import utils, guiutils, xmlimporter, dsphwidgets
+    from ds_modules.utils import __
 except:
     sys.path.append(os.path.dirname(os.path.abspath(__file__)))
-    from dsphfc.properties import *
-    from dsphfc import utils, guiutils, xmlimporter, dsphwidgets
-    from dsphfc.utils import __
+    from ds_modules.properties import *
+    from ds_modules import utils, guiutils, xmlimporter, dsphwidgets
+    from ds_modules.utils import __
 
 # Copyright (C) 2017 - Andrés Vieira (anvieiravazquez@gmail.com)
 # EPHYSLAB Environmental Physics Laboratory, Universidade de Vigo
@@ -85,6 +85,7 @@ if not is_compatible:
 QtCore.QTextCodec.setCodecForCStrings(QtCore.QTextCodec.codecForName('UTF-8'))
 
 # Main data structure
+# TODO: Big Change: Data structures should be an instance of a class like CaseData() and TempCaseData(), not a dict()
 data = dict()  # Used to save on disk case parameters and related data
 temp_data = dict()  # Used to store temporal useful items (like processes)
 # Used to store widgets that will be disabled/enabled, so they are centralized
@@ -92,13 +93,14 @@ widget_state_elements = dict()
 
 # Establishing references for the different elements that the script will use later.
 fc_main_window = FreeCADGui.getMainWindow()  # FreeCAD main window
+
+# TODO: Big Change: This should definetly be a custom class like DesignSPHysicsDock(QtGui.QDockWidget)
 dsph_main_dock = QtGui.QDockWidget()  # DSPH main dock
 # Scaffolding widget, only useful to apply to the dsph_dock widget
 dsph_main_dock_scaff_widget = QtGui.QWidget()
 
 # Executes the default data function the first time and merges results with current data structure.
 default_data, default_temp_data = utils.get_default_data()
-
 data.update(default_data)
 temp_data.update(default_temp_data)
 
@@ -135,27 +137,32 @@ constants_button = QtGui.QPushButton(__("Define\nConstants"))
 constants_button.setToolTip(
     __("Use this button to define case constants,\nsuch as gravity or fluid reference density."))
 
+# Opens constant definition window on button click
 constants_button.clicked.connect(lambda: guiutils.def_constants_window(data))
 widget_state_elements['constants_button'] = constants_button
 
+# Help button that opens a help URL for DesignSPHysics
 help_button = QtGui.QPushButton("Help")
 help_button.setToolTip(
     __("Push this button to open a browser with help\non how to use this tool."))
 help_button.clicked.connect(utils.open_help)
 
+# Setup window button.
 setup_button = QtGui.QPushButton(__("Setup\nPlugin"))
 setup_button.setToolTip(__("Setup of the simulator executables"))
 setup_button.clicked.connect(lambda: guiutils.def_setup_window(data))
 
+# Execution parameters button.
 execparams_button = QtGui.QPushButton(__("Execution\nParameters"))
 execparams_button.setToolTip(
     __("Change execution parameters, such as\ntime of simulation, viscosity, etc."))
 execparams_button.clicked.connect(lambda: guiutils.def_execparams_window(data))
 widget_state_elements['execparams_button'] = execparams_button
 
+# Logo. Made from a label. Labels can have image as well as text.
 logo_label = QtGui.QLabel()
 logo_label.setPixmap(os.path.dirname(os.path.abspath(
-    __file__)) + "/DSPH_Images/{}".format("logo.png"))
+    __file__)) + "/images/{}".format("logo.png"))
 
 
 def on_dp_changed():
@@ -234,7 +241,6 @@ casecontrols_bt_loaddoc.setIcon(guiutils.get_icon("load.png"))
 casecontrols_bt_loaddoc.setIconSize(QtCore.QSize(28, 28))
 
 # Add fillbox button
-
 casecontrols_bt_addfillbox = QtGui.QPushButton(__("Add fillbox"))
 casecontrols_bt_addfillbox.setToolTip(
     __("Adds a FillBox. A FillBox is able to fill an empty space\nwithin "
@@ -283,6 +289,7 @@ def on_new_case(prompt=True):
     """ Defines what happens when new case is clicked. Closes all documents
         if possible and creates a FreeCAD document with Case Limits object. """
 
+    # Closes all documents as there can only be one open.
     if utils.document_count() > 0:
         new_case_success = utils.prompt_close_all_documents(prompt)
         if not new_case_success:
@@ -297,10 +304,14 @@ def on_new_case(prompt=True):
     data['simobjects']['Case_Limits'] = [
         "mkspecial", "typespecial", "fillspecial"]
     dp_input.setText(str(data["dp"]))
+
+    # Forces call to item selection change function so all changes are taken into account
     on_tree_item_selection_change()
 
 
 def on_new_from_freecad_document(prompt=True):
+    """ Creates a new case based on an existing FreeCAD document.
+    This is specially useful for CAD users that want to use existing geometry for DesignSPHysics. """
     file_name, _ = QtGui.QFileDialog().getOpenFileName(guiutils.get_fc_main_window(),
                                                        "Select document to import", QtCore.QDir.homePath())
 
@@ -318,6 +329,8 @@ def on_new_from_freecad_document(prompt=True):
     data['simobjects']['Case_Limits'] = [
         "mkspecial", "typespecial", "fillspecial"]
     dp_input.setText(str(data["dp"]))
+
+    # Forces call to item selection change function so all changes are taken into account
     on_tree_item_selection_change()
 
 
@@ -411,6 +424,7 @@ def on_save_case(save_as=None):
                         # Probably already copied the file.
                         pass
 
+        # Copies files needed for RelaxationZones into the project folder and changes data paths to relative ones.
         if isinstance(data['relaxationzone'], RelaxationZoneFile):
             # Need to copy the abc_x*_y*.csv file series to the out folder
             filename = data['relaxationzone'].filesvel
@@ -431,7 +445,10 @@ def on_save_case(save_as=None):
         utils.dump_to_xml(data, save_name)
 
         # Generate batch file in disk
-        # TODO: fix this and enable it. It's disabled temporarily because it is not working
+        # TODO: Batch file generation needs to be updated.
+        # Batch files need to have all the data they can have into it. Also, users should have options to include
+        # different post-processing tools in the batch files. It is disabled for now because it's not really useful.
+
         # if (data['gencase_path'] == "") or (data['dsphysics_path'] == "") or (data['partvtk4_path'] == ""):
         #     utils.warning(
         #         __("Can't create executable bat file! One or more of the paths in plugin setup is not set"))
@@ -447,7 +464,7 @@ def on_save_case(save_as=None):
         #             str(ex_selector_combo.currentText()).lower(), data['additional_parameters']),
         #         lib_path='/'.join(data['gencase_path'].split('/')[:-1]))
 
-        # Save data array on disk
+        # Save data array on disk. It is saved as a binary file with Pickle.
         try:
             with open(save_name + "/casedata.dsphdata", 'wb') as picklefile:
                 pickle.dump(data, picklefile, utils.PICKLE_PROTOCOL)
@@ -460,29 +477,18 @@ def on_save_case(save_as=None):
 
 
 def on_save_with_gencase():
-    # Check possible size of the case in particles and warn the user if there are too much.
-    case_maximum_particles = utils.get_maximum_particles(data['dp'])
-    utils.debug("Max number of particles that can be created is: {}".format(
-        case_maximum_particles))
+    """ Saves data into disk and uses GenCase to generate the case files."""
 
-    # Disabled for now.
-    # if case_maximum_particles > utils.MAX_PARTICLE_WARNING:
-    #     # Spawn a dialog warning the user
-    #     max_particle_warning = guiutils.ok_cancel_dialog(
-    #         __('Are you sure?'),
-    #         __("With that Case Limits size and DP you can generate as much as {} particles.\n\n"
-    #            "Are you sure you want to continue saving?").format(case_maximum_particles))
-    #     if max_particle_warning == QtGui.QMessageBox.Cancel:
-    #         return
-
-    # Save Case
+    # Save Case as usual so all the data needed for GenCase is on disk
     on_save_case()
 
+    # Ensure the current working directory is the DesignSPHysics directory
     utils.refocus_cwd()
 
     # Use gencase if possible to generate the case final definition
     data['gencase_done'] = False
     if data['gencase_path'] != "":
+        # Tries to spawn a process with GenCase to generate the case
         process = QtCore.QProcess(fc_main_window)
         gencase_full_path = os.getcwd() + "/" + data['gencase_path']
         process.setWorkingDirectory(data['project_path'])
@@ -494,7 +500,9 @@ def on_save_with_gencase():
         process.waitForFinished()
         output = str(process.readAllStandardOutput())
         error_in_gen_case = False
+
         # If GenCase was successful, check for internal errors
+        # This is done because a "clean" exit (return 0) of GenCase does not mean that all went correct.
         if str(process.exitCode()) == "0":
             try:
                 total_particles_text = output[output.index(
@@ -525,14 +533,15 @@ def on_save_with_gencase():
                 # Not an expected result. GenCase had a not handled error
                 error_in_gen_case = True
 
+        # If for some reason GenCase failed
         if str(process.exitCode()) != "0" or error_in_gen_case:
             # Multiple possible causes. Let the user know
             gencase_out_file = open(
                 data['project_path'] + '/' + data['project_name'] + '_out/' + data['project_name'] + ".out", "rb")
             gencase_failed_dialog = QtGui.QMessageBox()
             gencase_failed_dialog.setText(
-                __(
-                    "Error executing GenCase. Did you add objects to the case?. Another reason could be memory issues. View details for more info."))
+                __("Error executing GenCase. Did you add objects to the case?. "
+                   "Another reason could be memory issues. View details for more info."))
             gencase_failed_dialog.setDetailedText(
                 gencase_out_file.read().split("================================")[1])
             gencase_failed_dialog.setIcon(QtGui.QMessageBox.Critical)
@@ -540,7 +549,7 @@ def on_save_with_gencase():
             gencase_failed_dialog.exec_()
             utils.warning(__("GenCase Failed."))
 
-        # Save results
+        # Save results again so all the data is updated if something changes.
         on_save_case()
 
 
@@ -558,6 +567,17 @@ def on_save_menu(action):
         on_save_with_gencase()
     if __("Save as...") in action.text():
         on_save_case(save_as=True)
+
+
+def on_load_button():
+    """ Defines load case button behaviour. This is made so errors can be detected and handled. """
+    try:
+        on_load_case()
+    except ImportError:
+        guiutils.error_dialog(__("There was an error loading the case"),
+                              __("The case you are trying to load has some data that DesignSPHysics could not"
+                                 " load.\n\nDid you make the case in a previous version?"))
+        on_new_case(prompt=False)
 
 
 def on_load_case():
@@ -609,14 +629,9 @@ def on_load_case():
         # Remove exec paths from loaded data if user have already correct ones.
         _, already_correct = utils.check_executables(data)
         if already_correct:
-            [
-                load_disk_data.pop(x, None)
-                for x in [
-                'gencase_path', 'dsphysics_path', 'partvtk4_path', 'floatinginfo_path', 'computeforces_path',
-                'measuretool_path', 'isosurface_path',
-                'boundaryvtk_path'
-            ]
-            ]
+            [load_disk_data.pop(x, None) for x in
+             ['gencase_path', 'dsphysics_path', 'partvtk4_path', 'floatinginfo_path', 'computeforces_path',
+              'measuretool_path', 'isosurface_path', 'boundaryvtk_path']]
 
         # Update data structure with disk loaded one
         data.update(load_disk_data)
@@ -624,7 +639,8 @@ def on_load_case():
         guiutils.error_dialog(
             __("There was an error importing the case properties. You probably need to set them again."
                "\n\n"
-               "This could be caused due to file corruption, caused by operating system based line endings or ends-of-file, or other related aspects."))
+               "This could be caused due to file corruption, "
+               "caused by operating system based line endings or ends-of-file, or other related aspects."))
 
     # Fill some data
     dp_input.setText(str(data['dp']))
@@ -687,6 +703,9 @@ def on_add_fillbox():
 
 
 def on_add_damping_zone():
+    """ Adds a damping zone into the case. It consist on a solid line that rempresents the damping vector
+    and a dashed line representing the overlimit. It can be adjusted in the damping property window
+    or changing the lines itselves."""
     damping_group = FreeCAD.ActiveDocument.addObject("App::DocumentObjectGroup", "DampingZone")
 
     # Limits line
@@ -716,25 +735,33 @@ def on_add_damping_zone():
     overlimitv.ArrowSize = "10 mm"
     overlimitv.ArrowType = "Dot"
 
+    # Add the two lines to the group
     damping_group.addObject(limits)
     damping_group.addObject(overlimit)
 
     FreeCAD.ActiveDocument.recompute()
     FreeCADGui.SendMsgToActiveView("ViewFit")
+    # Save damping in the main data structure.
     data["damping"][damping_group.Name] = Damping()
+    # Opens damping configuration window to tweak the added damping zone.
     guiutils.damping_config_window(data, damping_group.Name)
 
 
 def on_add_stl():
     """ Add STL file. Opens a file opener and allows
     the user to set parameters for the import process"""
+
+    # TODO: Low priority: This Dialog should be implemented and designed as a class like AddSTLDialog(QtGui.QDialog)
     filedialog = QtGui.QFileDialog()
+
     # noinspection PyArgumentList
     file_name, _ = filedialog.getOpenFileName(fc_main_window, __(
         "Select STL to import"), QtCore.QDir.homePath(), "STL Files (*.stl)")
+
     if len(file_name) <= 1:
         # User didn't select any files
         return
+
     # Defines import stl dialog
     stl_dialog = QtGui.QDialog()
     stl_dialog.setModal(True)
@@ -808,6 +835,7 @@ def on_add_stl():
 
     # STL Dialog function definition and connections
     def stl_ok_clicked():
+        """ Defines ok button behaviour"""
         [stl_scaling_edit.setText(stl_scaling_edit.text().replace(",", ".")) for stl_scaling_edit in [
             stl_scaling_x_e, stl_scaling_y_e, stl_scaling_z_e]]
         try:
@@ -825,6 +853,7 @@ def on_add_stl():
                 __("There was an error. Are you sure you wrote correct float values in the sacaling factor?"))
 
     def stl_dialog_browse():
+        """ Defines the browse button behaviour."""
         # noinspection PyArgumentList
         file_name_temp, _ = filedialog.getOpenFileName(fc_main_window, __(
             "Select STL to import"), QtCore.QDir.homePath(), "STL Files (*.stl)")
@@ -918,8 +947,8 @@ def on_import_xml():
             # Notify change to refresh UI elements related.
             on_tree_item_selection_change()
     guiutils.info_dialog(
-        __(
-            "Importing successful. Note that some objects may not be automatically added to the case, and other may not have its properties correctly applied."))
+        __("Importing successful. Note that some objects may not be automatically added to the case, "
+            "and other may not have its properties correctly applied."))
 
 
 def on_summary():
@@ -932,6 +961,8 @@ def on_2d_toggle():
     if utils.valid_document_environment():
         if data['3dmode']:
             # Change to 2D
+
+            # TODO: Low-priority: This dialog should be implemented as a class like 2DModeConfig(QtGui.QDialog)
             y_pos_2d_window = QtGui.QDialog()
             y_pos_2d_window.setWindowTitle(__("Set Y position"))
 
@@ -1015,7 +1046,9 @@ def on_2d_toggle():
 
 
 def on_special_button():
-    """ Spawns a dialog with special options """
+    """ Spawns a dialog with special options. This is only a selector """
+
+    # TODO: Low-priority: This should be implemented in a class like SpecialOptionsSelector(QtGui.QDialog)
     sp_window = QtGui.QDialog()
     sp_window_layout = QtGui.QVBoxLayout()
 
@@ -1041,10 +1074,12 @@ def on_special_button():
     sp_accinput_button = QtGui.QPushButton(__("Acceleration Inputs"))
 
     def on_damping_option():
+        """ Defines damping button behaviour"""
         on_add_damping_zone()
         sp_window.accept()
 
     def on_multilayeredmb_menu(action):
+        """ Defines MLPiston menu behaviour"""
         # Get currently selected object
         try:
             selection = FreeCADGui.Selection.getSelection()[0]
@@ -1141,7 +1176,9 @@ def on_special_button():
         sp_window.accept()
 
     def on_relaxationzone_menu(action):
-        # Which type of relaxationzone
+        """ Defines Relaxation Zone menu behaviour."""
+
+        # Check which type of relaxationzone it is
         if action.text() == __("Regular waves"):
             if data['relaxationzone'] is not None:
                 if not isinstance(data['relaxationzone'], RelaxationZoneRegular):
@@ -1183,8 +1220,8 @@ def on_special_button():
                 if not isinstance(data['relaxationzone'], RelaxationZoneFile):
                     overwrite_warn = guiutils.ok_cancel_dialog(__("Relaxation Zone"),
                                                                __("There's already another type of "
-                                                                   "Relaxation Zone defined. "
-                                                                   "Continuing will overwrite it. Are you sure?"))
+                                                                  "Relaxation Zone defined. "
+                                                                  "Continuing will overwrite it. Are you sure?"))
                     if overwrite_warn == QtGui.QMessageBox.Cancel:
                         return
                     else:
@@ -1220,10 +1257,12 @@ def on_special_button():
         sp_window.accept()
 
     def on_accinput_button():
+        """ Acceleration input button behaviour."""
         accinput_dialog = dsphwidgets.AccelerationInputDialog(data['accinput'])
         result = accinput_dialog.exec_()
         if result == QtGui.QDialog.Accepted:
             data['accinput'] = accinput_dialog.get_result()
+
 
     sp_damping_button.clicked.connect(on_damping_option)
     sp_multilayeredmb_menu.triggered.connect(on_multilayeredmb_menu)
@@ -1242,7 +1281,7 @@ casecontrols_bt_newdoc.clicked.connect(on_new_case)
 casecontrols_bt_savedoc.clicked.connect(on_save_case)
 casecontrols_menu_newdoc.triggered.connect(on_newdoc_menu)
 casecontrols_menu_savemenu.triggered.connect(on_save_menu)
-casecontrols_bt_loaddoc.clicked.connect(on_load_case)
+casecontrols_bt_loaddoc.clicked.connect(on_load_button)
 casecontrols_bt_addfillbox.clicked.connect(on_add_fillbox)
 casecontrols_bt_addstl.clicked.connect(on_add_stl)
 casecontrols_bt_importxml.clicked.connect(on_import_xml)
@@ -1269,6 +1308,7 @@ cc_layout.addLayout(ccsecondrow_layout)
 cc_layout.addLayout(ccfourthrow_layout)
 
 # Defines run window dialog
+# TODO: This should be a custom implementation in a class like RunDialog(QtGui.QDialog)
 run_dialog = QtGui.QDialog()
 run_watcher = QtCore.QFileSystemWatcher()
 
@@ -1363,8 +1403,8 @@ def on_ex_simulate():
 
     run_button_cancel.clicked.connect(on_cancel)
 
-    # Details button handler
     def on_details():
+        """ Details button handler. Opens and closes the details pane on the execution window."""
         if run_details.isVisible():
             utils.debug('Hiding details pane on execution')
             run_details.hide()
@@ -1389,8 +1429,9 @@ def on_ex_simulate():
         os.remove(data['project_path'] + '/' +
                   data['project_name'] + "_out/" + f)
 
-    # Simulation finished handler
     def on_dsph_sim_finished(exit_code):
+        """ Simulation finish handler. Defines what happens when the process finishes."""
+
         # Reads output and completes the progress bar
         output = temp_data['current_process'].readAllStandardOutput()
         run_details_text.setText(str(output))
@@ -1441,8 +1482,9 @@ def on_ex_simulate():
     final_params_ex = static_params_exe + additional_params_ex
     temp_data['current_process'].start(data['dsphysics_path'], final_params_ex)
 
-    # Executed each time filesystem changes. Updates run data
     def on_fs_change():
+        """ Executed each time the filesystem changes. This updates the percentage of the simulation and its
+        details."""
         run_file_data = ''
         try:
             with open(data['project_path'] + '/' + data['project_name'] + "_out/Run.out", "r") as run_file:
@@ -1509,19 +1551,20 @@ def on_ex_simulate():
 
 def on_additional_parameters():
     """ Handles additional parameters button for execution """
+    # TODO: This should be a custom implementation in a class like AdditionalParametersDialog(QtGui.QDialog)
     additional_parameters_window = QtGui.QDialog()
     additional_parameters_window.setWindowTitle(__("Additional parameters"))
 
     ok_button = QtGui.QPushButton(__("Ok"))
     cancel_button = QtGui.QPushButton(__("Cancel"))
 
-    # Ok Button handler
     def on_ok():
+        """ OK Button handler."""
         data['additional_parameters'] = export_params.text()
         additional_parameters_window.accept()
 
-    # Cancel Button handler
     def on_cancel():
+        """ Cancel button handler."""
         additional_parameters_window.reject()
 
     ok_button.clicked.connect(on_ok)
@@ -1589,6 +1632,7 @@ ex_layout.addLayout(ex_button_layout)
 
 # Defines export window dialog.
 # This dialog is used in each <tool>_export function as a generic progress information
+# TODO: This should be a custom implementation on a class like ExporProgressDialog(QtGui.QDialog)
 export_dialog = QtGui.QDialog()
 
 export_dialog.setModal(False)
@@ -1728,6 +1772,7 @@ def partvtk_export(export_parameters):
 
 def on_partvtk():
     """ Opens a dialog with PartVTK exporting options """
+    # TODO: This should be a custom implementation in a class like PartVTKDialog(QtGui.QDialog)
     partvtk_tool_dialog = QtGui.QDialog()
 
     partvtk_tool_dialog.setModal(False)
@@ -1793,9 +1838,11 @@ def on_partvtk():
     partvtk_tool_dialog.setLayout(partvtk_tool_layout)
 
     def on_pvtk_cancel():
+        """ Cancel button behaviour """
         partvtk_tool_dialog.reject()
 
     def on_pvtk_export():
+        """ Export button behaviour """
         export_parameters = dict()
         export_parameters['save_mode'] = outformat_combobox.currentIndex()
         export_parameters['save_types'] = '-all'
@@ -1833,6 +1880,7 @@ def on_partvtk():
         partvtk_tool_dialog.accept()
 
     def on_pvtk_type_all_change(state):
+        """ 'All' type selection handler """
         if state == QtCore.Qt.Checked:
             [
                 chk.setCheckState(QtCore.Qt.Unchecked)
@@ -1841,26 +1889,32 @@ def on_partvtk():
             ]
 
     def on_pvtk_type_bound_change(state):
+        """ 'Bound' type selection handler """
         if state == QtCore.Qt.Checked:
             pvtk_types_chk_all.setCheckState(QtCore.Qt.Unchecked)
 
     def on_pvtk_type_fluid_change(state):
+        """ 'Fluid' type selection handler """
         if state == QtCore.Qt.Checked:
             pvtk_types_chk_all.setCheckState(QtCore.Qt.Unchecked)
 
     def on_pvtk_type_fixed_change(state):
+        """ 'Fixed' type selection handler """
         if state == QtCore.Qt.Checked:
             pvtk_types_chk_all.setCheckState(QtCore.Qt.Unchecked)
 
     def on_pvtk_type_moving_change(state):
+        """ 'Moving' type selection handler """
         if state == QtCore.Qt.Checked:
             pvtk_types_chk_all.setCheckState(QtCore.Qt.Unchecked)
 
     def on_pvtk_type_floating_change(state):
+        """ 'Floating' type selection handler """
         if state == QtCore.Qt.Checked:
             pvtk_types_chk_all.setCheckState(QtCore.Qt.Unchecked)
 
     def on_pvtk_export_format_change(index):
+        """ Export format combobox handler"""
         if "vtk" in outformat_combobox.currentText().lower() and data['paraview_path'] != "":
             pvtk_open_at_end.setEnabled(True)
         else:
@@ -1958,6 +2012,7 @@ def floatinginfo_export(export_parameters):
 
 def on_floatinginfo():
     """ Opens a dialog with FloatingInfo exporting options """
+    # TODO: This should be implemented in a custom class like FloatingInfoDialog(QtCore.QDialog)
     floatinfo_tool_dialog = QtGui.QDialog()
 
     floatinfo_tool_dialog.setModal(False)
@@ -2003,9 +2058,11 @@ def on_floatinginfo():
     floatinfo_tool_dialog.setLayout(floatinfo_tool_layout)
 
     def on_finfo_cancel():
+        """ Cancel button behaviour."""
         floatinfo_tool_dialog.reject()
 
     def on_finfo_export():
+        """ Export button behaviour."""
         export_parameters = dict()
         export_parameters['onlyprocess'] = finfo_onlyprocess_text.text()
         export_parameters['filename'] = finfo_filename_text.text()
@@ -2110,6 +2167,7 @@ def computeforces_export(export_parameters):
 
 def on_computeforces():
     """ Opens a dialog with ComputeForces exporting options """
+    # TODO: This should be implemented in a custom class like ComputerForcesDialog(QtGui.QDialog)
     compforces_tool_dialog = QtGui.QDialog()
 
     compforces_tool_dialog.setModal(False)
@@ -2168,9 +2226,11 @@ def on_computeforces():
     compforces_tool_dialog.setLayout(compforces_tool_layout)
 
     def on_cfces_cancel():
+        """ Cancel button behaviour."""
         compforces_tool_dialog.reject()
 
     def on_cfces_export():
+        """ Export button behaviour."""
         export_parameters = dict()
         export_parameters['save_mode'] = outformat_combobox.currentIndex()
 
@@ -2311,6 +2371,7 @@ def measuretool_export(export_parameters):
 
 def on_measuretool():
     """ Opens a dialog with MeasureTool exporting options """
+    # TODO: This should be implemented in a custom class like MeasureToolDialog(QtGui.QDialog)
     measuretool_tool_dialog = QtGui.QDialog()
 
     measuretool_tool_dialog.setModal(False)
@@ -2390,9 +2451,11 @@ def on_measuretool():
     measuretool_tool_dialog.setLayout(measuretool_tool_layout)
 
     def on_mtool_cancel():
+        """ Cancel button behaviour."""
         measuretool_tool_dialog.reject()
 
     def on_mtool_export():
+        """ Export button behaviour."""
         export_parameters = dict()
         export_parameters['save_mode'] = outformat_combobox.currentIndex()
         export_parameters['save_vars'] = '-all'
@@ -2439,6 +2502,7 @@ def on_measuretool():
         measuretool_tool_dialog.accept()
 
     def on_mtool_measure_all_change(state):
+        """ 'All' checkbox behaviour"""
         if state == QtCore.Qt.Checked:
             [
                 chk.setCheckState(QtCore.Qt.Unchecked)
@@ -2450,10 +2514,13 @@ def on_measuretool():
             ]
 
     def on_mtool_measure_single_change(state):
+        """ Behaviour for all checkboxes except 'All' """
         if state == QtCore.Qt.Checked:
             mtool_types_chk_all.setCheckState(QtCore.Qt.Unchecked)
 
     def on_mtool_set_points():
+        """ Point list button behaviour."""
+        # TODO: This should be implemented in a custom class like MeasureToolPointsDialog(QtGui.QDialog)
         measurepoints_tool_dialog = QtGui.QDialog()
         measurepoints_tool_dialog.setModal(False)
         measurepoints_tool_dialog.setWindowTitle(__("MeasureTool Points"))
@@ -2470,6 +2537,7 @@ def on_measuretool():
             mpoints_table.setItem(i, 2, QtGui.QTableWidgetItem(str(point[2])))
 
         def on_mpoints_accept():
+            """ MeasureTool points dialog accept button behaviour. """
             temp_data['measuretool_points'] = list()
             for mtool_row in range(0, mpoints_table.rowCount()):
                 try:
@@ -2487,6 +2555,7 @@ def on_measuretool():
             measurepoints_tool_dialog.accept()
 
         def on_mpoints_cancel():
+            """ MeasureTool points dialog cancel button behaviour. """
             measurepoints_tool_dialog.reject()
 
         mpoints_bt_layout = QtGui.QHBoxLayout()
@@ -2506,6 +2575,8 @@ def on_measuretool():
         measurepoints_tool_dialog.exec_()
 
     def on_mtool_set_grid():
+        """ Defines grid point button behaviour."""
+        # TODO: This should be implemented as a custom class like MeasureToolGridDialog(QtGui.QDialog)
         measuregrid_tool_dialog = QtGui.QDialog()
         measuregrid_tool_dialog.setModal(False)
         measuregrid_tool_dialog.setWindowTitle(__("MeasureTool Points"))
@@ -2534,6 +2605,7 @@ def on_measuretool():
                 QtCore.Qt.ItemIsSelectable | QtCore.Qt.ItemIsEnabled)
 
         def on_mgrid_change(row, column):
+            """ Defines what happens when a field changes on the table"""
             if column > 8:
                 return
             for mgrid_row in range(0, mgrid_table.rowCount()):
@@ -2593,6 +2665,7 @@ def on_measuretool():
                     pass
 
         def on_mgrid_accept():
+            """ MeasureTool point grid accept button behaviour."""
             temp_data['measuretool_grid'] = list()
             for mgrid_row in range(0, mgrid_table.rowCount()):
                 try:
@@ -2616,6 +2689,7 @@ def on_measuretool():
             measuregrid_tool_dialog.accept()
 
         def on_mgrid_cancel():
+            """ MeasureTool point grid cancel button behaviour"""
             measuregrid_tool_dialog.reject()
 
         # Compute possible final points
@@ -2753,6 +2827,7 @@ def isosurface_export(export_parameters):
 
 def on_isosurface():
     """ Opens a dialog with IsoSurface exporting options """
+    # TODO: This should be implemented as a custom class like IsoSurfaceDialog(QtGui.QDialog)
     isosurface_tool_dialog = QtGui.QDialog()
 
     isosurface_tool_dialog.setModal(False)
@@ -2799,9 +2874,11 @@ def on_isosurface():
     isosurface_tool_dialog.setLayout(isosurface_tool_layout)
 
     def on_isosfc_cancel():
+        """ IsoSurface dialog cancel button behaviour."""
         isosurface_tool_dialog.reject()
 
     def on_isosfc_export():
+        """ IsoSurface dialog export button behaviour."""
         export_parameters = dict()
 
         if "surface" in isosfc_selector.currentText().lower():
@@ -2920,6 +2997,7 @@ def flowtool_export(export_parameters):
 
 def on_flowtool():
     """ Opens a dialog with FlowTool exporting options """
+    # TODO: This should be implemented as a custom class like FlowToolDialog(QtGui.QDialog)
     flowtool_tool_dialog = QtGui.QDialog()
 
     flowtool_tool_dialog.setModal(False)
@@ -2977,15 +3055,19 @@ def on_flowtool():
     flowtool_tool_dialog.setLayout(flowtool_tool_layout)
 
     def box_edit(box_id):
+        """ Box edit button behaviour. Opens a dialog to edit the selected FlowTool Box"""
+        # TODO: This should be implemented as a custom class like FlowToolBoxEditDialog(QtGui.QDialog)
         box_edit_dialog = QtGui.QDialog()
         box_edit_layout = QtGui.QVBoxLayout()
 
+        # Find the box for which the button was pressed
         target_box = None
 
         for box in data['flowtool_boxes']:
             if box[0] == box_id:
                 target_box = box
 
+        # This should not happen but if no box is found with reference id, it spawns an error.
         if target_box is None:
             guiutils.error_dialog("There was an error opening the box to edit")
             return
@@ -3117,6 +3199,7 @@ def on_flowtool():
         box_edit_dialog.setLayout(box_edit_layout)
 
         def on_ok():
+            """ FlowTool box edit ok behaviour."""
             box_to_edit_index = -1
             for box_index, box_value in enumerate(data['flowtool_boxes']):
                 if box_value[0] == box_id:
@@ -3151,6 +3234,7 @@ def on_flowtool():
             box_edit_dialog.accept()
 
         def on_cancel():
+            """ FlowTool box edit cancel button behaviour."""
             box_edit_dialog.reject()
 
         box_edit_button_ok.clicked.connect(on_ok)
@@ -3159,6 +3243,7 @@ def on_flowtool():
         box_edit_dialog.exec_()
 
     def box_delete(box_id):
+        """ Box delete button behaviour. Tries to find the box for which the button was pressed and deletes it."""
         box_to_remove = None
         for box in data['flowtool_boxes']:
             if box[0] == box_id:
@@ -3168,6 +3253,7 @@ def on_flowtool():
             refresh_boxlist()
 
     def refresh_boxlist():
+        """ Refreshes the FlowTool box list."""
         while fltool_boxlist_layout.count() > 0:
             target = fltool_boxlist_layout.takeAt(0)
             target.setParent(None)
@@ -3186,6 +3272,7 @@ def on_flowtool():
             fltool_boxlist_layout.addLayout(to_add_layout)
 
     def on_fltool_addbox():
+        """ Adds a box to the data structure."""
         data['flowtool_boxes'].append(
             [
                 str(uuid.uuid4()),
@@ -3201,9 +3288,11 @@ def on_flowtool():
         refresh_boxlist()
 
     def on_fltool_cancel():
+        """ FlowTool cancel button behaviour."""
         flowtool_tool_dialog.reject()
 
     def on_fltool_export():
+        """ FlowTool export button behaviour."""
         export_parameters = dict()
 
         if len(fltool_csv_file_name_text.text()) > 0:
@@ -3238,134 +3327,11 @@ def on_flowtool():
 # TODO: Implement this
 def on_boundaryvtk():
     """ Opens a dialog with BoundaryVTK exporting options """
+    # TODO: This should be implemented as a custom class like BoundaryVTKDialog(QtGui.QDialog)
     boundaryvtk_tool_dialog = QtGui.QDialog()
 
     guiutils.warning_dialog("Not implemented yet")
     return
-
-    boundaryvtk_tool_dialog.setModal(False)
-    boundaryvtk_tool_dialog.setWindowTitle(__("BoundaryVTK Tool"))
-    boundaryvtk_tool_layout = QtGui.QVBoxLayout()
-
-    bvtk_types_groupbox = QtGui.QGroupBox(__("Types to export"))
-    bvtk_filename_layout = QtGui.QHBoxLayout()
-    bvtk_parameters_layout = QtGui.QHBoxLayout()
-    bvtk_buttons_layout = QtGui.QHBoxLayout()
-
-    bvtk_types_groupbox_layout = QtGui.QVBoxLayout()
-    bvtk_types_chk_all = QtGui.QCheckBox(__("All"))
-    bvtk_types_chk_all.setCheckState(QtCore.Qt.Checked)
-    bvtk_types_chk_bound = QtGui.QCheckBox(__("Bound"))
-    bvtk_types_chk_fluid = QtGui.QCheckBox(__("Fluid"))
-    bvtk_types_chk_fixed = QtGui.QCheckBox(__("Fixed"))
-    bvtk_types_chk_moving = QtGui.QCheckBox(__("Moving"))
-    bvtk_types_chk_floating = QtGui.QCheckBox(__("Floating"))
-    [
-        bvtk_types_groupbox_layout.addWidget(x)
-        for x in
-        [bvtk_types_chk_all, bvtk_types_chk_bound, bvtk_types_chk_fluid, bvtk_types_chk_fixed, bvtk_types_chk_moving,
-         bvtk_types_chk_floating]
-    ]
-    bvtk_types_groupbox.setLayout(bvtk_types_groupbox_layout)
-
-    bvtk_file_name_label = QtGui.QLabel(__("File name"))
-    bvtk_file_name_text = QtGui.QLineEdit()
-    bvtk_file_name_text.setText('FileIso')
-    bvtk_filename_layout.addWidget(bvtk_file_name_label)
-    bvtk_filename_layout.addWidget(bvtk_file_name_text)
-
-    bvtk_parameters_label = QtGui.QLabel(__("Additional Parameters"))
-    bvtk_parameters_text = QtGui.QLineEdit()
-    bvtk_parameters_layout.addWidget(bvtk_parameters_label)
-    bvtk_parameters_layout.addWidget(bvtk_parameters_text)
-
-    bvtk_export_button = QtGui.QPushButton(__("Export"))
-    bvtk_cancel_button = QtGui.QPushButton(__("Cancel"))
-    bvtk_buttons_layout.addWidget(bvtk_export_button)
-    bvtk_buttons_layout.addWidget(bvtk_cancel_button)
-
-    boundaryvtk_tool_layout.addWidget(bvtk_types_groupbox)
-    boundaryvtk_tool_layout.addStretch(1)
-    boundaryvtk_tool_layout.addLayout(bvtk_filename_layout)
-    boundaryvtk_tool_layout.addLayout(bvtk_parameters_layout)
-    boundaryvtk_tool_layout.addLayout(bvtk_buttons_layout)
-
-    boundaryvtk_tool_dialog.setLayout(boundaryvtk_tool_layout)
-
-    def on_bvtk_cancel():
-        boundaryvtk_tool_dialog.reject()
-
-    def on_bvtk_export():
-        export_parameters = dict()
-        export_parameters['save_types'] = '-all'
-        if bvtk_types_chk_all.isChecked():
-            export_parameters['save_types'] = '+all'
-        else:
-            if bvtk_types_chk_bound.isChecked():
-                export_parameters['save_types'] += ',+bound'
-            if bvtk_types_chk_fluid.isChecked():
-                export_parameters['save_types'] += ',+fluid'
-            if bvtk_types_chk_fixed.isChecked():
-                export_parameters['save_types'] += ',+fixed'
-            if bvtk_types_chk_moving.isChecked():
-                export_parameters['save_types'] += ',+moving'
-            if bvtk_types_chk_floating.isChecked():
-                export_parameters['save_types'] += ',+floating'
-
-        if export_parameters['save_types'] == '-all':
-            export_parameters['save_types'] = '+all'
-
-        if len(bvtk_file_name_text.text()) > 0:
-            export_parameters['file_name'] = bvtk_file_name_text.text()
-        else:
-            export_parameters['file_name'] = 'IsoFile'
-
-        if len(bvtk_parameters_text.text()) > 0:
-            export_parameters['additional_parameters'] = bvtk_parameters_text.text(
-            )
-        else:
-            export_parameters['additional_parameters'] = ''
-
-        boundaryvtk_export(export_parameters)
-        boundaryvtk_tool_dialog.accept()
-
-    def on_bvtk_type_all_change(state):
-        if state == QtCore.Qt.Checked:
-            [
-                chk.setCheckState(QtCore.Qt.Unchecked)
-                for chk in [bvtk_types_chk_bound, bvtk_types_chk_fluid, bvtk_types_chk_fixed, bvtk_types_chk_moving,
-                            bvtk_types_chk_floating]
-            ]
-
-    def on_bvtk_type_bound_change(state):
-        if state == QtCore.Qt.Checked:
-            bvtk_types_chk_all.setCheckState(QtCore.Qt.Unchecked)
-
-    def on_bvtk_type_fluid_change(state):
-        if state == QtCore.Qt.Checked:
-            bvtk_types_chk_all.setCheckState(QtCore.Qt.Unchecked)
-
-    def on_bvtk_type_fixed_change(state):
-        if state == QtCore.Qt.Checked:
-            bvtk_types_chk_all.setCheckState(QtCore.Qt.Unchecked)
-
-    def on_bvtk_type_moving_change(state):
-        if state == QtCore.Qt.Checked:
-            bvtk_types_chk_all.setCheckState(QtCore.Qt.Unchecked)
-
-    def on_bvtk_type_floating_change(state):
-        if state == QtCore.Qt.Checked:
-            bvtk_types_chk_all.setCheckState(QtCore.Qt.Unchecked)
-
-    bvtk_types_chk_all.stateChanged.connect(on_bvtk_type_all_change)
-    bvtk_types_chk_bound.stateChanged.connect(on_bvtk_type_bound_change)
-    bvtk_types_chk_fluid.stateChanged.connect(on_bvtk_type_fluid_change)
-    bvtk_types_chk_fixed.stateChanged.connect(on_bvtk_type_fixed_change)
-    bvtk_types_chk_moving.stateChanged.connect(on_bvtk_type_moving_change)
-    bvtk_types_chk_floating.stateChanged.connect(on_bvtk_type_floating_change)
-    bvtk_export_button.clicked.connect(on_bvtk_export)
-    bvtk_cancel_button.clicked.connect(on_bvtk_cancel)
-    boundaryvtk_tool_dialog.exec_()
 
 
 # Post processing section scaffolding
@@ -3390,7 +3356,7 @@ post_proc_floatinginfo_button.setToolTip(__("Opens the FloatingInfo tool."))
 post_proc_measuretool_button.setToolTip(__("Opens the MeasureTool tool."))
 post_proc_isosurface_button.setToolTip(__("Opens the IsoSurface tool."))
 post_proc_boundaryvtk_button.setToolTip(__("Opens the BoundaryVTK tool."))
-post_proc_boundaryvtk_button.setToolTip(__("Opens the FlowTool tool."))
+post_proc_flowtool_button.setToolTip(__("Opens the FlowTool tool."))
 
 widget_state_elements['post_proc_partvtk_button'] = post_proc_partvtk_button
 widget_state_elements['post_proc_computeforces_button'] = post_proc_computeforces_button
@@ -3414,12 +3380,14 @@ export_first_row_layout.addWidget(post_proc_computeforces_button)
 export_first_row_layout.addWidget(post_proc_isosurface_button)
 export_second_row_layout.addWidget(post_proc_floatinginfo_button)
 export_second_row_layout.addWidget(post_proc_measuretool_button)
+# TODO: Enable this when boundaryvtk is implemented
 # export_second_row_layout.addWidget(post_proc_boundaryvtk_button)
 export_second_row_layout.addWidget(post_proc_flowtool_button)
 export_layout.addLayout(export_first_row_layout)
 export_layout.addLayout(export_second_row_layout)
 
 # Object list table scaffolding
+# TODO: This should be implemented as a custom class like ObjectListTable(QtGui.QWidget) or something like that.
 objectlist_layout = QtGui.QVBoxLayout()
 objectlist_label = QtGui.QLabel("<b>" + __("Object order") + "</b>")
 objectlist_label.setWordWrap(True)
@@ -3476,6 +3444,7 @@ dsph_main_dock.setWidget(dsph_main_dock_scaff_widget)
 fc_main_window.addDockWidget(QtCore.Qt.RightDockWidgetArea, dsph_main_dock)
 
 # DSPH OBJECT PROPERTIES DOCK RELATED CODE
+# This is the dock widget that by default appears at the bottom-right corner.
 # ----------------------------
 # Tries to find and close previous instances of the widget.
 previous_dock = fc_main_window.findChild(QtGui.QDockWidget, "DSPH_Properties")
@@ -3484,6 +3453,7 @@ if previous_dock:
     previous_dock = None
 
 # Creation of the widget and scaffolding
+# TODO: This should be implemented as a custom class like DesignSPHysicsPropertiesDock(QtGui.QDockWidget)
 properties_widget = QtGui.QDockWidget()
 properties_widget.setObjectName("DSPH_Properties")
 properties_widget.setWindowTitle(__("DSPH Object Properties"))
@@ -3524,6 +3494,7 @@ properties_scaff_widget.setLayout(property_widget_layout)
 
 properties_widget.setWidget(properties_scaff_widget)
 
+# Different labels to add to the property table
 mkgroup_label = QtGui.QLabel("   {}".format(__("MKGroup")))
 mkgroup_label.setOpenExternalLinks(True)
 mkgroup_label.setToolTip(__("Establishes the object group."))
@@ -3662,6 +3633,7 @@ def fillmode_change(index):
 
 def floatstate_change():
     """ Defines a window with floating properties. """
+    # TODO: This should be implemented as a custom class like FloatStateDialog(QtGui.QDialog)
     floatings_window = QtGui.QDialog()
     floatings_window.setWindowTitle(__("Floating configuration"))
     ok_button = QtGui.QPushButton(__("Ok"))
@@ -4010,6 +3982,7 @@ def floatstate_change():
 
 def initials_change():
     """ Defines a window with initials properties. """
+    # TODO: This should be implemented as a custom class like InitialsDialog(QtGui.QDialog)
     initials_window = QtGui.QDialog()
     initials_window.setWindowTitle(__("Initials configuration"))
     ok_button = QtGui.QPushButton(__("Ok"))
@@ -4122,6 +4095,10 @@ def initials_change():
 
 def motion_change():
     """ Defines a window with motion properties. """
+    # TODO: BIG Change. This should be implemented as a custom class like MovementDialog(QtGui.QDialog)
+    # This is a big dialog with complex inner workings (Movements, motions, special ones, combined ones... etc)
+    # but it should be changed for something more readable and maintainable, not inside this function.
+
     motion_window = QtGui.QDialog()
     motion_window.setMinimumSize(1400, 650)
     motion_window.setWindowTitle(__("Motion configuration"))
@@ -5040,7 +5017,8 @@ def on_tree_item_selection_change():
     properties_scaff_widget.adjustSize()
     properties_widget.adjustSize()
 
-
+# Subscribe the trees to the item selection change function. This helps FreeCAD notify DesignSPHysics for the
+# deleted and changed objects to get updated correctly.
 for item in trees:
     item.itemSelectionChanged.connect(on_tree_item_selection_change)
 
@@ -5081,7 +5059,6 @@ def selection_monitor():
                 if case_limits_obj.Selectable:
                     case_limits_obj.Selectable = False
 
-            #     TODO: Watch damping and update it if changed
             for gn in data["damping"]:
                 damping_group = FreeCAD.ActiveDocument.getObject(gn)
                 data["damping"][gn].overlimit = damping_group.OutList[1].Length.Value
@@ -5094,6 +5071,7 @@ def selection_monitor():
         time.sleep(0.5)
 
 
+# Launch a monitor thread that ensures some things are not changed.
 monitor_thread = threading.Thread(target=selection_monitor)
 monitor_thread.start()
 
