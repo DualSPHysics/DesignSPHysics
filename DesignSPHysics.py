@@ -366,8 +366,25 @@ def on_save_case(save_as=None):
                         filename = movement.generator.filename
                         utils.debug("Copying {} to {}".format(
                             filename, save_name))
+
+                        # Change directory to de case one, so if file path is already relative it copies it to the
+                        # out folder
+                        os.chdir(save_name)
+
                         try:
+                            # Copy to project root
+                            shutil.copy2(filename, save_name)
+                        except IOError:
+                            utils.error("Unable to copy {} into {}".format(
+                                filename, save_name))
+                        except shutil.Error:
+                            # Probably already copied the file.
+                            pass
+
+                        try:
+                            # Copy to project out folder
                             shutil.copy2(filename, save_name + "/" + save_name.split('/')[-1] + "_out")
+
                             movement.generator.filename = "{}".format(
                                 filename.split("/")[-1])
                         except IOError:
@@ -382,12 +399,30 @@ def on_save_case(save_as=None):
             filename = aid.datafile
             utils.debug("Copying {} to {}".format(
                 filename, save_name + "/" + save_name.split('/')[-1] + "_out"))
+
+            # Change directory to de case one, so if file path is already relative it copies it to the
+            # out folder
+            os.chdir(save_name)
+
             try:
-                shutil.copy2(filename, save_name + "/" + save_name.split('/')[-1] + "_out")
-                aid.datafile = filename.split("/")[-1]
+                # Copy to project root
+                shutil.copy2(filename, save_name)
             except IOError:
                 utils.error("Unable to copy {} into {}".format(
-                    filename, save_name + "/" + save_name.split('/')[-1] + "_out"))
+                    filename, save_name))
+            except shutil.Error:
+                # Probably already copied the file.
+                pass
+
+            try:
+                # Copy to project out folder
+                shutil.copy2(filename, save_name + "/" + save_name.split('/')[-1] + "_out")
+
+                aid.datafile = filename.split("/")[-1]
+
+            except IOError:
+                utils.error("Unable to copy {} into {}".format(
+                    filename, save_name))
             except shutil.Error:
                 # Probably already copied the file.
                 pass
@@ -398,12 +433,28 @@ def on_save_case(save_as=None):
                 filename = piston.filevelx
                 utils.debug("Copying {} to {}".format(
                     filename, save_name + "/" + save_name.split('/')[-1] + "_out"))
+                # Change directory to de case one, so if file path is already relative it copies it to the
+                # out folder
+                os.chdir(save_name)
+
                 try:
+                    # Copy to project root
+                    shutil.copy2(filename, save_name)
+                except IOError:
+                    utils.error("Unable to copy {} into {}".format(
+                        filename, save_name))
+                except shutil.Error:
+                    # Probably already copied the file.
+                    pass
+
+                try:
+                    # Copy to project out folder
                     shutil.copy2(filename, save_name + "/" + save_name.split('/')[-1] + "_out")
+
                     piston.filevelx = filename.split("/")[-1]
                 except IOError:
                     utils.error("Unable to copy {} into {}".format(
-                        filename, save_name + "/" + save_name.split('/')[-1] + "_out"))
+                        filename, save_name))
                 except shutil.Error:
                     # Probably already copied the file.
                     pass
@@ -414,12 +465,28 @@ def on_save_case(save_as=None):
                     filename = v.filevelx
                     utils.debug("Copying {} to {}".format(
                         filename, save_name + "/" + save_name.split('/')[-1] + "_out"))
+                    # Change directory to de case one, so if file path is already relative it copies it to the
+                    # out folder
+                    os.chdir(save_name)
+
                     try:
+                        # Copy to project root
+                        shutil.copy2(filename, save_name)
+                    except IOError:
+                        utils.error("Unable to copy {} into {}".format(
+                            filename, save_name))
+                    except shutil.Error:
+                        # Probably already copied the file.
+                        pass
+
+                    try:
+                        # Copy to project out folder
                         shutil.copy2(filename, save_name + "/" + save_name.split('/')[-1] + "_out")
+
                         v.filevelx = filename.split("/")[-1]
                     except IOError:
                         utils.error("Unable to copy {} into {}".format(
-                            filename, save_name + "/" + save_name.split('/')[-1] + "_out"))
+                            filename, save_name))
                     except shutil.Error:
                         # Probably already copied the file.
                         pass
@@ -428,18 +495,37 @@ def on_save_case(save_as=None):
         if isinstance(data['relaxationzone'], RelaxationZoneFile):
             # Need to copy the abc_x*_y*.csv file series to the out folder
             filename = data['relaxationzone'].filesvel
+
+            # Change directory to de case one, so if file path is already relative it copies it to the
+            # out folder
+            os.chdir(save_name)
+
             for f in glob.glob("{}*".format(filename)):
                 utils.debug("Copying {} to {}".format(
                     filename, save_name + "/" + save_name.split('/')[-1] + "_out"))
                 try:
-                    shutil.copy2(f, save_name + "/" + save_name.split('/')[-1] + "_out")
+                    # Copy to project root
+                    shutil.copy2(f, save_name)
                 except IOError:
                     utils.error("Unable to copy {} into {}".format(
-                        filename, save_name + "/" + save_name.split('/')[-1] + "_out"))
+                        filename, save_name))
                 except shutil.Error:
                     # Probably already copied the file.
                     pass
-            data['relaxationzone'].filesvel = filename.split("/")[-1]
+
+                try:
+                    # Copy to project out folder
+                    shutil.copy2(f, save_name + "/" + save_name.split('/')[-1] + "_out")
+
+                    data['relaxationzone'].filesvel = filename.split("/")[-1]
+
+                except IOError:
+                    utils.error("Unable to copy {} into {}".format(
+                        filename, save_name))
+                except shutil.Error:
+                    # Probably already copied the file.
+                    pass
+
 
         # Dumps all the case data to an XML file.
         utils.dump_to_xml(data, save_name)
@@ -472,6 +558,8 @@ def on_save_case(save_as=None):
             traceback.print_exc()
             guiutils.error_dialog(
                 __("There was a problem saving the DSPH information file (casedata.dsphdata)."))
+
+        utils.refocus_cwd()
     else:
         utils.log(__("Saving cancelled."))
 
