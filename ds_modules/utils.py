@@ -962,6 +962,8 @@ def dump_to_xml(data, save_name):
             f.write('\t\t\t<objreal ref="' + str(key) + '">\n')
             mot_counter = 1
             for movement in value:
+                if movement not in data["global_movements"]:
+                    continue
                 f.write('\t\t\t\t<!-- Movement Name: {} -->\n'.format(movement.name))
                 f.write('\t\t\t\t<begin mov="{}" start="0"/>\n'.format(mot_counter))
                 first_series_motion = mot_counter
