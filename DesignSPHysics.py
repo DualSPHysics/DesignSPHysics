@@ -526,7 +526,6 @@ def on_save_case(save_as=None):
                     # Probably already copied the file.
                     pass
 
-
         # Dumps all the case data to an XML file.
         utils.dump_to_xml(data, save_name)
 
