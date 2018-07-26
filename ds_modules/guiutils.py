@@ -107,13 +107,11 @@ def ok_cancel_dialog(title, text):
 def get_icon(file_name, return_only_path=False):
     """ Returns a QIcon to use with DesignSPHysics.
     Retrieves a file with filename (like image.png) from the images folder. """
-    file_to_load = os.path.dirname(
-        os.path.abspath(__file__)) + "/../images/{}".format(file_name)
+    file_to_load = os.path.dirname(os.path.abspath(__file__)) + "/../images/{}".format(file_name)
     if os.path.isfile(file_to_load):
         return file_to_load if return_only_path else QtGui.QIcon(file_to_load)
     else:
-        raise IOError(
-            "File {} not found in images folder".format(file_name))
+        raise IOError("File {} not found in images folder".format(file_name))
 
 
 def get_fc_main_window():
@@ -308,8 +306,7 @@ def def_constants_window(data):
     else:
         speedsoundauto_chk.setCheckState(QtCore.Qt.Unchecked)
 
-    def on_speedsoundauto_check(
-    ):  # Controls if user selected auto speedsound or not enabling/disablen speedsound
+    def on_speedsoundauto_check():  # Controls if user selected auto speedsound or not enabling/disablen speedsound
         # custom value introduction
         if speedsoundauto_chk.isChecked():
             speedsound_input.setEnabled(False)
@@ -406,8 +403,7 @@ def def_constants_window(data):
     else:
         bauto_chk.setCheckState(QtCore.Qt.Unchecked)
 
-    def on_bauto_check(
-    ):  # Controls if user selected auto b or not enabling/disablen b custom value
+    def on_bauto_check():  # Controls if user selected auto b or not enabling/disablen b custom value
         # introduction
         if bauto_chk.isChecked():
             b_input.setEnabled(False)

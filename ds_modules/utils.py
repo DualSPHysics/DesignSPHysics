@@ -70,6 +70,8 @@ VERSION = "0.5.1806-29"
 WIDTH_2D = 0.001
 MAX_PARTICLE_WARNING = 2000000
 HELP_WEBPAGE = "https://github.com/ndrs92/DesignSPHysics/wiki"
+
+
 # ------ END CONSTANTS DEFINITION ------
 
 
@@ -79,8 +81,7 @@ def is_compatible_version():
 
     version_num = FreeCAD.Version()[0] + FreeCAD.Version()[1]
     if int(version_num) < int(FREECAD_MIN_VERSION):
-        guiutils.warning_dialog(
-            "This version of FreeCAD is not supported!. Install version 0.16 or higher.")
+        guiutils.warning_dialog("This version of FreeCAD is not supported!. Install version 0.16 or higher.")
         return False
     else:
         return True
@@ -119,11 +120,9 @@ def __(text):
     # Find ds_modules directory
     utils_dir = os.path.dirname(os.path.abspath(__file__))
     # Open translation file and print the matching string, if it's defined.
-    filename = "{utils_dir}/lang/{locale}.json".format(
-        utils_dir=utils_dir, locale=freecad_locale)
+    filename = "{utils_dir}/lang/{locale}.json".format(utils_dir=utils_dir, locale=freecad_locale)
     if not os.path.isfile(filename):
-        filename = "{utils_dir}/lang/{locale}.json".format(
-            utils_dir=utils_dir, locale="english")
+        filename = "{utils_dir}/lang/{locale}.json".format(utils_dir=utils_dir, locale="english")
     with open(filename, "rb") as f:
         translation = json.load(f)
     # Tries to return the translation. It it does not exist, creates it
@@ -148,11 +147,11 @@ def check_executables(data):
     stating if all went correctly. """
     execs_correct = True
 
+    # Make sure the current working directory is the DesignSPHysics folder
     refocus_cwd()
 
     # Tries to identify gencase
     if os.path.isfile(data['gencase_path']):
-        debug('Path FOUND for gencase')
         process = QtCore.QProcess(FreeCADGui.getMainWindow())
         process.start('"{}"'.format(data['gencase_path']))
         process.waitForFinished()
@@ -172,8 +171,7 @@ def check_executables(data):
     if os.path.isfile(data['dsphysics_path']):
         process = QtCore.QProcess(FreeCADGui.getMainWindow())
         if platform == "linux" or platform == "linux2":
-            os.environ["LD_LIBRARY_PATH"] = "/".join(
-                data['dsphysics_path'].split("/")[:-1])
+            os.environ["LD_LIBRARY_PATH"] = "/".join(data['dsphysics_path'].split("/")[:-1])
             process.start('"{}"'.format(data['dsphysics_path']))
         else:
             process.start('"{}"'.format(data['dsphysics_path']))
@@ -313,17 +311,16 @@ def check_executables(data):
         else:
             # Spawn warning dialog and return filtered data.
             if not execs_correct:
-                warning(
-                    "One or more of the executables in the setup is not correct. Check plugin setup to fix missing binaries")
-                guiutils.warning_dialog(
-                    "One or more of the executables in the setup is not correct. Check plugin setup to fix missing binaries.")
+                warning("One or more of the executables in the setup is not correct. "
+                        "Check plugin setup to fix missing binaries")
+                guiutils.warning_dialog("One or more of the executables in the setup is not correct. "
+                                        "Check plugin setup to fix missing binaries.")
     return data, execs_correct
 
 
 def are_executables_bundled():
     """ Returns if the DualSPHysics executable directory exists"""
-    dsph_execs_path = os.path.dirname(
-        os.path.realpath(__file__)) + "/../dualsphysics/bin/"
+    dsph_execs_path = os.path.dirname(os.path.realpath(__file__)) + "/../dualsphysics/bin/"
     return os.path.isdir(dsph_execs_path)
 
 
@@ -333,8 +330,11 @@ def float_list_to_float_property(floating_mks):
     for key, value in floating_mks.iteritems():
         if isinstance(value, list):
             # Is in old mode. Change to OOP
-            fp = FloatProperty(mk=float(key), mass_density_type=int(
-                value[0][0]), mass_density_value=float(value[0][1]))
+            fp = FloatProperty(
+                mk=float(key),
+                mass_density_type=int(value[0][0]),
+                mass_density_value=float(value[0][1])
+            )
             if not value[1][0]:  # Gravity center is not auto
                 fp.gravity_center = value[1][1:]
             if not value[2][0]:  # Inertia is not auto
@@ -379,6 +379,7 @@ def get_default_data():
         Returns data and temp_data dict with default values.
         If there is data saved on disk, tries to load it. """
 
+    # TODO: Big change. These should be data objects, not dict()
     data = dict()
     temp_data = dict()
 
@@ -469,12 +470,13 @@ def get_default_data():
     data['export_options'] = ""
     data["mkboundused"] = []
     data["mkfluidused"] = []
-    """ Dictionary that defines floatings.
-        Structure: {mk: FloatProperty} """
+
+    # Dictionary that defines floatings.
+    # Structure: {mk: FloatProperty}
     data['floating_mks'] = dict()
-    """Dictionary that defines initials.
-    Keys are mks enabled (ONLY FLUIDS) and values are a list containing:
-    {'mkfluid': [x, y, z]}"""
+
+    # Dictionary that defines initials.
+    # Keys are mks enabled (ONLY FLUIDS) and values are a list containing: {'mkfluid': [x, y, z]}
     data['initials_mks'] = dict()
 
     # Control data for enabling features
@@ -484,21 +486,23 @@ def get_default_data():
     # Last generated number of particles
     data['last_number_particles'] = -1
 
-    # Simulation objects with its parameters.  Without order.
-    # format is: {'key': ['mk', 'type', 'fill']}
+    # Simulation objects with its parameters (Without order).
+    # The format is: {'key': ['mk', 'type', 'fill']}
     data['simobjects'] = dict()
 
-    # Keys of simobjects.  Ordered.
+    # Keys of simobjects (Ordered).
     data['export_order'] = []
-    """ Global movement list.
-    It stores all the movements created in this case. """
+
+    # Global movement list.
+    # It stores all the movements created in this case.
     data['global_movements'] = list()
-    """ Global property list.
-        It stores all the properties created in this case. """
+
+    # Global property list.
+    # It stores all the properties created in this case.
     data['global_properties'] = list()
-    """ Object movement mapping.
-    Dictionary with a list of movements attached..
-    {'mkgroup': [movement1, movement2, ...]} """
+
+    # Object movement mapping.
+    # Dictionary with a list of movements attached. {'mkgroup': [movement1, movement2, ...]}
     data['motion_mks'] = dict()
 
     # Post-processing info
@@ -525,8 +529,7 @@ def get_default_data():
     temp_data['measuretool_points'] = list()
     temp_data['measuretool_grid'] = list()
     temp_data['current_output'] = ""
-    temp_data['supported_types'] = [
-        "Part::Box", "Part::Sphere", "Part::Cylinder"]
+    temp_data['supported_types'] = ["Part::Box", "Part::Sphere", "Part::Cylinder"]
 
     # Try to load saved paths. This way the user does not need
     # to introduce the software paths every time
@@ -547,7 +550,6 @@ def get_default_data():
                 data['paraview_path'] = disk_data['paraview_path']
 
         except Exception:
-            # traceback.print_exc()
             warning(__("The main settings file is corrupted. Deleting..."))
             os.remove(picklefile.name)
             data['gencase_path'] = ""
@@ -563,8 +565,7 @@ def get_default_data():
             data.update(get_default_config_file())
 
         data, state = check_executables(data)
-        with open(FreeCAD.getUserAppDataDir() + '/dsph_data-{}.dsphdata'.format(VERSION),
-                  'wb') as picklefile:
+        with open(FreeCAD.getUserAppDataDir() + '/dsph_data-{}.dsphdata'.format(VERSION), 'wb') as picklefile:
             pickle.dump(data, picklefile, PICKLE_PROTOCOL)
     else:
         # Settings file not created. Merging with default one inf default-config.json
@@ -673,10 +674,8 @@ def create_dsph_document():
     FreeCAD.ActiveDocument.getObject("Case_Limits").Length = '1000 mm'
     FreeCAD.ActiveDocument.getObject("Case_Limits").Width = '1000 mm'
     FreeCAD.ActiveDocument.getObject("Case_Limits").Height = '1000 mm'
-    FreeCADGui.ActiveDocument.getObject(
-        "Case_Limits").DisplayMode = "Wireframe"
-    FreeCADGui.ActiveDocument.getObject(
-        "Case_Limits").LineColor = (1.00, 0.00, 0.00)
+    FreeCADGui.ActiveDocument.getObject("Case_Limits").DisplayMode = "Wireframe"
+    FreeCADGui.ActiveDocument.getObject("Case_Limits").LineColor = (1.00, 0.00, 0.00)
     FreeCADGui.ActiveDocument.getObject("Case_Limits").LineWidth = 2.00
     FreeCADGui.ActiveDocument.getObject("Case_Limits").Selectable = False
 
@@ -700,10 +699,8 @@ def create_dsph_document_from_fcstd(document_path):
     FreeCAD.ActiveDocument.getObject("Case_Limits").Length = '1000 mm'
     FreeCAD.ActiveDocument.getObject("Case_Limits").Width = '1000 mm'
     FreeCAD.ActiveDocument.getObject("Case_Limits").Height = '1000 mm'
-    FreeCADGui.ActiveDocument.getObject(
-        "Case_Limits").DisplayMode = "Wireframe"
-    FreeCADGui.ActiveDocument.getObject(
-        "Case_Limits").LineColor = (1.00, 0.00, 0.00)
+    FreeCADGui.ActiveDocument.getObject("Case_Limits").DisplayMode = "Wireframe"
+    FreeCADGui.ActiveDocument.getObject("Case_Limits").LineColor = (1.00, 0.00, 0.00)
     FreeCADGui.ActiveDocument.getObject("Case_Limits").LineWidth = 2.00
     FreeCADGui.ActiveDocument.getObject("Case_Limits").Selectable = False
 
@@ -716,70 +713,75 @@ def dump_to_xml(data, save_name):
         to disk. Generates a GenCase compatible XML. """
     # Saves all the data in XML format.
     log("Saving data in " + data["project_path"] + ".")
-    FreeCAD.getDocument("DSPH_Case").saveAs(
-        save_name.encode('utf-8') + "/DSPH_Case.FCStd")
+    FreeCAD.getDocument("DSPH_Case").saveAs(save_name.encode('utf-8') + "/DSPH_Case.FCStd")
     FreeCADGui.SendMsgToActiveView("Save")
     f = open(save_name + "/" + save_name.split('/')[-1] + "_Def.xml", 'w')
     f.write('<?xml version="1.0" encoding="UTF-8" ?>\n')
-    f.write(
-        '<!-- Case name: {} -->\n'.format(data["project_name"].encode('utf-8')))
-    f.write('<case app="{} v{}" date="{}">\n'.format(
-        APP_NAME, VERSION, datetime.now().strftime('%d-%m-%Y %H:%M:%S')))
+    f.write('<!-- Case name: {} -->\n'.format(data["project_name"].encode('utf-8')))
+    f.write('<case app="{} v{}" date="{}">\n'.format(APP_NAME, VERSION, datetime.now().strftime('%d-%m-%Y %H:%M:%S')))
     f.write('\t<casedef>\n')
     f.write('\t\t<constantsdef>\n')
-    f.write('\t\t\t<lattice bound="' +
-            str(data['lattice_bound']) + '" fluid="' + str(data['lattice_fluid']) + '" />\n')
-    f.write('\t\t\t<gravity x="' + str(data['gravity'][0]) + '" y="' + str(data['gravity'][1]) + '" z="' + str(
-        data['gravity'][2]) +
-            '" comment="Gravitational acceleration" units_comment="m/s^2" />\n')
-    f.write('\t\t\t<rhop0 value="' +
-            str(data['rhop0']) + '" comment="Reference density of the fluid" units_comment="kg/m^3" />\n')
-    f.write('\t\t\t<hswl value="' + str(data['hswl']) + '" auto="' + str(data['hswl_auto']).lower() +
-            '" comment="Maximum still water level to calculate speedofsound using coefsound" '
-            'units_comment="metres (m)"  />\n')
-    f.write('\t\t\t<gamma value="' +
-            str(data['gamma']) + '" comment="Polytropic constant for water used in the state equation" />\n')
+    f.write('\t\t\t<lattice bound="' + str(data['lattice_bound']) + '" fluid="' + str(data['lattice_fluid']) + '" />\n')
     f.write(
-        '\t\t\t<speedsystem value="' + str(data['speedsystem']) + '" auto="' + str(data['speedsystem_auto']).lower() +
-        '" comment="Maximum system speed (by default the dam-break propagation is used)" />\n')
-    f.write('\t\t\t<coefsound value="' +
-            str(data['coefsound']) + '" comment="Coefficient to multiply speedsystem" />\n')
-    f.write('\t\t\t<speedsound value="' + str(data['speedsound']) + '" auto="' + str(data['speedsound_auto']).lower() +
-            '" comment="Speed of sound to use in the simulation '
-            '(by default speedofsound=coefsound*speedsystem)" />\n')
-    f.write('\t\t\t<coefh value="' +
-            str(data[
-                    'coefh']) + '" comment="Coefficient to calculate the smoothing length (h=coefh*sqrt(3*dp^2) in 3D)" />\n')
-    f.write('\t\t\t<cflnumber value="' +
-            str(data['cflnumber']) + '" comment="Coefficient to multiply dt" />\n')
-    f.write('\t\t\t<h value="' + str(data['h']) + '" auto="' + str(
-        data['h_auto']).lower() + '" units_comment="metres (m)" />\n')
-    f.write('\t\t\t<b value="' + str(data['b']) + '" auto="' + str(
-        data['b_auto']).lower() + '" units_comment="metres (m)" />\n')
-    f.write('\t\t\t<massbound value="' + str(data['massbound']) + '" auto="' + str(
-        data['massbound_auto']).lower() + '" units_comment="kg" />\n')
-    f.write('\t\t\t<massfluid value="' + str(data['massfluid']) + '" auto="' + str(
-        data['massfluid_auto']).lower() + '" units_comment="kg" />\n')
+        '\t\t\t<gravity x="' + str(data['gravity'][0]) +
+        '" y="' + str(data['gravity'][1]) +
+        '" z="' + str(data['gravity'][2]) +
+        '" comment="Gravitational acceleration" units_comment="m/s^2" />\n'
+    )
+    f.write('\t\t\t<rhop0 value="' + str(data['rhop0']) + '" comment="Reference density of the fluid" units_comment="kg/m^3" />\n')
+    f.write(
+        '\t\t\t<hswl value="' +
+        str(data['hswl']) +
+        '" auto="' +
+        str(data['hswl_auto']).lower() +
+        '" comment="Maximum still water level to calculate speedofsound using coefsound" units_comment="metres (m)"  />\n'
+    )
+    f.write('\t\t\t<gamma value="' + str(data['gamma']) + '" comment="Polytropic constant for water used in the state equation" />\n')
+    f.write(
+        '\t\t\t<speedsystem value="' +
+        str(data['speedsystem']) +
+        '" auto="' +
+        str(data['speedsystem_auto']).lower() +
+        '" comment="Maximum system speed (by default the dam-break propagation is used)" />\n'
+    )
+    f.write('\t\t\t<coefsound value="' + str(data['coefsound']) + '" comment="Coefficient to multiply speedsystem" />\n')
+    f.write(
+        '\t\t\t<speedsound value="' +
+        str(data['speedsound']) +
+        '" auto="' +
+        str(data['speedsound_auto']).lower() +
+        '" comment="Speed of sound to use in the simulation (by default speedofsound=coefsound*speedsystem)" />\n'
+    )
+    f.write(
+        '\t\t\t<coefh value="' + str(data['coefh']) +
+        '" comment="Coefficient to calculate the smoothing length (h=coefh*sqrt(3*dp^2) in 3D)" />\n')
+    f.write('\t\t\t<cflnumber value="' + str(data['cflnumber']) + '" comment="Coefficient to multiply dt" />\n')
+    f.write('\t\t\t<h value="' + str(data['h']) + '" auto="' + str(data['h_auto']).lower() + '" units_comment="metres (m)" />\n')
+    f.write('\t\t\t<b value="' + str(data['b']) + '" auto="' + str(data['b_auto']).lower() + '" units_comment="metres (m)" />\n')
+    f.write('\t\t\t<massbound value="' + str(data['massbound']) + '" auto="' + str(data['massbound_auto']).lower() + '" units_comment="kg" />\n')
+    f.write('\t\t\t<massfluid value="' + str(data['massfluid']) + '" auto="' + str(data['massfluid_auto']).lower() + '" units_comment="kg" />\n')
     f.write('\t\t</constantsdef>\n')
     f.write('\t\t<mkconfig boundcount="240" fluidcount="10">\n')
     f.write('\t\t</mkconfig>\n')
     f.write('\t\t<geometry>\n')
-    f.write('\t\t\t<definition dp="' +
-            str(data['dp']) + '" comment="Initial inter-particle distance" units_comment="metres (m)">\n')
+    f.write('\t\t\t<definition dp="' + str(data['dp']) + '" comment="Initial inter-particle distance" units_comment="metres (m)">\n')
     min_point = FreeCAD.ActiveDocument.getObject("Case_Limits").Placement.Base
     max_point = FreeCAD.ActiveDocument.getObject("Case_Limits")
-    f.write('\t\t\t\t<pointmin x="' + str((min_point.x / DIVIDER)) + '" y="' +
-            str((min_point.y / DIVIDER)) + '" z="' + str((min_point.z / DIVIDER)) + '" />\n')
+    f.write('\t\t\t\t<pointmin x="' + str((min_point.x / DIVIDER)) + '" y="' + str((min_point.y / DIVIDER)) + '" z="' + str((min_point.z / DIVIDER)) + '" />\n')
     if data['3dmode']:
         f.write(
-            '\t\t\t\t<pointmax x="' + str((min_point.x / DIVIDER + max_point.Length.Value / DIVIDER)) + '" y="' + str(
-                (min_point.y / DIVIDER + max_point.Width.Value / DIVIDER)) + '" z="' + str(
-                (min_point.z / DIVIDER + max_point.Height.Value / DIVIDER)) + '" />\n')
+            '\t\t\t\t<pointmax x="' +
+            str((min_point.x / DIVIDER + max_point.Length.Value / DIVIDER)) + '" y="' +
+            str((min_point.y / DIVIDER + max_point.Width.Value / DIVIDER)) + '" z="' +
+            str((min_point.z / DIVIDER + max_point.Height.Value / DIVIDER)) + '" />\n'
+        )
     else:
         f.write(
-            '\t\t\t\t<pointmax x="' + str((min_point.x / DIVIDER + max_point.Length.Value / DIVIDER)) + '" y="' + str(
-                (min_point.y / DIVIDER)) + '" z="' +
-            str((min_point.z / DIVIDER + max_point.Height.Value / DIVIDER)) + '" />\n')
+            '\t\t\t\t<pointmax x="' +
+            str((min_point.x / DIVIDER + max_point.Length.Value / DIVIDER)) + '" y="' +
+            str((min_point.y / DIVIDER)) + '" z="' +
+            str((min_point.z / DIVIDER + max_point.Height.Value / DIVIDER)) + '" />\n'
+        )
     f.write('\t\t\t</definition>\n')
     f.write('\t\t\t<commands>\n')
     f.write('\t\t\t\t<mainlist>\n')
@@ -795,59 +797,77 @@ def dump_to_xml(data, save_name):
             # the matrix
             f.write('\t\t\t\t\t<matrixreset />\n')
             if valuelist[1].lower() == "fluid":
-                f.write('\t\t\t\t\t<setmkfluid mk="' +
-                        str(valuelist[0]) + '"/>\n')
+                f.write('\t\t\t\t\t<setmkfluid mk="' + str(valuelist[0]) + '"/>\n')
             elif valuelist[1].lower() == "bound":
-                f.write('\t\t\t\t\t<setmkbound mk="' +
-                        str(valuelist[0]) + '"/>\n')
-            f.write('\t\t\t\t\t<setdrawmode mode="' +
-                    valuelist[2].lower() + '"/>\n')
-            """ Exports supported objects in a xml parametric mode.
-            If special objects are found, exported in an specific manner (p.e FillBox)
-            The rest of the things are exported in STL format."""
+                f.write('\t\t\t\t\t<setmkbound mk="' + str(valuelist[0]) + '"/>\n')
+            f.write('\t\t\t\t\t<setdrawmode mode="' + valuelist[2].lower() + '"/>\n')
+            # Exports supported objects in a xml parametric mode.
+            # If special objects are found, exported in an specific manner (p.e FillBox)
+            # The rest of the things are exported in STL format.
             if o.TypeId == "Part::Box":
                 if (abs(o.Placement.Base.x) + abs(o.Placement.Base.y) + abs(o.Placement.Base.z)) != 0:
-                    f.write('\t\t\t\t\t<move x="' + str(o.Placement.Base.x / DIVIDER) + '" y="' + str(
-                        o.Placement.Base.y / DIVIDER) + '" z="' + str(
-                        o.Placement.Base.z / DIVIDER) + '" />\n')
+                    f.write(
+                        '\t\t\t\t\t<move x="' +
+                        str(o.Placement.Base.x / DIVIDER) + '" y="' +
+                        str(o.Placement.Base.y / DIVIDER) + '" z="' +
+                        str(o.Placement.Base.z / DIVIDER) + '" />\n'
+                    )
                 if math.degrees(o.Placement.Rotation.Angle) != 0:
-                    f.write('\t\t\t\t\t<rotate ang="' + str(math.degrees(o.Placement.Rotation.Angle)) + '" x="' + str(
-                        -o.Placement.Rotation.Axis.x) + '" y="' +
-                            str(-o.Placement.Rotation.Axis.y) + '" z="' + str(-o.Placement.Rotation.Axis.z) + '" />\n')
+                    f.write(
+                        '\t\t\t\t\t<rotate ang="' +
+                        str(math.degrees(o.Placement.Rotation.Angle)) + '" x="' +
+                        str(-o.Placement.Rotation.Axis.x) + '" y="' +
+                        str(-o.Placement.Rotation.Axis.y) + '" z="' +
+                        str(-o.Placement.Rotation.Axis.z) + '" />\n'
+                    )
                 f.write('\t\t\t\t\t<drawbox objname="{}">\n'.format(o.Label))
                 f.write('\t\t\t\t\t\t<boxfill>solid</boxfill>\n')
                 f.write('\t\t\t\t\t\t<point x="0" y="0" z="0" />\n')
-                f.write('\t\t\t\t\t\t<size x="' + str(o.Length.Value / DIVIDER) + '" y="' + str(
-                    o.Width.Value / DIVIDER) + '" z="' + str(
-                    o.Height.Value / DIVIDER) + '" />\n')
+                f.write(
+                    '\t\t\t\t\t\t<size x="' +
+                    str(o.Length.Value / DIVIDER) + '" y="' +
+                    str(o.Width.Value / DIVIDER) + '" z="' +
+                    str(o.Height.Value / DIVIDER) + '" />\n'
+                )
                 f.write('\t\t\t\t\t</drawbox>\n')
             elif o.TypeId == "Part::Sphere":
                 if (abs(o.Placement.Base.x) + abs(o.Placement.Base.y) + abs(o.Placement.Base.z)) != 0:
-                    f.write('\t\t\t\t\t<move x="' + str(o.Placement.Base.x / DIVIDER) + '" y="' + str(
-                        o.Placement.Base.y / DIVIDER) + '" z="' + str(
-                        o.Placement.Base.z / DIVIDER) + '" />\n')
+                    f.write(
+                        '\t\t\t\t\t<move x="' +
+                        str(o.Placement.Base.x / DIVIDER) + '" y="' +
+                        str(o.Placement.Base.y / DIVIDER) + '" z="' +
+                        str(o.Placement.Base.z / DIVIDER) + '" />\n'
+                    )
                 if math.degrees(o.Placement.Rotation.Angle) != 0:
-                    f.write('\t\t\t\t\t<rotate ang="' + str(math.degrees(o.Placement.Rotation.Angle)) + '" x="' + str(
-                        -o.Placement.Rotation.Axis.x) + '" y="' +
-                            str(-o.Placement.Rotation.Axis.y) + '" z="' + str(-o.Placement.Rotation.Axis.z) + '" />\n')
-                f.write('\t\t\t\t\t<drawsphere radius="' + str(o.Radius.Value /
-                                                               DIVIDER) + '"  objname="{}">\n'.format(o.Label))
+                    f.write(
+                        '\t\t\t\t\t<rotate ang="' +
+                        str(math.degrees(o.Placement.Rotation.Angle)) + '" x="' +
+                        str(-o.Placement.Rotation.Axis.x) + '" y="' +
+                        str(-o.Placement.Rotation.Axis.y) + '" z="' +
+                        str(-o.Placement.Rotation.Axis.z) + '" />\n'
+                    )
+                f.write('\t\t\t\t\t<drawsphere radius="' + str(o.Radius.Value / DIVIDER) + '"  objname="{}">\n'.format(o.Label))
                 f.write('\t\t\t\t\t\t<point x="0" y="0" z="0" />\n')
                 f.write('\t\t\t\t\t</drawsphere>\n')
             elif o.TypeId == "Part::Cylinder":
                 if (abs(o.Placement.Base.x) + abs(o.Placement.Base.y) + abs(o.Placement.Base.z)) != 0:
-                    f.write('\t\t\t\t\t<move x="' + str(o.Placement.Base.x / DIVIDER) + '" y="' + str(
-                        o.Placement.Base.y / DIVIDER) + '" z="' + str(
-                        o.Placement.Base.z / DIVIDER) + '" />\n')
+                    f.write(
+                        '\t\t\t\t\t<move x="' +
+                        str(o.Placement.Base.x / DIVIDER) + '" y="' +
+                        str(o.Placement.Base.y / DIVIDER) + '" z="' +
+                        str(o.Placement.Base.z / DIVIDER) + '" />\n'
+                    )
                 if math.degrees(o.Placement.Rotation.Angle) != 0:
-                    f.write('\t\t\t\t\t<rotate ang="' + str(math.degrees(o.Placement.Rotation.Angle)) + '" x="' + str(
-                        -o.Placement.Rotation.Axis.x) + '" y="' +
-                            str(-o.Placement.Rotation.Axis.y) + '" z="' + str(-o.Placement.Rotation.Axis.z) + '" />\n')
-                f.write('\t\t\t\t\t<drawcylinder radius="' + str(o.Radius.Value /
-                                                                 DIVIDER) + '" objname="{}">\n'.format(o.Label))
+                    f.write(
+                        '\t\t\t\t\t<rotate ang="' +
+                        str(math.degrees(o.Placement.Rotation.Angle)) + '" x="' +
+                        str(-o.Placement.Rotation.Axis.x) + '" y="' +
+                        str(-o.Placement.Rotation.Axis.y) + '" z="' +
+                        str(-o.Placement.Rotation.Axis.z) + '" />\n'
+                    )
+                f.write('\t\t\t\t\t<drawcylinder radius="' + str(o.Radius.Value / DIVIDER) + '" objname="{}">\n'.format(o.Label))
                 f.write('\t\t\t\t\t\t<point x="0" y="0" z="0" />\n')
-                f.write('\t\t\t\t\t\t<point x="0" y="0" z="' +
-                        str((0 + o.Height.Value) / DIVIDER) + '" />\n')
+                f.write('\t\t\t\t\t\t<point x="0" y="0" z="' + str((0 + o.Height.Value) / DIVIDER) + '" />\n')
                 f.write('\t\t\t\t\t</drawcylinder>\n')
             else:
                 # Watch if it is a fillbox group
@@ -860,34 +880,40 @@ def dump_to_xml(data, save_name):
                         elif "fillpoint" in element.Name.lower():
                             fillpoint = element
                     if filllimits and fillpoint:
-                        if (abs(filllimits.Placement.Base.x) + abs(filllimits.Placement.Base.y) + abs(
-                                filllimits.Placement.Base.z)) != 0:
-                            f.write('\t\t\t\t\t<move x="' + str(filllimits.Placement.Base.x / DIVIDER) + '" y="' + str(
-                                filllimits.Placement.Base.y / DIVIDER) +
-                                    '" z="' + str(filllimits.Placement.Base.z / DIVIDER) + '" />\n')
+                        if (abs(filllimits.Placement.Base.x) + abs(filllimits.Placement.Base.y) + abs(filllimits.Placement.Base.z)) != 0:
+                            f.write(
+                                '\t\t\t\t\t<move x="' +
+                                str(filllimits.Placement.Base.x / DIVIDER) + '" y="' +
+                                str(filllimits.Placement.Base.y / DIVIDER) + '" z="' +
+                                str(filllimits.Placement.Base.z / DIVIDER) + '" />\n'
+                            )
                         if math.degrees(filllimits.Placement.Rotation.Angle) != 0:
-                            f.write('\t\t\t\t\t<rotate ang="' + str(math.degrees(
-                                filllimits.Placement.Rotation.Angle)) + '" x="' + str(
-                                -filllimits.Placement.Rotation.Axis.x) + '" y="' +
-                                    str(-filllimits.Placement.Rotation.Axis.y) + '" z="' + str(
-                                -filllimits.Placement.Rotation.Axis.z) + '" />\n')
-                        f.write('\t\t\t\t\t<fillbox x="' + str(
-                            (fillpoint.Placement.Base.x - filllimits.Placement.Base.x) / DIVIDER) + '" y="' + str(
-                            (fillpoint.Placement.Base.y - filllimits.Placement.Base.y) / DIVIDER) + '" z="' + str(
-                            (
-                                    fillpoint.Placement.Base.z - filllimits.Placement.Base.z) / DIVIDER) + '" objname="{}">\n'.format(
-                            o.Label))
+                            f.write(
+                                '\t\t\t\t\t<rotate ang="' +
+                                str(math.degrees(filllimits.Placement.Rotation.Angle)) + '" x="' +
+                                str(-filllimits.Placement.Rotation.Axis.x) + '" y="' +
+                                str(-filllimits.Placement.Rotation.Axis.y) + '" z="' +
+                                str(-filllimits.Placement.Rotation.Axis.z) + '" />\n'
+                            )
+                        f.write(
+                            '\t\t\t\t\t<fillbox x="' +
+                            str((fillpoint.Placement.Base.x - filllimits.Placement.Base.x) / DIVIDER) + '" y="' +
+                            str((fillpoint.Placement.Base.y - filllimits.Placement.Base.y) / DIVIDER) + '" z="' +
+                            str((fillpoint.Placement.Base.z - filllimits.Placement.Base.z) / DIVIDER) + '" objname="{}">\n'.format(o.Label)
+                        )
                         f.write('\t\t\t\t\t\t<modefill>void</modefill>\n')
                         f.write('\t\t\t\t\t\t<point x="0" y="0" z="0" />\n')
-                        f.write('\t\t\t\t\t\t<size x="' + str(filllimits.Length.Value / DIVIDER) + '" y="' + str(
-                            filllimits.Width.Value / DIVIDER) + '" z="' +
-                                str(filllimits.Height.Value / DIVIDER) + '" />\n')
+                        f.write(
+                            '\t\t\t\t\t\t<size x="' +
+                            str(filllimits.Length.Value / DIVIDER) + '" y="' +
+                            str(filllimits.Width.Value / DIVIDER) + '" z="' +
+                            str(filllimits.Height.Value / DIVIDER) + '" />\n'
+                        )
                         f.write('\t\t\t\t\t</fillbox>\n')
                     else:
                         # Something went wrong, one of the needed objects is not
                         # in the fillbox group
-                        error(
-                            "Limits or point missing in a fillbox group. Ignoring it")
+                        error("Limits or point missing in a fillbox group. Ignoring it")
                         continue
                 else:
                     # Not a xml parametric object.  Needs exporting
@@ -900,8 +926,7 @@ def dump_to_xml(data, save_name):
                         os.path.dirname(os.path.abspath(stl_file_path))
                     )
                     f.write('\t\t\t\t\t<drawfilestl file="{}" objname="{}">\n'.format(relative_file_path, o.Label))
-                    f.write(
-                        '\t\t\t\t\t\t<drawscale x="0.001" y="0.001" z="0.001" />\n')
+                    f.write('\t\t\t\t\t\t<drawscale x="0.001" y="0.001" z="0.001" />\n')
                     f.write('\t\t\t\t\t</drawfilestl>\n')
                     del __objs__
     f.write('\t\t\t\t\t<shapeout file="" />\n')
@@ -912,9 +937,13 @@ def dump_to_xml(data, save_name):
     if len(data["initials_mks"].keys()) > 0:
         f.write('\t\t<initials>\n')
         for key, value in data["initials_mks"].iteritems():
-            f.write('\t\t\t<velocity mkfluid="' + str(key) + '" x="' + str(value.force[0]) + '" y="' + str(
-                value.force[1]) + '" z="' + str(value.force[2]) +
-                    '"/>\n')
+            f.write(
+                '\t\t\t<velocity mkfluid="' +
+                str(key) + '" x="' +
+                str(value.force[0]) + '" y="' +
+                str(value.force[1]) + '" z="' +
+                str(value.force[2]) + '"/>\n'
+            )
         f.write('\t\t</initials>\n')
     # Writes floatings
     if len(data["floating_mks"].keys()) > 0:
@@ -923,27 +952,38 @@ def dump_to_xml(data, save_name):
             if value.mass_density_type == 0:
                 # is massbody
                 f.write('\t\t\t<floating mkbound="' + str(key) + '">\n')
-                f.write('\t\t\t\t<massbody value="' +
-                        str(value.mass_density_value) + '" />\n')
+                f.write('\t\t\t\t<massbody value="' + str(value.mass_density_value) + '" />\n')
             else:
                 # is rhopbody
-                f.write('\t\t\t<floating mkbound="' + str(key) +
-                        '" rhopbody="' + str(value.mass_density_value) + '">\n')
+                f.write('\t\t\t<floating mkbound="' + str(key) + '" rhopbody="' + str(value.mass_density_value) + '">\n')
             if len(value.gravity_center) != 0:
-                f.write('\t\t\t\t<center x="' + str(value.gravity_center[0]) + '" y="' + str(
-                    value.gravity_center[1]) + '" z="' + str(value.gravity_center[2]) +
-                        '" />\n')
+                f.write(
+                    '\t\t\t\t<center x="' +
+                    str(value.gravity_center[0]) + '" y="' +
+                    str(value.gravity_center[1]) + '" z="' +
+                    str(value.gravity_center[2]) + '" />\n'
+                )
             if len(value.inertia) != 0:
-                f.write('\t\t\t\t<inertia x="' + str(value.inertia[0]) + '" y="' + str(
-                    value.inertia[1]) + '" z="' + str(value.inertia[2]) + '" />\n')
+                f.write(
+                    '\t\t\t\t<inertia x="' +
+                    str(value.inertia[0]) + '" y="' +
+                    str(value.inertia[1]) + '" z="' +
+                    str(value.inertia[2]) + '" />\n'
+                )
             if len(value.initial_linear_velocity) != 0:
-                f.write('\t\t\t\t<velini x="' + str(value.initial_linear_velocity[0]) + '" y="' + str(
-                    value.initial_linear_velocity[1]) + '" z="' + str(
-                    value.initial_linear_velocity[2]) + '" />\n')
+                f.write(
+                    '\t\t\t\t<velini x="' +
+                    str(value.initial_linear_velocity[0]) + '" y="' +
+                    str(value.initial_linear_velocity[1]) + '" z="' +
+                    str(value.initial_linear_velocity[2]) + '" />\n'
+                )
             if len(value.initial_angular_velocity) != 0:
-                f.write('\t\t\t\t<omegaini x="' + str(value.initial_angular_velocity[0]) + '" y="' + str(
-                    value.initial_angular_velocity[1]) + '" z="' + str(
-                    value.initial_angular_velocity[2]) + '" />\n')
+                f.write(
+                    '\t\t\t\t<omegaini x="' +
+                    str(value.initial_angular_velocity[0]) + '" y="' +
+                    str(value.initial_angular_velocity[1]) + '" z="' +
+                    str(value.initial_angular_velocity[2]) + '" />\n'
+                )
             f.write('\t\t\t</floating>\n')
         f.write('\t\t</floatings>\n')
 
@@ -1038,10 +1078,8 @@ def dump_to_xml(data, save_name):
 
                             f.write(
                                 '\t\t\t\t\t<vel ang="{}"/>\n'.format(motion.ang_vel))
-                            f.write('\t\t\t\t\t<axisp1 x="{}" y="{}" z="{}"/>\n'.format(
-                                motion.axis1[0], motion.axis1[1], motion.axis1[2]))
-                            f.write('\t\t\t\t\t<axisp2 x="{}" y="{}" z="{}"/>\n'.format(
-                                motion.axis2[0], motion.axis2[1], motion.axis2[2]))
+                            f.write('\t\t\t\t\t<axisp1 x="{}" y="{}" z="{}"/>\n'.format(motion.axis1[0], motion.axis1[1], motion.axis1[2]))
+                            f.write('\t\t\t\t\t<axisp2 x="{}" y="{}" z="{}"/>\n'.format(motion.axis2[0], motion.axis2[1], motion.axis2[2]))
                             f.write('\t\t\t\t</mvrot>\n')
                         elif isinstance(motion, AccRotMotion):
                             if motion_index is len(movement.motion_list) - 1:
@@ -1059,10 +1097,8 @@ def dump_to_xml(data, save_name):
                                 f.write('\t\t\t\t<mvrotace id="{}" duration="{}" next="{}">\n'.format(
                                     mot_counter, motion.duration, mot_counter + 1))
 
-                            f.write(
-                                '\t\t\t\t\t<ace ang="{}"/>\n'.format(motion.ang_acc))
-                            f.write(
-                                '\t\t\t\t\t<velini ang="{}"/>\n'.format(motion.ang_vel))
+                            f.write('\t\t\t\t\t<ace ang="{}"/>\n'.format(motion.ang_acc))
+                            f.write('\t\t\t\t\t<velini ang="{}"/>\n'.format(motion.ang_vel))
                             f.write('\t\t\t\t\t<axisp1 x="{}" y="{}" z="{}"/>\n'.format(
                                 motion.axis1[0], motion.axis1[1], motion.axis1[2]))
                             f.write('\t\t\t\t\t<axisp2 x="{}" y="{}" z="{}"/>\n'.format(
@@ -1084,10 +1120,8 @@ def dump_to_xml(data, save_name):
                                 f.write('\t\t\t\t<mvcirace id="{}" duration="{}" next="{}">\n'.format(
                                     mot_counter, motion.duration, mot_counter + 1))
 
-                            f.write(
-                                '\t\t\t\t\t<ace ang="{}"/>\n'.format(motion.ang_acc))
-                            f.write(
-                                '\t\t\t\t\t<velini ang="{}"/>\n'.format(motion.ang_vel))
+                            f.write('\t\t\t\t\t<ace ang="{}"/>\n'.format(motion.ang_acc))
+                            f.write('\t\t\t\t\t<velini ang="{}"/>\n'.format(motion.ang_vel))
                             f.write('\t\t\t\t\t<ref x="{}" y="{}" z="{}"/>\n'.format(
                                 motion.reference[0], motion.reference[1], motion.reference[2]))
                             f.write('\t\t\t\t\t<axisp1 x="{}" y="{}" z="{}"/>\n'.format(
@@ -1223,7 +1257,9 @@ def dump_to_xml(data, save_name):
                 '\t\t\t\t\t<acccentre x="{}" y="{}" z="{}" comment="Center of acceleration" />\n'.format(*aid.acccentre))
             f.write(
                 '\t\t\t\t\t<globalgravity value="{}" comment="Global gravity enabled (1) or disabled (0)" />\n'.format(
-                    "1" if aid.globalgravity else "0"))
+                    "1" if aid.globalgravity else "0"
+                )
+            )
             f.write('\t\t\t\t\t<datafile value="{}" comment="File with acceleration data" />\n'.format(aid.datafile))
             f.write('\t\t\t\t</accinput>\n')
         f.write('\t\t\t</accinputs>\n')
@@ -1271,8 +1307,7 @@ def dump_to_xml(data, save_name):
 
             if isinstance(mot, RegularPistonWaveGen):
                 f.write('\t\t\t\t<piston>\n')
-                f.write(
-                    '\t\t\t\t\t<mkbound value="{}" comment="Mk-Bound of selected particles" />\n'.format(mk))
+                f.write('\t\t\t\t\t<mkbound value="{}" comment="Mk-Bound of selected particles" />\n'.format(mk))
                 f.write(
                     '\t\t\t\t\t<waveorder value="{}" ' 'comment="Order wave generation 1:1st order, 2:2nd order (def=1)" />\n'.format(
                         mot.wave_order))
@@ -1397,9 +1432,12 @@ def dump_to_xml(data, save_name):
                 f.write(
                     '\t\t\t\t\t<randomseed value="{}" ' 'comment="Random seed to initialize a pseudorandom number generator" />\n'.format(
                         mot.randomseed))
-                f.write('\t\t\t\t\t<serieini value="{}" autofit="{}" '
-                        'comment="Initial time in irregular wave serie (default=0 and autofit=false)" />\n'.format(
-                    mot.serieini, str(mot.serieini_autofit).lower()))
+                f.write(
+                    '\t\t\t\t\t<serieini value="{}" autofit="{}" '
+                    'comment="Initial time in irregular wave serie (default=0 and autofit=false)" />\n'.format(
+                        mot.serieini, str(mot.serieini_autofit).lower()
+                    )
+                )
                 f.write(
                     '\t\t\t\t\t<ramptime value="{}" comment="Time of ramp (def=0)" />\n'.format(mot.ramptime))
                 f.write('\t\t\t\t\t<savemotion time="{}" timedt="{}" xpos="{}" zpos="{}" '
@@ -1558,9 +1596,12 @@ def dump_to_xml(data, save_name):
                 f.write(
                     '\t\t\t\t\t<randomseed value="{}" ' 'comment="Random seed to initialize a pseudorandom number generator" />\n'.format(
                         mot.randomseed))
-                f.write('\t\t\t\t\t<serieini value="{}" autofit="{}" '
-                        'comment="Initial time in irregular wave serie (default=0 and autofit=false)" />\n'.format(
-                    mot.serieini, str(mot.serieini_autofit).lower()))
+                f.write(
+                    '\t\t\t\t\t<serieini value="{}" autofit="{}" '
+                    'comment="Initial time in irregular wave serie (default=0 and autofit=false)" />\n'.format(
+                        mot.serieini, str(mot.serieini_autofit).lower()
+                    )
+                )
                 f.write(
                     '\t\t\t\t\t<ramptime value="{}" comment="Time of ramp (def=0)" />\n'.format(mot.ramptime))
                 f.write('\t\t\t\t\t<savemotion time="{}" timedt="{}" xpos="{}" zpos="{}" '
@@ -1911,7 +1952,8 @@ def batch_generator(full_path, case_name, gcpath, dsphpath, pvtkpath, exec_param
             pvtkpath=pvtkpath,
             exec_params=exec_params,
             lib_path=lib_path,
-            name="name")
+            name="name"
+        )
 
     with open(full_path + "/run.bat", 'w') as bat_file:
         log(__("Creating ") + full_path + "/run.bat")
@@ -1942,8 +1984,7 @@ def import_stl(filename=None, scale_x=1, scale_y=1, scale_z=1, name=None):
     target.y *= scale_y
     target.z *= scale_z
     if not name:
-        temp_file_name = tempfile.gettempdir() + "/" + \
-                         str(random.randrange(100, 1000, 1)) + ".stl"
+        temp_file_name = tempfile.gettempdir() + "/" + str(random.randrange(100, 1000, 1)) + ".stl"
     else:
         temp_file_name = tempfile.gettempdir() + "/" + name + ".stl"
 
