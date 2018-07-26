@@ -134,8 +134,7 @@ intro_layout = QtGui.QVBoxLayout()
 constants_label = QtGui.QLabel("<b>" + __("Configuration") + "</b>")
 constants_label.setWordWrap(True)
 constants_button = QtGui.QPushButton(__("Define\nConstants"))
-constants_button.setToolTip(
-    __("Use this button to define case constants,\nsuch as gravity or fluid reference density."))
+constants_button.setToolTip(__("Use this button to define case constants,\nsuch as gravity or fluid reference density."))
 
 # Opens constant definition window on button click
 constants_button.clicked.connect(lambda: guiutils.def_constants_window(data))
@@ -143,8 +142,7 @@ widget_state_elements['constants_button'] = constants_button
 
 # Help button that opens a help URL for DesignSPHysics
 help_button = QtGui.QPushButton("Help")
-help_button.setToolTip(
-    __("Push this button to open a browser with help\non how to use this tool."))
+help_button.setToolTip(__("Push this button to open a browser with help\non how to use this tool."))
 help_button.clicked.connect(utils.open_help)
 
 # Setup window button.
@@ -154,8 +152,7 @@ setup_button.clicked.connect(lambda: guiutils.def_setup_window(data))
 
 # Execution parameters button.
 execparams_button = QtGui.QPushButton(__("Execution\nParameters"))
-execparams_button.setToolTip(
-    __("Change execution parameters, such as\ntime of simulation, viscosity, etc."))
+execparams_button.setToolTip(__("Change execution parameters, such as\ntime of simulation, viscosity, etc."))
 execparams_button.clicked.connect(lambda: guiutils.def_execparams_window(data))
 widget_state_elements['execparams_button'] = execparams_button
 
@@ -203,8 +200,7 @@ casecontrols_bt_newdoc = QtGui.QToolButton()
 casecontrols_bt_newdoc.setPopupMode(QtGui.QToolButton.MenuButtonPopup)
 casecontrols_bt_newdoc.setToolButtonStyle(QtCore.Qt.ToolButtonTextBesideIcon)
 casecontrols_bt_newdoc.setText("  " + __("New\n  Case"))
-casecontrols_bt_newdoc.setToolTip(
-    __("Creates a new case. \nThe opened documents will be closed."))
+casecontrols_bt_newdoc.setToolTip(__("Creates a new case. \nThe opened documents will be closed."))
 casecontrols_bt_newdoc.setIcon(guiutils.get_icon("new.png"))
 casecontrols_bt_newdoc.setIconSize(QtCore.QSize(28, 28))
 casecontrols_menu_newdoc = QtGui.QMenu()
@@ -219,15 +215,12 @@ casecontrols_bt_savedoc = QtGui.QToolButton()
 casecontrols_bt_savedoc.setPopupMode(QtGui.QToolButton.MenuButtonPopup)
 casecontrols_bt_savedoc.setToolButtonStyle(QtCore.Qt.ToolButtonTextBesideIcon)
 casecontrols_bt_savedoc.setText("  " + __("Save\n  Case"))
-casecontrols_bt_savedoc.setToolTip(
-    __("Saves the case."))
+casecontrols_bt_savedoc.setToolTip(__("Saves the case."))
 casecontrols_bt_savedoc.setIcon(guiutils.get_icon("save.png"))
 casecontrols_bt_savedoc.setIconSize(QtCore.QSize(28, 28))
 casecontrols_menu_savemenu = QtGui.QMenu()
-casecontrols_menu_savemenu.addAction(
-    guiutils.get_icon("save.png"), __("Save and run GenCase"))
-casecontrols_menu_savemenu.addAction(
-    guiutils.get_icon("save.png"), __("Save as..."))
+casecontrols_menu_savemenu.addAction(guiutils.get_icon("save.png"), __("Save and run GenCase"))
+casecontrols_menu_savemenu.addAction(guiutils.get_icon("save.png"), __("Save as..."))
 casecontrols_bt_savedoc.setMenu(casecontrols_menu_savemenu)
 widget_state_elements['casecontrols_bt_savedoc'] = casecontrols_bt_savedoc
 
@@ -235,49 +228,44 @@ widget_state_elements['casecontrols_bt_savedoc'] = casecontrols_bt_savedoc
 casecontrols_bt_loaddoc = QtGui.QToolButton()
 casecontrols_bt_loaddoc.setToolButtonStyle(QtCore.Qt.ToolButtonTextBesideIcon)
 casecontrols_bt_loaddoc.setText("  " + __("Load\n  Case"))
-casecontrols_bt_loaddoc.setToolTip(
-    __("Loads a case from disk. All the current documents\nwill be closed."))
+casecontrols_bt_loaddoc.setToolTip(__("Loads a case from disk. All the current documents\nwill be closed."))
 casecontrols_bt_loaddoc.setIcon(guiutils.get_icon("load.png"))
 casecontrols_bt_loaddoc.setIconSize(QtCore.QSize(28, 28))
 
 # Add fillbox button
 casecontrols_bt_addfillbox = QtGui.QPushButton(__("Add fillbox"))
-casecontrols_bt_addfillbox.setToolTip(
-    __("Adds a FillBox. A FillBox is able to fill an empty space\nwithin "
-       "limits of geometry and a maximum bounding\nbox placed by the user."))
+casecontrols_bt_addfillbox.setToolTip(__("Adds a FillBox. A FillBox is able to fill an empty space\nwithin "
+                                         "limits of geometry and a maximum bounding\nbox placed by the user."))
 casecontrols_bt_addfillbox.setEnabled(False)
 widget_state_elements['casecontrols_bt_addfillbox'] = casecontrols_bt_addfillbox
 
 # Import STL button
 casecontrols_bt_addstl = QtGui.QPushButton("Import STL")
-casecontrols_bt_addstl.setToolTip(
-    __("Imports a STL with postprocessing. This way you can set the scale of the imported object."))
+casecontrols_bt_addstl.setToolTip(__("Imports a STL with postprocessing. "
+                                     "This way you can set the scale of the imported object."))
 casecontrols_bt_addstl.setEnabled(False)
 widget_state_elements['casecontrols_bt_addstl'] = casecontrols_bt_addstl
 
 # Import XML button
 casecontrols_bt_importxml = QtGui.QPushButton(__("Import XML"))
-casecontrols_bt_importxml.setToolTip(
-    __("Imports an already created XML case from disk."))
+casecontrols_bt_importxml.setToolTip(__("Imports an already created XML case from disk."))
 casecontrols_bt_importxml.setEnabled(True)
 
 # Case summary button
 summary_bt = QtGui.QPushButton(__("Case summary"))
-summary_bt.setToolTip(
-    __("Shows a complete case summary with objects, configurations and settings in a brief view."))
+summary_bt.setToolTip(__("Shows a complete case summary with objects, "
+                         "configurations and settings in a brief view."))
 widget_state_elements['summary_bt'] = summary_bt
 summary_bt.setEnabled(False)
 
 # Toggle 3D/2D button
 toggle3dbutton = QtGui.QPushButton(__("Change 3D/2D"))
-toggle3dbutton.setToolTip(
-    __("Changes the case mode between 2D and 3D mode, switching the Case Limits between a plane or a cube"))
+toggle3dbutton.setToolTip(__("Changes the case mode between 2D and 3D mode, switching the Case Limits between a plane or a cube"))
 widget_state_elements['toggle3dbutton'] = toggle3dbutton
 
 # Damping add button
 casecontrols_bt_special = QtGui.QPushButton(__("Special "))
-casecontrols_bt_special.setToolTip(
-    __("Special actions for the case."))
+casecontrols_bt_special.setToolTip(__("Special actions for the case."))
 widget_state_elements['dampingbutton'] = casecontrols_bt_special
 
 # Toggle Periodicity buttons
@@ -301,8 +289,7 @@ def on_new_case(prompt=True):
     temp_data.update(new_case_temp_data)
     utils.create_dsph_document()
     guiutils.widget_state_config(widget_state_elements, "new case")
-    data['simobjects']['Case_Limits'] = [
-        "mkspecial", "typespecial", "fillspecial"]
+    data['simobjects']['Case_Limits'] = ["mkspecial", "typespecial", "fillspecial"]
     dp_input.setText(str(data["dp"]))
 
     # Forces call to item selection change function so all changes are taken into account
@@ -312,8 +299,7 @@ def on_new_case(prompt=True):
 def on_new_from_freecad_document(prompt=True):
     """ Creates a new case based on an existing FreeCAD document.
     This is specially useful for CAD users that want to use existing geometry for DesignSPHysics. """
-    file_name, _ = QtGui.QFileDialog().getOpenFileName(guiutils.get_fc_main_window(),
-                                                       "Select document to import", QtCore.QDir.homePath())
+    file_name, _ = QtGui.QFileDialog().getOpenFileName(guiutils.get_fc_main_window(), "Select document to import", QtCore.QDir.homePath())
 
     if utils.document_count() > 0:
         new_case_success = utils.prompt_close_all_documents(prompt)
@@ -326,8 +312,7 @@ def on_new_from_freecad_document(prompt=True):
     temp_data.update(new_case_temp_data)
     utils.create_dsph_document_from_fcstd(file_name)
     guiutils.widget_state_config(widget_state_elements, "new case")
-    data['simobjects']['Case_Limits'] = [
-        "mkspecial", "typespecial", "fillspecial"]
+    data['simobjects']['Case_Limits'] = ["mkspecial", "typespecial", "fillspecial"]
     dp_input.setText(str(data["dp"]))
 
     # Forces call to item selection change function so all changes are taken into account
@@ -341,8 +326,7 @@ def on_save_case(save_as=None):
     # Watch if save path is available.  Prompt the user if not.
     if (data['project_path'] == "" and data['project_name'] == "") or save_as:
         # noinspection PyArgumentList
-        save_name, _ = QtGui.QFileDialog.getSaveFileName(
-            dsph_main_dock, __("Save Case"), QtCore.QDir.homePath())
+        save_name, _ = QtGui.QFileDialog.getSaveFileName(dsph_main_dock, __("Save Case"), QtCore.QDir.homePath())
     else:
         save_name = data['project_path']
 
@@ -364,8 +348,7 @@ def on_save_case(save_as=None):
                 if isinstance(movement, SpecialMovement):
                     if isinstance(movement.generator, FileGen) or isinstance(movement.generator, RotationFileGen):
                         filename = movement.generator.filename
-                        utils.debug("Copying {} to {}".format(
-                            filename, save_name))
+                        utils.debug("Copying {} to {}".format(filename, save_name))
 
                         # Change directory to de case one, so if file path is already relative it copies it to the
                         # out folder
@@ -375,8 +358,7 @@ def on_save_case(save_as=None):
                             # Copy to project root
                             shutil.copy2(filename, save_name)
                         except IOError:
-                            utils.error("Unable to copy {} into {}".format(
-                                filename, save_name))
+                            utils.error("Unable to copy {} into {}".format(filename, save_name))
                         except shutil.Error:
                             # Probably already copied the file.
                             pass
@@ -385,11 +367,9 @@ def on_save_case(save_as=None):
                             # Copy to project out folder
                             shutil.copy2(filename, save_name + "/" + save_name.split('/')[-1] + "_out")
 
-                            movement.generator.filename = "{}".format(
-                                filename.split("/")[-1])
+                            movement.generator.filename = "{}".format(filename.split("/")[-1])
                         except IOError:
-                            utils.error("Unable to copy {} into {}".format(
-                                filename, save_name))
+                            utils.error("Unable to copy {} into {}".format(filename, save_name))
                         except shutil.Error:
                             # Probably already copied the file.
                             pass
@@ -397,8 +377,7 @@ def on_save_case(save_as=None):
         # Copy files from Acceleration input and change paths to be inside the project folder.
         for aid in data['accinput'].acclist:
             filename = aid.datafile
-            utils.debug("Copying {} to {}".format(
-                filename, save_name + "/" + save_name.split('/')[-1] + "_out"))
+            utils.debug("Copying {} to {}".format(filename, save_name + "/" + save_name.split('/')[-1] + "_out"))
 
             # Change directory to de case one, so if file path is already relative it copies it to the
             # out folder
@@ -408,8 +387,7 @@ def on_save_case(save_as=None):
                 # Copy to project root
                 shutil.copy2(filename, save_name)
             except IOError:
-                utils.error("Unable to copy {} into {}".format(
-                    filename, save_name))
+                utils.error("Unable to copy {} into {}".format(filename, save_name))
             except shutil.Error:
                 # Probably already copied the file.
                 pass
@@ -421,8 +399,7 @@ def on_save_case(save_as=None):
                 aid.datafile = filename.split("/")[-1]
 
             except IOError:
-                utils.error("Unable to copy {} into {}".format(
-                    filename, save_name))
+                utils.error("Unable to copy {} into {}".format(filename, save_name))
             except shutil.Error:
                 # Probably already copied the file.
                 pass
@@ -501,14 +478,12 @@ def on_save_case(save_as=None):
             os.chdir(save_name)
 
             for f in glob.glob("{}*".format(filename)):
-                utils.debug("Copying {} to {}".format(
-                    filename, save_name + "/" + save_name.split('/')[-1] + "_out"))
+                utils.debug("Copying {} to {}".format(filename, save_name + "/" + save_name.split('/')[-1] + "_out"))
                 try:
                     # Copy to project root
                     shutil.copy2(f, save_name)
                 except IOError:
-                    utils.error("Unable to copy {} into {}".format(
-                        filename, save_name))
+                    utils.error("Unable to copy {} into {}".format(filename, save_name))
                 except shutil.Error:
                     # Probably already copied the file.
                     pass
@@ -520,8 +495,7 @@ def on_save_case(save_as=None):
                     data['relaxationzone'].filesvel = filename.split("/")[-1]
 
                 except IOError:
-                    utils.error("Unable to copy {} into {}".format(
-                        filename, save_name))
+                    utils.error("Unable to copy {} into {}".format(filename, save_name))
                 except shutil.Error:
                     # Probably already copied the file.
                     pass
@@ -555,8 +529,7 @@ def on_save_case(save_as=None):
                 pickle.dump(data, picklefile, utils.PICKLE_PROTOCOL)
         except Exception as e:
             traceback.print_exc()
-            guiutils.error_dialog(
-                __("There was a problem saving the DSPH information file (casedata.dsphdata)."))
+            guiutils.error_dialog(__("There was a problem saving the DSPH information file (casedata.dsphdata)."))
 
         utils.refocus_cwd()
     else:
@@ -592,29 +565,22 @@ def on_save_with_gencase():
         # This is done because a "clean" exit (return 0) of GenCase does not mean that all went correct.
         if str(process.exitCode()) == "0":
             try:
-                total_particles_text = output[output.index(
-                    "Total particles: "):output.index(" (bound=")]
-                total_particles = int(
-                    total_particles_text[total_particles_text.index(": ") + 2:])
+                total_particles_text = output[output.index("Total particles: "):output.index(" (bound=")]
+                total_particles = int(total_particles_text[total_particles_text.index(": ") + 2:])
                 data['total_particles'] = total_particles
-                utils.log(__("Total number of particles exported: ") +
-                          str(total_particles))
+                utils.log(__("Total number of particles exported: ") + str(total_particles))
                 if total_particles < 300:
-                    utils.warning(
-                        __("Are you sure all the parameters are set right? The number of particles is very low ({}). "
-                           "Lower the DP to increase number of particles").format(str(total_particles)))
+                    utils.warning(__("Are you sure all the parameters are set right? The number of particles is very low ({}). "
+                                     "Lower the DP to increase number of particles").format(str(total_particles)))
                 elif total_particles > 200000:
-                    utils.warning(__(
-                        "Number of particles is pretty high ({}) and it could take a lot of time to simulate.").format(
-                        str(total_particles)))
+                    utils.warning(__("Number of particles is pretty high ({}) "
+                                     "and it could take a lot of time to simulate.").format(str(total_particles)))
                 data['gencase_done'] = True
-                guiutils.widget_state_config(
-                    widget_state_elements, "gencase done")
+                guiutils.widget_state_config(widget_state_elements, "gencase done")
 
                 data["last_number_particles"] = int(total_particles)
                 guiutils.gencase_completed_dialog(particle_count=total_particles,
-                                                  detail_text=output.split(
-                                                      "================================")[1],
+                                                  detail_text=output.split("================================")[1],
                                                   data=data, temp_data=temp_data)
             except ValueError:
                 # Not an expected result. GenCase had a not handled error
@@ -623,14 +589,11 @@ def on_save_with_gencase():
         # If for some reason GenCase failed
         if str(process.exitCode()) != "0" or error_in_gen_case:
             # Multiple possible causes. Let the user know
-            gencase_out_file = open(
-                data['project_path'] + '/' + data['project_name'] + '_out/' + data['project_name'] + ".out", "rb")
+            gencase_out_file = open(data['project_path'] + '/' + data['project_name'] + '_out/' + data['project_name'] + ".out", "rb")
             gencase_failed_dialog = QtGui.QMessageBox()
-            gencase_failed_dialog.setText(
-                __("Error executing GenCase. Did you add objects to the case?. "
-                   "Another reason could be memory issues. View details for more info."))
-            gencase_failed_dialog.setDetailedText(
-                gencase_out_file.read().split("================================")[1])
+            gencase_failed_dialog.setText(__("Error executing GenCase. Did you add objects to the case?. "
+                                             "Another reason could be memory issues. View details for more info."))
+            gencase_failed_dialog.setDetailedText(gencase_out_file.read().split("================================")[1])
             gencase_failed_dialog.setIcon(QtGui.QMessageBox.Critical)
             gencase_out_file.close()
             gencase_failed_dialog.exec_()
@@ -672,8 +635,7 @@ def on_load_case():
     Load points to a dsphdata custom file, that stores all the relevant info.
     If FCStd file is not found the project is considered corrupt."""
     # noinspection PyArgumentList
-    load_name, _ = QtGui.QFileDialog.getOpenFileName(dsph_main_dock, __(
-        "Load Case"), QtCore.QDir.homePath(), "casedata.dsphdata")
+    load_name, _ = QtGui.QFileDialog.getOpenFileName(dsph_main_dock, __("Load Case"), QtCore.QDir.homePath(), "casedata.dsphdata")
     if load_name == "":
         # User pressed cancel.  No path is selected.
         return
@@ -681,10 +643,8 @@ def on_load_case():
     # Check if FCStd file is in there.
     load_path_project_folder = "/".join(load_name.split("/")[:-1])
     if not os.path.isfile(load_path_project_folder + "/DSPH_Case.FCStd"):
-        guiutils.error_dialog(
-            __("DSPH_Case.FCStd file not found! Corrupt or moved project. Aborting."))
-        utils.error(
-            __("DSPH_Case.FCStd file not found! Corrupt or moved project. Aborting."))
+        guiutils.error_dialog(__("DSPH_Case.FCStd file not found! Corrupt or moved project. Aborting."))
+        utils.error(__("DSPH_Case.FCStd file not found! Corrupt or moved project. Aborting."))
         return
 
     # Tries to close all documents
@@ -707,9 +667,8 @@ def on_load_case():
             try:
                 load_disk_data = pickle.load(load_picklefile)
             except AttributeError:
-                guiutils.error_dialog(
-                    __("There was an error trying to load the case. This can be due to the project being "
-                       "from another version or an error while saving the case."))
+                guiutils.error_dialog(__("There was an error trying to load the case. This can be due to the project being "
+                                         "from another version or an error while saving the case."))
                 on_new_case(prompt=False)
                 return
 
@@ -736,10 +695,8 @@ def on_load_case():
 
     # Compatibility code. Transform content from previous version to this one.
     # Make FloatProperty compatible
-    data['floating_mks'] = utils.float_list_to_float_property(
-        data['floating_mks'])
-    data['initials_mks'] = utils.initials_list_to_initials_property(
-        data['initials_mks'])
+    data['floating_mks'] = utils.float_list_to_float_property(data['floating_mks'])
+    data['initials_mks'] = utils.initials_list_to_initials_property(data['initials_mks'])
 
     # Adapt widget state to case info
     guiutils.widget_state_config(widget_state_elements, "load base")
@@ -751,15 +708,13 @@ def on_load_case():
     if data['simulation_done']:
         guiutils.widget_state_config(widget_state_elements, "simulation done")
     else:
-        guiutils.widget_state_config(
-            widget_state_elements, "simulation not done")
+        guiutils.widget_state_config(widget_state_elements, "simulation not done")
 
     # Check executable paths
     utils.refocus_cwd()
     data, correct_execs = utils.check_executables(data)
     if not correct_execs:
-        guiutils.widget_state_config(
-            widget_state_elements, "execs not correct")
+        guiutils.widget_state_config(widget_state_elements, "execs not correct")
 
     # Update FreeCAD case state
     on_tree_item_selection_change()
@@ -770,10 +725,8 @@ def on_add_fillbox():
     in a group with 2 objects inside: a point and a box.
     The point represents the fill seed and the box sets
     the bounds for the filling"""
-    fillbox_gp = FreeCAD.getDocument("DSPH_Case").addObject(
-        "App::DocumentObjectGroup", "FillBox")
-    fillbox_point = FreeCAD.ActiveDocument.addObject(
-        "Part::Sphere", "FillPoint")
+    fillbox_gp = FreeCAD.getDocument("DSPH_Case").addObject("App::DocumentObjectGroup", "FillBox")
+    fillbox_point = FreeCAD.ActiveDocument.addObject("Part::Sphere", "FillPoint")
     fillbox_limits = FreeCAD.ActiveDocument.addObject("Part::Box", "FillLimit")
     fillbox_limits.Length = '1000 mm'
     fillbox_limits.Width = '1000 mm'
@@ -842,8 +795,7 @@ def on_add_stl():
     filedialog = QtGui.QFileDialog()
 
     # noinspection PyArgumentList
-    file_name, _ = filedialog.getOpenFileName(fc_main_window, __(
-        "Select STL to import"), QtCore.QDir.homePath(), "STL Files (*.stl)")
+    file_name, _ = filedialog.getOpenFileName(fc_main_window, __("Select STL to import"), QtCore.QDir.homePath(), "STL Files (*.stl)")
 
     if len(file_name) <= 1:
         # User didn't select any files
@@ -863,8 +815,7 @@ def on_add_stl():
     stl_file_path = QtGui.QLineEdit()
     stl_file_path.setText(file_name)
     stl_file_browse = QtGui.QPushButton(__("Browse"))
-    [stl_file_layout.addWidget(x) for x in [
-        stl_file_label, stl_file_path, stl_file_browse]]
+    [stl_file_layout.addWidget(x) for x in [stl_file_label, stl_file_path, stl_file_browse]]
     # END STL File selection
 
     # Scaling factor
@@ -876,9 +827,7 @@ def on_add_stl():
     stl_scaling_y_e = QtGui.QLineEdit("1")
     stl_scaling_z_l = QtGui.QLabel("Z: ")
     stl_scaling_z_e = QtGui.QLineEdit("1")
-    [
-        stl_scaling_layout.addWidget(x)
-        for x in [
+    [stl_scaling_layout.addWidget(x) for x in [
         stl_scaling_label,
         stl_scaling_x_l,
         stl_scaling_x_e,
@@ -886,21 +835,18 @@ def on_add_stl():
         stl_scaling_y_e,
         stl_scaling_z_l,
         stl_scaling_z_e,
-    ]
-    ]
+    ]]
     # END Scaling factor
 
     # Import object name
     stl_objname_layout = QtGui.QHBoxLayout()
     stl_objname_label = QtGui.QLabel(__("Import object name: "))
     stl_objname_text = QtGui.QLineEdit("ImportedSTL")
-    [stl_objname_layout.addWidget(x)
-     for x in [stl_objname_label, stl_objname_text]]
+    [stl_objname_layout.addWidget(x) for x in [stl_objname_label, stl_objname_text]]
     # End object name
 
     # Add component layouts to group layout
-    [stl_group_layout.addLayout(x) for x in [
-        stl_file_layout, stl_scaling_layout, stl_objname_layout]]
+    [stl_group_layout.addLayout(x) for x in [stl_file_layout, stl_scaling_layout, stl_objname_layout]]
     stl_group_layout.addStretch(1)
     stl_group.setLayout(stl_group_layout)
 
@@ -924,7 +870,10 @@ def on_add_stl():
     def stl_ok_clicked():
         """ Defines ok button behaviour"""
         [stl_scaling_edit.setText(stl_scaling_edit.text().replace(",", ".")) for stl_scaling_edit in [
-            stl_scaling_x_e, stl_scaling_y_e, stl_scaling_z_e]]
+            stl_scaling_x_e,
+            stl_scaling_y_e,
+            stl_scaling_z_e
+        ]]
         try:
             utils.import_stl(
                 filename=str(stl_file_path.text()),
@@ -934,16 +883,13 @@ def on_add_stl():
                 name=str(stl_objname_text.text()))
             stl_dialog.accept()
         except ValueError:
-            utils.error(
-                __("There was an error. Are you sure you wrote correct float values in the scaling factor?"))
-            guiutils.error_dialog(
-                __("There was an error. Are you sure you wrote correct float values in the sacaling factor?"))
+            utils.error(__("There was an error. Are you sure you wrote correct float values in the scaling factor?"))
+            guiutils.error_dialog(__("There was an error. Are you sure you wrote correct float values in the sacaling factor?"))
 
     def stl_dialog_browse():
         """ Defines the browse button behaviour."""
         # noinspection PyArgumentList
-        file_name_temp, _ = filedialog.getOpenFileName(fc_main_window, __(
-            "Select STL to import"), QtCore.QDir.homePath(), "STL Files (*.stl)")
+        file_name_temp, _ = filedialog.getOpenFileName(fc_main_window, __("Select STL to import"), QtCore.QDir.homePath(), "STL Files (*.stl)")
         stl_file_path.setText(file_name_temp)
         stl_dialog.raise_()
         stl_dialog.activateWindow()
@@ -959,14 +905,12 @@ def on_import_xml():
     """ Imports an already created GenCase/DSPH compatible
     file and loads it in the scene. """
 
-    guiutils.warning_dialog(
-        __("This feature is experimental. It's meant to help to build a case importing bits from"
-           "previous, non DesignSPHysics code. This is not intended neither to import all objects "
-           "nor its properties."))
+    guiutils.warning_dialog(__("This feature is experimental. It's meant to help to build a case importing bits from"
+                               "previous, non DesignSPHysics code. This is not intended neither to import all objects "
+                               "nor its properties."))
 
     # noinspection PyArgumentList
-    import_name, _ = QtGui.QFileDialog.getOpenFileName(dsph_main_dock, __(
-        "Import XML"), QtCore.QDir.homePath(), "XML Files (*.xml)")
+    import_name, _ = QtGui.QFileDialog.getOpenFileName(dsph_main_dock, __("Import XML"), QtCore.QDir.homePath(), "XML Files (*.xml)")
     if import_name == "":
         # User pressed cancel.  No path is selected.
         return
@@ -988,12 +932,9 @@ def on_import_xml():
         FreeCAD.ActiveDocument.getObject('Case_Limits').Placement = FreeCAD.Placement(
             FreeCAD.Vector(limits_point_min[0] * 1000, limits_point_min[1] * 1000, limits_point_min[2] * 1000),
             FreeCAD.Rotation(FreeCAD.Vector(0, 0, 1), 0))
-        FreeCAD.ActiveDocument.getObject("Case_Limits").Length = str(
-            limits_point_max[0] - limits_point_min[0]) + ' m'
-        FreeCAD.ActiveDocument.getObject("Case_Limits").Width = str(
-            limits_point_max[1] - limits_point_min[1]) + ' m'
-        FreeCAD.ActiveDocument.getObject("Case_Limits").Height = str(
-            limits_point_max[2] - limits_point_min[2]) + ' m'
+        FreeCAD.ActiveDocument.getObject("Case_Limits").Length = str(limits_point_max[0] - limits_point_min[0]) + ' m'
+        FreeCAD.ActiveDocument.getObject("Case_Limits").Width = str(limits_point_max[1] - limits_point_min[1]) + ' m'
+        FreeCAD.ActiveDocument.getObject("Case_Limits").Height = str(limits_point_max[2] - limits_point_min[2]) + ' m'
 
         # Merges and updates current data with the imported one.
         data.update(config)
@@ -1033,9 +974,8 @@ def on_import_xml():
 
             # Notify change to refresh UI elements related.
             on_tree_item_selection_change()
-    guiutils.info_dialog(
-        __("Importing successful. Note that some objects may not be automatically added to the case, "
-            "and other may not have its properties correctly applied."))
+    guiutils.info_dialog(__("Importing successful. Note that some objects may not be automatically added to the case, "
+                            "and other may not have its properties correctly applied."))
 
 
 def on_summary():
@@ -1058,26 +998,20 @@ def on_2d_toggle():
 
             # Ok Button handler
             def on_ok():
-                temp_data['3d_width'] = utils.get_fc_object(
-                    'Case_Limits').Width.Value
+                temp_data['3d_width'] = utils.get_fc_object('Case_Limits').Width.Value
 
                 try:
-                    utils.get_fc_object('Case_Limits').Placement.Base.y = float(
-                        y2_pos_input.text())
+                    utils.get_fc_object('Case_Limits').Placement.Base.y = float(y2_pos_input.text())
                 except ValueError:
-                    guiutils.error_dialog(
-                        __("The Y position that was inserted is not valid."))
+                    guiutils.error_dialog(__("The Y position that was inserted is not valid."))
 
                 utils.get_fc_object('Case_Limits').Width.Value = utils.WIDTH_2D
-                guiutils.get_fc_view_object(
-                    'Case_Limits').DisplayMode = 'Flat Lines'
-                guiutils.get_fc_view_object(
-                    'Case_Limits').ShapeColor = (1.00, 0.00, 0.00)
+                guiutils.get_fc_view_object('Case_Limits').DisplayMode = 'Flat Lines'
+                guiutils.get_fc_view_object('Case_Limits').ShapeColor = (1.00, 0.00, 0.00)
                 guiutils.get_fc_view_object('Case_Limits').Transparency = 90
                 # Toggle 3D Mode and change name
                 data['3dmode'] = not data['3dmode']
-                utils.get_fc_object(
-                    'Case_Limits').Label = "Case Limits (3D)" if data['3dmode'] else "Case Limits (2D)"
+                utils.get_fc_object('Case_Limits').Label = "Case Limits (3D)" if data['3dmode'] else "Case Limits (2D)"
                 y_pos_2d_window.accept()
 
             # Cancel Button handler
@@ -1096,8 +1030,7 @@ def on_2d_toggle():
             y_pos_intro_layout = QtGui.QHBoxLayout()
             y_pos_intro_label = QtGui.QLabel(__("New Y position (mm): "))
             y2_pos_input = QtGui.QLineEdit()
-            y2_pos_input.setText(
-                str(utils.get_fc_object('Case_Limits').Placement.Base.y))
+            y2_pos_input.setText(str(utils.get_fc_object('Case_Limits').Placement.Base.y))
             y_pos_intro_layout.addWidget(y_pos_intro_label)
             y_pos_intro_layout.addWidget(y2_pos_input)
 
@@ -1112,22 +1045,17 @@ def on_2d_toggle():
             # Change to 3D
             try:
                 # Try to restore original Width.
-                utils.get_fc_object(
-                    'Case_Limits').Width = temp_data['3d_width']
+                utils.get_fc_object('Case_Limits').Width = temp_data['3d_width']
             except:
                 # If its not saved just set it same as Length
-                utils.get_fc_object('Case_Limits').Width = utils.get_fc_object(
-                    'Case_Limits').Length
+                utils.get_fc_object('Case_Limits').Width = utils.get_fc_object('Case_Limits').Length
 
-            guiutils.get_fc_view_object(
-                'Case_Limits').DisplayMode = 'Wireframe'
-            guiutils.get_fc_view_object(
-                'Case_Limits').ShapeColor = (0.80, 0.80, 0.80)
+            guiutils.get_fc_view_object('Case_Limits').DisplayMode = 'Wireframe'
+            guiutils.get_fc_view_object('Case_Limits').ShapeColor = (0.80, 0.80, 0.80)
             guiutils.get_fc_view_object('Case_Limits').Transparency = 0
             # Toggle 3D Mode and change name
             data['3dmode'] = not data['3dmode']
-            utils.get_fc_object(
-                'Case_Limits').Label = "Case Limits (3D)" if data['3dmode'] else "Case Limits (2D)"
+            utils.get_fc_object('Case_Limits').Label = "Case Limits (3D)" if data['3dmode'] else "Case Limits (2D)"
     else:
         utils.error("Not a valid case environment")
 
@@ -1181,8 +1109,8 @@ def on_special_button():
 
         # Check if it is fluid and warn the user.
         if "fluid" in data["simobjects"][selection.Name][1].lower():
-            guiutils.error_dialog(
-                __("You can't apply a piston movement to a fluid.\nPlease select a boundary and try again"))
+            guiutils.error_dialog(__("You can't apply a piston movement to a fluid.\n"
+                                     "Please select a boundary and try again"))
             return
 
         # Get selection mk
@@ -1195,7 +1123,8 @@ def on_special_button():
                 utils.APP_NAME,
                 __("This mk already has motions applied. "
                    "Setting a Multi-layered piston will delete all of its movement. "
-                   "Are you sure?"))
+                   "Are you sure?")
+            )
             if motion_delete_warning == QtGui.QMessageBox.Cancel:
                 return
             else:
@@ -1213,8 +1142,7 @@ def on_special_button():
                     if overwrite_warn == QtGui.QMessageBox.Cancel:
                         return
 
-            if selection_mk in data['mlayerpistons'].keys() and isinstance(data['mlayerpistons'][selection_mk],
-                                                                           MLPiston1D):
+            if selection_mk in data['mlayerpistons'].keys() and isinstance(data['mlayerpistons'][selection_mk], MLPiston1D):
                 config_dialog = dsphwidgets.MLPiston1DConfigDialog(
                     selection_mk, data['mlayerpistons'][selection_mk]
                 )
@@ -1269,28 +1197,28 @@ def on_special_button():
         if action.text() == __("Regular waves"):
             if data['relaxationzone'] is not None:
                 if not isinstance(data['relaxationzone'], RelaxationZoneRegular):
-                    overwrite_warn = guiutils.ok_cancel_dialog(__("Relaxation Zone"),
-                                                               __(
-                                                                   "There's already another type of Relaxation Zone defined. "
-                                                                   "Continuing will overwrite it. Are you sure?"))
+                    overwrite_warn = guiutils.ok_cancel_dialog(
+                        __("Relaxation Zone"),
+                        __("There's already another type of Relaxation Zone defined. "
+                           "Continuing will overwrite it. Are you sure?")
+                    )
                     if overwrite_warn == QtGui.QMessageBox.Cancel:
                         return
                     else:
                         data['relaxationzone'] = RelaxationZoneRegular()
 
-            config_dialog = dsphwidgets.RelaxationZoneRegularConfigDialog(
-                data['relaxationzone']
-            )
+            config_dialog = dsphwidgets.RelaxationZoneRegularConfigDialog(data['relaxationzone'])
 
             # Set the relaxation zone. Can be an object or be None
             data['relaxationzone'] = config_dialog.relaxationzone
         if action.text() == __("Irregular waves"):
             if data['relaxationzone'] is not None:
                 if not isinstance(data['relaxationzone'], RelaxationZoneIrregular):
-                    overwrite_warn = guiutils.ok_cancel_dialog(__("Relaxation Zone"),
-                                                               __(
-                                                                   "There's already another type of Relaxation Zone defined. "
-                                                                   "Continuing will overwrite it. Are you sure?"))
+                    overwrite_warn = guiutils.ok_cancel_dialog(
+                        __("Relaxation Zone"),
+                        __("There's already another type of Relaxation Zone defined. "
+                           "Continuing will overwrite it. Are you sure?")
+                    )
                     if overwrite_warn == QtGui.QMessageBox.Cancel:
                         return
                     else:
@@ -1305,18 +1233,18 @@ def on_special_button():
         if action.text() == __("External waves"):
             if data['relaxationzone'] is not None:
                 if not isinstance(data['relaxationzone'], RelaxationZoneFile):
-                    overwrite_warn = guiutils.ok_cancel_dialog(__("Relaxation Zone"),
-                                                               __("There's already another type of "
-                                                                  "Relaxation Zone defined. "
-                                                                  "Continuing will overwrite it. Are you sure?"))
+                    overwrite_warn = guiutils.ok_cancel_dialog(
+                        __("Relaxation Zone"),
+                        __("There's already another type of "
+                           "Relaxation Zone defined. "
+                           "Continuing will overwrite it. Are you sure?")
+                    )
                     if overwrite_warn == QtGui.QMessageBox.Cancel:
                         return
                     else:
                         data['relaxationzone'] = RelaxationZoneFile()
 
-            config_dialog = dsphwidgets.RelaxationZoneFileConfigDialog(
-                data['relaxationzone']
-            )
+            config_dialog = dsphwidgets.RelaxationZoneFileConfigDialog(data['relaxationzone'])
 
             # Set the relaxation zone. Can be an object or be None
             data['relaxationzone'] = config_dialog.relaxationzone
@@ -1324,19 +1252,18 @@ def on_special_button():
         if action.text() == __("Uniform velocity"):
             if data['relaxationzone'] is not None:
                 if not isinstance(data['relaxationzone'], RelaxationZoneUniform):
-                    overwrite_warn = guiutils.ok_cancel_dialog(__("Relaxation Zone"),
-                                                               __(
-                                                                   "There's already another type of Relaxation Zone "
-                                                                   "defined. Continuing will overwrite it. "
-                                                                   "Are you sure?"))
+                    overwrite_warn = guiutils.ok_cancel_dialog(
+                        __("Relaxation Zone"),
+                        __("There's already another type of Relaxation Zone "
+                           "defined. Continuing will overwrite it. "
+                           "Are you sure?")
+                    )
                     if overwrite_warn == QtGui.QMessageBox.Cancel:
                         return
                     else:
                         data['relaxationzone'] = RelaxationZoneUniform()
 
-            config_dialog = dsphwidgets.RelaxationZoneUniformConfigDialog(
-                data['relaxationzone']
-            )
+            config_dialog = dsphwidgets.RelaxationZoneUniformConfigDialog(data['relaxationzone'])
 
             # Set the relaxation zone. Can be an object or be None
             data['relaxationzone'] = config_dialog.relaxationzone
@@ -1350,15 +1277,19 @@ def on_special_button():
         if result == QtGui.QDialog.Accepted:
             data['accinput'] = accinput_dialog.get_result()
 
-
     sp_damping_button.clicked.connect(on_damping_option)
     sp_multilayeredmb_menu.triggered.connect(on_multilayeredmb_menu)
     sp_relaxationzone_menu.triggered.connect(on_relaxationzone_menu)
     sp_accinput_button.clicked.connect(on_accinput_button)
 
-    [sp_window_layout.addWidget(x) for x in
-     [sp_damping_button, sp_inlet_button, sp_chrono_button, sp_multilayeredmb_button, sp_relaxationzone_button,
-      sp_accinput_button]]
+    [sp_window_layout.addWidget(x) for x in [
+        sp_damping_button,
+        sp_inlet_button,
+        sp_chrono_button,
+        sp_multilayeredmb_button,
+        sp_relaxationzone_button,
+        sp_accinput_button
+    ]]
     sp_window.setLayout(sp_window_layout)
     sp_window.exec_()
 
@@ -1413,8 +1344,7 @@ run_group_label_proc = QtGui.QLabel(__("Simulation processor: "))
 run_group_label_part = QtGui.QLabel(__("Number of particles: "))
 run_group_label_partsout = QtGui.QLabel(__("Total particles out: "))
 run_group_label_eta = QtGui.QLabel(run_dialog)
-run_group_label_eta.setText(
-    __("Estimated time to complete simulation: {}").format("Calculating..."))
+run_group_label_eta.setText(__("Estimated time to complete simulation: {}").format("Calculating..."))
 
 run_group_layout.addWidget(run_group_label_case)
 run_group_layout.addWidget(run_group_label_proc)
@@ -1470,13 +1400,10 @@ def on_ex_simulate():
     run_button_cancel.setText(__("Cancel Simulation"))
     run_dialog.setWindowTitle(__("DualSPHysics Simulation: {}%").format("0"))
     run_group_label_case.setText(__("Case name: ") + data['project_name'])
-    run_group_label_proc.setText(
-        __("Simulation processor: ") + str(ex_selector_combo.currentText()))
-    run_group_label_part.setText(
-        __("Number of particles: ") + str(data['total_particles']))
+    run_group_label_proc.setText(__("Simulation processor: ") + str(ex_selector_combo.currentText()))
+    run_group_label_part.setText(__("Number of particles: ") + str(data['total_particles']))
     run_group_label_partsout.setText(__("Total particles out: ") + "0")
-    run_group_label_eta.setText(
-        __("Estimated time to complete simulation: ") + __("Calculating..."))
+    run_group_label_eta.setText(__("Estimated time to complete simulation: ") + __("Calculating..."))
 
     # Cancel button handler
     def on_cancel():
@@ -1498,8 +1425,7 @@ def on_ex_simulate():
         else:
             utils.debug('Showing details pane on execution')
             run_details.show()
-            run_details.move(run_dialog.x() -
-                             run_details.width() - 15, run_dialog.y())
+            run_details.move(run_dialog.x() - run_details.width() - 15, run_dialog.y())
 
     # Ensure run button has no connections
     try:
@@ -1510,11 +1436,9 @@ def on_ex_simulate():
     run_button_details.clicked.connect(on_details)
 
     # Launch simulation and watch filesystem to monitor simulation
-    filelist = [f for f in os.listdir(
-        data['project_path'] + '/' + data['project_name'] + "_out/") if f.startswith("Part")]
+    filelist = [f for f in os.listdir(data['project_path'] + '/' + data['project_name'] + "_out/") if f.startswith("Part")]
     for f in filelist:
-        os.remove(data['project_path'] + '/' +
-                  data['project_name'] + "_out/" + f)
+        os.remove(data['project_path'] + '/' + data['project_name'] + "_out/" + f)
 
     def on_dsph_sim_finished(exit_code):
         """ Simulation finish handler. Defines what happens when the process finishes."""
@@ -1523,8 +1447,7 @@ def on_ex_simulate():
         output = temp_data['current_process'].readAllStandardOutput()
         run_details_text.setText(str(output))
         run_details_text.moveCursor(QtGui.QTextCursor.End)
-        run_watcher.removePath(
-            data['project_path'] + '/' + data['project_name'] + "_out/")
+        run_watcher.removePath(data['project_path'] + '/' + data['project_name'] + "_out/")
         run_dialog.setWindowTitle(__("DualSPHysics Simulation: Complete"))
         run_progbar_bar.setValue(100)
         run_button_cancel.setText(__("Close"))
@@ -1540,15 +1463,12 @@ def on_ex_simulate():
                 run_dialog.setWindowTitle(__("DualSPHysics Simulation: Error"))
                 run_progbar_bar.setValue(0)
                 run_dialog.hide()
-                guiutils.widget_state_config(
-                    widget_state_elements, "sim error")
+                guiutils.widget_state_config(widget_state_elements, "sim error")
                 execution_error_dialog = QtGui.QMessageBox()
-                execution_error_dialog.setText(
-                    __("An error occurred during execution. Make sure that parameters exist and are properly defined. "
-                       "You can also check your execution device (update the driver of your GPU). "
-                       "Read the details for more information."))
-                execution_error_dialog.setDetailedText(
-                    str(output).split("================================")[1])
+                execution_error_dialog.setText(__("An error occurred during execution. Make sure that parameters exist and are properly defined. "
+                                                  "You can also check your execution device (update the driver of your GPU). "
+                                                  "Read the details for more information."))
+                execution_error_dialog.setDetailedText(str(output).split("================================")[1])
                 execution_error_dialog.setIcon(QtGui.QMessageBox.Critical)
                 execution_error_dialog.exec_()
 
@@ -1593,43 +1513,34 @@ def on_ex_simulate():
         if "Part_" in run_file_data[-1]:
             last_line_parttime = run_file_data[-1].split(".")
             if "Part_" in last_line_parttime[0]:
-                current_value = (float(last_line_parttime[0].split(
-                    " ")[-1] + "." + last_line_parttime[1][:2]) * float(100)) / float(data['timemax'])
+                current_value = (float(last_line_parttime[0].split(" ")[-1] + "." + last_line_parttime[1][:2]) * float(100)) / float(data['timemax'])
                 run_progbar_bar.setValue(current_value)
                 run_dialog.setWindowTitle(__("DualSPHysics Simulation: {}%").format(
                     str(format(current_value, ".2f"))))
 
             last_line_time = run_file_data[-1].split("  ")[-1]
-            if ("===" not in last_line_time) and ("CellDiv" not in last_line_time) and (
-                    "memory" not in last_line_time) and ("-" in last_line_time):
+            if ("===" not in last_line_time) and ("CellDiv" not in last_line_time) and ("memory" not in last_line_time) and ("-" in last_line_time):
                 # Update time field
                 try:
-                    run_group_label_eta.setText(
-                        __("Estimated time to complete simulation: ") + last_line_time)
+                    run_group_label_eta.setText(__("Estimated time to complete simulation: ") + last_line_time)
                 except RuntimeError:
-                    run_group_label_eta.setText(
-                        __("Estimated time to complete simulation: ") + "Calculating...")
+                    run_group_label_eta.setText(__("Estimated time to complete simulation: ") + "Calculating...")
         elif "Particles out:" in run_file_data[-1]:
-            totalpartsout = int(
-                run_file_data[-1].split("(total: ")[1].split(")")[0])
+            totalpartsout = int(run_file_data[-1].split("(total: ")[1].split(")")[0])
             data['total_particles_out'] = totalpartsout
-            run_group_label_partsout.setText(
-                __("Total particles out: {}").format(str(data['total_particles_out'])))
+            run_group_label_partsout.setText(__("Total particles out: {}").format(str(data['total_particles_out'])))
 
     # Set filesystem watcher to the out directory.
-    run_watcher.addPath(data['project_path'] + '/' +
-                        data['project_name'] + "_out/")
+    run_watcher.addPath(data['project_path'] + '/' + data['project_name'] + "_out/")
     run_watcher.directoryChanged.connect(on_fs_change)
 
     # Handle error on simulation start
     if temp_data['current_process'].state() == QtCore.QProcess.NotRunning:
         # Probably error happened.
-        run_watcher.removePath(
-            data['project_path'] + '/' + data['project_name'] + "_out/")
+        run_watcher.removePath(data['project_path'] + '/' + data['project_name'] + "_out/")
         temp_data['current_process'] = ""
         exec_not_correct_dialog = QtGui.QMessageBox()
-        exec_not_correct_dialog.setText(
-            __("Error on simulation start. Is the path of DualSPHysics correctly placed?"))
+        exec_not_correct_dialog.setText(__("Error on simulation start. Is the path of DualSPHysics correctly placed?"))
         exec_not_correct_dialog.setIcon(QtGui.QMessageBox.Critical)
         exec_not_correct_dialog.exec_()
     else:
@@ -1693,9 +1604,9 @@ widget_state_elements['ex_selector_combo'] = ex_selector_combo
 # Simulate case button
 ex_button = QtGui.QPushButton(__("Run"))
 ex_button.setStyleSheet("QPushButton {font-weight: bold; }")
-ex_button.setToolTip(
-    __(
-        "Starts the case simulation. From the simulation\nwindow you can see the current progress and\nuseful information."))
+ex_button.setToolTip(__("Starts the case simulation. From the simulation\n"
+                        "window you can see the current progress and\n"
+                        "useful information."))
 ex_button.setIcon(guiutils.get_icon("run.png"))
 ex_button.setIconSize(QtCore.QSize(12, 12))
 ex_button.clicked.connect(on_ex_simulate)
@@ -1703,8 +1614,7 @@ widget_state_elements['ex_button'] = ex_button
 
 # Additional parameters button
 ex_additional = QtGui.QPushButton(__("Additional parameters"))
-ex_additional.setToolTip(
-    "__(Sets simulation additional parameters for execution.)")
+ex_additional.setToolTip("__(Sets simulation additional parameters for execution.)")
 ex_additional.clicked.connect(on_additional_parameters)
 widget_state_elements['ex_additional'] = ex_additional
 
@@ -1750,11 +1660,9 @@ def partvtk_export(export_parameters):
     widget_state_elements['post_proc_partvtk_button'].setText("Exporting...")
 
     # Find total export parts and adjust progress bar
-    partfiles = glob.glob(data['project_path'] + '/' +
-                          data['project_name'] + "_out/" + "Part_*.bi4")
+    partfiles = glob.glob(data['project_path'] + '/' + data['project_name'] + "_out/" + "Part_*.bi4")
     for filename in partfiles:
-        temp_data['total_export_parts'] = max(int(filename.split(
-            "Part_")[1].split(".bi4")[0]), temp_data['total_export_parts'])
+        temp_data['total_export_parts'] = max(int(filename.split("Part_")[1].split(".bi4")[0]), temp_data['total_export_parts'])
     export_progbar_bar.setRange(0, temp_data['total_export_parts'])
     export_progbar_bar.setValue(0)
 
@@ -1774,8 +1682,7 @@ def partvtk_export(export_parameters):
 
     # PartVTK export finish handler
     def on_export_finished(exit_code):
-        widget_state_elements['post_proc_partvtk_button'].setText(
-            __("PartVTK"))
+        widget_state_elements['post_proc_partvtk_button'].setText(__("PartVTK"))
         guiutils.widget_state_config(widget_state_elements, "export finished")
 
         export_dialog.hide()
@@ -1789,7 +1696,8 @@ def partvtk_export(export_parameters):
         else:
             guiutils.error_dialog(
                 __("There was an error on the post-processing. Show details to view the errors."),
-                detailed_text=temp_data['current_output'])
+                detailed_text=temp_data['current_output']
+            )
 
         # Bit of code that tries to open ParaView if the option was selected.
         if export_parameters['open_paraview']:
@@ -1825,8 +1733,7 @@ def partvtk_export(export_parameters):
         " " + export_parameters['additional_parameters']
     ]
 
-    utils.debug("Going to execute: {} {}".format(data['partvtk4_path'],
-                                                 " ".join(static_params_exp)))
+    utils.debug("Going to execute: {} {}".format(data['partvtk4_path'], " ".join(static_params_exp)))
 
     # Start process
     export_process.start(data['partvtk4_path'], static_params_exp)
@@ -1835,8 +1742,7 @@ def partvtk_export(export_parameters):
     # Information ready handler.
     def on_stdout_ready():
         # Update progress bar
-        current_output = str(
-            temp_data['current_export_process'].readAllStandardOutput())
+        current_output = str(temp_data['current_export_process'].readAllStandardOutput())
         temp_data['current_output'] += current_output
         try:
             current_part = current_output.split(
@@ -1850,11 +1756,9 @@ def partvtk_export(export_parameters):
         except IndexError:
             current_part = export_progbar_bar.value()
         export_progbar_bar.setValue(current_part)
-        export_dialog.setWindowTitle(
-            __("Exporting: ") + str(current_part) + "/" + str(temp_data['total_export_parts']))
+        export_dialog.setWindowTitle(__("Exporting: ") + str(current_part) + "/" + str(temp_data['total_export_parts']))
 
-    temp_data['current_export_process'].readyReadStandardOutput.connect(
-        on_stdout_ready)
+    temp_data['current_export_process'].readyReadStandardOutput.connect(on_stdout_ready)
 
 
 def on_partvtk():
@@ -1887,12 +1791,14 @@ def on_partvtk():
     pvtk_types_chk_fixed = QtGui.QCheckBox(__("Fixed"))
     pvtk_types_chk_moving = QtGui.QCheckBox(__("Moving"))
     pvtk_types_chk_floating = QtGui.QCheckBox(__("Floating"))
-    [
-        pvtk_types_groupbox_layout.addWidget(x)
-        for x in
-        [pvtk_types_chk_all, pvtk_types_chk_bound, pvtk_types_chk_fluid, pvtk_types_chk_fixed, pvtk_types_chk_moving,
-         pvtk_types_chk_floating]
-    ]
+    [pvtk_types_groupbox_layout.addWidget(x) for x in [
+        pvtk_types_chk_all,
+        pvtk_types_chk_bound,
+        pvtk_types_chk_fluid,
+        pvtk_types_chk_fixed,
+        pvtk_types_chk_moving,
+        pvtk_types_chk_floating
+    ]]
     pvtk_types_groupbox.setLayout(pvtk_types_groupbox_layout)
 
     pvtk_file_name_label = QtGui.QLabel(__("File name"))
@@ -1969,11 +1875,13 @@ def on_partvtk():
     def on_pvtk_type_all_change(state):
         """ 'All' type selection handler """
         if state == QtCore.Qt.Checked:
-            [
-                chk.setCheckState(QtCore.Qt.Unchecked)
-                for chk in [pvtk_types_chk_bound, pvtk_types_chk_fluid, pvtk_types_chk_fixed, pvtk_types_chk_moving,
-                            pvtk_types_chk_floating]
-            ]
+            [chk.setCheckState(QtCore.Qt.Unchecked) for chk in [
+                pvtk_types_chk_bound,
+                pvtk_types_chk_fluid,
+                pvtk_types_chk_fixed,
+                pvtk_types_chk_moving,
+                pvtk_types_chk_floating
+            ]]
 
     def on_pvtk_type_bound_change(state):
         """ 'Bound' type selection handler """
@@ -2022,15 +1930,12 @@ def on_partvtk():
 def floatinginfo_export(export_parameters):
     """ FloatingInfo tool export. """
     guiutils.widget_state_config(widget_state_elements, "export start")
-    widget_state_elements['post_proc_floatinginfo_button'].setText(
-        "Exporting...")
+    widget_state_elements['post_proc_floatinginfo_button'].setText("Exporting...")
 
     # Find total export parts
-    partfiles = glob.glob(data['project_path'] + '/' +
-                          data['project_name'] + "_out/" + "Part_*.bi4")
+    partfiles = glob.glob(data['project_path'] + '/' + data['project_name'] + "_out/" + "Part_*.bi4")
     for filename in partfiles:
-        temp_data['total_export_parts'] = max(int(filename.split(
-            "Part_")[1].split(".bi4")[0]), temp_data['total_export_parts'])
+        temp_data['total_export_parts'] = max(int(filename.split("Part_")[1].split(".bi4")[0]), temp_data['total_export_parts'])
     export_progbar_bar.setRange(0, temp_data['total_export_parts'])
     export_progbar_bar.setValue(0)
 
@@ -2040,28 +1945,26 @@ def floatinginfo_export(export_parameters):
         utils.log(__("Stopping export"))
         if temp_data['current_export_process'] is not None:
             temp_data['current_export_process'].kill()
-            widget_state_elements['post_proc_floatinginfo_button'].setText(
-                __("FloatingInfo"))
+            widget_state_elements['post_proc_floatinginfo_button'].setText(__("FloatingInfo"))
         guiutils.widget_state_config(widget_state_elements, "export cancel")
         export_dialog.hide()
 
     export_button_cancel.clicked.connect(on_cancel)
 
     def on_export_finished(exit_code):
-        widget_state_elements['post_proc_floatinginfo_button'].setText(
-            __("FloatingInfo"))
+        widget_state_elements['post_proc_floatinginfo_button'].setText(__("FloatingInfo"))
         guiutils.widget_state_config(widget_state_elements, "export finished")
         export_dialog.hide()
         if exit_code == 0:
             # Exported correctly
             temp_data['current_info_dialog'] = dsphwidgets.InfoDialog(
-                info_text=__(
-                    "FloatingInfo finished successfully"),
+                info_text=__("FloatingInfo finished successfully"),
                 detailed_text=temp_data['current_output'])
         else:
             guiutils.error_dialog(
                 __("There was an error on the post-processing. Press the details button to see the error"),
-                detailed_text=temp_data['current_output'])
+                detailed_text=temp_data['current_output']
+            )
 
     temp_data['current_output'] = ""
     export_process = QtCore.QProcess(dsph_main_dock)
@@ -2082,19 +1985,16 @@ def floatinginfo_export(export_parameters):
 
     def on_stdout_ready():
         # update progress bar
-        current_output = str(
-            temp_data['current_export_process'].readAllStandardOutput())
+        current_output = str(temp_data['current_export_process'].readAllStandardOutput())
         temp_data['current_output'] += current_output
         try:
             current_part = current_output.split("Part_")[1].split("  ")[0]
         except IndexError:
             current_part = export_progbar_bar.value()
         export_progbar_bar.setValue(int(current_part))
-        export_dialog.setWindowTitle(
-            __("Exporting: ") + str(current_part) + "/" + str(temp_data['total_export_parts']))
+        export_dialog.setWindowTitle(__("Exporting: ") + str(current_part) + "/" + str(temp_data['total_export_parts']))
 
-    temp_data['current_export_process'].readyReadStandardOutput.connect(
-        on_stdout_ready)
+    temp_data['current_export_process'].readyReadStandardOutput.connect(on_stdout_ready)
 
 
 def on_floatinginfo():
@@ -2123,13 +2023,10 @@ def on_floatinginfo():
     finfo_filename_layout.addWidget(finfo_filename_label)
     finfo_filename_layout.addWidget(finfo_filename_text)
 
-    finfo_additional_parameters_label = QtGui.QLabel(
-        __("Additional Parameters"))
+    finfo_additional_parameters_label = QtGui.QLabel(__("Additional Parameters"))
     finfo_additional_parameters_text = QtGui.QLineEdit()
-    finfo_additional_parameters_layout.addWidget(
-        finfo_additional_parameters_label)
-    finfo_additional_parameters_layout.addWidget(
-        finfo_additional_parameters_text)
+    finfo_additional_parameters_layout.addWidget(finfo_additional_parameters_label)
+    finfo_additional_parameters_layout.addWidget(finfo_additional_parameters_text)
 
     finfo_export_button = QtGui.QPushButton(__("Export"))
     finfo_cancel_button = QtGui.QPushButton(__("Cancel"))
@@ -2153,8 +2050,7 @@ def on_floatinginfo():
         export_parameters = dict()
         export_parameters['onlyprocess'] = finfo_onlyprocess_text.text()
         export_parameters['filename'] = finfo_filename_text.text()
-        export_parameters['additional_parameters'] = finfo_additional_parameters_text.text(
-        )
+        export_parameters['additional_parameters'] = finfo_additional_parameters_text.text()
         floatinginfo_export(export_parameters)
         floatinfo_tool_dialog.accept()
 
@@ -2167,15 +2063,12 @@ def on_floatinginfo():
 def computeforces_export(export_parameters):
     """ ComputeForces tool export. """
     guiutils.widget_state_config(widget_state_elements, "export start")
-    widget_state_elements['post_proc_computeforces_button'].setText(
-        "Exporting...")
+    widget_state_elements['post_proc_computeforces_button'].setText("Exporting...")
 
     # Find total export parts
-    partfiles = glob.glob(data['project_path'] + '/' +
-                          data['project_name'] + "_out/" + "Part_*.bi4")
+    partfiles = glob.glob(data['project_path'] + '/' + data['project_name'] + "_out/" + "Part_*.bi4")
     for filename in partfiles:
-        temp_data['total_export_parts'] = max(int(filename.split(
-            "Part_")[1].split(".bi4")[0]), temp_data['total_export_parts'])
+        temp_data['total_export_parts'] = max(int(filename.split("Part_")[1].split(".bi4")[0]), temp_data['total_export_parts'])
     export_progbar_bar.setRange(0, temp_data['total_export_parts'])
     export_progbar_bar.setValue(0)
 
@@ -2185,28 +2078,27 @@ def computeforces_export(export_parameters):
         utils.log(__("Stopping export"))
         if temp_data['current_export_process'] is not None:
             temp_data['current_export_process'].kill()
-            widget_state_elements['post_proc_computeforces_button'].setText(
-                __("ComputeForces"))
+            widget_state_elements['post_proc_computeforces_button'].setText(__("ComputeForces"))
         guiutils.widget_state_config(widget_state_elements, "export cancel")
         export_dialog.hide()
 
     export_button_cancel.clicked.connect(on_cancel)
 
     def on_export_finished(exit_code):
-        widget_state_elements['post_proc_computeforces_button'].setText(
-            __("ComputeForces"))
+        widget_state_elements['post_proc_computeforces_button'].setText(__("ComputeForces"))
         guiutils.widget_state_config(widget_state_elements, "export finished")
         export_dialog.hide()
         if exit_code == 0:
             # Exported correctly
             temp_data['current_info_dialog'] = dsphwidgets.InfoDialog(
-                info_text=__(
-                    "ComputeForces finished successfully."),
-                detailed_text=temp_data['current_output'])
+                info_text=__("ComputeForces finished successfully."),
+                detailed_text=temp_data['current_output']
+            )
         else:
             guiutils.error_dialog(
                 __("There was an error on the post-processing. Press the details button to see the error"),
-                detailed_text=temp_data['current_output'])
+                detailed_text=temp_data['current_output']
+            )
 
     temp_data['current_output'] = ""
     export_process = QtCore.QProcess(dsph_main_dock)
@@ -2237,16 +2129,14 @@ def computeforces_export(export_parameters):
 
     def on_stdout_ready():
         # update progress bar
-        current_output = str(
-            temp_data['current_export_process'].readAllStandardOutput())
+        current_output = str(temp_data['current_export_process'].readAllStandardOutput())
         temp_data['current_output'] += current_output
         try:
             current_part = current_output.split("Part_")[1].split(".bi4")[0]
         except IndexError:
             current_part = export_progbar_bar.value()
         export_progbar_bar.setValue(int(current_part))
-        export_dialog.setWindowTitle(
-            __("Exporting: ") + str(current_part) + "/" + str(temp_data['total_export_parts']))
+        export_dialog.setWindowTitle(__("Exporting: ") + str(current_part) + "/" + str(temp_data['total_export_parts']))
 
     temp_data['current_export_process'].readyReadStandardOutput.connect(
         on_stdout_ready)
@@ -2290,13 +2180,10 @@ def on_computeforces():
     cfces_filename_layout.addWidget(cfces_filename_label)
     cfces_filename_layout.addWidget(cfces_filename_text)
 
-    cfces_additional_parameters_label = QtGui.QLabel(
-        __("Additional Parameters"))
+    cfces_additional_parameters_label = QtGui.QLabel(__("Additional Parameters"))
     cfces_additional_parameters_text = QtGui.QLineEdit()
-    cfces_additional_parameters_layout.addWidget(
-        cfces_additional_parameters_label)
-    cfces_additional_parameters_layout.addWidget(
-        cfces_additional_parameters_text)
+    cfces_additional_parameters_layout.addWidget(cfces_additional_parameters_label)
+    cfces_additional_parameters_layout.addWidget(cfces_additional_parameters_text)
 
     cfces_export_button = QtGui.QPushButton(__("Export"))
     cfces_cancel_button = QtGui.QPushButton(__("Cancel"))
@@ -2330,8 +2217,7 @@ def on_computeforces():
 
         export_parameters['onlyprocess'] = cfces_onlyprocess_text.text()
         export_parameters['filename'] = cfces_filename_text.text()
-        export_parameters['additional_parameters'] = cfces_additional_parameters_text.text(
-        )
+        export_parameters['additional_parameters'] = cfces_additional_parameters_text.text()
         computeforces_export(export_parameters)
         compforces_tool_dialog.accept()
 
@@ -2355,15 +2241,12 @@ def on_computeforces():
 def measuretool_export(export_parameters):
     """ MeasureTool tool export. """
     guiutils.widget_state_config(widget_state_elements, "export start")
-    widget_state_elements['post_proc_measuretool_button'].setText(
-        "Exporting...")
+    widget_state_elements['post_proc_measuretool_button'].setText("Exporting...")
 
     # Find total export parts
-    partfiles = glob.glob(data['project_path'] + '/' +
-                          data['project_name'] + "_out/" + "Part_*.bi4")
+    partfiles = glob.glob(data['project_path'] + '/' + data['project_name'] + "_out/" + "Part_*.bi4")
     for filename in partfiles:
-        temp_data['total_export_parts'] = max(int(filename.split(
-            "Part_")[1].split(".bi4")[0]), temp_data['total_export_parts'])
+        temp_data['total_export_parts'] = max(int(filename.split("Part_")[1].split(".bi4")[0]), temp_data['total_export_parts'])
     export_progbar_bar.setRange(0, temp_data['total_export_parts'])
     export_progbar_bar.setValue(0)
 
@@ -2373,28 +2256,27 @@ def measuretool_export(export_parameters):
         utils.log(__("Stopping export"))
         if temp_data['current_export_process'] is not None:
             temp_data['current_export_process'].kill()
-            widget_state_elements['post_proc_measuretool_button'].setText(
-                __("MeasureTool"))
+            widget_state_elements['post_proc_measuretool_button'].setText(__("MeasureTool"))
         guiutils.widget_state_config(widget_state_elements, "export cancel")
         export_dialog.hide()
 
     export_button_cancel.clicked.connect(on_cancel)
 
     def on_export_finished(exit_code):
-        widget_state_elements['post_proc_measuretool_button'].setText(
-            __("MeasureTool"))
+        widget_state_elements['post_proc_measuretool_button'].setText(__("MeasureTool"))
         guiutils.widget_state_config(widget_state_elements, "export finished")
         export_dialog.hide()
         if exit_code == 0:
             # Exported correctly
             temp_data['current_info_dialog'] = dsphwidgets.InfoDialog(
-                info_text=__(
-                    "MeasureTool finished successfully."),
-                detailed_text=temp_data['current_output'])
+                info_text=__("MeasureTool finished successfully."),
+                detailed_text=temp_data['current_output']
+            )
         else:
             guiutils.error_dialog(
                 __("There was an error on the post-processing. Press the details button to see the error"),
-                detailed_text=temp_data['current_output'])
+                detailed_text=temp_data['current_output']
+            )
 
     temp_data['current_output'] = ""
     export_process = QtCore.QProcess(dsph_main_dock)
@@ -2441,19 +2323,16 @@ def measuretool_export(export_parameters):
 
     def on_stdout_ready():
         # update progress bar
-        current_output = str(
-            temp_data['current_export_process'].readAllStandardOutput())
+        current_output = str(temp_data['current_export_process'].readAllStandardOutput())
         temp_data['current_output'] += current_output
         try:
             current_part = current_output.split("/Part_")[1].split(".bi4")[0]
         except IndexError:
             current_part = export_progbar_bar.value()
         export_progbar_bar.setValue(int(current_part))
-        export_dialog.setWindowTitle(
-            __("Exporting: ") + str(current_part) + "/" + str(temp_data['total_export_parts']))
+        export_dialog.setWindowTitle(__("Exporting: ") + str(current_part) + "/" + str(temp_data['total_export_parts']))
 
-    temp_data['current_export_process'].readyReadStandardOutput.connect(
-        on_stdout_ready)
+    temp_data['current_export_process'].readyReadStandardOutput.connect(on_stdout_ready)
 
 
 def on_measuretool():
@@ -2491,18 +2370,21 @@ def on_measuretool():
     mtool_types_chk_ace = QtGui.QCheckBox(__("Acceleration"))
     mtool_types_chk_vor = QtGui.QCheckBox(__("Vorticity"))
     mtool_types_chk_kcorr = QtGui.QCheckBox(__("KCorr"))
-    [
-        mtool_types_groupbox_layout.addWidget(x)
-        for x in [
-        mtool_types_chk_all, mtool_types_chk_vel, mtool_types_chk_rhop, mtool_types_chk_press, mtool_types_chk_mass,
+    [mtool_types_groupbox_layout.addWidget(x) for x in [
+        mtool_types_chk_all,
+        mtool_types_chk_vel,
+        mtool_types_chk_rhop,
+        mtool_types_chk_press,
+        mtool_types_chk_mass,
         mtool_types_chk_vol,
-        mtool_types_chk_idp, mtool_types_chk_ace, mtool_types_chk_vor, mtool_types_chk_kcorr
-    ]
-    ]
+        mtool_types_chk_idp,
+        mtool_types_chk_ace,
+        mtool_types_chk_vor,
+        mtool_types_chk_kcorr
+    ]]
     mtool_types_groupbox.setLayout(mtool_types_groupbox_layout)
 
-    mtool_calculate_elevation = QtGui.QCheckBox(
-        __("Calculate water elevation"))
+    mtool_calculate_elevation = QtGui.QCheckBox(__("Calculate water elevation"))
 
     mtool_set_points_layout = QtGui.QHBoxLayout()
     mtool_set_points = QtGui.QPushButton("List of points")
@@ -2571,8 +2453,7 @@ def on_measuretool():
         if export_parameters['save_vars'] == '-all':
             export_parameters['save_vars'] = '+all'
 
-        export_parameters['calculate_water_elevation'] = mtool_calculate_elevation.isChecked(
-        )
+        export_parameters['calculate_water_elevation'] = mtool_calculate_elevation.isChecked()
 
         if len(mtool_file_name_text.text()) > 0:
             export_parameters['filename'] = mtool_file_name_text.text()
@@ -2580,8 +2461,7 @@ def on_measuretool():
             export_parameters['filename'] = 'MeasurePart'
 
         if len(mtool_parameters_text.text()) > 0:
-            export_parameters['additional_parameters'] = mtool_parameters_text.text(
-            )
+            export_parameters['additional_parameters'] = mtool_parameters_text.text()
         else:
             export_parameters['additional_parameters'] = ''
 
@@ -2591,14 +2471,17 @@ def on_measuretool():
     def on_mtool_measure_all_change(state):
         """ 'All' checkbox behaviour"""
         if state == QtCore.Qt.Checked:
-            [
-                chk.setCheckState(QtCore.Qt.Unchecked)
-                for chk in [
-                mtool_types_chk_vel, mtool_types_chk_rhop, mtool_types_chk_press, mtool_types_chk_mass,
-                mtool_types_chk_vol, mtool_types_chk_idp,
-                mtool_types_chk_ace, mtool_types_chk_vor, mtool_types_chk_kcorr
-            ]
-            ]
+            [chk.setCheckState(QtCore.Qt.Unchecked) for chk in [
+                mtool_types_chk_vel,
+                mtool_types_chk_rhop,
+                mtool_types_chk_press,
+                mtool_types_chk_mass,
+                mtool_types_chk_vol,
+                mtool_types_chk_idp,
+                mtool_types_chk_ace,
+                mtool_types_chk_vor,
+                mtool_types_chk_kcorr
+            ]]
 
     def on_mtool_measure_single_change(state):
         """ Behaviour for all checkboxes except 'All' """
@@ -2672,9 +2555,20 @@ def on_measuretool():
         mgrid_table.setRowCount(100)
         mgrid_table.setColumnCount(12)
         mgrid_table.verticalHeader().setVisible(False)
-        mgrid_table.setHorizontalHeaderLabels(
-            ["BeginX", "BeginY", "BeginZ", "StepX", "StepY", "StepZ", "CountX", "CountY", "CountZ", "FinalX", "FinalY",
-             "FinalZ"])
+        mgrid_table.setHorizontalHeaderLabels([
+            "BeginX",
+            "BeginY",
+            "BeginZ",
+            "StepX",
+            "StepY",
+            "StepZ",
+            "CountX",
+            "CountY",
+            "CountZ",
+            "FinalX",
+            "FinalY",
+            "FinalZ"
+        ])
 
         for i, grid in enumerate(temp_data['measuretool_grid']):
             for j in range(0, mgrid_table.columnCount() - 3):
@@ -2684,12 +2578,9 @@ def on_measuretool():
             mgrid_table.setItem(mgrid_row, 9, QtGui.QTableWidgetItem(""))
             mgrid_table.setItem(mgrid_row, 10, QtGui.QTableWidgetItem(""))
             mgrid_table.setItem(mgrid_row, 11, QtGui.QTableWidgetItem(""))
-            mgrid_table.item(mgrid_row, 9).setFlags(
-                QtCore.Qt.ItemIsSelectable | QtCore.Qt.ItemIsEnabled)
-            mgrid_table.item(mgrid_row, 10).setFlags(
-                QtCore.Qt.ItemIsSelectable | QtCore.Qt.ItemIsEnabled)
-            mgrid_table.item(mgrid_row, 11).setFlags(
-                QtCore.Qt.ItemIsSelectable | QtCore.Qt.ItemIsEnabled)
+            mgrid_table.item(mgrid_row, 9).setFlags(QtCore.Qt.ItemIsSelectable | QtCore.Qt.ItemIsEnabled)
+            mgrid_table.item(mgrid_row, 10).setFlags(QtCore.Qt.ItemIsSelectable | QtCore.Qt.ItemIsEnabled)
+            mgrid_table.item(mgrid_row, 11).setFlags(QtCore.Qt.ItemIsSelectable | QtCore.Qt.ItemIsEnabled)
 
         def on_mgrid_change(row, column):
             """ Defines what happens when a field changes on the table"""
@@ -2821,15 +2712,12 @@ def isosurface_export(export_parameters):
     """ Export IsoSurface button behaviour.
     Launches a process while disabling the button. """
     guiutils.widget_state_config(widget_state_elements, "export start")
-    widget_state_elements['post_proc_isosurface_button'].setText(
-        "Exporting...")
+    widget_state_elements['post_proc_isosurface_button'].setText("Exporting...")
 
     # Find total export parts and adjust progress bar
-    partfiles = glob.glob(data['project_path'] + '/' +
-                          data['project_name'] + "_out/" + "Part_*.bi4")
+    partfiles = glob.glob(data['project_path'] + '/' + data['project_name'] + "_out/" + "Part_*.bi4")
     for filename in partfiles:
-        temp_data['total_export_parts'] = max(int(filename.split(
-            "Part_")[1].split(".bi4")[0]), temp_data['total_export_parts'])
+        temp_data['total_export_parts'] = max(int(filename.split("Part_")[1].split(".bi4")[0]), temp_data['total_export_parts'])
     export_progbar_bar.setRange(0, temp_data['total_export_parts'])
     export_progbar_bar.setValue(0)
 
@@ -2840,8 +2728,7 @@ def isosurface_export(export_parameters):
         utils.log(__("Stopping export"))
         if temp_data['current_export_process'] is not None:
             temp_data['current_export_process'].kill()
-            widget_state_elements['post_proc_isosurface_button'].setText(
-                __("IsoSurface"))
+            widget_state_elements['post_proc_isosurface_button'].setText(__("IsoSurface"))
         guiutils.widget_state_config(widget_state_elements, "export cancel")
         export_dialog.hide()
 
@@ -2849,8 +2736,7 @@ def isosurface_export(export_parameters):
 
     # IsoSurface export finish handler
     def on_export_finished(exit_code):
-        widget_state_elements['post_proc_isosurface_button'].setText(
-            __("IsoSurface"))
+        widget_state_elements['post_proc_isosurface_button'].setText(__("IsoSurface"))
         guiutils.widget_state_config(widget_state_elements, "export finished")
 
         export_dialog.hide()
@@ -2858,21 +2744,20 @@ def isosurface_export(export_parameters):
         if exit_code == 0:
             # Exported correctly
             temp_data['current_info_dialog'] = dsphwidgets.InfoDialog(
-                info_text=__(
-                    "IsoSurface finished successfully."),
+                info_text=__("IsoSurface finished successfully."),
                 detailed_text=temp_data['current_output'])
         else:
             guiutils.error_dialog(
-                __("There was an error on the post-processing."), detailed_text=temp_data['current_output'])
+                __("There was an error on the post-processing."),
+                detailed_text=temp_data['current_output']
+            )
 
         # Bit of code that tries to open ParaView if the option was selected.
         if export_parameters['open_paraview']:
             subprocess.Popen(
-                [
-                    data['paraview_path'],
-                    "--data={}\\{}_..{}".format(data['project_path'] + '\\' + data['project_name'] + '_out',
-                                                export_parameters['file_name'], "vtk")
-                ],
+                [data['paraview_path'], "--data={}\\{}_..{}".format(
+                    data['project_path'] + '\\' + data['project_name'] + '_out',
+                    export_parameters['file_name'], "vtk")],
                 stdout=subprocess.PIPE)
 
     temp_data['current_output'] = ""
@@ -2895,21 +2780,17 @@ def isosurface_export(export_parameters):
     # Information ready handler.
     def on_stdout_ready():
         # Update progress bar
-        current_output = str(
-            temp_data['current_export_process'].readAllStandardOutput())
+        current_output = str(temp_data['current_export_process'].readAllStandardOutput())
         temp_data['current_output'] += current_output
         try:
-            current_part = current_output.split(
-                "{}_".format(export_parameters['file_name']))[1]
+            current_part = current_output.split("{}_".format(export_parameters['file_name']))[1]
             current_part = int(current_part.split(".vtk")[0])
         except IndexError:
             current_part = export_progbar_bar.value()
         export_progbar_bar.setValue(current_part)
-        export_dialog.setWindowTitle(
-            __("Exporting: ") + str(current_part) + "/" + str(temp_data['total_export_parts']))
+        export_dialog.setWindowTitle(__("Exporting: ") + str(current_part) + "/" + str(temp_data['total_export_parts']))
 
-    temp_data['current_export_process'].readyReadStandardOutput.connect(
-        on_stdout_ready)
+    temp_data['current_export_process'].readyReadStandardOutput.connect(on_stdout_ready)
 
 
 def on_isosurface():
@@ -2979,8 +2860,7 @@ def on_isosurface():
             export_parameters['file_name'] = 'IsoFile'
 
         if len(isosfc_parameters_text.text()) > 0:
-            export_parameters['additional_parameters'] = isosfc_parameters_text.text(
-            )
+            export_parameters['additional_parameters'] = isosfc_parameters_text.text()
         else:
             export_parameters['additional_parameters'] = ''
 
@@ -2998,15 +2878,12 @@ def flowtool_export(export_parameters):
     """ Export FlowTool button behaviour.
     Launches a process while disabling the button. """
     guiutils.widget_state_config(widget_state_elements, "export start")
-    widget_state_elements['post_proc_flowtool_button'].setText(
-        "Exporting...")
+    widget_state_elements['post_proc_flowtool_button'].setText("Exporting...")
 
     # Find total export parts and adjust progress bar
-    partfiles = glob.glob(data['project_path'] + '/' +
-                          data['project_name'] + "_out/" + "Part_*.bi4")
+    partfiles = glob.glob(data['project_path'] + '/' + data['project_name'] + "_out/" + "Part_*.bi4")
     for filename in partfiles:
-        temp_data['total_export_parts'] = max(int(filename.split(
-            "Part_")[1].split(".bi4")[0]), temp_data['total_export_parts'])
+        temp_data['total_export_parts'] = max(int(filename.split("Part_")[1].split(".bi4")[0]), temp_data['total_export_parts'])
     export_progbar_bar.setRange(0, temp_data['total_export_parts'])
     export_progbar_bar.setValue(0)
 
@@ -3017,8 +2894,7 @@ def flowtool_export(export_parameters):
         utils.log(__("Stopping export"))
         if temp_data['current_export_process'] is not None:
             temp_data['current_export_process'].kill()
-            widget_state_elements['post_proc_flowtool_button'].setText(
-                __("FlowTool"))
+            widget_state_elements['post_proc_flowtool_button'].setText(__("FlowTool"))
         guiutils.widget_state_config(widget_state_elements, "export cancel")
         export_dialog.hide()
 
@@ -3026,21 +2902,20 @@ def flowtool_export(export_parameters):
 
     # FlowTool export finish handler
     def on_export_finished(exit_code):
-        widget_state_elements['post_proc_flowtool_button'].setText(
-            __("FlowTool"))
+        widget_state_elements['post_proc_flowtool_button'].setText(__("FlowTool"))
         guiutils.widget_state_config(widget_state_elements, "export finished")
-
         export_dialog.hide()
 
         if exit_code == 0:
             # Exported correctly
             temp_data['current_info_dialog'] = dsphwidgets.InfoDialog(
-                info_text=__(
-                    "FlowTool finished successfully."),
+                info_text=__("FlowTool finished successfully."),
                 detailed_text=temp_data['current_output'])
         else:
             guiutils.error_dialog(
-                __("There was an error on the post-processing."), detailed_text=temp_data['current_output'])
+                __("There was an error on the post-processing."),
+                detailed_text=temp_data['current_output']
+            )
 
     temp_data['current_output'] = ""
     export_process = QtCore.QProcess(dsph_main_dock)
@@ -3065,21 +2940,17 @@ def flowtool_export(export_parameters):
     # Information ready handler.
     def on_stdout_ready():
         # Update progress bar
-        current_output = str(
-            temp_data['current_export_process'].readAllStandardOutput())
+        current_output = str(temp_data['current_export_process'].readAllStandardOutput())
         temp_data['current_output'] += current_output
         try:
-            current_part = current_output.split(
-                "{}_".format(export_parameters['vtk_name']))[1]
+            current_part = current_output.split("{}_".format(export_parameters['vtk_name']))[1]
             current_part = int(current_part.split(".vtk")[0])
         except IndexError:
             current_part = export_progbar_bar.value()
         export_progbar_bar.setValue(current_part)
-        export_dialog.setWindowTitle(
-            __("Exporting: ") + str(current_part) + "/" + str(temp_data['total_export_parts']))
+        export_dialog.setWindowTitle(__("Exporting: ") + str(current_part) + "/" + str(temp_data['total_export_parts']))
 
-    temp_data['current_export_process'].readyReadStandardOutput.connect(
-        on_stdout_ready)
+    temp_data['current_export_process'].readyReadStandardOutput.connect(on_stdout_ready)
 
 
 def on_flowtool():
@@ -3165,14 +3036,14 @@ def on_flowtool():
         box_edit_name_layout.addWidget(box_edit_name_label)
         box_edit_name_layout.addWidget(box_edit_name_input)
 
-        box_edit_description = QtGui.QLabel(__(
-            "Using multiple boxes with the same name will produce only one volume to measure.\nUse that to create prisms and complex forms. All points are specified in meters."))
+        box_edit_description = QtGui.QLabel(__("Using multiple boxes with the same name will produce only one volume to measure.\n"
+                                               "Use that to create prisms and complex forms. "
+                                               "All points are specified in meters."))
         box_edit_description.setAlignment(QtCore.Qt.AlignCenter)
 
         # Reference image
         box_edit_image = QtGui.QLabel()
-        box_edit_image.setPixmap(guiutils.get_icon(
-            "flowtool_template.jpg", return_only_path=True))
+        box_edit_image.setPixmap(guiutils.get_icon("flowtool_template.jpg", return_only_path=True))
         box_edit_image.setAlignment(QtCore.Qt.AlignCenter)
 
         # Point coords inputs
@@ -3360,18 +3231,18 @@ def on_flowtool():
 
     def on_fltool_addbox():
         """ Adds a box to the data structure."""
-        data['flowtool_boxes'].append(
-            [
-                str(uuid.uuid4()),
-                'BOX',
-                [0.0, 0.0, 0.0],
-                [0.0, 0.0, 0.0],
-                [0.0, 0.0, 0.0],
-                [0.0, 0.0, 0.0],
-                [0.0, 0.0, 0.0],
-                [0.0, 0.0, 0.0],
-                [0.0, 0.0, 0.0],
-                [0.0, 0.0, 0.0]])
+        data['flowtool_boxes'].append([
+            str(uuid.uuid4()),
+            'BOX',
+            [0.0, 0.0, 0.0],
+            [0.0, 0.0, 0.0],
+            [0.0, 0.0, 0.0],
+            [0.0, 0.0, 0.0],
+            [0.0, 0.0, 0.0],
+            [0.0, 0.0, 0.0],
+            [0.0, 0.0, 0.0],
+            [0.0, 0.0, 0.0]
+        ])
         refresh_boxlist()
 
     def on_fltool_cancel():
@@ -3393,13 +3264,11 @@ def on_flowtool():
             export_parameters['vtk_name'] = 'Boxes'
 
         if len(fltool_parameters_text.text()) > 0:
-            export_parameters['additional_parameters'] = fltool_parameters_text.text(
-            )
+            export_parameters['additional_parameters'] = fltool_parameters_text.text()
         else:
             export_parameters['additional_parameters'] = ''
 
-        utils.create_flowtool_boxes(
-            data['project_path'] + '/' + 'fileboxes.txt', data['flowtool_boxes'])
+        utils.create_flowtool_boxes(data['project_path'] + '/' + 'fileboxes.txt', data['flowtool_boxes'])
 
         flowtool_export(export_parameters)
         flowtool_tool_dialog.accept()
@@ -3415,8 +3284,6 @@ def on_flowtool():
 def on_boundaryvtk():
     """ Opens a dialog with BoundaryVTK exporting options """
     # TODO: This should be implemented as a custom class like BoundaryVTKDialog(QtGui.QDialog)
-    boundaryvtk_tool_dialog = QtGui.QDialog()
-
     guiutils.warning_dialog("Not implemented yet")
     return
 
@@ -3552,25 +3419,22 @@ property_widget_layout = QtGui.QVBoxLayout()
 # Property table
 object_property_table = QtGui.QTableWidget(6, 2)
 object_property_table.setMinimumHeight(220)
-object_property_table.setHorizontalHeaderLabels(
-    [__("Property Name"), __("Value")])
+object_property_table.setHorizontalHeaderLabels([__("Property Name"), __("Value")])
 object_property_table.verticalHeader().setVisible(False)
 object_property_table.horizontalHeader().setResizeMode(QtGui.QHeaderView.Stretch)
 
 # Add an object to DSPH. Only appears when an object is not part of the simulation
 addtodsph_button = QtGui.QPushButton(__("Add to DSPH Simulation"))
-addtodsph_button.setToolTip(
-    __("Adds the current selection to\nthe case. Objects not included will not be exported."))
+addtodsph_button.setToolTip(__("Adds the current selection to\nthe case. Objects not included will not be exported."))
 
 # Same as above, this time with remove
 removefromdsph_button = QtGui.QPushButton(__("Remove from DSPH Simulation"))
-removefromdsph_button.setToolTip(
-    __("Removes the current selection from the case.\nObjects not included in the case will not be exported."))
+removefromdsph_button.setToolTip(__("Removes the current selection from the case.\n"
+                                    "Objects not included in the case will not be exported."))
 
 # Damping configuration button
 damping_config_button = QtGui.QPushButton(__("Damping configuration"))
-damping_config_button.setToolTip(
-    __("Opens the damping configuration for the selected object"))
+damping_config_button.setToolTip(__("Opens the damping configuration for the selected object"))
 
 property_widget_layout.addWidget(object_property_table)
 property_widget_layout.addWidget(addtodsph_button)
@@ -3588,10 +3452,10 @@ mkgroup_label.setToolTip(__("Establishes the object group."))
 objtype_label = QtGui.QLabel("   {}".format(__("Type of object")))
 objtype_label.setToolTip(__("Establishes the object type: Fluid or bound"))
 fillmode_label = QtGui.QLabel("   {}".format(__("Fill mode")))
-fillmode_label.setToolTip(
-    __("Sets fill mode.\nFull: generates internal volume and external mesh."
-       "\nSolid: generates only internal volume.\nFace: generates only external mesh."
-       "\nWire: generates only external mesh polygon edges."))
+fillmode_label.setToolTip(__("Sets fill mode.\nFull: generates internal volume and external mesh."
+                             "\nSolid: generates only internal volume."
+                             "\nFace: generates only external mesh."
+                             "\nWire: generates only external mesh polygon edges."))
 floatstate_label = QtGui.QLabel("   {}".format(__("Float state")))
 floatstate_label.setToolTip(__("Sets floating state for this object MK."))
 initials_label = QtGui.QLabel("   {}".format(__("Initials")))
@@ -3626,14 +3490,12 @@ def mkgroup_change(value):
 def objtype_change(index):
     """ Defines what happens when type of object is changed """
     selection = FreeCADGui.Selection.getSelection()[0]
-    selectiongui = FreeCADGui.getDocument(
-        "DSPH_Case").getObject(selection.Name)
+    selectiongui = FreeCADGui.getDocument("DSPH_Case").getObject(selection.Name)
 
     if objtype_prop.itemText(index).lower() == "bound":
         mkgroup_prop.setRange(0, 240)
         if data['simobjects'][selection.Name][1].lower() != "bound":
-            mkgroup_prop.setValue(
-                int(utils.get_first_mk_not_used("bound", data)))
+            mkgroup_prop.setValue(int(utils.get_first_mk_not_used("bound", data)))
         try:
             selectiongui.ShapeColor = (0.80, 0.80, 0.80)
             selectiongui.Transparency = 0
@@ -3642,13 +3504,13 @@ def objtype_change(index):
             pass
         floatstate_prop.setEnabled(True)
         initials_prop.setEnabled(False)
-        mkgroup_label.setText("&nbsp;&nbsp;&nbsp;" + __("MKBound") +
-                              " <a href='http://design.sphysics.org/wiki/doku.php?id=concepts'>?</a>")
+        mkgroup_label.setText(
+            "&nbsp;&nbsp;&nbsp;" + __("MKBound") + " <a href='http://design.sphysics.org/wiki/doku.php?id=concepts'>?</a>"
+        )
     elif objtype_prop.itemText(index).lower() == "fluid":
         mkgroup_prop.setRange(0, 10)
         if data['simobjects'][selection.Name][1].lower() != "fluid":
-            mkgroup_prop.setValue(
-                int(utils.get_first_mk_not_used("fluid", data)))
+            mkgroup_prop.setValue(int(utils.get_first_mk_not_used("fluid", data)))
         try:
             selectiongui.ShapeColor = (0.00, 0.45, 1.00)
             selectiongui.Transparency = 30
@@ -3657,15 +3519,15 @@ def objtype_change(index):
             pass
         # Remove floating properties if it is changed to fluid
         if str(data['simobjects'][selection.Name][0]) in data['floating_mks'].keys():
-            data['floating_mks'].pop(
-                str(data['simobjects'][selection.Name][0]), None)
+            data['floating_mks'].pop(str(data['simobjects'][selection.Name][0]), None)
         # Remove motion properties if it is changed to fluid
         if data['simobjects'][selection.Name][0] in data['motion_mks'].keys():
             data['motion_mks'].pop(data['simobjects'][selection.Name][0], None)
         floatstate_prop.setEnabled(False)
         initials_prop.setEnabled(True)
-        mkgroup_label.setText("&nbsp;&nbsp;&nbsp;" + __("MKFluid") +
-                              " <a href='http://design.sphysics.org/wiki/doku.php?id=concepts'>?</a>")
+        mkgroup_label.setText(
+            "&nbsp;&nbsp;&nbsp;" + __("MKFluid") + " <a href='http://design.sphysics.org/wiki/doku.php?id=concepts'>?</a>"
+        )
 
     data['simobjects'][selection.Name][1] = objtype_prop.itemText(index)
     on_tree_item_selection_change()
@@ -3674,8 +3536,7 @@ def objtype_change(index):
 def fillmode_change(index):
     """ Defines what happens when fill mode is changed """
     selection = FreeCADGui.Selection.getSelection()[0]
-    selectiongui = FreeCADGui.getDocument(
-        "DSPH_Case").getObject(selection.Name)
+    selectiongui = FreeCADGui.getDocument("DSPH_Case").getObject(selection.Name)
     data['simobjects'][selection.Name][2] = fillmode_prop.itemText(index)
 
     if fillmode_prop.itemText(index).lower() == "full":
@@ -3725,12 +3586,10 @@ def floatstate_change():
     floatings_window.setWindowTitle(__("Floating configuration"))
     ok_button = QtGui.QPushButton(__("Ok"))
     cancel_button = QtGui.QPushButton(__("Cancel"))
-    target_mk = int(data['simobjects']
-                    [FreeCADGui.Selection.getSelection()[0].Name][0])
+    target_mk = int(data['simobjects'][FreeCADGui.Selection.getSelection()[0].Name][0])
 
     def on_ok():
-        guiutils.info_dialog(
-            __("This will apply the floating properties to all objects with mkbound = ") + str(target_mk))
+        guiutils.info_dialog(__("This will apply the floating properties to all objects with mkbound = ") + str(target_mk))
         if is_floating_selector.currentIndex() == 1:
             # Floating false
             if str(target_mk) in data['floating_mks'].keys():
@@ -3747,20 +3606,29 @@ def floatstate_change():
             if floating_center_auto.isChecked():
                 fp.gravity_center = list()
             else:
-                fp.gravity_center = [float(floating_center_input_x.text()), float(
-                    floating_center_input_y.text()), float(floating_center_input_z.text())]
+                fp.gravity_center = [
+                    float(floating_center_input_x.text()),
+                    float(floating_center_input_y.text()),
+                    float(floating_center_input_z.text())
+                ]
 
             if floating_center_auto.isChecked():
                 fp.gravity_center = list()
             else:
-                fp.gravity_center = [float(floating_center_input_x.text()), float(
-                    floating_center_input_y.text()), float(floating_center_input_z.text())]
+                fp.gravity_center = [
+                    float(floating_center_input_x.text()),
+                    float(floating_center_input_y.text()),
+                    float(floating_center_input_z.text())
+                ]
 
             if floating_inertia_auto.isChecked():
                 fp.inertia = list()
             else:
-                fp.inertia = [float(floating_inertia_input_x.text()), float(
-                    floating_inertia_input_y.text()), float(floating_inertia_input_z.text())]
+                fp.inertia = [
+                    float(floating_inertia_input_x.text()),
+                    float(floating_inertia_input_y.text()),
+                    float(floating_inertia_input_z.text())
+                ]
 
             if floating_velini_auto.isChecked():
                 fp.initial_linear_velocity = list()
@@ -3844,13 +3712,11 @@ def floatstate_change():
 
     is_floating_layout = QtGui.QHBoxLayout()
     is_floating_label = QtGui.QLabel(__("Set floating: "))
-    is_floating_label.setToolTip(
-        __("Sets the current MKBound selected as floating."))
+    is_floating_label.setToolTip(__("Sets the current MKBound selected as floating."))
     is_floating_selector = QtGui.QComboBox()
     is_floating_selector.insertItems(0, ["True", "False"])
     is_floating_selector.currentIndexChanged.connect(on_floating_change)
-    is_floating_targetlabel = QtGui.QLabel(
-        __("Target MKBound: ") + str(target_mk))
+    is_floating_targetlabel = QtGui.QLabel(__("Target MKBound: ") + str(target_mk))
     is_floating_layout.addWidget(is_floating_label)
     is_floating_layout.addWidget(is_floating_selector)
     is_floating_layout.addStretch(1)
@@ -3860,13 +3726,10 @@ def floatstate_change():
     floating_props_layout = QtGui.QVBoxLayout()
     floating_props_massrhop_layout = QtGui.QHBoxLayout()
     floating_props_massrhop_label = QtGui.QLabel(__("Mass/Density: "))
-    floating_props_massrhop_label.setToolTip(
-        __("Selects an mass/density calculation method and its value."))
+    floating_props_massrhop_label.setToolTip(__("Selects an mass/density calculation method and its value."))
     floating_props_massrhop_selector = QtGui.QComboBox()
-    floating_props_massrhop_selector.insertItems(
-        0, ['massbody (kg)', 'rhopbody (kg/m^3)'])
-    floating_props_massrhop_selector.currentIndexChanged.connect(
-        on_massrhop_change)
+    floating_props_massrhop_selector.insertItems(0, ['massbody (kg)', 'rhopbody (kg/m^3)'])
+    floating_props_massrhop_selector.currentIndexChanged.connect(on_massrhop_change)
     floating_props_massrhop_input = QtGui.QLineEdit()
     floating_props_massrhop_layout.addWidget(floating_props_massrhop_label)
     floating_props_massrhop_layout.addWidget(floating_props_massrhop_selector)
@@ -3914,8 +3777,7 @@ def floatstate_change():
 
     floating_velini_layout = QtGui.QHBoxLayout()
     floating_velini_label = QtGui.QLabel(__("Initial linear velocity: "))
-    floating_velini_label.setToolTip(
-        __("Sets the MK group initial linear velocity"))
+    floating_velini_label.setToolTip(__("Sets the MK group initial linear velocity"))
     floating_velini_label_x = QtGui.QLabel("X")
     floating_velini_input_x = QtGui.QLineEdit()
     floating_velini_label_y = QtGui.QLabel("Y")
@@ -3935,8 +3797,7 @@ def floatstate_change():
 
     floating_omegaini_layout = QtGui.QHBoxLayout()
     floating_omegaini_label = QtGui.QLabel(__("Initial angular velocity: "))
-    floating_omegaini_label.setToolTip(
-        __("Sets the MK group initial angular velocity"))
+    floating_omegaini_label.setToolTip(__("Sets the MK group initial angular velocity"))
     floating_omegaini_label_x = QtGui.QLabel("X")
     floating_omegaini_input_x = QtGui.QLineEdit()
     floating_omegaini_label_y = QtGui.QLabel("Y")
@@ -3978,33 +3839,25 @@ def floatstate_change():
         is_floating_selector.setCurrentIndex(0)
         on_floating_change(0)
         floating_props_group.setEnabled(True)
-        floating_props_massrhop_selector.setCurrentIndex(
-            data['floating_mks'][str(target_mk)].mass_density_type)
-        floating_props_massrhop_input.setText(
-            str(data['floating_mks'][str(target_mk)].mass_density_value))
+        floating_props_massrhop_selector.setCurrentIndex(data['floating_mks'][str(target_mk)].mass_density_type)
+        floating_props_massrhop_input.setText(str(data['floating_mks'][str(target_mk)].mass_density_value))
         if len(data['floating_mks'][str(target_mk)].gravity_center) == 0:
             floating_center_input_x.setText("0")
             floating_center_input_y.setText("0")
             floating_center_input_z.setText("0")
         else:
-            floating_center_input_x.setText(
-                str(data['floating_mks'][str(target_mk)].gravity_center[0]))
-            floating_center_input_y.setText(
-                str(data['floating_mks'][str(target_mk)].gravity_center[1]))
-            floating_center_input_z.setText(
-                str(data['floating_mks'][str(target_mk)].gravity_center[2]))
+            floating_center_input_x.setText(str(data['floating_mks'][str(target_mk)].gravity_center[0]))
+            floating_center_input_y.setText(str(data['floating_mks'][str(target_mk)].gravity_center[1]))
+            floating_center_input_z.setText(str(data['floating_mks'][str(target_mk)].gravity_center[2]))
 
         if len(data['floating_mks'][str(target_mk)].inertia) == 0:
             floating_inertia_input_x.setText("0")
             floating_inertia_input_y.setText("0")
             floating_inertia_input_z.setText("0")
         else:
-            floating_inertia_input_x.setText(
-                str(data['floating_mks'][str(target_mk)].inertia[0]))
-            floating_inertia_input_y.setText(
-                str(data['floating_mks'][str(target_mk)].inertia[1]))
-            floating_inertia_input_z.setText(
-                str(data['floating_mks'][str(target_mk)].inertia[2]))
+            floating_inertia_input_x.setText(str(data['floating_mks'][str(target_mk)].inertia[0]))
+            floating_inertia_input_y.setText(str(data['floating_mks'][str(target_mk)].inertia[1]))
+            floating_inertia_input_z.setText(str(data['floating_mks'][str(target_mk)].inertia[2]))
 
         if len(data['floating_mks'][str(target_mk)].initial_linear_velocity) == 0:
             floating_velini_input_x.setText("0")
@@ -4013,10 +3866,8 @@ def floatstate_change():
         else:
             floating_velini_input_x.setText(
                 str(data['floating_mks'][str(target_mk)].initial_linear_velocity[0]))
-            floating_velini_input_y.setText(
-                str(data['floating_mks'][str(target_mk)].initial_linear_velocity[1]))
-            floating_velini_input_z.setText(
-                str(data['floating_mks'][str(target_mk)].initial_linear_velocity[2]))
+            floating_velini_input_y.setText(str(data['floating_mks'][str(target_mk)].initial_linear_velocity[1]))
+            floating_velini_input_z.setText(str(data['floating_mks'][str(target_mk)].initial_linear_velocity[2]))
 
         if len(data['floating_mks'][str(target_mk)].initial_angular_velocity) == 0:
             floating_omegaini_input_x.setText("0")
@@ -4025,20 +3876,21 @@ def floatstate_change():
         else:
             floating_omegaini_input_x.setText(
                 str(data['floating_mks'][str(target_mk)].initial_angular_velocity[0]))
-            floating_omegaini_input_y.setText(
-                str(data['floating_mks'][str(target_mk)].initial_angular_velocity[1]))
-            floating_omegaini_input_z.setText(
-                str(data['floating_mks'][str(target_mk)].initial_angular_velocity[2]))
+            floating_omegaini_input_y.setText(str(data['floating_mks'][str(target_mk)].initial_angular_velocity[1]))
+            floating_omegaini_input_z.setText(str(data['floating_mks'][str(target_mk)].initial_angular_velocity[2]))
 
-        floating_center_auto.setCheckState(QtCore.Qt.Checked if len(
-            data['floating_mks'][str(target_mk)].gravity_center) == 0 else QtCore.Qt.Unchecked)
-        floating_inertia_auto.setCheckState(QtCore.Qt.Checked if len(
-            data['floating_mks'][str(target_mk)].inertia) == 0 else QtCore.Qt.Unchecked)
-        floating_velini_auto.setCheckState(QtCore.Qt.Checked if len(data['floating_mks'][str(
-            target_mk)].initial_linear_velocity) == 0 else QtCore.Qt.Unchecked)
+        floating_center_auto.setCheckState(
+            QtCore.Qt.Checked if len(data['floating_mks'][str(target_mk)].gravity_center) == 0 else QtCore.Qt.Unchecked
+        )
+        floating_inertia_auto.setCheckState(
+            QtCore.Qt.Checked if len(data['floating_mks'][str(target_mk)].inertia) == 0 else QtCore.Qt.Unchecked
+        )
+        floating_velini_auto.setCheckState(
+            QtCore.Qt.Checked if len(data['floating_mks'][str(target_mk)].initial_linear_velocity) == 0 else QtCore.Qt.Unchecked
+        )
         floating_omegaini_auto.setCheckState(
-            QtCore.Qt.Checked if len(
-                data['floating_mks'][str(target_mk)].initial_angular_velocity) == 0 else QtCore.Qt.Unchecked)
+            QtCore.Qt.Checked if len(data['floating_mks'][str(target_mk)].initial_angular_velocity) == 0 else QtCore.Qt.Unchecked
+        )
     else:
         is_floating_selector.setCurrentIndex(1)
         on_floating_change(1)
@@ -4074,13 +3926,11 @@ def initials_change():
     initials_window.setWindowTitle(__("Initials configuration"))
     ok_button = QtGui.QPushButton(__("Ok"))
     cancel_button = QtGui.QPushButton(__("Cancel"))
-    target_mk = int(data['simobjects']
-                    [FreeCADGui.Selection.getSelection()[0].Name][0])
+    target_mk = int(data['simobjects'][FreeCADGui.Selection.getSelection()[0].Name][0])
 
     # Ok button handler
     def on_ok():
-        guiutils.info_dialog(
-            __("This will apply the initials properties to all objects with mkfluid = ") + str(target_mk))
+        guiutils.info_dialog(__("This will apply the initials properties to all objects with mkfluid = ") + str(target_mk))
         if has_initials_selector.currentIndex() == 1:
             # Initials false
             if str(target_mk) in data['initials_mks'].keys():
@@ -4089,9 +3939,12 @@ def initials_change():
             # Initials true
             # Structure: InitialsProperty Object
             data['initials_mks'][str(target_mk)] = InitialsProperty(
-                mk=target_mk, force=[float(initials_vector_input_x.text()),
-                                     float(initials_vector_input_y.text()),
-                                     float(initials_vector_input_z.text())])
+                mk=target_mk,
+                force=[
+                    float(initials_vector_input_x.text()),
+                    float(initials_vector_input_y.text()),
+                    float(initials_vector_input_z.text())
+                ])
         initials_window.accept()
 
     # Cancel button handler
@@ -4110,13 +3963,11 @@ def initials_change():
 
     has_initials_layout = QtGui.QHBoxLayout()
     has_initials_label = QtGui.QLabel(__("Set initials: "))
-    has_initials_label.setToolTip(
-        __("Sets the current initial movement vector."))
+    has_initials_label.setToolTip(__("Sets the current initial movement vector."))
     has_initials_selector = QtGui.QComboBox()
     has_initials_selector.insertItems(0, ['True', 'False'])
     has_initials_selector.currentIndexChanged.connect(on_initials_change)
-    has_initials_targetlabel = QtGui.QLabel(
-        __("Target MKFluid: ") + str(target_mk))
+    has_initials_targetlabel = QtGui.QLabel(__("Target MKFluid: ") + str(target_mk))
     has_initials_layout.addWidget(has_initials_label)
     has_initials_layout.addWidget(has_initials_selector)
     has_initials_layout.addStretch(1)
@@ -4162,12 +4013,9 @@ def initials_change():
         has_initials_selector.setCurrentIndex(0)
         on_initials_change(0)
         initials_props_group.setEnabled(True)
-        initials_vector_input_x.setText(
-            str(data['initials_mks'][str(target_mk)].force[0]))
-        initials_vector_input_y.setText(
-            str(data['initials_mks'][str(target_mk)].force[1]))
-        initials_vector_input_z.setText(
-            str(data['initials_mks'][str(target_mk)].force[2]))
+        initials_vector_input_x.setText(str(data['initials_mks'][str(target_mk)].force[0]))
+        initials_vector_input_y.setText(str(data['initials_mks'][str(target_mk)].force[1]))
+        initials_vector_input_z.setText(str(data['initials_mks'][str(target_mk)].force[2]))
     else:
         has_initials_selector.setCurrentIndex(1)
         on_initials_change(1)
@@ -4193,13 +4041,11 @@ def motion_change():
     cancel_button = QtGui.QPushButton(__("Cancel"))
     notice_label = QtGui.QLabel("")
     notice_label.setStyleSheet("QLabel { color : red; }")
-    target_mk = int(data['simobjects']
-                    [FreeCADGui.Selection.getSelection()[0].Name][0])
+    target_mk = int(data['simobjects'][FreeCADGui.Selection.getSelection()[0].Name][0])
     movements_selected = list(data["motion_mks"].get(target_mk, list()))
 
     def on_ok():
-        guiutils.info_dialog(
-            __("This will apply the motion properties to all objects with mkbound = ") + str(target_mk))
+        guiutils.info_dialog(__("This will apply the motion properties to all objects with mkbound = ") + str(target_mk))
         if has_motion_selector.currentIndex() == 0:
             # True has been selected
             # Reinstance the list and copy every movement selected to avoid referencing problems.
@@ -4227,8 +4073,7 @@ def motion_change():
             # Put a placeholder in the table
             timeline_list_table.clearContents()
             timeline_list_table.setRowCount(1)
-            timeline_list_table.setCellWidget(
-                0, 0, dsphwidgets.MovementTimelinePlaceholder())
+            timeline_list_table.setCellWidget(0, 0, dsphwidgets.MovementTimelinePlaceholder())
         else:
             movement_list_groupbox.setEnabled(False)
             timeline_groupbox.setEnabled(False)
@@ -4244,14 +4089,12 @@ def motion_change():
     has_motion_selector.insertItems(0, ["True", "False"])
     has_motion_selector.currentIndexChanged.connect(on_motion_change)
     has_motion_helplabel = QtGui.QLabel(
-        "<a href='http://design.sphysics.org/wiki/doku.php?id=featreference#configure_object_motion'>{}</a>".format(
-            __("Movement Help")))
+        "<a href='http://design.sphysics.org/wiki/doku.php?id=featreference#configure_object_motion'>{}</a>".format(__("Movement Help")))
     has_motion_helplabel.setTextFormat(QtCore.Qt.RichText)
     has_motion_helplabel.setTextInteractionFlags(
         QtCore.Qt.TextBrowserInteraction)
     has_motion_helplabel.setOpenExternalLinks(True)
-    has_motion_targetlabel = QtGui.QLabel(
-        __("Target MKBound: ") + str(target_mk))
+    has_motion_targetlabel = QtGui.QLabel(__("Target MKBound: ") + str(target_mk))
     has_motion_layout.addWidget(has_motion_label)
     has_motion_layout.addWidget(has_motion_selector)
     has_motion_layout.addStretch(1)
@@ -4267,12 +4110,10 @@ def motion_change():
     movement_list_table = QtGui.QTableWidget(1, 2)
     movement_list_table.setSelectionBehavior(
         QtGui.QAbstractItemView.SelectItems)
-    movement_list_table.setSelectionMode(
-        QtGui.QAbstractItemView.SingleSelection)
+    movement_list_table.setSelectionMode(QtGui.QAbstractItemView.SingleSelection)
     movement_list_table.horizontalHeader().setResizeMode(QtGui.QHeaderView.Stretch)
     movement_list_table.horizontalHeader().setResizeMode(0, QtGui.QHeaderView.Stretch)
-    movement_list_table.horizontalHeader().setResizeMode(
-        1, QtGui.QHeaderView.ResizeToContents)
+    movement_list_table.horizontalHeader().setResizeMode(1, QtGui.QHeaderView.ResizeToContents)
 
     movement_list_table.verticalHeader().setVisible(False)
     movement_list_table.horizontalHeader().setVisible(False)
@@ -4280,14 +4121,12 @@ def motion_change():
     movement_list_groupbox_layout.addWidget(movement_list_table)
     movement_list_groupbox.setLayout(movement_list_groupbox_layout)
 
-    timeline_groupbox = QtGui.QGroupBox(
-        __("Timeline for the selected movement"))
+    timeline_groupbox = QtGui.QGroupBox(__("Timeline for the selected movement"))
     timeline_groupbox_layout = QtGui.QVBoxLayout()
 
     timeline_list_table = QtGui.QTableWidget(0, 1)
     timeline_list_table.horizontalHeader().setResizeMode(QtGui.QHeaderView.Stretch)
-    timeline_list_table.verticalHeader().setResizeMode(
-        QtGui.QHeaderView.ResizeToContents)
+    timeline_list_table.verticalHeader().setResizeMode(QtGui.QHeaderView.ResizeToContents)
     timeline_list_table.verticalHeader().setVisible(False)
     timeline_list_table.horizontalHeader().setVisible(False)
     timeline_list_table.resizeRowsToContents()
@@ -4328,21 +4167,19 @@ def motion_change():
     def check_movement_compatibility(target_movement):
         # Wave generators are exclusive
         if isinstance(target_movement, SpecialMovement):
-            notice_label.setText(
-                "Notice: Wave generators and file movements are exclusive. All movements are disabled when using one.")
+            notice_label.setText("Notice: Wave generators and file movements are exclusive. "
+                                 "All movements are disabled when using one.")
             del movements_selected[:]
         elif isinstance(target_movement, Movement):
             for index, ms in enumerate(movements_selected):
                 if isinstance(ms, SpecialMovement):
                     movements_selected.pop(index)
-                    notice_label.setText(
-                        "Notice: Regular movements are not compatible with wave generators and file movements.")
+                    notice_label.setText("Notice: Regular movements are not compatible with wave generators and file movements.")
 
     # Movements table actions
     def on_check_movement(index, checked):
         """ Add or delete a movement from the temporal list of selected movements. """
-        notice_label.setText(
-            "")  # Reset the notice label if a valid change is made
+        notice_label.setText("")  # Reset the notice label if a valid change is made
         target_movement = data["global_movements"][index]
         if checked:
             check_movement_compatibility(target_movement)
@@ -4353,8 +4190,7 @@ def motion_change():
 
     def on_loop_movement(index, checked):
         """ Make a movement loop itself """
-        notice_label.setText(
-            "")  # Reset the notice label if a valid change is made
+        notice_label.setText("")  # Reset the notice label if a valid change is made
         data["global_movements"][index].set_loop(checked)
 
     def on_delete_movement(index):
@@ -4372,8 +4208,7 @@ def motion_change():
 
     def on_new_movement():
         """ Creates a movement on the project. """
-        notice_label.setText(
-            "")  # Reset the notice label if a valid change is made
+        notice_label.setText("")  # Reset the notice label if a valid change is made
         to_add = Movement(name="New Movement")
         data["global_movements"].append(to_add)
         movements_selected.append(to_add)
@@ -4383,29 +4218,22 @@ def motion_change():
 
     def on_new_wave_generator(action):
         """ Creates a movement on the project. """
-        notice_label.setText(
-            "")  # Reset the notice label if a valid change is made
+        notice_label.setText("")  # Reset the notice label if a valid change is made
         if __("Movement") in action.text():
             on_new_movement()
             return
         if __("Regular wave generator (Piston)") in action.text():
-            to_add = SpecialMovement(
-                generator=RegularPistonWaveGen(), name="Regular Wave Generator (Piston)")
+            to_add = SpecialMovement(generator=RegularPistonWaveGen(), name="Regular Wave Generator (Piston)")
         if __("Irregular wave generator (Piston)") in action.text():
-            to_add = SpecialMovement(
-                generator=IrregularPistonWaveGen(), name="Irregular Wave Generator (Piston)")
+            to_add = SpecialMovement(generator=IrregularPistonWaveGen(), name="Irregular Wave Generator (Piston)")
         if __("Regular wave generator (Flap)") in action.text():
-            to_add = SpecialMovement(
-                generator=RegularFlapWaveGen(), name="Regular Wave Generator (Flap)")
+            to_add = SpecialMovement(generator=RegularFlapWaveGen(), name="Regular Wave Generator (Flap)")
         if __("Irregular wave generator (Flap)") in action.text():
-            to_add = SpecialMovement(
-                generator=IrregularFlapWaveGen(), name="Irregular Wave Generator (Flap)")
+            to_add = SpecialMovement(generator=IrregularFlapWaveGen(), name="Irregular Wave Generator (Flap)")
         if __("Linear motion from a file") in action.text():
-            to_add = SpecialMovement(
-                generator=FileGen(), name="Linear motion from a file")
+            to_add = SpecialMovement(generator=FileGen(), name="Linear motion from a file")
         if __("Rotation from a file") in action.text():
-            to_add = SpecialMovement(
-                generator=RotationFileGen(), name="Rotation from a file")
+            to_add = SpecialMovement(generator=RotationFileGen(), name="Rotation from a file")
 
         to_add.generator.parent_movement = to_add
         data["global_movements"].append(to_add)
@@ -4424,8 +4252,7 @@ def motion_change():
 
     def on_timeline_item_change(index, motion_object):
         """ Changes the values of an item on the timeline. """
-        notice_label.setText(
-            "")  # Reset the notice label if a valid change is made
+        notice_label.setText("")  # Reset the notice label if a valid change is made
         if isinstance(motion_object, WaveGen):
             motion_object.parent_movement.set_wavegen(motion_object)
         else:
@@ -4433,29 +4260,23 @@ def motion_change():
 
     def on_timeline_item_delete(index, motion_object):
         """ Deletes an item from the timeline. """
-        notice_label.setText(
-            "")  # Reset the notice label if a valid change is made
+        notice_label.setText("")  # Reset the notice label if a valid change is made
         motion_object.parent_movement.motion_list.pop(index)
-        on_movement_selected(
-            movement_list_table.selectedIndexes()[0].row(), None)
+        on_movement_selected(movement_list_table.selectedIndexes()[0].row(), None)
 
     def on_timeline_item_order_up(index):
         # Reset the notice label if a valid change is made
         notice_label.setText("")
-        movement = data["global_movements"][movement_list_table.selectedIndexes()[
-            0].row()]
+        movement = data["global_movements"][movement_list_table.selectedIndexes()[0].row()]
         movement.motion_list.insert(index - 1, movement.motion_list.pop(index))
-        on_movement_selected(
-            movement_list_table.selectedIndexes()[0].row(), None)
+        on_movement_selected(movement_list_table.selectedIndexes()[0].row(), None)
 
     def on_timeline_item_order_down(index):
         # Reset the notice label if a valid change is made
         notice_label.setText("")
-        movement = data["global_movements"][movement_list_table.selectedIndexes()[
-            0].row()]
+        movement = data["global_movements"][movement_list_table.selectedIndexes()[0].row()]
         movement.motion_list.insert(index + 1, movement.motion_list.pop(index))
-        on_movement_selected(
-            movement_list_table.selectedIndexes()[0].row(), None)
+        on_movement_selected(movement_list_table.selectedIndexes()[0].row(), None)
 
     def on_movement_selected(row, _):
         """ Shows the timeline for the selected movement. """
@@ -4465,8 +4286,7 @@ def motion_change():
             timeline_list_table.clearContents()
             timeline_list_table.setEnabled(False)
             timeline_list_table.setRowCount(1)
-            timeline_list_table.setCellWidget(
-                0, 0, dsphwidgets.MovementTimelinePlaceholder())
+            timeline_list_table.setCellWidget(0, 0, dsphwidgets.MovementTimelinePlaceholder())
             return
         timeline_list_table.clearContents()
 
@@ -4481,32 +4301,23 @@ def motion_change():
             current_row = 0
             for motion in target_movement.motion_list:
                 if isinstance(motion, RectMotion):
-                    target_to_put = dsphwidgets.RectilinearMotionTimeline(
-                        current_row, motion)
+                    target_to_put = dsphwidgets.RectilinearMotionTimeline(current_row, motion)
                 elif isinstance(motion, WaitMotion):
-                    target_to_put = dsphwidgets.WaitMotionTimeline(
-                        current_row, motion)
+                    target_to_put = dsphwidgets.WaitMotionTimeline(current_row, motion)
                 elif isinstance(motion, AccRectMotion):
-                    target_to_put = dsphwidgets.AccRectilinearMotionTimeline(
-                        current_row, motion)
+                    target_to_put = dsphwidgets.AccRectilinearMotionTimeline(current_row, motion)
                 elif isinstance(motion, RotMotion):
-                    target_to_put = dsphwidgets.RotationalMotionTimeline(
-                        current_row, motion)
+                    target_to_put = dsphwidgets.RotationalMotionTimeline(current_row, motion)
                 elif isinstance(motion, AccRotMotion):
-                    target_to_put = dsphwidgets.AccRotationalMotionTimeline(
-                        current_row, motion)
+                    target_to_put = dsphwidgets.AccRotationalMotionTimeline(current_row, motion)
                 elif isinstance(motion, AccCirMotion):
-                    target_to_put = dsphwidgets.AccCircularMotionTimeline(
-                        current_row, motion)
+                    target_to_put = dsphwidgets.AccCircularMotionTimeline(current_row, motion)
                 elif isinstance(motion, RotSinuMotion):
-                    target_to_put = dsphwidgets.RotSinuMotionTimeline(
-                        current_row, motion)
+                    target_to_put = dsphwidgets.RotSinuMotionTimeline(current_row, motion)
                 elif isinstance(motion, CirSinuMotion):
-                    target_to_put = dsphwidgets.CirSinuMotionTimeline(
-                        current_row, motion)
+                    target_to_put = dsphwidgets.CirSinuMotionTimeline(current_row, motion)
                 elif isinstance(motion, RectSinuMotion):
-                    target_to_put = dsphwidgets.RectSinuMotionTimeline(
-                        current_row, motion)
+                    target_to_put = dsphwidgets.RectSinuMotionTimeline(current_row, motion)
                 else:
                     raise NotImplementedError("The type of movement: {} is not implemented.".format(
                         str(motion.__class__.__name__)))
@@ -4515,8 +4326,7 @@ def motion_change():
                 target_to_put.deleted.connect(on_timeline_item_delete)
                 target_to_put.order_up.connect(on_timeline_item_order_up)
                 target_to_put.order_down.connect(on_timeline_item_order_down)
-                timeline_list_table.setCellWidget(
-                    current_row, 0, target_to_put)
+                timeline_list_table.setCellWidget(current_row, 0, target_to_put)
 
                 if current_row is 0:
                     target_to_put.disable_order_up_button()
@@ -4530,23 +4340,17 @@ def motion_change():
             actions_groupbox_table.setEnabled(False)
 
             if isinstance(target_movement.generator, RegularPistonWaveGen):
-                target_to_put = dsphwidgets.RegularPistonWaveMotionTimeline(
-                    target_movement.generator)
+                target_to_put = dsphwidgets.RegularPistonWaveMotionTimeline(target_movement.generator)
             elif isinstance(target_movement.generator, IrregularPistonWaveGen):
-                target_to_put = dsphwidgets.IrregularPistonWaveMotionTimeline(
-                    target_movement.generator)
+                target_to_put = dsphwidgets.IrregularPistonWaveMotionTimeline(target_movement.generator)
             if isinstance(target_movement.generator, RegularFlapWaveGen):
-                target_to_put = dsphwidgets.RegularFlapWaveMotionTimeline(
-                    target_movement.generator)
+                target_to_put = dsphwidgets.RegularFlapWaveMotionTimeline(target_movement.generator)
             elif isinstance(target_movement.generator, IrregularFlapWaveGen):
-                target_to_put = dsphwidgets.IrregularFlapWaveMotionTimeline(
-                    target_movement.generator)
+                target_to_put = dsphwidgets.IrregularFlapWaveMotionTimeline(target_movement.generator)
             elif isinstance(target_movement.generator, FileGen):
-                target_to_put = dsphwidgets.FileMotionTimeline(
-                    target_movement.generator, data['project_path'])
+                target_to_put = dsphwidgets.FileMotionTimeline(target_movement.generator, data['project_path'])
             elif isinstance(target_movement.generator, RotationFileGen):
-                target_to_put = dsphwidgets.RotationFileMotionTimeline(
-                    target_movement.generator, data['project_path'])
+                target_to_put = dsphwidgets.RotationFileMotionTimeline(target_movement.generator, data['project_path'])
 
             target_to_put.changed.connect(on_timeline_item_change)
             timeline_list_table.setCellWidget(0, 0, target_to_put)
@@ -4558,19 +4362,16 @@ def motion_change():
         movement_list_table.setRowCount(len(data["global_movements"]) + 1)
         current_row = 0
         for movement in data["global_movements"]:
-            movement_list_table.setItem(
-                current_row, 0, QtGui.QTableWidgetItem(movement.name))
+            movement_list_table.setItem(current_row, 0, QtGui.QTableWidgetItem(movement.name))
             try:
                 has_loop = movement.loop
             except AttributeError:
                 has_loop = False
             if isinstance(movement, Movement):
-                movement_actions = dsphwidgets.MovementActions(
-                    current_row, movement in movements_selected, has_loop)
+                movement_actions = dsphwidgets.MovementActions(current_row, movement in movements_selected, has_loop)
                 movement_actions.loop.connect(on_loop_movement)
             elif isinstance(movement, SpecialMovement):
-                movement_actions = dsphwidgets.WaveMovementActions(
-                    current_row, movement in movements_selected)
+                movement_actions = dsphwidgets.WaveMovementActions(current_row, movement in movements_selected)
 
             movement_actions.delete.connect(on_delete_movement)
             movement_actions.use.connect(on_check_movement)
@@ -4578,29 +4379,20 @@ def motion_change():
 
             current_row += 1
         create_new_movement_button = QtGui.QToolButton()
-        create_new_movement_button.setPopupMode(
-            QtGui.QToolButton.MenuButtonPopup)
+        create_new_movement_button.setPopupMode(QtGui.QToolButton.MenuButtonPopup)
         create_new_movement_button.setText(__("Create New"))
         create_new_movement_menu = QtGui.QMenu()
-        create_new_movement_menu.addAction(
-            guiutils.get_icon("movement.png"), __("Movement"))
-        create_new_movement_menu.addAction(guiutils.get_icon(
-            "regular_wave.png"), __("Regular wave generator (Piston)"))
-        create_new_movement_menu.addAction(guiutils.get_icon(
-            "irregular_wave.png"), __("Irregular wave generator (Piston)"))
-        create_new_movement_menu.addAction(guiutils.get_icon(
-            "regular_wave.png"), __("Regular wave generator (Flap)"))
-        create_new_movement_menu.addAction(guiutils.get_icon(
-            "irregular_wave.png"), __("Irregular wave generator (Flap)"))
-        create_new_movement_menu.addAction(guiutils.get_icon(
-            "file_mov.png"), __("Linear motion from a file"))
-        create_new_movement_menu.addAction(guiutils.get_icon(
-            "file_mov.png"), __("Rotation from a file"))
+        create_new_movement_menu.addAction(guiutils.get_icon("movement.png"), __("Movement"))
+        create_new_movement_menu.addAction(guiutils.get_icon("regular_wave.png"), __("Regular wave generator (Piston)"))
+        create_new_movement_menu.addAction(guiutils.get_icon("irregular_wave.png"), __("Irregular wave generator (Piston)"))
+        create_new_movement_menu.addAction(guiutils.get_icon("regular_wave.png"), __("Regular wave generator (Flap)"))
+        create_new_movement_menu.addAction(guiutils.get_icon("irregular_wave.png"), __("Irregular wave generator (Flap)"))
+        create_new_movement_menu.addAction(guiutils.get_icon("file_mov.png"), __("Linear motion from a file"))
+        create_new_movement_menu.addAction(guiutils.get_icon("file_mov.png"), __("Rotation from a file"))
         create_new_movement_button.setMenu(create_new_movement_menu)
         create_new_movement_button.clicked.connect(on_new_movement)
         create_new_movement_menu.triggered.connect(on_new_wave_generator)
-        movement_list_table.setCellWidget(
-            current_row, 1, create_new_movement_button)
+        movement_list_table.setCellWidget(current_row, 1, create_new_movement_button)
         movement_list_table.setCellWidget(current_row, 0, QtGui.QWidget())
 
     refresh_movements_table()
@@ -4610,34 +4402,27 @@ def motion_change():
     # Possible actions for adding motions to a movement
     def on_add_delay():
         """ Adds a WaitMotion to the timeline of the selected movement. """
-        notice_label.setText(
-            "")  # Reset the notice label if a valid change is made
+        notice_label.setText("")  # Reset the notice label if a valid change is made
         if len(movement_list_table.selectedIndexes()) > 0:
             if movement_list_table.selectedIndexes()[0].row() is not len(data["global_movements"]):
-                data["global_movements"][movement_list_table.selectedIndexes()[
-                    0].row()].add_motion(WaitMotion())
+                data["global_movements"][movement_list_table.selectedIndexes()[0].row()].add_motion(WaitMotion())
                 on_movement_selected(
                     movement_list_table.selectedIndexes()[0].row(), None)
 
     def on_add_rectilinear():
         """ Adds a RectMotion to the timeline of the selected movement. """
-        notice_label.setText(
-            "")  # Reset the notice label if a valid change is made
+        notice_label.setText("")  # Reset the notice label if a valid change is made
         if len(movement_list_table.selectedIndexes()) > 0:
             if movement_list_table.selectedIndexes()[0].row() is not len(data["global_movements"]):
-                data["global_movements"][movement_list_table.selectedIndexes()[
-                    0].row()].add_motion(RectMotion())
-                on_movement_selected(
-                    movement_list_table.selectedIndexes()[0].row(), None)
+                data["global_movements"][movement_list_table.selectedIndexes()[0].row()].add_motion(RectMotion())
+                on_movement_selected(movement_list_table.selectedIndexes()[0].row(), None)
 
     def on_add_accrectilinear():
         """ Adds a AccRectMotion to the timeline of the selected movement. """
-        notice_label.setText(
-            "")  # Reset the notice label if a valid change is made
+        notice_label.setText("")  # Reset the notice label if a valid change is made
         if len(movement_list_table.selectedIndexes()) > 0:
             if movement_list_table.selectedIndexes()[0].row() is not len(data["global_movements"]):
-                data["global_movements"][movement_list_table.selectedIndexes()[
-                    0].row()].add_motion(AccRectMotion())
+                data["global_movements"][movement_list_table.selectedIndexes()[0].row()].add_motion(AccRectMotion())
                 on_movement_selected(
                     movement_list_table.selectedIndexes()[0].row(), None)
 
@@ -4647,109 +4432,88 @@ def motion_change():
             "")  # Reset the notice label if a valid change is made
         if len(movement_list_table.selectedIndexes()) > 0:
             if movement_list_table.selectedIndexes()[0].row() is not len(data["global_movements"]):
-                data["global_movements"][movement_list_table.selectedIndexes()[
-                    0].row()].add_motion(RotMotion())
+                data["global_movements"][movement_list_table.selectedIndexes()[0].row()].add_motion(RotMotion())
                 on_movement_selected(
                     movement_list_table.selectedIndexes()[0].row(), None)
 
     def on_add_acc_rotational():
         """ Adds a AccRotMotion to the timeline of the selected movement. """
-        notice_label.setText(
-            "")  # Reset the notice label if a valid change is made
+        notice_label.setText("")  # Reset the notice label if a valid change is made
         if len(movement_list_table.selectedIndexes()) > 0:
             if movement_list_table.selectedIndexes()[0].row() is not len(data["global_movements"]):
-                data["global_movements"][movement_list_table.selectedIndexes()[
-                    0].row()].add_motion(AccRotMotion())
+                data["global_movements"][movement_list_table.selectedIndexes()[0].row()].add_motion(AccRotMotion())
                 on_movement_selected(
                     movement_list_table.selectedIndexes()[0].row(), None)
 
     def on_add_acc_circular():
         """ Adds a AccCirMotion to the timeline of the selected movement. """
-        notice_label.setText(
-            "")  # Reset the notice label if a valid change is made
+        notice_label.setText("")  # Reset the notice label if a valid change is made
         if len(movement_list_table.selectedIndexes()) > 0:
             if movement_list_table.selectedIndexes()[0].row() is not len(data["global_movements"]):
-                data["global_movements"][movement_list_table.selectedIndexes()[
-                    0].row()].add_motion(AccCirMotion())
+                data["global_movements"][movement_list_table.selectedIndexes()[0].row()].add_motion(AccCirMotion())
                 on_movement_selected(
                     movement_list_table.selectedIndexes()[0].row(), None)
 
     def on_add_sinu_rot():
         """ Adds a RotSinuMotion to the timeline of the selected movement. """
-        notice_label.setText(
-            "")  # Reset the notice label if a valid change is made
+        notice_label.setText("")  # Reset the notice label if a valid change is made
         if len(movement_list_table.selectedIndexes()) > 0:
             if movement_list_table.selectedIndexes()[0].row() is not len(data["global_movements"]):
-                data["global_movements"][movement_list_table.selectedIndexes()[
-                    0].row()].add_motion(RotSinuMotion())
+                data["global_movements"][movement_list_table.selectedIndexes()[0].row()].add_motion(RotSinuMotion())
                 on_movement_selected(
                     movement_list_table.selectedIndexes()[0].row(), None)
 
     def on_add_sinu_cir():
         """ Adds a CirSinuMotion to the timeline of the selected movement. """
-        notice_label.setText(
-            "")  # Reset the notice label if a valid change is made
+        notice_label.setText("")  # Reset the notice label if a valid change is made
         if len(movement_list_table.selectedIndexes()) > 0:
             if movement_list_table.selectedIndexes()[0].row() is not len(data["global_movements"]):
-                data["global_movements"][movement_list_table.selectedIndexes()[
-                    0].row()].add_motion(CirSinuMotion())
+                data["global_movements"][movement_list_table.selectedIndexes()[0].row()].add_motion(CirSinuMotion())
                 on_movement_selected(
                     movement_list_table.selectedIndexes()[0].row(), None)
 
     def on_add_sinu_rect():
         """ Adds a RectSinuMotion to the timeline of the selected movement. """
-        notice_label.setText(
-            "")  # Reset the notice label if a valid change is made
+        notice_label.setText("")  # Reset the notice label if a valid change is made
         if len(movement_list_table.selectedIndexes()) > 0:
             if movement_list_table.selectedIndexes()[0].row() is not len(data["global_movements"]):
-                data["global_movements"][movement_list_table.selectedIndexes()[
-                    0].row()].add_motion(RectSinuMotion())
-                on_movement_selected(
-                    movement_list_table.selectedIndexes()[0].row(), None)
+                data["global_movements"][movement_list_table.selectedIndexes()[0].row()].add_motion(RectSinuMotion())
+                on_movement_selected(movement_list_table.selectedIndexes()[0].row(), None)
 
     actions_groupbox_table.setRowCount(9)
-    bt_to_add = QtGui.QPushButton(guiutils.get_icon(
-        "left-arrow.png"), __("Add a delay"))
+    bt_to_add = QtGui.QPushButton(guiutils.get_icon("left-arrow.png"), __("Add a delay"))
     bt_to_add.setStyleSheet("text-align: left")
     bt_to_add.clicked.connect(on_add_delay)
     actions_groupbox_table.setCellWidget(0, 0, bt_to_add)
-    bt_to_add = QtGui.QPushButton(guiutils.get_icon(
-        "left-arrow.png"), __("Add a rectilinear motion"))
+    bt_to_add = QtGui.QPushButton(guiutils.get_icon("left-arrow.png"), __("Add a rectilinear motion"))
     bt_to_add.setStyleSheet("text-align: left")
     bt_to_add.clicked.connect(on_add_rectilinear)
     actions_groupbox_table.setCellWidget(1, 0, bt_to_add)
-    bt_to_add = QtGui.QPushButton(guiutils.get_icon(
-        "left-arrow.png"), __("Add an accelerated rectilinear motion"))
+    bt_to_add = QtGui.QPushButton(guiutils.get_icon("left-arrow.png"), __("Add an accelerated rectilinear motion"))
     bt_to_add.setStyleSheet("text-align: left")
     bt_to_add.clicked.connect(on_add_accrectilinear)
     actions_groupbox_table.setCellWidget(2, 0, bt_to_add)
-    bt_to_add = QtGui.QPushButton(guiutils.get_icon(
-        "left-arrow.png"), __("Add a rotational motion"))
+    bt_to_add = QtGui.QPushButton(guiutils.get_icon("left-arrow.png"), __("Add a rotational motion"))
     bt_to_add.setStyleSheet("text-align: left")
     bt_to_add.clicked.connect(on_add_rotational)
     actions_groupbox_table.setCellWidget(3, 0, bt_to_add)
-    bt_to_add = QtGui.QPushButton(guiutils.get_icon(
-        "left-arrow.png"), __("Add an accelerated rotational motion"))
+    bt_to_add = QtGui.QPushButton(guiutils.get_icon("left-arrow.png"), __("Add an accelerated rotational motion"))
     bt_to_add.setStyleSheet("text-align: left")
     bt_to_add.clicked.connect(on_add_acc_rotational)
     actions_groupbox_table.setCellWidget(4, 0, bt_to_add)
-    bt_to_add = QtGui.QPushButton(guiutils.get_icon(
-        "left-arrow.png"), __("Add an accelerated circular motion"))
+    bt_to_add = QtGui.QPushButton(guiutils.get_icon("left-arrow.png"), __("Add an accelerated circular motion"))
     bt_to_add.setStyleSheet("text-align: left")
     bt_to_add.clicked.connect(on_add_acc_circular)
     actions_groupbox_table.setCellWidget(5, 0, bt_to_add)
-    bt_to_add = QtGui.QPushButton(guiutils.get_icon(
-        "left-arrow.png"), __("Add a sinusoidal rotational motion"))
+    bt_to_add = QtGui.QPushButton(guiutils.get_icon("left-arrow.png"), __("Add a sinusoidal rotational motion"))
     bt_to_add.setStyleSheet("text-align: left")
     bt_to_add.clicked.connect(on_add_sinu_rot)
     actions_groupbox_table.setCellWidget(6, 0, bt_to_add)
-    bt_to_add = QtGui.QPushButton(guiutils.get_icon(
-        "left-arrow.png"), __("Add a sinusoidal circular motion"))
+    bt_to_add = QtGui.QPushButton(guiutils.get_icon("left-arrow.png"), __("Add a sinusoidal circular motion"))
     bt_to_add.setStyleSheet("text-align: left")
     bt_to_add.clicked.connect(on_add_sinu_cir)
     actions_groupbox_table.setCellWidget(7, 0, bt_to_add)
-    bt_to_add = QtGui.QPushButton(guiutils.get_icon(
-        "left-arrow.png"), __("Add a sinusoidal rectilinear motion"))
+    bt_to_add = QtGui.QPushButton(guiutils.get_icon("left-arrow.png"), __("Add a sinusoidal rectilinear motion"))
     bt_to_add.setStyleSheet("text-align: left")
     bt_to_add.clicked.connect(on_add_sinu_rect)
     actions_groupbox_table.setCellWidget(8, 0, bt_to_add)
@@ -4841,8 +4605,7 @@ def remove_object_from_sim():
 
 
 def on_damping_config():
-    """ Configures the damping configuration for the selected
-    obejct """
+    """ Configures the damping configuration for the selected obejct """
     selection = FreeCADGui.Selection.getSelection()
     guiutils.damping_config_window(data, selection[0].Name)
 
@@ -4918,8 +4681,7 @@ def on_tree_item_selection_change():
     if len(selection) > 0:
         if len(selection) > 1:
             # Multiple objects selected
-            addtodsph_button.setText(
-                __("Add all possible objects to DSPH Simulation"))
+            addtodsph_button.setText(__("Add all possible objects to DSPH Simulation"))
             object_property_table.hide()
             addtodsph_button.show()
             removefromdsph_button.hide()
@@ -4957,13 +4719,15 @@ def on_tree_item_selection_change():
                     if data['simobjects'][selection[0].Name][1].lower() == "fluid":
                         to_change.setCurrentIndex(0)
                         mkgroup_prop.setRange(0, 10)
-                        mkgroup_label.setText("&nbsp;&nbsp;&nbsp;" + __(
-                            "MKFluid") + " <a href='http://design.sphysics.org/wiki/doku.php?id=concepts'>?</a>")
+                        mkgroup_label.setText(
+                            "&nbsp;&nbsp;&nbsp;" + __("MKFluid") + " <a href='http://design.sphysics.org/wiki/doku.php?id=concepts'>?</a>"
+                        )
                     elif data['simobjects'][selection[0].Name][1].lower() == "bound":
                         to_change.setCurrentIndex(1)
                         mkgroup_prop.setRange(0, 240)
-                        mkgroup_label.setText("&nbsp;&nbsp;&nbsp;" + __(
-                            "MKBound") + " <a href='http://design.sphysics.org/wiki/doku.php?id=concepts'>?</a>")
+                        mkgroup_label.setText(
+                            "&nbsp;&nbsp;&nbsp;" + __("MKBound") + " <a href='http://design.sphysics.org/wiki/doku.php?id=concepts'>?</a>"
+                        )
                 elif "part" in selection[0].TypeId.lower() or "mesh" in selection[0].TypeId.lower() or (
                         selection[0].TypeId == "App::DocumentObjectGroup" and "fillbox" in selection[0].Name.lower()):
                     # Is an object that will be exported to STL
@@ -4971,13 +4735,15 @@ def on_tree_item_selection_change():
                     if data['simobjects'][selection[0].Name][1].lower() == "fluid":
                         to_change.setCurrentIndex(0)
                         mkgroup_prop.setRange(0, 10)
-                        mkgroup_label.setText("&nbsp;&nbsp;&nbsp;" + __(
-                            "MKFluid") + " <a href='http://design.sphysics.org/wiki/doku.php?id=concepts'>?</a>")
+                        mkgroup_label.setText(
+                            "&nbsp;&nbsp;&nbsp;" + __("MKFluid") + " <a href='http://design.sphysics.org/wiki/doku.php?id=concepts'>?</a>"
+                        )
                     elif data['simobjects'][selection[0].Name][1].lower() == "bound":
                         to_change.setCurrentIndex(1)
                         mkgroup_prop.setRange(0, 240)
-                        mkgroup_label.setText("&nbsp;&nbsp;&nbsp;" + __(
-                            "MKBound") + " <a href='http://design.sphysics.org/wiki/doku.php?id=concepts'>?</a>")
+                        mkgroup_label.setText(
+                            "&nbsp;&nbsp;&nbsp;" + __("MKBound") + " <a href='http://design.sphysics.org/wiki/doku.php?id=concepts'>?</a>"
+                        )
                 else:
                     # Everything else
                     to_change.setCurrentIndex(1)
@@ -5007,9 +4773,8 @@ def on_tree_item_selection_change():
 
                 # float state config
                 to_change = object_property_table.cellWidget(3, 1)
-                if selection[0].TypeId in temp_data['supported_types'] or (
-                        selection[0].TypeId == "App::DocumentObjectGroup"
-                        and "fillbox" in selection[0].Name.lower()):
+                if selection[0].TypeId in temp_data['supported_types'] or (selection[0].TypeId == "App::DocumentObjectGroup"
+                                                                           and "fillbox" in selection[0].Name.lower()):
                     if data['simobjects'][selection[0].Name][1].lower() == "fluid":
                         to_change.setEnabled(False)
                     else:
@@ -5040,8 +4805,7 @@ def on_tree_item_selection_change():
                     removefromdsph_button.hide()
                     damping_config_button.hide()
                 else:
-                    addtodsph_button.setText(
-                        __("Can't add this object to the simulation"))
+                    addtodsph_button.setText(__("Can't add this object to the simulation"))
                     object_property_table.hide()
                     addtodsph_button.show()
                     addtodsph_button.setEnabled(False)
@@ -5081,7 +4845,8 @@ def on_tree_item_selection_change():
             index=current_row,
             object_mk=data['simobjects'][context_object.Name][0],
             mktype=data['simobjects'][context_object.Name][1],
-            object_name=context_object.Label)
+            object_name=context_object.Label
+        )
 
         target_widget.up.connect(on_up_objectorder)
         target_widget.down.connect(on_down_objectorder)
@@ -5103,6 +4868,7 @@ def on_tree_item_selection_change():
         data['export_order'].remove(each)
     properties_scaff_widget.adjustSize()
     properties_widget.adjustSize()
+
 
 # Subscribe the trees to the item selection change function. This helps FreeCAD notify DesignSPHysics for the
 # deleted and changed objects to get updated correctly.
@@ -5133,8 +4899,7 @@ def selection_monitor():
                         utils.error(__("Can't change rotation!"))
                     if not data['3dmode'] and o.Width.Value != utils.WIDTH_2D:
                         o.Width.Value = utils.WIDTH_2D
-                        utils.error(
-                            __("Can't change width if the case is in 2D Mode!"))
+                        utils.error(__("Can't change width if the case is in 2D Mode!"))
 
             # Prevent some view properties of Case Limits to be changed
             case_limits_obj = guiutils.get_fc_view_object("Case_Limits")
