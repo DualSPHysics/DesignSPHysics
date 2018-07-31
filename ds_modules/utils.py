@@ -66,14 +66,13 @@ DEBUGGING = False
 VERBOSE = False
 DIVIDER = 1000
 PICKLE_PROTOCOL = 1  # Binary mode
-VERSION = "0.5.1806-29"
+VERSION = "0.5.1807-31"
 WIDTH_2D = 0.001
 MAX_PARTICLE_WARNING = 2000000
-HELP_WEBPAGE = "https://github.com/ndrs92/DesignSPHysics/wiki"
+HELP_WEBPAGE = "https://github.com/DualSPHysics/DesignSPHysics/wiki"
 
 
 # ------ END CONSTANTS DEFINITION ------
-
 
 def is_compatible_version():
     """ Checks if the current FreeCAD version is suitable
@@ -384,6 +383,7 @@ def get_default_data():
     temp_data = dict()
 
     # Data relative to constant definition
+    # TODO: These should be aggregated into an object like CaseConstants()
     data['lattice_bound'] = 1
     data['lattice_fluid'] = 1
     data['gravity'] = [0, 0, -9.81]
@@ -406,9 +406,12 @@ def get_default_data():
     data['massbound_auto'] = True
     data['massfluid'] = 0
     data['massfluid_auto'] = True
+
+    # TODO: This should be aggregated into an object like CaseGeometryDefinition()
     data['dp'] = 0.01
 
     # Data relative to execution parameters
+    # TODO: These should be aggregated into an object like CaseExecutionParameters()
     data['posdouble'] = 0
     data['stepalgorithm'] = 1
     data['verletsteps'] = 40
@@ -447,6 +450,7 @@ def get_default_data():
     data['period_z'] = [False, 0.0, 0.0, 0.0]
 
     # Stores paths to executables
+    # TODO: These should be aggregated into an object like ExecutablePaths()
     data['gencase_path'] = ""
     data['dsphysics_path'] = ""
     data['partvtk4_path'] = ""
@@ -468,8 +472,6 @@ def get_default_data():
     data['total_particles_out'] = 0
     data['additional_parameters'] = ""
     data['export_options'] = ""
-    data["mkboundused"] = []
-    data["mkfluidused"] = []
 
     # Dictionary that defines floatings.
     # Structure: {mk: FloatProperty}
@@ -623,7 +625,7 @@ def get_os():
 
 def print_license():
     """ Prints this software license. """
-    licpath = os.path.abspath(__file__).split("ds_modules")[0] + "LICENSE"
+    licpath = "{}{}".format(os.path.abspath(__file__).split("ds_modules")[0], "LICENSE")
     if os.path.isfile(licpath):
         with open(licpath) as licfile:
             if VERBOSE:
@@ -1820,8 +1822,6 @@ def dump_to_xml(data, save_name):
             f.write('\t\t\t\t\t<coefdt value="{}" comment="Multiplies by dt value in the calculation (using 0 is not applied) (default=1000)" />\n'.format(str(rzobject.coefdt)))
             f.write('\t\t\t\t\t<function psi="{}" beta="{}" comment="Coefficients in funtion for velocity (def. psi=0.9, beta=1)" />\n'.format(str(rzobject.function_psi), str(rzobject.function_beta)))
             f.write('\t\t\t\t</rzwaves_uniform>\n')
-
-        #     TODO: Add other RZ objects
         f.write('\t\t\t</relaxationzones>\n')
 
     f.write('\t\t</special>\n')

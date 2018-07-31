@@ -6,7 +6,7 @@ It is under development since September 2016 and in Beta stage.
 
 Check the [Official Webpage](http://design.sphysics.org) for downloads and more information.
 
-![Screenshot](http://design.sphysics.org/img/github-shot.png)
+![Screenshot](http://design.sphysics.org/img/github-shot-31072018.png)
 
 ## Description
 DesignSPHysics enables the user to create cases with solids and fluids and exports it to a DualSPHysics compatbile format. In addition, it does the hard work for the user, generating the case automatically, simulating, and post-processing, all inside FreeCAD.
@@ -33,12 +33,10 @@ By default, for example, in Windows, it is located in `%appdata%/FreeCAD/Mod` or
 Then copy the file `DesignSPHysics.FCMacro` of this repository into the FreeCAD macro directory (`%appdata%/FreeCAD/Macro` on Windows; `~/.FreeCAD/Macro` on GNU/Linux)
 
 ## Where to get help
-You can check the [DesignSPHysics Wiki](http://design.sphysics.org/wiki) to get help. Also, you can post an issue here on GitHub or send [an email to me](mailto:anvieiravazquez@gmail.com)
+You can check the [DesignSPHysics Wiki](http://design.sphysics.org/wiki) to get help. Also, you can post an issue here on GitHub or send an email to any of the people found in the [CONTRIBUTING file](CONTRIBUTING.md). 
 
 ## Contributing
-Right now the application is in early stages, so the best way to contribute right now is to post issues and suggestions for the code.
-
-Pull request will be considered but as it is under heavy development right now a lot of things are about to change, so new code / new functionalities are a bit tricky to integrate.
+Please check the [CONTRIBUTING file](CONTRIBUTING.md) to view information about how to contribute to the project and how it is structured.
 
 ## Copyright and License
 Copyright (C) 2017 - Andrés Vieira (anvieiravazquez@gmail.com)
