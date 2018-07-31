@@ -4238,7 +4238,6 @@ class RelaxationZoneIrregularConfigDialog(QtGui.QDialog):
         self.exec_()
 
     def on_apply(self):
-        # TODO: fix this
         self.temp_relaxationzone.start = float(self.start_input.text())
         self.temp_relaxationzone.duration = float(self.duration_input.text())
         self.temp_relaxationzone.peakcoef = float(self.peakcoef_input.text())

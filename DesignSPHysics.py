@@ -71,15 +71,18 @@ try:
     utils.print_license()
 except EnvironmentError:
     guiutils.warning_dialog(
-        __("LICENSE file could not be found. Are you sure you didn't delete it?"))
+        __("LICENSE file could not be found. Are you sure you didn't delete it?")
+    )
 
 # Version check. This script is only compatible with FreeCAD 0.16 or higher
 is_compatible = utils.is_compatible_version()
 if not is_compatible:
     guiutils.error_dialog(
-        __("This FreeCAD version is not compatible. Please update FreeCAD to version 0.16 or higher."))
+        __("This FreeCAD version is not compatible. Please update FreeCAD to version 0.16 or higher.")
+    )
     raise EnvironmentError(
-        __("This FreeCAD version is not compatible. Please update FreeCAD to version 0.16 or higher."))
+        __("This FreeCAD version is not compatible. Please update FreeCAD to version 0.16 or higher.")
+    )
 
 # Set QT to UTF-8 encoding
 QtCore.QTextCodec.setCodecForCStrings(QtCore.QTextCodec.codecForName('UTF-8'))
@@ -120,7 +123,7 @@ if previous_dock:
 # Creation of the DSPH Widget.
 # Creates a widget with a series of layouts added, to apply to the DSPH dock at the end.
 dsph_main_dock.setObjectName("DSPH Widget")
-dsph_main_dock.setWindowTitle(utils.APP_NAME + " " + str(__version__))
+dsph_main_dock.setWindowTitle("{} {}".format(utils.APP_NAME, str(__version__)))
 main_layout = QtGui.QVBoxLayout()  # Main Widget layout.  Vertical ordering
 
 # Component layouts definition
@@ -131,7 +134,7 @@ intro_layout = QtGui.QVBoxLayout()
 
 # DSPH dock first section.
 # Includes constant definition, help, etc.
-constants_label = QtGui.QLabel("<b>" + __("Configuration") + "</b>")
+constants_label = QtGui.QLabel("<b>{}</b>".format(__("Configuration")))
 constants_label.setWordWrap(True)
 constants_button = QtGui.QPushButton(__("Define\nConstants"))
 constants_button.setToolTip(__("Use this button to define case constants,\nsuch as gravity or fluid reference density."))
@@ -158,8 +161,7 @@ widget_state_elements['execparams_button'] = execparams_button
 
 # Logo. Made from a label. Labels can have image as well as text.
 logo_label = QtGui.QLabel()
-logo_label.setPixmap(os.path.dirname(os.path.abspath(
-    __file__)) + "/images/{}".format("logo.png"))
+logo_label.setPixmap(guiutils.get_icon(file_name="logo.png", return_only_path=True))
 
 
 def on_dp_changed():
@@ -193,28 +195,26 @@ ccfilebuttons_layout = QtGui.QHBoxLayout()
 ccsecondrow_layout = QtGui.QHBoxLayout()
 ccthirdrow_layout = QtGui.QHBoxLayout()
 ccfourthrow_layout = QtGui.QHBoxLayout()
-casecontrols_label = QtGui.QLabel("<b>" + __("Pre-processing") + "<b>")
+casecontrols_label = QtGui.QLabel("<b>{}</b>".format(__("Pre-processing")))
 
 # New Case button
 casecontrols_bt_newdoc = QtGui.QToolButton()
 casecontrols_bt_newdoc.setPopupMode(QtGui.QToolButton.MenuButtonPopup)
 casecontrols_bt_newdoc.setToolButtonStyle(QtCore.Qt.ToolButtonTextBesideIcon)
-casecontrols_bt_newdoc.setText("  " + __("New\n  Case"))
+casecontrols_bt_newdoc.setText("  {}".format(__("New\n  Case")))
 casecontrols_bt_newdoc.setToolTip(__("Creates a new case. \nThe opened documents will be closed."))
 casecontrols_bt_newdoc.setIcon(guiutils.get_icon("new.png"))
 casecontrols_bt_newdoc.setIconSize(QtCore.QSize(28, 28))
 casecontrols_menu_newdoc = QtGui.QMenu()
-casecontrols_menu_newdoc.addAction(
-    guiutils.get_icon("new.png"), __("New"))
-casecontrols_menu_newdoc.addAction(
-    guiutils.get_icon("new.png"), __("Import FreeCAD Document"))
+casecontrols_menu_newdoc.addAction(guiutils.get_icon("new.png"), __("New"))
+casecontrols_menu_newdoc.addAction(guiutils.get_icon("new.png"), __("Import FreeCAD Document"))
 casecontrols_bt_newdoc.setMenu(casecontrols_menu_newdoc)
 
 # Save Case button and dropdown
 casecontrols_bt_savedoc = QtGui.QToolButton()
 casecontrols_bt_savedoc.setPopupMode(QtGui.QToolButton.MenuButtonPopup)
 casecontrols_bt_savedoc.setToolButtonStyle(QtCore.Qt.ToolButtonTextBesideIcon)
-casecontrols_bt_savedoc.setText("  " + __("Save\n  Case"))
+casecontrols_bt_savedoc.setText("  {}".format(__("Save\n  Case")))
 casecontrols_bt_savedoc.setToolTip(__("Saves the case."))
 casecontrols_bt_savedoc.setIcon(guiutils.get_icon("save.png"))
 casecontrols_bt_savedoc.setIconSize(QtCore.QSize(28, 28))
@@ -227,7 +227,7 @@ widget_state_elements['casecontrols_bt_savedoc'] = casecontrols_bt_savedoc
 # Load Case button
 casecontrols_bt_loaddoc = QtGui.QToolButton()
 casecontrols_bt_loaddoc.setToolButtonStyle(QtCore.Qt.ToolButtonTextBesideIcon)
-casecontrols_bt_loaddoc.setText("  " + __("Load\n  Case"))
+casecontrols_bt_loaddoc.setText("  {}".format(__("Load\n  Case")))
 casecontrols_bt_loaddoc.setToolTip(__("Loads a case from disk. All the current documents\nwill be closed."))
 casecontrols_bt_loaddoc.setIcon(guiutils.get_icon("load.png"))
 casecontrols_bt_loaddoc.setIconSize(QtCore.QSize(28, 28))
@@ -264,13 +264,9 @@ toggle3dbutton.setToolTip(__("Changes the case mode between 2D and 3D mode, swit
 widget_state_elements['toggle3dbutton'] = toggle3dbutton
 
 # Damping add button
-casecontrols_bt_special = QtGui.QPushButton(__("Special "))
+casecontrols_bt_special = QtGui.QPushButton(__("Special"))
 casecontrols_bt_special.setToolTip(__("Special actions for the case."))
 widget_state_elements['dampingbutton'] = casecontrols_bt_special
-
-# Toggle Periodicity buttons
-y_period_bt = QtGui.QPushButton("Toggle Y Periodicity")
-x_period_bt = QtGui.QPushButton("Toggle Y Periodicity")
 
 
 def on_new_case(prompt=True):
@@ -332,15 +328,16 @@ def on_save_case(save_as=None):
 
     # Check if there is any path, a blank one meant the user cancelled the save file dialog
     if save_name != '':
+        project_name = save_name.split('/')[-1]
         # Watch if folder already exists or create it
         if not os.path.exists(save_name):
             os.makedirs(save_name)
         data['project_path'] = save_name
-        data['project_name'] = save_name.split('/')[-1]
+        data['project_name'] = project_name
 
         # Create out folder for the case
-        if not os.path.exists(save_name + "/" + save_name.split('/')[-1] + "_out"):
-            os.makedirs(save_name + "/" + save_name.split('/')[-1] + "_out")
+        if not os.path.exists("{}/{}_out".format(save_name, project_name)):
+            os.makedirs("{}/{}_out".format(save_name, project_name))
 
         # Copy files from movements and change its paths to be inside the project.
         for key, value in data["motion_mks"].iteritems():
@@ -365,7 +362,7 @@ def on_save_case(save_as=None):
 
                         try:
                             # Copy to project out folder
-                            shutil.copy2(filename, save_name + "/" + save_name.split('/')[-1] + "_out")
+                            shutil.copy2(filename, save_name + "/" + project_name + "_out")
 
                             movement.generator.filename = "{}".format(filename.split("/")[-1])
                         except IOError:
@@ -377,7 +374,7 @@ def on_save_case(save_as=None):
         # Copy files from Acceleration input and change paths to be inside the project folder.
         for aid in data['accinput'].acclist:
             filename = aid.datafile
-            utils.debug("Copying {} to {}".format(filename, save_name + "/" + save_name.split('/')[-1] + "_out"))
+            utils.debug("Copying {} to {}".format(filename, save_name + "/" + project_name + "_out"))
 
             # Change directory to de case one, so if file path is already relative it copies it to the
             # out folder
@@ -394,7 +391,7 @@ def on_save_case(save_as=None):
 
             try:
                 # Copy to project out folder
-                shutil.copy2(filename, save_name + "/" + save_name.split('/')[-1] + "_out")
+                shutil.copy2(filename, save_name + "/" + project_name + "_out")
 
                 aid.datafile = filename.split("/")[-1]
 
@@ -408,8 +405,7 @@ def on_save_case(save_as=None):
         for key, piston in data["mlayerpistons"].iteritems():
             if isinstance(piston, MLPiston1D):
                 filename = piston.filevelx
-                utils.debug("Copying {} to {}".format(
-                    filename, save_name + "/" + save_name.split('/')[-1] + "_out"))
+                utils.debug("Copying {} to {}".format(filename, save_name + "/" + project_name + "_out"))
                 # Change directory to de case one, so if file path is already relative it copies it to the
                 # out folder
                 os.chdir(save_name)
@@ -418,20 +414,18 @@ def on_save_case(save_as=None):
                     # Copy to project root
                     shutil.copy2(filename, save_name)
                 except IOError:
-                    utils.error("Unable to copy {} into {}".format(
-                        filename, save_name))
+                    utils.error("Unable to copy {} into {}".format(filename, save_name))
                 except shutil.Error:
                     # Probably already copied the file.
                     pass
 
                 try:
                     # Copy to project out folder
-                    shutil.copy2(filename, save_name + "/" + save_name.split('/')[-1] + "_out")
+                    shutil.copy2(filename, save_name + "/" + project_name + "_out")
 
                     piston.filevelx = filename.split("/")[-1]
                 except IOError:
-                    utils.error("Unable to copy {} into {}".format(
-                        filename, save_name))
+                    utils.error("Unable to copy {} into {}".format(filename, save_name))
                 except shutil.Error:
                     # Probably already copied the file.
                     pass
@@ -440,8 +434,7 @@ def on_save_case(save_as=None):
                 veldata = piston.veldata
                 for v in veldata:
                     filename = v.filevelx
-                    utils.debug("Copying {} to {}".format(
-                        filename, save_name + "/" + save_name.split('/')[-1] + "_out"))
+                    utils.debug("Copying {} to {}".format(filename, save_name + "/" + project_name + "_out"))
                     # Change directory to de case one, so if file path is already relative it copies it to the
                     # out folder
                     os.chdir(save_name)
@@ -450,20 +443,18 @@ def on_save_case(save_as=None):
                         # Copy to project root
                         shutil.copy2(filename, save_name)
                     except IOError:
-                        utils.error("Unable to copy {} into {}".format(
-                            filename, save_name))
+                        utils.error("Unable to copy {} into {}".format(filename, save_name))
                     except shutil.Error:
                         # Probably already copied the file.
                         pass
 
                     try:
                         # Copy to project out folder
-                        shutil.copy2(filename, save_name + "/" + save_name.split('/')[-1] + "_out")
+                        shutil.copy2(filename, save_name + "/" + project_name + "_out")
 
                         v.filevelx = filename.split("/")[-1]
                     except IOError:
-                        utils.error("Unable to copy {} into {}".format(
-                            filename, save_name))
+                        utils.error("Unable to copy {} into {}".format(filename, save_name))
                     except shutil.Error:
                         # Probably already copied the file.
                         pass
@@ -478,7 +469,7 @@ def on_save_case(save_as=None):
             os.chdir(save_name)
 
             for f in glob.glob("{}*".format(filename)):
-                utils.debug("Copying {} to {}".format(filename, save_name + "/" + save_name.split('/')[-1] + "_out"))
+                utils.debug("Copying {} to {}".format(filename, save_name + "/" + project_name + "_out"))
                 try:
                     # Copy to project root
                     shutil.copy2(f, save_name)
@@ -490,7 +481,7 @@ def on_save_case(save_as=None):
 
                 try:
                     # Copy to project out folder
-                    shutil.copy2(f, save_name + "/" + save_name.split('/')[-1] + "_out")
+                    shutil.copy2(f, save_name + "/" + project_name + "_out")
 
                     data['relaxationzone'].filesvel = filename.split("/")[-1]
 
@@ -515,7 +506,7 @@ def on_save_case(save_as=None):
         #     # Export batch files
         #     utils.batch_generator(
         #         full_path=save_name,
-        #         case_name=save_name.split('/')[-1],
+        #         case_name=project_name,
         #         gcpath=data['gencase_path'],
         #         dsphpath=data['dsphysics_path'],
         #         pvtkpath=data['partvtk4_path'],
@@ -1082,7 +1073,7 @@ def on_special_button():
     sp_relaxationzone_menu = QtGui.QMenu()
     sp_relaxationzone_menu.addAction(__("Regular waves"))
     sp_relaxationzone_menu.addAction(__("Irregular waves"))
-    sp_relaxationzone_menu.addAction(__("External waves"))
+    sp_relaxationzone_menu.addAction(__("External Input"))
     sp_relaxationzone_menu.addAction(__("Uniform velocity"))
     sp_relaxationzone_button.setMenu(sp_relaxationzone_menu)
 
@@ -1230,7 +1221,7 @@ def on_special_button():
 
             # Set the relaxation zone. Can be an object or be None
             data['relaxationzone'] = config_dialog.relaxationzone
-        if action.text() == __("External waves"):
+        if action.text() == __("External Input"):
             if data['relaxationzone'] is not None:
                 if not isinstance(data['relaxationzone'], RelaxationZoneFile):
                     overwrite_warn = guiutils.ok_cancel_dialog(
@@ -3280,7 +3271,7 @@ def on_flowtool():
     flowtool_tool_dialog.exec_()
 
 
-# TODO: Implement this
+# TODO: Implement BoundaryVTK post-processing tool
 def on_boundaryvtk():
     """ Opens a dialog with BoundaryVTK exporting options """
     # TODO: This should be implemented as a custom class like BoundaryVTKDialog(QtGui.QDialog)
@@ -4878,13 +4869,18 @@ for item in trees:
 
 # Watch if no object is selected and prevent fillbox rotations
 def selection_monitor():
+    time.sleep(2.0)
     while True:
         # ensure everything is fine when objects are not selected
-        if len(FreeCADGui.Selection.getSelection()) == 0:
-            object_property_table.hide()
-            addtodsph_button.hide()
-            removefromdsph_button.hide()
-            damping_config_button.hide()
+        try:
+            if len(FreeCADGui.Selection.getSelection()) == 0:
+                object_property_table.hide()
+                addtodsph_button.hide()
+                removefromdsph_button.hide()
+                damping_config_button.hide()
+        except AttributeError:
+            # No object is selected so the selection has no length. Ignore it
+            pass
         try:
             # watch fillbox rotations and prevent them
             for o in FreeCAD.getDocument("DSPH_Case").Objects:
@@ -4915,7 +4911,7 @@ def selection_monitor():
                 damping_group = FreeCAD.ActiveDocument.getObject(gn)
                 data["damping"][gn].overlimit = damping_group.OutList[1].Length.Value
 
-        except NameError:
+        except (NameError, AttributeError):
             # DSPH Case not opened, disable things
             guiutils.widget_state_config(widget_state_elements, "no case")
             time.sleep(2.0)
