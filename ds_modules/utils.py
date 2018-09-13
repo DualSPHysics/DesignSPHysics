@@ -472,6 +472,8 @@ def get_default_data():
     data['total_particles_out'] = 0
     data['additional_parameters'] = ""
     data['export_options'] = ""
+    data['mkboundused'] = []
+    data['mkfluidused'] = []
 
     # Dictionary that defines floatings.
     # Structure: {mk: FloatProperty}
