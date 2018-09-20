@@ -25,6 +25,13 @@ To install a release version go to the download section of the [official webpage
 
 Execute the installer (installer.exe on Windows and installer on GNU/Linux) to open the installer. Then press install and it will copy the needed scripts in FreeCAD's macro default folder.
 
+It can also be done manually, unpackage release-windows.zip or release-linux.tar.gz, choose 'resource' folder and rename the folder to 'DesignSPHysics'. Then copy the folder to the Mod folder of the FreeCAD installation directory. 
+
+By default, for example, in Windows, it is located in `%appdata%/FreeCAD/Mod` or in Linux in `~/.FreeCAD/Mod`
+
+Next open the folder and copy the file `DesignSPHysics.FCMacro` into the FreeCAD macro directory (`%appdata%/FreeCAD/Macro` on Windows; `~/.FreeCAD/Macro` on GNU/Linux).
+
+
 ### Installing a develompent build
 Clone this repository and rename the folder to 'DesignSPHysics'. Then copy the folder to the Mod folder of the FreeCAD installation directory. 
 

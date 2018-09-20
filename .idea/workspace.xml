@@ -8,11 +8,7 @@
   <component name="ChangeListManager">
     <list default="true" id="22d76f4b-310a-4afb-8788-a472c77b2c87" name="Default" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/DesignSPHysics.py" beforeDir="false" afterPath="$PROJECT_DIR$/DesignSPHysics.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/README.md" beforeDir="false" afterPath="$PROJECT_DIR$/README.md" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/ds_modules/dsphwidgets.py" beforeDir="false" afterPath="$PROJECT_DIR$/ds_modules/dsphwidgets.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/ds_modules/lang/english.json" beforeDir="false" afterPath="$PROJECT_DIR$/ds_modules/lang/english.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/ds_modules/utils.py" beforeDir="false" afterPath="$PROJECT_DIR$/ds_modules/utils.py" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
@@ -21,7 +17,7 @@
     <option name="LAST_RESOLUTION" value="IGNORE" />
   </component>
   <component name="CoverageDataManager">
-    <SUITE FILE_PATH="coverage/Macro$Reopen_FreeCAD_and_Execute.coverage" NAME="Reopen FreeCAD and Execute Coverage Results" MODIFIED="1499847116881" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$USER_HOME$/Documents/DSPH" />
+    <SUITE FILE_PATH="coverage/Macro$Reopen_FreeCAD_and_Execute.coverage" NAME="Reopen FreeCAD and Execute Coverage Results" MODIFIED="1499847116881" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/../../DSPH" />
   </component>
   <component name="CreatePatchCommitExecutor">
     <option name="PATCH_PATH" value="" />
@@ -87,18 +83,30 @@
         </counts>
       </usages-collector>
     </session>
+    <session id="970593039">
+      <usages-collector id="statistics.file.extensions.edit">
+        <counts>
+          <entry key="md" value="183" />
+        </counts>
+      </usages-collector>
+      <usages-collector id="statistics.file.types.edit">
+        <counts>
+          <entry key="Markdown" value="183" />
+        </counts>
+      </usages-collector>
+    </session>
   </component>
   <component name="FavoritesManager">
     <favorites_list name="Macro" />
   </component>
   <component name="FileEditorManager">
     <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
-      <file pinned="false" current-in-tab="false">
+      <file pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/README.md">
           <provider selected="true" editor-type-id="split-provider[text-editor;markdown-preview-editor]">
             <state split_layout="SPLIT">
-              <first_editor relative-caret-position="-135">
-                <caret line="8" column="14" lean-forward="true" selection-start-line="8" selection-start-column="14" selection-end-line="8" selection-end-column="69" />
+              <first_editor relative-caret-position="442">
+                <caret line="32" lean-forward="true" selection-start-line="32" selection-end-line="32" />
               </first_editor>
               <second_editor />
             </state>
@@ -109,8 +117,8 @@
         <entry file="file://$PROJECT_DIR$/CONTRIBUTING.md">
           <provider selected="true" editor-type-id="split-provider[text-editor;markdown-preview-editor]">
             <state split_layout="SPLIT">
-              <first_editor relative-caret-position="506">
-                <caret line="22" column="17" lean-forward="true" selection-start-line="22" selection-start-column="17" selection-end-line="22" selection-end-column="17" />
+              <first_editor relative-caret-position="374">
+                <caret line="22" column="17" selection-start-line="22" selection-start-column="17" selection-end-line="22" selection-end-column="17" />
               </first_editor>
               <second_editor />
             </state>
@@ -120,8 +128,8 @@
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/DesignSPHysics.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="280">
-              <caret line="406" column="42" selection-start-line="406" selection-start-column="42" selection-end-line="406" selection-end-column="42" />
+            <state relative-caret-position="201">
+              <caret line="1136" column="58" lean-forward="true" selection-start-line="1136" selection-start-column="44" selection-end-line="1136" selection-end-column="66" />
               <folding>
                 <element signature="e#286#300#0" expanded="true" />
                 <element signature="e#61549#69392#0" />
@@ -132,16 +140,27 @@
           </provider>
         </entry>
       </file>
-      <file pinned="false" current-in-tab="true">
+      <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/ds_modules/utils.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="529">
-              <caret line="71" column="63" selection-start-line="71" selection-start-column="63" selection-end-line="71" selection-end-column="63" />
+            <state relative-caret-position="-2091">
+              <caret line="54" column="61" selection-start-line="54" selection-start-column="61" selection-end-line="54" selection-end-column="61" />
               <folding>
                 <element signature="e#253#267#0" expanded="true" />
-                <element signature="e#4228#11142#0" />
-                <element signature="e#13302#20615#0" />
-                <element signature="e#21104#21660#0" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/ds_modules/guiutils.py">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="313">
+              <caret line="136" column="4" selection-start-line="136" selection-start-column="4" selection-end-line="136" selection-end-column="4" />
+              <folding>
+                <element signature="e#18530#46042#0" />
+                <element signature="e#46077#68652#0" />
+                <element signature="e#68704#74008#0" />
               </folding>
             </state>
           </provider>
@@ -150,10 +169,9 @@
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/ds_modules/dsphwidgets.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="365">
-              <caret line="4493" lean-forward="true" selection-start-line="4493" selection-end-line="4493" />
+            <state relative-caret-position="255">
+              <caret line="15" column="8" selection-start-line="15" selection-start-column="7" selection-end-line="15" selection-end-column="12" />
               <folding>
-                <element signature="e#273#287#0" expanded="true" />
                 <element signature="e#1358#2727#0" />
                 <element signature="e#2776#3792#0" />
                 <element signature="e#3847#8932#0" />
@@ -166,7 +184,6 @@
                 <element signature="e#62982#66479#0" />
                 <element signature="e#66531#75597#0" />
                 <element signature="e#75658#96268#0" />
-                <element signature="e#96331#125608#0" />
                 <element signature="e#125667#137304#0" />
                 <element signature="e#137365#157726#0" />
                 <element signature="e#157774#163509#0" />
@@ -178,8 +195,8 @@
                 <element signature="e#179575#186608#0" />
                 <element signature="e#186671#198131#0" />
                 <element signature="e#198196#215715#0" />
+                <element signature="e#215775#227952#0" />
                 <element signature="e#228005#235963#0" />
-                <element signature="e#236026#245022#0" />
                 <element signature="e#245071#246801#0" />
               </folding>
             </state>
@@ -244,13 +261,13 @@
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
     <option name="RECENT_BRANCH_BY_REPOSITORY">
       <map>
-        <entry key="$PROJECT_DIR$" value="master" />
+        <entry key="$PROJECT_DIR$" value="develop" />
       </map>
     </option>
   </component>
   <component name="HighlightingSettingsPerFile">
-    <setting file="file://$PROJECT_DIR$/ds_modules/dsphwidgets.py" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/DesignSPHysics.py" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/ds_modules/dsphwidgets.py" root0="FORCE_HIGHLIGHTING" />
   </component>
   <component name="IdeDocumentHistory">
     <option name="CHANGED_PATHS">
@@ -274,11 +291,11 @@
         <option value="$PROJECT_DIR$/build-release.sh" />
         <option value="$PROJECT_DIR$/pylintrc" />
         <option value="$PROJECT_DIR$/ds_modules/guiutils.py" />
-        <option value="$PROJECT_DIR$/README.md" />
         <option value="$PROJECT_DIR$/DesignSPHysics.py" />
         <option value="$PROJECT_DIR$/ds_modules/dsphwidgets.py" />
         <option value="$PROJECT_DIR$/CONTRIBUTING.md" />
         <option value="$PROJECT_DIR$/ds_modules/utils.py" />
+        <option value="$PROJECT_DIR$/README.md" />
       </list>
     </option>
   </component>
@@ -318,7 +335,6 @@
       <foldersAlwaysOnTop value="true" />
     </navigator>
     <panes>
-      <pane id="Scope" />
       <pane id="ProjectPane">
         <subPane>
           <expand>
@@ -335,6 +351,7 @@
           <select />
         </subPane>
       </pane>
+      <pane id="Scope" />
     </panes>
   </component>
   <component name="PropertiesComponent">
@@ -386,12 +403,12 @@
         <env name="PYTHONUNBUFFERED" value="1" />
       </envs>
       <option name="SDK_HOME" value="C:\Python27\python.exe" />
-      <option name="WORKING_DIRECTORY" value="$USER_HOME$/Documents/DSPH" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/../../DSPH" />
       <option name="IS_MODULE_SDK" value="false" />
       <option name="ADD_CONTENT_ROOTS" value="true" />
       <option name="ADD_SOURCE_ROOTS" value="true" />
       <EXTENSION ID="PythonCoverageRunConfigurationExtension" runner="coverage.py" />
-      <option name="SCRIPT_NAME" value="$USER_HOME$/Documents/DSPH/fc_execute.py" />
+      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/../../DSPH/fc_execute.py" />
       <option name="PARAMETERS" value="" />
       <option name="SHOW_COMMAND_LINE" value="false" />
       <option name="EMULATE_TERMINAL" value="false" />
@@ -815,10 +832,10 @@
     </todo-panel>
   </component>
   <component name="ToolWindowManager">
-    <frame x="0" y="0" width="2560" height="1080" extended-state="0" />
+    <frame x="-8" y="-8" width="2576" height="1056" extended-state="6" />
     <editor active="true" />
     <layout>
-      <window_info active="true" content_ui="combo" id="Project" order="0" sideWeight="0.4993498" visible="true" weight="0.11804452" />
+      <window_info content_ui="combo" id="Project" order="0" sideWeight="0.4993498" visible="true" weight="0.10015898" />
       <window_info id="Favorites" order="1" sideWeight="0.50065017" side_tool="true" weight="0.10771065" />
       <window_info x="2363" y="239" width="619" height="687" id="Notes" order="2" weight="0.30063966" />
       <window_info anchor="bottom" id="Message" order="0" />
@@ -827,8 +844,8 @@
       <window_info anchor="bottom" id="Debug" order="3" weight="0.4" />
       <window_info anchor="bottom" id="Cvs" order="4" weight="0.25" />
       <window_info anchor="bottom" id="Inspection" order="5" weight="0.4" />
-      <window_info anchor="bottom" id="Event Log" order="6" sideWeight="0.5093439" side_tool="true" weight="0.1641791" />
-      <window_info anchor="bottom" id="TODO" order="7" sideWeight="0.49156272" weight="0.25273633" />
+      <window_info anchor="bottom" id="Event Log" order="6" sideWeight="0.5091415" side_tool="true" weight="0.2527115" />
+      <window_info anchor="bottom" id="TODO" order="7" sideWeight="0.4908585" weight="0.2527115" />
       <window_info anchor="bottom" id="Docker" order="8" show_stripe_button="false" />
       <window_info anchor="bottom" id="Messages" order="9" />
       <window_info anchor="bottom" id="Python Console" order="10" weight="0.3273632" />
@@ -969,13 +986,7 @@
     <entry file="file://$PROJECT_DIR$/dualsphysics/bin/DsphConfig.xml">
       <provider selected="true" editor-type-id="text-editor" />
     </entry>
-    <entry file="file://$APPLICATION_CONFIG_DIR$/pycharm64.exe.vmoptions">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="69">
-          <caret line="3" column="8" selection-start-line="3" selection-start-column="8" selection-end-line="3" selection-end-column="8" />
-        </state>
-      </provider>
-    </entry>
+    <entry file="file://$APPLICATION_CONFIG_DIR$/pycharm64.exe.vmoptions" />
     <entry file="file://$PROJECT_DIR$/.gitignore">
       <provider selected="true" editor-type-id="text-editor" />
     </entry>
@@ -1030,8 +1041,13 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/ds_modules/guiutils.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="731">
-          <caret line="106" column="4" selection-start-line="106" selection-start-column="4" selection-end-line="106" selection-end-column="4" />
+        <state relative-caret-position="313">
+          <caret line="136" column="4" selection-start-line="136" selection-start-column="4" selection-end-line="136" selection-end-column="4" />
+          <folding>
+            <element signature="e#18530#46042#0" />
+            <element signature="e#46077#68652#0" />
+            <element signature="e#68704#74008#0" />
+          </folding>
         </state>
       </provider>
     </entry>
@@ -1243,17 +1259,17 @@
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/README.md">
+      <provider selected="true" editor-type-id="split-provider[text-editor;markdown-preview-editor]">
+        <state split_layout="SPLIT">
+          <first_editor relative-caret-position="442">
+            <caret line="32" lean-forward="true" selection-start-line="32" selection-end-line="32" />
+          </first_editor>
+          <second_editor />
+        </state>
+      </provider>
       <provider editor-type-id="text-editor">
         <state relative-caret-position="560">
           <caret line="35" column="57" selection-start-line="35" selection-start-column="57" selection-end-line="35" selection-end-column="57" />
-        </state>
-      </provider>
-      <provider selected="true" editor-type-id="split-provider[text-editor;markdown-preview-editor]">
-        <state split_layout="SPLIT">
-          <first_editor relative-caret-position="-135">
-            <caret line="8" column="14" lean-forward="true" selection-start-line="8" selection-start-column="14" selection-end-line="8" selection-end-column="69" />
-          </first_editor>
-          <second_editor />
         </state>
       </provider>
     </entry>
@@ -1266,10 +1282,9 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/ds_modules/dsphwidgets.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="365">
-          <caret line="4493" lean-forward="true" selection-start-line="4493" selection-end-line="4493" />
+        <state relative-caret-position="255">
+          <caret line="15" column="8" selection-start-line="15" selection-start-column="7" selection-end-line="15" selection-end-column="12" />
           <folding>
-            <element signature="e#273#287#0" expanded="true" />
             <element signature="e#1358#2727#0" />
             <element signature="e#2776#3792#0" />
             <element signature="e#3847#8932#0" />
@@ -1282,7 +1297,6 @@
             <element signature="e#62982#66479#0" />
             <element signature="e#66531#75597#0" />
             <element signature="e#75658#96268#0" />
-            <element signature="e#96331#125608#0" />
             <element signature="e#125667#137304#0" />
             <element signature="e#137365#157726#0" />
             <element signature="e#157774#163509#0" />
@@ -1294,8 +1308,8 @@
             <element signature="e#179575#186608#0" />
             <element signature="e#186671#198131#0" />
             <element signature="e#198196#215715#0" />
+            <element signature="e#215775#227952#0" />
             <element signature="e#228005#235963#0" />
-            <element signature="e#236026#245022#0" />
             <element signature="e#245071#246801#0" />
           </folding>
         </state>
@@ -1304,8 +1318,8 @@
     <entry file="file://$PROJECT_DIR$/CONTRIBUTING.md">
       <provider selected="true" editor-type-id="split-provider[text-editor;markdown-preview-editor]">
         <state split_layout="SPLIT">
-          <first_editor relative-caret-position="506">
-            <caret line="22" column="17" lean-forward="true" selection-start-line="22" selection-start-column="17" selection-end-line="22" selection-end-column="17" />
+          <first_editor relative-caret-position="374">
+            <caret line="22" column="17" selection-start-line="22" selection-start-column="17" selection-end-line="22" selection-end-column="17" />
           </first_editor>
           <second_editor />
         </state>
@@ -1313,8 +1327,8 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/DesignSPHysics.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="280">
-          <caret line="406" column="42" selection-start-line="406" selection-start-column="42" selection-end-line="406" selection-end-column="42" />
+        <state relative-caret-position="201">
+          <caret line="1136" column="58" lean-forward="true" selection-start-line="1136" selection-start-column="44" selection-end-line="1136" selection-end-column="66" />
           <folding>
             <element signature="e#286#300#0" expanded="true" />
             <element signature="e#61549#69392#0" />
@@ -1326,13 +1340,10 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/ds_modules/utils.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="529">
-          <caret line="71" column="63" selection-start-line="71" selection-start-column="63" selection-end-line="71" selection-end-column="63" />
+        <state relative-caret-position="-2091">
+          <caret line="54" column="61" selection-start-line="54" selection-start-column="61" selection-end-line="54" selection-end-column="61" />
           <folding>
             <element signature="e#253#267#0" expanded="true" />
-            <element signature="e#4228#11142#0" />
-            <element signature="e#13302#20615#0" />
-            <element signature="e#21104#21660#0" />
           </folding>
         </state>
       </provider>
