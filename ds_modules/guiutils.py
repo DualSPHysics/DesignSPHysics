@@ -13,6 +13,7 @@ import pickle
 import sys
 import os
 import utils
+import constants
 import subprocess
 from sys import platform
 
@@ -21,6 +22,7 @@ sys.setdefaultencoding('utf-8')
 
 from PySide import QtGui, QtCore
 from execution_parameters import *
+from widgets import HoverableLabel
 
 """
 Copyright (C) 2016 - Andrés Vieira (anvieiravazquez@gmail.com)
@@ -128,6 +130,8 @@ def def_constants_window(data):
     # Creates a dialog and 2 main buttons
     constants_window = QtGui.QDialog()
     constants_window.setWindowTitle("DSPH Constant definition")
+    help_window = QtGui.QTextEdit()
+    help_window.setReadOnly(True)
     ok_button = QtGui.QPushButton("Ok")
     cancel_button = QtGui.QPushButton("Cancel")
 
@@ -155,7 +159,14 @@ def def_constants_window(data):
 
     # Gravity
     gravity_layout = QtGui.QHBoxLayout()
-    gravity_label = QtGui.QLabel("Gravity [X, Y, Z]: ")
+    gravity_label = HoverableLabel("Gravity [X, Y, Z]: ")
+    gravity_label.setHelpText("Testing things")
+    gravity_label.setToolTip(constants.GRAVITY)
+
+    def on_gravity_label_hover(help_text):
+        help_window.setText(help_text)
+
+    gravity_label.hover.connect(on_gravity_label_hover)
 
     gravityx_input = QtGui.QLineEdit()
     gravityx_input.setMaxLength(10)
@@ -187,6 +198,8 @@ def def_constants_window(data):
     # Reference density of the fluid: layout and components
     rhop0_layout = QtGui.QHBoxLayout()
     rhop0_label = QtGui.QLabel("Fluid reference density: ")
+    rhop0_label.setToolTip(constants.RHOP0)
+
     rhop0_input = QtGui.QLineEdit()
     rhop0_input.setMaxLength(10)
     rhop0_validator = QtGui.QIntValidator(0, 10000, rhop0_input)
@@ -221,6 +234,7 @@ def def_constants_window(data):
 
     hswl_layout = QtGui.QHBoxLayout()
     hswl_label = QtGui.QLabel("HSWL: ")
+    hswl_label.setToolTip(constants.HSWL)
     hswl_input = QtGui.QLineEdit()
     hswl_input.setMaxLength(10)
     hswl_validator = QtGui.QIntValidator(0, 10000, hswl_input)
@@ -238,6 +252,7 @@ def def_constants_window(data):
     # gamma: layout and components
     gamma_layout = QtGui.QHBoxLayout()
     gamma_label = QtGui.QLabel("Gamma: ")
+    gamma_label.setToolTip(constants.GAMMA)
     gamma_input = QtGui.QLineEdit()
     gamma_input.setMaxLength(3)
     gamma_validator = QtGui.QIntValidator(0, 999, gamma_input)
@@ -270,6 +285,7 @@ def def_constants_window(data):
 
     speedsystem_layout = QtGui.QHBoxLayout()
     speedsystem_label = QtGui.QLabel("Speedsystem: ")
+    speedsystem_label.setToolTip(constants.SPEEDSYSTEM)
     speedsystem_input = QtGui.QLineEdit()
     speedsystem_input.setMaxLength(10)
     speedsystem_validator = QtGui.QIntValidator(0, 10000, speedsystem_input)
@@ -287,6 +303,7 @@ def def_constants_window(data):
     # coefsound: layout and components
     coefsound_layout = QtGui.QHBoxLayout()
     coefsound_label = QtGui.QLabel("Coefsound: ")
+    coefsound_label.setToolTip(constants.COEFSOUND)
     coefsound_input = QtGui.QLineEdit()
     coefsound_input.setMaxLength(3)
     coefsound_validator = QtGui.QIntValidator(0, 999, coefsound_input)
@@ -318,6 +335,7 @@ def def_constants_window(data):
 
     speedsound_layout = QtGui.QHBoxLayout()
     speedsound_label = QtGui.QLabel("Speedsound: ")
+    speedsound_label.setToolTip(constants.COEFSOUND)
     speedsound_input = QtGui.QLineEdit()
     speedsound_input.setMaxLength(10)
     speedsound_validator = QtGui.QIntValidator(0, 10000, speedsound_input)
@@ -335,6 +353,7 @@ def def_constants_window(data):
     # coefh: layout and components
     coefh_layout = QtGui.QHBoxLayout()
     coefh_label = QtGui.QLabel("CoefH: ")
+    coefh_label.setToolTip(constants.COEFH)
     coefh_input = QtGui.QLineEdit()
     coefh_input.setMaxLength(10)
     coefh_validator = QtGui.QDoubleValidator(0, 10, 8, coefh_input)
@@ -349,6 +368,7 @@ def def_constants_window(data):
     # cflnumber: layout and components
     cflnumber_layout = QtGui.QHBoxLayout()
     cflnumber_label = QtGui.QLabel("cflnumber: ")
+    cflnumber_label.setToolTip(constants.CFLNUMBER)
     cflnumber_input = QtGui.QLineEdit()
     cflnumber_input.setMaxLength(10)
     cflnumber_validator = QtGui.QDoubleValidator(0, 10, 8, coefh_input)
@@ -420,7 +440,7 @@ def def_constants_window(data):
     b_validator = QtGui.QDoubleValidator(0, 100, 8, b_input)
     b_input.setText(str(data['b']))
     b_input.setValidator(b_validator)
-    b_label2 = QtGui.QLabel("")
+    b_label2 = QtGui.QLabel("Pascal")
 
     b_layout.addWidget(b_label)
     b_layout.addWidget(b_input)
@@ -462,6 +482,11 @@ def def_constants_window(data):
 
     ok_button.clicked.connect(on_ok)
     cancel_button.clicked.connect(on_cancel)
+    # Help Text Layout definition
+
+    cw_helpText_layout = QtGui.QHBoxLayout()
+    cw_helpText_layout.addWidget(help_window)
+
     # Button layout definition
     cw_button_layout = QtGui.QHBoxLayout()
     cw_button_layout.addStretch(1)
@@ -497,6 +522,7 @@ def def_constants_window(data):
     cw_groupbox.setLayout(cw_main_layout)
     constants_window_layout = QtGui.QVBoxLayout()
     constants_window_layout.addWidget(cw_groupbox)
+    constants_window_layout.addLayout(cw_helpText_layout)
     constants_window_layout.addLayout(cw_button_layout)
     constants_window.setLayout(constants_window_layout)
     # END Main layout definition and composition.

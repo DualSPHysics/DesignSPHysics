@@ -60,7 +60,7 @@ along with DesignSPHysics.  If not, see <http://www.gnu.org/licenses/>.
 """
 
 # ------ CONSTANTS DEFINITION ------
-FREECAD_MIN_VERSION = "016"
+FREECAD_MIN_VERSION = "017"
 APP_NAME = "DesignSPHysics"
 DEBUGGING = False
 VERBOSE = False
@@ -80,7 +80,7 @@ def is_compatible_version():
 
     version_num = FreeCAD.Version()[0] + FreeCAD.Version()[1]
     if int(version_num) < int(FREECAD_MIN_VERSION):
-        guiutils.warning_dialog("This version of FreeCAD is not supported!. Install version 0.16 or higher.")
+        guiutils.warning_dialog("This version of FreeCAD is not supported!. Install version 0.17 or higher.")
         return False
     else:
         return True

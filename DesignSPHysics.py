@@ -74,14 +74,14 @@ except EnvironmentError:
         __("LICENSE file could not be found. Are you sure you didn't delete it?")
     )
 
-# Version check. This script is only compatible with FreeCAD 0.16 or higher
+# Version check. This script is only compatible with FreeCAD 0.17 or higher
 is_compatible = utils.is_compatible_version()
 if not is_compatible:
     guiutils.error_dialog(
-        __("This FreeCAD version is not compatible. Please update FreeCAD to version 0.16 or higher.")
+        __("This FreeCAD version is not compatible. Please update FreeCAD to version 0.17 or higher.")
     )
     raise EnvironmentError(
-        __("This FreeCAD version is not compatible. Please update FreeCAD to version 0.16 or higher.")
+        __("This FreeCAD version is not compatible. Please update FreeCAD to version 0.17 or higher.")
     )
 
 # Set QT to UTF-8 encoding
