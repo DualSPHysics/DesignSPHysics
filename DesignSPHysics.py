@@ -139,8 +139,17 @@ constants_label.setWordWrap(True)
 constants_button = QtGui.QPushButton(__("Define\nConstants"))
 constants_button.setToolTip(__("Use this button to define case constants,\nsuch as gravity or fluid reference density."))
 
+
 # Opens constant definition window on button click
-constants_button.clicked.connect(lambda: guiutils.def_constants_window(data))
+def on_constants_button_pressed():
+    constants_window = dsphwidgets.ConstantsDialog(data)
+
+    # Constant definition window behaviour and general composing
+    constants_window.resize(600, 400)
+    constants_window.exec_()
+
+
+constants_button.clicked.connect(on_constants_button_pressed)
 widget_state_elements['constants_button'] = constants_button
 
 # Help button that opens a help URL for DesignSPHysics

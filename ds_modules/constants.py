@@ -6,8 +6,6 @@ This file contains a collection of constants meant to use with DesignSPHysics.
 
 """
 
-from utils import __
-
 
 """
 Copyright (C) 2016 - Andrés Vieira (anvieiravazquez@gmail.com) & Lorena Docasar Vázquez (docasarlorena@gmail.com)
@@ -30,7 +28,7 @@ along with DesignSPHysics.  If not, see <http://www.gnu.org/licenses/>.
 """
 
 # ------ DEFINE CONSTANTS  ------
-GRAVITY = __("Gravitational acceleration.")
+GRAVITY = "Gravitational acceleration."
 RHOP0 = "Reference density of the fluid."
 HSWL = "Maximum still water level to calculate speedofsound using coefsound."
 GAMMA = "Polytropic constant for water used in the state equation."
