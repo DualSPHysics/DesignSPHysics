@@ -28,6 +28,9 @@ along with DesignSPHysics.  If not, see <http://www.gnu.org/licenses/>.
 """
 
 # ------ DEFINE CONSTANTS  ------
+
+""" --------- ToolTip -------------- """
+
 GRAVITY = "Gravitational acceleration."
 RHOP0 = "Reference density of the fluid."
 HSWL = "Maximum still water level to calculate speedofsound using coefsound."
@@ -37,3 +40,19 @@ COEFSOUND = "Coefficient to multiply speedsystem."
 SPEEDSOUND = "Speed of sound to use in the simulation (by default speedofsound=coefsound*speedsystem)."
 COEFH = "Coefficient to calculate the smoothing length (h=coefh*sqrt(3*dp^2) in 3D)."
 CFLNUMBER = "Coefficient to multiply dt."
+
+""" --------- Help Window -------------- """
+
+HELP_GRAVITYX = "Gravity X"
+HELP_GRAVITYY = "Gravity Y"
+HELP_GRAVITYZ = "Gravity Z"
+HELP_RHOP0 = "Fluid reference density"
+HELP_HSWL = "HSWL"
+HELP_GAMMA = "Gamma"
+HELP_SPEEDSYSTEM = "Speedsystem"
+HELP_COEFSOUND = "Coefsound"
+HELP_SPEEDSOUND = "Speedsound"
+HELP_COEFH = "CoefH"
+HELP_CFLNUMBER = "cflnumber"
+
+
