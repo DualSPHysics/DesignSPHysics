@@ -4985,6 +4985,21 @@ class HoverableLabel(QtGui.QLabel):
         self.hover.emit(self.help_text)
 
 
+class FocusableLineEdit(QtGui.QLineEdit):
+    focus = QtCore.Signal(str)
+    help_text = ""
+
+    def __init__(self):
+        super(FocusableLineEdit, self).__init__()
+
+    def setHelpText(self, help_text):
+        self.help_text = help_text
+
+    def focusInEvent(self, *args, **kwargs):
+        QtGui.QLineEdit.focusInEvent(self, *args, **kwargs).__init__()
+        self.focus.emit(self.help_text)
+
+
 class ConstantsDialog(QtGui.QDialog):
 
     def __init__(self, data):
@@ -5023,25 +5038,37 @@ class ConstantsDialog(QtGui.QDialog):
         # Gravity
         self.gravity_layout = QtGui.QHBoxLayout()
         self.gravity_label = HoverableLabel("Gravity [X, Y, Z]: ")
-        self.gravity_label.setHelpText("Testing things")
         self.gravity_label.setToolTip(utils.__(constants.GRAVITY))
 
-        self.gravity_label.hover.connect(self.on_gravity_label_hover)
-
         self.gravityx_input = QtGui.QLineEdit()
+        self.gravityx_input = FocusableLineEdit()
+        self.gravityx_input.setHelpText(utils.__(constants.HELP_GRAVITYX))
         self.gravityx_input.setMaxLength(10)
+
+        self.gravityx_input.focus.connect(self.on_gravity_label_focus)
+
         self.gravityx_validator = QtGui.QDoubleValidator(-200, 200, 8, self.gravityx_input)
         self.gravityx_input.setText(str(self.data['gravity'][0]))
         self.gravityx_input.setValidator(self.gravityx_validator)
 
         self.gravityy_input = QtGui.QLineEdit()
+        self.gravityy_input = FocusableLineEdit()
+        self.gravityy_input.setHelpText(utils.__(constants.HELP_GRAVITYY))
         self.gravityy_input.setMaxLength(10)
+
+        self.gravityy_input.focus.connect(self.on_gravity_label_focus)
+
         self.gravityy_validator = QtGui.QDoubleValidator(-200, 200, 8, self.gravityy_input)
         self.gravityy_input.setText(str(self.data['gravity'][1]))
         self.gravityy_input.setValidator(self.gravityy_validator)
 
         self.gravityz_input = QtGui.QLineEdit()
+        self.gravityz_input = FocusableLineEdit()
+        self.gravityz_input.setHelpText(utils.__(constants.HELP_GRAVITYZ))
         self.gravityz_input.setMaxLength(10)
+
+        self.gravityz_input.focus.connect(self.on_gravity_label_focus)
+
         self.gravityz_validator = QtGui.QDoubleValidator(-200, 200, 8, self.gravityz_input)
         self.gravityz_input.setText(str(self.data['gravity'][2]))
         self.gravityz_input.setValidator(self.gravityz_validator)
@@ -5058,10 +5085,15 @@ class ConstantsDialog(QtGui.QDialog):
         # Reference density of the fluid: layout and components
         self.rhop0_layout = QtGui.QHBoxLayout()
         self.rhop0_label = QtGui.QLabel("Fluid reference density: ")
-        self.rhop0_label.setToolTip(constants.RHOP0)
+        self.rhop0_label.setToolTip(utils.__(constants.RHOP0))
 
         self.rhop0_input = QtGui.QLineEdit()
+        self.rhop0_input = FocusableLineEdit()
+        self.rhop0_input.setHelpText(utils.__(constants.HELP_RHOP0))
         self.rhop0_input.setMaxLength(10)
+
+        self.rhop0_input.focus.connect(self.on_gravity_label_focus)
+
         self.rhop0_validator = QtGui.QIntValidator(0, 10000, self.rhop0_input)
         self.rhop0_input.setText(str(self.data['rhop0']))
         self.rhop0_input.setValidator(self.rhop0_validator)
@@ -5086,9 +5118,14 @@ class ConstantsDialog(QtGui.QDialog):
 
         self.hswl_layout = QtGui.QHBoxLayout()
         self.hswl_label = QtGui.QLabel("HSWL: ")
-        self.hswl_label.setToolTip(constants.HSWL)
+        self.hswl_label.setToolTip(utils.__(constants.HSWL))
         self.hswl_input = QtGui.QLineEdit()
+        self.hswl_input = FocusableLineEdit()
+        self.hswl_input.setHelpText(utils.__(constants.HELP_HSWL))
         self.hswl_input.setMaxLength(10)
+
+        self.hswl_input.focus.connect(self.on_gravity_label_focus)
+
         self.hswl_validator = QtGui.QIntValidator(0, 10000, self.hswl_input)
         self.hswl_input.setText(str(self.data['hswl']))
         self.hswl_input.setValidator(self.hswl_validator)
@@ -5104,9 +5141,14 @@ class ConstantsDialog(QtGui.QDialog):
         # gamma: layout and components
         self.gamma_layout = QtGui.QHBoxLayout()
         self.gamma_label = QtGui.QLabel("Gamma: ")
-        self.gamma_label.setToolTip(constants.GAMMA)
+        self.gamma_label.setToolTip(utils.__(constants.GAMMA))
         self.gamma_input = QtGui.QLineEdit()
+        self.gamma_input = FocusableLineEdit()
+        self.gamma_input.setHelpText(utils.__(constants.HELP_GAMMA))
         self.gamma_input.setMaxLength(3)
+
+        self.gamma_input.focus.connect(self.on_gravity_label_focus)
+
         self.gamma_validator = QtGui.QIntValidator(0, 999, self.gamma_input)
         self.gamma_input.setText(str(self.data['gamma']))
         self.gamma_input.setValidator(self.gamma_validator)
@@ -5129,9 +5171,14 @@ class ConstantsDialog(QtGui.QDialog):
 
         self.speedsystem_layout = QtGui.QHBoxLayout()
         self.speedsystem_label = QtGui.QLabel("Speedsystem: ")
-        self.speedsystem_label.setToolTip(constants.SPEEDSYSTEM)
+        self.speedsystem_label.setToolTip(utils.__(constants.SPEEDSYSTEM))
         self.speedsystem_input = QtGui.QLineEdit()
+        self.speedsystem_input = FocusableLineEdit()
+        self.speedsystem_input.setHelpText(utils.__(constants.HELP_SPEEDSYSTEM))
         self.speedsystem_input.setMaxLength(10)
+
+        self.speedsystem_input.focus.connect(self.on_gravity_label_focus)
+
         self.speedsystem_validator = QtGui.QIntValidator(0, 10000, self.speedsystem_input)
         self.speedsystem_input.setText(str(self.data['speedsystem']))
         self.speedsystem_input.setValidator(self.speedsystem_validator)
@@ -5147,9 +5194,14 @@ class ConstantsDialog(QtGui.QDialog):
         # coefsound: layout and components
         self.coefsound_layout = QtGui.QHBoxLayout()
         self.coefsound_label = QtGui.QLabel("Coefsound: ")
-        self.coefsound_label.setToolTip(constants.COEFSOUND)
+        self.coefsound_label.setToolTip(utils.__(constants.COEFSOUND))
         self.coefsound_input = QtGui.QLineEdit()
+        self.coefsound_input = FocusableLineEdit()
+        self.coefsound_input.setHelpText(utils.__(constants.HELP_COEFSOUND))
         self.coefsound_input.setMaxLength(3)
+
+        self.coefsound_input.focus.connect(self.on_gravity_label_focus)
+
         self.coefsound_validator = QtGui.QIntValidator(0, 999, self.coefsound_input)
         self.coefsound_input.setText(str(self.data['coefsound']))
         self.coefsound_input.setValidator(self.coefsound_validator)
@@ -5172,9 +5224,14 @@ class ConstantsDialog(QtGui.QDialog):
 
         self.speedsound_layout = QtGui.QHBoxLayout()
         self.speedsound_label = QtGui.QLabel("Speedsound: ")
-        self.speedsound_label.setToolTip(constants.COEFSOUND)
+        self.speedsound_label.setToolTip(utils.__(constants.SPEEDSOUND))
         self.speedsound_input = QtGui.QLineEdit()
+        self.speedsound_input = FocusableLineEdit()
+        self.speedsound_input.setHelpText(utils.__(constants.HELP_SPEEDSOUND))
         self.speedsound_input.setMaxLength(10)
+
+        self.speedsound_input.focus.connect(self.on_gravity_label_focus)
+
         self.speedsound_validator = QtGui.QIntValidator(0, 10000, self.speedsound_input)
         self.speedsound_input.setText(str(self.data['speedsound']))
         self.speedsound_input.setValidator(self.speedsound_validator)
@@ -5190,9 +5247,14 @@ class ConstantsDialog(QtGui.QDialog):
         # coefh: layout and components
         self.coefh_layout = QtGui.QHBoxLayout()
         self.coefh_label = QtGui.QLabel("CoefH: ")
-        self.coefh_label.setToolTip(constants.COEFH)
+        self.coefh_label.setToolTip(utils.__(constants.COEFH))
         self.coefh_input = QtGui.QLineEdit()
+        self.coefh_input = FocusableLineEdit()
+        self.coefh_input.setHelpText(utils.__(constants.HELP_COEFH))
         self.coefh_input.setMaxLength(10)
+
+        self.coefh_input.focus.connect(self.on_gravity_label_focus)
+
         self.coefh_validator = QtGui.QDoubleValidator(0, 10, 8, self.coefh_input)
         self.coefh_input.setText(str(self.data['coefh']))
         self.coefh_input.setValidator(self.coefh_validator)
@@ -5205,9 +5267,14 @@ class ConstantsDialog(QtGui.QDialog):
         # cflnumber: layout and components
         self.cflnumber_layout = QtGui.QHBoxLayout()
         self.cflnumber_label = QtGui.QLabel("cflnumber: ")
-        self.cflnumber_label.setToolTip(constants.CFLNUMBER)
+        self.cflnumber_label.setToolTip(utils.__(constants.CFLNUMBER))
         self.cflnumber_input = QtGui.QLineEdit()
+        self.cflnumber_input = FocusableLineEdit()
+        self.cflnumber_input.setHelpText(utils.__(constants.HELP_CFLNUMBER))
         self.cflnumber_input.setMaxLength(10)
+
+        self.cflnumber_input.focus.connect(self.on_gravity_label_focus)
+
         self.cflnumber_validator = QtGui.QDoubleValidator(0, 10, 8, self.coefh_input)
         self.cflnumber_input.setText(str(self.data['cflnumber']))
         self.cflnumber_input.setValidator(self.cflnumber_validator)
@@ -5231,7 +5298,12 @@ class ConstantsDialog(QtGui.QDialog):
         self.h_layout = QtGui.QHBoxLayout()
         self.h_label = QtGui.QLabel("Smoothing Length: ")
         self.h_input = QtGui.QLineEdit()
+        self.h_input = FocusableLineEdit()
+        self.h_input.setHelpText("Smoothing Length")
         self.h_input.setMaxLength(10)
+
+        self.h_input.focus.connect(self.on_gravity_label_focus)
+
         self.h_validator = QtGui.QDoubleValidator(0, 100, 8, self.h_input)
         self.h_input.setText(str(self.data['h']))
         self.h_input.setValidator(self.h_validator)
@@ -5258,7 +5330,12 @@ class ConstantsDialog(QtGui.QDialog):
         self.b_layout = QtGui.QHBoxLayout()
         self.b_label = QtGui.QLabel("B constant: ")
         self.b_input = QtGui.QLineEdit()
+        self.b_input = FocusableLineEdit()
+        self.b_input.setHelpText("B constant")
         self.b_input.setMaxLength(10)
+
+        self.b_input.focus.connect(self.on_gravity_label_focus)
+
         self.b_validator = QtGui.QDoubleValidator(0, 100, 8, self.b_input)
         self.b_input.setText(str(self.data['b']))
         self.b_input.setValidator(self.b_validator)
@@ -5326,7 +5403,7 @@ class ConstantsDialog(QtGui.QDialog):
         else:
             self.hswl_input.setEnabled(True)
 
-    def on_gravity_label_hover(self, help_text):
+    def on_gravity_label_focus(self, help_text):
         self.help_window.setText(help_text)
 
     # Controls if user selected auto speedsystem or not enabling/disablen
