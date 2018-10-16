@@ -2,16 +2,16 @@
 <project version="4">
   <component name="BookmarkManager">
     <bookmark url="file://$PROJECT_DIR$/ds_modules/utils.py" line="516" mnemonic="9" />
-    <bookmark url="file://$PROJECT_DIR$/DesignSPHysics.py" line="1858" mnemonic="3" />
-    <bookmark url="file://$PROJECT_DIR$/ds_modules/dsphwidgets.py" line="5348" mnemonic="2" />
-    <bookmark url="file://$PROJECT_DIR$/ds_modules/dsphwidgets.py" line="5044" mnemonic="1" />
+    <bookmark url="file://$PROJECT_DIR$/DesignSPHysics.py" line="177" mnemonic="3" />
+    <bookmark url="file://$PROJECT_DIR$/ds_modules/dsphwidgets.py" line="5901" mnemonic="1" />
+    <bookmark url="file://$PROJECT_DIR$/ds_modules/dsphwidgets.py" line="6108" mnemonic="2" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="22d76f4b-310a-4afb-8788-a472c77b2c87" name="Default" comment="Refactorizes Constant Definition Dialog to be a new class">
+    <list default="true" id="22d76f4b-310a-4afb-8788-a472c77b2c87" name="Default" comment="Adds a custom QLineEdit implementation with focus event&#10;&#10;Adds more text constants for help messages">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/ds_modules/constants.py" beforeDir="false" afterPath="$PROJECT_DIR$/ds_modules/constants.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/DesignSPHysics.py" beforeDir="false" afterPath="$PROJECT_DIR$/DesignSPHysics.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/ds_modules/dsphwidgets.py" beforeDir="false" afterPath="$PROJECT_DIR$/ds_modules/dsphwidgets.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/ds_modules/lang/spanish.json" beforeDir="false" afterPath="$PROJECT_DIR$/ds_modules/lang/spanish.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/ds_modules/guiutils.py" beforeDir="false" afterPath="$PROJECT_DIR$/ds_modules/guiutils.py" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
@@ -96,15 +96,15 @@
         <counts>
           <entry key="dummy" value="11" />
           <entry key="md" value="6" />
-          <entry key="py" value="3263" />
-          <entry key="txt" value="451" />
+          <entry key="py" value="4069" />
+          <entry key="txt" value="564" />
         </counts>
       </usages-collector>
       <usages-collector id="statistics.file.types.edit">
         <counts>
           <entry key="Markdown" value="6" />
-          <entry key="PLAIN_TEXT" value="462" />
-          <entry key="Python" value="3263" />
+          <entry key="PLAIN_TEXT" value="575" />
+          <entry key="Python" value="4069" />
         </counts>
       </usages-collector>
       <usages-collector id="statistics.file.extensions.open">
@@ -112,7 +112,7 @@
           <entry key="FCMacro" value="1" />
           <entry key="json" value="6" />
           <entry key="md" value="2" />
-          <entry key="py" value="53" />
+          <entry key="py" value="59" />
           <entry key="pylintrc" value="1" />
         </counts>
       </usages-collector>
@@ -121,7 +121,7 @@
           <entry key="JSON" value="6" />
           <entry key="Markdown" value="2" />
           <entry key="PLAIN_TEXT" value="1" />
-          <entry key="Python" value="54" />
+          <entry key="Python" value="60" />
         </counts>
       </usages-collector>
       <usages-collector id="statistics.lifecycle.project">
@@ -153,8 +153,8 @@
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/ds_modules/utils.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="259">
-              <caret line="742" column="87" selection-start-line="742" selection-start-column="81" selection-end-line="742" selection-end-column="87" />
+            <state relative-caret-position="561">
+              <caret line="39" column="34" lean-forward="true" selection-start-line="39" selection-end-line="39" selection-end-column="34" />
               <folding>
                 <element signature="e#253#267#0" expanded="true" />
               </folding>
@@ -162,27 +162,45 @@
           </provider>
         </entry>
       </file>
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/ds_modules/execution_parameters.py">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="680">
+              <caret line="46" column="8" selection-start-line="46" selection-start-column="8" selection-end-line="46" selection-end-column="8" />
+            </state>
+          </provider>
+        </entry>
+      </file>
       <file pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/ds_modules/dsphwidgets.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="547">
-              <caret line="5272" column="75" selection-start-line="5272" selection-start-column="75" selection-end-line="5272" selection-end-column="75" />
+            <state relative-caret-position="598">
+              <caret line="6137" column="41" selection-start-line="6137" selection-start-column="41" selection-end-line="6137" selection-end-column="41" />
               <folding>
                 <element signature="e#273#287#0" expanded="true" />
-                <marker date="1539619461260" expanded="true" signature="247512:247518" ph="..." />
+                <marker date="1539706049853" expanded="true" signature="247362:247368" ph="..." />
+                <marker date="1539706049853" expanded="true" signature="268401:268495" ph="..." />
+                <marker date="1539706049853" expanded="true" signature="294276:294281" ph="..." />
+                <marker date="1539706049853" expanded="true" signature="297896:297901" ph="..." />
               </folding>
             </state>
           </provider>
         </entry>
       </file>
       <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/DesignSPHysics.py">
+        <entry file="file://$PROJECT_DIR$/ds_modules/guiutils.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="228">
-              <caret line="3843" column="56" selection-start-line="3843" selection-start-column="52" selection-end-line="3843" selection-end-column="56" />
+            <state relative-caret-position="261">
+              <caret line="121" selection-start-line="121" selection-end-line="121" />
               <folding>
-                <element signature="e#286#300#0" expanded="true" />
-                <marker date="1539190301161" expanded="true" signature="5388:5581" ph="..." />
+                <element signature="e#163#177#0" expanded="true" />
+                <element signature="e#1241#1447#0" />
+                <element signature="e#1478#1680#0" />
+                <element signature="e#1738#2080#0" />
+                <element signature="e#2137#2465#0" />
+                <element signature="e#2520#2844#0" />
+                <element signature="e#2886#3319#0" />
+                <element signature="e#3375#3804#0" />
               </folding>
             </state>
           </provider>
@@ -199,18 +217,6 @@
   </component>
   <component name="FindInProjectRecents">
     <findStrings>
-      <find>guiutils</find>
-      <find>GRAVITY</find>
-      <find>constants.GRA</find>
-      <find>constants_window</find>
-      <find>self..</find>
-      <find>constants_window.</find>
-      <find>data[</find>
-      <find>constants_windo</find>
-      <find>import widget</find>
-      <find>import wd</find>
-      <find>ConstantsDialog</find>
-      <find>help_window</find>
       <find>ok_button</find>
       <find>cancel_button</find>
       <find>lattice_layout</find>
@@ -226,9 +232,21 @@
       <find>cw_main_layout.addL</find>
       <find>_main_layout.addLayout(</find>
       <find>on_self</find>
-      <find>data</find>
       <find>consta</find>
       <find>grav</find>
+      <find>execution para</find>
+      <find>const</find>
+      <find>execution pa</find>
+      <find>dialog</find>
+      <find>params_window</find>
+      <find>params_w</find>
+      <find>execpara</find>
+      <find>on_dtiniauto_check</find>
+      <find>execparams_window_layout</find>
+      <find>domainfixedparameter</find>
+      <find>DomainFixedParameter</find>
+      <find>data</find>
+      <find>data[</find>
     </findStrings>
     <replaceStrings>
       <replace>self.time_label</replace>
@@ -290,10 +308,10 @@
         <option value="$PROJECT_DIR$/ds_modules/Define Constants.py" />
         <option value="$PROJECT_DIR$/ds_modules/widgets/HoverableLabel.py" />
         <option value="$PROJECT_DIR$/ds_modules/widgets/__init__.py" />
-        <option value="$PROJECT_DIR$/ds_modules/guiutils.py" />
-        <option value="$PROJECT_DIR$/DesignSPHysics.py" />
-        <option value="$PROJECT_DIR$/ds_modules/dsphwidgets.py" />
         <option value="$PROJECT_DIR$/ds_modules/constants.py" />
+        <option value="$PROJECT_DIR$/DesignSPHysics.py" />
+        <option value="$PROJECT_DIR$/ds_modules/guiutils.py" />
+        <option value="$PROJECT_DIR$/ds_modules/dsphwidgets.py" />
       </list>
     </option>
   </component>
@@ -477,13 +495,6 @@
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
       <updated>1486981492000</updated>
-    </task>
-    <task id="LOCAL-00026" summary="Started draft of ComputeForces, FloatingInfo and MeasureTool export windows.">
-      <created>1495449532234</created>
-      <option name="number" value="00026" />
-      <option name="presentableId" value="LOCAL-00026" />
-      <option name="project" value="LOCAL" />
-      <updated>1495449532234</updated>
     </task>
     <task id="LOCAL-00027" summary="Added custom file names for PartVTK tool exporting. Changed roadmap a bit">
       <created>1495529303665</created>
@@ -821,7 +832,14 @@
       <option name="project" value="LOCAL" />
       <updated>1539192436181</updated>
     </task>
-    <option name="localTasksCounter" value="75" />
+    <task id="LOCAL-00075" summary="Adds a custom QLineEdit implementation with focus event&#10;&#10;Adds more text constants for help messages">
+      <created>1539619938388</created>
+      <option name="number" value="00075" />
+      <option name="presentableId" value="LOCAL-00075" />
+      <option name="project" value="LOCAL" />
+      <updated>1539619938389</updated>
+    </task>
+    <option name="localTasksCounter" value="76" />
     <servers />
   </component>
   <component name="TodoView">
@@ -837,7 +855,7 @@
     <frame x="1263" y="0" width="1304" height="1047" extended-state="0" />
     <editor active="true" />
     <layout>
-      <window_info content_ui="combo" id="Project" order="0" sideWeight="0.4993498" visible="true" weight="0.23794213" />
+      <window_info active="true" content_ui="combo" id="Project" order="0" sideWeight="0.4993498" visible="true" weight="0.23794213" />
       <window_info id="Structure" order="1" sideWeight="0.50200266" side_tool="true" weight="0.13036565" />
       <window_info id="Favorites" order="2" sideWeight="0.50065017" side_tool="true" weight="0.10771065" />
       <window_info x="2363" y="239" width="619" height="687" id="Notes" order="3" weight="0.30063966" />
@@ -854,7 +872,7 @@
       <window_info anchor="bottom" id="Python Console" order="10" weight="0.3263965" />
       <window_info anchor="bottom" id="Database Changes" order="11" show_stripe_button="false" />
       <window_info anchor="bottom" id="Terminal" order="12" sideWeight="0.49836066" weight="0.2245345" />
-      <window_info active="true" anchor="bottom" id="Version Control" order="13" sideWeight="0.48794213" visible="true" weight="0.16210295" />
+      <window_info anchor="bottom" id="Version Control" order="13" sideWeight="0.48794213" visible="true" weight="0.16210295" />
       <window_info anchor="bottom" id="Inspection Results" order="14" weight="0.32935324" />
       <window_info anchor="right" x="0" y="0" width="590" height="880" id="Documentation" order="0" side_tool="true" weight="0.32962227" />
       <window_info anchor="right" id="Commander" order="1" weight="0.4" />
@@ -902,7 +920,6 @@
   </component>
   <component name="VcsManagerConfiguration">
     <option name="RELOAD_CONTEXT" value="false" />
-    <MESSAGE value="Adds option to open IsoSurface export with Paraview&#10;&#10;Also, removes type selection from IsoSurface as it can only export&#10;fluids, so it does not need it." />
     <MESSAGE value="Now opening with Paraview in PartVTK is only enabled if VTK is selected" />
     <MESSAGE value="Fixes an error where FloatingInfo would put -onlyprocess instead of &#10;-onlymk" />
     <MESSAGE value="Removes size constraints in multiple windows" />
@@ -927,7 +944,8 @@
     <MESSAGE value="Fixes an error when adding an object to the case" />
     <MESSAGE value="Adds text constants for help messages&#10;&#10;Also adds a custom QLabel implementation with hover event.&#10;&#10;Changes some bits like minimum required version and some details&#10;in the README.md file." />
     <MESSAGE value="Refactorizes Constant Definition Dialog to be a new class" />
-    <option name="LAST_COMMIT_MESSAGE" value="Refactorizes Constant Definition Dialog to be a new class" />
+    <MESSAGE value="Adds a custom QLineEdit implementation with focus event&#10;&#10;Adds more text constants for help messages" />
+    <option name="LAST_COMMIT_MESSAGE" value="Adds a custom QLineEdit implementation with focus event&#10;&#10;Adds more text constants for help messages" />
   </component>
   <component name="editorHistoryManager">
     <entry file="file://$PROJECT_DIR$/build-release.sh">
@@ -936,9 +954,6 @@
           <caret line="9" column="33" lean-forward="true" selection-start-line="9" selection-start-column="33" selection-end-line="9" selection-end-column="33" />
         </state>
       </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/ds_modules/__init__.py">
-      <provider selected="true" editor-type-id="text-editor" />
     </entry>
     <entry file="file://$PROJECT_DIR$/ds_modules/lang/chinese-traditional.json">
       <provider selected="true" editor-type-id="text-editor" />
@@ -1085,16 +1100,6 @@
     <entry file="file://$PROJECT_DIR$/ds_modules/stl/utils.py">
       <provider selected="true" editor-type-id="text-editor" />
     </entry>
-    <entry file="file://$PROJECT_DIR$/ds_modules/execution_parameters.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="595">
-          <caret line="64" lean-forward="true" selection-start-line="64" selection-end-line="64" />
-          <folding>
-            <element signature="e#1097#2070#0" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/ds_modules/propenums.py">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="74">
@@ -1184,34 +1189,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/ds_modules/utils.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="259">
-          <caret line="742" column="87" selection-start-line="742" selection-start-column="81" selection-end-line="742" selection-end-column="87" />
-          <folding>
-            <element signature="e#253#267#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/ds_modules/guiutils.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="228">
-          <caret line="15" column="13" selection-start-line="15" selection-start-column="7" selection-end-line="15" selection-end-column="13" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/DesignSPHysics.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="228">
-          <caret line="3843" column="56" selection-start-line="3843" selection-start-column="52" selection-end-line="3843" selection-end-column="56" />
-          <folding>
-            <element signature="e#286#300#0" expanded="true" />
-            <marker date="1539190301161" expanded="true" signature="5388:5581" ph="..." />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/ds_modules/constants.py">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="683">
@@ -1219,13 +1196,65 @@
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/ds_modules/__init__.py">
+      <provider selected="true" editor-type-id="text-editor" />
+    </entry>
+    <entry file="file://$PROJECT_DIR$/DesignSPHysics.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="432">
+          <caret line="177" column="61" selection-start-line="177" selection-start-column="61" selection-end-line="177" selection-end-column="61" />
+          <folding>
+            <element signature="e#286#300#0" expanded="true" />
+            <marker date="1539622339777" expanded="true" signature="5388:5581" ph="..." />
+            <marker date="1539622339777" expanded="true" signature="6457:6663" ph="..." />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/ds_modules/guiutils.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="261">
+          <caret line="121" selection-start-line="121" selection-end-line="121" />
+          <folding>
+            <element signature="e#163#177#0" expanded="true" />
+            <element signature="e#1241#1447#0" />
+            <element signature="e#1478#1680#0" />
+            <element signature="e#1738#2080#0" />
+            <element signature="e#2137#2465#0" />
+            <element signature="e#2520#2844#0" />
+            <element signature="e#2886#3319#0" />
+            <element signature="e#3375#3804#0" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/ds_modules/utils.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="561">
+          <caret line="39" column="34" lean-forward="true" selection-start-line="39" selection-end-line="39" selection-end-column="34" />
+          <folding>
+            <element signature="e#253#267#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/ds_modules/execution_parameters.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="680">
+          <caret line="46" column="8" selection-start-line="46" selection-start-column="8" selection-end-line="46" selection-end-column="8" />
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/ds_modules/dsphwidgets.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="547">
-          <caret line="5272" column="75" selection-start-line="5272" selection-start-column="75" selection-end-line="5272" selection-end-column="75" />
+        <state relative-caret-position="598">
+          <caret line="6137" column="41" selection-start-line="6137" selection-start-column="41" selection-end-line="6137" selection-end-column="41" />
           <folding>
             <element signature="e#273#287#0" expanded="true" />
-            <marker date="1539619461260" expanded="true" signature="247512:247518" ph="..." />
+            <marker date="1539706049853" expanded="true" signature="247362:247368" ph="..." />
+            <marker date="1539706049853" expanded="true" signature="268401:268495" ph="..." />
+            <marker date="1539706049853" expanded="true" signature="294276:294281" ph="..." />
+            <marker date="1539706049853" expanded="true" signature="297896:297901" ph="..." />
           </folding>
         </state>
       </provider>

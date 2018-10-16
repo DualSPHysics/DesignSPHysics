@@ -26,6 +26,7 @@ from utils import __
 import guiutils
 from properties import *
 import constants
+from execution_parameters import *
 
 
 # Copyright (C) 2016 - Andrés Vieira (anvieiravazquez@gmail.com)
@@ -3501,13 +3502,13 @@ class InfoDialog(QtGui.QDialog):
 
         if self.has_details:
             self.details_button = QtGui.QPushButton("Details")
-        self.self.ok_button = QtGui.QPushButton("Ok")
+        self.ok_button = QtGui.QPushButton("Ok")
 
         self.button_layout = QtGui.QHBoxLayout()
         self.button_layout.addStretch(1)
         if self.has_details:
             self.button_layout.addWidget(self.details_button)
-        self.button_layout.addWidget(self.self.ok_button)
+        self.button_layout.addWidget(self.ok_button)
 
         self.main_layout.addWidget(self.text)
         self.main_layout.addWidget(guiutils.h_line_generator())
@@ -3534,7 +3535,7 @@ class InfoDialog(QtGui.QDialog):
     def connections(self):
         if self.has_details:
             self.details_button.clicked.connect(self.on_details_button)
-        self.self.ok_button.clicked.connect(self.on_ok_button)
+        self.ok_button.clicked.connect(self.on_ok_button)
 
 
 class MLPiston1DConfigDialog(QtGui.QDialog):
@@ -3954,9 +3955,9 @@ class RelaxationZoneRegularConfigDialog(QtGui.QDialog):
         self.temp_relaxationzone.waveperiod = float(self.waveperiod_input.text())
         self.temp_relaxationzone.depth = float(self.depth_input.text())
         self.temp_relaxationzone.swl = float(self.swl_input.text())
-        self.temp_relaxationzone.center[0] = self.float(self.center_x.text())
-        self.temp_relaxationzone.center[1] = self.float(self.center_y.text())
-        self.temp_relaxationzone.center[2] = self.float(self.center_z.text())
+        self.temp_relaxationzone.center[0] = float(self.center_x.text())
+        self.temp_relaxationzone.center[1] = float(self.center_y.text())
+        self.temp_relaxationzone.center[2] = float(self.center_z.text())
         self.temp_relaxationzone.width = float(self.width_input.text())
         self.temp_relaxationzone.phase = float(self.phase_input.text())
         self.temp_relaxationzone.ramp = float(self.ramp_input.text())
@@ -3964,9 +3965,9 @@ class RelaxationZoneRegularConfigDialog(QtGui.QDialog):
         self.temp_relaxationzone.savemotion_periodsteps = float(self.savemotion_periodsteps_input.text())
         self.temp_relaxationzone.savemotion_xpos = float(self.savemotion_xpos_input.text())
         self.temp_relaxationzone.savemotion_zpos = float(self.savemotion_zpos_input.text())
-        self.temp_relaxationzone.coefdir[0] = self.float(self.coefdir_x.text())
-        self.temp_relaxationzone.coefdir[1] = self.float(self.coefdir_y.text())
-        self.temp_relaxationzone.coefdir[2] = self.float(self.coefdir_z.text())
+        self.temp_relaxationzone.coefdir[0] = float(self.coefdir_x.text())
+        self.temp_relaxationzone.coefdir[1] = float(self.coefdir_y.text())
+        self.temp_relaxationzone.coefdir[2] = float(self.coefdir_z.text())
         self.temp_relaxationzone.coefdt = float(self.coefdt_input.text())
         self.temp_relaxationzone.function_psi = float(self.function_psi_input.text())
         self.temp_relaxationzone.function_beta = float(self.function_beta_input.text())
@@ -4251,9 +4252,9 @@ class RelaxationZoneIrregularConfigDialog(QtGui.QDialog):
         self.temp_relaxationzone.randomseed = float(self.waveperiod_input.text())
         self.temp_relaxationzone.depth = float(self.depth_input.text())
         self.temp_relaxationzone.swl = float(self.swl_input.text())
-        self.temp_relaxationzone.center[0] = self.float(self.center_x.text())
-        self.temp_relaxationzone.center[1] = self.float(self.center_y.text())
-        self.temp_relaxationzone.center[2] = self.float(self.center_z.text())
+        self.temp_relaxationzone.center[0] = float(self.center_x.text())
+        self.temp_relaxationzone.center[1] = float(self.center_y.text())
+        self.temp_relaxationzone.center[2] = float(self.center_z.text())
         self.temp_relaxationzone.width = float(self.width_input.text())
         self.temp_relaxationzone.ramptime = float(self.ramptime_input.text())
         self.temp_relaxationzone.serieini = float(self.serieini_input.text())
@@ -4268,9 +4269,9 @@ class RelaxationZoneIrregularConfigDialog(QtGui.QDialog):
         self.temp_relaxationzone.saveseriewaves_timemin = float(self.saveseriewaves_timemin_input.text())
         self.temp_relaxationzone.saveseriewaves_timemax = float(self.saveseriewaves_timemax_input.text())
         self.temp_relaxationzone.saveseriewaves_xpos = float(self.saveseriewaves_xpos_input.text())
-        self.temp_relaxationzone.coefdir[0] = self.float(self.coefdir_x.text())
-        self.temp_relaxationzone.coefdir[1] = self.float(self.coefdir_y.text())
-        self.temp_relaxationzone.coefdir[2] = self.float(self.coefdir_z.text())
+        self.temp_relaxationzone.coefdir[0] = float(self.coefdir_x.text())
+        self.temp_relaxationzone.coefdir[1] = float(self.coefdir_y.text())
+        self.temp_relaxationzone.coefdir[2] = float(self.coefdir_z.text())
         self.temp_relaxationzone.coefdt = float(self.coefdt_input.text())
         self.temp_relaxationzone.function_psi = float(self.function_psi_input.text())
         self.temp_relaxationzone.function_beta = float(self.function_beta_input.text())
@@ -4502,18 +4503,18 @@ class RelaxationZoneFileConfigDialog(QtGui.QDialog):
         self.temp_relaxationzone.filesvelx_initial = int(self.filesvelx_initial_input.text())
         self.temp_relaxationzone.filesvelx_count = int(self.filesvelx_count_input.text())
         self.temp_relaxationzone.usevelz = bool(self.usevelz_check.isChecked())
-        self.temp_relaxationzone.movedata[0] = self.float(self.movedata_x.text())
-        self.temp_relaxationzone.movedata[1] = self.float(self.movedata_y.text())
-        self.temp_relaxationzone.movedata[2] = self.float(self.movedata_z.text())
+        self.temp_relaxationzone.movedata[0] = float(self.movedata_x.text())
+        self.temp_relaxationzone.movedata[1] = float(self.movedata_y.text())
+        self.temp_relaxationzone.movedata[2] = float(self.movedata_z.text())
         self.temp_relaxationzone.dpz = float(self.dpz_input.text())
         self.temp_relaxationzone.smooth = float(self.smooth_input.text())
-        self.temp_relaxationzone.center[0] = self.float(self.center_x.text())
-        self.temp_relaxationzone.center[1] = self.float(self.center_y.text())
-        self.temp_relaxationzone.center[2] = self.float(self.center_z.text())
+        self.temp_relaxationzone.center[0] = float(self.center_x.text())
+        self.temp_relaxationzone.center[1] = float(self.center_y.text())
+        self.temp_relaxationzone.center[2] = float(self.center_z.text())
         self.temp_relaxationzone.width = float(self.width_input.text())
-        self.temp_relaxationzone.coefdir[0] = self.float(self.coefdir_x.text())
-        self.temp_relaxationzone.coefdir[1] = self.float(self.coefdir_y.text())
-        self.temp_relaxationzone.coefdir[2] = self.float(self.coefdir_z.text())
+        self.temp_relaxationzone.coefdir[0] = float(self.coefdir_x.text())
+        self.temp_relaxationzone.coefdir[1] = float(self.coefdir_y.text())
+        self.temp_relaxationzone.coefdir[2] = float(self.coefdir_z.text())
         self.temp_relaxationzone.coefdt = float(self.coefdt_input.text())
         self.temp_relaxationzone.function_psi = float(self.function_psi_input.text())
         self.temp_relaxationzone.function_beta = float(self.function_beta_input.text())
@@ -4612,9 +4613,9 @@ class AccelerationInputDialog(QtGui.QDialog):
             self.accinput_acccentre_z,
         ]]
 
-        self.accinput_globalself.gravity_layout = QtGui.QHBoxLayout()
+        self.accinput_globalgravity_layout = QtGui.QHBoxLayout()
         self.accinput_globalgravity_check = QtGui.QCheckBox(__("Global Gravity"))
-        self.accinput_globalself.gravity_layout.addWidget(self.accinput_globalgravity_check)
+        self.accinput_globalgravity_layout.addWidget(self.accinput_globalgravity_check)
 
         self.accinput_datafile_layout = QtGui.QHBoxLayout()
         self.accinput_datafile_label = QtGui.QLabel(__("File with acceleration data:"))
@@ -4633,7 +4634,7 @@ class AccelerationInputDialog(QtGui.QDialog):
             self.accinput_label_layout,
             self.accinput_mkfluid_layout,
             self.accinput_acccentre_layout,
-            self.accinput_globalself.gravity_layout,
+            self.accinput_globalgravity_layout,
             self.accinput_datafile_layout,
             self.accinput_save_layout
         ]]
@@ -4644,9 +4645,9 @@ class AccelerationInputDialog(QtGui.QDialog):
         self.accinput_layout.addWidget(self.accinput_data_groupbox)
 
         self.button_layout = QtGui.QHBoxLayout()
-        self.self.ok_button = QtGui.QPushButton(__("Ok"))
+        self.ok_button = QtGui.QPushButton(__("Ok"))
         self.button_layout.addStretch(1)
-        self.button_layout.addWidget(self.self.ok_button)
+        self.button_layout.addWidget(self.ok_button)
 
         self.main_layout.addWidget(self.enabled_check)
         self.main_layout.addLayout(self.accinput_layout)
@@ -4668,7 +4669,7 @@ class AccelerationInputDialog(QtGui.QDialog):
         self.on_enable()
 
     def init_connections(self):
-        self.self.ok_button.clicked.connect(self.on_ok)
+        self.ok_button.clicked.connect(self.on_ok)
         self.accinput_datafile_button.clicked.connect(self.on_browse)
         self.accinput_list_add_button.clicked.connect(self.on_add)
         self.accinput_list_remove_button.clicked.connect(self.on_remove)
@@ -4727,7 +4728,7 @@ class AccelerationInputDialog(QtGui.QDialog):
         item.globalgravity = bool(self.accinput_globalgravity_check.isChecked())
         item.datafile = str(self.accinput_datafile_input.text())
 
-        self.accinput.acclist[index] = self.item
+        self.accinput.acclist[index] = item
         self.list_refresh()
 
     def on_enable(self):
@@ -4936,18 +4937,18 @@ class VelocityTimesDialog(QtGui.QDialog):
         self.table.setHorizontalHeaderLabels([__("Time"), __("Value")])
 
         self.button_layout = QtGui.QHBoxLayout()
-        self.self.cancel_button = QtGui.QPushButton(__("Cancel"))
-        self.self.ok_button = QtGui.QPushButton(__("Ok"))
+        self.cancel_button = QtGui.QPushButton(__("Cancel"))
+        self.ok_button = QtGui.QPushButton(__("Ok"))
         self.button_layout.addStretch(1)
-        self.button_layout.addWidget(self.self.cancel_button)
-        self.button_layout.addWidget(self.self.ok_button)
+        self.button_layout.addWidget(self.cancel_button)
+        self.button_layout.addWidget(self.ok_button)
 
         self.main_layout.addWidget(self.table)
         self.main_layout.addLayout(self.button_layout)
 
         self.setLayout(self.main_layout)
-        self.self.ok_button.clicked.connect(self.on_ok)
-        self.self.cancel_button.clicked.connect(self.on_cancel)
+        self.ok_button.clicked.connect(self.on_ok)
+        self.cancel_button.clicked.connect(self.on_cancel)
         self.fill_data()
 
     def fill_data(self):
@@ -5463,4 +5464,676 @@ class ConstantsDialog(QtGui.QDialog):
 
     def on_cancel(self):
         utils.log("Constants not changed")
+        self.reject()
+
+
+class ExecutionParametersDialog(QtGui.QDialog):
+    """Defines the execution parameters window.
+    Modifies the data dictionary passed as parameter."""
+
+    def __init__(self, data):
+        super(ExecutionParametersDialog, self).__init__()
+
+        self.data = data
+
+        # Creates a dialog and 2 main buttons
+        self.setWindowTitle("DSPH Execution Parameters")
+        self.ok_button = QtGui.QPushButton("Ok")
+        self.cancel_button = QtGui.QPushButton("Cancel")
+
+        # Precision in particle interaction
+        self.posdouble_layout = QtGui.QHBoxLayout()
+        self.posdouble_label = QtGui.QLabel("Precision in particle interaction: ")
+        self.posdouble_input = QtGui.QComboBox()
+        self.posdouble_input.insertItems(0,
+                                    ['Simple', 'Double', 'Uses and saves double'])
+        self.posdouble_input.setCurrentIndex(int(self.data['posdouble']))
+
+        self.posdouble_layout.addWidget(self.posdouble_label)
+        self.posdouble_layout.addWidget(self.posdouble_input)
+        self.posdouble_layout.addStretch(1)
+
+        self.stepalgorithm_layout = QtGui.QHBoxLayout()
+        self.stepalgorithm_label = QtGui.QLabel("Step Algorithm: ")
+        self.stepalgorithm_input = QtGui.QComboBox()
+        self.stepalgorithm_input.insertItems(0, ['Verlet', 'Symplectic'])
+        self.stepalgorithm_input.setCurrentIndex(int(self.data['stepalgorithm']) - 1)
+        self.stepalgorithm_input.currentIndexChanged.connect(self.on_step_change)
+
+        self.stepalgorithm_layout.addWidget(self.stepalgorithm_label)
+        self.stepalgorithm_layout.addWidget(self.stepalgorithm_input)
+        self.stepalgorithm_layout.addStretch(1)
+
+        # Verlet steps
+        self.verletsteps_layout = QtGui.QHBoxLayout()
+        self.verletsteps_label = QtGui.QLabel("Verlet Steps: ")
+        self.verletsteps_input = QtGui.QLineEdit()
+        self.verletsteps_input.setMaxLength(4)
+        self.verletsteps_validator = QtGui.QIntValidator(0, 9999, self.verletsteps_input)
+        self.verletsteps_input.setText(str(self.data['verletsteps']))
+        self.verletsteps_input.setValidator(self.verletsteps_validator)
+
+        # Enable/Disable fields depending on selection
+        self.on_step_change(self.stepalgorithm_input.currentIndex)
+
+        self.verletsteps_layout.addWidget(self.verletsteps_label)
+        self.verletsteps_layout.addWidget(self.verletsteps_input)
+
+        # Kernel
+        self.kernel_layout = QtGui.QHBoxLayout()
+        self.kernel_label = QtGui.QLabel("Interaction kernel: ")
+        self.kernel_input = QtGui.QComboBox()
+        self.kernel_input.insertItems(0, ['Cubic spline', 'Wendland'])
+        self.kernel_input.setCurrentIndex(int(self.data['kernel']) - 1)
+
+        self.kernel_layout.addWidget(self.kernel_label)
+        self.kernel_layout.addWidget(self.kernel_input)
+        self.kernel_layout.addStretch(1)
+
+        # Viscosity formulation
+        self.viscotreatment_layout = QtGui.QHBoxLayout()
+        self.viscotreatment_label = QtGui.QLabel("Viscosity Formulation: ")
+        self.viscotreatment_input = QtGui.QComboBox()
+        self.viscotreatment_input.insertItems(0, ['Artificial', 'Laminar + SPS'])
+        self.viscotreatment_input.setCurrentIndex(int(self.data['viscotreatment']) - 1)
+
+        self.viscotreatment_layout.addWidget(self.viscotreatment_label)
+        self.viscotreatment_layout.addWidget(self.viscotreatment_input)
+        self.viscotreatment_layout.addStretch(1)
+
+        # Viscosity value
+        self.visco_layout = QtGui.QHBoxLayout()
+        self.visco_label = QtGui.QLabel("Viscosity value: ")
+        self.visco_input = QtGui.QLineEdit()
+        self.visco_input.setMaxLength(10)
+        self.visco_units_label = QtGui.QLabel("")
+        self.visco_layout.addWidget(self.visco_label)
+        self.visco_layout.addWidget(self.visco_input)
+        self.visco_layout.addWidget(self.visco_units_label)
+
+        self.on_viscotreatment_change(int(self.data['viscotreatment']) - 1)
+        self.visco_input.setText(str(self.data['visco']))
+
+        self.viscotreatment_input.currentIndexChanged.connect(self.on_viscotreatment_change)
+
+        # Viscosity with boundary
+        self.viscoboundfactor_layout = QtGui.QHBoxLayout()
+        self.viscoboundfactor_label = QtGui.QLabel("Viscosity factor with boundary: ")
+        self.viscoboundfactor_input = QtGui.QLineEdit()
+        self.viscoboundfactor_input.setMaxLength(10)
+        self.viscoboundfactor_input.setText(str(self.data['viscoboundfactor']))
+
+        self.viscoboundfactor_layout.addWidget(self.viscoboundfactor_label)
+        self.viscoboundfactor_layout.addWidget(self.viscoboundfactor_input)
+
+        self.deltasph_en_layout = QtGui.QHBoxLayout()
+        self.deltasph_en_label = QtGui.QLabel("Enable DeltaSPH: ")
+        self.deltasph_en_input = QtGui.QComboBox()
+        self.deltasph_en_input.insertItems(0, ['No', 'Yes'])
+        self.deltasph_en_input.setCurrentIndex(int(self.data['deltasph_en']))
+        self.deltasph_en_input.currentIndexChanged.connect(self.on_deltasph_en_change)
+
+        self.deltasph_en_layout.addWidget(self.deltasph_en_label)
+        self.deltasph_en_layout.addWidget(self.deltasph_en_input)
+        self.deltasph_en_layout.addStretch(1)
+
+        # DeltaSPH value
+        self.deltasph_layout = QtGui.QHBoxLayout()
+        self.deltasph_label = QtGui.QLabel("DeltaSPH value: ")
+        self.deltasph_input = QtGui.QLineEdit()
+        self.deltasph_input.setMaxLength(10)
+        self.deltasph_input.setText(str(self.data['deltasph']))
+        self.deltasph_layout.addWidget(self.deltasph_label)
+        self.deltasph_layout.addWidget(self.deltasph_input)
+
+        if self.deltasph_en_input.currentIndex() == 0:
+            self.deltasph_input.setEnabled(False)
+        else:
+            self.deltasph_input.setEnabled(True)
+
+        self.shifting_layout = QtGui.QHBoxLayout()
+        self.shifting_label = QtGui.QLabel("Shifting mode: ")
+        self.shifting_input = QtGui.QComboBox()
+        self.shifting_input.insertItems(
+            0, ['None', 'Ignore bound', 'Ignore fixed', 'Full'])
+        self.shifting_input.setCurrentIndex(int(self.data['shifting']))
+        self.shifting_input.currentIndexChanged.connect(self.on_shifting_change)
+
+        self.shifting_layout.addWidget(self.shifting_label)
+        self.shifting_layout.addWidget(self.shifting_input)
+        self.shifting_layout.addStretch(1)
+
+        # Coefficient for shifting
+        self.shiftcoef_layout = QtGui.QHBoxLayout()
+        self.shiftcoef_label = QtGui.QLabel("Coefficient for shifting: ")
+        self.shiftcoef_input = QtGui.QLineEdit()
+        self.shiftcoef_input.setMaxLength(10)
+        self.shiftcoef_input.setText(str(self.data['shiftcoef']))
+        self.shiftcoef_layout.addWidget(self.shiftcoef_label)
+        self.shiftcoef_layout.addWidget(self.shiftcoef_input)
+
+        # Free surface detection threshold
+        self.shifttfs_layout = QtGui.QHBoxLayout()
+        self.shifttfs_label = QtGui.QLabel("Free surface detection threshold: ")
+        self.shifttfs_input = QtGui.QLineEdit()
+        self.shifttfs_input.setMaxLength(10)
+        self.shifttfs_input.setText(str(self.data['shifttfs']))
+        self.shifttfs_layout.addWidget(self.shifttfs_label)
+        self.shifttfs_layout.addWidget(self.shifttfs_input)
+
+        # Enable/Disable fields depending on Shifting mode on window creation.
+        self.on_shifting_change(self.shifting_input.currentIndex())
+
+        # Rigid algorithm
+        self.rigidalgorithm_layout = QtGui.QHBoxLayout()
+        self.rigidalgorithm_label = QtGui.QLabel("Solid-solid interaction: ")
+        self.rigidalgorithm_input = QtGui.QComboBox()
+        self.rigidalgorithm_input.insertItems(0, ['SPH', 'DEM'])
+        self.rigidalgorithm_input.setCurrentIndex(int(self.data['rigidalgorithm']) - 1)
+
+        self.rigidalgorithm_layout.addWidget(self.rigidalgorithm_label)
+        self.rigidalgorithm_layout.addWidget(self.rigidalgorithm_input)
+        self.rigidalgorithm_layout.addStretch(1)
+
+        # Sim start freeze time
+        self.ftpause_layout = QtGui.QHBoxLayout()
+        self.ftpause_label = QtGui.QLabel("Floating freeze time: ")
+        self.ftpause_input = QtGui.QLineEdit()
+        self.ftpause_input.setMaxLength(10)
+        self.ftpause_input.setText(str(self.data['ftpause']))
+        self.ftpause_label2 = QtGui.QLabel("seconds")
+        self.ftpause_layout.addWidget(self.ftpause_label)
+        self.ftpause_layout.addWidget(self.ftpause_input)
+        self.ftpause_layout.addWidget(self.ftpause_label2)
+
+        # Coefficient to calculate DT
+        self.coefdtmin_layout = QtGui.QHBoxLayout()
+        self.coefdtmin_label = QtGui.QLabel("Coefficient for minimum time step: ")
+        self.coefdtmin_input = QtGui.QLineEdit()
+        self.coefdtmin_input.setMaxLength(10)
+        self.coefdtmin_input.setText(str(self.data['coefdtmin']))
+        self.coefdtmin_layout.addWidget(self.coefdtmin_label)
+        self.coefdtmin_layout.addWidget(self.coefdtmin_input)
+
+        # Initial time step
+        self.dtiniauto_layout = QtGui.QHBoxLayout()
+        self.dtiniauto_chk = QtGui.QCheckBox("Initial time step auto")
+        if self.data['dtini_auto']:
+            self.dtiniauto_chk.setCheckState(QtCore.Qt.Checked)
+        else:
+            self.dtiniauto_chk.setCheckState(QtCore.Qt.Unchecked)
+
+        self.dtiniauto_chk.toggled.connect(self.on_dtiniauto_check)
+        self.dtiniauto_layout.addWidget(self.dtiniauto_chk)
+        self.dtini_layout = QtGui.QHBoxLayout()
+        self.dtini_label = QtGui.QLabel("Initial time step: ")
+        self.dtini_input = QtGui.QLineEdit()
+        self.dtini_input.setMaxLength(10)
+        self.dtini_input.setText(str(self.data['dtini']))
+        self.dtini_label2 = QtGui.QLabel("seconds")
+        self.dtini_layout.addWidget(self.dtini_label)
+        self.dtini_layout.addWidget(self.dtini_input)
+        self.dtini_layout.addWidget(self.dtini_label2)
+        self.on_dtiniauto_check()
+
+        # Minimium time step
+        self.dtminauto_layout = QtGui.QHBoxLayout()
+        self.dtminauto_chk = QtGui.QCheckBox("Minimum time step: ")
+        if self.data['dtmin_auto']:
+            self.dtminauto_chk.setCheckState(QtCore.Qt.Checked)
+        else:
+            self.dtminauto_chk.setCheckState(QtCore.Qt.Unchecked)
+
+        self.dtminauto_chk.toggled.connect(self.on_dtminauto_check)
+        self.dtminauto_layout.addWidget(self.dtminauto_chk)
+        self.dtmin_layout = QtGui.QHBoxLayout()
+        self.dtmin_label = QtGui.QLabel("Minimium time step: ")
+        self.dtmin_input = QtGui.QLineEdit()
+        self.dtmin_input.setMaxLength(10)
+        self.dtmin_input.setText(str(self.data['dtmin']))
+        self.dtmin_label2 = QtGui.QLabel("seconds")
+        self.dtmin_layout.addWidget(self.dtmin_label)
+        self.dtmin_layout.addWidget(self.dtmin_input)
+        self.dtmin_layout.addWidget(self.dtmin_label2)
+        self.on_dtminauto_check()
+
+        # Fixed DT file
+        self.dtfixed_layout = QtGui.QHBoxLayout()
+        self.dtfixed_label = QtGui.QLabel("Fixed DT file: ")
+        self.dtfixed_input = QtGui.QLineEdit()
+        self.dtfixed_input.setText(str(self.data['dtfixed']))
+        self.dtfixed_label2 = QtGui.QLabel("file")
+        self.dtfixed_layout.addWidget(self.dtfixed_label)
+        self.dtfixed_layout.addWidget(self.dtfixed_input)
+        self.dtfixed_layout.addWidget(self.dtfixed_label2)
+
+        # Velocity of particles
+        self.dtallparticles_layout = QtGui.QHBoxLayout()
+        self.dtallparticles_label = QtGui.QLabel("Velocity of particles: ")
+        self.dtallparticles_input = QtGui.QLineEdit()
+        self.dtallparticles_input.setMaxLength(1)
+        self.dtallparticles_validator = QtGui.QIntValidator(0, 1, self.dtallparticles_input)
+        self.dtallparticles_input.setText(str(self.data['dtallparticles']))
+        self.dtallparticles_input.setValidator(self.dtallparticles_validator)
+        self.dtallparticles_label2 = QtGui.QLabel("[0,1]")
+        self.dtallparticles_layout.addWidget(self.dtallparticles_label)
+        self.dtallparticles_layout.addWidget(self.dtallparticles_input)
+        self.dtallparticles_layout.addWidget(self.dtallparticles_label2)
+
+        # Time of simulation
+        self.timemax_layout = QtGui.QHBoxLayout()
+        self.timemax_label = QtGui.QLabel("Time of simulation: ")
+        self.timemax_input = QtGui.QLineEdit()
+        self.timemax_input.setMaxLength(10)
+        self.timemax_input.setText(str(self.data['timemax']))
+        self.timemax_label2 = QtGui.QLabel("seconds")
+        self.timemax_layout.addWidget(self.timemax_label)
+        self.timemax_layout.addWidget(self.timemax_input)
+        self.timemax_layout.addWidget(self.timemax_label2)
+
+        # Time out data
+        self.timeout_layout = QtGui.QHBoxLayout()
+        self.timeout_label = QtGui.QLabel("Time out data: ")
+        self.timeout_input = QtGui.QLineEdit()
+        self.timeout_input.setMaxLength(10)
+        self.timeout_input.setText(str(self.data['timeout']))
+        self.timeout_label2 = QtGui.QLabel("seconds")
+        self.timeout_layout.addWidget(self.timeout_label)
+        self.timeout_layout.addWidget(self.timeout_input)
+        self.timeout_layout.addWidget(self.timeout_label2)
+
+        # Increase of Z+
+        self.incz_layout = QtGui.QHBoxLayout()
+        self.incz_label = QtGui.QLabel("Increase of Z+ (%): ")
+        self.incz_input = QtGui.QLineEdit()
+        self.incz_input.setMaxLength(10)
+        self.incz_input.setText(str(float(self.data['incz']) * 100))
+        self.incz_layout.addWidget(self.incz_label)
+        self.incz_layout.addWidget(self.incz_input)
+
+        # Max parts out allowed
+        self.partsoutmax_layout = QtGui.QHBoxLayout()
+        self.partsoutmax_label = QtGui.QLabel("Max parts out allowed (%): ")
+        self.partsoutmax_input = QtGui.QLineEdit()
+        self.partsoutmax_input.setMaxLength(10)
+        self.partsoutmax_input.setText(str(float(self.data['partsoutmax']) * 100))
+        self.partsoutmax_layout.addWidget(self.partsoutmax_label)
+        self.partsoutmax_layout.addWidget(self.partsoutmax_input)
+
+        # Minimum rhop valid
+        self.rhopoutmin_layout = QtGui.QHBoxLayout()
+        self.rhopoutmin_label = QtGui.QLabel("Minimum rhop valid: ")
+        self.rhopoutmin_input = QtGui.QLineEdit()
+        self.rhopoutmin_input.setMaxLength(10)
+        self.rhopoutmin_input.setText(str(self.data['rhopoutmin']))
+        self.rhopoutmin_label2 = QtGui.QLabel(
+            "kg/m<span style='vertical-align:super'>3</span>")
+        self.rhopoutmin_layout.addWidget(self.rhopoutmin_label)
+        self.rhopoutmin_layout.addWidget(self.rhopoutmin_input)
+        self.rhopoutmin_layout.addWidget(self.rhopoutmin_label2)
+
+        # Maximum rhop valid
+        self.rhopoutmax_layout = QtGui.QHBoxLayout()
+        self.rhopoutmax_label = QtGui.QLabel("Maximum rhop valid: ")
+        self.rhopoutmax_input = QtGui.QLineEdit()
+        self.rhopoutmax_input.setMaxLength(10)
+        self.rhopoutmax_input.setText(str(self.data['rhopoutmax']))
+        self.rhopoutmax_label2 = QtGui.QLabel(
+            "kg/m<span style='vertical-align:super'>3</span>")
+        self.rhopoutmax_layout.addWidget(self.rhopoutmax_label)
+        self.rhopoutmax_layout.addWidget(self.rhopoutmax_input)
+        self.rhopoutmax_layout.addWidget(self.rhopoutmax_label2)
+
+        self.domainfixed_layout = QtGui.QVBoxLayout()
+        self.domainfixed_chk = QtGui.QCheckBox("Fixed Domain")
+
+        self.domainfixed_x_layout = QtGui.QHBoxLayout()
+        self.domainfixed_y_layout = QtGui.QHBoxLayout()
+        self.domainfixed_z_layout = QtGui.QHBoxLayout()
+
+        self.domainfixed_xmin_label = QtGui.QLabel("X Min")
+        self.domainfixed_xmin_input = QtGui.QLineEdit("0")
+        self.domainfixed_xmax_label = QtGui.QLabel("X Max")
+        self.domainfixed_xmax_input = QtGui.QLineEdit("0")
+
+        self.domainfixed_ymin_label = QtGui.QLabel("Y Min")
+        self.domainfixed_ymin_input = QtGui.QLineEdit("0")
+        self.domainfixed_ymax_label = QtGui.QLabel("Y Max")
+        self.domainfixed_ymax_input = QtGui.QLineEdit("0")
+
+        self.domainfixed_zmin_label = QtGui.QLabel("Z Min")
+        self.domainfixed_zmin_input = QtGui.QLineEdit("0")
+        self.domainfixed_zmax_label = QtGui.QLabel("Z Max")
+        self.domainfixed_zmax_input = QtGui.QLineEdit("0")
+
+        self.domainfixed_x_layout.addWidget(self.domainfixed_xmin_label)
+        self.domainfixed_x_layout.addWidget(self.domainfixed_xmin_input)
+        self.domainfixed_x_layout.addWidget(self.domainfixed_xmax_label)
+        self.domainfixed_x_layout.addWidget(self.domainfixed_xmax_input)
+
+        self.domainfixed_y_layout.addWidget(self.domainfixed_ymin_label)
+        self.domainfixed_y_layout.addWidget(self.domainfixed_ymin_input)
+        self.domainfixed_y_layout.addWidget(self.domainfixed_ymax_label)
+        self.domainfixed_y_layout.addWidget(self.domainfixed_ymax_input)
+
+        self.domainfixed_z_layout.addWidget(self.domainfixed_zmin_label)
+        self.domainfixed_z_layout.addWidget(self.domainfixed_zmin_input)
+        self.domainfixed_z_layout.addWidget(self.domainfixed_zmax_label)
+        self.domainfixed_z_layout.addWidget(self.domainfixed_zmax_input)
+
+        self.domainfixed_layout.addWidget(self.domainfixed_chk)
+        self.domainfixed_layout.addLayout(self.domainfixed_x_layout)
+        self.domainfixed_layout.addLayout(self.domainfixed_y_layout)
+        self.domainfixed_layout.addLayout(self.domainfixed_z_layout)
+
+        self.domainfixed_chk.stateChanged.connect(self.on_domainfixed_chk)
+
+        try:
+            self.domainfixed_chk.setChecked(self.data["domainfixed"].enabled)
+            self.domainfixed_xmin_input.setText(str(self.data["domainfixed"].xmin))
+            self.domainfixed_xmax_input.setText(str(self.data["domainfixed"].xmax))
+            self.domainfixed_ymin_input.setText(str(self.data["domainfixed"].ymin))
+            self.domainfixed_ymax_input.setText(str(self.data["domainfixed"].ymax))
+            self.domainfixed_zmin_input.setText(str(self.data["domainfixed"].zmin))
+            self.domainfixed_zmax_input.setText(str(self.data["domainfixed"].zmax))
+        except:
+            pass
+
+        self.on_domainfixed_chk()
+
+        self.period_x_layout = QtGui.QVBoxLayout()
+        self.period_x_chk = QtGui.QCheckBox("X periodicity")
+        self.period_x_inc_layout = QtGui.QHBoxLayout()
+        self.period_x_inc_x_label = QtGui.QLabel("X Increment")
+        self.period_x_inc_x_input = QtGui.QLineEdit("0")
+        self.period_x_inc_y_label = QtGui.QLabel("Y Increment")
+        self.period_x_inc_y_input = QtGui.QLineEdit("0")
+        self.period_x_inc_z_label = QtGui.QLabel("Z Increment")
+        self.period_x_inc_z_input = QtGui.QLineEdit("0")
+        self.period_x_inc_layout.addWidget(self.period_x_inc_x_label)
+        self.period_x_inc_layout.addWidget(self.period_x_inc_x_input)
+        self.period_x_inc_layout.addWidget(self.period_x_inc_y_label)
+        self.period_x_inc_layout.addWidget(self.period_x_inc_y_input)
+        self.period_x_inc_layout.addWidget(self.period_x_inc_z_label)
+        self.period_x_inc_layout.addWidget(self.period_x_inc_z_input)
+        self.period_x_layout.addWidget(self.period_x_chk)
+        self.period_x_layout.addLayout(self.period_x_inc_layout)
+        self.period_x_chk.stateChanged.connect(self.on_period_x_chk)
+
+        try:
+            self.period_x_chk.setChecked(self.data["period_x"][0])
+            self.period_x_inc_x_input.setText(str(self.data["period_x"][1]))
+            self.period_x_inc_y_input.setText(str(self.data["period_x"][2]))
+            self.period_x_inc_z_input.setText(str(self.data["period_x"][3]))
+        except:
+            pass
+
+        # Change the state of periodicity input on window open
+        self.on_period_x_chk()
+
+        self.period_y_layout = QtGui.QVBoxLayout()
+        self.period_y_chk = QtGui.QCheckBox("Y periodicity")
+        self.period_y_inc_layout = QtGui.QHBoxLayout()
+        self.period_y_inc_x_label = QtGui.QLabel("X Increment")
+        self.period_y_inc_x_input = QtGui.QLineEdit("0")
+        self.period_y_inc_y_label = QtGui.QLabel("Y Increment")
+        self.period_y_inc_y_input = QtGui.QLineEdit("0")
+        self.period_y_inc_z_label = QtGui.QLabel("Z Increment")
+        self.period_y_inc_z_input = QtGui.QLineEdit("0")
+        self.period_y_inc_layout.addWidget(self.period_y_inc_x_label)
+        self.period_y_inc_layout.addWidget(self.period_y_inc_x_input)
+        self.period_y_inc_layout.addWidget(self.period_y_inc_y_label)
+        self.period_y_inc_layout.addWidget(self.period_y_inc_y_input)
+        self.period_y_inc_layout.addWidget(self.period_y_inc_z_label)
+        self.period_y_inc_layout.addWidget(self.period_y_inc_z_input)
+        self.period_y_layout.addWidget(self.period_y_chk)
+        self.period_y_layout.addLayout(self.period_y_inc_layout)
+        self.period_y_chk.stateChanged.connect(self.on_period_y_chk)
+
+        try:
+            self.period_y_chk.setChecked(self.data["period_y"][0])
+            self.period_y_inc_x_input.setText(str(self.data["period_y"][1]))
+            self.period_y_inc_y_input.setText(str(self.data["period_y"][2]))
+            self.period_y_inc_z_input.setText(str(self.data["period_y"][3]))
+        except:
+            pass
+
+        # Change the state of periodicity input on window open
+        self.on_period_y_chk()
+
+        self.period_z_layout = QtGui.QVBoxLayout()
+        self.period_z_chk = QtGui.QCheckBox("Z periodicity")
+        self.period_z_inc_layout = QtGui.QHBoxLayout()
+        self.period_z_inc_x_label = QtGui.QLabel("X Increment")
+        self.period_z_inc_x_input = QtGui.QLineEdit("0")
+        self.period_z_inc_y_label = QtGui.QLabel("Y Increment")
+        self.period_z_inc_y_input = QtGui.QLineEdit("0")
+        self.period_z_inc_z_label = QtGui.QLabel("Z Increment")
+        self.period_z_inc_z_input = QtGui.QLineEdit("0")
+        self.period_z_inc_layout.addWidget(self.period_z_inc_x_label)
+        self.period_z_inc_layout.addWidget(self.period_z_inc_x_input)
+        self.period_z_inc_layout.addWidget(self.period_z_inc_y_label)
+        self.period_z_inc_layout.addWidget(self.period_z_inc_y_input)
+        self.period_z_inc_layout.addWidget(self.period_z_inc_z_label)
+        self.period_z_inc_layout.addWidget(self.period_z_inc_z_input)
+        self.period_z_layout.addWidget(self.period_z_chk)
+        self.period_z_layout.addLayout(self.period_z_inc_layout)
+        self.period_z_chk.stateChanged.connect(self.on_period_z_chk)
+
+        try:
+            self.period_z_chk.setChecked(self.data["period_z"][0])
+            self.period_z_inc_x_input.setText(str(self.data["period_z"][1]))
+            self.period_z_inc_y_input.setText(str(self.data["period_z"][2]))
+            self.period_z_inc_z_input.setText(str(self.data["period_z"][3]))
+        except:
+            pass
+
+        # Change the state of periodicity input on window open
+        self.on_period_z_chk()
+
+        self.ok_button.clicked.connect(self.on_ok)
+        self.cancel_button.clicked.connect(self.on_cancel)
+        # Button layout definition
+        self.ep_button_layout = QtGui.QHBoxLayout()
+        self.ep_button_layout.addStretch(1)
+        self.ep_button_layout.addWidget(self.ok_button)
+        self.ep_button_layout.addWidget(self.cancel_button)
+
+        # START Main layout definition and composition.
+        self.ep_main_layout_scroll = QtGui.QScrollArea()
+        self.ep_main_layout_scroll_widget = QtGui.QWidget()
+        self.ep_main_layout = QtGui.QVBoxLayout()
+        self.ep_main_layout.addLayout(self.posdouble_layout)
+        self.ep_main_layout.addLayout(self.stepalgorithm_layout)
+        self.ep_main_layout.addLayout(self.verletsteps_layout)
+        self.ep_main_layout.addLayout(self.kernel_layout)
+        self.ep_main_layout.addLayout(self.viscotreatment_layout)
+        self.ep_main_layout.addLayout(self.visco_layout)
+        self.ep_main_layout.addLayout(self.viscoboundfactor_layout)
+        self.ep_main_layout.addLayout(self.deltasph_en_layout)
+        self.ep_main_layout.addLayout(self.deltasph_layout)
+        self.ep_main_layout.addLayout(self.shifting_layout)
+        self.ep_main_layout.addLayout(self.shiftcoef_layout)
+        self.ep_main_layout.addLayout(self.shifttfs_layout)
+        self.ep_main_layout.addLayout(self.rigidalgorithm_layout)
+        self.ep_main_layout.addLayout(self.ftpause_layout)
+        self.ep_main_layout.addLayout(self.dtiniauto_layout)
+        self.ep_main_layout.addLayout(self.dtini_layout)
+        self.ep_main_layout.addLayout(self.dtminauto_layout)
+        self.ep_main_layout.addLayout(self.dtmin_layout)
+        self.ep_main_layout.addLayout(self.coefdtmin_layout)
+        # ep_main_layout.addLayout(dtallparticles_layout)
+        self.ep_main_layout.addLayout(self.timemax_layout)
+        self.ep_main_layout.addLayout(self.timeout_layout)
+        self.ep_main_layout.addLayout(self.incz_layout)
+        self.ep_main_layout.addLayout(self.partsoutmax_layout)
+        self.ep_main_layout.addLayout(self.rhopoutmin_layout)
+        self.ep_main_layout.addLayout(self.rhopoutmax_layout)
+        self.ep_main_layout.addLayout(self.domainfixed_layout)
+        self.ep_main_layout.addLayout(self.period_x_layout)
+        self.ep_main_layout.addLayout(self.period_y_layout)
+        self.ep_main_layout.addLayout(self.period_z_layout)
+
+        self.ep_main_layout_scroll_widget.setLayout(self.ep_main_layout)
+        self.ep_main_layout_scroll.setWidget(self.ep_main_layout_scroll_widget)
+        self.ep_main_layout_scroll.setHorizontalScrollBarPolicy(
+            QtCore.Qt.ScrollBarAlwaysOff)
+
+        self.execparams_window_layout = QtGui.QVBoxLayout()
+        self.execparams_window_layout.addWidget(self.ep_main_layout_scroll)
+        self.execparams_window_layout.addLayout(self.ep_button_layout)
+        self.setLayout(self.execparams_window_layout)
+        # END Main layout definition and composition.
+
+    # Step Algorithm
+    def on_step_change(self, index):
+        if index == 0:
+            self.verletsteps_input.setEnabled(True)
+        else:
+            self.verletsteps_input.setEnabled(False)
+
+    def on_viscotreatment_change(self, index):
+        self.visco_input.setText("0.01" if index == 0 else "0.000001")
+        self.visco_label.setText("Viscosity value (alpha): "
+                            if index == 0 else "Kinematic viscosity: ")
+        self.visco_units_label.setText(
+            "" if index == 0 else
+            "m<span style='vertical-align:super'>2</span>/s")
+
+    # DeltaSPH enabled selector
+    def on_deltasph_en_change(self, inex):
+        if index == 0:
+            self.deltasph_input.setEnabled(False)
+        else:
+            self.deltasph_input.setEnabled(True)
+            self.deltasph_input.setText("0.1")
+
+    # Shifting mode
+    def on_shifting_change(self, index):
+        if index == 0:
+            self.shiftcoef_input.setEnabled(False)
+            self.shifttfs_input.setEnabled(False)
+        else:
+            self.shiftcoef_input.setEnabled(True)
+            self.shifttfs_input.setEnabled(True)
+
+    # Controls if user selected auto b or not enabling/disablen b custom value
+    def on_dtiniauto_check(self):
+        # introduction
+        if self.dtiniauto_chk.isChecked():
+            self.dtini_input.setEnabled(False)
+        else:
+            self.dtini_input.setEnabled(True)
+
+    # Controls if user selected auto b or not enabling/disablen b custom value
+    def on_dtminauto_check(self):
+        # introduction
+        if self.dtminauto_chk.isChecked():
+            self.dtmin_input.setEnabled(False)
+        else:
+            self.dtmin_input.setEnabled(True)
+
+    # DomainFixed
+    def on_domainfixed_chk(self):
+        self.domainfixed_xmin_input.setEnabled(self.domainfixed_chk.isChecked())
+        self.domainfixed_xmax_input.setEnabled(self.domainfixed_chk.isChecked())
+        self.domainfixed_ymin_input.setEnabled(self.domainfixed_chk.isChecked())
+        self.domainfixed_ymax_input.setEnabled(self.domainfixed_chk.isChecked())
+        self.domainfixed_zmin_input.setEnabled(self.domainfixed_chk.isChecked())
+        self.domainfixed_zmax_input.setEnabled(self.domainfixed_chk.isChecked())
+
+    # Periodicity in X
+    def on_period_x_chk(self):
+        if self.period_x_chk.isChecked():
+            self.period_x_inc_x_input.setEnabled(False)
+            self.period_x_inc_y_input.setEnabled(True)
+            self.period_x_inc_z_input.setEnabled(True)
+        else:
+            self.period_x_inc_x_input.setEnabled(False)
+            self.period_x_inc_y_input.setEnabled(False)
+            self.period_x_inc_z_input.setEnabled(False)
+
+    # Periodicity in Y
+    def on_period_y_chk(self):
+        if self.period_y_chk.isChecked():
+            self.period_y_inc_x_input.setEnabled(True)
+            self.period_y_inc_y_input.setEnabled(False)
+            self.period_y_inc_z_input.setEnabled(True)
+        else:
+            self.period_y_inc_x_input.setEnabled(False)
+            self.period_y_inc_y_input.setEnabled(False)
+            self.period_y_inc_z_input.setEnabled(False)
+
+    # Periodicity in X
+    def on_period_z_chk(self):
+        if self.period_z_chk.isChecked():
+            self.period_z_inc_x_input.setEnabled(True)
+            self.period_z_inc_y_input.setEnabled(True)
+            self.period_z_inc_z_input.setEnabled(False)
+        else:
+            self.period_z_inc_x_input.setEnabled(False)
+            self.period_z_inc_y_input.setEnabled(False)
+            self.period_z_inc_z_input.setEnabled(False)
+
+    # ------------ Button behaviour definition --------------
+    def on_ok(self):
+        self.data['posdouble'] = str(self.posdouble_input.currentIndex())
+        self.data['stepalgorithm'] = str(self.stepalgorithm_input.currentIndex() + 1)
+        self.data['verletsteps'] = self.verletsteps_input.text()
+        self.data['kernel'] = str(self.kernel_input.currentIndex() + 1)
+        self.data['viscotreatment'] = self.viscotreatment_input.currentIndex() + 1
+        self.data['visco'] = self.visco_input.text()
+        self.data['viscoboundfactor'] = self.viscoboundfactor_input.text()
+        self.data['deltasph'] = self.deltasph_input.text()
+        self.data['deltasph_en'] = self.deltasph_en_input.currentIndex()
+        self.data['shifting'] = str(self.shifting_input.currentIndex())
+        self.data['shiftcoef'] = self.shiftcoef_input.text()
+        self.data['shifttfs'] = self.shifttfs_input.text()
+        self.data['rigidalgorithm'] = str(self.rigidalgorithm_input.currentIndex() + 1)
+        self.data['ftpause'] = self.ftpause_input.text()
+        self.data['coefdtmin'] = self.coefdtmin_input.text()
+        self.data['dtini'] = self.dtini_input.text()
+        self.data['dtini_auto'] = self.dtiniauto_chk.isChecked()
+        self.data['dtmin'] = self.dtmin_input.text()
+        self.data['dtmin_auto'] = self.dtminauto_chk.isChecked()
+        self.data['dtfixed'] = self.dtfixed_input.text()
+        self.data['dtallparticles'] = self.dtallparticles_input.text()
+        self.data['timemax'] = self.timemax_input.text()
+        self.data['timeout'] = self.timeout_input.text()
+        self.data['incz'] = str(float(self.incz_input.text()) / 100)
+        self.data['partsoutmax'] = str(float(self.partsoutmax_input.text()) / 100)
+        self.data['rhopoutmin'] = self.rhopoutmin_input.text()
+        self.data['rhopoutmax'] = self.rhopoutmax_input.text()
+        self.data['domainfixed'] = DomainFixedParameter(
+            self.domainfixed_chk.isChecked(),
+            float(self.domainfixed_xmin_input.text()),
+            float(self.domainfixed_xmax_input.text()),
+            float(self.domainfixed_ymin_input.text()),
+            float(self.domainfixed_ymax_input.text()),
+            float(self.domainfixed_zmin_input.text()),
+            float(self.domainfixed_zmax_input.text()))
+
+        self.data['period_x'] = [
+            self.period_x_chk.isChecked(),
+            float(self.period_x_inc_x_input.text()),
+            float(self.period_x_inc_y_input.text()),
+            float(self.period_x_inc_z_input.text())
+        ]
+        self.data['period_y'] = [
+            self.period_y_chk.isChecked(),
+            float(self.period_y_inc_x_input.text()),
+            float(self.period_y_inc_y_input.text()),
+            float(self.period_y_inc_z_input.text())
+        ]
+        self.data['period_z'] = [
+            self.period_z_chk.isChecked(),
+            float(self.period_z_inc_x_input.text()),
+            float(self.period_z_inc_y_input.text()),
+            float(self.period_z_inc_z_input.text())
+        ]
+        utils.log("Execution Parameters changed")
+        self.accept()
+
+    def on_cancel(self):
+        utils.log("Execution Parameters not changed")
         self.reject()

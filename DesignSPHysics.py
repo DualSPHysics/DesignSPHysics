@@ -165,7 +165,18 @@ setup_button.clicked.connect(lambda: guiutils.def_setup_window(data))
 # Execution parameters button.
 execparams_button = QtGui.QPushButton(__("Execution\nParameters"))
 execparams_button.setToolTip(__("Change execution parameters, such as\ntime of simulation, viscosity, etc."))
-execparams_button.clicked.connect(lambda: guiutils.def_execparams_window(data))
+
+
+# Opens execution parameters window on button click
+def on_execparams_button_presed():
+    execparams_window = dsphwidgets.ExecutionParametersDialog(data)
+
+    # Execution parameters window behaviour and general composing
+    execparams_window.resize(800, 600)
+    execparams_window.exec_()
+
+
+execparams_button.clicked.connect(on_execparams_button_presed)
 widget_state_elements['execparams_button'] = execparams_button
 
 # Logo. Made from a label. Labels can have image as well as text.
