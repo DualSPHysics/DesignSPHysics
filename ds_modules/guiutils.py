@@ -725,6 +725,7 @@ def widget_state_config(widgets, config):
         enable and disable certain widgets base on a case. """
     if config == "no case":
         widgets["casecontrols_bt_savedoc"].setEnabled(False)
+        widgets["rungencase_bt"].setEnabled(False)
         widgets["constants_button"].setEnabled(False)
         widgets["execparams_button"].setEnabled(False)
         widgets["casecontrols_bt_addfillbox"].setEnabled(False)
@@ -748,6 +749,7 @@ def widget_state_config(widgets, config):
         widgets["constants_button"].setEnabled(True)
         widgets["execparams_button"].setEnabled(True)
         widgets["casecontrols_bt_savedoc"].setEnabled(True)
+        widgets["rungencase_bt"].setEnabled(True)
         widgets["dp_input"].setEnabled(True)
         widgets["ex_selector_combo"].setEnabled(False)
         widgets["ex_button"].setEnabled(False)
@@ -776,6 +778,7 @@ def widget_state_config(widgets, config):
         widgets["constants_button"].setEnabled(True)
         widgets["execparams_button"].setEnabled(True)
         widgets["casecontrols_bt_savedoc"].setEnabled(True)
+        widgets["rungencase_bt"].setEnabled(True)
         widgets["dp_input"].setEnabled(True)
         widgets["casecontrols_bt_addfillbox"].setEnabled(True)
         widgets["casecontrols_bt_addstl"].setEnabled(True)
