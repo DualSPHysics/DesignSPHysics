@@ -60,13 +60,13 @@ along with DesignSPHysics.  If not, see <http://www.gnu.org/licenses/>.
 """
 
 # ------ CONSTANTS DEFINITION ------
-FREECAD_MIN_VERSION = "016"
+FREECAD_MIN_VERSION = "017"
 APP_NAME = "DesignSPHysics"
 DEBUGGING = False
 VERBOSE = False
 DIVIDER = 1000
 PICKLE_PROTOCOL = 1  # Binary mode
-VERSION = "0.5.1807-31"
+VERSION = "0.5.1811-08"
 WIDTH_2D = 0.001
 MAX_PARTICLE_WARNING = 2000000
 HELP_WEBPAGE = "https://github.com/DualSPHysics/DesignSPHysics/wiki"
@@ -80,7 +80,7 @@ def is_compatible_version():
 
     version_num = FreeCAD.Version()[0] + FreeCAD.Version()[1]
     if int(version_num) < int(FREECAD_MIN_VERSION):
-        guiutils.warning_dialog("This version of FreeCAD is not supported!. Install version 0.16 or higher.")
+        guiutils.warning_dialog("This version of FreeCAD is not supported!. Install version 0.17 or higher.")
         return False
     else:
         return True
@@ -472,6 +472,8 @@ def get_default_data():
     data['total_particles_out'] = 0
     data['additional_parameters'] = ""
     data['export_options'] = ""
+    data['mkboundused'] = []
+    data['mkfluidused'] = []
 
     # Dictionary that defines floatings.
     # Structure: {mk: FloatProperty}
