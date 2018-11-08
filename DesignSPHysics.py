@@ -561,12 +561,14 @@ def on_save_case(save_as=None):
 def on_save_with_gencase():
     """ Saves data into disk and uses GenCase to generate the case files."""
 
-    # Warning window about save_case
-    gencase_warning_dialog = QtGui.QMessageBox()
-    gencase_warning_dialog.setWindowTitle(__("Warning!"))
-    gencase_warning_dialog.setText(__("You need save first!"))
-    gencase_warning_dialog.setIcon(QtGui.QMessageBox.Warning)
-    gencase_warning_dialog.exec_()
+    # Check if the gencase is saved, if no shows the following message
+    if data['project_path'] == '':
+        # Warning window about save_case
+        gencase_warning_dialog = QtGui.QMessageBox()
+        gencase_warning_dialog.setWindowTitle(__("Warning!"))
+        gencase_warning_dialog.setText(__("You need save first!"))
+        gencase_warning_dialog.setIcon(QtGui.QMessageBox.Warning)
+        gencase_warning_dialog.exec_()
 
     # Save Case as usual so all the data needed for GenCase is on disk
     on_save_case()
