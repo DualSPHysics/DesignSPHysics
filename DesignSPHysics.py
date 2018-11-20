@@ -545,6 +545,8 @@ def on_save_case(save_as=None):
         #             str(ex_selector_combo.currentText()).lower(), data['additional_parameters']),
         #         lib_path='/'.join(data['gencase_path'].split('/')[:-1]))
 
+        data['run_gen_case_first'] = False
+
         # Save data array on disk. It is saved as a binary file with Pickle.
         try:
             with open(save_name + "/casedata.dsphdata", 'wb') as picklefile:
@@ -561,7 +563,7 @@ def on_save_case(save_as=None):
 def on_save_with_gencase():
     """ Saves data into disk and uses GenCase to generate the case files."""
 
-    # Check if the gencase is saved, if no shows the following message
+    # Check if the project is saved, if no shows the following message
     if data['project_path'] == '':
         # Warning window about save_case
         gencase_warning_dialog = QtGui.QMessageBox()
@@ -617,27 +619,27 @@ def on_save_with_gencase():
                 # Not an expected result. GenCase had a not handled error
                 error_in_gen_case = True
 
-        # Check if there is any path, a blank one meant the user cancelled the save file dialog
-        if data['project_path'] != '':
-            # If for some reason GenCase failed
-            if str(process.exitCode()) != "0" or error_in_gen_case:
-                # Multiple possible causes. Let the user know
-                gencase_out_file = open(data['project_path'] + '/' + data['project_name'] + '_out/' + data['project_name'] + ".out", "rb")
-                gencase_failed_dialog = QtGui.QMessageBox()
-                gencase_failed_dialog.setText(__("Error executing GenCase. Did you add objects to the case?. "
-                                                 "Another reason could be memory issues. View details for more info."))
-                gencase_failed_dialog.setDetailedText(gencase_out_file.read().split("================================")[1])
-                gencase_failed_dialog.setIcon(QtGui.QMessageBox.Critical)
-                gencase_out_file.close()
-                gencase_failed_dialog.exec_()
-                utils.warning(__("GenCase Failed."))
+    # Check if there is any path, a blank one meant the user cancelled the save file dialog
+    if data['project_path'] != '':
+        # If for some reason GenCase failed
+        if str(process.exitCode()) != "0" or error_in_gen_case:
+            # Multiple possible causes. Let the user know
+            gencase_out_file = open(data['project_path'] + '/' + data['project_name'] + '_out/' + data['project_name'] + ".out", "rb")
+            gencase_failed_dialog = QtGui.QMessageBox()
+            gencase_failed_dialog.setText(__("Error executing GenCase. Did you add objects to the case?. "
+                                             "Another reason could be memory issues. View details for more info."))
+            gencase_failed_dialog.setDetailedText(gencase_out_file.read().split("================================")[1])
+            gencase_failed_dialog.setIcon(QtGui.QMessageBox.Critical)
+            gencase_out_file.close()
+            gencase_failed_dialog.exec_()
+            utils.warning(__("GenCase Failed."))
 
-            # Save results again so all the data is updated if something changes.
-            on_save_case()
-        else:
-            utils.log(__("Saving cancelled."))
+        # Save results again so all the data is updated if something changes.
+        on_save_case()
+    else:
+        utils.log(__("Saving cancelled."))
 
-
+    data['run_gen_case_first'] = True
 
 
 def on_newdoc_menu(action):
@@ -650,8 +652,6 @@ def on_newdoc_menu(action):
 
 def on_save_menu(action):
     """ Handles the save button and its dropdown items. """
-    #if __("Save and run GenCase") in action.text():
-    #    on_save_with_gencase()
     if __("Save as...") in action.text():
         on_save_case(save_as=True)
 
@@ -1434,6 +1434,15 @@ def on_ex_simulate():
     It shows the run window and starts a background process
     with dualsphysics running. Updates the window with useful info."""
 
+    if data['run_gen_case_first'] != True:
+        # Warning window about save_case
+        run_warning_dialog = QtGui.QMessageBox()
+        run_warning_dialog.setWindowTitle(__("Warning!"))
+        run_warning_dialog.setText(__("It is necessary that you run Run GenCase again, otherwise, maybe the results "
+                                      "obtained may not be as expected..."))
+        run_warning_dialog.setIcon(QtGui.QMessageBox.Warning)
+        run_warning_dialog.exec_()
+
     run_progbar_bar.setValue(0)
     data['simulation_done'] = False
     guiutils.widget_state_config(widget_state_elements, "sim start")
@@ -1573,6 +1582,8 @@ def on_ex_simulate():
     # Set filesystem watcher to the out directory.
     run_watcher.addPath(data['project_path'] + '/' + data['project_name'] + "_out/")
     run_watcher.directoryChanged.connect(on_fs_change)
+
+    data['run_gen_case_first'] = False
 
     # Handle error on simulation start
     if temp_data['current_process'].state() == QtCore.QProcess.NotRunning:

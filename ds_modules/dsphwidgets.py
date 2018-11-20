@@ -5365,6 +5365,8 @@ class ConstantsDialog(QtGui.QDialog):
         self.cw_button_layout.addWidget(self.cancel_button)
 
         # START Main layout definition and composition.
+        self.cw_main_layout_scroll = QtGui.QScrollArea()
+        self.cw_main_layout_scroll_widget = QtGui.QWidget()
         self.cw_main_layout = QtGui.QVBoxLayout()
 
         # Lattice was removed on 0.3Beta - 1 of June
@@ -5389,13 +5391,16 @@ class ConstantsDialog(QtGui.QDialog):
 
         self.cw_main_layout.addStretch(1)
 
-        self.cw_groupbox = QtGui.QGroupBox("Case constants")
-        self.cw_groupbox.setLayout(self.cw_main_layout)
+        self.cw_main_layout_scroll_widget.setLayout(self.cw_main_layout)
+        self.cw_main_layout_scroll.setWidget(self.cw_main_layout_scroll_widget)
+        self.cw_main_layout_scroll.setHorizontalScrollBarPolicy(QtCore.Qt.ScrollBarAlwaysOff)
+
         self.constants_window_layout = QtGui.QVBoxLayout()
-        self.constants_window_layout.addWidget(self.cw_groupbox)
+        self.constants_window_layout.addWidget(self.cw_main_layout_scroll)
         self.constants_window_layout.addLayout(self.cw_helpText_layout)
         self.constants_window_layout.addLayout(self.cw_button_layout)
         self.setLayout(self.constants_window_layout)
+        self.setMaximumHeight(550)
         # END Main layout definition and composition.
 
     # Controls if user selected auto HSWL or not enabling/disablen HSWL custom
