@@ -84,14 +84,41 @@ RHOPOUTMIN = "Minimum rhop valid (default=700)"
 RHOPOUTMAX = "Maximum rhop valid (default=1300)"
 DOMAINFIXED = "The domain is fixed with the specified values (xmin:ymin:zmin:xmax:ymax:zmax)"
 
+XMIN = "The domain is fixed in the specified limit (default=not applied)"
+XMAX = "The domain is fixed in the specified limit (default=not applied)"
+
+YMIN = "The domain is fixed in the specified limit (default=not applied)"
+YMAX = "The domain is fixed in the specified limit (default=not applied)"
+
+ZMIN = "The domain is fixed in the specified limit (default=not applied)"
+ZMAX = "The domain is fixed in the specified limit (default=not applied)"
+
+PERIODX = ""
+YINCEMENTX = "Increase of Y with periodic BC in axis X"
+ZINCREMENTX = "Increase of Z with periodic BC in axis X"
+
+PERIODY = ""
+XINCREMENTY = "Increase of X with periodic BC in axis Y"
+ZINCREMENTY = "Increase of Z with periodic BC in axis Y"
+
+PERIODZ = ""
+XINCREMENTZ = "Increase of X with periodic BC in axis Z"
+YINCEMENTZ = "Increase of Y with periodic BC in axis Z"
+
 """ --------- Help Window -------------- """
 
+HELP_POSDOUBLE = "Precision in particle interaction"
+HELP_STEPALGORITHM = "Step Algorithm"
 HELP_VERLETSTEPS = "Verlet Steps"
+HELP_KERNEL = "Interaction kernel"
+HELP_VISCOTREATMENT = "Viscosity Formulation"
 HELP_VISCO = "Viscosity value"
 HELP_VISCOBOUNDFACROT = "Viscosity factor with boundary"
 HELP_DELTASPH = "Delta SPH value"
+HELP_SHIFTING = "Shifting mode"
 HELP_SHIFTINGCOEF = "Shifting Coefficient"
 HELP_SHIFTINGTFS = "Free surface detection threshold"
+HELP_RIGIDALGORITHM = "Solid-solid interaction"
 HELP_FTPAUSE = "Floating freeze time"
 HELP_DTINI = "Initial time step"
 HELP_DTMIN = "Minimium time step"

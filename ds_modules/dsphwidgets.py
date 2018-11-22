@@ -5001,6 +5001,21 @@ class FocusableLineEdit(QtGui.QLineEdit):
         self.focus.emit(self.help_text)
 
 
+class FocusableComboBox(QtGui.QComboBox):
+    focus = QtCore.Signal(str)
+    help_text = ""
+
+    def __init__(self):
+        super(FocusableComboBox, self).__init__()
+
+    def setHelpText(self, help_text):
+        self.help_text = help_text
+
+    def focusInEvent(self, *args, **kwargs):
+        QtGui.QComboBox.focusInEvent(self, *args, **kwargs).__init__()
+        self.focus.emit(self.help_text)
+
+
 class ConstantsDialog(QtGui.QDialog):
 
     def __init__(self, data):
@@ -5495,10 +5510,13 @@ class ExecutionParametersDialog(QtGui.QDialog):
         self.posdouble_layout = QtGui.QHBoxLayout()
         self.posdouble_label = QtGui.QLabel("Precision in particle interaction: ")
         self.posdouble_label.setToolTip(utils.__(constants.POSDOUBLE))
-        self.posdouble_input = QtGui.QComboBox()
+        self.posdouble_input = FocusableComboBox()
         self.posdouble_input.insertItems(0,
                                     ['Simple', 'Double', 'Uses and saves double'])
         self.posdouble_input.setCurrentIndex(int(self.data['posdouble']))
+        self.posdouble_input.setHelpText(utils.__(constants.HELP_POSDOUBLE))
+
+        self.posdouble_input.focus.connect(self.on_help_focus)
 
         self.posdouble_layout.addWidget(self.posdouble_label)
         self.posdouble_layout.addWidget(self.posdouble_input)
@@ -5507,9 +5525,13 @@ class ExecutionParametersDialog(QtGui.QDialog):
         self.stepalgorithm_layout = QtGui.QHBoxLayout()
         self.stepalgorithm_label = QtGui.QLabel("Step Algorithm: ")
         self.stepalgorithm_label.setToolTip(utils.__(constants.STEPALGORITHM))
-        self.stepalgorithm_input = QtGui.QComboBox()
+        self.stepalgorithm_input = FocusableComboBox()
         self.stepalgorithm_input.insertItems(0, ['Verlet', 'Symplectic'])
         self.stepalgorithm_input.setCurrentIndex(int(self.data['stepalgorithm']) - 1)
+        self.stepalgorithm_input.setHelpText(utils.__(constants.HELP_STEPALGORITHM))
+
+        self.stepalgorithm_input.focus.connect(self.on_help_focus)
+
         self.stepalgorithm_input.currentIndexChanged.connect(self.on_step_change)
 
         self.stepalgorithm_layout.addWidget(self.stepalgorithm_label)
@@ -5541,9 +5563,12 @@ class ExecutionParametersDialog(QtGui.QDialog):
         self.kernel_layout = QtGui.QHBoxLayout()
         self.kernel_label = QtGui.QLabel("Interaction kernel: ")
         self.kernel_label.setToolTip(utils.__(constants.KERNEL))
-        self.kernel_input = QtGui.QComboBox()
+        self.kernel_input = FocusableComboBox()
         self.kernel_input.insertItems(0, ['Cubic spline', 'Wendland'])
+        self.kernel_input.setHelpText(utils.__(constants.HELP_KERNEL))
         self.kernel_input.setCurrentIndex(int(self.data['kernel']) - 1)
+
+        self.kernel_input.focus.connect(self.on_help_focus)
 
         self.kernel_layout.addWidget(self.kernel_label)
         self.kernel_layout.addWidget(self.kernel_input)
@@ -5553,9 +5578,12 @@ class ExecutionParametersDialog(QtGui.QDialog):
         self.viscotreatment_layout = QtGui.QHBoxLayout()
         self.viscotreatment_label = QtGui.QLabel("Viscosity Formulation: ")
         self.viscotreatment_label.setToolTip(utils.__(constants.VISCOTREATMENT))
-        self.viscotreatment_input = QtGui.QComboBox()
+        self.viscotreatment_input = FocusableComboBox()
         self.viscotreatment_input.insertItems(0, ['Artificial', 'Laminar + SPS'])
+        self.viscotreatment_input.setHelpText(utils.__(constants.HELP_VISCOTREATMENT))
         self.viscotreatment_input.setCurrentIndex(int(self.data['viscotreatment']) - 1)
+
+        self.viscotreatment_input.focus.connect(self.on_help_focus)
 
         self.viscotreatment_layout.addWidget(self.viscotreatment_label)
         self.viscotreatment_layout.addWidget(self.viscotreatment_input)
@@ -5631,9 +5659,13 @@ class ExecutionParametersDialog(QtGui.QDialog):
         self.shifting_layout = QtGui.QHBoxLayout()
         self.shifting_label = QtGui.QLabel("Shifting mode: ")
         self.shifting_label.setToolTip(utils.__(constants.SHIFTING))
-        self.shifting_input = QtGui.QComboBox()
+        self.shifting_input = FocusableComboBox()
         self.shifting_input.insertItems(
             0, ['None', 'Ignore bound', 'Ignore fixed', 'Full'])
+        self.shifting_input.setHelpText(utils.__(constants.HELP_SHIFTING))
+
+        self.shifting_input.focus.connect(self.on_help_focus)
+
         self.shifting_input.setCurrentIndex(int(self.data['shifting']))
         self.shifting_input.currentIndexChanged.connect(self.on_shifting_change)
 
@@ -5676,9 +5708,12 @@ class ExecutionParametersDialog(QtGui.QDialog):
         self.rigidalgorithm_layout = QtGui.QHBoxLayout()
         self.rigidalgorithm_label = QtGui.QLabel("Solid-solid interaction: ")
         self.rigidalgorithm_label.setToolTip(utils.__(constants.RIGIDALGORITHM))
-        self.rigidalgorithm_input = QtGui.QComboBox()
+        self.rigidalgorithm_input = FocusableComboBox()
         self.rigidalgorithm_input.insertItems(0, ['SPH', 'DEM'])
+        self.rigidalgorithm_input.setHelpText(utils.__(constants.HELP_RIGIDALGORITHM))
         self.rigidalgorithm_input.setCurrentIndex(int(self.data['rigidalgorithm']) - 1)
+
+        self.rigidalgorithm_input.focus.connect(self.on_help_focus)
 
         self.rigidalgorithm_layout.addWidget(self.rigidalgorithm_label)
         self.rigidalgorithm_layout.addWidget(self.rigidalgorithm_input)
@@ -5871,7 +5906,7 @@ class ExecutionParametersDialog(QtGui.QDialog):
         self.rhopoutmax_label = QtGui.QLabel("Maximum rhop valid: ")
         self.rhopoutmax_label.setToolTip(utils.__(constants.RHOPOUTMAX))
         self.rhopoutmax_input = FocusableLineEdit()
-        self.rhopoutmin_input.setHelpText(utils.__(constants.HELP_RHOPOUTMAX))
+        self.rhopoutmax_input.setHelpText(utils.__(constants.HELP_RHOPOUTMAX))
         self.rhopoutmax_input.setMaxLength(10)
 
         self.rhopoutmax_input.focus.connect(self.on_help_focus)
@@ -5892,18 +5927,24 @@ class ExecutionParametersDialog(QtGui.QDialog):
         self.domainfixed_z_layout = QtGui.QHBoxLayout()
 
         self.domainfixed_xmin_label = QtGui.QLabel("X Min")
+        self.domainfixed_xmin_label.setToolTip(utils.__(constants.XMIN))
         self.domainfixed_xmin_input = QtGui.QLineEdit("0")
         self.domainfixed_xmax_label = QtGui.QLabel("X Max")
+        self.domainfixed_xmax_label.setToolTip(utils.__(constants.XMAX))
         self.domainfixed_xmax_input = QtGui.QLineEdit("0")
 
         self.domainfixed_ymin_label = QtGui.QLabel("Y Min")
+        self.domainfixed_ymin_label.setToolTip(utils.__(constants.YMIN))
         self.domainfixed_ymin_input = QtGui.QLineEdit("0")
         self.domainfixed_ymax_label = QtGui.QLabel("Y Max")
+        self.domainfixed_ymax_label.setToolTip(utils.__(constants.YMAX))
         self.domainfixed_ymax_input = QtGui.QLineEdit("0")
 
         self.domainfixed_zmin_label = QtGui.QLabel("Z Min")
+        self.domainfixed_zmin_label.setToolTip(utils.__(constants.ZMIN))
         self.domainfixed_zmin_input = QtGui.QLineEdit("0")
         self.domainfixed_zmax_label = QtGui.QLabel("Z Max")
+        self.domainfixed_zmax_label.setToolTip(utils.__(constants.ZMAX))
         self.domainfixed_zmax_input = QtGui.QLineEdit("0")
 
         self.domainfixed_x_layout.addWidget(self.domainfixed_xmin_label)
@@ -5943,12 +5984,15 @@ class ExecutionParametersDialog(QtGui.QDialog):
 
         self.period_x_layout = QtGui.QVBoxLayout()
         self.period_x_chk = QtGui.QCheckBox("X periodicity")
+        self.period_x_chk.setToolTip(utils.__(constants.PERIODX))
         self.period_x_inc_layout = QtGui.QHBoxLayout()
         self.period_x_inc_x_label = QtGui.QLabel("X Increment")
         self.period_x_inc_x_input = QtGui.QLineEdit("0")
         self.period_x_inc_y_label = QtGui.QLabel("Y Increment")
+        self.period_x_inc_y_label.setToolTip(utils.__(constants.YINCEMENTX))
         self.period_x_inc_y_input = QtGui.QLineEdit("0")
         self.period_x_inc_z_label = QtGui.QLabel("Z Increment")
+        self.period_x_inc_z_label.setToolTip(utils.__(constants.ZINCREMENTX))
         self.period_x_inc_z_input = QtGui.QLineEdit("0")
         self.period_x_inc_layout.addWidget(self.period_x_inc_x_label)
         self.period_x_inc_layout.addWidget(self.period_x_inc_x_input)
@@ -5973,12 +6017,15 @@ class ExecutionParametersDialog(QtGui.QDialog):
 
         self.period_y_layout = QtGui.QVBoxLayout()
         self.period_y_chk = QtGui.QCheckBox("Y periodicity")
+        self.period_y_chk.setToolTip(utils.__(constants.PERIODY))
         self.period_y_inc_layout = QtGui.QHBoxLayout()
         self.period_y_inc_x_label = QtGui.QLabel("X Increment")
+        self.period_y_inc_x_label.setToolTip(utils.__(constants.XINCREMENTY))
         self.period_y_inc_x_input = QtGui.QLineEdit("0")
         self.period_y_inc_y_label = QtGui.QLabel("Y Increment")
         self.period_y_inc_y_input = QtGui.QLineEdit("0")
         self.period_y_inc_z_label = QtGui.QLabel("Z Increment")
+        self.period_y_inc_z_label.setToolTip(utils.__(constants.XINCREMENTY))
         self.period_y_inc_z_input = QtGui.QLineEdit("0")
         self.period_y_inc_layout.addWidget(self.period_y_inc_x_label)
         self.period_y_inc_layout.addWidget(self.period_y_inc_x_input)
@@ -6003,10 +6050,13 @@ class ExecutionParametersDialog(QtGui.QDialog):
 
         self.period_z_layout = QtGui.QVBoxLayout()
         self.period_z_chk = QtGui.QCheckBox("Z periodicity")
+        self.period_z_chk.setToolTip(utils.__(constants.PERIODZ))
         self.period_z_inc_layout = QtGui.QHBoxLayout()
         self.period_z_inc_x_label = QtGui.QLabel("X Increment")
+        self.period_z_inc_x_label.setToolTip(utils.__(constants.XINCREMENTZ))
         self.period_z_inc_x_input = QtGui.QLineEdit("0")
         self.period_z_inc_y_label = QtGui.QLabel("Y Increment")
+        self.period_z_inc_y_label.setToolTip(utils.__(constants.YINCEMENTZ))
         self.period_z_inc_y_input = QtGui.QLineEdit("0")
         self.period_z_inc_z_label = QtGui.QLabel("Z Increment")
         self.period_z_inc_z_input = QtGui.QLineEdit("0")
