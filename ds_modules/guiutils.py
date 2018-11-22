@@ -1093,18 +1093,23 @@ def gencase_completed_dialog(particle_count=0, detail_text="No details", data=di
                 window.y() - abs(window.height() - detail_text_dialog.height()) / 2)
 
     def on_open_paraview_menu(action):
-        subprocess.Popen(
-            [
-                data['paraview_path'],
-                "--data={}\\{}".format(
-                    data['project_path'] + '\\' +
-                    data['project_name'] + '_out',
-                    action.text()
-                )
-            ],
-            stdout=subprocess.PIPE)
-        detail_text_dialog.hide()
-        window.accept()
+        try:
+            subprocess.Popen(
+                [
+                    data['paraview_path'],
+                    "--data={}\\{}".format(
+                        data['project_path'] + '\\' +
+                        data['project_name'] + '_out',
+                        action.text()
+                    )
+                ],
+                stdout=subprocess.PIPE)
+            detail_text_dialog.hide()
+            window.accept()
+        except:
+            error_dialog(
+                "ERROR! \nCheck the ParaView executable path, it may have been saved from previously opened case!")
+            return
 
     bt_ok.clicked.connect(on_ok)
     bt_details.clicked.connect(on_view_details)
