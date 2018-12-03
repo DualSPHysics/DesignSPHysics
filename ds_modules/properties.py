@@ -171,12 +171,11 @@ class WaveGen(object):
         start: Start time (def 0)
         duration: Movement duration, 0 means until simulation end
         depth: Fluid depth (def 0)
-        fixed_depth: Fluid depth without paddle (def 0)
         wave_height: Wave height (def 0.5)
         wave_period: Wave period (def 1)
     """
 
-    def __init__(self, parent_movement=None, wave_order=1, start=0, duration=0, depth=0, fixed_depth=0, wave_height=0.5,
+    def __init__(self, parent_movement=None, wave_order=1, start=0, duration=0, depth=0, wave_height=0.5,
                  wave_period=1):
         super(WaveGen, self).__init__()
         self.parent_movement = parent_movement
@@ -185,7 +184,6 @@ class WaveGen(object):
         self.start = start
         self.duration = duration
         self.depth = depth
-        self.fixed_depth = fixed_depth
         self.wave_height = wave_height
         self.wave_period = wave_period
 
@@ -204,11 +202,11 @@ class RegularPistonWaveGen(WaveGen):
         awas: AWAS object
     """
 
-    def __init__(self, parent_movement=None, wave_order=2, start=0, duration=0, depth=0, fixed_depth=0, wave_height=0.5,
+    def __init__(self, parent_movement=None, wave_order=2, start=0, duration=0, depth=0, wave_height=0.5,
                  wave_period=1, phase=0, ramp=0, disksave_periods=24,
                  disksave_periodsteps=20, disksave_xpos=2, disksave_zpos=-0.15, piston_dir=None, awas=None):
         super(RegularPistonWaveGen, self).__init__(parent_movement, wave_order, start,
-                                                   duration, depth, fixed_depth, wave_height, wave_period)
+                                                   duration, depth, wave_height, wave_period)
         self.type = "Regular Piston Wave Generator"
         self.phase = phase
         self.ramp = ramp
@@ -280,7 +278,7 @@ class IrregularPistonWaveGen(WaveGen):
         piston_dir: Movement direction (def [1,0,0])
     """
 
-    def __init__(self, parent_movement=None, wave_order=1, start=0, duration=0, depth=0, fixed_depth=0, wave_height=0.5,
+    def __init__(self, parent_movement=None, wave_order=1, start=0, duration=0, depth=0, wave_height=0.5,
                  wave_period=1, spectrum=IrregularSpectrum.JONSWAP,
                  discretization=IrregularDiscretization.STRETCHED,
                  peak_coef=0.1, waves=50, randomseed=random.randint(0, 9999), serieini=0, ramptime=0,
@@ -289,7 +287,7 @@ class IrregularPistonWaveGen(WaveGen):
                  saveserie_xpos=0, saveseriewaves_timemin=0, saveseriewaves_timemax=1000, saveseriewaves_xpos=2,
                  piston_dir=None, awas=None):
         super(IrregularPistonWaveGen, self).__init__(parent_movement, wave_order, start,
-                                                     duration, depth, fixed_depth, wave_height, wave_period)
+                                                     duration, depth, wave_height, wave_period)
         self.type = "Irregular Piston Wave Generator"
         self.spectrum = spectrum
         self.discretization = discretization
@@ -325,12 +323,12 @@ class RegularFlapWaveGen(WaveGen):
         flapaxis1: Point 1 of axis rotation
     """
 
-    def __init__(self, parent_movement=None, wave_order=2, start=0, duration=0, depth=0, fixed_depth=0, wave_height=0.5,
+    def __init__(self, parent_movement=None, wave_order=2, start=0, duration=0, depth=0, wave_height=0.5,
                  wave_period=1, phase=0, ramp=0, disksave_periods=24,
                  disksave_periodsteps=20, disksave_xpos=2, disksave_zpos=-0.15, variable_draft=0.0, flapaxis0=None,
                  flapaxis1=None):
         super(RegularFlapWaveGen, self).__init__(parent_movement, wave_order,
-                                                 start, duration, depth, fixed_depth, wave_height, wave_period)
+                                                 start, duration, depth, wave_height, wave_period)
         self.type = "Regular Flap Wave Generator"
         self.phase = phase
         self.ramp = ramp
@@ -359,7 +357,7 @@ class IrregularFlapWaveGen(WaveGen):
         flapaxis1: Point 1 of axis rotation
     """
 
-    def __init__(self, parent_movement=None, wave_order=1, start=0, duration=0, depth=0, fixed_depth=0, wave_height=0.5,
+    def __init__(self, parent_movement=None, wave_order=1, start=0, duration=0, depth=0, wave_height=0.5,
                  wave_period=1, spectrum=IrregularSpectrum.JONSWAP,
                  discretization=IrregularDiscretization.STRETCHED,
                  peak_coef=0.1, waves=50, randomseed=random.randint(0, 9999), serieini=0, ramptime=0,
@@ -368,7 +366,7 @@ class IrregularFlapWaveGen(WaveGen):
                  saveserie_xpos=0, saveseriewaves_timemin=0, saveseriewaves_timemax=1000, saveseriewaves_xpos=2,
                  variable_draft=0.0, flapaxis0=None, flapaxis1=None):
         super(IrregularFlapWaveGen, self).__init__(parent_movement, wave_order, start,
-                                                   duration, depth, fixed_depth, wave_height, wave_period)
+                                                   duration, depth, wave_height, wave_period)
         self.type = "Irregular Flap Wave Generator"
         self.spectrum = spectrum
         self.discretization = discretization

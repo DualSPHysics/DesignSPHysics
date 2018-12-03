@@ -1698,10 +1698,6 @@ class RegularPistonWaveMotionTimeline(QtGui.QWidget):
         self.depth_label = QtGui.QLabel(__("Depth (m): "))
         self.depth_input = QtGui.QLineEdit()
 
-        self.fixed_depth_label = QtGui.QLabel(__("Fixed depth (m): "))
-        self.fixed_depth_input = QtGui.QLineEdit()
-        self.fixed_depth_input.setEnabled(False)
-
         self.piston_dir_label = QtGui.QLabel(
             __("Piston direction (X, Y, Z): "))
         self.piston_dir_x = QtGui.QLineEdit()
@@ -1790,8 +1786,7 @@ class RegularPistonWaveMotionTimeline(QtGui.QWidget):
 
         self.first_row_layout = QtGui.QHBoxLayout()
         [self.first_row_layout.addWidget(x) for x in [self.wave_order_label, self.wave_order_selector,
-                                                      self.depth_label, self.depth_input,
-                                                      self.fixed_depth_label, self.fixed_depth_input]]
+                                                      self.depth_label, self.depth_input]]
 
         self.second_row_layout = QtGui.QHBoxLayout()
         [self.second_row_layout.addWidget(x) for x in [self.piston_dir_label,
@@ -1870,7 +1865,6 @@ class RegularPistonWaveMotionTimeline(QtGui.QWidget):
         self.wave_order_selector.setCurrentIndex(
             int(reg_wave_gen.wave_order) - 1)
         self.depth_input.setText(str(reg_wave_gen.depth))
-        self.fixed_depth_input.setText(str(reg_wave_gen.fixed_depth))
         self.piston_dir_x.setText(str(reg_wave_gen.piston_dir[0]))
         self.piston_dir_y.setText(str(reg_wave_gen.piston_dir[1]))
         self.piston_dir_z.setText(str(reg_wave_gen.piston_dir[2]))
@@ -1916,8 +1910,7 @@ class RegularPistonWaveMotionTimeline(QtGui.QWidget):
         self.awas_enabled.stateChanged.connect(self.on_change)
         self.awas_correction_enabled.stateChanged.connect(
             self._awas_correction_enabled_handler)
-        [x.textChanged.connect(self.on_change) for x in [self.duration_input, self.depth_input,
-                                                         self.fixed_depth_input, self.piston_dir_x,
+        [x.textChanged.connect(self.on_change) for x in [self.duration_input, self.depth_input, self.piston_dir_x,
                                                          self.piston_dir_y, self.piston_dir_z,
                                                          self.wave_height_input, self.wave_period_input,
                                                          self.ramp_input, self.phase_input, self.disksave_periods,
@@ -2007,8 +2000,6 @@ class RegularPistonWaveMotionTimeline(QtGui.QWidget):
         return RegularPistonWaveGen(parent_movement=self.parent_movement,
                                     wave_order=self.wave_order_selector.currentIndex() + 1, start=0,
                                     duration=float(self.duration_input.text()), depth=float(self.depth_input.text()),
-                                    fixed_depth=float(
-                                        self.fixed_depth_input.text()),
                                     piston_dir=[float(self.piston_dir_x.text()),
                                                 float(
                                                     self.piston_dir_y.text()),
@@ -2036,8 +2027,7 @@ class RegularPistonWaveMotionTimeline(QtGui.QWidget):
         [x.setText("0")
          if len(x.text()) is 0
          else x.setText(x.text().replace(",", "."))
-         for x in [self.duration_input, self.depth_input,
-                   self.fixed_depth_input, self.piston_dir_x,
+         for x in [self.duration_input, self.depth_input, self.piston_dir_x,
                    self.piston_dir_y, self.piston_dir_z,
                    self.wave_height_input, self.wave_period_input,
                    self.ramp_input, self.phase_input, self.disksave_periods,
@@ -2081,11 +2071,6 @@ class IrregularPistonWaveMotionTimeline(QtGui.QWidget):
 
         self.depth_label = QtGui.QLabel(__("Depth (m): "))
         self.depth_input = QtGui.QLineEdit()
-
-        self.fixed_depth_label = QtGui.QLabel(__("Fixed depth (m): "))
-        self.fixed_depth_input = QtGui.QLineEdit()
-        self.fixed_depth_input.setEnabled(False)
-        self.fixed_depth_units_label = QtGui.QLabel()
 
         self.piston_dir_label = QtGui.QLabel(
             __("Piston direction (X, Y, Z): "))
@@ -2216,8 +2201,7 @@ class IrregularPistonWaveMotionTimeline(QtGui.QWidget):
 
         self.first_row_layout = QtGui.QHBoxLayout()
         [self.first_row_layout.addWidget(x) for x in [self.wave_order_label, self.wave_order_selector,
-                                                      self.depth_label, self.depth_input,
-                                                      self.fixed_depth_label, self.fixed_depth_input]]
+                                                      self.depth_label, self.depth_input]]
 
         self.second_row_layout = QtGui.QHBoxLayout()
         [self.second_row_layout.addWidget(x) for x in [self.piston_dir_label,
@@ -2331,7 +2315,6 @@ class IrregularPistonWaveMotionTimeline(QtGui.QWidget):
         self.wave_order_selector.setCurrentIndex(
             int(irreg_wave_gen.wave_order) - 1)
         self.depth_input.setText(str(irreg_wave_gen.depth))
-        self.fixed_depth_input.setText(str(irreg_wave_gen.fixed_depth))
         self.piston_dir_x.setText(str(irreg_wave_gen.piston_dir[0]))
         self.piston_dir_y.setText(str(irreg_wave_gen.piston_dir[1]))
         self.piston_dir_z.setText(str(irreg_wave_gen.piston_dir[2]))
@@ -2402,7 +2385,7 @@ class IrregularPistonWaveMotionTimeline(QtGui.QWidget):
 
         [x.textChanged.connect(self.on_change) for x in [self.peak_coef_input, self.waves_input, self.randomseed_input,
                                                          self.serieini_input, self.ramptime_input, self.duration_input,
-                                                         self.depth_input, self.fixed_depth_input, self.piston_dir_x,
+                                                         self.depth_input, self.piston_dir_x,
                                                          self.piston_dir_y, self.piston_dir_z, self.wave_height_input,
                                                          self.wave_period_input, self.savemotion_time_input,
                                                          self.savemotion_timedt_input, self.savemotion_xpos_input,
@@ -2495,8 +2478,6 @@ class IrregularPistonWaveMotionTimeline(QtGui.QWidget):
         return IrregularPistonWaveGen(parent_movement=self.parent_movement,
                                       wave_order=self.wave_order_selector.currentIndex() + 1, start=0,
                                       duration=float(self.duration_input.text()), depth=float(self.depth_input.text()),
-                                      fixed_depth=float(
-                                          self.fixed_depth_input.text()),
                                       piston_dir=[float(self.piston_dir_x.text()),
                                                   float(
                                                       self.piston_dir_y.text()),
@@ -2547,8 +2528,7 @@ class IrregularPistonWaveMotionTimeline(QtGui.QWidget):
         [x.setText("0")
          if len(x.text()) is 0
          else x.setText(x.text().replace(",", "."))
-         for x in [self.duration_input, self.depth_input,
-                   self.fixed_depth_input, self.piston_dir_x,
+         for x in [self.duration_input, self.depth_input, self.piston_dir_x,
                    self.piston_dir_y, self.piston_dir_z,
                    self.wave_height_input, self.wave_period_input,
                    self.peak_coef_input, self.randomseed_input,
@@ -2599,10 +2579,6 @@ class RegularFlapWaveMotionTimeline(QtGui.QWidget):
         self.depth_label = QtGui.QLabel(__("Depth (m): "))
         self.depth_input = QtGui.QLineEdit()
 
-        self.fixed_depth_label = QtGui.QLabel(__("Fixed depth (m): "))
-        self.fixed_depth_input = QtGui.QLineEdit()
-        self.fixed_depth_input.setEnabled(False)
-
         self.flap_axis_0_label = QtGui.QLabel(
             __("Flap axis 0 (X, Y, Z): "))
         self.flap_axis_0_x = QtGui.QLineEdit()
@@ -2648,8 +2624,7 @@ class RegularFlapWaveMotionTimeline(QtGui.QWidget):
 
         self.first_row_layout = QtGui.QHBoxLayout()
         [self.first_row_layout.addWidget(x) for x in [self.wave_order_label, self.wave_order_selector,
-                                                      self.depth_label, self.depth_input,
-                                                      self.fixed_depth_label, self.fixed_depth_input]]
+                                                      self.depth_label, self.depth_input]]
 
         self.second_row_layout = QtGui.QHBoxLayout()
         [self.second_row_layout.addWidget(x) for x in [self.flap_axis_0_label,
@@ -2694,7 +2669,6 @@ class RegularFlapWaveMotionTimeline(QtGui.QWidget):
         self.wave_order_selector.setCurrentIndex(
             int(reg_wave_gen.wave_order) - 1)
         self.depth_input.setText(str(reg_wave_gen.depth))
-        self.fixed_depth_input.setText(str(reg_wave_gen.fixed_depth))
         self.flap_axis_0_x.setText(str(reg_wave_gen.flapaxis0[0]))
         self.flap_axis_0_y.setText(str(reg_wave_gen.flapaxis0[1]))
         self.flap_axis_0_z.setText(str(reg_wave_gen.flapaxis0[2]))
@@ -2715,7 +2689,6 @@ class RegularFlapWaveMotionTimeline(QtGui.QWidget):
     def _init_connections(self):
         self.wave_order_selector.currentIndexChanged.connect(self.on_change)
         [x.textChanged.connect(self.on_change) for x in [self.duration_input, self.depth_input,
-                                                         self.fixed_depth_input,
                                                          self.variable_draft_input, self.flap_axis_0_x,
                                                          self.flap_axis_0_y, self.flap_axis_0_z,
                                                          self.flap_axis_1_x,
@@ -2736,8 +2709,6 @@ class RegularFlapWaveMotionTimeline(QtGui.QWidget):
         return RegularFlapWaveGen(parent_movement=self.parent_movement,
                                   wave_order=self.wave_order_selector.currentIndex() + 1, start=0,
                                   duration=float(self.duration_input.text()), depth=float(self.depth_input.text()),
-                                  fixed_depth=float(
-                                      self.fixed_depth_input.text()),
                                   flapaxis0=[float(self.flap_axis_0_x.text()),
                                              float(
                                                  self.flap_axis_0_y.text()),
@@ -2769,8 +2740,7 @@ class RegularFlapWaveMotionTimeline(QtGui.QWidget):
         [x.setText("0")
          if len(x.text()) is 0
          else x.setText(x.text().replace(",", "."))
-         for x in [self.duration_input, self.depth_input,
-                   self.fixed_depth_input, self.flap_axis_0_x,
+         for x in [self.duration_input, self.depth_input, self.flap_axis_0_x,
                    self.flap_axis_0_y, self.flap_axis_0_z,
                    self.flap_axis_1_x,
                    self.flap_axis_1_y, self.flap_axis_1_z,
@@ -2812,11 +2782,6 @@ class IrregularFlapWaveMotionTimeline(QtGui.QWidget):
 
         self.depth_label = QtGui.QLabel(__("Depth (m): "))
         self.depth_input = QtGui.QLineEdit()
-
-        self.fixed_depth_label = QtGui.QLabel(__("Fixed depth (m): "))
-        self.fixed_depth_input = QtGui.QLineEdit()
-        self.fixed_depth_input.setEnabled(False)
-        self.fixed_depth_units_label = QtGui.QLabel()
 
         self.flap_axis_0_label = QtGui.QLabel(
             __("Flap axis 0 (X, Y, Z): "))
@@ -2904,8 +2869,7 @@ class IrregularFlapWaveMotionTimeline(QtGui.QWidget):
 
         self.first_row_layout = QtGui.QHBoxLayout()
         [self.first_row_layout.addWidget(x) for x in [self.wave_order_label, self.wave_order_selector,
-                                                      self.depth_label, self.depth_input,
-                                                      self.fixed_depth_label, self.fixed_depth_input]]
+                                                      self.depth_label, self.depth_input]]
 
         self.second_row_layout = QtGui.QHBoxLayout()
         [self.second_row_layout.addWidget(x) for x in [self.flap_axis_0_label,
@@ -2984,7 +2948,6 @@ class IrregularFlapWaveMotionTimeline(QtGui.QWidget):
         self.wave_order_selector.setCurrentIndex(
             int(irreg_wave_gen.wave_order) - 1)
         self.depth_input.setText(str(irreg_wave_gen.depth))
-        self.fixed_depth_input.setText(str(irreg_wave_gen.fixed_depth))
         self.flap_axis_0_x.setText(str(irreg_wave_gen.flapaxis0[0]))
         self.flap_axis_0_y.setText(str(irreg_wave_gen.flapaxis0[1]))
         self.flap_axis_0_z.setText(str(irreg_wave_gen.flapaxis0[2]))
@@ -3029,7 +2992,7 @@ class IrregularFlapWaveMotionTimeline(QtGui.QWidget):
 
         [x.textChanged.connect(self.on_change) for x in [self.peak_coef_input, self.waves_input, self.randomseed_input,
                                                          self.serieini_input, self.ramptime_input, self.duration_input,
-                                                         self.depth_input, self.fixed_depth_input, self.flap_axis_0_x,
+                                                         self.depth_input, self.flap_axis_0_x,
                                                          self.flap_axis_0_y, self.flap_axis_0_z,
                                                          self.flap_axis_1_x,
                                                          self.flap_axis_1_y, self.flap_axis_1_z,
@@ -3054,8 +3017,6 @@ class IrregularFlapWaveMotionTimeline(QtGui.QWidget):
         return IrregularFlapWaveGen(parent_movement=self.parent_movement,
                                     wave_order=self.wave_order_selector.currentIndex() + 1, start=0,
                                     duration=float(self.duration_input.text()), depth=float(self.depth_input.text()),
-                                    fixed_depth=float(
-                                        self.fixed_depth_input.text()),
                                     flapaxis0=[float(self.flap_axis_0_x.text()),
                                                float(
                                                    self.flap_axis_0_y.text()),
@@ -3111,8 +3072,7 @@ class IrregularFlapWaveMotionTimeline(QtGui.QWidget):
         [x.setText("0")
          if len(x.text()) is 0
          else x.setText(x.text().replace(",", "."))
-         for x in [self.duration_input, self.depth_input,
-                   self.fixed_depth_input, self.flap_axis_0_x,
+         for x in [self.duration_input, self.depth_input, self.flap_axis_0_x,
                    self.flap_axis_0_y, self.flap_axis_0_z,
                    self.flap_axis_1_x,
                    self.flap_axis_1_y, self.flap_axis_1_z,
