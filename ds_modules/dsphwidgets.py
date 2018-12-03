@@ -5055,7 +5055,6 @@ class ConstantsDialog(QtGui.QDialog):
         # Gravity
         self.gravity_layout = QtGui.QHBoxLayout()
         self.gravity_label = HoverableLabel("Gravity [X, Y, Z]: ")
-        self.gravity_label.setToolTip(utils.__(constants.GRAVITY))
 
         self.gravityx_input = QtGui.QLineEdit()
         self.gravityx_input = FocusableLineEdit()
@@ -5102,7 +5101,6 @@ class ConstantsDialog(QtGui.QDialog):
         # Reference density of the fluid: layout and components
         self.rhop0_layout = QtGui.QHBoxLayout()
         self.rhop0_label = QtGui.QLabel("Fluid reference density: ")
-        self.rhop0_label.setToolTip(utils.__(constants.RHOP0))
 
         self.rhop0_input = QtGui.QLineEdit()
         self.rhop0_input = FocusableLineEdit()
@@ -5135,7 +5133,6 @@ class ConstantsDialog(QtGui.QDialog):
 
         self.hswl_layout = QtGui.QHBoxLayout()
         self.hswl_label = QtGui.QLabel("HSWL: ")
-        self.hswl_label.setToolTip(utils.__(constants.HSWL))
         self.hswl_input = QtGui.QLineEdit()
         self.hswl_input = FocusableLineEdit()
         self.hswl_input.setHelpText(utils.__(constants.HELP_HSWL))
@@ -5158,7 +5155,6 @@ class ConstantsDialog(QtGui.QDialog):
         # gamma: layout and components
         self.gamma_layout = QtGui.QHBoxLayout()
         self.gamma_label = QtGui.QLabel("Gamma: ")
-        self.gamma_label.setToolTip(utils.__(constants.GAMMA))
         self.gamma_input = QtGui.QLineEdit()
         self.gamma_input = FocusableLineEdit()
         self.gamma_input.setHelpText(utils.__(constants.HELP_GAMMA))
@@ -5188,7 +5184,6 @@ class ConstantsDialog(QtGui.QDialog):
 
         self.speedsystem_layout = QtGui.QHBoxLayout()
         self.speedsystem_label = QtGui.QLabel("Speedsystem: ")
-        self.speedsystem_label.setToolTip(utils.__(constants.SPEEDSYSTEM))
         self.speedsystem_input = QtGui.QLineEdit()
         self.speedsystem_input = FocusableLineEdit()
         self.speedsystem_input.setHelpText(utils.__(constants.HELP_SPEEDSYSTEM))
@@ -5211,7 +5206,6 @@ class ConstantsDialog(QtGui.QDialog):
         # coefsound: layout and components
         self.coefsound_layout = QtGui.QHBoxLayout()
         self.coefsound_label = QtGui.QLabel("Coefsound: ")
-        self.coefsound_label.setToolTip(utils.__(constants.COEFSOUND))
         self.coefsound_input = QtGui.QLineEdit()
         self.coefsound_input = FocusableLineEdit()
         self.coefsound_input.setHelpText(utils.__(constants.HELP_COEFSOUND))
@@ -5241,7 +5235,6 @@ class ConstantsDialog(QtGui.QDialog):
 
         self.speedsound_layout = QtGui.QHBoxLayout()
         self.speedsound_label = QtGui.QLabel("Speedsound: ")
-        self.speedsound_label.setToolTip(utils.__(constants.SPEEDSOUND))
         self.speedsound_input = QtGui.QLineEdit()
         self.speedsound_input = FocusableLineEdit()
         self.speedsound_input.setHelpText(utils.__(constants.HELP_SPEEDSOUND))
@@ -5264,7 +5257,6 @@ class ConstantsDialog(QtGui.QDialog):
         # coefh: layout and components
         self.coefh_layout = QtGui.QHBoxLayout()
         self.coefh_label = QtGui.QLabel("CoefH: ")
-        self.coefh_label.setToolTip(utils.__(constants.COEFH))
         self.coefh_input = QtGui.QLineEdit()
         self.coefh_input = FocusableLineEdit()
         self.coefh_input.setHelpText(utils.__(constants.HELP_COEFH))
@@ -5284,7 +5276,6 @@ class ConstantsDialog(QtGui.QDialog):
         # cflnumber: layout and components
         self.cflnumber_layout = QtGui.QHBoxLayout()
         self.cflnumber_label = QtGui.QLabel("cflnumber: ")
-        self.cflnumber_label.setToolTip(utils.__(constants.CFLNUMBER))
         self.cflnumber_input = QtGui.QLineEdit()
         self.cflnumber_input = FocusableLineEdit()
         self.cflnumber_input.setHelpText(utils.__(constants.HELP_CFLNUMBER))
@@ -5509,7 +5500,6 @@ class ExecutionParametersDialog(QtGui.QDialog):
         # Precision in particle interaction
         self.posdouble_layout = QtGui.QHBoxLayout()
         self.posdouble_label = QtGui.QLabel("Precision in particle interaction: ")
-        self.posdouble_label.setToolTip(utils.__(constants.POSDOUBLE))
         self.posdouble_input = FocusableComboBox()
         self.posdouble_input.insertItems(0,
                                     ['Simple', 'Double', 'Uses and saves double'])
@@ -5524,7 +5514,6 @@ class ExecutionParametersDialog(QtGui.QDialog):
 
         self.stepalgorithm_layout = QtGui.QHBoxLayout()
         self.stepalgorithm_label = QtGui.QLabel("Step Algorithm: ")
-        self.stepalgorithm_label.setToolTip(utils.__(constants.STEPALGORITHM))
         self.stepalgorithm_input = FocusableComboBox()
         self.stepalgorithm_input.insertItems(0, ['Verlet', 'Symplectic'])
         self.stepalgorithm_input.setCurrentIndex(int(self.data['stepalgorithm']) - 1)
@@ -5541,7 +5530,6 @@ class ExecutionParametersDialog(QtGui.QDialog):
         # Verlet steps
         self.verletsteps_layout = QtGui.QHBoxLayout()
         self.verletsteps_label = QtGui.QLabel("Verlet Steps: ")
-        self.verletsteps_label.setToolTip(utils.__(constants.VERLETSTEPS))
         self.verletsteps_input = QtGui.QLineEdit()
         self.verletsteps_input = FocusableLineEdit()
         self.verletsteps_input.setHelpText(utils.__(constants.HELP_VERLETSTEPS))
@@ -5562,7 +5550,6 @@ class ExecutionParametersDialog(QtGui.QDialog):
         # Kernel
         self.kernel_layout = QtGui.QHBoxLayout()
         self.kernel_label = QtGui.QLabel("Interaction kernel: ")
-        self.kernel_label.setToolTip(utils.__(constants.KERNEL))
         self.kernel_input = FocusableComboBox()
         self.kernel_input.insertItems(0, ['Cubic spline', 'Wendland'])
         self.kernel_input.setHelpText(utils.__(constants.HELP_KERNEL))
@@ -5577,7 +5564,6 @@ class ExecutionParametersDialog(QtGui.QDialog):
         # Viscosity formulation
         self.viscotreatment_layout = QtGui.QHBoxLayout()
         self.viscotreatment_label = QtGui.QLabel("Viscosity Formulation: ")
-        self.viscotreatment_label.setToolTip(utils.__(constants.VISCOTREATMENT))
         self.viscotreatment_input = FocusableComboBox()
         self.viscotreatment_input.insertItems(0, ['Artificial', 'Laminar + SPS'])
         self.viscotreatment_input.setHelpText(utils.__(constants.HELP_VISCOTREATMENT))
@@ -5592,7 +5578,6 @@ class ExecutionParametersDialog(QtGui.QDialog):
         # Viscosity value
         self.visco_layout = QtGui.QHBoxLayout()
         self.visco_label = QtGui.QLabel("Viscosity value: ")
-        self.visco_label.setToolTip(utils.__(constants.VISCO))
         self.visco_input = FocusableLineEdit()
         self.visco_input.setHelpText(utils.__(constants.HELP_VISCO))
         self.visco_input.setMaxLength(10)
@@ -5612,7 +5597,6 @@ class ExecutionParametersDialog(QtGui.QDialog):
         # Viscosity with boundary
         self.viscoboundfactor_layout = QtGui.QHBoxLayout()
         self.viscoboundfactor_label = QtGui.QLabel("Viscosity factor with boundary: ")
-        self.viscoboundfactor_label.setToolTip(utils.__(constants.VISCOBOUNDFACTOR))
         self.viscoboundfactor_input = FocusableLineEdit()
 
         self.viscoboundfactor_input.setHelpText(utils.__(constants.HELP_VISCOBOUNDFACROT))
@@ -5640,7 +5624,6 @@ class ExecutionParametersDialog(QtGui.QDialog):
         # DeltaSPH value
         self.deltasph_layout = QtGui.QHBoxLayout()
         self.deltasph_label = QtGui.QLabel("DeltaSPH value: ")
-        self.deltasph_label.setToolTip(utils.__(constants.DELTASPH))
         self.deltasph_input = FocusableLineEdit()
         self.deltasph_input.setHelpText(utils.__(constants.HELP_DELTASPH))
         self.deltasph_input.setMaxLength(10)
@@ -5658,7 +5641,6 @@ class ExecutionParametersDialog(QtGui.QDialog):
 
         self.shifting_layout = QtGui.QHBoxLayout()
         self.shifting_label = QtGui.QLabel("Shifting mode: ")
-        self.shifting_label.setToolTip(utils.__(constants.SHIFTING))
         self.shifting_input = FocusableComboBox()
         self.shifting_input.insertItems(
             0, ['None', 'Ignore bound', 'Ignore fixed', 'Full'])
@@ -5676,7 +5658,6 @@ class ExecutionParametersDialog(QtGui.QDialog):
         # Coefficient for shifting
         self.shiftcoef_layout = QtGui.QHBoxLayout()
         self.shiftcoef_label = QtGui.QLabel("Coefficient for shifting: ")
-        self.shiftcoef_label.setToolTip(utils.__(constants.SHIFTINGCOEF))
         self.shiftcoef_input = FocusableLineEdit()
         self.shiftcoef_input.setHelpText(utils.__(constants.HELP_SHIFTINGCOEF))
         self.shiftcoef_input.setMaxLength(10)
@@ -5690,7 +5671,6 @@ class ExecutionParametersDialog(QtGui.QDialog):
         # Free surface detection threshold
         self.shifttfs_layout = QtGui.QHBoxLayout()
         self.shifttfs_label = QtGui.QLabel("Free surface detection threshold: ")
-        self.shifttfs_label.setToolTip(utils.__(constants.SHIFTINGTFS))
         self.shifttfs_input = FocusableLineEdit()
         self.shifttfs_input.setHelpText(utils.__(constants.HELP_SHIFTINGTFS))
         self.shifttfs_input.setMaxLength(10)
@@ -5707,7 +5687,6 @@ class ExecutionParametersDialog(QtGui.QDialog):
         # Rigid algorithm
         self.rigidalgorithm_layout = QtGui.QHBoxLayout()
         self.rigidalgorithm_label = QtGui.QLabel("Solid-solid interaction: ")
-        self.rigidalgorithm_label.setToolTip(utils.__(constants.RIGIDALGORITHM))
         self.rigidalgorithm_input = FocusableComboBox()
         self.rigidalgorithm_input.insertItems(0, ['SPH', 'DEM'])
         self.rigidalgorithm_input.setHelpText(utils.__(constants.HELP_RIGIDALGORITHM))
@@ -5722,7 +5701,6 @@ class ExecutionParametersDialog(QtGui.QDialog):
         # Sim start freeze time
         self.ftpause_layout = QtGui.QHBoxLayout()
         self.ftpause_label = QtGui.QLabel("Floating freeze time: ")
-        self.ftpause_label.setToolTip(utils.__(constants.FTPAUSE))
         self.ftpause_input = FocusableLineEdit()
         self.ftpause_input.setHelpText(utils.__(constants.HELP_FTPAUSE))
         self.ftpause_input.setMaxLength(10)
@@ -5738,7 +5716,6 @@ class ExecutionParametersDialog(QtGui.QDialog):
         # Coefficient to calculate DT
         self.coefdtmin_layout = QtGui.QHBoxLayout()
         self.coefdtmin_label = QtGui.QLabel("Coefficient for minimum time step: ")
-        self.coefdtmin_label.setToolTip(utils.__(constants.COEFDTMIN))
         self.coefdtmin_input = FocusableLineEdit()
         self.coefdtmin_input.setHelpText(utils.__(constants.HELP_COEFDTMIN))
         self.coefdtmin_input.setMaxLength(10)
@@ -5761,7 +5738,6 @@ class ExecutionParametersDialog(QtGui.QDialog):
         self.dtiniauto_layout.addWidget(self.dtiniauto_chk)
         self.dtini_layout = QtGui.QHBoxLayout()
         self.dtini_label = QtGui.QLabel("Initial time step: ")
-        self.dtini_label.setToolTip(utils.__(constants.DTINI))
         self.dtini_input = FocusableLineEdit()
         self.dtini_input.setHelpText(utils.__(constants.HELP_DTINI))
         self.dtini_input.setMaxLength(10)
@@ -5787,7 +5763,6 @@ class ExecutionParametersDialog(QtGui.QDialog):
         self.dtminauto_layout.addWidget(self.dtminauto_chk)
         self.dtmin_layout = QtGui.QHBoxLayout()
         self.dtmin_label = QtGui.QLabel("Minimium time step: ")
-        self.dtmin_label.setToolTip(utils.__(constants.DTMIN))
         self.dtmin_input = FocusableLineEdit()
         self.dtmin_input.setHelpText(utils.__(constants.HELP_DTMIN))
         self.dtmin_input.setMaxLength(10)
@@ -5827,7 +5802,6 @@ class ExecutionParametersDialog(QtGui.QDialog):
         # Time of simulation
         self.timemax_layout = QtGui.QHBoxLayout()
         self.timemax_label = QtGui.QLabel("Time of simulation: ")
-        self.timemax_label.setToolTip(utils.__(constants.TIMEMAX))
         self.timemax_input = FocusableLineEdit()
         self.timemax_input.setHelpText(utils.__(constants.HELP_TIMEMAX))
         self.timemax_input.setMaxLength(10)
@@ -5843,7 +5817,6 @@ class ExecutionParametersDialog(QtGui.QDialog):
         # Time out data
         self.timeout_layout = QtGui.QHBoxLayout()
         self.timeout_label = QtGui.QLabel("Time out data: ")
-        self.timeout_label.setToolTip(utils.__(constants.TIMEOUT))
         self.timeout_input = FocusableLineEdit()
         self.timeout_input.setHelpText(utils.__(constants.HELP_TIMEOUT))
         self.timeout_input.setMaxLength(10)
@@ -5859,7 +5832,6 @@ class ExecutionParametersDialog(QtGui.QDialog):
         # Increase of Z+
         self.incz_layout = QtGui.QHBoxLayout()
         self.incz_label = QtGui.QLabel("Increase of Z+ (%): ")
-        self.incz_label.setToolTip(utils.__(constants.INCZ))
         self.incz_input = FocusableLineEdit()
         self.incz_input.setHelpText(utils.__(constants.HELP_INCZ))
         self.incz_input.setMaxLength(10)
@@ -5873,7 +5845,6 @@ class ExecutionParametersDialog(QtGui.QDialog):
         # Max parts out allowed
         self.partsoutmax_layout = QtGui.QHBoxLayout()
         self.partsoutmax_label = QtGui.QLabel("Max parts out allowed (%): ")
-        self.partsoutmax_label.setToolTip(utils.__(constants.PARTSOUTMAX))
         self.partsoutmax_input = FocusableLineEdit()
         self.partsoutmax_input.setHelpText(utils.__(constants.HELP_PARTSOUTMAX))
         self.partsoutmax_input.setMaxLength(10)
@@ -5887,7 +5858,6 @@ class ExecutionParametersDialog(QtGui.QDialog):
         # Minimum rhop valid
         self.rhopoutmin_layout = QtGui.QHBoxLayout()
         self.rhopoutmin_label = QtGui.QLabel("Minimum rhop valid: ")
-        self.rhopoutmin_label.setToolTip(utils.__(constants.RHOPOUTMIN))
         self.rhopoutmin_input = FocusableLineEdit()
         self.rhopoutmin_input.setHelpText(utils.__(constants.HELP_RHOPOUTMIN))
         self.rhopoutmin_input.setMaxLength(10)
@@ -5904,7 +5874,6 @@ class ExecutionParametersDialog(QtGui.QDialog):
         # Maximum rhop valid
         self.rhopoutmax_layout = QtGui.QHBoxLayout()
         self.rhopoutmax_label = QtGui.QLabel("Maximum rhop valid: ")
-        self.rhopoutmax_label.setToolTip(utils.__(constants.RHOPOUTMAX))
         self.rhopoutmax_input = FocusableLineEdit()
         self.rhopoutmax_input.setHelpText(utils.__(constants.HELP_RHOPOUTMAX))
         self.rhopoutmax_input.setMaxLength(10)

@@ -1,16 +1,18 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="BookmarkManager">
-    <bookmark url="file://$PROJECT_DIR$/ds_modules/dsphwidgets.py" line="5565" mnemonic="2" />
-    <bookmark url="file://$PROJECT_DIR$/ds_modules/dsphwidgets.py" line="5003" mnemonic="1" />
+    <bookmark url="file://$PROJECT_DIR$/DesignSPHysics.py" line="2266" mnemonic="2" />
+    <bookmark url="file://$PROJECT_DIR$/DesignSPHysics.py" line="2291" mnemonic="3" />
+    <bookmark url="file://$PROJECT_DIR$/DesignSPHysics.py" line="2113" mnemonic="1" />
+    <bookmark url="file://$PROJECT_DIR$/DesignSPHysics.py" line="2176" mnemonic="4" />
+    <bookmark url="file://$PROJECT_DIR$/ds_modules/dsphwidgets.py" line="5891" mnemonic="8" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="22d76f4b-310a-4afb-8788-a472c77b2c87" name="Default" comment="Adds a custom QLineEdit implementation with focus event">
-      <change beforePath="$PROJECT_DIR$/.idea/inspectionProfiles/Project_Default.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/inspectionProfiles/Project_Default.xml" afterDir="false" />
+    <list default="true" id="22d76f4b-310a-4afb-8788-a472c77b2c87" name="Default" comment="Adds a custom QComboBox implementation with focus event&#10;&#10;Adds more text constants for help messages&#10;Adds an error message if ParaView path is wrong">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/DesignSPHysics.py" beforeDir="false" afterPath="$PROJECT_DIR$/DesignSPHysics.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/ds_modules/constants.py" beforeDir="false" afterPath="$PROJECT_DIR$/ds_modules/constants.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/ds_modules/dsphwidgets.py" beforeDir="false" afterPath="$PROJECT_DIR$/ds_modules/dsphwidgets.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/ds_modules/guiutils.py" beforeDir="false" afterPath="$PROJECT_DIR$/ds_modules/guiutils.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/ds_modules/lang/spanish.json" beforeDir="false" afterPath="$PROJECT_DIR$/ds_modules/lang/spanish.json" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
@@ -97,24 +99,25 @@
         <counts>
           <entry key="dummy" value="11" />
           <entry key="md" value="6" />
-          <entry key="py" value="10356" />
-          <entry key="txt" value="758" />
+          <entry key="py" value="10509" />
+          <entry key="txt" value="811" />
         </counts>
       </usages-collector>
       <usages-collector id="statistics.file.types.edit">
         <counts>
           <entry key="Markdown" value="6" />
-          <entry key="PLAIN_TEXT" value="769" />
-          <entry key="Python" value="10356" />
+          <entry key="PLAIN_TEXT" value="822" />
+          <entry key="Python" value="10509" />
         </counts>
       </usages-collector>
       <usages-collector id="statistics.file.extensions.open">
         <counts>
           <entry key="FCMacro" value="1" />
+          <entry key="exe" value="1" />
           <entry key="ico" value="1" />
           <entry key="json" value="6" />
           <entry key="md" value="5" />
-          <entry key="py" value="71" />
+          <entry key="py" value="76" />
           <entry key="pylintrc" value="1" />
         </counts>
       </usages-collector>
@@ -123,18 +126,19 @@
           <entry key="Image" value="1" />
           <entry key="JSON" value="6" />
           <entry key="Markdown" value="5" />
-          <entry key="PLAIN_TEXT" value="1" />
-          <entry key="Python" value="72" />
+          <entry key="PLAIN_TEXT" value="2" />
+          <entry key="Python" value="77" />
         </counts>
       </usages-collector>
       <usages-collector id="statistics.lifecycle.project">
         <counts>
-          <entry key="project.closed" value="32" />
+          <entry key="project.closed" value="37" />
           <entry key="project.open.time.5" value="5" />
-          <entry key="project.open.time.6" value="15" />
-          <entry key="project.open.time.7" value="14" />
+          <entry key="project.open.time.6" value="16" />
+          <entry key="project.open.time.7" value="18" />
           <entry key="project.open.time.8" value="1" />
-          <entry key="project.opened" value="35" />
+          <entry key="project.open.time.9" value="1" />
+          <entry key="project.opened" value="41" />
         </counts>
       </usages-collector>
     </session>
@@ -144,13 +148,14 @@
   </component>
   <component name="FileEditorManager">
     <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
-      <file pinned="false" current-in-tab="true">
+      <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/ds_modules/dsphwidgets.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="228">
-              <caret line="5003" column="39" selection-start-line="5003" selection-start-column="30" selection-end-line="5003" selection-end-column="39" />
+            <state relative-caret-position="449">
+              <caret line="5890" column="46" selection-start-line="5890" selection-start-column="46" selection-end-line="5890" selection-end-column="46" />
               <folding>
                 <element signature="e#273#287#0" expanded="true" />
+                <marker date="1543825822667" expanded="true" signature="247993:247996" ph="..." />
               </folding>
             </state>
           </provider>
@@ -159,8 +164,8 @@
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/ds_modules/constants.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="652">
-              <caret line="105" column="54" selection-start-line="105" selection-start-column="54" selection-end-line="105" selection-end-column="54" />
+            <state relative-caret-position="346">
+              <caret line="49" lean-forward="true" selection-start-line="49" selection-end-line="49" />
             </state>
           </provider>
         </entry>
@@ -168,8 +173,8 @@
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/ds_modules/utils.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="1020">
-              <caret line="76" column="25" selection-start-line="76" selection-start-column="4" selection-end-line="76" selection-end-column="25" />
+            <state relative-caret-position="26435">
+              <caret line="1571" column="79" selection-start-line="1571" selection-start-column="74" selection-end-line="1571" selection-end-column="79" />
               <folding>
                 <element signature="e#253#267#0" expanded="true" />
               </folding>
@@ -177,11 +182,11 @@
           </provider>
         </entry>
       </file>
-      <file pinned="false" current-in-tab="false">
+      <file pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/DesignSPHysics.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="2227">
-              <caret line="144" column="42" selection-start-line="144" selection-start-column="42" selection-end-line="144" selection-end-column="42" />
+            <state relative-caret-position="-1625">
+              <caret line="2176" selection-start-line="2176" selection-end-line="2176" />
               <folding>
                 <element signature="e#286#300#0" expanded="true" />
                 <element signature="e#13665#14731#0" />
@@ -197,8 +202,8 @@
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/ds_modules/guiutils.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="18734">
-              <caret line="1110" column="47" selection-start-line="1110" selection-start-column="47" selection-end-line="1110" selection-end-column="47" />
+            <state relative-caret-position="621">
+              <caret line="1110" column="41" selection-start-line="1110" selection-start-column="41" selection-end-line="1110" selection-end-column="41" />
               <folding>
                 <element signature="e#163#177#0" expanded="true" />
               </folding>
@@ -217,29 +222,6 @@
   </component>
   <component name="FindInProjectRecents">
     <findStrings>
-      <find>def __</find>
-      <find>save cas</find>
-      <find>run</find>
-      <find>ccfourthrow_layout</find>
-      <find>casecontrols_bt_special</find>
-      <find>new_ca</find>
-      <find>pre-pr</find>
-      <find>cc_layout</find>
-      <find>main_layout</find>
-      <find>butt</find>
-      <find>new_cas</find>
-      <find>casecontrols_menu_newdoc</find>
-      <find>disable</find>
-      <find>false</find>
-      <find>summary_bt</find>
-      <find>casecontrols_bt_savedoc</find>
-      <find>simulation con</find>
-      <find>run GenCas</find>
-      <find>simulation_done</find>
-      <find>data[</find>
-      <find>gencase_done</find>
-      <find>gencase_path</find>
-      <find>executi</find>
       <find>is_compatible_version</find>
       <find>plug</find>
       <find>paraview_path</find>
@@ -247,6 +229,29 @@
       <find>define</find>
       <find>exe</find>
       <find>HELP_RHOPOUTMAX</find>
+      <find>grid</find>
+      <find>ComputeForces</find>
+      <find>onlyprocess</find>
+      <find>onlyid</find>
+      <find>finfo_onlyprocess_text</find>
+      <find>cfces_onlyprocess_text</find>
+      <find>flap</find>
+      <find>create_new_movement_button</find>
+      <find>has_motion_selector</find>
+      <find>fixeddepth</find>
+      <find>fixed_depth_label</find>
+      <find>computefo</find>
+      <find>onlyp</find>
+      <find>on_cfces_export</find>
+      <find>onlyprocess_tag</find>
+      <find>export_parameters</find>
+      <find>computeforces_export</find>
+      <find>export_process.start(data['computeforces_path'], static_params_exp)</find>
+      <find>save_mode</find>
+      <find>static_params_exp</find>
+      <find>GRAVITY</find>
+      <find>constants.RHOPOUTMAX</find>
+      <find>contants.GRAVITY</find>
     </findStrings>
     <replaceStrings>
       <replace>self.time_label</replace>
@@ -311,9 +316,9 @@
         <option value="$PROJECT_DIR$/ds_modules/widgets/HoverableLabel.py" />
         <option value="$PROJECT_DIR$/ds_modules/widgets/__init__.py" />
         <option value="$PROJECT_DIR$/ds_modules/utils.py" />
-        <option value="$PROJECT_DIR$/DesignSPHysics.py" />
         <option value="$PROJECT_DIR$/ds_modules/guiutils.py" />
         <option value="$PROJECT_DIR$/ds_modules/constants.py" />
+        <option value="$PROJECT_DIR$/DesignSPHysics.py" />
         <option value="$PROJECT_DIR$/ds_modules/dsphwidgets.py" />
       </list>
     </option>
@@ -325,7 +330,7 @@
     <sorting>DEFINITION_ORDER</sorting>
   </component>
   <component name="ProjectFrameBounds">
-    <option name="x" value="1258" />
+    <option name="x" value="1244" />
     <option name="width" value="1309" />
     <option name="height" value="1047" />
   </component>
@@ -353,7 +358,6 @@
       <foldersAlwaysOnTop value="true" />
     </navigator>
     <panes>
-      <pane id="Scope" />
       <pane id="ProjectPane">
         <subPane>
           <expand>
@@ -370,6 +374,7 @@
           <select />
         </subPane>
       </pane>
+      <pane id="Scope" />
     </panes>
   </component>
   <component name="PropertiesComponent">
@@ -498,13 +503,6 @@
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
       <updated>1486981492000</updated>
-    </task>
-    <task id="LOCAL-00031" summary="Added ComputeForces post processing tool">
-      <created>1495797289508</created>
-      <option name="number" value="00031" />
-      <option name="presentableId" value="LOCAL-00031" />
-      <option name="project" value="LOCAL" />
-      <updated>1495797289508</updated>
     </task>
     <task id="LOCAL-00032" summary="Implemented MeasureTool post processing tool">
       <created>1496054514055</created>
@@ -842,7 +840,14 @@
       <option name="project" value="LOCAL" />
       <updated>1542739015495</updated>
     </task>
-    <option name="localTasksCounter" value="80" />
+    <task id="LOCAL-00080" summary="Adds a custom QComboBox implementation with focus event&#10;&#10;Adds more text constants for help messages&#10;Adds an error message if ParaView path is wrong">
+      <created>1542907714542</created>
+      <option name="number" value="00080" />
+      <option name="presentableId" value="LOCAL-00080" />
+      <option name="project" value="LOCAL" />
+      <updated>1542907714542</updated>
+    </task>
+    <option name="localTasksCounter" value="81" />
     <servers />
   </component>
   <component name="TodoView">
@@ -855,10 +860,10 @@
     </todo-panel>
   </component>
   <component name="ToolWindowManager">
-    <frame x="1258" y="0" width="1309" height="1047" extended-state="0" />
+    <frame x="1244" y="0" width="1309" height="1047" extended-state="0" />
     <editor active="true" />
     <layout>
-      <window_info active="true" content_ui="combo" id="Project" order="0" sideWeight="0.4993498" visible="true" weight="0.20016013" />
+      <window_info content_ui="combo" id="Project" order="0" sideWeight="0.4993498" visible="true" weight="0.19055244" />
       <window_info id="Structure" order="1" sideWeight="0.50200266" side_tool="true" weight="0.13036565" />
       <window_info id="Favorites" order="2" sideWeight="0.50065017" side_tool="true" weight="0.10771065" />
       <window_info x="2363" y="239" width="619" height="687" id="Notes" order="3" weight="0.30063966" />
@@ -868,7 +873,7 @@
       <window_info anchor="bottom" id="Debug" order="3" weight="0.4" />
       <window_info anchor="bottom" id="Cvs" order="4" weight="0.25" />
       <window_info anchor="bottom" id="Inspection" order="5" weight="0.4" />
-      <window_info anchor="bottom" id="TODO" order="6" sideWeight="0.49517685" visible="true" weight="0.19605696" />
+      <window_info active="true" anchor="bottom" id="TODO" order="6" sideWeight="0.49517685" visible="true" weight="0.19605696" />
       <window_info anchor="bottom" id="Event Log" order="7" sideWeight="0.50520414" side_tool="true" weight="0.2245345" />
       <window_info anchor="bottom" id="Docker" order="8" show_stripe_button="false" />
       <window_info anchor="bottom" id="Messages" order="9" />
@@ -885,33 +890,6 @@
       <window_info anchor="right" id="SciView" order="5" sideWeight="0.4992785" weight="0.32962227" />
       <window_info anchor="right" id="Data View" order="6" />
     </layout>
-    <layout-to-restore>
-      <window_info active="true" content_ui="combo" id="Project" order="0" sideWeight="0.4993498" visible="true" weight="0.14035785" />
-      <window_info id="Favorites" order="1" sideWeight="0.50065017" side_tool="true" weight="0.10771065" />
-      <window_info x="2363" y="239" width="619" height="687" id="Notes" order="2" weight="0.30063966" />
-      <window_info anchor="bottom" id="Message" order="0" />
-      <window_info anchor="bottom" id="Find" order="1" weight="0.3283582" />
-      <window_info anchor="bottom" id="Run" order="2" weight="0.32960895" />
-      <window_info anchor="bottom" id="Debug" order="3" weight="0.4" />
-      <window_info anchor="bottom" id="Cvs" order="4" weight="0.25" />
-      <window_info anchor="bottom" id="Inspection" order="5" weight="0.4" />
-      <window_info anchor="bottom" id="Event Log" order="6" sideWeight="0.5089463" side_tool="true" weight="0.1641791" />
-      <window_info anchor="bottom" id="TODO" order="7" sideWeight="0.49156272" weight="0.25273633" />
-      <window_info anchor="bottom" id="Docker" order="8" show_stripe_button="false" />
-      <window_info anchor="bottom" id="Messages" order="9" />
-      <window_info anchor="bottom" id="Python Console" order="10" weight="0.32768923" />
-      <window_info anchor="bottom" id="Database Changes" order="11" show_stripe_button="false" />
-      <window_info anchor="bottom" id="Terminal" order="12" weight="0.20597015" />
-      <window_info anchor="bottom" id="Version Control" order="13" sideWeight="0.49105367" weight="0.1641791" />
-      <window_info anchor="right" x="0" y="0" width="590" height="880" id="Documentation" order="0" side_tool="true" weight="0.32962227" />
-      <window_info anchor="right" id="Commander" order="1" weight="0.4" />
-      <window_info anchor="right" id="Ant Build" order="2" weight="0.25" />
-      <window_info anchor="right" content_ui="combo" id="Hierarchy" order="3" weight="0.25" />
-      <window_info anchor="right" id="Database" order="4" sideWeight="0.49799734" weight="0.32962227" />
-      <window_info anchor="right" auto_hide="true" id="SciView" order="5" show_stripe_button="false" sideWeight="0.4992785" type="FLOATING" weight="0.32962227" />
-      <window_info anchor="right" id="Structure" order="6" sideWeight="0.50200266" side_tool="true" weight="0.1304175" />
-      <window_info anchor="right" id="Data View" order="7" />
-    </layout-to-restore>
   </component>
   <component name="TypeScriptGeneratedFilesManager">
     <option name="version" value="1" />
@@ -950,7 +928,6 @@
   </component>
   <component name="VcsManagerConfiguration">
     <option name="RELOAD_CONTEXT" value="false" />
-    <MESSAGE value="Changes some messages and names on the interface" />
     <MESSAGE value="Now when DesignSPHysics autofills the executable paths, it gets saved&#10;to the disk" />
     <MESSAGE value="Now linear and rotational motions from file uses relative paths." />
     <MESSAGE value="Removes matrixreset from fillboxes" />
@@ -975,29 +952,10 @@
     <MESSAGE value="Added a warning window about save case in &quot;Run GenCase&quot;&#10;&#10;Added &quot;run_gencase.png&quot; to images folder" />
     <MESSAGE value="Merges develop. Version 0.5.1811-08" />
     <MESSAGE value="Added a warning window in &quot;Run&quot; option&#10;&#10;Changed QGroupBox to QScrollArea in &quot;Define Constants&quot;" />
-    <option name="LAST_COMMIT_MESSAGE" value="Added a warning window in &quot;Run&quot; option&#10;&#10;Changed QGroupBox to QScrollArea in &quot;Define Constants&quot;" />
+    <MESSAGE value="Adds a custom QComboBox implementation with focus event&#10;&#10;Adds more text constants for help messages&#10;Adds an error message if ParaView path is wrong" />
+    <option name="LAST_COMMIT_MESSAGE" value="Adds a custom QComboBox implementation with focus event&#10;&#10;Adds more text constants for help messages&#10;Adds an error message if ParaView path is wrong" />
   </component>
   <component name="editorHistoryManager">
-    <entry file="file://$PROJECT_DIR$/ds_modules/enum/test.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="92">
-          <caret line="6" selection-start-line="6" selection-end-line="6" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/ds_modules/enum/README">
-      <provider selected="true" editor-type-id="text-editor" />
-    </entry>
-    <entry file="file://$PROJECT_DIR$/ds_modules/enum/LICENSE">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="253">
-          <caret line="11" column="29" selection-start-line="11" selection-start-column="29" selection-end-line="11" selection-end-column="29" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/ds_modules/templates/template.sh">
-      <provider selected="true" editor-type-id="text-editor" />
-    </entry>
     <entry file="file://$PROJECT_DIR$/ds_modules/templates/case_summary_template.html">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="-690">
@@ -1222,41 +1180,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/ds_modules/utils.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="1020">
-          <caret line="76" column="25" selection-start-line="76" selection-start-column="4" selection-end-line="76" selection-end-column="25" />
-          <folding>
-            <element signature="e#253#267#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/DesignSPHysics.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="2227">
-          <caret line="144" column="42" selection-start-line="144" selection-start-column="42" selection-end-line="144" selection-end-column="42" />
-          <folding>
-            <element signature="e#286#300#0" expanded="true" />
-            <element signature="e#13665#14731#0" />
-            <element signature="e#15977#17492#0" />
-            <element signature="e#17646#18677#0" />
-            <element signature="e#18837#21344#0" />
-            <element signature="e#21540#22798#0" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/ds_modules/guiutils.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="18734">
-          <caret line="1110" column="47" selection-start-line="1110" selection-start-column="47" selection-end-line="1110" selection-end-column="47" />
-          <folding>
-            <element signature="e#163#177#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$USER_HOME$/.PyCharm2018.2/system/python_stubs/703128353/PySide/QtGui/QComboBox.py">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="236">
@@ -1264,19 +1187,77 @@
         </state>
       </provider>
     </entry>
+    <entry file="file://$USER_HOME$/Desktop/Untitled-1.py" />
+    <entry file="file://Z:/exports/ndrs/thredds_downloader/thredds_downloader.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="289">
+          <caret line="17" column="52" selection-start-line="17" selection-start-column="44" selection-end-line="17" selection-end-column="52" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://Z:/exports/ndrs/thredds_downloader/download.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="153">
+          <caret line="9" column="32" selection-start-line="9" selection-start-column="28" selection-end-line="9" selection-end-column="32" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/dualsphysics/bin/ComputeForces4_win64.exe">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="236">
+          <caret line="4513" column="7" selection-start-line="4513" selection-start-column="7" selection-end-line="4513" selection-end-column="7" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/ds_modules/utils.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="26435">
+          <caret line="1571" column="79" selection-start-line="1571" selection-start-column="74" selection-end-line="1571" selection-end-column="79" />
+          <folding>
+            <element signature="e#253#267#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/ds_modules/guiutils.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="621">
+          <caret line="1110" column="41" selection-start-line="1110" selection-start-column="41" selection-end-line="1110" selection-end-column="41" />
+          <folding>
+            <element signature="e#163#177#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/ds_modules/constants.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="652">
-          <caret line="105" column="54" selection-start-line="105" selection-start-column="54" selection-end-line="105" selection-end-column="54" />
+        <state relative-caret-position="346">
+          <caret line="49" lean-forward="true" selection-start-line="49" selection-end-line="49" />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/ds_modules/dsphwidgets.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="228">
-          <caret line="5003" column="39" selection-start-line="5003" selection-start-column="30" selection-end-line="5003" selection-end-column="39" />
+        <state relative-caret-position="449">
+          <caret line="5890" column="46" selection-start-line="5890" selection-start-column="46" selection-end-line="5890" selection-end-column="46" />
           <folding>
             <element signature="e#273#287#0" expanded="true" />
+            <marker date="1543825822667" expanded="true" signature="247993:247996" ph="..." />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/DesignSPHysics.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-1625">
+          <caret line="2176" selection-start-line="2176" selection-end-line="2176" />
+          <folding>
+            <element signature="e#286#300#0" expanded="true" />
+            <element signature="e#13665#14731#0" />
+            <element signature="e#15977#17492#0" />
+            <element signature="e#17646#18677#0" />
+            <element signature="e#18837#21344#0" />
+            <element signature="e#21540#22798#0" />
           </folding>
         </state>
       </provider>

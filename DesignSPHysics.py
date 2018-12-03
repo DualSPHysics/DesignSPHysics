@@ -2264,7 +2264,7 @@ def on_computeforces():
         elif "id" in cfces_onlyprocess_selector.currentText().lower():
             export_parameters['onlyprocess_tag'] = "-onlyid:"
         elif "position" in cfces_onlyprocess_selector.currentText().lower():
-            export_parameters['onlyprocess_tag'] = "-onlyid:"
+            export_parameters['onlyprocess_tag'] = "-onlypos:"
 
         export_parameters['onlyprocess'] = cfces_onlyprocess_text.text()
         export_parameters['filename'] = cfces_filename_text.text()
