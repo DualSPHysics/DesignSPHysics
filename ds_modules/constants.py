@@ -8,7 +8,7 @@ This file contains a collection of constants meant to use with DesignSPHysics.
 
 
 """
-Copyright (C) 2016 - Andrés Vieira (anvieiravazquez@gmail.com) & Lorena Docasar Vázquez (docasarlorena@gmail.com)
+Copyright (C) 2018 - Andrés Vieira (anvieiravazquez@gmail.com) & Lorena Docasar Vázquez (docasarlorena@gmail.com)
 EPHYSLAB Environmental Physics Laboratory, Universidade de Vigo
 
 This file is part of DesignSPHysics.

@@ -5,15 +5,15 @@
     <bookmark url="file://$PROJECT_DIR$/DesignSPHysics.py" line="2291" mnemonic="3" />
     <bookmark url="file://$PROJECT_DIR$/DesignSPHysics.py" line="2113" mnemonic="1" />
     <bookmark url="file://$PROJECT_DIR$/DesignSPHysics.py" line="2176" mnemonic="4" />
-    <bookmark url="file://$PROJECT_DIR$/ds_modules/dsphwidgets.py" line="5891" mnemonic="8" />
+    <bookmark url="file://$PROJECT_DIR$/ds_modules/dsphwidgets.py" line="5851" mnemonic="8" />
+    <bookmark url="file://$PROJECT_DIR$/DesignSPHysics.py" line="2371" mnemonic="9" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="22d76f4b-310a-4afb-8788-a472c77b2c87" name="Default" comment="Adds a custom QComboBox implementation with focus event&#10;&#10;Adds more text constants for help messages&#10;Adds an error message if ParaView path is wrong">
+    <list default="true" id="22d76f4b-310a-4afb-8788-a472c77b2c87" name="Default" comment="Adds some changes in help texts">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/DesignSPHysics.py" beforeDir="false" afterPath="$PROJECT_DIR$/DesignSPHysics.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/ds_modules/constants.py" beforeDir="false" afterPath="$PROJECT_DIR$/ds_modules/constants.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/ds_modules/dsphwidgets.py" beforeDir="false" afterPath="$PROJECT_DIR$/ds_modules/dsphwidgets.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/ds_modules/lang/spanish.json" beforeDir="false" afterPath="$PROJECT_DIR$/ds_modules/lang/spanish.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/ds_modules/properties.py" beforeDir="false" afterPath="$PROJECT_DIR$/ds_modules/properties.py" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
@@ -99,15 +99,15 @@
         <counts>
           <entry key="dummy" value="11" />
           <entry key="md" value="6" />
-          <entry key="py" value="10509" />
-          <entry key="txt" value="811" />
+          <entry key="py" value="10550" />
+          <entry key="txt" value="813" />
         </counts>
       </usages-collector>
       <usages-collector id="statistics.file.types.edit">
         <counts>
           <entry key="Markdown" value="6" />
-          <entry key="PLAIN_TEXT" value="822" />
-          <entry key="Python" value="10509" />
+          <entry key="PLAIN_TEXT" value="824" />
+          <entry key="Python" value="10550" />
         </counts>
       </usages-collector>
       <usages-collector id="statistics.file.extensions.open">
@@ -117,7 +117,7 @@
           <entry key="ico" value="1" />
           <entry key="json" value="6" />
           <entry key="md" value="5" />
-          <entry key="py" value="76" />
+          <entry key="py" value="77" />
           <entry key="pylintrc" value="1" />
         </counts>
       </usages-collector>
@@ -127,7 +127,7 @@
           <entry key="JSON" value="6" />
           <entry key="Markdown" value="5" />
           <entry key="PLAIN_TEXT" value="2" />
-          <entry key="Python" value="77" />
+          <entry key="Python" value="78" />
         </counts>
       </usages-collector>
       <usages-collector id="statistics.lifecycle.project">
@@ -151,11 +151,11 @@
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/ds_modules/dsphwidgets.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="449">
-              <caret line="5890" column="46" selection-start-line="5890" selection-start-column="46" selection-end-line="5890" selection-end-column="46" />
+            <state relative-caret-position="2547">
+              <caret line="3074" column="56" selection-start-line="3074" selection-start-column="56" selection-end-line="3074" selection-end-column="56" />
               <folding>
                 <element signature="e#273#287#0" expanded="true" />
-                <marker date="1543825822667" expanded="true" signature="247993:247996" ph="..." />
+                <marker date="1543861825729" expanded="true" signature="245615:245618" ph="..." />
               </folding>
             </state>
           </provider>
@@ -173,8 +173,8 @@
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/ds_modules/utils.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="26435">
-              <caret line="1571" column="79" selection-start-line="1571" selection-start-column="74" selection-end-line="1571" selection-end-column="79" />
+            <state relative-caret-position="218">
+              <caret line="1411" column="69" selection-start-line="1411" selection-start-column="58" selection-end-line="1411" selection-end-column="69" />
               <folding>
                 <element signature="e#253#267#0" expanded="true" />
               </folding>
@@ -185,8 +185,8 @@
       <file pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/DesignSPHysics.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="-1625">
-              <caret line="2176" selection-start-line="2176" selection-end-line="2176" />
+            <state relative-caret-position="218">
+              <caret line="2176" lean-forward="true" selection-start-line="2176" selection-end-line="2176" />
               <folding>
                 <element signature="e#286#300#0" expanded="true" />
                 <element signature="e#13665#14731#0" />
@@ -195,6 +195,15 @@
                 <element signature="e#18837#21344#0" />
                 <element signature="e#21540#22798#0" />
               </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/ds_modules/properties.py">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="17">
+              <caret line="147" column="13" selection-start-line="147" selection-start-column="13" selection-end-line="147" selection-end-column="13" />
             </state>
           </provider>
         </entry>
@@ -222,14 +231,6 @@
   </component>
   <component name="FindInProjectRecents">
     <findStrings>
-      <find>is_compatible_version</find>
-      <find>plug</find>
-      <find>paraview_path</find>
-      <find>warnin</find>
-      <find>define</find>
-      <find>exe</find>
-      <find>HELP_RHOPOUTMAX</find>
-      <find>grid</find>
       <find>ComputeForces</find>
       <find>onlyprocess</find>
       <find>onlyid</find>
@@ -238,20 +239,28 @@
       <find>flap</find>
       <find>create_new_movement_button</find>
       <find>has_motion_selector</find>
-      <find>fixeddepth</find>
       <find>fixed_depth_label</find>
       <find>computefo</find>
       <find>onlyp</find>
       <find>on_cfces_export</find>
       <find>onlyprocess_tag</find>
       <find>export_parameters</find>
-      <find>computeforces_export</find>
       <find>export_process.start(data['computeforces_path'], static_params_exp)</find>
       <find>save_mode</find>
-      <find>static_params_exp</find>
       <find>GRAVITY</find>
       <find>constants.RHOPOUTMAX</find>
       <find>contants.GRAVITY</find>
+      <find>computeforces_export</find>
+      <find>export_process</find>
+      <find>static_params_exp</find>
+      <find>fixeddepth</find>
+      <find>fixed depth</find>
+      <find>generator</find>
+      <find>RegularPistonWaveMotionTimeline</find>
+      <find>fixed_depth_input</find>
+      <find>Fluid depth</find>
+      <find>WaveGen</find>
+      <find>fixed_depth</find>
     </findStrings>
     <replaceStrings>
       <replace>self.time_label</replace>
@@ -318,8 +327,9 @@
         <option value="$PROJECT_DIR$/ds_modules/utils.py" />
         <option value="$PROJECT_DIR$/ds_modules/guiutils.py" />
         <option value="$PROJECT_DIR$/ds_modules/constants.py" />
-        <option value="$PROJECT_DIR$/DesignSPHysics.py" />
         <option value="$PROJECT_DIR$/ds_modules/dsphwidgets.py" />
+        <option value="$PROJECT_DIR$/ds_modules/properties.py" />
+        <option value="$PROJECT_DIR$/DesignSPHysics.py" />
       </list>
     </option>
   </component>
@@ -503,13 +513,6 @@
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
       <updated>1486981492000</updated>
-    </task>
-    <task id="LOCAL-00032" summary="Implemented MeasureTool post processing tool">
-      <created>1496054514055</created>
-      <option name="number" value="00032" />
-      <option name="presentableId" value="LOCAL-00032" />
-      <option name="project" value="LOCAL" />
-      <updated>1496054514055</updated>
     </task>
     <task id="LOCAL-00033" summary="Cosmetic changes&#10;&#10;Changes _Out folder suffix with _out (capitalization).&#10;Changes Save &amp; Run GenCase dialog a bit.">
       <created>1527237281435</created>
@@ -847,7 +850,14 @@
       <option name="project" value="LOCAL" />
       <updated>1542907714542</updated>
     </task>
-    <option name="localTasksCounter" value="81" />
+    <task id="LOCAL-00081" summary="Adds some changes in help texts">
+      <created>1543826826261</created>
+      <option name="number" value="00081" />
+      <option name="presentableId" value="LOCAL-00081" />
+      <option name="project" value="LOCAL" />
+      <updated>1543826826262</updated>
+    </task>
+    <option name="localTasksCounter" value="82" />
     <servers />
   </component>
   <component name="TodoView">
@@ -928,7 +938,6 @@
   </component>
   <component name="VcsManagerConfiguration">
     <option name="RELOAD_CONTEXT" value="false" />
-    <MESSAGE value="Now when DesignSPHysics autofills the executable paths, it gets saved&#10;to the disk" />
     <MESSAGE value="Now linear and rotational motions from file uses relative paths." />
     <MESSAGE value="Removes matrixreset from fillboxes" />
     <MESSAGE value="Changes version" />
@@ -953,7 +962,8 @@
     <MESSAGE value="Merges develop. Version 0.5.1811-08" />
     <MESSAGE value="Added a warning window in &quot;Run&quot; option&#10;&#10;Changed QGroupBox to QScrollArea in &quot;Define Constants&quot;" />
     <MESSAGE value="Adds a custom QComboBox implementation with focus event&#10;&#10;Adds more text constants for help messages&#10;Adds an error message if ParaView path is wrong" />
-    <option name="LAST_COMMIT_MESSAGE" value="Adds a custom QComboBox implementation with focus event&#10;&#10;Adds more text constants for help messages&#10;Adds an error message if ParaView path is wrong" />
+    <MESSAGE value="Adds some changes in help texts" />
+    <option name="LAST_COMMIT_MESSAGE" value="Adds some changes in help texts" />
   </component>
   <component name="editorHistoryManager">
     <entry file="file://$PROJECT_DIR$/ds_modules/templates/case_summary_template.html">
@@ -1158,13 +1168,6 @@
     <entry file="file://$PROJECT_DIR$/ds_modules/__init__.py">
       <provider selected="true" editor-type-id="text-editor" />
     </entry>
-    <entry file="file://$PROJECT_DIR$/ds_modules/properties.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="187">
-          <caret line="146" column="12" selection-start-line="146" selection-start-column="12" selection-end-line="146" selection-end-column="12" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/README.md">
       <provider editor-type-id="text-editor">
         <state relative-caret-position="560">
@@ -1209,10 +1212,17 @@
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/ds_modules/constants.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="346">
+          <caret line="49" lean-forward="true" selection-start-line="49" selection-end-line="49" />
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/ds_modules/utils.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="26435">
-          <caret line="1571" column="79" selection-start-line="1571" selection-start-column="74" selection-end-line="1571" selection-end-column="79" />
+        <state relative-caret-position="218">
+          <caret line="1411" column="69" selection-start-line="1411" selection-start-column="58" selection-end-line="1411" selection-end-column="69" />
           <folding>
             <element signature="e#253#267#0" expanded="true" />
           </folding>
@@ -1229,28 +1239,28 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/ds_modules/constants.py">
+    <entry file="file://$PROJECT_DIR$/ds_modules/properties.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="346">
-          <caret line="49" lean-forward="true" selection-start-line="49" selection-end-line="49" />
+        <state relative-caret-position="17">
+          <caret line="147" column="13" selection-start-line="147" selection-start-column="13" selection-end-line="147" selection-end-column="13" />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/ds_modules/dsphwidgets.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="449">
-          <caret line="5890" column="46" selection-start-line="5890" selection-start-column="46" selection-end-line="5890" selection-end-column="46" />
+        <state relative-caret-position="2547">
+          <caret line="3074" column="56" selection-start-line="3074" selection-start-column="56" selection-end-line="3074" selection-end-column="56" />
           <folding>
             <element signature="e#273#287#0" expanded="true" />
-            <marker date="1543825822667" expanded="true" signature="247993:247996" ph="..." />
+            <marker date="1543861825729" expanded="true" signature="245615:245618" ph="..." />
           </folding>
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/DesignSPHysics.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-1625">
-          <caret line="2176" selection-start-line="2176" selection-end-line="2176" />
+        <state relative-caret-position="218">
+          <caret line="2176" lean-forward="true" selection-start-line="2176" selection-end-line="2176" />
           <folding>
             <element signature="e#286#300#0" expanded="true" />
             <element signature="e#13665#14731#0" />
