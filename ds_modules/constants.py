@@ -8,7 +8,7 @@ This file contains a collection of constants meant to use with DesignSPHysics.
 
 
 """
-Copyright (C) 2016 - Andrés Vieira (anvieiravazquez@gmail.com) & Lorena Docasar Vázquez (docasarlorena@gmail.com)
+Copyright (C) 2018 - Andrés Vieira (anvieiravazquez@gmail.com) & Lorena Docasar Vázquez (docasarlorena@gmail.com)
 EPHYSLAB Environmental Physics Laboratory, Universidade de Vigo
 
 This file is part of DesignSPHysics.
@@ -29,77 +29,71 @@ along with DesignSPHysics.  If not, see <http://www.gnu.org/licenses/>.
 
 # ------ DEFINE CONSTANTS  ------
 
-""" --------- ToolTip -------------- """
-
-GRAVITY = "Gravitational acceleration."
-RHOP0 = "Reference density of the fluid."
-HSWL = "Maximum still water level to calculate speedofsound using coefsound."
-GAMMA = "Polytropic constant for water used in the state equation."
-SPEEDSYSTEM = "Maximum system speed (by default the dam-break propagation is used)."
-COEFSOUND = "Coefficient to multiply speedsystem."
-SPEEDSOUND = "Speed of sound to use in the simulation (by default speedofsound=coefsound*speedsystem)."
-COEFH = "Coefficient to calculate the smoothing length (h=coefh*sqrt(3*dp^2) in 3D)."
-CFLNUMBER = "Coefficient to multiply dt."
-
 """ --------- Help Window -------------- """
 
-HELP_GRAVITYX = "Gravity X"
-HELP_GRAVITYY = "Gravity Y"
-HELP_GRAVITYZ = "Gravity Z"
-HELP_RHOP0 = "Fluid reference density"
-HELP_HSWL = "HSWL"
-HELP_GAMMA = "Gamma"
-HELP_SPEEDSYSTEM = "Speedsystem"
-HELP_COEFSOUND = "Coefsound"
-HELP_SPEEDSOUND = "Speedsound"
-HELP_COEFH = "CoefH"
-HELP_CFLNUMBER = "cflnumber"
+HELP_GRAVITYX = "Gravitational acceleration in X direction."
+HELP_GRAVITYY = "Gravitational acceleration in Y direction."
+HELP_GRAVITYZ = "Gravitational acceleration in Z direction."
+HELP_RHOP0 = "Reference density of the fluid."
+HELP_HSWL = "Maximum still water level to calculate speedofsound as the celerity during dam-break propagation."
+HELP_GAMMA = "Polytropic constant for ocean water used in the state equation."
+HELP_SPEEDSYSTEM = "Maximum speed system (by default the celerity during dam-break propagation)."
+HELP_COEFSOUND = "Coefficient to multiply speedsystem"
+HELP_SPEEDSOUND = "Speed of sound (by default speedofsound=coefsound*speedsystem). "
+HELP_COEFH = "Coefficient to calculate the smoothing length (h=coefh*sqrt(3*dp^2) in 3D)."
+HELP_CFLNUMBER = "Coefficient to multiply variable dt."
 
 
 # ------ EXECUTION PARAMETERS  ------
 
 """ --------- ToolTip -------------- """
 
-POSDOUBLE = "Precision in particle interaction 0:Simple, 1:Double, 2:Uses and saves double (default=0)"
-STEPALGORITHM = "Step Algorithm 1:Verlet, 2:Symplectic (default=1)"
-VERLETSTEPS = "Verlet only: Number of steps to apply Euler timestepping (default=40)"
-KERNEL = "Interaction Kernel 1:Cubic Spline, 2:Wendland, 3:Gaussian (default=2)"
-VISCOTREATMENT = "Viscosity formulation 1:Artificial, 2:Laminar+SPS (default=1)"
-VISCO = "Viscosity value"
-VISCOBOUNDFACTOR = "Multiply viscosity value with boundary (default=1)"
-DELTASPH = "DeltaSPH value, 0.1 is the typical value, with 0 disabled (default=0)"
-SHIFTING = "Shifting mode 0:None, 1:Ignore bound, 2:Ignore fixed, 3:Full (default=0)"
-SHIFTINGCOEF = "Coefficient for shifting computation (default=-2)"
-SHIFTINGTFS = "Threshold to detect free surface. Typically 1.5 for 2D and 2.75 for 3D (default=0)"
-RIGIDALGORITHM = "Rigid Algorithm 1:SPH, 2:DEM, 3:Chrono (default=1)"
-FTPAUSE = "Time to freeze the floatings at simulation start (warmup) (default=0)"
-DTINI = "Initial time step (default=h/speedsound)"
-DTMIN = "Minimum time step (default=coefdtmin*h/speedsound)"
-COEFDTMIN = "Coefficient to calculate minimum time step dtmin=coefdtmin*h/speedsound (default=0.05)"
-TIMEMAX = "Time of simulation"
-TIMEOUT = "Time out data"
-INCZ = "Increase of Z+ (default=0)"
-PARTSOUTMAX = "%%/100 of fluid particles allowed to be excluded from domain (default=1)"
-RHOPOUTMIN = "Minimum rhop valid (default=700)"
-RHOPOUTMAX = "Maximum rhop valid (default=1300)"
 DOMAINFIXED = "The domain is fixed with the specified values (xmin:ymin:zmin:xmax:ymax:zmax)"
+
+XMIN = "The domain is fixed in the specified limit (default=not applied)"
+XMAX = "The domain is fixed in the specified limit (default=not applied)"
+
+YMIN = "The domain is fixed in the specified limit (default=not applied)"
+YMAX = "The domain is fixed in the specified limit (default=not applied)"
+
+ZMIN = "The domain is fixed in the specified limit (default=not applied)"
+ZMAX = "The domain is fixed in the specified limit (default=not applied)"
+
+PERIODX = ""
+YINCEMENTX = "Increase of Y with periodic BC in axis X"
+ZINCREMENTX = "Increase of Z with periodic BC in axis X"
+
+PERIODY = ""
+XINCREMENTY = "Increase of X with periodic BC in axis Y"
+ZINCREMENTY = "Increase of Z with periodic BC in axis Y"
+
+PERIODZ = ""
+XINCREMENTZ = "Increase of X with periodic BC in axis Z"
+YINCEMENTZ = "Increase of Y with periodic BC in axis Z"
 
 """ --------- Help Window -------------- """
 
-HELP_VERLETSTEPS = "Verlet Steps"
-HELP_VISCO = "Viscosity value"
-HELP_VISCOBOUNDFACROT = "Viscosity factor with boundary"
-HELP_DELTASPH = "Delta SPH value"
-HELP_SHIFTINGCOEF = "Shifting Coefficient"
-HELP_SHIFTINGTFS = "Free surface detection threshold"
-HELP_FTPAUSE = "Floating freeze time"
-HELP_DTINI = "Initial time step"
-HELP_DTMIN = "Minimium time step"
-HELP_COEFDTMIN = "Coefficient for minimum time step"
-HELP_TIMEMAX = "Time of simulation"
-HELP_TIMEOUT = "Time out data"
-HELP_INCZ = "Increase of Z+ (%)"
-HELP_PARTSOUTMAX = "%%/100 of fluid particles allowed to be excluded from domain"
-HELP_RHOPOUTMIN = "Minimum rhop valid"
-HELP_RHOPOUTMAX = "Maximum rhop valid"
+HELP_POSDOUBLE = "Precision in particle interaction 0:Simple, 1:Double, 2:Uses and saves double (default=0)."
+HELP_STEPALGORITHM = "Time-integrator algorithm 1:Verlet, 2:Symplectic (default=1)."
+HELP_VERLETSTEPS = "Verlet only: Number of steps to apply Euler timestepping (default=40)."
+HELP_KERNEL = "Interaction Kernel 1:Cubic Spline, 2:Wendland, 3:Gaussian (default=2)"
+HELP_VISCOTREATMENT = "Viscosity formulation 1:Artificial, 2:Laminar+SPS (default=1)"
+HELP_VISCO = "Viscosity value (apha when VISCOTREATMENT=1 and kinematic viscosity when VISCOTREATMENT=2)."
+HELP_VISCOBOUNDFACROT = "Multiply viscosity value for fluid-boundary interaction (default=1)."
+HELP_DELTASPH = "DeltaSPH value, 0.1 is the typical value, with 0 disabled (default=0)."
+HELP_SHIFTING = "Shifting mode 0:None, 1:Ignore bound, 2:Ignore fixed, 3:Full (default=0)."
+HELP_SHIFTINGCOEF = "Coefficient for shifting computation (default=-2)."
+HELP_SHIFTINGTFS = "Threshold to detect free surface. Typically 1.5 for 2D and 2.75 for 3D (default=0)."
+HELP_RIGIDALGORITHM = "Rigid Algorithm 1:SPH, 2:DEM, 3:Chrono (default=1)."
+HELP_FTPAUSE = "Time to freeze the floating objects at beginning of simulation (default=0)."
+HELP_DTINI = "Initial time step (default=h/speedsound)."
+HELP_DTMIN = "Minimum time step (default=coefdtmin*h/speedsound)."
+HELP_COEFDTMIN = "Coefficient to calculate minimum time step dtmin=coefdtmin*h/speedsound (default=0.05)."
+HELP_TIMEMAX = "Time of simulation."
+HELP_TIMEOUT = "Time to save output data."
+HELP_INCZ = "Increase of Z+ (%) (default=0)."
+HELP_PARTSOUTMAX = "%%/100 of fluid particles allowed to be excluded from domain (default=1)."
+HELP_RHOPOUTMIN = "Minimum rhop valid (default=700)."
+HELP_RHOPOUTMAX = "Maximum rhop valid (default=1300)."
+HELP_DOMAINFIXED = "The domain is fixed with the specified values (xmin:ymin:zmin:xmax:ymax:zmax)."
 
