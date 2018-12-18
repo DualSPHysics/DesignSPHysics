@@ -821,7 +821,8 @@ def on_add_damping_zone():
     # Save damping in the main data structure.
     data["damping"][damping_group.Name] = Damping()
     # Opens damping configuration window to tweak the added damping zone.
-    guiutils.damping_config_window(data, damping_group.Name)
+    dsphwidgets.DampingConfigDialog(data, damping_group.Name)
+
 
 
 def on_add_stl():
