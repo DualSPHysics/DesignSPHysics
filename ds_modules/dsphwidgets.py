@@ -4064,20 +4064,20 @@ class RelaxationZoneIrregularConfigDialog(QtGui.QDialog):
 
         self.savemotion_layout = QtGui.QHBoxLayout()
         self.savemotion_label = QtGui.QLabel(__("Save motion data ->"))
-        self.savemotion_periods_label = QtGui.QLabel(__("Periods: "))
-        self.savemotion_periods_input = QtGui.QLineEdit()
-        self.savemotion_periodsteps_label = QtGui.QLabel(__("Period steps: "))
-        self.savemotion_periodsteps_input = QtGui.QLineEdit()
+        self.savemotion_time_label = QtGui.QLabel(__("Time: "))
+        self.savemotion_time_input = QtGui.QLineEdit()
+        self.savemotion_timedt_label = QtGui.QLabel(__("Time data: "))
+        self.savemotion_timedt_input = QtGui.QLineEdit()
         self.savemotion_xpos_label = QtGui.QLabel(__("X Position: "))
         self.savemotion_xpos_input = QtGui.QLineEdit()
         self.savemotion_zpos_label = QtGui.QLabel(__("Z Position: "))
         self.savemotion_zpos_input = QtGui.QLineEdit()
         [self.savemotion_layout.addWidget(x) for x in [
             self.savemotion_label,
-            self.savemotion_periods_label,
-            self.savemotion_periods_input,
-            self.savemotion_periodsteps_label,
-            self.savemotion_periodsteps_input,
+            self.savemotion_time_label,
+            self.savemotion_time_input,
+            self.savemotion_timedt_label,
+            self.savemotion_timedt_input,
             self.savemotion_xpos_label,
             self.savemotion_xpos_input,
             self.savemotion_zpos_label,
@@ -4218,8 +4218,8 @@ class RelaxationZoneIrregularConfigDialog(QtGui.QDialog):
         self.temp_relaxationzone.width = float(self.width_input.text())
         self.temp_relaxationzone.ramptime = float(self.ramptime_input.text())
         self.temp_relaxationzone.serieini = float(self.serieini_input.text())
-        self.temp_relaxationzone.savemotion_periods = float(self.savemotion_periods_input.text())
-        self.temp_relaxationzone.savemotion_periodsteps = float(self.savemotion_periodsteps_input.text())
+        self.temp_relaxationzone.savemotion_time = float(self.savemotion_time_input.text())
+        self.temp_relaxationzone.savemotion_timedt = float(self.savemotion_timedt_input.text())
         self.temp_relaxationzone.savemotion_xpos = float(self.savemotion_xpos_input.text())
         self.temp_relaxationzone.savemotion_zpos = float(self.savemotion_zpos_input.text())
         self.temp_relaxationzone.saveserie_timemin = float(self.saveserie_timemin_input.text())
@@ -4262,8 +4262,8 @@ class RelaxationZoneIrregularConfigDialog(QtGui.QDialog):
         self.width_input.setText(str(self.temp_relaxationzone.width))
         self.ramptime_input.setText(str(self.temp_relaxationzone.ramptime))
         self.serieini_input.setText(str(self.temp_relaxationzone.serieini))
-        self.savemotion_periods_input.setText(str(self.temp_relaxationzone.savemotion_periods))
-        self.savemotion_periodsteps_input.setText(str(self.temp_relaxationzone.savemotion_periodsteps))
+        self.savemotion_time_input.setText(str(self.temp_relaxationzone.savemotion_time))
+        self.savemotion_timedt_input.setText(str(self.temp_relaxationzone.savemotion_timedt))
         self.savemotion_xpos_input.setText(str(self.temp_relaxationzone.savemotion_xpos))
         self.savemotion_zpos_input.setText(str(self.temp_relaxationzone.savemotion_zpos))
         self.saveserie_timemin_input.setText(str(self.temp_relaxationzone.saveserie_timemin))
