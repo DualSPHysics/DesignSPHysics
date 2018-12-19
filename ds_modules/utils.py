@@ -1778,8 +1778,8 @@ def dump_to_xml(data, save_name):
                 '\t\t\t\t\t<serieini value="{}" comment="Initial time in irregular wave serie (default=0)" />\n'.format(
                     rzobject.serieini))
             f.write(
-                '\t\t\t\t\t<savemotion periods="{}" periodsteps="{}" xpos="{}" zpos="{}" comment="Saves motion data. xpos and zpos are optional. zpos=-depth of the measuring point" />\n'.format(
-                    rzobject.savemotion_periods, rzobject.savemotion_periodsteps, rzobject.savemotion_xpos,
+                '\t\t\t\t\t<savemotion time="{}" timedt="{}" xpos="{}" zpos="{}" comment="Saves motion data. xpos and zpos are optional. zpos=-depth of the measuring point" />\n'.format(
+                    rzobject.savemotion_time, rzobject.savemotion_timedt, rzobject.savemotion_xpos,
                     rzobject.savemotion_zpos))
             f.write(
                 '\t\t\t\t\t<saveserie timemin="{}" timemax="{}" timedt="{}" xpos="{}" comment="Saves serie data (optional)" />\n'.format(
