@@ -4451,7 +4451,7 @@ class RelaxationZoneFileConfigDialog(QtGui.QDialog):
         if len(file_name) < 1:
             return
         # Takes only the filename without the serie data in its name
-        filtered_filename = file_name.split("_x")[0]
+        filtered_filename = file_name.split("_v")[0]
         self.filesvel_input.setText(filtered_filename)
 
     def on_apply(self):
