@@ -13,6 +13,7 @@ in QT by default.
 import FreeCAD
 import FreeCADGui
 from PySide import QtCore, QtGui
+import uuid
 import utils
 import shutil
 import glob
@@ -3405,6 +3406,31 @@ class ObjectOrderWidget(QtGui.QWidget):
         self.down.emit(self.index)
 
 
+class ObjectIsCheked(QtGui.QWidget):
+    """  """
+
+    def __init__(self, object_name="No name", object_mk=-1, mktype="bound"):
+        super(ObjectIsCheked, self).__init__()
+        self.setContentsMargins(0, 0, 0, 0)
+
+        self.object_name = object_name
+        self.main_layout = QtGui.QHBoxLayout()
+        self.main_layout.setContentsMargins(10, 0, 10, 0)
+        self.mk_label = QtGui.QLabel(
+            "<b>{}{}</b>".format(mktype[0].upper(), str(object_mk)))
+        self.name_label = QtGui.QLabel(str(object_name))
+        self.object_check = QtGui.QCheckBox()
+
+        self.main_layout.addWidget(self.mk_label)
+        self.main_layout.addWidget(self.name_label)
+        self.main_layout.addStretch(1)
+        self.main_layout.addWidget(self.object_check)
+
+        self.setLayout(self.main_layout)
+        self.setToolTip("MK: {} ({})\n"
+                        "Name: {}\n".format(object_mk, mktype.lower().title(), object_name))
+
+
 class MovementTimelinePlaceholder(QtGui.QWidget):
     """ A placeholder for the movement timeline table. """
 
@@ -6515,6 +6541,201 @@ class DampingConfigDialog(QtGui.QDialog):
           self.limitmax_input_y, self.limitmax_input_z]]
 
 
+class ChronoConfigDialog(QtGui.QDialog):
+    """  """
+
+    def __init__(self, orig_data):
+        super(ChronoConfigDialog, self).__init__()
+
+        self.data = dict(orig_data)
+
+        # Creates a dialog and 2 main buttons
+        self.setWindowTitle("Chrono configuration")
+
+        self.main_layout = QtGui.QVBoxLayout()
+        self.main_chrono = QtGui.QGroupBox("Chrono objects")
+        self.main_chrono.setMinimumHeight(150)
+        self.chrono_layout = QtGui.QVBoxLayout()
+
+        self.objectlist_table = QtGui.QTableWidget(0, 1)
+        self.objectlist_table.setObjectName("Chrono objects")
+        self.objectlist_table.verticalHeader().setVisible(False)
+        self.objectlist_table.horizontalHeader().setVisible(False)
+        self.objectlist_table.horizontalHeader().setResizeMode(0, QtGui.QHeaderView.Stretch)
+
+        self.objectlist_table.setEnabled(True)
+
+        self.count = 0
+        for key in self.data['simobjects'].keys():
+            self.context_object = FreeCAD.getDocument("DSPH_Case").getObject(key)
+            if self.data['simobjects'][self.context_object.Name][1] != "Fluid" and \
+                    self.context_object.Name != "Case_Limits":
+                self.count += 1
+        self.objectlist_table.setRowCount(self.count)
+        self.current_row = 0
+        self.objects_with_parent = list()
+
+        for key in self.data['simobjects'].keys():
+            self.context_object = FreeCAD.getDocument("DSPH_Case").getObject(key)
+            if self.context_object.InList != list():
+                self.objects_with_parent.append(self.context_object.Name)
+                continue
+            if self.context_object.Name == "Case_Limits":
+                continue
+            if self.data['simobjects'][self.context_object.Name][1] == "Fluid":
+                continue
+
+            self.target_widget = ObjectIsCheked(
+                object_mk=self.data['simobjects'][self.context_object.Name][0],
+                mktype=self.data['simobjects'][self.context_object.Name][1],
+                object_name=self.context_object.Label
+            )
+
+            self.objectlist_table.setCellWidget(self.current_row, 0, self.target_widget)
+
+            self.current_row += 1
+
+        self.chrono_layout.addWidget(self.objectlist_table)
+
+        self.ok_button = QtGui.QPushButton("Save")
+        self.cancel_button = QtGui.QPushButton("Cancel")
+        self.button_layout = QtGui.QHBoxLayout()
+        self.button_layout.addStretch(1)
+
+        self.main_link_spheric = QtGui.QGroupBox("Link spheric")
+        self.link_spheric_layout = QtGui.QVBoxLayout()
+        self.link_spheric_layout2 = QtGui.QVBoxLayout()
+
+        self.link_spheric_button_layout = QtGui.QHBoxLayout()
+        self.button_link_spheric = QtGui.QPushButton("Add Link Spheric")
+        self.link_spheric_button_layout.addStretch(1)
+        self.link_spheric_button_layout.addWidget(self.button_link_spheric)
+        self.button_link_spheric.clicked.connect(self.on_link_spheric_add)
+
+        self.link_spheric_layout.addLayout(self.link_spheric_button_layout)
+        self.link_spheric_layout.addLayout(self.link_spheric_layout2)
+        self.main_link_spheric.setLayout(self.link_spheric_layout)
+
+        self.button_layout.addWidget(self.ok_button)
+        self.button_layout.addWidget(self.cancel_button)
+
+        self.main_chrono.setLayout(self.chrono_layout)
+        self.main_layout.addWidget(self.main_chrono)
+        self.main_layout.addWidget(self.main_link_spheric)
+        self.main_layout.addLayout(self.button_layout)
+
+        self.setLayout(self.main_layout)
+
+        self.cancel_button.clicked.connect(self.on_cancel)
+
+        self.exec_()
+
+    def refresh_link_spheric(self):
+        """ Refreshes the link spheric list """
+        while self.link_spheric_layout2.count() > 0:
+            target = self.link_spheric_layout2.takeAt(0)
+            target.setParent(None)
+
+        for linkSpheric in self.data['link_spheric']:
+            to_add_layout = QtGui.QHBoxLayout()
+            to_add_label = QtGui.QLabel(str(linkSpheric[1]))
+            to_add_layout.addWidget(to_add_label)
+            to_add_layout.addStretch(1)
+            to_add_editbutton = QtGui.QPushButton("Edit")
+            to_add_deletebutton = QtGui.QPushButton("Delete")
+            to_add_layout.addWidget(to_add_editbutton)
+            to_add_layout.addWidget(to_add_deletebutton)
+            to_add_editbutton.clicked.connect(lambda ls=linkSpheric[0]: self.link_spheric_edit(ls))
+            to_add_deletebutton.clicked.connect(lambda ls=linkSpheric[0]: self.link_spheric_delete(ls))
+            self.link_spheric_layout2.addLayout(to_add_layout)
+
+    def on_link_spheric_add(self):
+        """ Adds Link spheric option at list """
+        self.data['link_spheric'].append([
+            str(uuid.uuid4()),
+            'Link Spheric'])
+        self.refresh_link_spheric()
+
+    def link_spheric_delete(self, link_spheric_id):
+        """ """
+        link_spheric_to_remove = None
+        for ls in self.data['link_spheric']:
+            if ls[0] == link_spheric_id:
+                link_spheric_to_remove = ls
+        if link_spheric_to_remove is not None:
+            self.data['link_spheric'].remove(link_spheric_to_remove)
+            self.refresh_link_spheric()
+
+    def link_spheric_edit(self, link_spheric_id):
+        """ """
+        LinkSphericEdit(self.data, link_spheric_id)
+
+    def on_cancel(self):
+        self.reject()
+
+
+class LinkSphericEdit(QtGui.QDialog):
+    """ """
+
+    def __init__(self, data, link_spheric_id):
+        super(LinkSphericEdit, self).__init__()
+
+        self.data = data
+        self.link_spheric_id = link_spheric_id
+
+        self.setWindowTitle(__("Link spheric configuration"))
+        self.link_spheric_edit_layout = QtGui.QVBoxLayout()
+
+        self.body_layout = QtGui.QHBoxLayout()
+        self.body_one_label = QtGui.QLabel(__("Body 1: "))
+        self.body_one_line_edit = QtGui.QLineEdit()
+        self.body_two_label = QtGui.QLabel(__("Body 2: "))
+        self.body_two_line_edit = QtGui.QLineEdit()
+        self.body_to_body_label = QtGui.QLabel(__("to"))
+
+        self.points_layout = QtGui.QHBoxLayout()
+        self.points_label = QtGui.QLabel(__("Points: "))
+        self.point_x_label = QtGui.QLabel(__("X"))
+        self.point_x_line_edit = QtGui.QLineEdit()
+        self.point_y_label = QtGui.QLabel(__("Y"))
+        self.point_y_line_edit = QtGui.QLineEdit()
+        self.point_z_label = QtGui.QLabel(__("Z"))
+        self.point_z_line_edit = QtGui.QLineEdit()
+
+        self.ok_button = QtGui.QPushButton("Save")
+        self.cancel_button = QtGui.QPushButton("Cancel")
+        self.cancel_button.clicked.connect(self.on_cancel)
+        self.button_layout = QtGui.QHBoxLayout()
+        self.button_layout.addStretch(1)
+
+        self.body_layout.addWidget(self.body_one_label)
+        self.body_layout.addWidget(self.body_one_line_edit)
+        self.body_layout.addWidget(self.body_to_body_label)
+        self.body_layout.addWidget(self.body_two_label)
+        self.body_layout.addWidget(self.body_two_line_edit)
+
+        self.points_layout.addWidget(self.points_label)
+        self.points_layout.addWidget(self.point_x_label)
+        self.points_layout.addWidget(self.point_x_line_edit)
+        self.points_layout.addWidget(self.point_y_label)
+        self.points_layout.addWidget(self.point_y_line_edit)
+        self.points_layout.addWidget(self.point_z_label)
+        self.points_layout.addWidget(self.point_z_line_edit)
+
+        self.button_layout.addWidget(self.ok_button)
+        self.button_layout.addWidget(self.cancel_button)
+
+        self.link_spheric_edit_layout.addLayout(self.body_layout)
+        self.link_spheric_edit_layout.addLayout(self.points_layout)
+        self.link_spheric_edit_layout.addLayout(self.button_layout)
+
+        self.setLayout(self.link_spheric_edit_layout)
+        self.exec_()
+
+    def on_cancel(self):
+        self.reject()
+
+
 class RunDialog(QtGui.QDialog):
     """"" Defines run window dialog """
 
@@ -6522,7 +6743,6 @@ class RunDialog(QtGui.QDialog):
         super(RunDialog, self).__init__()
 
         self.run_watcher = QtCore.QFileSystemWatcher()
-
         # Title and size
         self.setModal(False)
         self.setWindowTitle(__("DualSPHysics Simulation: {}%").format("0"))

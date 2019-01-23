@@ -514,6 +514,9 @@ def get_default_data():
     # id is an UUID
     data['flowtool_boxes'] = list()
 
+    # CHRONO objects
+    data['link_spheric'] = list()
+
     # MultiLayer Pistons: {mk: MLPistonObject}
     data['mlayerpistons'] = dict()
 

@@ -215,7 +215,6 @@ ccfilebuttons_layout = QtGui.QHBoxLayout()
 ccsecondrow_layout = QtGui.QHBoxLayout()
 ccthirdrow_layout = QtGui.QHBoxLayout()
 ccfourthrow_layout = QtGui.QHBoxLayout()
-ccfivethrow_layout = QtGui.QHBoxLayout()
 casecontrols_label = QtGui.QLabel("<b>{}</b>".format(__("Pre-processing")))
 
 # New Case button
@@ -824,6 +823,11 @@ def on_add_damping_zone():
     dsphwidgets.DampingConfigDialog(data, damping_group.Name)
 
 
+def on_add_chrono():
+    # Opens chrono configuration window to configurate the chrono options.
+    dsphwidgets.ChronoConfigDialog(data)
+
+
 def on_add_stl():
     """ Add STL file. Opens a file opener and allows
     the user to set parameters for the import process"""
@@ -1130,6 +1134,11 @@ def on_special_button():
         on_add_damping_zone()
         sp_window.accept()
 
+    def on_chrono_option():
+        """ Defines Coupling CHRONO behaviour"""
+        on_add_chrono()
+        sp_window.accept()
+
     def on_multilayeredmb_menu(action):
         """ Defines MLPiston menu behaviour"""
         # Get currently selected object
@@ -1315,6 +1324,7 @@ def on_special_button():
             data['accinput'] = accinput_dialog.get_result()
 
     sp_damping_button.clicked.connect(on_damping_option)
+    sp_chrono_button.clicked.connect(on_chrono_option)
     sp_multilayeredmb_menu.triggered.connect(on_multilayeredmb_menu)
     sp_relaxationzone_menu.triggered.connect(on_relaxationzone_menu)
     sp_accinput_button.clicked.connect(on_accinput_button)
@@ -1356,14 +1366,13 @@ ccthirdrow_layout.addWidget(casecontrols_bt_addfillbox)
 ccthirdrow_layout.addWidget(casecontrols_bt_addstl)
 ccthirdrow_layout.addWidget(casecontrols_bt_importxml)
 ccfourthrow_layout.addWidget(casecontrols_bt_special)
-ccfivethrow_layout.addWidget(rungencase_bt)
+ccfourthrow_layout.addWidget(rungencase_bt)
 
 cc_layout.addLayout(cclabel_layout)
 cc_layout.addLayout(ccfilebuttons_layout)
 cc_layout.addLayout(ccthirdrow_layout)
 cc_layout.addLayout(ccsecondrow_layout)
 cc_layout.addLayout(ccfourthrow_layout)
-cc_layout.addLayout(ccfivethrow_layout)
 
 
 def on_ex_simulate():
@@ -1515,7 +1524,7 @@ def on_ex_simulate():
         elif "Particles out:" in run_file_data[-1]:
             totalpartsout = int(run_file_data[-1].split("(total: ")[1].split(")")[0])
             data['total_particles_out'] = totalpartsout
-            run_group_label_partsout.setText(__("Total particles out: {}").format(str(data['total_particles_out'])))
+            run_dialog.run_group_label_partsout.setText(__("Total particles out: {}").format(str(data['total_particles_out'])))
 
     # Set filesystem watcher to the out directory.
     run_dialog.run_watcher.addPath(data['project_path'] + '/' + data['project_name'] + "_out/")
