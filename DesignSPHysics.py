@@ -823,6 +823,11 @@ def on_add_damping_zone():
     dsphwidgets.DampingConfigDialog(data, damping_group.Name)
 
 
+def on_add_inlet():
+    # Opens Inlet/Outlet configuration window to configurate the inlet/outlet options.
+    dsphwidgets.InletConfigDialog(data)
+
+
 def on_add_chrono():
     # Opens chrono configuration window to configurate the chrono options.
     dsphwidgets.ChronoConfigDialog(data)
@@ -1106,13 +1111,15 @@ def on_special_button():
 
     # TODO: Low-priority: This should be implemented in a class like SpecialOptionsSelector(QtGui.QDialog)
     sp_window = QtGui.QDialog()
+    sp_window.setWindowTitle(__("Special"))
+    sp_window.setMinimumWidth(200)
     sp_window_layout = QtGui.QVBoxLayout()
 
     sp_damping_button = QtGui.QPushButton(__("Damping"))
     sp_inlet_button = QtGui.QPushButton(__("Inlet/Outlet"))
     sp_inlet_button.setEnabled(False)
     sp_chrono_button = QtGui.QPushButton(__("Coupling CHRONO"))
-    sp_chrono_button.setEnabled(False)
+    #sp_chrono_button.setEnabled(False)
     sp_multilayeredmb_button = QtGui.QPushButton(__("Multi-layered Piston"))
     sp_multilayeredmb_menu = QtGui.QMenu()
     sp_multilayeredmb_menu.addAction(__("1 Dimension"))
@@ -1132,6 +1139,11 @@ def on_special_button():
     def on_damping_option():
         """ Defines damping button behaviour"""
         on_add_damping_zone()
+        sp_window.accept()
+
+    def on_inlet_option():
+        """ Defines Inlet/Outlet behaviour """
+        on_add_inlet()
         sp_window.accept()
 
     def on_chrono_option():
@@ -1324,6 +1336,7 @@ def on_special_button():
             data['accinput'] = accinput_dialog.get_result()
 
     sp_damping_button.clicked.connect(on_damping_option)
+    sp_inlet_button.clicked.connect(on_inlet_option)
     sp_chrono_button.clicked.connect(on_chrono_option)
     sp_multilayeredmb_menu.triggered.connect(on_multilayeredmb_menu)
     sp_relaxationzone_menu.triggered.connect(on_relaxationzone_menu)
@@ -3273,7 +3286,7 @@ properties_scaff_widget = QtGui.QWidget()
 property_widget_layout = QtGui.QVBoxLayout()
 
 # Property table
-object_property_table = QtGui.QTableWidget(6, 2)
+object_property_table = QtGui.QTableWidget(7, 2)
 object_property_table.setMinimumHeight(220)
 object_property_table.setHorizontalHeaderLabels([__("Property Name"), __("Value")])
 object_property_table.verticalHeader().setVisible(False)
@@ -3320,6 +3333,8 @@ material_label = QtGui.QLabel("   {}".format(__("Material")))
 material_label.setToolTip(__("Sets material for this object"))
 motion_label = QtGui.QLabel("   {}".format(__("Motion")))
 motion_label.setToolTip(__("Sets motion for this object"))
+simplewall_label = QtGui.QLabel("   {}".format(__("Simple Wall")))
+simplewall_label.setToolTip(__("Adds a simple wall"))
 
 mkgroup_label.setAlignment(QtCore.Qt.AlignLeft)
 material_label.setAlignment(QtCore.Qt.AlignLeft)
@@ -3335,6 +3350,7 @@ object_property_table.setCellWidget(2, 0, fillmode_label)
 object_property_table.setCellWidget(3, 0, floatstate_label)
 object_property_table.setCellWidget(4, 0, initials_label)
 object_property_table.setCellWidget(5, 0, motion_label)
+object_property_table.setCellWidget(6, 0, simplewall_label)
 
 
 def mkgroup_change(value):
@@ -3433,346 +3449,6 @@ def fillmode_change(index):
         except AttributeError:
             # Cannot change transparency. Just ignore
             pass
-
-
-def floatstate_change():
-    """ Defines a window with floating properties. """
-    # TODO: This should be implemented as a custom class like FloatStateDialog(QtGui.QDialog)
-    floatings_window = QtGui.QDialog()
-    floatings_window.setWindowTitle(__("Floating configuration"))
-    ok_button = QtGui.QPushButton(__("Ok"))
-    cancel_button = QtGui.QPushButton(__("Cancel"))
-    target_mk = int(data['simobjects'][FreeCADGui.Selection.getSelection()[0].Name][0])
-
-    def on_ok():
-        guiutils.info_dialog(__("This will apply the floating properties to all objects with mkbound = ") + str(target_mk))
-        if is_floating_selector.currentIndex() == 1:
-            # Floating false
-            if str(target_mk) in data['floating_mks'].keys():
-                data['floating_mks'].pop(str(target_mk), None)
-        else:
-            # Floating true
-            # Structure: 'mk': [massrhop, center, inertia, velini, omegaini]
-            # Structure: 'mk': FloatProperty
-            fp = FloatProperty()  # FloatProperty to be inserted
-            fp.mk = target_mk
-            fp.mass_density_type = floating_props_massrhop_selector.currentIndex()
-            fp.mass_density_value = float(floating_props_massrhop_input.text())
-
-            if floating_center_auto.isChecked():
-                fp.gravity_center = list()
-            else:
-                fp.gravity_center = [
-                    float(floating_center_input_x.text()),
-                    float(floating_center_input_y.text()),
-                    float(floating_center_input_z.text())
-                ]
-
-            if floating_center_auto.isChecked():
-                fp.gravity_center = list()
-            else:
-                fp.gravity_center = [
-                    float(floating_center_input_x.text()),
-                    float(floating_center_input_y.text()),
-                    float(floating_center_input_z.text())
-                ]
-
-            if floating_inertia_auto.isChecked():
-                fp.inertia = list()
-            else:
-                fp.inertia = [
-                    float(floating_inertia_input_x.text()),
-                    float(floating_inertia_input_y.text()),
-                    float(floating_inertia_input_z.text())
-                ]
-
-            if floating_velini_auto.isChecked():
-                fp.initial_linear_velocity = list()
-            else:
-                fp.initial_linear_velocity = [
-                    float(floating_velini_input_x.text()),
-                    float(floating_velini_input_y.text()),
-                    float(floating_velini_input_z.text())
-                ]
-
-            if floating_omegaini_auto.isChecked():
-                fp.initial_angular_velocity = list()
-            else:
-                fp.initial_angular_velocity = [
-                    float(floating_omegaini_input_x.text()),
-                    float(floating_omegaini_input_y.text()),
-                    float(floating_omegaini_input_z.text())
-                ]
-
-            data['floating_mks'][str(target_mk)] = fp
-
-        floatings_window.accept()
-
-    def on_cancel():
-        floatings_window.reject()
-
-    def on_floating_change(index):
-        if index == 0:
-            floating_props_group.setEnabled(True)
-        else:
-            floating_props_group.setEnabled(False)
-
-    def on_massrhop_change(index):
-        if index == 0:
-            floating_props_massrhop_input.setText("0.0")
-        else:
-            floating_props_massrhop_input.setText("0.0")
-
-    def on_gravity_auto():
-        if floating_center_auto.isChecked():
-            floating_center_input_x.setEnabled(False)
-            floating_center_input_y.setEnabled(False)
-            floating_center_input_z.setEnabled(False)
-        else:
-            floating_center_input_x.setEnabled(True)
-            floating_center_input_y.setEnabled(True)
-            floating_center_input_z.setEnabled(True)
-
-    def on_inertia_auto():
-        if floating_inertia_auto.isChecked():
-            floating_inertia_input_x.setEnabled(False)
-            floating_inertia_input_y.setEnabled(False)
-            floating_inertia_input_z.setEnabled(False)
-        else:
-            floating_inertia_input_x.setEnabled(True)
-            floating_inertia_input_y.setEnabled(True)
-            floating_inertia_input_z.setEnabled(True)
-
-    def on_velini_auto():
-        if floating_velini_auto.isChecked():
-            floating_velini_input_x.setEnabled(False)
-            floating_velini_input_y.setEnabled(False)
-            floating_velini_input_z.setEnabled(False)
-        else:
-            floating_velini_input_x.setEnabled(True)
-            floating_velini_input_y.setEnabled(True)
-            floating_velini_input_z.setEnabled(True)
-
-    def on_omegaini_auto():
-        if floating_omegaini_auto.isChecked():
-            floating_omegaini_input_x.setEnabled(False)
-            floating_omegaini_input_y.setEnabled(False)
-            floating_omegaini_input_z.setEnabled(False)
-        else:
-            floating_omegaini_input_x.setEnabled(True)
-            floating_omegaini_input_y.setEnabled(True)
-            floating_omegaini_input_z.setEnabled(True)
-
-    ok_button.clicked.connect(on_ok)
-    cancel_button.clicked.connect(on_cancel)
-
-    is_floating_layout = QtGui.QHBoxLayout()
-    is_floating_label = QtGui.QLabel(__("Set floating: "))
-    is_floating_label.setToolTip(__("Sets the current MKBound selected as floating."))
-    is_floating_selector = QtGui.QComboBox()
-    is_floating_selector.insertItems(0, ["True", "False"])
-    is_floating_selector.currentIndexChanged.connect(on_floating_change)
-    is_floating_targetlabel = QtGui.QLabel(__("Target MKBound: ") + str(target_mk))
-    is_floating_layout.addWidget(is_floating_label)
-    is_floating_layout.addWidget(is_floating_selector)
-    is_floating_layout.addStretch(1)
-    is_floating_layout.addWidget(is_floating_targetlabel)
-
-    floating_props_group = QtGui.QGroupBox(__("Floating properties"))
-    floating_props_layout = QtGui.QVBoxLayout()
-    floating_props_massrhop_layout = QtGui.QHBoxLayout()
-    floating_props_massrhop_label = QtGui.QLabel(__("Mass/Density: "))
-    floating_props_massrhop_label.setToolTip(__("Selects an mass/density calculation method and its value."))
-    floating_props_massrhop_selector = QtGui.QComboBox()
-    floating_props_massrhop_selector.insertItems(0, ['massbody (kg)', 'rhopbody (kg/m^3)'])
-    floating_props_massrhop_selector.currentIndexChanged.connect(on_massrhop_change)
-    floating_props_massrhop_input = QtGui.QLineEdit()
-    floating_props_massrhop_layout.addWidget(floating_props_massrhop_label)
-    floating_props_massrhop_layout.addWidget(floating_props_massrhop_selector)
-    floating_props_massrhop_layout.addWidget(floating_props_massrhop_input)
-
-    floating_center_layout = QtGui.QHBoxLayout()
-    floating_center_label = QtGui.QLabel(__("Gravity center (m): "))
-    floating_center_label.setToolTip(__("Sets the mk group gravity center."))
-    floating_center_label_x = QtGui.QLabel("X")
-    floating_center_input_x = QtGui.QLineEdit()
-    floating_center_label_y = QtGui.QLabel("Y")
-    floating_center_input_y = QtGui.QLineEdit()
-    floating_center_label_z = QtGui.QLabel("Z")
-    floating_center_input_z = QtGui.QLineEdit()
-    floating_center_auto = QtGui.QCheckBox("Auto ")
-    floating_center_auto.toggled.connect(on_gravity_auto)
-    floating_center_layout.addWidget(floating_center_label)
-    floating_center_layout.addWidget(floating_center_label_x)
-    floating_center_layout.addWidget(floating_center_input_x)
-    floating_center_layout.addWidget(floating_center_label_y)
-    floating_center_layout.addWidget(floating_center_input_y)
-    floating_center_layout.addWidget(floating_center_label_z)
-    floating_center_layout.addWidget(floating_center_input_z)
-    floating_center_layout.addWidget(floating_center_auto)
-
-    floating_inertia_layout = QtGui.QHBoxLayout()
-    floating_inertia_label = QtGui.QLabel(__("Inertia (kg*m<sup>2</sup>): "))
-    floating_inertia_label.setToolTip(__("Sets the MK group inertia."))
-    floating_inertia_label_x = QtGui.QLabel("X")
-    floating_inertia_input_x = QtGui.QLineEdit()
-    floating_inertia_label_y = QtGui.QLabel("Y")
-    floating_inertia_input_y = QtGui.QLineEdit()
-    floating_inertia_label_z = QtGui.QLabel("Z")
-    floating_inertia_input_z = QtGui.QLineEdit()
-    floating_inertia_auto = QtGui.QCheckBox("Auto ")
-    floating_inertia_auto.toggled.connect(on_inertia_auto)
-    floating_inertia_layout.addWidget(floating_inertia_label)
-    floating_inertia_layout.addWidget(floating_inertia_label_x)
-    floating_inertia_layout.addWidget(floating_inertia_input_x)
-    floating_inertia_layout.addWidget(floating_inertia_label_y)
-    floating_inertia_layout.addWidget(floating_inertia_input_y)
-    floating_inertia_layout.addWidget(floating_inertia_label_z)
-    floating_inertia_layout.addWidget(floating_inertia_input_z)
-    floating_inertia_layout.addWidget(floating_inertia_auto)
-
-    floating_velini_layout = QtGui.QHBoxLayout()
-    floating_velini_label = QtGui.QLabel(__("Initial linear velocity: "))
-    floating_velini_label.setToolTip(__("Sets the MK group initial linear velocity"))
-    floating_velini_label_x = QtGui.QLabel("X")
-    floating_velini_input_x = QtGui.QLineEdit()
-    floating_velini_label_y = QtGui.QLabel("Y")
-    floating_velini_input_y = QtGui.QLineEdit()
-    floating_velini_label_z = QtGui.QLabel("Z")
-    floating_velini_input_z = QtGui.QLineEdit()
-    floating_velini_auto = QtGui.QCheckBox("Auto ")
-    floating_velini_auto.toggled.connect(on_velini_auto)
-    floating_velini_layout.addWidget(floating_velini_label)
-    floating_velini_layout.addWidget(floating_velini_label_x)
-    floating_velini_layout.addWidget(floating_velini_input_x)
-    floating_velini_layout.addWidget(floating_velini_label_y)
-    floating_velini_layout.addWidget(floating_velini_input_y)
-    floating_velini_layout.addWidget(floating_velini_label_z)
-    floating_velini_layout.addWidget(floating_velini_input_z)
-    floating_velini_layout.addWidget(floating_velini_auto)
-
-    floating_omegaini_layout = QtGui.QHBoxLayout()
-    floating_omegaini_label = QtGui.QLabel(__("Initial angular velocity: "))
-    floating_omegaini_label.setToolTip(__("Sets the MK group initial angular velocity"))
-    floating_omegaini_label_x = QtGui.QLabel("X")
-    floating_omegaini_input_x = QtGui.QLineEdit()
-    floating_omegaini_label_y = QtGui.QLabel("Y")
-    floating_omegaini_input_y = QtGui.QLineEdit()
-    floating_omegaini_label_z = QtGui.QLabel("Z")
-    floating_omegaini_input_z = QtGui.QLineEdit()
-    floating_omegaini_auto = QtGui.QCheckBox("Auto ")
-    floating_omegaini_auto.toggled.connect(on_omegaini_auto)
-    floating_omegaini_layout.addWidget(floating_omegaini_label)
-    floating_omegaini_layout.addWidget(floating_omegaini_label_x)
-    floating_omegaini_layout.addWidget(floating_omegaini_input_x)
-    floating_omegaini_layout.addWidget(floating_omegaini_label_y)
-    floating_omegaini_layout.addWidget(floating_omegaini_input_y)
-    floating_omegaini_layout.addWidget(floating_omegaini_label_z)
-    floating_omegaini_layout.addWidget(floating_omegaini_input_z)
-    floating_omegaini_layout.addWidget(floating_omegaini_auto)
-
-    floating_props_layout.addLayout(floating_props_massrhop_layout)
-    floating_props_layout.addLayout(floating_center_layout)
-    floating_props_layout.addLayout(floating_inertia_layout)
-    floating_props_layout.addLayout(floating_velini_layout)
-    floating_props_layout.addLayout(floating_omegaini_layout)
-    floating_props_layout.addStretch(1)
-    floating_props_group.setLayout(floating_props_layout)
-
-    buttons_layout = QtGui.QHBoxLayout()
-    buttons_layout.addStretch(1)
-    buttons_layout.addWidget(ok_button)
-    buttons_layout.addWidget(cancel_button)
-
-    floatings_window_layout = QtGui.QVBoxLayout()
-    floatings_window_layout.addLayout(is_floating_layout)
-    floatings_window_layout.addWidget(floating_props_group)
-    floatings_window_layout.addLayout(buttons_layout)
-
-    floatings_window.setLayout(floatings_window_layout)
-
-    if str(target_mk) in data['floating_mks'].keys():
-        is_floating_selector.setCurrentIndex(0)
-        on_floating_change(0)
-        floating_props_group.setEnabled(True)
-        floating_props_massrhop_selector.setCurrentIndex(data['floating_mks'][str(target_mk)].mass_density_type)
-        floating_props_massrhop_input.setText(str(data['floating_mks'][str(target_mk)].mass_density_value))
-        if len(data['floating_mks'][str(target_mk)].gravity_center) == 0:
-            floating_center_input_x.setText("0")
-            floating_center_input_y.setText("0")
-            floating_center_input_z.setText("0")
-        else:
-            floating_center_input_x.setText(str(data['floating_mks'][str(target_mk)].gravity_center[0]))
-            floating_center_input_y.setText(str(data['floating_mks'][str(target_mk)].gravity_center[1]))
-            floating_center_input_z.setText(str(data['floating_mks'][str(target_mk)].gravity_center[2]))
-
-        if len(data['floating_mks'][str(target_mk)].inertia) == 0:
-            floating_inertia_input_x.setText("0")
-            floating_inertia_input_y.setText("0")
-            floating_inertia_input_z.setText("0")
-        else:
-            floating_inertia_input_x.setText(str(data['floating_mks'][str(target_mk)].inertia[0]))
-            floating_inertia_input_y.setText(str(data['floating_mks'][str(target_mk)].inertia[1]))
-            floating_inertia_input_z.setText(str(data['floating_mks'][str(target_mk)].inertia[2]))
-
-        if len(data['floating_mks'][str(target_mk)].initial_linear_velocity) == 0:
-            floating_velini_input_x.setText("0")
-            floating_velini_input_y.setText("0")
-            floating_velini_input_z.setText("0")
-        else:
-            floating_velini_input_x.setText(
-                str(data['floating_mks'][str(target_mk)].initial_linear_velocity[0]))
-            floating_velini_input_y.setText(str(data['floating_mks'][str(target_mk)].initial_linear_velocity[1]))
-            floating_velini_input_z.setText(str(data['floating_mks'][str(target_mk)].initial_linear_velocity[2]))
-
-        if len(data['floating_mks'][str(target_mk)].initial_angular_velocity) == 0:
-            floating_omegaini_input_x.setText("0")
-            floating_omegaini_input_y.setText("0")
-            floating_omegaini_input_z.setText("0")
-        else:
-            floating_omegaini_input_x.setText(
-                str(data['floating_mks'][str(target_mk)].initial_angular_velocity[0]))
-            floating_omegaini_input_y.setText(str(data['floating_mks'][str(target_mk)].initial_angular_velocity[1]))
-            floating_omegaini_input_z.setText(str(data['floating_mks'][str(target_mk)].initial_angular_velocity[2]))
-
-        floating_center_auto.setCheckState(
-            QtCore.Qt.Checked if len(data['floating_mks'][str(target_mk)].gravity_center) == 0 else QtCore.Qt.Unchecked
-        )
-        floating_inertia_auto.setCheckState(
-            QtCore.Qt.Checked if len(data['floating_mks'][str(target_mk)].inertia) == 0 else QtCore.Qt.Unchecked
-        )
-        floating_velini_auto.setCheckState(
-            QtCore.Qt.Checked if len(data['floating_mks'][str(target_mk)].initial_linear_velocity) == 0 else QtCore.Qt.Unchecked
-        )
-        floating_omegaini_auto.setCheckState(
-            QtCore.Qt.Checked if len(data['floating_mks'][str(target_mk)].initial_angular_velocity) == 0 else QtCore.Qt.Unchecked
-        )
-    else:
-        is_floating_selector.setCurrentIndex(1)
-        on_floating_change(1)
-        floating_props_group.setEnabled(False)
-        is_floating_selector.setCurrentIndex(1)
-        floating_props_massrhop_selector.setCurrentIndex(1)
-        floating_props_massrhop_input.setText("1000")
-        floating_center_input_x.setText("0")
-        floating_center_input_y.setText("0")
-        floating_center_input_z.setText("0")
-        floating_inertia_input_x.setText("0")
-        floating_inertia_input_y.setText("0")
-        floating_inertia_input_z.setText("0")
-        floating_velini_input_x.setText("0")
-        floating_velini_input_y.setText("0")
-        floating_velini_input_z.setText("0")
-        floating_omegaini_input_x.setText("0")
-        floating_omegaini_input_y.setText("0")
-        floating_omegaini_input_z.setText("0")
-
-        floating_center_auto.setCheckState(QtCore.Qt.Checked)
-        floating_inertia_auto.setCheckState(QtCore.Qt.Checked)
-        floating_velini_auto.setCheckState(QtCore.Qt.Checked)
-        floating_omegaini_auto.setCheckState(QtCore.Qt.Checked)
-
-    floatings_window.exec_()
 
 
 def initials_change():
@@ -4383,6 +4059,10 @@ def motion_change():
     motion_window.exec_()
 
 
+def floatstate_change():
+    dsphwidgets.FloatStateDialog(data)
+
+
 # Property change widgets
 mkgroup_prop = QtGui.QSpinBox()
 objtype_prop = QtGui.QComboBox()
@@ -4390,6 +4070,7 @@ fillmode_prop = QtGui.QComboBox()
 floatstate_prop = QtGui.QPushButton(__("Configure"))
 initials_prop = QtGui.QPushButton(__("Configure"))
 motion_prop = QtGui.QPushButton(__("Configure"))
+wall_prop = QtGui.QPushButton(__("Add"))
 mkgroup_prop.setRange(0, 240)
 objtype_prop.insertItems(0, ['Fluid', 'Bound'])
 fillmode_prop.insertItems(1, ['Full', 'Solid', 'Face', 'Wire'])
@@ -4405,6 +4086,7 @@ object_property_table.setCellWidget(2, 1, fillmode_prop)
 object_property_table.setCellWidget(3, 1, floatstate_prop)
 object_property_table.setCellWidget(4, 1, initials_prop)
 object_property_table.setCellWidget(5, 1, motion_prop)
+object_property_table.setCellWidget(6, 1, wall_prop)
 
 # Dock the widget to the left side of screen
 fc_main_window.addDockWidget(QtCore.Qt.LeftDockWidgetArea, properties_widget)

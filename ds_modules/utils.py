@@ -515,7 +515,23 @@ def get_default_data():
     data['flowtool_boxes'] = list()
 
     # CHRONO objects
+    data['chrono_objects'] = list()
     data['link_spheric'] = list()
+    data['link_linearspring'] = list()
+    data['link_hinge'] = list()
+    data['link_pointline'] = list()
+    data['csv_intervals_check'] = False
+    data['scale_scheme_check'] = False
+    data['collisiondp_check'] = False
+    data['csv_intervals'] = 0.0
+    data['scale_scheme'] = 0.0
+    data['collisiondp'] = 0.0
+    data['modelnormal_check'] = 0
+    data['modelnormal_print'] = "original"
+
+    # INLET/OUTLET objects
+    data['inlet_object'] = list()
+    data['inlet_zones'] = list()
 
     # MultiLayer Pistons: {mk: MLPistonObject}
     data['mlayerpistons'] = dict()
@@ -979,17 +995,17 @@ def dump_to_xml(data, save_name):
                 )
             if len(value.initial_linear_velocity) != 0:
                 f.write(
-                    '\t\t\t\t<velini x="' +
+                    '\t\t\t\t<linearvelini x="' +
                     str(value.initial_linear_velocity[0]) + '" y="' +
                     str(value.initial_linear_velocity[1]) + '" z="' +
-                    str(value.initial_linear_velocity[2]) + '" />\n'
+                    str(value.initial_linear_velocity[2]) + '" units_comment="m/s" />\n'
                 )
             if len(value.initial_angular_velocity) != 0:
                 f.write(
-                    '\t\t\t\t<omegaini x="' +
+                    '\t\t\t\t<angularvelini x="' +
                     str(value.initial_angular_velocity[0]) + '" y="' +
                     str(value.initial_angular_velocity[1]) + '" z="' +
-                    str(value.initial_angular_velocity[2]) + '" />\n'
+                    str(value.initial_angular_velocity[2]) + '" units_comment="rad/s" />\n'
                 )
             f.write('\t\t\t</floating>\n')
         f.write('\t\t</floatings>\n')
@@ -1296,6 +1312,151 @@ def dump_to_xml(data, save_name):
                     '\t\t\t\t\t<redumax value="{}" />\n'.format(damping_object.redumax))
                 f.write('\t\t\t\t</dampingzone>\n')
         f.write('\t\t\t</damping>\n')
+
+    # Chrono objects
+    if len(data['chrono_objects']) > 0 or data['csv_intervals_check'] or data['scale_scheme_check'] \
+            or data['collisiondp_check']:
+        f.write('\t\t\t<chrono>\n')
+        if data['csv_intervals_check'] and data['csv_intervals'] != "":
+            f.write(
+                '\t\t\t\t<savedata value="{}" comment="Saves CSV with data exchange for each time interval '
+                '(0=all steps)" />\n'.format(data['csv_intervals'])
+            )
+        if data['scale_scheme_check'] and data['scale_scheme'] != "":
+            f.write(
+                '\t\t\t\t<schemescale value="{}" comment="Scale used to create the initial scheme of Chrono objects '
+                '(default=1)" />\n'.format(data['scale_scheme'])
+            )
+        if data['collisiondp_check'] and data['collisiondp'] != "":
+            f.write(
+                '\t\t\t\t<collisiondp value="{}" comment="Allowed collision overlap according Dp (default=0.5)" '
+                '/>\n'.format(data['collisiondp'])
+            )
+        for chrono_element in data['chrono_objects']:
+            if chrono_element[3] == 1:
+                if chrono_element[4] == 0:
+                    data['modelnormal_print'] = "original"
+                elif chrono_element[4] == 1:
+                    data['modelnormal_print'] = "invert"
+                elif chrono_element[4] == 2:
+                    data['modelnormal_print'] = "twoface"
+                f.write(
+                    '\t\t\t\t<{} id="{}" mkbound="{}" modelfile="AutoActual" modelnormal="{}"/>\n'.format(
+                        chrono_element[5], str(chrono_element[1]), str(chrono_element[2]), data['modelnormal_print'])
+                )
+            else:
+                f.write(
+                    '\t\t\t\t<{} id="{}" mkbound="{}"/>\n'.format(chrono_element[5],
+                                                                  str(chrono_element[1]), str(chrono_element[2]))
+                )
+
+        for ll in data['link_linearspring']:
+            if ll[1] != "" and ll[2] != "":
+                f.write(
+                    '\t\t\t\t<link_linearspring idbody1="{}" idbody2="{}">\n'.format(str(ll[1]), str(ll[2]))
+                )
+                f.write(
+                    '\t\t\t\t\t<point_fb1 x="{}" y="{}" z="{}" comment="Point in body 1" />\n'.format(ll[3][0],
+                                                                                                      ll[3][1],
+                                                                                                      ll[3][2])
+                )
+                f.write(
+                    '\t\t\t\t\t<point_fb2 x="{}" y="{}" z="{}" comment="Point in body 2" />\n'.format(ll[4][0],
+                                                                                                      ll[4][1],
+                                                                                                      ll[4][2])
+                )
+                f.write(
+                    '\t\t\t\t\t<stiffness value="{}" comment="Stiffness [N/m]" />\n'.format(ll[5])
+                )
+                f.write(
+                    '\t\t\t\t\t<damping value="{}" comment="Damping [-]" />\n'.format(ll[6])
+                )
+                f.write(
+                    '\t\t\t\t\t<rest_length value="{}" comment="Spring equilibrium length [m]" />\n'.format(ll[7])
+                )
+                f.write('\t\t\t\t\t<savevtk>\n')
+                f.write(
+                    '\t\t\t\t\t\t<nside value="{}" comment="number of sections for each revolution. 0=not saved, '
+                    '1=line (default=16)" />\n'.format(ll[8][0])
+                )
+                f.write(
+                    '\t\t\t\t\t\t<radius value="{}" comment="spring radius (default=3)" />\n'.format(ll[8][1])
+                )
+                f.write(
+                    '\t\t\t\t\t\t<length value="{}" comment="length for each revolution (default=1)" />'
+                    '\n'.format(ll[8][2])
+                )
+                f.write('\t\t\t\t\t</savevtk>\n')
+                f.write('\t\t\t\t</link_linearspring>\n')
+
+        for lh in data['link_hinge']:
+            if lh[1] != "" and lh[2] != "":
+                f.write(
+                    '\t\t\t\t<link_hinge idbody1="{}" idbody2="{}">\n'.format(str(lh[1]), str(lh[2]))
+                )
+                f.write(
+                    '\t\t\t\t\t<rotpoint x="{}" y="{}" z="{}" comment="Point for rotation" />\n'.format(lh[3][0],
+                                                                                                        lh[3][1],
+                                                                                                        lh[3][2])
+                )
+                f.write(
+                    '\t\t\t\t\t<rotvector x="{}" y="{}" z="{}" comment="Vector direction for rotation" />'
+                    '\n'.format(lh[4][0], lh[4][1], lh[4][2])
+                )
+                f.write(
+                    '\t\t\t\t\t<stiffness value="{}" comment="Torsional stiffness [N/rad]" />\n'.format(lh[5])
+                )
+                f.write(
+                    '\t\t\t\t\t<damping   value="10" comment="Torsional damping [-]" />\n'.format(lh[6])
+                )
+                f.write('\t\t\t\t</link_hinge>\n')
+        for ls in data['link_spheric']:
+            if ls[1] != "":
+                if ls[2] != "":
+                    f.write(
+                        '\t\t\t\t<link_spheric idbody1="{}" idbody2="{}">\n'.format(str(ls[1]), str(ls[2]))
+                    )
+                else:
+                    f.write(
+                        '\t\t\t\t<link_spheric idbody1="{}">\n'.format(str(ls[1]))
+                    )
+
+                f.write(
+                    '\t\t\t\t\t<rotpoint x="{}" y="{}" z="{}" comment="Point for rotation" />\n'.format(ls[3][0],
+                                                                                                        ls[3][1],
+                                                                                                        ls[3][2])
+                )
+                f.write(
+                    '\t\t\t\t\t<stiffness value="{}" comment="Torsional stiffness [N/rad]" />\n'.format(ls[4])
+                )
+                f.write(
+                    '\t\t\t\t\t<damping value="{}" comment="Torsional damping [-]" />\n'.format(ls[5])
+                )
+                f.write('\t\t\t\t</link_spheric>\n')
+        for lp in data['link_pointline']:
+            if lp[1] != "":
+                f.write('\t\t\t\t<link_pointline idbody1="{}">\n'.format(str(lp[1])))
+                f.write(
+                    '\t\t\t\t\t<slidingvector x="{}" y="{}" z="{}" comment="Vector direction for sliding axis" />'
+                    '\n'.format(lp[2][0], lp[2][1], lp[2][2])
+                )
+                f.write(
+                    '\t\t\t\t\t<rotpoint x="{}" y="{}" z="{}" comment="Point for rotation" />\n'.format(lp[3][0],
+                                                                                                        lp[3][1],
+                                                                                                        lp[3][2])
+                )
+                f.write(
+                    '\t\t\t\t\t<rotvector x="{}" y="{}" z="{}" comment="Vector direction for rotation, use (0,0,0) for '
+                    'spheric joint (default=(0,0,0))" />\n'.format(lp[4][0], lp[4][1], lp[4][2])
+                )
+                f.write(
+                    '\t\t\t\t\t<rotvector2 x="{}" y="{}" z="{}" comment="Second vector to avoid rotation '
+                    '(default=(0,0,0))" />\n'.format(lp[5][0], lp[5][1], lp[5][2])
+                )
+                f.write('\t\t\t\t\t<stiffness value="{}" comment="Torsional stiffness [N/rad]" />\n'.format(lp[6]))
+                f.write('\t\t\t\t\t<damping value="{}" comment="Torsional damping [-]" />\n'.format(lp[7]))
+                f.write('\t\t\t\t</link_pointline>\n')
+        f.write('\t\t\t</chrono>\n')
 
     # A counter for special movements. Controls when and how to open/close tags
     written_movements_counter = 0
@@ -1858,7 +2019,7 @@ def dump_to_xml(data, save_name):
     f.write('\t\t\t<parameter key="ShiftTFS" value="' + str(data['shifttfs']) +
             '" comment="Threshold to detect free surface. Typically 1.5 for 2D and 2.75 for 3D (default=0)" />\n')
     f.write('\t\t\t<parameter key="RigidAlgorithm" value="' +
-            str(data['rigidalgorithm']) + '" comment="Rigid Algorithm 1:SPH, 2:DEM (default=1)" />\n')
+            str(data['rigidalgorithm']) + '" comment="Rigid Algorithm 1:SPH, 2:DEM, 3:CHRONO (default=1)" />\n')
     f.write('\t\t\t<parameter key="FtPause" value="' + str(
         data['ftpause']) + '" comment="Time to freeze the floatings at simulation start'
                            ' (warmup) (default=0)" units_comment="seconds" />\n')

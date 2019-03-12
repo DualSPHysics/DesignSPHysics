@@ -3407,28 +3407,34 @@ class ObjectOrderWidget(QtGui.QWidget):
 
 
 class ObjectIsCheked(QtGui.QWidget):
-    """  """
+    """ Widget shows check options for an object """
 
-    def __init__(self, object_name="No name", object_mk=-1, mktype="bound"):
+    def __init__(self, key, object_name="No name", object_mk=-1, mktype="bound", is_floating=""):
         super(ObjectIsCheked, self).__init__()
         self.setContentsMargins(0, 0, 0, 0)
 
+        self.key = key
         self.object_name = object_name
+        self.object_mk = object_mk
         self.main_layout = QtGui.QHBoxLayout()
         self.main_layout.setContentsMargins(10, 0, 10, 0)
         self.mk_label = QtGui.QLabel(
             "<b>{}{}</b>".format(mktype[0].upper(), str(object_mk)))
         self.name_label = QtGui.QLabel(str(object_name))
+        self.is_floating = is_floating
         self.object_check = QtGui.QCheckBox()
+        self.geometry_check = QtGui.QCheckBox(__("Geometry"))
+        self.modelnormal_input = QtGui.QComboBox()
+        self.modelnormal_input.insertItems(0, ['Original', 'Invert', 'Two face'])
 
+        self.main_layout.addWidget(self.object_check)
         self.main_layout.addWidget(self.mk_label)
         self.main_layout.addWidget(self.name_label)
         self.main_layout.addStretch(1)
-        self.main_layout.addWidget(self.object_check)
+        self.main_layout.addWidget(self.geometry_check)
+        self.main_layout.addWidget(self.modelnormal_input)
 
         self.setLayout(self.main_layout)
-        self.setToolTip("MK: {} ({})\n"
-                        "Name: {}\n".format(object_mk, mktype.lower().title(), object_name))
 
 
 class MovementTimelinePlaceholder(QtGui.QWidget):
@@ -5675,7 +5681,7 @@ class ExecutionParametersDialog(QtGui.QDialog):
         self.rigidalgorithm_layout = QtGui.QHBoxLayout()
         self.rigidalgorithm_label = QtGui.QLabel("Solid-solid interaction: ")
         self.rigidalgorithm_input = FocusableComboBox()
-        self.rigidalgorithm_input.insertItems(0, ['SPH', 'DEM'])
+        self.rigidalgorithm_input.insertItems(0, ['SPH', 'DEM', 'CHRONO'])
         self.rigidalgorithm_input.setHelpText(utils.__(constants.HELP_RIGIDALGORITHM))
         self.rigidalgorithm_input.setCurrentIndex(int(self.data['rigidalgorithm']) - 1)
 
@@ -6542,29 +6548,76 @@ class DampingConfigDialog(QtGui.QDialog):
 
 
 class ChronoConfigDialog(QtGui.QDialog):
-    """  """
+    """ Defines the Chrono dialog window.
+    Modifies data dictionary passed as parameter. """
 
-    def __init__(self, orig_data):
+    def __init__(self, data):
         super(ChronoConfigDialog, self).__init__()
 
-        self.data = dict(orig_data)
+        self.data = data
 
-        # Creates a dialog and 2 main buttons
+        # Creates a dialog
         self.setWindowTitle("Chrono configuration")
-
+        self.setMinimumWidth(500)
+        self.setMinimumHeight(600)
         self.main_layout = QtGui.QVBoxLayout()
+
+        # Option for saves CSV with data exchange for each time interval
+        self.csv_option_layout = QtGui.QHBoxLayout()
+        self.csv_intervals_checkbox = QtGui.QCheckBox()
+        if self.data['csv_intervals_check']:
+            self.csv_intervals_checkbox.setCheckState(QtCore.Qt.Checked)
+        else:
+            self.csv_intervals_checkbox.setCheckState(QtCore.Qt.Unchecked)
+        self.csv_intervals_checkbox.toggled.connect(self.on_csv_intervals_check)
+        self.csv_intervals_option = QtGui.QLabel(__("CSV intervarls:"))
+        self.csv_intervals_line_edit = QtGui.QLineEdit(str(self.data['csv_intervals']))
+        self.csv_option_layout.addWidget(self.csv_intervals_checkbox)
+        self.csv_option_layout.addWidget(self.csv_intervals_option)
+        self.csv_option_layout.addWidget(self.csv_intervals_line_edit)
+
+        # Option for define scale used to create the initial scheme of Chrono objects
+        self.scale_scheme_option_layout = QtGui.QHBoxLayout()
+        self.scale_scheme_checkbox = QtGui.QCheckBox()
+        if self.data['scale_scheme_check']:
+            self.scale_scheme_checkbox.setCheckState(QtCore.Qt.Checked)
+        else:
+            self.scale_scheme_checkbox.setCheckState(QtCore.Qt.Unchecked)
+        self.scale_scheme_checkbox.toggled.connect(self.on_scale_scheme_checkbox)
+        self.scale_scheme_option = QtGui.QLabel(__("Scale for scheme:"))
+        self.scale_scheme_line_edit = QtGui.QLineEdit(str(self.data['scale_scheme']))
+        self.scale_scheme_option_layout.addWidget(self.scale_scheme_checkbox)
+        self.scale_scheme_option_layout.addWidget(self.scale_scheme_option)
+        self.scale_scheme_option_layout.addWidget(self.scale_scheme_line_edit)
+
+        # Option for allow collision overlap according Dp
+        self.collisiondp_option_layout = QtGui.QHBoxLayout()
+        self.collisiondp_checkbox = QtGui.QCheckBox()
+        if self.data['collisiondp_check']:
+            self.collisiondp_checkbox.setCheckState(QtCore.Qt.Checked)
+        else:
+            self.collisiondp_checkbox.setCheckState(QtCore.Qt.Unchecked)
+        self.collisiondp_checkbox.toggled.connect(self.on_collisiondp_checkbox)
+        self.collisiondp_option = QtGui.QLabel(__("Collision Dp:"))
+        self.collisiondp_line_edit = QtGui.QLineEdit(str(self.data['collisiondp']))
+        self.collisiondp_option_layout.addWidget(self.collisiondp_checkbox)
+        self.collisiondp_option_layout.addWidget(self.collisiondp_option)
+        self.collisiondp_option_layout.addWidget(self.collisiondp_line_edit)
+
+        # Create the list for chrono objects
         self.main_chrono = QtGui.QGroupBox("Chrono objects")
         self.main_chrono.setMinimumHeight(150)
         self.chrono_layout = QtGui.QVBoxLayout()
 
         self.objectlist_table = QtGui.QTableWidget(0, 1)
-        self.objectlist_table.setObjectName("Chrono objects")
+        self.objectlist_table.setObjectName("Chrono objects table")
         self.objectlist_table.verticalHeader().setVisible(False)
         self.objectlist_table.horizontalHeader().setVisible(False)
         self.objectlist_table.horizontalHeader().setResizeMode(0, QtGui.QHeaderView.Stretch)
 
         self.objectlist_table.setEnabled(True)
 
+        # Create the necessary spaces in the list
         self.count = 0
         for key in self.data['simobjects'].keys():
             self.context_object = FreeCAD.getDocument("DSPH_Case").getObject(key)
@@ -6574,8 +6627,12 @@ class ChronoConfigDialog(QtGui.QDialog):
         self.objectlist_table.setRowCount(self.count)
         self.current_row = 0
         self.objects_with_parent = list()
+        self.is_floating = ""
+        # TODO: LOW PRIORITY, CHANGE THIS FOR GLOBAL TEMP_TADA
+        self.temp_data = list()
 
-        for key in self.data['simobjects'].keys():
+        # Select the objects that are going to be listed
+        for key, value in self.data['simobjects'].iteritems():
             self.context_object = FreeCAD.getDocument("DSPH_Case").getObject(key)
             if self.context_object.InList != list():
                 self.objects_with_parent.append(self.context_object.Name)
@@ -6585,29 +6642,91 @@ class ChronoConfigDialog(QtGui.QDialog):
             if self.data['simobjects'][self.context_object.Name][1] == "Fluid":
                 continue
 
+            self.is_floating = "bodyfloating" if str(
+                value[0]) in data['floating_mks'].keys() else "bodyfixed"
+
+            # Collects the information of the object
             self.target_widget = ObjectIsCheked(
+                key=key,
                 object_mk=self.data['simobjects'][self.context_object.Name][0],
                 mktype=self.data['simobjects'][self.context_object.Name][1],
-                object_name=self.context_object.Label
+                object_name=self.context_object.Label,
+                is_floating=self.is_floating
             )
 
+            # Actualices the state of list options
+            if self.data['chrono_objects'] > 0:
+                for elem in self.data['chrono_objects']:
+                    if elem[0] == str(key) and elem[3] == 1:
+                        self.target_widget.object_check.setCheckState(QtCore.Qt.Checked)
+                        self.target_widget.geometry_check.setCheckState(QtCore.Qt.Checked)
+                        self.target_widget.modelnormal_input.setCurrentIndex(int(elem[4]))
+                    elif elem[0] == str(key) and elem[3] == 0:
+                        self.target_widget.object_check.setCheckState(QtCore.Qt.Checked)
+                        self.target_widget.geometry_check.setCheckState(QtCore.Qt.Unchecked)
+                        self.target_widget.modelnormal_input.setCurrentIndex(int(elem[4]))
+
+            # Saves the information about object for being process later
+            self.temp_data.append(self.target_widget)
+
+            # Shows the object in table
             self.objectlist_table.setCellWidget(self.current_row, 0, self.target_widget)
 
             self.current_row += 1
 
+        # Add table to the layout
         self.chrono_layout.addWidget(self.objectlist_table)
 
+        # Creates 2 main buttons
         self.ok_button = QtGui.QPushButton("Save")
         self.cancel_button = QtGui.QPushButton("Cancel")
         self.button_layout = QtGui.QHBoxLayout()
         self.button_layout.addStretch(1)
 
-        self.main_link_spheric = QtGui.QGroupBox("Link spheric")
+        self.ok_button.clicked.connect(self.on_ok)
+        self.cancel_button.clicked.connect(self.on_cancel)
+
+        # Link Linearspring option list
+        self.main_link_linearspring = QtGui.QGroupBox("Linearspring")
+        self.link_linearspring_layout = QtGui.QVBoxLayout()
+        self.link_linearspring_layout2 = QtGui.QVBoxLayout()
+
+        self.link_linearspring_button_layout = QtGui.QHBoxLayout()
+        self.button_link_linearspring = QtGui.QPushButton("Add")
+        self.link_linearspring_button_layout.addStretch(1)
+        self.link_linearspring_button_layout.addWidget(self.button_link_linearspring)
+        self.button_link_linearspring.clicked.connect(self.on_link_linearspring_add)
+
+        self.link_linearspring_layout.addLayout(self.link_linearspring_button_layout)
+        self.link_linearspring_layout.addLayout(self.link_linearspring_layout2)
+        self.main_link_linearspring.setLayout(self.link_linearspring_layout)
+
+        self.refresh_link_linearspring()
+
+        # Link hinge option list
+        self.main_link_hinge = QtGui.QGroupBox("Hinge")
+        self.link_hinge_layout = QtGui.QVBoxLayout()
+        self.link_hinge_layout2 = QtGui.QVBoxLayout()
+
+        self.link_hinge_button_layout = QtGui.QHBoxLayout()
+        self.button_link_hinge = QtGui.QPushButton("Add")
+        self.link_hinge_button_layout.addStretch(1)
+        self.link_hinge_button_layout.addWidget(self.button_link_hinge)
+        self.button_link_hinge.clicked.connect(self.on_link_hinge_add)
+
+        self.link_hinge_layout.addLayout(self.link_hinge_button_layout)
+        self.link_hinge_layout.addLayout(self.link_hinge_layout2)
+        self.main_link_hinge.setLayout(self.link_hinge_layout)
+
+        self.refresh_link_hinge()
+
+        # Link Spheric option list
+        self.main_link_spheric = QtGui.QGroupBox("Spheric")
         self.link_spheric_layout = QtGui.QVBoxLayout()
         self.link_spheric_layout2 = QtGui.QVBoxLayout()
 
         self.link_spheric_button_layout = QtGui.QHBoxLayout()
-        self.button_link_spheric = QtGui.QPushButton("Add Link Spheric")
+        self.button_link_spheric = QtGui.QPushButton("Add")
         self.link_spheric_button_layout.addStretch(1)
         self.link_spheric_button_layout.addWidget(self.button_link_spheric)
         self.button_link_spheric.clicked.connect(self.on_link_spheric_add)
@@ -6616,19 +6735,119 @@ class ChronoConfigDialog(QtGui.QDialog):
         self.link_spheric_layout.addLayout(self.link_spheric_layout2)
         self.main_link_spheric.setLayout(self.link_spheric_layout)
 
+        self.refresh_link_spheric()
+
+        # Link Pointline option list
+        self.main_link_pointline = QtGui.QGroupBox("Pointline")
+        self.link_pointline_layout = QtGui.QVBoxLayout()
+        self.link_pointline_layout2 = QtGui.QVBoxLayout()
+
+        self.link_pointline_button_layout = QtGui.QHBoxLayout()
+        self.button_link_pointline = QtGui.QPushButton("Add")
+        self.link_pointline_button_layout.addStretch(1)
+        self.link_pointline_button_layout.addWidget(self.button_link_pointline)
+        self.button_link_pointline.clicked.connect(self.on_link_pointline_add)
+
+        self.link_pointline_layout.addLayout(self.link_pointline_button_layout)
+        self.link_pointline_layout.addLayout(self.link_pointline_layout2)
+        self.main_link_pointline.setLayout(self.link_pointline_layout)
+
+        self.refresh_link_pointline()
+
+        # Adds all layouts to main
+        self.main_layout.addLayout(self.csv_option_layout)
+        self.main_layout.addLayout(self.scale_scheme_option_layout)
+        self.main_layout.addLayout(self.collisiondp_option_layout)
+        self.main_chrono.setLayout(self.chrono_layout)
+        self.main_layout.addWidget(self.main_chrono)
+        self.main_layout.addWidget(self.main_link_linearspring)
+        self.main_layout.addWidget(self.main_link_hinge)
+        self.main_layout.addWidget(self.main_link_spheric)
+        self.main_layout.addWidget(self.main_link_pointline)
+
         self.button_layout.addWidget(self.ok_button)
         self.button_layout.addWidget(self.cancel_button)
 
-        self.main_chrono.setLayout(self.chrono_layout)
-        self.main_layout.addWidget(self.main_chrono)
-        self.main_layout.addWidget(self.main_link_spheric)
-        self.main_layout.addLayout(self.button_layout)
+        # Adds scroll area
+        self.main_layout_dialog = QtGui.QVBoxLayout()
+        self.main_layout_scroll = QtGui.QScrollArea()
+        self.main_layout_scroll.setMinimumWidth(400)
+        self.main_layout_scroll.setWidgetResizable(True)
+        self.main_layout_scroll_widget = QtGui.QWidget()
+        self.main_layout_scroll_widget.setMinimumWidth(400)
 
-        self.setLayout(self.main_layout)
+        self.main_layout_scroll_widget.setLayout(self.main_layout)
+        self.main_layout_scroll.setWidget(self.main_layout_scroll_widget)
+        self.main_layout_scroll.setHorizontalScrollBarPolicy(QtCore.Qt.ScrollBarAlwaysOff)
 
-        self.cancel_button.clicked.connect(self.on_cancel)
+        self.main_layout_dialog.addWidget(self.main_layout_scroll)
+        self.main_layout_dialog.addLayout(self.button_layout)
+        self.on_scale_scheme_checkbox()
+        self.on_csv_intervals_check()
+        self.on_collisiondp_checkbox()
+
+        self.setLayout(self.main_layout_dialog)
 
         self.exec_()
+
+    def on_collisiondp_checkbox(self):
+        """ Checks the collisiondp state """
+        if self.collisiondp_checkbox.isChecked():
+            self.collisiondp_line_edit.setEnabled(True)
+        else:
+            self.collisiondp_line_edit.setEnabled(False)
+
+    def on_scale_scheme_checkbox(self):
+        """ Checks the scale scheme state """
+        if self.scale_scheme_checkbox.isChecked():
+            self.scale_scheme_line_edit.setEnabled(True)
+        else:
+            self.scale_scheme_line_edit.setEnabled(False)
+
+    def on_csv_intervals_check(self):
+        """ Checks the csv intervals state """
+        if self.csv_intervals_checkbox.isChecked():
+            self.csv_intervals_line_edit.setEnabled(True)
+        else:
+            self.csv_intervals_line_edit.setEnabled(False)
+
+    def refresh_link_hinge(self):
+        """ Refreshes the link hinge list """
+        while self.link_hinge_layout2.count() > 0:
+            target = self.link_hinge_layout2.takeAt(0)
+            target.setParent(None)
+
+        for linkhinge in self.data['link_hinge']:
+            to_add_layout = QtGui.QHBoxLayout()
+            to_add_label = QtGui.QLabel("Link hinge")
+            to_add_layout.addWidget(to_add_label)
+            to_add_layout.addStretch(1)
+            to_add_editbutton = QtGui.QPushButton("Edit")
+            to_add_deletebutton = QtGui.QPushButton("Delete")
+            to_add_layout.addWidget(to_add_editbutton)
+            to_add_layout.addWidget(to_add_deletebutton)
+            to_add_editbutton.clicked.connect(lambda lh=linkhinge[0]: self.link_hinge_edit(lh))
+            to_add_deletebutton.clicked.connect(lambda lh=linkhinge[0]: self.link_hinge_delete(lh))
+            self.link_hinge_layout2.addLayout(to_add_layout)
+
+    def refresh_link_linearspring(self):
+        """ Refreshes the link linearspring list """
+        while self.link_linearspring_layout2.count() > 0:
+            target = self.link_linearspring_layout2.takeAt(0)
+            target.setParent(None)
+
+        for linkLinearspring in self.data['link_linearspring']:
+            to_add_layout = QtGui.QHBoxLayout()
+            to_add_label = QtGui.QLabel("Link linearspring")
+            to_add_layout.addWidget(to_add_label)
+            to_add_layout.addStretch(1)
+            to_add_editbutton = QtGui.QPushButton("Edit")
+            to_add_deletebutton = QtGui.QPushButton("Delete")
+            to_add_layout.addWidget(to_add_editbutton)
+            to_add_layout.addWidget(to_add_deletebutton)
+            to_add_editbutton.clicked.connect(lambda ll=linkLinearspring[0]: self.link_linearspring_edit(ll))
+            to_add_deletebutton.clicked.connect(lambda ll=linkLinearspring[0]: self.link_linearspring_delete(ll))
+            self.link_linearspring_layout2.addLayout(to_add_layout)
 
     def refresh_link_spheric(self):
         """ Refreshes the link spheric list """
@@ -6638,7 +6857,7 @@ class ChronoConfigDialog(QtGui.QDialog):
 
         for linkSpheric in self.data['link_spheric']:
             to_add_layout = QtGui.QHBoxLayout()
-            to_add_label = QtGui.QLabel(str(linkSpheric[1]))
+            to_add_label = QtGui.QLabel("Link spheric")
             to_add_layout.addWidget(to_add_label)
             to_add_layout.addStretch(1)
             to_add_editbutton = QtGui.QPushButton("Edit")
@@ -6649,15 +6868,79 @@ class ChronoConfigDialog(QtGui.QDialog):
             to_add_deletebutton.clicked.connect(lambda ls=linkSpheric[0]: self.link_spheric_delete(ls))
             self.link_spheric_layout2.addLayout(to_add_layout)
 
+    def refresh_link_pointline(self):
+        """ Refreshes the link pointline list """
+        while self.link_pointline_layout2.count() > 0:
+            target = self.link_pointline_layout2.takeAt(0)
+            target.setParent(None)
+
+        for linkPointline in self.data['link_pointline']:
+            to_add_layout = QtGui.QHBoxLayout()
+            to_add_label = QtGui.QLabel("Link pointline")
+            to_add_layout.addWidget(to_add_label)
+            to_add_layout.addStretch(1)
+            to_add_editbutton = QtGui.QPushButton("Edit")
+            to_add_deletebutton = QtGui.QPushButton("Delete")
+            to_add_layout.addWidget(to_add_editbutton)
+            to_add_layout.addWidget(to_add_deletebutton)
+            to_add_editbutton.clicked.connect(lambda lp=linkPointline[0]: self.link_pointline_edit(lp))
+            to_add_deletebutton.clicked.connect(lambda lp=linkPointline[0]: self.link_pointline_delete(lp))
+            self.link_pointline_layout2.addLayout(to_add_layout)
+
+    def on_link_hinge_add(self):
+        """ Adds Link hinge option at list """
+        # data['link_hinge'] = [element id, body 1, body 2, rotpoint[x,y,z], rotvector[x,y,z], stiffness, damping]
+        self.data['link_hinge'].append([
+            str(uuid.uuid4()), '', '', [0, 0, 0], [0, 0, 0], 0, 0])
+        self.refresh_link_hinge()
+
+    def link_hinge_delete(self, link_hinge_id):
+        """ Delete a link hinge element """
+        link_hinge_to_remove = None
+        for lh in self.data['link_hinge']:
+            if lh[0] == link_hinge_id:
+                link_hinge_to_remove = lh
+        if link_hinge_to_remove is not None:
+            self.data['link_hinge'].remove(link_hinge_to_remove)
+            self.refresh_link_hinge()
+
+    def link_hinge_edit(self, link_hinge_id):
+        """ Edit a link hinge element """
+        LinkHingeEdit(self.data, link_hinge_id)
+        self.refresh_link_hinge()
+
+    def on_link_linearspring_add(self):
+        """ Adds Link linearspring option at list """
+        # data['link_linearspring'] = [element id, body 1, body 2, point_fb1[x,y,z], point_fb2[x,y,z], stiffness,
+        # damping, rest_length, savevtk[nside, radius, length]]
+        self.data['link_linearspring'].append([
+            str(uuid.uuid4()), '', '', [0, 0, 0], [0, 0, 0], 0, 0, 0, [0, 0, 0]])
+        self.refresh_link_linearspring()
+
+    def link_linearspring_delete(self, link_linearspring_id):
+        """ Delete a link linearspring element """
+        link_linearspring_to_remove = None
+        for ll in self.data['link_linearspring']:
+            if ll[0] == link_linearspring_id:
+                link_linearspring_to_remove = ll
+        if link_linearspring_to_remove is not None:
+            self.data['link_linearspring'].remove(link_linearspring_to_remove)
+            self.refresh_link_linearspring()
+
+    def link_linearspring_edit(self, link_linearspring_id):
+        """ Edit a link linearspring element """
+        LinkLinearspringEdit(self.data, link_linearspring_id)
+        self.refresh_link_linearspring()
+
     def on_link_spheric_add(self):
         """ Adds Link spheric option at list """
+        # data['link_spheric'] = [element id, body 1, body 2, rotpoint[x,y,z], stiffness, damping]
         self.data['link_spheric'].append([
-            str(uuid.uuid4()),
-            'Link Spheric'])
+            str(uuid.uuid4()), '', '', [0, 0, 0], 0, 0])
         self.refresh_link_spheric()
 
     def link_spheric_delete(self, link_spheric_id):
-        """ """
+        """ Delete a link spheric element """
         link_spheric_to_remove = None
         for ls in self.data['link_spheric']:
             if ls[0] == link_spheric_id:
@@ -6667,15 +6950,420 @@ class ChronoConfigDialog(QtGui.QDialog):
             self.refresh_link_spheric()
 
     def link_spheric_edit(self, link_spheric_id):
-        """ """
+        """ Edit a link spheric element """
         LinkSphericEdit(self.data, link_spheric_id)
+        self.refresh_link_spheric()
+
+    def on_link_pointline_add(self):
+        """ Adds Link pointline option at list """
+        # data['link_pointline'] = [element id, body 1, slidingvector[x,y,z], rotpoint[x,y,z], rotvector[x,y,z],
+        # rotvector2[x,y,z], stiffness, damping]
+        self.data['link_pointline'].append([
+            str(uuid.uuid4()), '', [0, 0, 0], [0, 0, 0], [0, 0, 0], [0, 0, 0], 0, 0])
+        self.refresh_link_pointline()
+
+    def link_pointline_delete(self, link_pointline_id):
+        """ Delete a link pointline element """
+        link_pointline_to_remove = None
+        for lp in self.data['link_pointline']:
+            if lp[0] == link_pointline_id:
+                link_pointline_to_remove = lp
+        if link_pointline_to_remove is not None:
+            self.data['link_pointline'].remove(link_pointline_to_remove)
+            self.refresh_link_pointline()
+
+    def link_pointline_edit(self, link_pointline_id):
+        """ Edit a link pointline element """
+        LinkPointlineEdit(self.data, link_pointline_id)
+        self.refresh_link_pointline()
 
     def on_cancel(self):
         self.reject()
 
+    def update_to_save(self):
+        """ Check all the conditions before save """
+
+        # Clean the chrono object list
+        self.data['chrono_objects'] = list()
+
+        # Checks the chrono objects and options for save
+        for elem in self.temp_data:
+            if elem.object_check.isChecked() and elem.geometry_check.isChecked():
+                self.data['chrono_objects'].append([elem.key, elem.object_name, elem.object_mk, 1,
+                                                    elem.modelnormal_input.currentIndex(), elem.is_floating])
+            elif elem.object_check.isChecked():
+                self.data['chrono_objects'].append([elem.key, elem.object_name, elem.object_mk, 0, 0, elem.is_floating])
+
+        # Checks the csv interval option for save
+        if self.csv_intervals_checkbox.isChecked():
+            self.data['csv_intervals_check'] = True
+            try:
+                self.data['csv_intervals'] = float(self.csv_intervals_line_edit.text())
+            except ValueError:
+                self.data['csv_intervals_check'] = False
+                self.data['csv_intervals'] = ""
+                utils.debug("Introduced an invalid value for a float number.")
+        else:
+            self.data['csv_intervals_check'] = False
+            self.data['csv_intervals'] = ""
+
+        # Checks the scale scheme option for save
+        if self.scale_scheme_checkbox.isChecked():
+            self.data['scale_scheme_check'] = True
+            try:
+                self.data['scale_scheme'] = float(self.scale_scheme_line_edit.text())
+            except ValueError:
+                self.data['scale_scheme_check'] = False
+                self.data['scale_scheme'] = ""
+                utils.debug("Introduced an invalid value for a float number.")
+        else:
+            self.data['scale_scheme_check'] = False
+            self.data['scale_scheme'] = ""
+
+        # Checks the collisiondp option for save
+        if self.collisiondp_checkbox.isChecked():
+            self.data['collisiondp_check'] = True
+            try:
+                self.data['collisiondp'] = float(self.collisiondp_line_edit.text())
+            except ValueError:
+                self.data['collisiondp_check'] = False
+                self.data['collisiondp'] = ""
+                utils.debug("Introduced an invalid value for a float number.")
+        else:
+            self.data['collisiondp_check'] = False
+            self.data['collisiondp'] = ""
+
+    def on_ok(self):
+        """ Save data """
+        self.update_to_save()
+
+        ChronoConfigDialog.accept(self)
+
+
+class LinkHingeEdit(QtGui.QDialog):
+    """ Defines Link hinge window dialog """
+
+    def __init__(self, data, link_hinge_id):
+        super(LinkHingeEdit, self).__init__()
+
+        self.data = data
+        self.link_hinge_id = link_hinge_id
+
+        # Title
+        self.setWindowTitle(__("Link hinge configuration"))
+        self.link_hinge_edit_layout = QtGui.QVBoxLayout()
+
+        # Find the link hinge for which the button was pressed
+        target_link_hinge = None
+
+        for link_hinge in self.data['link_hinge']:
+            if link_hinge[0] == self.link_hinge_id:
+                target_link_hinge = link_hinge
+
+        # This should not happen but if no link hinge is found with reference id, it spawns an error.
+        if target_link_hinge is None:
+            guiutils.error_dialog("There was an error opnening the link hinge to edit")
+            return
+
+        # Elements that interact
+        self.body_layout = QtGui.QHBoxLayout()
+        self.body_one_label = QtGui.QLabel(__("Body 1: "))
+        self.body_one_line_edit = QtGui.QLineEdit(str(target_link_hinge[1]))
+        self.body_two_label = QtGui.QLabel(__("Body 2: "))
+        self.body_two_line_edit = QtGui.QLineEdit(str(target_link_hinge[2]))
+        self.body_to_body_label = QtGui.QLabel(__("to"))
+
+        self.body_layout.addWidget(self.body_one_label)
+        self.body_layout.addWidget(self.body_one_line_edit)
+        self.body_layout.addWidget(self.body_to_body_label)
+        self.body_layout.addWidget(self.body_two_label)
+        self.body_layout.addWidget(self.body_two_line_edit)
+
+        self.link_hinge_edit_layout.addLayout(self.body_layout)
+
+        # Points for rotation
+        self.rotpoints_layout = QtGui.QHBoxLayout()
+        self.rotpoints_label = QtGui.QLabel(__("Points for rotation: "))
+        self.rotpoints_x_label = QtGui.QLabel(__("X"))
+        self.rotpoints_x_line_edit = QtGui.QLineEdit(str(target_link_hinge[3][0]))
+        self.rotpoints_y_label = QtGui.QLabel(__("Y"))
+        self.rotpoints_y_line_edit = QtGui.QLineEdit(str(target_link_hinge[3][1]))
+        self.rotpoints_z_label = QtGui.QLabel(__("Z"))
+        self.rotpoints_z_line_edit = QtGui.QLineEdit(str(target_link_hinge[3][2]))
+
+        self.rotpoints_layout.addWidget(self.rotpoints_label)
+        self.rotpoints_layout.addWidget(self.rotpoints_x_label)
+        self.rotpoints_layout.addWidget(self.rotpoints_x_line_edit)
+        self.rotpoints_layout.addWidget(self.rotpoints_y_label)
+        self.rotpoints_layout.addWidget(self.rotpoints_y_line_edit)
+        self.rotpoints_layout.addWidget(self.rotpoints_z_label)
+        self.rotpoints_layout.addWidget(self.rotpoints_z_line_edit)
+
+        self.link_hinge_edit_layout.addLayout(self.rotpoints_layout)
+
+        # Vector direction for rotation
+        self.rotvector_layout = QtGui.QHBoxLayout()
+        self.rotvector_label = QtGui.QLabel(__("Vector direction: "))
+        self.rotvector_x_label = QtGui.QLabel(__("X"))
+        self.rotvector_x_line_edit = QtGui.QLineEdit(str(target_link_hinge[4][0]))
+        self.rotvector_y_label = QtGui.QLabel(__("Y"))
+        self.rotvector_y_line_edit = QtGui.QLineEdit(str(target_link_hinge[4][1]))
+        self.rotvector_z_label = QtGui.QLabel(__("Z"))
+        self.rotvector_z_line_edit = QtGui.QLineEdit(str(target_link_hinge[4][2]))
+
+        self.rotvector_layout.addWidget(self.rotvector_label)
+        self.rotvector_layout.addWidget(self.rotvector_x_label)
+        self.rotvector_layout.addWidget(self.rotvector_x_line_edit)
+        self.rotvector_layout.addWidget(self.rotvector_y_label)
+        self.rotvector_layout.addWidget(self.rotvector_y_line_edit)
+        self.rotvector_layout.addWidget(self.rotvector_z_label)
+        self.rotvector_layout.addWidget(self.rotvector_z_line_edit)
+
+        self.link_hinge_edit_layout.addLayout(self.rotvector_layout)
+
+        # Torsion options
+        self.torsion_stiffness_layout = QtGui.QHBoxLayout()
+        self.torsion_damping_layout = QtGui.QHBoxLayout()
+        self.stiffness_label = QtGui.QLabel(__("Stiffness: "))
+        self.stiffness_line_edit = QtGui.QLineEdit(str(target_link_hinge[5]))
+        self.damping_label = QtGui.QLabel(__("Damping: "))
+        self.damping_line_edit = QtGui.QLineEdit(str(target_link_hinge[6]))
+
+        self.torsion_stiffness_layout.addWidget(self.stiffness_label)
+        self.torsion_stiffness_layout.addWidget(self.stiffness_line_edit)
+        self.torsion_damping_layout.addWidget(self.damping_label)
+        self.torsion_damping_layout.addWidget(self.damping_line_edit)
+
+        self.link_hinge_edit_layout.addLayout(self.torsion_stiffness_layout)
+        self.link_hinge_edit_layout.addLayout(self.torsion_damping_layout)
+
+        # Buttons
+        self.ok_button = QtGui.QPushButton("Save")
+        self.ok_button.clicked.connect(self.on_save)
+        self.cancel_button = QtGui.QPushButton("Cancel")
+        self.cancel_button.clicked.connect(self.on_cancel)
+        self.button_layout = QtGui.QHBoxLayout()
+        self.button_layout.addStretch(1)
+
+        self.button_layout.addWidget(self.ok_button)
+        self.button_layout.addWidget(self.cancel_button)
+
+        self.link_hinge_edit_layout.addLayout(self.button_layout)
+
+        # Add the elements to the window
+        self.setLayout(self.link_hinge_edit_layout)
+        self.exec_()
+
+    def on_cancel(self):
+        """ Link hinge edit cancel button behaviour."""
+        self.reject()
+
+    def on_save(self):
+        """ Link hinge save button behaviour"""
+        count = -1
+        for link_hinge_value in self.data['link_hinge']:
+            count += 1
+            if link_hinge_value[0] == self.link_hinge_id:
+                self.data['link_hinge'][count][1] = str(self.body_one_line_edit.text())
+                self.data['link_hinge'][count][2] = str(self.body_two_line_edit.text())
+                self.data['link_hinge'][count][3] = [float(self.rotpoints_x_line_edit.text()),
+                                                     float(self.rotpoints_y_line_edit.text()),
+                                                     float(self.rotpoints_z_line_edit.text())]
+                self.data['link_hinge'][count][4] = [float(self.rotvector_x_line_edit.text()),
+                                                     float(self.rotvector_y_line_edit.text()),
+                                                     float(self.rotvector_z_line_edit.text())]
+                self.data['link_hinge'][count][5] = float(self.stiffness_line_edit.text())
+                self.data['link_hinge'][count][6] = float(self.damping_line_edit.text())
+
+        if self.data['link_hinge'][count][1] != "" and self.data['link_hinge'][count][2] != "":
+            LinkHingeEdit.accept(self)
+        else:
+            link_hinge_error_dialog = QtGui.QMessageBox()
+            link_hinge_error_dialog.setWindowTitle(__("Error!"))
+            link_hinge_error_dialog.setText(__("bodies are necesary!"))
+            link_hinge_error_dialog.setIcon(QtGui.QMessageBox.Critical)
+            link_hinge_error_dialog.exec_()
+
+
+class LinkLinearspringEdit(QtGui.QDialog):
+    """ Defines Link linearspring window dialog """
+
+    def __init__(self, data, link_linearspring_id):
+        super(LinkLinearspringEdit, self).__init__()
+
+        self.data = data
+        self.link_linearspring_id = link_linearspring_id
+
+        # Title
+        self.setWindowTitle(__("Link linearspring configuration"))
+        self.link_linearspring_edit_layout = QtGui.QVBoxLayout()
+
+        # Find the link linearspring for which the button was pressed
+        target_link_linearspring = None
+
+        for link_linearspring in self.data['link_linearspring']:
+            if link_linearspring[0] == self.link_linearspring_id:
+                target_link_linearspring = link_linearspring
+
+        # This should not happen but if no link linearspring is found with reference id, it spawns an error.
+        if target_link_linearspring is None:
+            guiutils.error_dialog("There was an error opnening the link linearspring to edit")
+            return
+
+        # Elements that interact
+        self.body_layout = QtGui.QHBoxLayout()
+        self.body_one_label = QtGui.QLabel(__("Body 1: "))
+        self.body_one_line_edit = QtGui.QLineEdit(str(target_link_linearspring[1]))
+        self.body_two_label = QtGui.QLabel(__("Body 2: "))
+        self.body_two_line_edit = QtGui.QLineEdit(str(target_link_linearspring[2]))
+        self.body_to_body_label = QtGui.QLabel(__("to"))
+
+        self.body_layout.addWidget(self.body_one_label)
+        self.body_layout.addWidget(self.body_one_line_edit)
+        self.body_layout.addWidget(self.body_to_body_label)
+        self.body_layout.addWidget(self.body_two_label)
+        self.body_layout.addWidget(self.body_two_line_edit)
+
+        self.link_linearspring_edit_layout.addLayout(self.body_layout)
+
+        # Points where the elements interact in body 1
+        self.points_b1_layout = QtGui.QHBoxLayout()
+        self.points_b1_label = QtGui.QLabel(__("Points in body 1: "))
+        self.point_b1_x_label = QtGui.QLabel(__("X"))
+        self.point_b1_x_line_edit = QtGui.QLineEdit(str(target_link_linearspring[3][0]))
+        self.point_b1_y_label = QtGui.QLabel(__("Y"))
+        self.point_b1_y_line_edit = QtGui.QLineEdit(str(target_link_linearspring[3][1]))
+        self.point_b1_z_label = QtGui.QLabel(__("Z"))
+        self.point_b1_z_line_edit = QtGui.QLineEdit(str(target_link_linearspring[3][2]))
+
+        self.points_b1_layout.addWidget(self.points_b1_label)
+        self.points_b1_layout.addWidget(self.point_b1_x_label)
+        self.points_b1_layout.addWidget(self.point_b1_x_line_edit)
+        self.points_b1_layout.addWidget(self.point_b1_y_label)
+        self.points_b1_layout.addWidget(self.point_b1_y_line_edit)
+        self.points_b1_layout.addWidget(self.point_b1_z_label)
+        self.points_b1_layout.addWidget(self.point_b1_z_line_edit)
+
+        self.link_linearspring_edit_layout.addLayout(self.points_b1_layout)
+
+        # Points where the elements interact in body 2
+        self.points_b2_layout = QtGui.QHBoxLayout()
+        self.points_b2_label = QtGui.QLabel(__("Points in body 2: "))
+        self.point_b2_x_label = QtGui.QLabel(__("X"))
+        self.point_b2_x_line_edit = QtGui.QLineEdit(str(target_link_linearspring[4][0]))
+        self.point_b2_y_label = QtGui.QLabel(__("Y"))
+        self.point_b2_y_line_edit = QtGui.QLineEdit(str(target_link_linearspring[4][1]))
+        self.point_b2_z_label = QtGui.QLabel(__("Z"))
+        self.point_b2_z_line_edit = QtGui.QLineEdit(str(target_link_linearspring[4][2]))
+
+        self.points_b2_layout.addWidget(self.points_b2_label)
+        self.points_b2_layout.addWidget(self.point_b2_x_label)
+        self.points_b2_layout.addWidget(self.point_b2_x_line_edit)
+        self.points_b2_layout.addWidget(self.point_b2_y_label)
+        self.points_b2_layout.addWidget(self.point_b2_y_line_edit)
+        self.points_b2_layout.addWidget(self.point_b2_z_label)
+        self.points_b2_layout.addWidget(self.point_b2_z_line_edit)
+
+        self.link_linearspring_edit_layout.addLayout(self.points_b2_layout)
+
+        # Torsion options
+        self.torsion_stiffness_layout = QtGui.QHBoxLayout()
+        self.torsion_damping_layout = QtGui.QHBoxLayout()
+        self.stiffness_label = QtGui.QLabel(__("Stiffness: "))
+        self.stiffness_line_edit = QtGui.QLineEdit(str(target_link_linearspring[5]))
+        self.damping_label = QtGui.QLabel(__("Damping: "))
+        self.damping_line_edit = QtGui.QLineEdit(str(target_link_linearspring[6]))
+
+        self.torsion_stiffness_layout.addWidget(self.stiffness_label)
+        self.torsion_stiffness_layout.addWidget(self.stiffness_line_edit)
+        self.torsion_damping_layout.addWidget(self.damping_label)
+        self.torsion_damping_layout.addWidget(self.damping_line_edit)
+
+        self.link_linearspring_edit_layout.addLayout(self.torsion_stiffness_layout)
+        self.link_linearspring_edit_layout.addLayout(self.torsion_damping_layout)
+
+        # Spring equilibrium length
+        self.rest_layout = QtGui.QHBoxLayout()
+        self.rest_label = QtGui.QLabel(__("Rest length: "))
+        self.rest_line_edit = QtGui.QLineEdit(str(target_link_linearspring[7]))
+
+        self.rest_layout.addWidget(self.rest_label)
+        self.rest_layout.addWidget(self.rest_line_edit)
+
+        self.link_linearspring_edit_layout.addLayout(self.rest_layout)
+
+        # vtk
+        self.vtk_layout = QtGui.QHBoxLayout()
+        self.vtk_nside_label = QtGui.QLabel(__("Number of sections: "))
+        self.vtk_nside_line_edit = QtGui.QLineEdit(str(target_link_linearspring[8][0]))
+        self.vtk_radius_label = QtGui.QLabel(__("Spring radius: "))
+        self.vtk_radius_line_edit = QtGui.QLineEdit(str(target_link_linearspring[8][1]))
+        self.vtk_length_label = QtGui.QLabel(__("Length for revolution: "))
+        self.vtk_length_line_edit = QtGui.QLineEdit(str(target_link_linearspring[8][2]))
+
+        self.vtk_layout.addWidget(self.vtk_nside_label)
+        self.vtk_layout.addWidget(self.vtk_nside_line_edit)
+        self.vtk_layout.addWidget(self.vtk_radius_label)
+        self.vtk_layout.addWidget(self.vtk_radius_line_edit)
+        self.vtk_layout.addWidget(self.vtk_length_label)
+        self.vtk_layout.addWidget(self.vtk_length_line_edit)
+
+        self.link_linearspring_edit_layout.addLayout(self.vtk_layout)
+
+        # Buttons
+        self.ok_button = QtGui.QPushButton("Save")
+        self.ok_button.clicked.connect(self.on_save)
+        self.cancel_button = QtGui.QPushButton("Cancel")
+        self.cancel_button.clicked.connect(self.on_cancel)
+        self.button_layout = QtGui.QHBoxLayout()
+        self.button_layout.addStretch(1)
+
+        self.button_layout.addWidget(self.ok_button)
+        self.button_layout.addWidget(self.cancel_button)
+
+        self.link_linearspring_edit_layout.addLayout(self.button_layout)
+
+        # Add the elements to the window
+        self.setLayout(self.link_linearspring_edit_layout)
+        self.exec_()
+
+    def on_cancel(self):
+        """ Link linearspring edit cancel button behaviour."""
+        self.reject()
+
+    def on_save(self):
+        """ Link linearspring save button behaviour"""
+        count = -1
+        for link_linearspring_value in self.data['link_linearspring']:
+            count += 1
+            if link_linearspring_value[0] == self.link_linearspring_id:
+                self.data['link_linearspring'][count][1] = str(self.body_one_line_edit.text())
+                self.data['link_linearspring'][count][2] = str(self.body_two_line_edit.text())
+                self.data['link_linearspring'][count][3] = [float(self.point_b1_x_line_edit.text()),
+                                                            float(self.point_b1_y_line_edit.text()),
+                                                            float(self.point_b1_z_line_edit.text())]
+                self.data['link_linearspring'][count][4] = [float(self.point_b2_x_line_edit.text()),
+                                                            float(self.point_b2_y_line_edit.text()),
+                                                            float(self.point_b2_z_line_edit.text())]
+                self.data['link_linearspring'][count][5] = float(self.stiffness_line_edit.text())
+                self.data['link_linearspring'][count][6] = float(self.damping_line_edit.text())
+                self.data['link_linearspring'][count][7] = float(self.rest_line_edit.text())
+                self.data['link_linearspring'][count][8] = [float(self.vtk_nside_line_edit.text()),
+                                                            float(self.vtk_radius_line_edit.text()),
+                                                            float(self.vtk_length_line_edit.text())]
+
+        if self.data['link_linearspring'][count][1] != "" and self.data['link_linearspring'][count][2] != "":
+            LinkLinearspringEdit.accept(self)
+        else:
+            link_linearspring_error_dialog = QtGui.QMessageBox()
+            link_linearspring_error_dialog.setWindowTitle(__("Error!"))
+            link_linearspring_error_dialog.setText(__("bodies are necesary!"))
+            link_linearspring_error_dialog.setIcon(QtGui.QMessageBox.Critical)
+            link_linearspring_error_dialog.exec_()
+
 
 class LinkSphericEdit(QtGui.QDialog):
-    """ """
+    """ Defines Link spheric window dialog """
 
     def __init__(self, data, link_spheric_id):
         super(LinkSphericEdit, self).__init__()
@@ -6683,36 +7371,47 @@ class LinkSphericEdit(QtGui.QDialog):
         self.data = data
         self.link_spheric_id = link_spheric_id
 
+        # Title
         self.setWindowTitle(__("Link spheric configuration"))
         self.link_spheric_edit_layout = QtGui.QVBoxLayout()
 
+        # Find the link spheric for which the button was pressed
+        target_link_spheric = None
+
+        for link_spheric in self.data['link_spheric']:
+            if link_spheric[0] == self.link_spheric_id:
+                target_link_spheric = link_spheric
+
+        # This should not happen but if no link spheric is found with reference id, it spawns an error.
+        if target_link_spheric is None:
+            guiutils.error_dialog("There was an error opnening the link spheric to edit")
+            return
+
+        # Elements that interact
         self.body_layout = QtGui.QHBoxLayout()
         self.body_one_label = QtGui.QLabel(__("Body 1: "))
-        self.body_one_line_edit = QtGui.QLineEdit()
+        self.body_one_line_edit = QtGui.QLineEdit(str(target_link_spheric[1]))
         self.body_two_label = QtGui.QLabel(__("Body 2: "))
-        self.body_two_line_edit = QtGui.QLineEdit()
+        self.body_two_line_edit = QtGui.QLineEdit(str(target_link_spheric[2]))
         self.body_to_body_label = QtGui.QLabel(__("to"))
-
-        self.points_layout = QtGui.QHBoxLayout()
-        self.points_label = QtGui.QLabel(__("Points: "))
-        self.point_x_label = QtGui.QLabel(__("X"))
-        self.point_x_line_edit = QtGui.QLineEdit()
-        self.point_y_label = QtGui.QLabel(__("Y"))
-        self.point_y_line_edit = QtGui.QLineEdit()
-        self.point_z_label = QtGui.QLabel(__("Z"))
-        self.point_z_line_edit = QtGui.QLineEdit()
-
-        self.ok_button = QtGui.QPushButton("Save")
-        self.cancel_button = QtGui.QPushButton("Cancel")
-        self.cancel_button.clicked.connect(self.on_cancel)
-        self.button_layout = QtGui.QHBoxLayout()
-        self.button_layout.addStretch(1)
 
         self.body_layout.addWidget(self.body_one_label)
         self.body_layout.addWidget(self.body_one_line_edit)
         self.body_layout.addWidget(self.body_to_body_label)
         self.body_layout.addWidget(self.body_two_label)
         self.body_layout.addWidget(self.body_two_line_edit)
+
+        self.link_spheric_edit_layout.addLayout(self.body_layout)
+
+        # Points where the elements interact
+        self.points_layout = QtGui.QHBoxLayout()
+        self.points_label = QtGui.QLabel(__("Points: "))
+        self.point_x_label = QtGui.QLabel(__("X"))
+        self.point_x_line_edit = QtGui.QLineEdit(str(target_link_spheric[3][0]))
+        self.point_y_label = QtGui.QLabel(__("Y"))
+        self.point_y_line_edit = QtGui.QLineEdit(str(target_link_spheric[3][1]))
+        self.point_z_label = QtGui.QLabel(__("Z"))
+        self.point_z_line_edit = QtGui.QLineEdit(str(target_link_spheric[3][2]))
 
         self.points_layout.addWidget(self.points_label)
         self.points_layout.addWidget(self.point_x_label)
@@ -6722,22 +7421,461 @@ class LinkSphericEdit(QtGui.QDialog):
         self.points_layout.addWidget(self.point_z_label)
         self.points_layout.addWidget(self.point_z_line_edit)
 
+        self.link_spheric_edit_layout.addLayout(self.points_layout)
+
+        # Torsion options
+        self.torsion_stiffness_layout = QtGui.QHBoxLayout()
+        self.torsion_damping_layout = QtGui.QHBoxLayout()
+        self.stiffness_label = QtGui.QLabel(__("Stiffness"))
+        self.stiffness_line_edit = QtGui.QLineEdit(str(target_link_spheric[4]))
+        self.damping_label = QtGui.QLabel(__("Damping"))
+        self.damping_line_edit = QtGui.QLineEdit(str(target_link_spheric[5]))
+
+        self.torsion_stiffness_layout.addWidget(self.stiffness_label)
+        self.torsion_stiffness_layout.addWidget(self.stiffness_line_edit)
+        self.torsion_damping_layout.addWidget(self.damping_label)
+        self.torsion_damping_layout.addWidget(self.damping_line_edit)
+
+        self.link_spheric_edit_layout.addLayout(self.torsion_stiffness_layout)
+        self.link_spheric_edit_layout.addLayout(self.torsion_damping_layout)
+
+        # Buttons
+        self.ok_button = QtGui.QPushButton("Save")
+        self.ok_button.clicked.connect(self.on_save)
+        self.cancel_button = QtGui.QPushButton("Cancel")
+        self.cancel_button.clicked.connect(self.on_cancel)
+        self.button_layout = QtGui.QHBoxLayout()
+        self.button_layout.addStretch(1)
+
         self.button_layout.addWidget(self.ok_button)
         self.button_layout.addWidget(self.cancel_button)
 
-        self.link_spheric_edit_layout.addLayout(self.body_layout)
-        self.link_spheric_edit_layout.addLayout(self.points_layout)
         self.link_spheric_edit_layout.addLayout(self.button_layout)
 
+        # Add the elements to the window
         self.setLayout(self.link_spheric_edit_layout)
         self.exec_()
 
     def on_cancel(self):
+        """ Link Spheric edit cancel button behaviour."""
         self.reject()
+
+    def on_save(self):
+        """ Link Spheric save button behaviour"""
+        count = -1
+        for link_spheric_value in self.data['link_spheric']:
+            count += 1
+            if link_spheric_value[0] == self.link_spheric_id:
+                self.data['link_spheric'][count][1] = str(self.body_one_line_edit.text())
+                self.data['link_spheric'][count][2] = str(self.body_two_line_edit.text())
+                self.data['link_spheric'][count][3] = [float(self.point_x_line_edit.text()),
+                                                       float(self.point_y_line_edit.text()),
+                                                       float(self.point_z_line_edit.text())]
+                self.data['link_spheric'][count][4] = float(self.stiffness_line_edit.text())
+                self.data['link_spheric'][count][5] = float(self.damping_line_edit.text())
+
+        if self.data['link_spheric'][count][1] != "":
+            LinkSphericEdit.accept(self)
+        else:
+            link_spheric_error_dialog = QtGui.QMessageBox()
+            link_spheric_error_dialog.setWindowTitle(__("Error!"))
+            link_spheric_error_dialog.setText(__("body 1 is necesary!"))
+            link_spheric_error_dialog.setIcon(QtGui.QMessageBox.Critical)
+            link_spheric_error_dialog.exec_()
+
+
+class LinkPointlineEdit(QtGui.QDialog):
+    """ Defines Link pontline window dialog """
+
+    def __init__(self, data, link_pointline_id):
+        super(LinkPointlineEdit, self).__init__()
+
+        self.data = data
+        self.link_pointline_id = link_pointline_id
+
+        # Title
+        self.setWindowTitle(__("Link pointline configuration"))
+        self.link_pointline_edit_layout = QtGui.QVBoxLayout()
+
+        # Find the link pointline for which the button was pressed
+        target_link_pointline = None
+
+        for link_pointline in self.data['link_pointline']:
+            if link_pointline[0] == self.link_pointline_id:
+                target_link_pointline = link_pointline
+
+        # This should not happen but if no link pointline is found with reference id, it spawns an error.
+        if target_link_pointline is None:
+            guiutils.error_dialog("There was an error opnening the link pointline to edit")
+            return
+
+        # Elements that interact
+        self.body_layout = QtGui.QHBoxLayout()
+        self.body_one_label = QtGui.QLabel(__("Body 1: "))
+        self.body_one_line_edit = QtGui.QLineEdit(str(target_link_pointline[1]))
+
+        self.body_layout.addWidget(self.body_one_label)
+        self.body_layout.addWidget(self.body_one_line_edit)
+
+        self.link_pointline_edit_layout.addLayout(self.body_layout)
+
+        # Vector direction for sliding axis
+        self.sliding_vector_layout = QtGui.QHBoxLayout()
+        self.sliding_vector_label = QtGui.QLabel(__("Sliding Vector: "))
+        self.sliding_vector_x_label = QtGui.QLabel(__("X"))
+        self.sliding_vector_x_line_edit = QtGui.QLineEdit(str(target_link_pointline[2][0]))
+        self.sliding_vector_y_label = QtGui.QLabel(__("Y"))
+        self.sliding_vector_y_line_edit = QtGui.QLineEdit(str(target_link_pointline[2][1]))
+        self.sliding_vector_z_label = QtGui.QLabel(__("Z"))
+        self.sliding_vector_z_line_edit = QtGui.QLineEdit(str(target_link_pointline[2][2]))
+
+        self.sliding_vector_layout.addWidget(self.sliding_vector_label)
+        self.sliding_vector_layout.addWidget(self.sliding_vector_x_label)
+        self.sliding_vector_layout.addWidget(self.sliding_vector_x_line_edit)
+        self.sliding_vector_layout.addWidget(self.sliding_vector_y_label)
+        self.sliding_vector_layout.addWidget(self.sliding_vector_y_line_edit)
+        self.sliding_vector_layout.addWidget(self.sliding_vector_z_label)
+        self.sliding_vector_layout.addWidget(self.sliding_vector_z_line_edit)
+
+        self.link_pointline_edit_layout.addLayout(self.sliding_vector_layout)
+
+        # Point for rotation
+        self.rotpoint_layout = QtGui.QHBoxLayout()
+        self.rotpoint_label = QtGui.QLabel(__("Point for rotation: "))
+        self.rotpoint_x_label = QtGui.QLabel(__("X"))
+        self.rotpoint_x_line_edit = QtGui.QLineEdit(str(target_link_pointline[3][0]))
+        self.rotpoint_y_label = QtGui.QLabel(__("Y"))
+        self.rotpoint_y_line_edit = QtGui.QLineEdit(str(target_link_pointline[3][1]))
+        self.rotpoint_z_label = QtGui.QLabel(__("Z"))
+        self.rotpoint_z_line_edit = QtGui.QLineEdit(str(target_link_pointline[3][2]))
+
+        self.rotpoint_layout.addWidget(self.rotpoint_label)
+        self.rotpoint_layout.addWidget(self.rotpoint_x_label)
+        self.rotpoint_layout.addWidget(self.rotpoint_x_line_edit)
+        self.rotpoint_layout.addWidget(self.rotpoint_y_label)
+        self.rotpoint_layout.addWidget(self.rotpoint_y_line_edit)
+        self.rotpoint_layout.addWidget(self.rotpoint_z_label)
+        self.rotpoint_layout.addWidget(self.rotpoint_z_line_edit)
+
+        self.link_pointline_edit_layout.addLayout(self.rotpoint_layout)
+
+        # Vector direction for rotation
+        self.rotvector_layout = QtGui.QHBoxLayout()
+        self.rotvector_label = QtGui.QLabel(__("Vector direction: "))
+        self.rotvector_x_label = QtGui.QLabel(__("X"))
+        self.rotvector_x_line_edit = QtGui.QLineEdit(str(target_link_pointline[4][0]))
+        self.rotvector_y_label = QtGui.QLabel(__("Y"))
+        self.rotvector_y_line_edit = QtGui.QLineEdit(str(target_link_pointline[4][1]))
+        self.rotvector_z_label = QtGui.QLabel(__("Z"))
+        self.rotvector_z_line_edit = QtGui.QLineEdit(str(target_link_pointline[4][2]))
+
+        self.rotvector_layout.addWidget(self.rotvector_label)
+        self.rotvector_layout.addWidget(self.rotvector_x_label)
+        self.rotvector_layout.addWidget(self.rotvector_x_line_edit)
+        self.rotvector_layout.addWidget(self.rotvector_y_label)
+        self.rotvector_layout.addWidget(self.rotvector_y_line_edit)
+        self.rotvector_layout.addWidget(self.rotvector_z_label)
+        self.rotvector_layout.addWidget(self.rotvector_z_line_edit)
+
+        self.link_pointline_edit_layout.addLayout(self.rotvector_layout)
+
+        # Second vector to avoid rotation
+        self.rotvector2_layout = QtGui.QHBoxLayout()
+        self.rotvector2_label = QtGui.QLabel(__("Second vector: "))
+        self.rotvector2_x_label = QtGui.QLabel(__("X"))
+        self.rotvector2_x_line_edit = QtGui.QLineEdit(str(target_link_pointline[5][0]))
+        self.rotvector2_y_label = QtGui.QLabel(__("Y"))
+        self.rotvector2_y_line_edit = QtGui.QLineEdit(str(target_link_pointline[5][1]))
+        self.rotvector2_z_label = QtGui.QLabel(__("Z"))
+        self.rotvector2_z_line_edit = QtGui.QLineEdit(str(target_link_pointline[5][2]))
+
+        self.rotvector2_layout.addWidget(self.rotvector2_label)
+        self.rotvector2_layout.addWidget(self.rotvector2_x_label)
+        self.rotvector2_layout.addWidget(self.rotvector2_x_line_edit)
+        self.rotvector2_layout.addWidget(self.rotvector2_y_label)
+        self.rotvector2_layout.addWidget(self.rotvector2_y_line_edit)
+        self.rotvector2_layout.addWidget(self.rotvector2_z_label)
+        self.rotvector2_layout.addWidget(self.rotvector2_z_line_edit)
+
+        self.link_pointline_edit_layout.addLayout(self.rotvector2_layout)
+
+        # Torsion options
+        self.torsion_stiffness_layout = QtGui.QHBoxLayout()
+        self.torsion_damping_layout = QtGui.QHBoxLayout()
+        self.stiffness_label = QtGui.QLabel(__("Stiffness"))
+        self.stiffness_line_edit = QtGui.QLineEdit(str(target_link_pointline[6]))
+        self.damping_label = QtGui.QLabel(__("Damping"))
+        self.damping_line_edit = QtGui.QLineEdit(str(target_link_pointline[7]))
+
+        self.torsion_stiffness_layout.addWidget(self.stiffness_label)
+        self.torsion_stiffness_layout.addWidget(self.stiffness_line_edit)
+        self.torsion_damping_layout.addWidget(self.damping_label)
+        self.torsion_damping_layout.addWidget(self.damping_line_edit)
+
+        self.link_pointline_edit_layout.addLayout(self.torsion_stiffness_layout)
+        self.link_pointline_edit_layout.addLayout(self.torsion_damping_layout)
+
+        # Buttons
+        self.ok_button = QtGui.QPushButton("Save")
+        self.ok_button.clicked.connect(self.on_save)
+        self.cancel_button = QtGui.QPushButton("Cancel")
+        self.cancel_button.clicked.connect(self.on_cancel)
+        self.button_layout = QtGui.QHBoxLayout()
+        self.button_layout.addStretch(1)
+
+        self.button_layout.addWidget(self.ok_button)
+        self.button_layout.addWidget(self.cancel_button)
+
+        self.link_pointline_edit_layout.addLayout(self.button_layout)
+
+        # Add the elements to the window
+        self.setLayout(self.link_pointline_edit_layout)
+        self.exec_()
+
+    def on_cancel(self):
+        """ Link pointline edit cancel button behaviour."""
+        self.reject()
+
+    def on_save(self):
+        """ Link pointline save button behaviour"""
+        count = -1
+        for link_pointline_value in self.data['link_pointline']:
+            count += 1
+            if link_pointline_value[0] == self.link_pointline_id:
+                self.data['link_pointline'][count][1] = str(self.body_one_line_edit.text())
+                self.data['link_pointline'][count][2] = [float(self.sliding_vector_x_line_edit.text()),
+                                                         float(self.sliding_vector_y_line_edit.text()),
+                                                         float(self.sliding_vector_z_line_edit.text())]
+                self.data['link_pointline'][count][3] = [float(self.rotpoint_x_line_edit.text()),
+                                                         float(self.rotpoint_y_line_edit.text()),
+                                                         float(self.rotpoint_z_line_edit.text())]
+                self.data['link_pointline'][count][4] = [float(self.rotvector_x_line_edit.text()),
+                                                         float(self.rotvector_y_line_edit.text()),
+                                                         float(self.rotvector_z_line_edit.text())]
+                self.data['link_pointline'][count][5] = [float(self.rotvector2_x_line_edit.text()),
+                                                         float(self.rotvector2_y_line_edit.text()),
+                                                         float(self.rotvector2_z_line_edit.text())]
+                self.data['link_pointline'][count][6] = float(self.stiffness_line_edit.text())
+                self.data['link_pointline'][count][7] = float(self.damping_line_edit.text())
+
+        if self.data['link_pointline'][count][1] != "":
+            LinkPointlineEdit.accept(self)
+        else:
+            link_pointline_error_dialog = QtGui.QMessageBox()
+            link_pointline_error_dialog.setWindowTitle(__("Error!"))
+            link_pointline_error_dialog.setText(__("body 1 is necesary!"))
+            link_pointline_error_dialog.setIcon(QtGui.QMessageBox.Critical)
+            link_pointline_error_dialog.exec_()
+
+
+class ObjectIsShowed(QtGui.QWidget):
+    """ Widget shows an object """
+
+    def __init__(self, key, object_name="No name", object_mk=-1, mktype="fluid"):
+        super(ObjectIsShowed, self).__init__()
+        self.setContentsMargins(0, 0, 0, 0)
+
+        self.key = key
+        self.object_name = object_name
+        self.object_mk = object_mk + 1
+        self.main_layout = QtGui.QHBoxLayout()
+        self.main_layout.setContentsMargins(10, 0, 10, 0)
+        self.mk_label = QtGui.QLabel(
+            "<b>{}{}</b>".format(mktype[0].upper(), str(self.object_mk)))
+        self.name_label = QtGui.QLabel(str(self.object_name))
+
+        self.main_layout.addWidget(self.mk_label)
+        self.main_layout.addWidget(self.name_label)
+        self.main_layout.addStretch(1)
+
+        self.setLayout(self.main_layout)
+
+
+class InletConfigDialog(QtGui.QDialog):
+    """ Defines the Inlet/Outlet dialog window.
+       Modifies data dictionary passed as parameter. """
+
+    def __init__(self, data):
+        super(InletConfigDialog, self).__init__()
+
+        self.data = data
+
+        # Creates a dialog
+        self.setWindowTitle("Inlet/Outlet configuration")
+        #self.setMinimumWidth(500)
+        #self.setMinimumHeight(600)
+        self.main_layout = QtGui.QVBoxLayout()
+
+        # Creates use refilling option
+        self.refilling_layout = QtGui.QHBoxLayout()
+        self.refilling_option = QtGui.QLabel(__("Use refilling: "))
+        self.refilling_combobox = QtGui.QComboBox()
+        self.refilling_combobox.insertItems(0, [__("False"), __("True")])
+
+        self.refilling_layout.addWidget(self.refilling_option)
+        self.refilling_layout.addWidget(self.refilling_combobox)
+        self.refilling_layout.addStretch(1)
+
+        # Creates 2 main buttons
+        self.ok_button = QtGui.QPushButton("Save")
+        self.cancel_button = QtGui.QPushButton("Cancel")
+        self.button_layout = QtGui.QHBoxLayout()
+        self.button_layout.addStretch(1)
+
+        self.ok_button.clicked.connect(self.on_ok)
+        self.cancel_button.clicked.connect(self.on_cancel)
+
+        self.button_layout.addWidget(self.ok_button)
+        self.button_layout.addWidget(self.cancel_button)
+
+        # Create the list for inlet/outlet objects
+        self.main_inlet = QtGui.QGroupBox("Inlet/Outler objects")
+        self.inlet_layout = QtGui.QVBoxLayout()
+        self.inlet_button = QtGui.QPushButton(__("Add"))
+        self.inlet_button.clicked.connect(self.on_add_zone)
+
+        self.objectlist_table = QtGui.QTableWidget(0, 2)
+        self.objectlist_table.setObjectName("Inlet/Outler objects table")
+        self.objectlist_table.verticalHeader().setVisible(False)
+        self.objectlist_table.horizontalHeader().setVisible(False)
+        self.objectlist_table.horizontalHeader().setResizeMode(0, QtGui.QHeaderView.Stretch)
+
+        self.objectlist_table.setEnabled(True)
+
+        # Create the necessary spaces in the list
+        self.count = 0
+        for key in self.data['simobjects'].keys():
+            self.context_object = FreeCAD.getDocument("DSPH_Case").getObject(key)
+            if self.data['simobjects'][self.context_object.Name][1] == "Fluid" and \
+                    self.context_object.Name != "Case_Limits":
+                self.count += 1
+        self.objectlist_table.setRowCount(self.count)
+        self.current_row = 0
+        self.objects_with_parent = list()
+        self.is_floating = ""
+        # TODO: LOW PRIORITY, CHANGE THIS FOR GLOBAL TEMP_TADA
+        self.temp_data = list()
+
+        # Select the objects that are going to be listed
+        for key, value in self.data['simobjects'].iteritems():
+            self.context_object = FreeCAD.getDocument("DSPH_Case").getObject(key)
+            if self.context_object.InList != list():
+                self.objects_with_parent.append(self.context_object.Name)
+                continue
+            if self.context_object.Name == "Case_Limits":
+                continue
+            if self.data['simobjects'][self.context_object.Name][1] == "Bound":
+                continue
+
+            # Collects the information of the object
+            self.target_widget = ObjectIsShowed(
+                key=key,
+                object_mk=self.data['simobjects'][self.context_object.Name][0],
+                mktype=self.data['simobjects'][self.context_object.Name][1],
+                object_name=self.context_object.Label
+            )
+
+            # Save the current object
+            self.temp_data.append(self.target_widget)
+
+            # Shows the object in table
+            self.objectlist_table.setCellWidget(self.current_row, 0, self.target_widget)
+            self.objectlist_table.setCellWidget(self.current_row, 1, self.inlet_button)
+
+            self.current_row += 1
+
+        # Add table to the layout
+        self.inlet_layout.addWidget(self.objectlist_table)
+
+        self.main_inlet.setLayout(self.inlet_layout)
+
+        # Create the list for zones
+        self.main_zones = QtGui.QGroupBox("Inlet/Outler zones")
+        self.zones_layout = QtGui.QVBoxLayout()
+
+        self.main_zones.setLayout(self.zones_layout)
+
+        # Adds all layouts to main
+        self.main_layout.addLayout(self.refilling_layout)
+        self.main_layout.addWidget(self.main_inlet)
+        self.main_layout.addWidget(self.main_zones)
+
+        # Adds scroll area
+        self.main_layout_dialog = QtGui.QVBoxLayout()
+        self.main_layout_scroll = QtGui.QScrollArea()
+        self.main_layout_scroll.setMinimumWidth(400)
+        self.main_layout_scroll.setWidgetResizable(True)
+        self.main_layout_scroll_widget = QtGui.QWidget()
+        self.main_layout_scroll_widget.setMinimumWidth(400)
+
+        self.main_layout_scroll_widget.setLayout(self.main_layout)
+        self.main_layout_scroll.setWidget(self.main_layout_scroll_widget)
+        self.main_layout_scroll.setHorizontalScrollBarPolicy(QtCore.Qt.ScrollBarAlwaysOff)
+
+        self.main_layout_dialog.addWidget(self.main_layout_scroll)
+        self.main_layout_dialog.addLayout(self.button_layout)
+
+        self.setLayout(self.main_layout_dialog)
+
+        self.exec_()
+
+    def on_add_zone(self):
+        """ """
+
+        if self.target_widget in self.data['inlet_object']:
+            # Warning window about save_case
+            self.zone_warning_dialog = QtGui.QMessageBox()
+            self.zone_warning_dialog.setWindowTitle(__("Warning!"))
+            self.zone_warning_dialog.setText(__("This zone already exists..."))
+            self.zone_warning_dialog.setIcon(QtGui.QMessageBox.Warning)
+            self.refresh_zones()
+            self.zone_warning_dialog.exec_()
+        else:
+            self.data['inlet_object'].append(self.target_widget)
+            self.refresh_zones()
+
+    def refresh_zones(self):
+        """ Refreshes the zones list """
+        while self.zones_layout.count() > 0:
+            target = self.zones_layout.takeAt(0)
+            target.setParent(None)
+
+        for inletObject in self.data['inlet_object']:
+            to_add_layout = QtGui.QHBoxLayout()
+            to_add_layout2 = QtGui.QHBoxLayout()
+            to_add_label2 = QtGui.QLabel(" ")
+            to_add_layout2.addWidget(to_add_label2)
+            to_add_label = QtGui.QLabel("Zone")
+            to_add_layout.addWidget(to_add_label)
+            to_add_layout.addStretch(1)
+            to_add_editbutton = QtGui.QPushButton("Edit")
+            to_add_deletebutton = QtGui.QPushButton("Delete")
+            to_add_layout.addWidget(to_add_editbutton)
+            to_add_layout.addWidget(to_add_deletebutton)
+            #to_add_editbutton.clicked.connect(lambda lp=linkPointline[0]: self.link_pointline_edit(lp))
+            to_add_deletebutton.clicked.connect(lambda io=inletObject: self.zone_delete(io))
+            self.zones_layout.addLayout(to_add_layout2)
+            self.zones_layout.addLayout(to_add_layout)
+
+    def zone_delete(self, io):
+        """ Delete one zone from the list """
+        self.data['inlet_object'].remove(io)
+        self.refresh_zones()
+
+    def zone_edit(self, io):
+        """"""
+
+    def on_cancel(self):
+        self.reject()
+
+    def on_ok(self):
+        """ Save data """
+        # TODO: NEED TO FINISH THIS
+        InletConfigDialog.accept(self)
 
 
 class RunDialog(QtGui.QDialog):
-    """"" Defines run window dialog """
+    """ Defines run window dialog """
 
     def __init__(self):
         super(RunDialog, self).__init__()
@@ -6801,3 +7939,348 @@ class RunDialog(QtGui.QDialog):
         self.run_details_layout.addWidget(self.run_details_text)
 
         self.run_details.setLayout(self.run_details_layout)
+
+
+class FloatStateDialog(QtGui.QDialog):
+    """ Defines a window with floating properties. """
+
+    def __init__(self, data):
+        super(FloatStateDialog, self).__init__()
+
+        self.data = data
+
+        self.setWindowTitle(__("Floating configuration"))
+        self.ok_button = QtGui.QPushButton(__("Ok"))
+        self.cancel_button = QtGui.QPushButton(__("Cancel"))
+
+        self.target_mk = int(self.data['simobjects'][FreeCADGui.Selection.getSelection()[0].Name][0])
+
+        self.ok_button.clicked.connect(self.on_ok)
+        self.cancel_button.clicked.connect(self.on_cancel)
+        self.is_floating_layout = QtGui.QHBoxLayout()
+        self.is_floating_label = QtGui.QLabel(__("Set floating: "))
+        self.is_floating_label.setToolTip(__("Sets the current MKBound selected as floating."))
+        self.is_floating_selector = QtGui.QComboBox()
+        self.is_floating_selector.insertItems(0, ["True", "False"])
+        self.is_floating_selector.currentIndexChanged.connect(self.on_floating_change)
+        self.is_floating_targetlabel = QtGui.QLabel(__("Target MKBound: ") + str(self.target_mk))
+        self.is_floating_layout.addWidget(self.is_floating_label)
+        self.is_floating_layout.addWidget(self.is_floating_selector)
+        self.is_floating_layout.addStretch(1)
+
+        self.is_floating_layout.addWidget(self.is_floating_targetlabel)
+        self.floating_props_group = QtGui.QGroupBox(__("Floating properties"))
+        self.floating_props_layout = QtGui.QVBoxLayout()
+        self.floating_props_massrhop_layout = QtGui.QHBoxLayout()
+        self.floating_props_massrhop_label = QtGui.QLabel(__("Mass/Density: "))
+        self.floating_props_massrhop_label.setToolTip(__("Selects an mass/density calculation method and its value."))
+        self.floating_props_massrhop_selector = QtGui.QComboBox()
+        self.floating_props_massrhop_selector.insertItems(0, ['massbody (kg)', 'rhopbody (kg/m^3)'])
+        self.floating_props_massrhop_input = QtGui.QLineEdit()
+        self.floating_props_massrhop_selector.currentIndexChanged.connect(self.on_massrhop_change)
+        self.floating_props_massrhop_layout.addWidget(self.floating_props_massrhop_label)
+
+        self.floating_props_massrhop_layout.addWidget(self.floating_props_massrhop_selector)
+        self.floating_props_massrhop_layout.addWidget(self.floating_props_massrhop_input)
+        self.floating_center_layout = QtGui.QHBoxLayout()
+        self.floating_center_label = QtGui.QLabel(__("Gravity center (m): "))
+        self.floating_center_label.setToolTip(__("Sets the mk group gravity center."))
+        self.floating_center_label_x = QtGui.QLabel("X")
+        self.floating_center_input_x = QtGui.QLineEdit()
+        self.floating_center_label_y = QtGui.QLabel("Y")
+        self.floating_center_input_y = QtGui.QLineEdit()
+        self.floating_center_label_z = QtGui.QLabel("Z")
+        self.floating_center_input_z = QtGui.QLineEdit()
+        self.floating_center_auto = QtGui.QCheckBox("Auto ")
+        self.floating_center_auto.toggled.connect(self.on_gravity_auto)
+        self.floating_center_layout.addWidget(self.floating_center_label)
+        self.floating_center_layout.addWidget(self.floating_center_label_x)
+        self.floating_center_layout.addWidget(self.floating_center_input_x)
+        self.floating_center_layout.addWidget(self.floating_center_label_y)
+        self.floating_center_layout.addWidget(self.floating_center_input_y)
+        self.floating_center_layout.addWidget(self.floating_center_label_z)
+        self.floating_center_layout.addWidget(self.floating_center_input_z)
+        self.floating_center_layout.addWidget(self.floating_center_auto)
+
+        self.floating_inertia_layout = QtGui.QHBoxLayout()
+        self.floating_inertia_label = QtGui.QLabel(__("Inertia (kg*m<sup>2</sup>): "))
+        self.floating_inertia_label.setToolTip(__("Sets the MK group inertia."))
+        self.floating_inertia_label_x = QtGui.QLabel("X")
+        self.floating_inertia_input_x = QtGui.QLineEdit()
+        self.floating_inertia_label_y = QtGui.QLabel("Y")
+        self.floating_inertia_input_y = QtGui.QLineEdit()
+        self.floating_inertia_label_z = QtGui.QLabel("Z")
+        self.floating_inertia_input_z = QtGui.QLineEdit()
+        self.floating_inertia_auto = QtGui.QCheckBox("Auto ")
+        self.floating_inertia_auto.toggled.connect(self.on_inertia_auto)
+        self.floating_inertia_layout.addWidget(self.floating_inertia_label)
+        self.floating_inertia_layout.addWidget(self.floating_inertia_label_x)
+        self.floating_inertia_layout.addWidget(self.floating_inertia_input_x)
+        self.floating_inertia_layout.addWidget(self.floating_inertia_label_y)
+        self.floating_inertia_layout.addWidget(self.floating_inertia_input_y)
+        self.floating_inertia_layout.addWidget(self.floating_inertia_label_z)
+        self.floating_inertia_layout.addWidget(self.floating_inertia_input_z)
+        self.floating_inertia_layout.addWidget(self.floating_inertia_auto)
+
+        self.floating_velini_layout = QtGui.QHBoxLayout()
+        self.floating_velini_label = QtGui.QLabel(__("Initial linear velocity: "))
+        self.floating_velini_label.setToolTip(__("Sets the MK group initial linear velocity"))
+        self.floating_velini_label_x = QtGui.QLabel("X")
+        self.floating_velini_input_x = QtGui.QLineEdit()
+        self.floating_velini_label_y = QtGui.QLabel("Y")
+        self.floating_velini_input_y = QtGui.QLineEdit()
+        self.floating_velini_label_z = QtGui.QLabel("Z")
+        self.floating_velini_input_z = QtGui.QLineEdit()
+        self.floating_velini_auto = QtGui.QCheckBox("Auto ")
+        self.floating_velini_auto.toggled.connect(self.on_velini_auto)
+        self.floating_velini_layout.addWidget(self.floating_velini_label)
+        self.floating_velini_layout.addWidget(self.floating_velini_label_x)
+        self.floating_velini_layout.addWidget(self.floating_velini_input_x)
+        self.floating_velini_layout.addWidget(self.floating_velini_label_y)
+        self.floating_velini_layout.addWidget(self.floating_velini_input_y)
+        self.floating_velini_layout.addWidget(self.floating_velini_label_z)
+        self.floating_velini_layout.addWidget(self.floating_velini_input_z)
+        self.floating_velini_layout.addWidget(self.floating_velini_auto)
+
+        self.floating_omegaini_layout = QtGui.QHBoxLayout()
+        self.floating_omegaini_label = QtGui.QLabel(__("Initial angular velocity: "))
+        self.floating_omegaini_label.setToolTip(__("Sets the MK group initial angular velocity"))
+        self.floating_omegaini_label_x = QtGui.QLabel("X")
+        self.floating_omegaini_input_x = QtGui.QLineEdit()
+        self.floating_omegaini_label_y = QtGui.QLabel("Y")
+        self.floating_omegaini_input_y = QtGui.QLineEdit()
+        self.floating_omegaini_label_z = QtGui.QLabel("Z")
+        self.floating_omegaini_input_z = QtGui.QLineEdit()
+        self.floating_omegaini_auto = QtGui.QCheckBox("Auto ")
+        self.floating_omegaini_auto.toggled.connect(self.on_omegaini_auto)
+        self.floating_omegaini_layout.addWidget(self.floating_omegaini_label)
+        self.floating_omegaini_layout.addWidget(self.floating_omegaini_label_x)
+        self.floating_omegaini_layout.addWidget(self.floating_omegaini_input_x)
+        self.floating_omegaini_layout.addWidget(self.floating_omegaini_label_y)
+        self.floating_omegaini_layout.addWidget(self.floating_omegaini_input_y)
+        self.floating_omegaini_layout.addWidget(self.floating_omegaini_label_z)
+        self.floating_omegaini_layout.addWidget(self.floating_omegaini_input_z)
+
+        self.floating_omegaini_layout.addWidget(self.floating_omegaini_auto)
+        self.floating_props_layout.addLayout(self.floating_props_massrhop_layout)
+        self.floating_props_layout.addLayout(self.floating_center_layout)
+        self.floating_props_layout.addLayout(self.floating_inertia_layout)
+        self.floating_props_layout.addLayout(self.floating_velini_layout)
+        self.floating_props_layout.addLayout(self.floating_omegaini_layout)
+        self.floating_props_layout.addStretch(1)
+        self.floating_props_group.setLayout(self.floating_props_layout)
+
+        self.buttons_layout = QtGui.QHBoxLayout()
+        self.buttons_layout.addStretch(1)
+        self.buttons_layout.addWidget(self.ok_button)
+        self.buttons_layout.addWidget(self.cancel_button)
+
+        self.floatings_window_layout = QtGui.QVBoxLayout()
+        self.floatings_window_layout.addLayout(self.is_floating_layout)
+        self.floatings_window_layout.addWidget(self.floating_props_group)
+        self.floatings_window_layout.addLayout(self.buttons_layout)
+
+        self.setLayout(self.floatings_window_layout)
+
+        if str(self.target_mk) in self.data['floating_mks'].keys():
+            self.is_floating_selector.setCurrentIndex(0)
+            self.on_floating_change(0)
+            self.floating_props_group.setEnabled(True)
+            self.floating_props_massrhop_selector.setCurrentIndex(self.data['floating_mks'][str(self.target_mk)].mass_density_type)
+            self.floating_props_massrhop_input.setText(str(self.data['floating_mks'][str(self.target_mk)].mass_density_value))
+            if len(self.data['floating_mks'][str(self.target_mk)].gravity_center) == 0:
+                self.floating_center_input_x.setText("0")
+                self.floating_center_input_y.setText("0")
+                self.floating_center_input_z.setText("0")
+            else:
+                self.floating_center_input_x.setText(str(self.data['floating_mks'][str(self.target_mk)].gravity_center[0]))
+                self.floating_center_input_y.setText(str(self.data['floating_mks'][str(self.target_mk)].gravity_center[1]))
+                self.floating_center_input_z.setText(str(self.data['floating_mks'][str(self.target_mk)].gravity_center[2]))
+
+            if len(self.data['floating_mks'][str(self.target_mk)].inertia) == 0:
+                self.floating_inertia_input_x.setText("0")
+                self.floating_inertia_input_y.setText("0")
+                self.floating_inertia_input_z.setText("0")
+            else:
+                self.floating_inertia_input_x.setText(str(self.data['floating_mks'][str(self.target_mk)].inertia[0]))
+                self.floating_inertia_input_y.setText(str(self.data['floating_mks'][str(self.target_mk)].inertia[1]))
+                self.floating_inertia_input_z.setText(str(self.data['floating_mks'][str(self.target_mk)].inertia[2]))
+
+            if len(self.data['floating_mks'][str(self.target_mk)].initial_linear_velocity) == 0:
+                self.floating_velini_input_x.setText("0")
+                self.floating_velini_input_y.setText("0")
+                self.floating_velini_input_z.setText("0")
+            else:
+                self.floating_velini_input_x.setText(
+                    str(self.data['floating_mks'][str(self.target_mk)].initial_linear_velocity[0]))
+                self.floating_velini_input_y.setText(str(self.data['floating_mks'][str(self.target_mk)].initial_linear_velocity[1]))
+                self.floating_velini_input_z.setText(str(self.data['floating_mks'][str(self.target_mk)].initial_linear_velocity[2]))
+
+            if len(self.data['floating_mks'][str(self.target_mk)].initial_angular_velocity) == 0:
+                self.floating_omegaini_input_x.setText("0")
+                self.floating_omegaini_input_y.setText("0")
+                self.floating_omegaini_input_z.setText("0")
+            else:
+                self.floating_omegaini_input_x.setText(
+                    str(self.data['floating_mks'][str(self.target_mk)].initial_angular_velocity[0]))
+                self.floating_omegaini_input_y.setText(str(self.data['floating_mks'][str(self.target_mk)].initial_angular_velocity[1]))
+                self.floating_omegaini_input_z.setText(str(self.data['floating_mks'][str(self.target_mk)].initial_angular_velocity[2]))
+
+            self.floating_center_auto.setCheckState(
+                QtCore.Qt.Checked if len(self.data['floating_mks'][str(self.target_mk)].gravity_center) == 0 else QtCore.Qt.Unchecked
+            )
+            self.floating_inertia_auto.setCheckState(
+                QtCore.Qt.Checked if len(self.data['floating_mks'][str(self.target_mk)].inertia) == 0 else QtCore.Qt.Unchecked
+            )
+            self.floating_velini_auto.setCheckState(
+                QtCore.Qt.Checked if len(self.data['floating_mks'][str(self.target_mk)].initial_linear_velocity) == 0 else QtCore.Qt.Unchecked
+            )
+            self.floating_omegaini_auto.setCheckState(
+                QtCore.Qt.Checked if len(self.data['floating_mks'][str(self.target_mk)].initial_angular_velocity) == 0 else QtCore.Qt.Unchecked
+            )
+        else:
+            self.is_floating_selector.setCurrentIndex(1)
+            self.on_floating_change(1)
+            self.floating_props_group.setEnabled(False)
+            self.is_floating_selector.setCurrentIndex(1)
+            self.floating_props_massrhop_selector.setCurrentIndex(1)
+            self.floating_props_massrhop_input.setText("1000")
+            self.floating_center_input_x.setText("0")
+            self.floating_center_input_y.setText("0")
+            self.floating_center_input_z.setText("0")
+            self.floating_inertia_input_x.setText("0")
+            self.floating_inertia_input_y.setText("0")
+            self.floating_inertia_input_z.setText("0")
+            self.floating_velini_input_x.setText("0")
+            self.floating_velini_input_y.setText("0")
+            self.floating_velini_input_z.setText("0")
+            self.floating_omegaini_input_x.setText("0")
+            self.floating_omegaini_input_y.setText("0")
+            self.floating_omegaini_input_z.setText("0")
+
+            self.floating_center_auto.setCheckState(QtCore.Qt.Checked)
+            self.floating_inertia_auto.setCheckState(QtCore.Qt.Checked)
+            self.floating_velini_auto.setCheckState(QtCore.Qt.Checked)
+            self.floating_omegaini_auto.setCheckState(QtCore.Qt.Checked)
+
+        self.exec_()
+
+    def on_ok(self):
+        guiutils.info_dialog(
+            __("This will apply the floating properties to all objects with mkbound = ") + str(self.target_mk))
+        if self.is_floating_selector.currentIndex() == 1:
+            # Floating false
+            if str(self.target_mk) in self.data['floating_mks'].keys():
+                self.data['floating_mks'].pop(str(self.target_mk), None)
+        else:
+            # Floating true
+            # Structure: 'mk': [massrhop, center, inertia, velini, omegaini]
+            # Structure: 'mk': FloatProperty
+            fp = FloatProperty()  # FloatProperty to be inserted
+            fp.mk = self.target_mk
+            fp.mass_density_type = self.floating_props_massrhop_selector.currentIndex()
+            fp.mass_density_value = float(self.floating_props_massrhop_input.text())
+
+            if self.floating_center_auto.isChecked():
+                fp.gravity_center = list()
+            else:
+                fp.gravity_center = [
+                    float(self.floating_center_input_x.text()),
+                    float(self.floating_center_input_y.text()),
+                    float(self.floating_center_input_z.text())
+                ]
+
+            if self.floating_center_auto.isChecked():
+                fp.gravity_center = list()
+            else:
+                fp.gravity_center = [
+                    float(self.floating_center_input_x.text()),
+                    float(self.floating_center_input_y.text()),
+                    float(self.floating_center_input_z.text())
+                ]
+
+            if self.floating_inertia_auto.isChecked():
+                fp.inertia = list()
+            else:
+                fp.inertia = [
+                    float(self.floating_inertia_input_x.text()),
+                    float(self.floating_inertia_input_y.text()),
+                    float(self.floating_inertia_input_z.text())
+                ]
+
+            if self.floating_velini_auto.isChecked():
+                fp.initial_linear_velocity = list()
+            else:
+                fp.initial_linear_velocity = [
+                    float(self.floating_velini_input_x.text()),
+                    float(self.floating_velini_input_y.text()),
+                    float(self.floating_velini_input_z.text())
+                ]
+
+            if self.floating_omegaini_auto.isChecked():
+                fp.initial_angular_velocity = list()
+            else:
+                fp.initial_angular_velocity = [
+                    float(self.floating_omegaini_input_x.text()),
+                    float(self.floating_omegaini_input_y.text()),
+                    float(self.floating_omegaini_input_z.text())
+                ]
+
+            self.data['floating_mks'][str(self.target_mk)] = fp
+
+        self.accept()
+
+    def on_cancel(self):
+        self.reject()
+
+    def on_floating_change(self, index):
+        if index == 0:
+            self.floating_props_group.setEnabled(True)
+        else:
+            self.floating_props_group.setEnabled(False)
+
+    def on_massrhop_change(self, index):
+        if index == 0:
+            self.floating_props_massrhop_input.setText("0.0")
+        else:
+            self.floating_props_massrhop_input.setText("0.0")
+
+    def on_gravity_auto(self):
+        if self.floating_center_auto.isChecked():
+            self.floating_center_input_x.setEnabled(False)
+            self.floating_center_input_y.setEnabled(False)
+            self.floating_center_input_z.setEnabled(False)
+        else:
+            self.floating_center_input_x.setEnabled(True)
+            self.floating_center_input_y.setEnabled(True)
+            self.floating_center_input_z.setEnabled(True)
+
+    def on_inertia_auto(self):
+        if self.floating_inertia_auto.isChecked():
+            self.floating_inertia_input_x.setEnabled(False)
+            self.floating_inertia_input_y.setEnabled(False)
+            self.floating_inertia_input_z.setEnabled(False)
+        else:
+            self.floating_inertia_input_x.setEnabled(True)
+            self.floating_inertia_input_y.setEnabled(True)
+            self.floating_inertia_input_z.setEnabled(True)
+
+    def on_velini_auto(self):
+        if self.floating_velini_auto.isChecked():
+            self.floating_velini_input_x.setEnabled(False)
+            self.floating_velini_input_y.setEnabled(False)
+            self.floating_velini_input_z.setEnabled(False)
+        else:
+            self.floating_velini_input_x.setEnabled(True)
+            self.floating_velini_input_y.setEnabled(True)
+            self.floating_velini_input_z.setEnabled(True)
+
+    def on_omegaini_auto(self):
+        if self.floating_omegaini_auto.isChecked():
+            self.floating_omegaini_input_x.setEnabled(False)
+            self.floating_omegaini_input_y.setEnabled(False)
+            self.floating_omegaini_input_z.setEnabled(False)
+        else:
+            self.floating_omegaini_input_x.setEnabled(True)
+            self.floating_omegaini_input_y.setEnabled(True)
+            self.floating_omegaini_input_z.setEnabled(True)
