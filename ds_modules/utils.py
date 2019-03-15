@@ -344,9 +344,24 @@ def float_list_to_float_property(floating_mks):
                 fp.initial_angular_velocity = value[4][1:]
 
             to_ret[key] = fp
+
+        # Adds the new element (empty) if not exists
+        elif not value.rotation_restriction:
+            fp = FloatProperty(
+                mk=float(key),
+                mass_density_type=value.mass_density_type,
+                mass_density_value=value.mass_density_value,
+                gravity_center=value.gravity_center,
+                inertia=value.inertia,
+                initial_linear_velocity=value.initial_linear_velocity,
+                initial_angular_velocity=value.initial_angular_velocity
+            )
+            fp.rotation_restriction = list()
+            to_ret[key] = fp
         else:
             # Is in OOP mode, appending
             to_ret[key] = value
+
     return to_ret
 
 
@@ -1006,6 +1021,14 @@ def dump_to_xml(data, save_name):
                     str(value.initial_angular_velocity[0]) + '" y="' +
                     str(value.initial_angular_velocity[1]) + '" z="' +
                     str(value.initial_angular_velocity[2]) + '" units_comment="rad/s" />\n'
+                )
+            if len(value.rotation_restriction) != 0:
+                f.write(
+                    '\t\t\t\t<rotation x="' +
+                    str(value.rotation_restriction[0]) + '" y="' +
+                    str(value.rotation_restriction[1]) + '" z="' +
+                    str(value.rotation_restriction[2]) + '" comment="Use 0 for rotation restriction in the movement'
+                                                         ' (default=(1,1,1))" />\n'
                 )
             f.write('\t\t\t</floating>\n')
         f.write('\t\t</floatings>\n')

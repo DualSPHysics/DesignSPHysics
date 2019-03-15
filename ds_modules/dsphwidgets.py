@@ -8060,13 +8060,41 @@ class FloatStateDialog(QtGui.QDialog):
         self.floating_omegaini_layout.addWidget(self.floating_omegaini_input_y)
         self.floating_omegaini_layout.addWidget(self.floating_omegaini_label_z)
         self.floating_omegaini_layout.addWidget(self.floating_omegaini_input_z)
-
         self.floating_omegaini_layout.addWidget(self.floating_omegaini_auto)
+
+        self.floating_rotation_layout = QtGui.QHBoxLayout()
+        self.floating_rotation_label = QtGui.QLabel(__("Rotation restriction: "))
+        self.floating_rotation_label.setToolTip(__("Use 0 for rotation restriction in the movement (default=(1,1,1))"))
+        self.floating_rotation_label_x = QtGui.QLabel("X")
+        self.floating_rotation_input_x = QtGui.QComboBox()
+        self.floating_rotation_input_x.insertItems(1, ['0', '1'])
+        self.floating_rotation_label_y = QtGui.QLabel("Y")
+        self.floating_rotation_input_y = QtGui.QComboBox()
+        self.floating_rotation_input_y.insertItems(1, ['0', '1'])
+        self.floating_rotation_label_z = QtGui.QLabel("Z")
+        self.floating_rotation_input_z = QtGui.QComboBox()
+        self.floating_rotation_input_z.insertItems(1, ['0', '1'])
+        self.floating_rotation_auto = QtGui.QCheckBox("Auto ")
+        self.floating_rotation_auto.toggled.connect(self.on_rotation_auto)
+        self.floating_rotation_layout.addWidget(self.floating_rotation_label)
+        self.floating_rotation_layout.addStretch(1)
+        self.floating_rotation_layout.addWidget(self.floating_rotation_label_x)
+        self.floating_rotation_layout.addWidget(self.floating_rotation_input_x)
+        self.floating_rotation_layout.addStretch(1)
+        self.floating_rotation_layout.addWidget(self.floating_rotation_label_y)
+        self.floating_rotation_layout.addWidget(self.floating_rotation_input_y)
+        self.floating_rotation_layout.addStretch(1)
+        self.floating_rotation_layout.addWidget(self.floating_rotation_label_z)
+        self.floating_rotation_layout.addWidget(self.floating_rotation_input_z)
+        self.floating_rotation_layout.addStretch(1)
+        self.floating_rotation_layout.addWidget(self.floating_rotation_auto)
+
         self.floating_props_layout.addLayout(self.floating_props_massrhop_layout)
         self.floating_props_layout.addLayout(self.floating_center_layout)
         self.floating_props_layout.addLayout(self.floating_inertia_layout)
         self.floating_props_layout.addLayout(self.floating_velini_layout)
         self.floating_props_layout.addLayout(self.floating_omegaini_layout)
+        self.floating_props_layout.addLayout(self.floating_rotation_layout)
         self.floating_props_layout.addStretch(1)
         self.floating_props_group.setLayout(self.floating_props_layout)
 
@@ -8126,6 +8154,18 @@ class FloatStateDialog(QtGui.QDialog):
                 self.floating_omegaini_input_y.setText(str(self.data['floating_mks'][str(self.target_mk)].initial_angular_velocity[1]))
                 self.floating_omegaini_input_z.setText(str(self.data['floating_mks'][str(self.target_mk)].initial_angular_velocity[2]))
 
+            if len(self.data['floating_mks'][str(self.target_mk)].rotation_restriction) == 0:
+                self.floating_rotation_input_x.setCurrentIndex(1)
+                self.floating_rotation_input_y.setCurrentIndex(1)
+                self.floating_rotation_input_z.setCurrentIndex(1)
+            else:
+                self.floating_rotation_input_x.setCurrentIndex(
+                    self.data['floating_mks'][str(self.target_mk)].rotation_restriction[0])
+                self.floating_rotation_input_y.setCurrentIndex(
+                    self.data['floating_mks'][str(self.target_mk)].rotation_restriction[1])
+                self.floating_rotation_input_z.setCurrentIndex(
+                    self.data['floating_mks'][str(self.target_mk)].rotation_restriction[2])
+
             self.floating_center_auto.setCheckState(
                 QtCore.Qt.Checked if len(self.data['floating_mks'][str(self.target_mk)].gravity_center) == 0 else QtCore.Qt.Unchecked
             )
@@ -8137,6 +8177,10 @@ class FloatStateDialog(QtGui.QDialog):
             )
             self.floating_omegaini_auto.setCheckState(
                 QtCore.Qt.Checked if len(self.data['floating_mks'][str(self.target_mk)].initial_angular_velocity) == 0 else QtCore.Qt.Unchecked
+            )
+            self.floating_rotation_auto.setCheckState(
+                QtCore.Qt.Checked if len(self.data['floating_mks'][str(
+                    self.target_mk)].rotation_restriction) == 0 else QtCore.Qt.Unchecked
             )
         else:
             self.is_floating_selector.setCurrentIndex(1)
@@ -8157,11 +8201,15 @@ class FloatStateDialog(QtGui.QDialog):
             self.floating_omegaini_input_x.setText("0")
             self.floating_omegaini_input_y.setText("0")
             self.floating_omegaini_input_z.setText("0")
+            self.floating_rotation_input_x.setCurrentIndex(1)
+            self.floating_rotation_input_y.setCurrentIndex(1)
+            self.floating_rotation_input_z.setCurrentIndex(1)
 
             self.floating_center_auto.setCheckState(QtCore.Qt.Checked)
             self.floating_inertia_auto.setCheckState(QtCore.Qt.Checked)
             self.floating_velini_auto.setCheckState(QtCore.Qt.Checked)
             self.floating_omegaini_auto.setCheckState(QtCore.Qt.Checked)
+            self.floating_rotation_auto.setCheckState(QtCore.Qt.Checked)
 
         self.exec_()
 
@@ -8226,6 +8274,15 @@ class FloatStateDialog(QtGui.QDialog):
                     float(self.floating_omegaini_input_z.text())
                 ]
 
+            if self.floating_rotation_auto.isChecked():
+                fp.rotation_restriction = list()
+            else:
+                fp.rotation_restriction = [
+                    int(self.floating_rotation_input_x.currentIndex()),
+                    int(self.floating_rotation_input_y.currentIndex()),
+                    int(self.floating_rotation_input_z.currentIndex())
+                ]
+
             self.data['floating_mks'][str(self.target_mk)] = fp
 
         self.accept()
@@ -8284,3 +8341,13 @@ class FloatStateDialog(QtGui.QDialog):
             self.floating_omegaini_input_x.setEnabled(True)
             self.floating_omegaini_input_y.setEnabled(True)
             self.floating_omegaini_input_z.setEnabled(True)
+
+    def on_rotation_auto(self):
+        if self.floating_rotation_auto.isChecked():
+            self.floating_rotation_input_x.setEnabled(False)
+            self.floating_rotation_input_y.setEnabled(False)
+            self.floating_rotation_input_z.setEnabled(False)
+        else:
+            self.floating_rotation_input_x.setEnabled(True)
+            self.floating_rotation_input_y.setEnabled(True)
+            self.floating_rotation_input_z.setEnabled(True)
