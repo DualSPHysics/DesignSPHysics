@@ -7,7 +7,7 @@
     <bookmark url="file://$PROJECT_DIR$/DesignSPHysics.py" line="3288" mnemonic="3" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="22d76f4b-310a-4afb-8788-a472c77b2c87" name="Default" comment="Develop Coupling CHRONO">
+    <list default="true" id="22d76f4b-310a-4afb-8788-a472c77b2c87" name="Default" comment="Added rotation restriction to &quot;Float state&quot; option">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/DesignSPHysics.py" beforeDir="false" afterPath="$PROJECT_DIR$/DesignSPHysics.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/ds_modules/dsphwidgets.py" beforeDir="false" afterPath="$PROJECT_DIR$/ds_modules/dsphwidgets.py" afterDir="false" />
@@ -55,14 +55,14 @@
       </usages-collector>
       <usages-collector id="statistics.file.types.edit">
         <counts>
-          <entry key="PLAIN_TEXT" value="2" />
-          <entry key="Python" value="3859" />
+          <entry key="PLAIN_TEXT" value="18" />
+          <entry key="Python" value="4097" />
         </counts>
       </usages-collector>
       <usages-collector id="statistics.file.types.open">
         <counts>
           <entry key="JSON" value="1" />
-          <entry key="Python" value="5" />
+          <entry key="Python" value="6" />
         </counts>
       </usages-collector>
     </session>
@@ -75,8 +75,8 @@
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/ds_modules/dsphwidgets.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="362">
-              <caret line="8276" column="55" selection-start-line="8276" selection-start-column="55" selection-end-line="8276" selection-end-column="55" />
+            <state relative-caret-position="450">
+              <caret line="8328" column="74" lean-forward="true" selection-start-line="8328" selection-start-column="74" selection-end-line="8328" selection-end-column="74" />
               <folding>
                 <element signature="e#273#287#0" expanded="true" />
                 <element signature="e#1422#2791#0" />
@@ -132,7 +132,7 @@
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/DesignSPHysics.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="12240">
+            <state relative-caret-position="239">
               <caret line="733" column="33" selection-start-line="733" selection-start-column="33" selection-end-line="733" selection-end-column="33" />
               <folding>
                 <element signature="e#286#300#0" expanded="true" />
@@ -150,8 +150,8 @@
       <file pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/ds_modules/utils.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="107">
-              <caret line="1004" column="24" lean-forward="true" selection-start-line="1004" selection-start-column="24" selection-end-line="1004" selection-end-column="24" />
+            <state relative-caret-position="382">
+              <caret line="1066" column="17" lean-forward="true" selection-start-line="1066" selection-start-column="17" selection-end-line="1066" selection-end-column="17" />
               <folding>
                 <element signature="e#253#267#0" expanded="true" />
               </folding>
@@ -162,8 +162,8 @@
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/ds_modules/properties.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="884">
-              <caret line="52" column="41" selection-start-line="52" selection-start-column="17" selection-end-line="52" selection-end-column="41" />
+            <state relative-caret-position="562">
+              <caret line="60" column="60" selection-start-line="60" selection-start-column="38" selection-end-line="60" selection-end-column="60" />
             </state>
           </provider>
         </entry>
@@ -171,7 +171,7 @@
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/ds_modules/guiutils.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="2091">
+            <state relative-caret-position="17">
               <caret line="175" column="60" selection-start-line="175" selection-start-column="42" selection-end-line="175" selection-end-column="60" />
               <folding>
                 <element signature="e#163#177#0" expanded="true" />
@@ -315,8 +315,8 @@
         <option value="$PROJECT_DIR$/default-config.json" />
         <option value="$PROJECT_DIR$/DesignSPHysics.py" />
         <option value="$PROJECT_DIR$/ds_modules/properties.py" />
-        <option value="$PROJECT_DIR$/ds_modules/utils.py" />
         <option value="$PROJECT_DIR$/ds_modules/dsphwidgets.py" />
+        <option value="$PROJECT_DIR$/ds_modules/utils.py" />
       </list>
     </option>
   </component>
@@ -569,13 +569,6 @@
       <workItem from="1551182394901" duration="907000" />
       <workItem from="1551183318097" duration="833000" />
       <workItem from="1551184270278" duration="946000" />
-    </task>
-    <task id="LOCAL-00043" summary="Fixes FlowTool point order and changes the reference image">
-      <created>1527581388146</created>
-      <option name="number" value="00043" />
-      <option name="presentableId" value="LOCAL-00043" />
-      <option name="project" value="LOCAL" />
-      <updated>1527581388146</updated>
     </task>
     <task id="LOCAL-00044" summary="Removes space restrictions on save path&#10;&#10;DualSPHysics now supports paths with spaces on it, so there's no&#10;need to keep DesignSPHysics forcing the users to save in a folder which&#10;path contains no spaces.&#10;&#10;Fixes #18">
       <created>1527582458791</created>
@@ -913,7 +906,14 @@
       <option name="project" value="LOCAL" />
       <updated>1552415063641</updated>
     </task>
-    <option name="localTasksCounter" value="92" />
+    <task id="LOCAL-00092" summary="Added rotation restriction to &quot;Float state&quot; option">
+      <created>1552649354509</created>
+      <option name="number" value="00092" />
+      <option name="presentableId" value="LOCAL-00092" />
+      <option name="project" value="LOCAL" />
+      <updated>1552649354510</updated>
+    </task>
+    <option name="localTasksCounter" value="93" />
     <servers />
   </component>
   <component name="TimeTrackingManager">
@@ -932,7 +932,7 @@
     <frame x="1166" y="0" width="1392" height="1047" extended-state="0" />
     <editor active="true" />
     <layout>
-      <window_info content_ui="combo" id="Project" order="0" sideWeight="0.4993498" visible="true" weight="0.18693693" />
+      <window_info active="true" content_ui="combo" id="Project" order="0" sideWeight="0.4993498" visible="true" weight="0.18693693" />
       <window_info id="Structure" order="1" sideWeight="0.50200266" side_tool="true" weight="0.13036565" />
       <window_info id="Favorites" order="2" sideWeight="0.50065017" side_tool="true" weight="0.10771065" />
       <window_info x="2363" y="239" width="619" height="687" id="Notes" order="3" weight="0.30063966" />
@@ -948,7 +948,7 @@
       <window_info anchor="bottom" id="Messages" order="9" />
       <window_info anchor="bottom" id="Python Console" order="10" sideWeight="0.487988" weight="0.15224534" />
       <window_info anchor="bottom" id="Database Changes" order="11" show_stripe_button="false" />
-      <window_info active="true" anchor="bottom" id="Terminal" order="12" sideWeight="0.48273274" visible="true" weight="0.15991238" />
+      <window_info anchor="bottom" id="Terminal" order="12" sideWeight="0.48273274" visible="true" weight="0.15991238" />
       <window_info anchor="bottom" id="Version Control" order="13" sideWeight="0.48584202" weight="0.1619256" />
       <window_info anchor="bottom" id="Inspection Results" order="14" weight="0.32935324" />
       <window_info anchor="right" x="0" y="0" width="590" height="880" id="Documentation" order="0" side_tool="true" weight="0.32962227" />
@@ -997,7 +997,6 @@
   </component>
   <component name="VcsManagerConfiguration">
     <option name="RELOAD_CONTEXT" value="false" />
-    <MESSAGE value="Implemented basic functionality for external waves (SWASH)" />
     <MESSAGE value="Relaxation Zone with external data now copies the velocity files to the&#10;out folder and changes its path to a relative one." />
     <MESSAGE value="Commenting and refactor pass." />
     <MESSAGE value="Adds DualSPHysics executables in a new directory" />
@@ -1022,7 +1021,8 @@
     <MESSAGE value="Refactorizes RunDialog to be a new class&#10;&#10;Resized &quot;details&quot; box.&#10;Updated binaries." />
     <MESSAGE value="Relocated the button &quot;Run GenCase&quot;&#10;&#10;Starting develop Coupling CHRONO" />
     <MESSAGE value="Develop Coupling CHRONO" />
-    <option name="LAST_COMMIT_MESSAGE" value="Develop Coupling CHRONO" />
+    <MESSAGE value="Added rotation restriction to &quot;Float state&quot; option" />
+    <option name="LAST_COMMIT_MESSAGE" value="Added rotation restriction to &quot;Float state&quot; option" />
   </component>
   <component name="editorHistoryManager">
     <entry file="file://$USER_HOME$/.PyCharm2018.2/system/python_stubs/703128353/PySide/QtCore/Qt.py">
@@ -1253,10 +1253,51 @@
     <entry file="file://$PROJECT_DIR$/ds_modules/__init__.py">
       <provider selected="true" editor-type-id="text-editor" />
     </entry>
+    <entry file="file://$PROJECT_DIR$/ds_modules/guiutils.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="17">
+          <caret line="175" column="60" selection-start-line="175" selection-start-column="42" selection-end-line="175" selection-end-column="60" />
+          <folding>
+            <element signature="e#163#177#0" expanded="true" />
+            <element signature="e#1241#1447#0" />
+            <element signature="e#1478#1680#0" />
+            <element signature="e#1738#2080#0" />
+            <element signature="e#2137#2465#0" />
+            <element signature="e#2520#2844#0" />
+            <element signature="e#2886#3319#0" />
+            <element signature="e#3375#3804#0" />
+            <element signature="e#3837#3911#0" />
+            <element signature="e#26723#27920#0" />
+            <element signature="e#27960#29093#0" />
+            <element signature="e#29137#29278#0" />
+            <element signature="e#29326#29470#0" />
+            <element signature="e#29511#30034#0" />
+            <element signature="e#30081#30522#0" />
+            <element signature="e#30573#31014#0" />
+            <element signature="e#31063#31664#0" />
+            <element signature="e#31705#32299#0" />
+            <element signature="e#33067#33508#0" />
+            <element signature="e#33549#33690#0" />
+            <element signature="e#33734#34182#0" />
+            <element signature="e#34227#34668#0" />
+            <element signature="e#34715#35156#0" />
+            <element signature="e#41575#45028#0" />
+            <marker date="1546967442798" expanded="true" signature="26521:26524" ph="..." />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/ds_modules/properties.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="562">
+          <caret line="60" column="60" selection-start-line="60" selection-start-column="38" selection-end-line="60" selection-end-column="60" />
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/ds_modules/dsphwidgets.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="362">
-          <caret line="8276" column="55" selection-start-line="8276" selection-start-column="55" selection-end-line="8276" selection-end-column="55" />
+        <state relative-caret-position="450">
+          <caret line="8328" column="74" lean-forward="true" selection-start-line="8328" selection-start-column="74" selection-end-line="8328" selection-end-column="74" />
           <folding>
             <element signature="e#273#287#0" expanded="true" />
             <element signature="e#1422#2791#0" />
@@ -1310,7 +1351,7 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/DesignSPHysics.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="12240">
+        <state relative-caret-position="239">
           <caret line="733" column="33" selection-start-line="733" selection-start-column="33" selection-end-line="733" selection-end-column="33" />
           <folding>
             <element signature="e#286#300#0" expanded="true" />
@@ -1324,51 +1365,10 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/ds_modules/properties.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="884">
-          <caret line="52" column="41" selection-start-line="52" selection-start-column="17" selection-end-line="52" selection-end-column="41" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/ds_modules/guiutils.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="2091">
-          <caret line="175" column="60" selection-start-line="175" selection-start-column="42" selection-end-line="175" selection-end-column="60" />
-          <folding>
-            <element signature="e#163#177#0" expanded="true" />
-            <element signature="e#1241#1447#0" />
-            <element signature="e#1478#1680#0" />
-            <element signature="e#1738#2080#0" />
-            <element signature="e#2137#2465#0" />
-            <element signature="e#2520#2844#0" />
-            <element signature="e#2886#3319#0" />
-            <element signature="e#3375#3804#0" />
-            <element signature="e#3837#3911#0" />
-            <element signature="e#26723#27920#0" />
-            <element signature="e#27960#29093#0" />
-            <element signature="e#29137#29278#0" />
-            <element signature="e#29326#29470#0" />
-            <element signature="e#29511#30034#0" />
-            <element signature="e#30081#30522#0" />
-            <element signature="e#30573#31014#0" />
-            <element signature="e#31063#31664#0" />
-            <element signature="e#31705#32299#0" />
-            <element signature="e#33067#33508#0" />
-            <element signature="e#33549#33690#0" />
-            <element signature="e#33734#34182#0" />
-            <element signature="e#34227#34668#0" />
-            <element signature="e#34715#35156#0" />
-            <element signature="e#41575#45028#0" />
-            <marker date="1546967442798" expanded="true" signature="26521:26524" ph="..." />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/ds_modules/utils.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="107">
-          <caret line="1004" column="24" lean-forward="true" selection-start-line="1004" selection-start-column="24" selection-end-line="1004" selection-end-column="24" />
+        <state relative-caret-position="382">
+          <caret line="1066" column="17" lean-forward="true" selection-start-line="1066" selection-start-column="17" selection-end-line="1066" selection-end-column="17" />
           <folding>
             <element signature="e#253#267#0" expanded="true" />
           </folding>

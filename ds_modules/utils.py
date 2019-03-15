@@ -346,7 +346,7 @@ def float_list_to_float_property(floating_mks):
             to_ret[key] = fp
 
         # Adds the new element (empty) if not exists
-        elif not value.rotation_restriction:
+        elif not (value.rotation_restriction and value.translation_restriction):
             fp = FloatProperty(
                 mk=float(key),
                 mass_density_type=value.mass_density_type,
@@ -355,6 +355,33 @@ def float_list_to_float_property(floating_mks):
                 inertia=value.inertia,
                 initial_linear_velocity=value.initial_linear_velocity,
                 initial_angular_velocity=value.initial_angular_velocity
+            )
+            fp.rotation_restriction = list()
+            fp.translation_restriction = list()
+            to_ret[key] = fp
+        elif not value.translation_restriction:
+            fp = FloatProperty(
+                mk=float(key),
+                mass_density_type=value.mass_density_type,
+                mass_density_value=value.mass_density_value,
+                gravity_center=value.gravity_center,
+                inertia=value.inertia,
+                initial_linear_velocity=value.initial_linear_velocity,
+                initial_angular_velocity=value.initial_angular_velocity,
+                rotation_restriction=value.rotation_restriction
+            )
+            fp.translation_restriction = list()
+            to_ret[key] = fp
+        elif not value.rotation_restriction:
+            fp = FloatProperty(
+                mk=float(key),
+                mass_density_type=value.mass_density_type,
+                mass_density_value=value.mass_density_value,
+                gravity_center=value.gravity_center,
+                inertia=value.inertia,
+                initial_linear_velocity=value.initial_linear_velocity,
+                initial_angular_velocity=value.initial_angular_velocity,
+                translation_restriction=value.translation_restriction
             )
             fp.rotation_restriction = list()
             to_ret[key] = fp
@@ -1021,6 +1048,14 @@ def dump_to_xml(data, save_name):
                     str(value.initial_angular_velocity[0]) + '" y="' +
                     str(value.initial_angular_velocity[1]) + '" z="' +
                     str(value.initial_angular_velocity[2]) + '" units_comment="rad/s" />\n'
+                )
+            if len(value.translation_restriction) != 0:
+                f.write(
+                    '\t\t\t\t<translation x="' +
+                    str(value.translation_restriction[0]) + '" y="' +
+                    str(value.translation_restriction[1]) + '" z="' +
+                    str(value.translation_restriction[2]) + '" comment="Use 0 for translation restriction in the movement '
+                                                           '(default=(1,1,1))" />\n'
                 )
             if len(value.rotation_restriction) != 0:
                 f.write(

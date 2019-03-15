@@ -8062,6 +8062,33 @@ class FloatStateDialog(QtGui.QDialog):
         self.floating_omegaini_layout.addWidget(self.floating_omegaini_input_z)
         self.floating_omegaini_layout.addWidget(self.floating_omegaini_auto)
 
+        self.floating_translation_layout = QtGui.QHBoxLayout()
+        self.floating_translation_label = QtGui.QLabel(__("Traslation restriction: "))
+        self.floating_translation_label.setToolTip(__("Use 0 for translation restriction in the movement (default=(1,1,1))"))
+        self.floating_translation_label_x = QtGui.QLabel("X")
+        self.floating_translation_input_x = QtGui.QComboBox()
+        self.floating_translation_input_x.insertItems(1, ['0', '1'])
+        self.floating_translation_label_y = QtGui.QLabel("Y")
+        self.floating_translation_input_y = QtGui.QComboBox()
+        self.floating_translation_input_y.insertItems(1, ['0', '1'])
+        self.floating_translation_label_z = QtGui.QLabel("Z")
+        self.floating_translation_input_z = QtGui.QComboBox()
+        self.floating_translation_input_z.insertItems(1, ['0', '1'])
+        self.floating_translation_auto = QtGui.QCheckBox("Auto ")
+        self.floating_translation_auto.toggled.connect(self.on_translation_auto)
+        self.floating_translation_layout.addWidget(self.floating_translation_label)
+        self.floating_translation_layout.addStretch(1)
+        self.floating_translation_layout.addWidget(self.floating_translation_label_x)
+        self.floating_translation_layout.addWidget(self.floating_translation_input_x)
+        self.floating_translation_layout.addStretch(1)
+        self.floating_translation_layout.addWidget(self.floating_translation_label_y)
+        self.floating_translation_layout.addWidget(self.floating_translation_input_y)
+        self.floating_translation_layout.addStretch(1)
+        self.floating_translation_layout.addWidget(self.floating_translation_label_z)
+        self.floating_translation_layout.addWidget(self.floating_translation_input_z)
+        self.floating_translation_layout.addStretch(1)
+        self.floating_translation_layout.addWidget(self.floating_translation_auto)
+
         self.floating_rotation_layout = QtGui.QHBoxLayout()
         self.floating_rotation_label = QtGui.QLabel(__("Rotation restriction: "))
         self.floating_rotation_label.setToolTip(__("Use 0 for rotation restriction in the movement (default=(1,1,1))"))
@@ -8095,6 +8122,7 @@ class FloatStateDialog(QtGui.QDialog):
         self.floating_props_layout.addLayout(self.floating_velini_layout)
         self.floating_props_layout.addLayout(self.floating_omegaini_layout)
         self.floating_props_layout.addLayout(self.floating_rotation_layout)
+        self.floating_props_layout.addLayout(self.floating_translation_layout)
         self.floating_props_layout.addStretch(1)
         self.floating_props_group.setLayout(self.floating_props_layout)
 
@@ -8154,6 +8182,18 @@ class FloatStateDialog(QtGui.QDialog):
                 self.floating_omegaini_input_y.setText(str(self.data['floating_mks'][str(self.target_mk)].initial_angular_velocity[1]))
                 self.floating_omegaini_input_z.setText(str(self.data['floating_mks'][str(self.target_mk)].initial_angular_velocity[2]))
 
+            if len(self.data['floating_mks'][str(self.target_mk)].translation_restriction) == 0:
+                self.floating_translation_input_x.setCurrentIndex(1)
+                self.floating_translation_input_y.setCurrentIndex(1)
+                self.floating_translation_input_z.setCurrentIndex(1)
+            else:
+                self.floating_translation_input_x.setCurrentIndex(
+                    self.data['floating_mks'][str(self.target_mk)].translation_restriction[0])
+                self.floating_translation_input_y.setCurrentIndex(
+                    self.data['floating_mks'][str(self.target_mk)].translation_restriction[1])
+                self.floating_translation_input_z.setCurrentIndex(
+                    self.data['floating_mks'][str(self.target_mk)].translation_restriction[2])
+
             if len(self.data['floating_mks'][str(self.target_mk)].rotation_restriction) == 0:
                 self.floating_rotation_input_x.setCurrentIndex(1)
                 self.floating_rotation_input_y.setCurrentIndex(1)
@@ -8178,6 +8218,10 @@ class FloatStateDialog(QtGui.QDialog):
             self.floating_omegaini_auto.setCheckState(
                 QtCore.Qt.Checked if len(self.data['floating_mks'][str(self.target_mk)].initial_angular_velocity) == 0 else QtCore.Qt.Unchecked
             )
+            self.floating_translation_auto.setCheckState(
+                QtCore.Qt.Checked if len(self.data['floating_mks'][str(
+                    self.target_mk)].translation_restriction) == 0 else QtCore.Qt.Unchecked
+            )
             self.floating_rotation_auto.setCheckState(
                 QtCore.Qt.Checked if len(self.data['floating_mks'][str(
                     self.target_mk)].rotation_restriction) == 0 else QtCore.Qt.Unchecked
@@ -8201,6 +8245,9 @@ class FloatStateDialog(QtGui.QDialog):
             self.floating_omegaini_input_x.setText("0")
             self.floating_omegaini_input_y.setText("0")
             self.floating_omegaini_input_z.setText("0")
+            self.floating_translation_input_x.setCurrentIndex(1)
+            self.floating_translation_input_y.setCurrentIndex(1)
+            self.floating_translation_input_z.setCurrentIndex(1)
             self.floating_rotation_input_x.setCurrentIndex(1)
             self.floating_rotation_input_y.setCurrentIndex(1)
             self.floating_rotation_input_z.setCurrentIndex(1)
@@ -8274,6 +8321,15 @@ class FloatStateDialog(QtGui.QDialog):
                     float(self.floating_omegaini_input_z.text())
                 ]
 
+            if self.floating_translation_auto.isChecked():
+                fp.translation_restriction = list()
+            else:
+                fp.translation_restriction = [
+                    int(self.floating_translation_input_x.currentIndex()),
+                    int(self.floating_translation_input_y.currentIndex()),
+                    int(self.floating_translation_input_z.currentIndex())
+                ]
+
             if self.floating_rotation_auto.isChecked():
                 fp.rotation_restriction = list()
             else:
@@ -8341,6 +8397,16 @@ class FloatStateDialog(QtGui.QDialog):
             self.floating_omegaini_input_x.setEnabled(True)
             self.floating_omegaini_input_y.setEnabled(True)
             self.floating_omegaini_input_z.setEnabled(True)
+
+    def on_translation_auto(self):
+        if self.floating_translation_auto.isChecked():
+            self.floating_translation_input_x.setEnabled(False)
+            self.floating_translation_input_y.setEnabled(False)
+            self.floating_translation_input_z.setEnabled(False)
+        else:
+            self.floating_translation_input_x.setEnabled(True)
+            self.floating_translation_input_y.setEnabled(True)
+            self.floating_translation_input_z.setEnabled(True)
 
     def on_rotation_auto(self):
         if self.floating_rotation_auto.isChecked():

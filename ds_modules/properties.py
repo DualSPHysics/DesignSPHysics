@@ -50,7 +50,7 @@ class FloatProperty(object):
 
     def __init__(self, mk=-1, mass_density_type=0, mass_density_value=100,
                  gravity_center=list(), inertia=list(), initial_linear_velocity=list(),
-                 initial_angular_velocity=list(), rotation_restriction=list()):
+                 initial_angular_velocity=list(), traslation_restriction=list(), rotation_restriction=list()):
         self.mk = mk
         self.mass_density_type = mass_density_type
         self.mass_density_value = mass_density_value
@@ -58,6 +58,7 @@ class FloatProperty(object):
         self.inertia = inertia
         self.initial_linear_velocity = initial_linear_velocity
         self.initial_angular_velocity = initial_angular_velocity
+        self.traslation_restriction = traslation_restriction
         self.rotation_restriction = rotation_restriction
 
 
