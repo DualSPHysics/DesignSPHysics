@@ -346,33 +346,22 @@ def float_list_to_float_property(floating_mks):
             to_ret[key] = fp
 
         # Adds the new element (empty) if not exists
-        elif not (value.rotation_restriction and value.translation_restriction):
-            fp = FloatProperty(
-                mk=float(key),
-                mass_density_type=value.mass_density_type,
-                mass_density_value=value.mass_density_value,
-                gravity_center=value.gravity_center,
-                inertia=value.inertia,
-                initial_linear_velocity=value.initial_linear_velocity,
-                initial_angular_velocity=value.initial_angular_velocity
-            )
-            fp.rotation_restriction = list()
-            fp.translation_restriction = list()
-            to_ret[key] = fp
-        elif not value.translation_restriction:
-            fp = FloatProperty(
-                mk=float(key),
-                mass_density_type=value.mass_density_type,
-                mass_density_value=value.mass_density_value,
-                gravity_center=value.gravity_center,
-                inertia=value.inertia,
-                initial_linear_velocity=value.initial_linear_velocity,
-                initial_angular_velocity=value.initial_angular_velocity,
-                rotation_restriction=value.rotation_restriction
-            )
-            fp.translation_restriction = list()
-            to_ret[key] = fp
-        elif not value.rotation_restriction:
+        elif isinstance(value, object):
+            try:
+                translation = value.translation_restriction
+            except AttributeError:
+                translation = list()
+
+            try:
+                rotation = value.rotation_restriction
+            except AttributeError:
+                rotation = list()
+
+            try:
+                material = value.material
+            except AttributeError:
+                material = ""
+
             fp = FloatProperty(
                 mk=float(key),
                 mass_density_type=value.mass_density_type,
@@ -381,10 +370,13 @@ def float_list_to_float_property(floating_mks):
                 inertia=value.inertia,
                 initial_linear_velocity=value.initial_linear_velocity,
                 initial_angular_velocity=value.initial_angular_velocity,
-                translation_restriction=value.translation_restriction
+                translation_restriction=translation,
+                rotation_restriction=rotation,
+                material=material
             )
-            fp.rotation_restriction = list()
+
             to_ret[key] = fp
+
         else:
             # Is in OOP mode, appending
             to_ret[key] = value
@@ -1064,6 +1056,10 @@ def dump_to_xml(data, save_name):
                     str(value.rotation_restriction[1]) + '" z="' +
                     str(value.rotation_restriction[2]) + '" comment="Use 0 for rotation restriction in the movement'
                                                          ' (default=(1,1,1))" />\n'
+                )
+            if value.material != "":
+                f.write(
+                    '\t\t\t\t<material name="' + str(value.material) + '"/>\n'
                 )
             f.write('\t\t\t</floating>\n')
         f.write('\t\t</floatings>\n')
