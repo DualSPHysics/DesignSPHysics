@@ -8116,6 +8116,17 @@ class FloatStateDialog(QtGui.QDialog):
         self.floating_rotation_layout.addStretch(1)
         self.floating_rotation_layout.addWidget(self.floating_rotation_auto)
 
+        self.floating_material_layout = QtGui.QHBoxLayout()
+        self.floating_material_label = QtGui.QLabel(__("Material: "))
+        #self.floating_material_label.setToolTip(__(""))
+        self.floating_material_line_edit = QtGui.QLineEdit()
+        self.floating_material_auto = QtGui.QCheckBox("Auto ")
+        self.floating_material_auto.toggled.connect(self.on_material_auto)
+        self.floating_material_layout.addWidget(self.floating_material_label)
+        self.floating_material_layout.addWidget(self.floating_material_line_edit)
+        self.floating_material_layout.addStretch(1)
+        self.floating_material_layout.addWidget(self.floating_material_auto)
+
         self.floating_props_layout.addLayout(self.floating_props_massrhop_layout)
         self.floating_props_layout.addLayout(self.floating_center_layout)
         self.floating_props_layout.addLayout(self.floating_inertia_layout)
@@ -8123,6 +8134,7 @@ class FloatStateDialog(QtGui.QDialog):
         self.floating_props_layout.addLayout(self.floating_omegaini_layout)
         self.floating_props_layout.addLayout(self.floating_rotation_layout)
         self.floating_props_layout.addLayout(self.floating_translation_layout)
+        self.floating_props_layout.addLayout(self.floating_material_layout)
         self.floating_props_layout.addStretch(1)
         self.floating_props_group.setLayout(self.floating_props_layout)
 
@@ -8206,6 +8218,11 @@ class FloatStateDialog(QtGui.QDialog):
                 self.floating_rotation_input_z.setCurrentIndex(
                     self.data['floating_mks'][str(self.target_mk)].rotation_restriction[2])
 
+            if len(self.data['floating_mks'][str(self.target_mk)].material) == 0:
+                self.floating_material_line_edit.setText("")
+            else:
+                self.floating_material_line_edit.setText(self.data['floating_mks'][str(self.target_mk)].material)
+
             self.floating_center_auto.setCheckState(
                 QtCore.Qt.Checked if len(self.data['floating_mks'][str(self.target_mk)].gravity_center) == 0 else QtCore.Qt.Unchecked
             )
@@ -8225,6 +8242,10 @@ class FloatStateDialog(QtGui.QDialog):
             self.floating_rotation_auto.setCheckState(
                 QtCore.Qt.Checked if len(self.data['floating_mks'][str(
                     self.target_mk)].rotation_restriction) == 0 else QtCore.Qt.Unchecked
+            )
+            self.floating_material_auto.setCheckState(
+                QtCore.Qt.Checked if len(self.data['floating_mks'][str(self.target_mk)].material) == 0 else
+                QtCore.Qt.Unchecked
             )
         else:
             self.is_floating_selector.setCurrentIndex(1)
@@ -8251,12 +8272,15 @@ class FloatStateDialog(QtGui.QDialog):
             self.floating_rotation_input_x.setCurrentIndex(1)
             self.floating_rotation_input_y.setCurrentIndex(1)
             self.floating_rotation_input_z.setCurrentIndex(1)
+            self.floating_material_line_edit.setText("")
 
             self.floating_center_auto.setCheckState(QtCore.Qt.Checked)
             self.floating_inertia_auto.setCheckState(QtCore.Qt.Checked)
             self.floating_velini_auto.setCheckState(QtCore.Qt.Checked)
             self.floating_omegaini_auto.setCheckState(QtCore.Qt.Checked)
+            self.floating_translation_auto.setCheckState(QtCore.Qt.Checked)
             self.floating_rotation_auto.setCheckState(QtCore.Qt.Checked)
+            self.floating_material_auto.setCheckState(QtCore.Qt.Checked)
 
         self.exec_()
 
@@ -8339,6 +8363,11 @@ class FloatStateDialog(QtGui.QDialog):
                     int(self.floating_rotation_input_z.currentIndex())
                 ]
 
+            if self.floating_material_auto.isChecked():
+                fp.material = ""
+            else:
+                fp.material = str(self.floating_material_line_edit.text())
+
             self.data['floating_mks'][str(self.target_mk)] = fp
 
         self.accept()
@@ -8417,3 +8446,9 @@ class FloatStateDialog(QtGui.QDialog):
             self.floating_rotation_input_x.setEnabled(True)
             self.floating_rotation_input_y.setEnabled(True)
             self.floating_rotation_input_z.setEnabled(True)
+
+    def on_material_auto(self):
+        if self.floating_material_auto.isChecked():
+            self.floating_material_line_edit.setEnabled(False)
+        else:
+            self.floating_material_line_edit.setEnabled(True)
