@@ -6906,7 +6906,7 @@ class ChronoConfigDialog(QtGui.QDialog):
 
     def link_hinge_edit(self, link_hinge_id):
         """ Edit a link hinge element """
-        LinkHingeEdit(self.data, link_hinge_id)
+        LinkHingeEdit(self.data, self.temp_data, link_hinge_id)
         self.refresh_link_hinge()
 
     def on_link_linearspring_add(self):
@@ -6929,7 +6929,7 @@ class ChronoConfigDialog(QtGui.QDialog):
 
     def link_linearspring_edit(self, link_linearspring_id):
         """ Edit a link linearspring element """
-        LinkLinearspringEdit(self.data, link_linearspring_id)
+        LinkLinearspringEdit(self.data, self.temp_data, link_linearspring_id)
         self.refresh_link_linearspring()
 
     def on_link_spheric_add(self):
@@ -6951,7 +6951,7 @@ class ChronoConfigDialog(QtGui.QDialog):
 
     def link_spheric_edit(self, link_spheric_id):
         """ Edit a link spheric element """
-        LinkSphericEdit(self.data, link_spheric_id)
+        LinkSphericEdit(self.data, self.temp_data, link_spheric_id)
         self.refresh_link_spheric()
 
     def on_link_pointline_add(self):
@@ -6974,7 +6974,7 @@ class ChronoConfigDialog(QtGui.QDialog):
 
     def link_pointline_edit(self, link_pointline_id):
         """ Edit a link pointline element """
-        LinkPointlineEdit(self.data, link_pointline_id)
+        LinkPointlineEdit(self.data, self.temp_data, link_pointline_id)
         self.refresh_link_pointline()
 
     def on_cancel(self):
@@ -7043,10 +7043,11 @@ class ChronoConfigDialog(QtGui.QDialog):
 class LinkHingeEdit(QtGui.QDialog):
     """ Defines Link hinge window dialog """
 
-    def __init__(self, data, link_hinge_id):
+    def __init__(self, data, temp_data, link_hinge_id):
         super(LinkHingeEdit, self).__init__()
 
         self.data = data
+        self.temp_data = temp_data
         self.link_hinge_id = link_hinge_id
 
         # Title
@@ -7068,9 +7069,17 @@ class LinkHingeEdit(QtGui.QDialog):
         # Elements that interact
         self.body_layout = QtGui.QHBoxLayout()
         self.body_one_label = QtGui.QLabel(__("Body 1: "))
-        self.body_one_line_edit = QtGui.QLineEdit(str(target_link_hinge[1]))
+        self.body_one_line_edit = QtGui.QComboBox()
+        self.body_one_line_edit.insertItems(0, [str(target_link_hinge[1])])
+        for body in self.temp_data:
+            if body.object_check.isChecked() and body.object_name != str(target_link_hinge[1]):
+                self.body_one_line_edit.insertItems(0, [body.object_name])
         self.body_two_label = QtGui.QLabel(__("Body 2: "))
-        self.body_two_line_edit = QtGui.QLineEdit(str(target_link_hinge[2]))
+        self.body_two_line_edit = QtGui.QComboBox()
+        self.body_two_line_edit.insertItems(0, [str(target_link_hinge[2])])
+        for body in self.temp_data:
+            if body.object_check.isChecked() and body.object_name != str(target_link_hinge[2]):
+                self.body_two_line_edit.insertItems(0, [body.object_name])
         self.body_to_body_label = QtGui.QLabel(__("to"))
 
         self.body_layout.addWidget(self.body_one_label)
@@ -7078,6 +7087,7 @@ class LinkHingeEdit(QtGui.QDialog):
         self.body_layout.addWidget(self.body_to_body_label)
         self.body_layout.addWidget(self.body_two_label)
         self.body_layout.addWidget(self.body_two_line_edit)
+        self.body_layout.addStretch(1)
 
         self.link_hinge_edit_layout.addLayout(self.body_layout)
 
@@ -7164,8 +7174,8 @@ class LinkHingeEdit(QtGui.QDialog):
         for link_hinge_value in self.data['link_hinge']:
             count += 1
             if link_hinge_value[0] == self.link_hinge_id:
-                self.data['link_hinge'][count][1] = str(self.body_one_line_edit.text())
-                self.data['link_hinge'][count][2] = str(self.body_two_line_edit.text())
+                self.data['link_hinge'][count][1] = str(self.body_one_line_edit.currentText())
+                self.data['link_hinge'][count][2] = str(self.body_two_line_edit.currentText())
                 self.data['link_hinge'][count][3] = [float(self.rotpoints_x_line_edit.text()),
                                                      float(self.rotpoints_y_line_edit.text()),
                                                      float(self.rotpoints_z_line_edit.text())]
@@ -7188,10 +7198,11 @@ class LinkHingeEdit(QtGui.QDialog):
 class LinkLinearspringEdit(QtGui.QDialog):
     """ Defines Link linearspring window dialog """
 
-    def __init__(self, data, link_linearspring_id):
+    def __init__(self, data, temp_data, link_linearspring_id):
         super(LinkLinearspringEdit, self).__init__()
 
         self.data = data
+        self.temp_data = temp_data
         self.link_linearspring_id = link_linearspring_id
 
         # Title
@@ -7213,9 +7224,17 @@ class LinkLinearspringEdit(QtGui.QDialog):
         # Elements that interact
         self.body_layout = QtGui.QHBoxLayout()
         self.body_one_label = QtGui.QLabel(__("Body 1: "))
-        self.body_one_line_edit = QtGui.QLineEdit(str(target_link_linearspring[1]))
+        self.body_one_line_edit = QtGui.QComboBox()
+        self.body_one_line_edit.insertItems(0, [str(target_link_linearspring[1])])
+        for body in self.temp_data:
+            if body.object_check.isChecked() and body.object_name != str(target_link_linearspring[1]):
+                self.body_one_line_edit.insertItems(0, [body.object_name])
         self.body_two_label = QtGui.QLabel(__("Body 2: "))
-        self.body_two_line_edit = QtGui.QLineEdit(str(target_link_linearspring[2]))
+        self.body_two_line_edit = QtGui.QComboBox()
+        self.body_two_line_edit.insertItems(0, [str(target_link_linearspring[2])])
+        for body in self.temp_data:
+            if body.object_check.isChecked() and body.object_name != str(target_link_linearspring[2]):
+                self.body_two_line_edit.insertItems(0, [body.object_name])
         self.body_to_body_label = QtGui.QLabel(__("to"))
 
         self.body_layout.addWidget(self.body_one_label)
@@ -7223,6 +7242,7 @@ class LinkLinearspringEdit(QtGui.QDialog):
         self.body_layout.addWidget(self.body_to_body_label)
         self.body_layout.addWidget(self.body_two_label)
         self.body_layout.addWidget(self.body_two_line_edit)
+        self.body_layout.addStretch(1)
 
         self.link_linearspring_edit_layout.addLayout(self.body_layout)
 
@@ -7337,8 +7357,8 @@ class LinkLinearspringEdit(QtGui.QDialog):
         for link_linearspring_value in self.data['link_linearspring']:
             count += 1
             if link_linearspring_value[0] == self.link_linearspring_id:
-                self.data['link_linearspring'][count][1] = str(self.body_one_line_edit.text())
-                self.data['link_linearspring'][count][2] = str(self.body_two_line_edit.text())
+                self.data['link_linearspring'][count][1] = str(self.body_one_line_edit.currentText())
+                self.data['link_linearspring'][count][2] = str(self.body_two_line_edit.currentText())
                 self.data['link_linearspring'][count][3] = [float(self.point_b1_x_line_edit.text()),
                                                             float(self.point_b1_y_line_edit.text()),
                                                             float(self.point_b1_z_line_edit.text())]
@@ -7365,10 +7385,11 @@ class LinkLinearspringEdit(QtGui.QDialog):
 class LinkSphericEdit(QtGui.QDialog):
     """ Defines Link spheric window dialog """
 
-    def __init__(self, data, link_spheric_id):
+    def __init__(self, data, temp_data, link_spheric_id):
         super(LinkSphericEdit, self).__init__()
 
         self.data = data
+        self.temp_data = temp_data
         self.link_spheric_id = link_spheric_id
 
         # Title
@@ -7390,9 +7411,25 @@ class LinkSphericEdit(QtGui.QDialog):
         # Elements that interact
         self.body_layout = QtGui.QHBoxLayout()
         self.body_one_label = QtGui.QLabel(__("Body 1: "))
-        self.body_one_line_edit = QtGui.QLineEdit(str(target_link_spheric[1]))
+        self.body_one_line_edit = QtGui.QComboBox()
+        if str(target_link_spheric[1]) != '':
+            self.body_one_line_edit.insertItems(0, ['', str(target_link_spheric[1])])
+            self.body_one_line_edit.setCurrentIndex(1)
+        else:
+            self.body_one_line_edit.insertItems(0, [str(target_link_spheric[1])])
+        for body in self.temp_data:
+            if body.object_check.isChecked() and body.object_name != str(target_link_spheric[1]):
+                self.body_one_line_edit.insertItems(0, [body.object_name])
         self.body_two_label = QtGui.QLabel(__("Body 2: "))
-        self.body_two_line_edit = QtGui.QLineEdit(str(target_link_spheric[2]))
+        self.body_two_line_edit = QtGui.QComboBox()
+        if str(target_link_spheric[2]) != '':
+            self.body_two_line_edit.insertItems(0, ['', str(target_link_spheric[2])])
+            self.body_two_line_edit.setCurrentIndex(1)
+        else:
+            self.body_two_line_edit.insertItems(0, [str(target_link_spheric[2])])
+        for body in self.temp_data:
+            if body.object_check.isChecked() and body.object_name != str(target_link_spheric[2]):
+                self.body_two_line_edit.insertItems(0, [body.object_name])
         self.body_to_body_label = QtGui.QLabel(__("to"))
 
         self.body_layout.addWidget(self.body_one_label)
@@ -7400,6 +7437,7 @@ class LinkSphericEdit(QtGui.QDialog):
         self.body_layout.addWidget(self.body_to_body_label)
         self.body_layout.addWidget(self.body_two_label)
         self.body_layout.addWidget(self.body_two_line_edit)
+        self.body_layout.addStretch(1)
 
         self.link_spheric_edit_layout.addLayout(self.body_layout)
 
@@ -7466,8 +7504,8 @@ class LinkSphericEdit(QtGui.QDialog):
         for link_spheric_value in self.data['link_spheric']:
             count += 1
             if link_spheric_value[0] == self.link_spheric_id:
-                self.data['link_spheric'][count][1] = str(self.body_one_line_edit.text())
-                self.data['link_spheric'][count][2] = str(self.body_two_line_edit.text())
+                self.data['link_spheric'][count][1] = str(self.body_one_line_edit.currentText())
+                self.data['link_spheric'][count][2] = str(self.body_two_line_edit.currentText())
                 self.data['link_spheric'][count][3] = [float(self.point_x_line_edit.text()),
                                                        float(self.point_y_line_edit.text()),
                                                        float(self.point_z_line_edit.text())]
@@ -7487,10 +7525,11 @@ class LinkSphericEdit(QtGui.QDialog):
 class LinkPointlineEdit(QtGui.QDialog):
     """ Defines Link pontline window dialog """
 
-    def __init__(self, data, link_pointline_id):
+    def __init__(self, data, temp_data, link_pointline_id):
         super(LinkPointlineEdit, self).__init__()
 
         self.data = data
+        self.temp_data = temp_data
         self.link_pointline_id = link_pointline_id
 
         # Title
@@ -7512,10 +7551,18 @@ class LinkPointlineEdit(QtGui.QDialog):
         # Elements that interact
         self.body_layout = QtGui.QHBoxLayout()
         self.body_one_label = QtGui.QLabel(__("Body 1: "))
-        self.body_one_line_edit = QtGui.QLineEdit(str(target_link_pointline[1]))
-
+        self.body_one_line_edit = QtGui.QComboBox()
+        if str(target_link_pointline[1]) != '':
+            self.body_one_line_edit.insertItems(0, ['', str(target_link_pointline[1])])
+            self.body_one_line_edit.setCurrentIndex(1)
+        else:
+            self.body_one_line_edit.insertItems(0, [str(target_link_pointline[1])])
+        for body in self.temp_data:
+            if body.object_check.isChecked() and body.object_name != str(target_link_pointline[1]):
+                self.body_one_line_edit.insertItems(0, [body.object_name])
         self.body_layout.addWidget(self.body_one_label)
         self.body_layout.addWidget(self.body_one_line_edit)
+        self.body_layout.addStretch(1)
 
         self.link_pointline_edit_layout.addLayout(self.body_layout)
 
@@ -7642,7 +7689,7 @@ class LinkPointlineEdit(QtGui.QDialog):
         for link_pointline_value in self.data['link_pointline']:
             count += 1
             if link_pointline_value[0] == self.link_pointline_id:
-                self.data['link_pointline'][count][1] = str(self.body_one_line_edit.text())
+                self.data['link_pointline'][count][1] = str(self.body_one_line_edit.currentText())
                 self.data['link_pointline'][count][2] = [float(self.sliding_vector_x_line_edit.text()),
                                                          float(self.sliding_vector_y_line_edit.text()),
                                                          float(self.sliding_vector_z_line_edit.text())]
@@ -7702,8 +7749,6 @@ class InletConfigDialog(QtGui.QDialog):
 
         # Creates a dialog
         self.setWindowTitle("Inlet/Outlet configuration")
-        #self.setMinimumWidth(500)
-        #self.setMinimumHeight(600)
         self.main_layout = QtGui.QVBoxLayout()
 
         # Creates use refilling option

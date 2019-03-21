@@ -1,14 +1,17 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="BookmarkManager">
-    <bookmark url="file://$PROJECT_DIR$/ds_modules/dsphwidgets.py" line="7053" />
+    <bookmark url="file://$PROJECT_DIR$/ds_modules/dsphwidgets.py" line="7054" />
     <bookmark url="file://$PROJECT_DIR$/DesignSPHysics.py" line="4088" mnemonic="2" />
-    <bookmark url="file://$PROJECT_DIR$/DesignSPHysics.py" line="3350" mnemonic="1" />
     <bookmark url="file://$PROJECT_DIR$/DesignSPHysics.py" line="3288" mnemonic="3" />
+    <bookmark url="file://$PROJECT_DIR$/ds_modules/dsphwidgets.py" line="7531" mnemonic="1" />
   </component>
   <component name="ChangeListManager">
     <list default="true" id="22d76f4b-310a-4afb-8788-a472c77b2c87" name="Default" comment="Added material to &quot;Float state&quot; option">
+      <change afterPath="$PROJECT_DIR$/dualsphysics/bin/desktop.ini" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/DesignSPHysics.py" beforeDir="false" afterPath="$PROJECT_DIR$/DesignSPHysics.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/ds_modules/dsphwidgets.py" beforeDir="false" afterPath="$PROJECT_DIR$/ds_modules/dsphwidgets.py" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
@@ -41,17 +44,17 @@
     <session id="970593039">
       <usages-collector id="statistics.lifecycle.project">
         <counts>
-          <entry key="project.closed" value="13" />
+          <entry key="project.closed" value="14" />
           <entry key="project.open.time.6" value="3" />
-          <entry key="project.open.time.7" value="6" />
+          <entry key="project.open.time.7" value="7" />
           <entry key="project.open.time.8" value="5" />
-          <entry key="project.opened" value="14" />
+          <entry key="project.opened" value="15" />
         </counts>
       </usages-collector>
       <usages-collector id="statistics.file.types.edit">
         <counts>
-          <entry key="PLAIN_TEXT" value="45" />
-          <entry key="Python" value="5335" />
+          <entry key="PLAIN_TEXT" value="46" />
+          <entry key="Python" value="6563" />
         </counts>
       </usages-collector>
       <usages-collector id="statistics.file.types.open">
@@ -67,11 +70,11 @@
   </component>
   <component name="FileEditorManager">
     <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
-      <file pinned="false" current-in-tab="false">
+      <file pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/ds_modules/dsphwidgets.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="209">
-              <caret line="8282" column="39" selection-start-line="8282" selection-start-column="17" selection-end-line="8282" selection-end-column="39" />
+            <state relative-caret-position="242">
+              <caret line="7413" column="51" lean-forward="true" selection-start-line="7413" selection-start-column="51" selection-end-line="7413" selection-end-column="51" />
               <folding>
                 <element signature="e#273#287#0" expanded="true" />
                 <element signature="e#1422#2791#0" />
@@ -111,14 +114,13 @@
                 <element signature="e#267225#304907#0" />
                 <element signature="e#304958#312794#0" />
                 <element signature="e#312843#319081#0" />
-                <element signature="e#319129#342214#0" />
-                <element signature="e#342257#349259#0" />
-                <element signature="e#349309#358498#0" />
-                <element signature="e#358543#364116#0" />
-                <element signature="e#364163#373849#0" />
-                <element signature="e#373893#374662#0" />
-                <element signature="e#374709#382062#0" />
-                <element signature="e#382101#384930#0" />
+                <element signature="e#342273#349275#0" />
+                <element signature="e#349325#359028#0" />
+                <element signature="e#366910#376607#0" />
+                <element signature="e#374167#374936#0" />
+                <element signature="e#374983#382265#0" />
+                <element signature="e#382304#385133#0" />
+                <element signature="e#385179#414207#0" />
               </folding>
             </state>
           </provider>
@@ -127,7 +129,7 @@
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/DesignSPHysics.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="239">
+            <state relative-caret-position="12240">
               <caret line="733" column="33" selection-start-line="733" selection-start-column="33" selection-end-line="733" selection-end-column="33" />
               <folding>
                 <element signature="e#286#300#0" expanded="true" />
@@ -142,10 +144,10 @@
           </provider>
         </entry>
       </file>
-      <file pinned="false" current-in-tab="true">
+      <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/ds_modules/utils.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="484">
+            <state relative-caret-position="17765">
               <caret line="1061" column="77" selection-start-line="1061" selection-start-column="77" selection-end-line="1061" selection-end-column="77" />
               <folding>
                 <element signature="e#253#267#0" expanded="true" />
@@ -157,8 +159,8 @@
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/ds_modules/properties.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="545">
-              <caret line="63" column="17" lean-forward="true" selection-start-line="63" selection-start-column="17" selection-end-line="63" selection-end-column="17" />
+            <state relative-caret-position="1071">
+              <caret line="63" column="17" selection-start-line="63" selection-start-column="17" selection-end-line="63" selection-end-column="17" />
             </state>
           </provider>
         </entry>
@@ -166,8 +168,8 @@
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/ds_modules/guiutils.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state>
-              <caret line="174" column="8" lean-forward="true" selection-start-line="174" selection-start-column="8" selection-end-line="174" selection-end-column="8" />
+            <state relative-caret-position="2074">
+              <caret line="174" column="8" selection-start-line="174" selection-start-column="8" selection-end-line="174" selection-end-column="8" />
               <folding>
                 <element signature="e#163#177#0" expanded="true" />
                 <element signature="e#1241#1447#0" />
@@ -210,7 +212,6 @@
   </component>
   <component name="FindInProjectRecents">
     <findStrings>
-      <find>dp</find>
       <find>inlet/</find>
       <find>Placement</find>
       <find>fillbox_point</find>
@@ -240,6 +241,7 @@
       <find>except</find>
       <find>floatin</find>
       <find>floatings</find>
+      <find>body_one_line_edit</find>
     </findStrings>
     <replaceStrings>
       <replace>self.time_label</replace>
@@ -309,9 +311,9 @@
         <option value="$PROJECT_DIR$/ds_modules/guiutils.py" />
         <option value="$PROJECT_DIR$/default-config.json" />
         <option value="$PROJECT_DIR$/DesignSPHysics.py" />
-        <option value="$PROJECT_DIR$/ds_modules/dsphwidgets.py" />
         <option value="$PROJECT_DIR$/ds_modules/properties.py" />
         <option value="$PROJECT_DIR$/ds_modules/utils.py" />
+        <option value="$PROJECT_DIR$/ds_modules/dsphwidgets.py" />
       </list>
     </option>
   </component>
@@ -564,13 +566,6 @@
       <workItem from="1551182394901" duration="907000" />
       <workItem from="1551183318097" duration="833000" />
       <workItem from="1551184270278" duration="946000" />
-    </task>
-    <task id="LOCAL-00046" summary="Fixes xml dump for fillboxes and corrects some strings">
-      <created>1527679167895</created>
-      <option name="number" value="00046" />
-      <option name="presentableId" value="LOCAL-00046" />
-      <option name="project" value="LOCAL" />
-      <updated>1527679167896</updated>
     </task>
     <task id="LOCAL-00047" summary="Implements draft of MultiLayered Pistons and Relaxation Zones">
       <created>1527851980395</created>
@@ -908,7 +903,14 @@
       <option name="project" value="LOCAL" />
       <updated>1553103146728</updated>
     </task>
-    <option name="localTasksCounter" value="95" />
+    <task id="LOCAL-00095" summary="Added material to &quot;Float state&quot; option">
+      <created>1553103503448</created>
+      <option name="number" value="00095" />
+      <option name="presentableId" value="LOCAL-00095" />
+      <option name="project" value="LOCAL" />
+      <updated>1553103503448</updated>
+    </task>
+    <option name="localTasksCounter" value="96" />
     <servers />
   </component>
   <component name="TimeTrackingManager">
@@ -925,8 +927,9 @@
   </component>
   <component name="ToolWindowManager">
     <frame x="1166" y="0" width="1392" height="1047" extended-state="0" />
+    <editor active="true" />
     <layout>
-      <window_info content_ui="combo" id="Project" order="0" sideWeight="0.4993498" visible="true" weight="0.19294295" />
+      <window_info content_ui="combo" id="Project" order="0" sideWeight="0.4993498" visible="true" weight="0.19594595" />
       <window_info id="Structure" order="1" sideWeight="0.50200266" side_tool="true" weight="0.13036565" />
       <window_info id="Favorites" order="2" sideWeight="0.50065017" side_tool="true" weight="0.10771065" />
       <window_info x="2363" y="239" width="619" height="687" id="Notes" order="3" weight="0.30063966" />
@@ -937,12 +940,12 @@
       <window_info anchor="bottom" id="Cvs" order="4" weight="0.25" />
       <window_info anchor="bottom" id="Inspection" order="5" weight="0.4" />
       <window_info anchor="bottom" id="TODO" order="6" sideWeight="0.49517685" weight="0.19584244" />
-      <window_info anchor="bottom" id="Event Log" order="7" sideWeight="0.5187688" side_tool="true" visible="true" weight="0.15991238" />
+      <window_info anchor="bottom" id="Event Log" order="7" sideWeight="0.5195195" side_tool="true" visible="true" weight="0.15991238" />
       <window_info anchor="bottom" id="Docker" order="8" show_stripe_button="false" />
       <window_info anchor="bottom" id="Messages" order="9" />
       <window_info anchor="bottom" id="Python Console" order="10" sideWeight="0.487988" weight="0.15224534" />
       <window_info anchor="bottom" id="Database Changes" order="11" show_stripe_button="false" />
-      <window_info active="true" anchor="bottom" id="Terminal" order="12" sideWeight="0.48123124" visible="true" weight="0.15991238" />
+      <window_info active="true" anchor="bottom" id="Terminal" order="12" sideWeight="0.4804805" visible="true" weight="0.15991238" />
       <window_info anchor="bottom" id="Version Control" order="13" sideWeight="0.48584202" weight="0.1619256" />
       <window_info anchor="bottom" id="Inspection Results" order="14" weight="0.32935324" />
       <window_info anchor="right" x="0" y="0" width="590" height="880" id="Documentation" order="0" side_tool="true" weight="0.32962227" />
@@ -1145,17 +1148,17 @@
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/README.md">
+      <provider editor-type-id="text-editor">
+        <state relative-caret-position="560">
+          <caret line="35" column="57" selection-start-line="35" selection-start-column="57" selection-end-line="35" selection-end-column="57" />
+        </state>
+      </provider>
       <provider selected="true" editor-type-id="split-provider[text-editor;markdown-preview-editor]">
         <state split_layout="SPLIT">
           <first_editor relative-caret-position="595">
             <caret line="35" lean-forward="true" selection-start-line="35" selection-end-line="35" />
           </first_editor>
           <second_editor />
-        </state>
-      </provider>
-      <provider editor-type-id="text-editor">
-        <state relative-caret-position="560">
-          <caret line="35" column="57" selection-start-line="35" selection-start-column="57" selection-end-line="35" selection-end-column="57" />
         </state>
       </provider>
     </entry>
@@ -1247,60 +1250,10 @@
     <entry file="file://$PROJECT_DIR$/ds_modules/__init__.py">
       <provider selected="true" editor-type-id="text-editor" />
     </entry>
-    <entry file="file://$PROJECT_DIR$/ds_modules/guiutils.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state>
-          <caret line="174" column="8" lean-forward="true" selection-start-line="174" selection-start-column="8" selection-end-line="174" selection-end-column="8" />
-          <folding>
-            <element signature="e#163#177#0" expanded="true" />
-            <element signature="e#1241#1447#0" />
-            <element signature="e#1478#1680#0" />
-            <element signature="e#1738#2080#0" />
-            <element signature="e#2137#2465#0" />
-            <element signature="e#2520#2844#0" />
-            <element signature="e#2886#3319#0" />
-            <element signature="e#3375#3804#0" />
-            <element signature="e#3837#3911#0" />
-            <element signature="e#26723#27920#0" />
-            <element signature="e#27960#29093#0" />
-            <element signature="e#29137#29278#0" />
-            <element signature="e#29326#29470#0" />
-            <element signature="e#29511#30034#0" />
-            <element signature="e#30081#30522#0" />
-            <element signature="e#30573#31014#0" />
-            <element signature="e#31063#31664#0" />
-            <element signature="e#31705#32299#0" />
-            <element signature="e#33067#33508#0" />
-            <element signature="e#33549#33690#0" />
-            <element signature="e#33734#34182#0" />
-            <element signature="e#34227#34668#0" />
-            <element signature="e#34715#35156#0" />
-            <element signature="e#41575#45028#0" />
-            <marker date="1546967442798" expanded="true" signature="26521:26524" ph="..." />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/DesignSPHysics.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="239">
-          <caret line="733" column="33" selection-start-line="733" selection-start-column="33" selection-end-line="733" selection-end-column="33" />
-          <folding>
-            <element signature="e#286#300#0" expanded="true" />
-            <element signature="e#5393#5578#0" />
-            <element signature="e#6997#7121#0" />
-            <marker date="1552411679133" expanded="true" signature="37106:37225" ph="..." />
-            <marker date="1552411679133" expanded="true" signature="50842:50948" ph="..." />
-            <marker date="1552411679133" expanded="true" signature="113869:113870" ph="..." />
-            <marker date="1552411679133" expanded="true" signature="113869:114003" ph="..." />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/ds_modules/dsphwidgets.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="209">
-          <caret line="8282" column="39" selection-start-line="8282" selection-start-column="17" selection-end-line="8282" selection-end-column="39" />
+        <state relative-caret-position="242">
+          <caret line="7413" column="51" lean-forward="true" selection-start-line="7413" selection-start-column="51" selection-end-line="7413" selection-end-column="51" />
           <folding>
             <element signature="e#273#287#0" expanded="true" />
             <element signature="e#1422#2791#0" />
@@ -1340,31 +1293,80 @@
             <element signature="e#267225#304907#0" />
             <element signature="e#304958#312794#0" />
             <element signature="e#312843#319081#0" />
-            <element signature="e#319129#342214#0" />
-            <element signature="e#342257#349259#0" />
-            <element signature="e#349309#358498#0" />
-            <element signature="e#358543#364116#0" />
-            <element signature="e#364163#373849#0" />
-            <element signature="e#373893#374662#0" />
-            <element signature="e#374709#382062#0" />
-            <element signature="e#382101#384930#0" />
+            <element signature="e#342273#349275#0" />
+            <element signature="e#349325#359028#0" />
+            <element signature="e#366910#376607#0" />
+            <element signature="e#374167#374936#0" />
+            <element signature="e#374983#382265#0" />
+            <element signature="e#382304#385133#0" />
+            <element signature="e#385179#414207#0" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/DesignSPHysics.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="12240">
+          <caret line="733" column="33" selection-start-line="733" selection-start-column="33" selection-end-line="733" selection-end-column="33" />
+          <folding>
+            <element signature="e#286#300#0" expanded="true" />
+            <element signature="e#5393#5578#0" />
+            <element signature="e#6997#7121#0" />
+            <marker date="1552411679133" expanded="true" signature="37106:37225" ph="..." />
+            <marker date="1552411679133" expanded="true" signature="50842:50948" ph="..." />
+            <marker date="1552411679133" expanded="true" signature="113869:113870" ph="..." />
+            <marker date="1552411679133" expanded="true" signature="113869:114003" ph="..." />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/ds_modules/utils.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="17765">
+          <caret line="1061" column="77" selection-start-line="1061" selection-start-column="77" selection-end-line="1061" selection-end-column="77" />
+          <folding>
+            <element signature="e#253#267#0" expanded="true" />
           </folding>
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/ds_modules/properties.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="545">
-          <caret line="63" column="17" lean-forward="true" selection-start-line="63" selection-start-column="17" selection-end-line="63" selection-end-column="17" />
+        <state relative-caret-position="1071">
+          <caret line="63" column="17" selection-start-line="63" selection-start-column="17" selection-end-line="63" selection-end-column="17" />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/ds_modules/utils.py">
+    <entry file="file://$PROJECT_DIR$/ds_modules/guiutils.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="484">
-          <caret line="1061" column="77" selection-start-line="1061" selection-start-column="77" selection-end-line="1061" selection-end-column="77" />
+        <state relative-caret-position="2074">
+          <caret line="174" column="8" selection-start-line="174" selection-start-column="8" selection-end-line="174" selection-end-column="8" />
           <folding>
-            <element signature="e#253#267#0" expanded="true" />
+            <element signature="e#163#177#0" expanded="true" />
+            <element signature="e#1241#1447#0" />
+            <element signature="e#1478#1680#0" />
+            <element signature="e#1738#2080#0" />
+            <element signature="e#2137#2465#0" />
+            <element signature="e#2520#2844#0" />
+            <element signature="e#2886#3319#0" />
+            <element signature="e#3375#3804#0" />
+            <element signature="e#3837#3911#0" />
+            <element signature="e#26723#27920#0" />
+            <element signature="e#27960#29093#0" />
+            <element signature="e#29137#29278#0" />
+            <element signature="e#29326#29470#0" />
+            <element signature="e#29511#30034#0" />
+            <element signature="e#30081#30522#0" />
+            <element signature="e#30573#31014#0" />
+            <element signature="e#31063#31664#0" />
+            <element signature="e#31705#32299#0" />
+            <element signature="e#33067#33508#0" />
+            <element signature="e#33549#33690#0" />
+            <element signature="e#33734#34182#0" />
+            <element signature="e#34227#34668#0" />
+            <element signature="e#34715#35156#0" />
+            <element signature="e#41575#45028#0" />
+            <marker date="1546967442798" expanded="true" signature="26521:26524" ph="..." />
           </folding>
         </state>
       </provider>
