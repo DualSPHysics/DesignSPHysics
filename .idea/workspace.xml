@@ -1,10 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="BookmarkManager">
-    <bookmark url="file://$PROJECT_DIR$/ds_modules/dsphwidgets.py" line="7054" />
-    <bookmark url="file://$PROJECT_DIR$/DesignSPHysics.py" line="4088" mnemonic="2" />
-    <bookmark url="file://$PROJECT_DIR$/DesignSPHysics.py" line="3288" mnemonic="3" />
-    <bookmark url="file://$PROJECT_DIR$/ds_modules/dsphwidgets.py" line="7531" mnemonic="1" />
+    <bookmark url="file://$PROJECT_DIR$/ds_modules/dsphwidgets.py" line="7062" />
+    <bookmark url="file://$PROJECT_DIR$/DesignSPHysics.py" line="3355" mnemonic="1" />
+    <bookmark url="file://$PROJECT_DIR$/DesignSPHysics.py" line="3361" mnemonic="2" />
+    <bookmark url="file://$PROJECT_DIR$/DesignSPHysics.py" line="3407" mnemonic="3" />
+    <bookmark url="file://$PROJECT_DIR$/DesignSPHysics.py" line="3453" mnemonic="4" />
+    <bookmark url="file://$PROJECT_DIR$/DesignSPHysics.py" line="3457" mnemonic="5" />
   </component>
   <component name="ChangeListManager">
     <list default="true" id="22d76f4b-310a-4afb-8788-a472c77b2c87" name="Default" comment="Added material to &quot;Float state&quot; option">
@@ -12,6 +14,7 @@
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/DesignSPHysics.py" beforeDir="false" afterPath="$PROJECT_DIR$/DesignSPHysics.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/ds_modules/dsphwidgets.py" beforeDir="false" afterPath="$PROJECT_DIR$/ds_modules/dsphwidgets.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/ds_modules/lang/spanish.json" beforeDir="false" afterPath="$PROJECT_DIR$/ds_modules/lang/spanish.json" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
@@ -44,17 +47,17 @@
     <session id="970593039">
       <usages-collector id="statistics.lifecycle.project">
         <counts>
-          <entry key="project.closed" value="14" />
+          <entry key="project.closed" value="15" />
           <entry key="project.open.time.6" value="3" />
           <entry key="project.open.time.7" value="7" />
-          <entry key="project.open.time.8" value="5" />
-          <entry key="project.opened" value="15" />
+          <entry key="project.open.time.8" value="6" />
+          <entry key="project.opened" value="16" />
         </counts>
       </usages-collector>
       <usages-collector id="statistics.file.types.edit">
         <counts>
-          <entry key="PLAIN_TEXT" value="46" />
-          <entry key="Python" value="6563" />
+          <entry key="PLAIN_TEXT" value="47" />
+          <entry key="Python" value="6904" />
         </counts>
       </usages-collector>
       <usages-collector id="statistics.file.types.open">
@@ -70,11 +73,11 @@
   </component>
   <component name="FileEditorManager">
     <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
-      <file pinned="false" current-in-tab="true">
+      <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/ds_modules/dsphwidgets.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="242">
-              <caret line="7413" column="51" lean-forward="true" selection-start-line="7413" selection-start-column="51" selection-end-line="7413" selection-end-column="51" />
+            <state relative-caret-position="1468">
+              <caret line="8588" column="8" selection-start-line="8588" selection-start-column="8" selection-end-line="8588" selection-end-column="8" />
               <folding>
                 <element signature="e#273#287#0" expanded="true" />
                 <element signature="e#1422#2791#0" />
@@ -114,31 +117,64 @@
                 <element signature="e#267225#304907#0" />
                 <element signature="e#304958#312794#0" />
                 <element signature="e#312843#319081#0" />
-                <element signature="e#342273#349275#0" />
-                <element signature="e#349325#359028#0" />
-                <element signature="e#366910#376607#0" />
-                <element signature="e#374167#374936#0" />
-                <element signature="e#374983#382265#0" />
-                <element signature="e#382304#385133#0" />
-                <element signature="e#385179#414207#0" />
+                <element signature="e#342321#349938#0" />
+                <element signature="e#349988#359806#0" />
+                <element signature="e#359851#366453#0" />
+                <element signature="e#366500#376748#0" />
+                <element signature="e#376792#377561#0" />
+                <element signature="e#377608#384890#0" />
+                <element signature="e#384929#387758#0" />
+                <element signature="e#387804#416832#0" />
               </folding>
             </state>
           </provider>
         </entry>
       </file>
-      <file pinned="false" current-in-tab="false">
+      <file pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/DesignSPHysics.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="12240">
-              <caret line="733" column="33" selection-start-line="733" selection-start-column="33" selection-end-line="733" selection-end-column="33" />
+            <state relative-caret-position="348">
+              <caret line="3572" column="20" selection-start-line="3572" selection-start-column="20" selection-end-line="3572" selection-end-column="20" />
               <folding>
                 <element signature="e#286#300#0" expanded="true" />
                 <element signature="e#5393#5578#0" />
                 <element signature="e#6997#7121#0" />
-                <marker date="1552411679133" expanded="true" signature="37106:37225" ph="..." />
-                <marker date="1552411679133" expanded="true" signature="50842:50948" ph="..." />
-                <marker date="1552411679133" expanded="true" signature="113869:113870" ph="..." />
-                <marker date="1552411679133" expanded="true" signature="113869:114003" ph="..." />
+                <element signature="e#151709#151867#0" />
+                <element signature="e#151901#154043#0" />
+                <element signature="e#154078#155954#0" />
+                <element signature="e#155984#156016#0" />
+                <element signature="e#161627#162264#0" />
+                <element signature="e#162295#162317#0" />
+                <element signature="e#162360#163142#0" />
+                <element signature="e#167285#167928#0" />
+                <element signature="e#168011#168468#0" />
+                <element signature="e#168520#168698#0" />
+                <element signature="e#168743#169202#0" />
+                <element signature="e#169239#169583#0" />
+                <element signature="e#169632#171089#0" />
+                <element signature="e#171145#171524#0" />
+                <element signature="e#171589#171935#0" />
+                <element signature="e#172000#172271#0" />
+                <element signature="e#172323#172661#0" />
+                <element signature="e#172715#173053#0" />
+                <element signature="e#173101#177554#0" />
+                <element signature="e#177637#180141#0" />
+                <element signature="e#180397#180934#0" />
+                <element signature="e#180974#181490#0" />
+                <element signature="e#181533#182076#0" />
+                <element signature="e#182115#182663#0" />
+                <element signature="e#182706#183247#0" />
+                <element signature="e#183288#183829#0" />
+                <element signature="e#183866#184409#0" />
+                <element signature="e#184446#184989#0" />
+                <element signature="e#185027#185551#0" />
+                <element signature="e#189743#190973#0" />
+                <element signature="e#191010#191404#0" />
+                <element signature="e#191436#191616#0" />
+                <marker date="1553254383483" expanded="true" signature="37106:37225" ph="..." />
+                <marker date="1553254383483" expanded="true" signature="50842:50948" ph="..." />
+                <marker date="1553254383483" expanded="true" signature="113869:113870" ph="..." />
+                <marker date="1553254383483" expanded="true" signature="113869:114003" ph="..." />
               </folding>
             </state>
           </provider>
@@ -212,15 +248,8 @@
   </component>
   <component name="FindInProjectRecents">
     <findStrings>
-      <find>inlet/</find>
-      <find>Placement</find>
-      <find>fillbox_point</find>
-      <find>fillbox_gp</find>
-      <find>geometry</find>
-      <find>Case_Limits</find>
       <find>placeme</find>
       <find>objtype_change</find>
-      <find>mkgroup_change</find>
       <find>fillmode_change</find>
       <find>motion_change</find>
       <find>floatings_window</find>
@@ -242,6 +271,13 @@
       <find>floatin</find>
       <find>floatings</find>
       <find>body_one_line_edit</find>
+      <find>object pro</find>
+      <find>mkgroup_change</find>
+      <find>has_initials_selector</find>
+      <find>initials_window</find>
+      <find>initials_vector_input_x</find>
+      <find>initials_change</find>
+      <find>motion_prop</find>
     </findStrings>
     <replaceStrings>
       <replace>self.time_label</replace>
@@ -310,9 +346,9 @@
         <option value="$PROJECT_DIR$/ds_modules/constants.py" />
         <option value="$PROJECT_DIR$/ds_modules/guiutils.py" />
         <option value="$PROJECT_DIR$/default-config.json" />
-        <option value="$PROJECT_DIR$/DesignSPHysics.py" />
         <option value="$PROJECT_DIR$/ds_modules/properties.py" />
         <option value="$PROJECT_DIR$/ds_modules/utils.py" />
+        <option value="$PROJECT_DIR$/DesignSPHysics.py" />
         <option value="$PROJECT_DIR$/ds_modules/dsphwidgets.py" />
       </list>
     </option>
@@ -326,7 +362,7 @@
   <component name="ProjectFrameBounds">
     <option name="x" value="1166" />
     <option name="width" value="1392" />
-    <option name="height" value="1047" />
+    <option name="height" value="1048" />
   </component>
   <component name="ProjectInspectionProfilesVisibleTreeState">
     <entry key="Project Default">
@@ -566,13 +602,6 @@
       <workItem from="1551182394901" duration="907000" />
       <workItem from="1551183318097" duration="833000" />
       <workItem from="1551184270278" duration="946000" />
-    </task>
-    <task id="LOCAL-00047" summary="Implements draft of MultiLayered Pistons and Relaxation Zones">
-      <created>1527851980395</created>
-      <option name="number" value="00047" />
-      <option name="presentableId" value="LOCAL-00047" />
-      <option name="project" value="LOCAL" />
-      <updated>1527851980396</updated>
     </task>
     <task id="LOCAL-00048" summary="Added Milti-Layer Pistons 2D">
       <created>1527873341125</created>
@@ -910,7 +939,14 @@
       <option name="project" value="LOCAL" />
       <updated>1553103503448</updated>
     </task>
-    <option name="localTasksCounter" value="96" />
+    <task id="LOCAL-00096" summary="Changes &quot;LineEdit&quot; for &quot;ComboBox&quot; in chrono options">
+      <created>1553193983381</created>
+      <option name="number" value="00096" />
+      <option name="presentableId" value="LOCAL-00096" />
+      <option name="project" value="LOCAL" />
+      <updated>1553193983383</updated>
+    </task>
+    <option name="localTasksCounter" value="97" />
     <servers />
   </component>
   <component name="TimeTrackingManager">
@@ -926,10 +962,10 @@
     </todo-panel>
   </component>
   <component name="ToolWindowManager">
-    <frame x="1166" y="0" width="1392" height="1047" extended-state="0" />
+    <frame x="1166" y="0" width="1392" height="1048" extended-state="0" />
     <editor active="true" />
     <layout>
-      <window_info content_ui="combo" id="Project" order="0" sideWeight="0.4993498" visible="true" weight="0.19594595" />
+      <window_info content_ui="combo" id="Project" order="0" sideWeight="0.4993498" visible="true" weight="0.19894895" />
       <window_info id="Structure" order="1" sideWeight="0.50200266" side_tool="true" weight="0.13036565" />
       <window_info id="Favorites" order="2" sideWeight="0.50065017" side_tool="true" weight="0.10771065" />
       <window_info x="2363" y="239" width="619" height="687" id="Notes" order="3" weight="0.30063966" />
@@ -940,12 +976,12 @@
       <window_info anchor="bottom" id="Cvs" order="4" weight="0.25" />
       <window_info anchor="bottom" id="Inspection" order="5" weight="0.4" />
       <window_info anchor="bottom" id="TODO" order="6" sideWeight="0.49517685" weight="0.19584244" />
-      <window_info anchor="bottom" id="Event Log" order="7" sideWeight="0.5195195" side_tool="true" visible="true" weight="0.15991238" />
+      <window_info anchor="bottom" id="Event Log" order="7" sideWeight="0.5202703" side_tool="true" visible="true" weight="0.15973742" />
       <window_info anchor="bottom" id="Docker" order="8" show_stripe_button="false" />
       <window_info anchor="bottom" id="Messages" order="9" />
       <window_info anchor="bottom" id="Python Console" order="10" sideWeight="0.487988" weight="0.15224534" />
       <window_info anchor="bottom" id="Database Changes" order="11" show_stripe_button="false" />
-      <window_info active="true" anchor="bottom" id="Terminal" order="12" sideWeight="0.4804805" visible="true" weight="0.15991238" />
+      <window_info active="true" anchor="bottom" id="Terminal" order="12" sideWeight="0.47972974" visible="true" weight="0.15973742" />
       <window_info anchor="bottom" id="Version Control" order="13" sideWeight="0.48584202" weight="0.1619256" />
       <window_info anchor="bottom" id="Inspection Results" order="14" weight="0.32935324" />
       <window_info anchor="right" x="0" y="0" width="590" height="880" id="Documentation" order="0" side_tool="true" weight="0.32962227" />
@@ -994,7 +1030,6 @@
   </component>
   <component name="VcsManagerConfiguration">
     <option name="RELOAD_CONTEXT" value="false" />
-    <MESSAGE value="Adds DualSPHysics executables in a new directory" />
     <MESSAGE value="Changed how different needed files for the cases are copied&#10;&#10;Changing the name of the project would make a reference error due to&#10;relative paths. To solve this the files needed to movements, accinputs,&#10;etc. are now copied both to the case root and the out folder. If the out&#10;folder gets removed of its name changes, the files on the project root&#10;will be copied instead of having to search for the file full path again." />
     <MESSAGE value="Prevents movements from exporting into the XML if they don't exist" />
     <MESSAGE value="Did some code cleaning and refactoring" />
@@ -1019,7 +1054,8 @@
     <MESSAGE value="Added rotation restriction to &quot;Float state&quot; option" />
     <MESSAGE value="Added translation restriction to &quot;Float state&quot; option" />
     <MESSAGE value="Added material to &quot;Float state&quot; option" />
-    <option name="LAST_COMMIT_MESSAGE" value="Added material to &quot;Float state&quot; option" />
+    <MESSAGE value="Changes &quot;LineEdit&quot; for &quot;ComboBox&quot; in chrono options" />
+    <option name="LAST_COMMIT_MESSAGE" value="Changes &quot;LineEdit&quot; for &quot;ComboBox&quot; in chrono options" />
   </component>
   <component name="editorHistoryManager">
     <entry file="file://$USER_HOME$/.PyCharm2018.2/system/python_stubs/703128353/PySide/QtCore/Qt.py">
@@ -1250,76 +1286,6 @@
     <entry file="file://$PROJECT_DIR$/ds_modules/__init__.py">
       <provider selected="true" editor-type-id="text-editor" />
     </entry>
-    <entry file="file://$PROJECT_DIR$/ds_modules/dsphwidgets.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="242">
-          <caret line="7413" column="51" lean-forward="true" selection-start-line="7413" selection-start-column="51" selection-end-line="7413" selection-end-column="51" />
-          <folding>
-            <element signature="e#273#287#0" expanded="true" />
-            <element signature="e#1422#2791#0" />
-            <element signature="e#2840#3856#0" />
-            <element signature="e#3911#8996#0" />
-            <element signature="e#9054#16287#0" />
-            <element signature="e#16341#23864#0" />
-            <element signature="e#23921#32605#0" />
-            <element signature="e#32660#43173#0" />
-            <element signature="e#43224#52009#0" />
-            <element signature="e#52060#62998#0" />
-            <element signature="e#63046#66543#0" />
-            <element signature="e#66595#75661#0" />
-            <element signature="e#75722#95737#0" />
-            <element signature="e#95800#124479#0" />
-            <element signature="e#124538#135584#0" />
-            <element signature="e#135645#155412#0" />
-            <element signature="e#155460#161195#0" />
-            <element signature="e#161251#168093#0" />
-            <element signature="e#168140#170056#0" />
-            <element signature="e#170100#171338#0" />
-            <element signature="e#171395#172275#0" />
-            <element signature="e#172322#172843#0" />
-            <element signature="e#172883#174669#0" />
-            <element signature="e#174721#178525#0" />
-            <element signature="e#178577#185610#0" />
-            <element signature="e#185673#197133#0" />
-            <element signature="e#197198#214647#0" />
-            <element signature="e#214707#226884#0" />
-            <element signature="e#226937#234895#0" />
-            <element signature="e#234958#243954#0" />
-            <element signature="e#244003#245733#0" />
-            <element signature="e#245776#246073#0" />
-            <element signature="e#246122#246473#0" />
-            <element signature="e#246522#246873#0" />
-            <element signature="e#246919#267170#0" />
-            <element signature="e#267225#304907#0" />
-            <element signature="e#304958#312794#0" />
-            <element signature="e#312843#319081#0" />
-            <element signature="e#342273#349275#0" />
-            <element signature="e#349325#359028#0" />
-            <element signature="e#366910#376607#0" />
-            <element signature="e#374167#374936#0" />
-            <element signature="e#374983#382265#0" />
-            <element signature="e#382304#385133#0" />
-            <element signature="e#385179#414207#0" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/DesignSPHysics.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="12240">
-          <caret line="733" column="33" selection-start-line="733" selection-start-column="33" selection-end-line="733" selection-end-column="33" />
-          <folding>
-            <element signature="e#286#300#0" expanded="true" />
-            <element signature="e#5393#5578#0" />
-            <element signature="e#6997#7121#0" />
-            <marker date="1552411679133" expanded="true" signature="37106:37225" ph="..." />
-            <marker date="1552411679133" expanded="true" signature="50842:50948" ph="..." />
-            <marker date="1552411679133" expanded="true" signature="113869:113870" ph="..." />
-            <marker date="1552411679133" expanded="true" signature="113869:114003" ph="..." />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/ds_modules/utils.py">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="17765">
@@ -1367,6 +1333,109 @@
             <element signature="e#34715#35156#0" />
             <element signature="e#41575#45028#0" />
             <marker date="1546967442798" expanded="true" signature="26521:26524" ph="..." />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/ds_modules/dsphwidgets.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="1468">
+          <caret line="8588" column="8" selection-start-line="8588" selection-start-column="8" selection-end-line="8588" selection-end-column="8" />
+          <folding>
+            <element signature="e#273#287#0" expanded="true" />
+            <element signature="e#1422#2791#0" />
+            <element signature="e#2840#3856#0" />
+            <element signature="e#3911#8996#0" />
+            <element signature="e#9054#16287#0" />
+            <element signature="e#16341#23864#0" />
+            <element signature="e#23921#32605#0" />
+            <element signature="e#32660#43173#0" />
+            <element signature="e#43224#52009#0" />
+            <element signature="e#52060#62998#0" />
+            <element signature="e#63046#66543#0" />
+            <element signature="e#66595#75661#0" />
+            <element signature="e#75722#95737#0" />
+            <element signature="e#95800#124479#0" />
+            <element signature="e#124538#135584#0" />
+            <element signature="e#135645#155412#0" />
+            <element signature="e#155460#161195#0" />
+            <element signature="e#161251#168093#0" />
+            <element signature="e#168140#170056#0" />
+            <element signature="e#170100#171338#0" />
+            <element signature="e#171395#172275#0" />
+            <element signature="e#172322#172843#0" />
+            <element signature="e#172883#174669#0" />
+            <element signature="e#174721#178525#0" />
+            <element signature="e#178577#185610#0" />
+            <element signature="e#185673#197133#0" />
+            <element signature="e#197198#214647#0" />
+            <element signature="e#214707#226884#0" />
+            <element signature="e#226937#234895#0" />
+            <element signature="e#234958#243954#0" />
+            <element signature="e#244003#245733#0" />
+            <element signature="e#245776#246073#0" />
+            <element signature="e#246122#246473#0" />
+            <element signature="e#246522#246873#0" />
+            <element signature="e#246919#267170#0" />
+            <element signature="e#267225#304907#0" />
+            <element signature="e#304958#312794#0" />
+            <element signature="e#312843#319081#0" />
+            <element signature="e#342321#349938#0" />
+            <element signature="e#349988#359806#0" />
+            <element signature="e#359851#366453#0" />
+            <element signature="e#366500#376748#0" />
+            <element signature="e#376792#377561#0" />
+            <element signature="e#377608#384890#0" />
+            <element signature="e#384929#387758#0" />
+            <element signature="e#387804#416832#0" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/DesignSPHysics.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="348">
+          <caret line="3572" column="20" selection-start-line="3572" selection-start-column="20" selection-end-line="3572" selection-end-column="20" />
+          <folding>
+            <element signature="e#286#300#0" expanded="true" />
+            <element signature="e#5393#5578#0" />
+            <element signature="e#6997#7121#0" />
+            <element signature="e#151709#151867#0" />
+            <element signature="e#151901#154043#0" />
+            <element signature="e#154078#155954#0" />
+            <element signature="e#155984#156016#0" />
+            <element signature="e#161627#162264#0" />
+            <element signature="e#162295#162317#0" />
+            <element signature="e#162360#163142#0" />
+            <element signature="e#167285#167928#0" />
+            <element signature="e#168011#168468#0" />
+            <element signature="e#168520#168698#0" />
+            <element signature="e#168743#169202#0" />
+            <element signature="e#169239#169583#0" />
+            <element signature="e#169632#171089#0" />
+            <element signature="e#171145#171524#0" />
+            <element signature="e#171589#171935#0" />
+            <element signature="e#172000#172271#0" />
+            <element signature="e#172323#172661#0" />
+            <element signature="e#172715#173053#0" />
+            <element signature="e#173101#177554#0" />
+            <element signature="e#177637#180141#0" />
+            <element signature="e#180397#180934#0" />
+            <element signature="e#180974#181490#0" />
+            <element signature="e#181533#182076#0" />
+            <element signature="e#182115#182663#0" />
+            <element signature="e#182706#183247#0" />
+            <element signature="e#183288#183829#0" />
+            <element signature="e#183866#184409#0" />
+            <element signature="e#184446#184989#0" />
+            <element signature="e#185027#185551#0" />
+            <element signature="e#189743#190973#0" />
+            <element signature="e#191010#191404#0" />
+            <element signature="e#191436#191616#0" />
+            <marker date="1553254383483" expanded="true" signature="37106:37225" ph="..." />
+            <marker date="1553254383483" expanded="true" signature="50842:50948" ph="..." />
+            <marker date="1553254383483" expanded="true" signature="113869:113870" ph="..." />
+            <marker date="1553254383483" expanded="true" signature="113869:114003" ph="..." />
           </folding>
         </state>
       </provider>
