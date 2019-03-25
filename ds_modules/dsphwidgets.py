@@ -8617,3 +8617,508 @@ class InitialsDialog(QtGui.QDialog):
             self.initials_props_group.setEnabled(True)
         else:
             self.initials_props_group.setEnabled(False)
+
+
+class MovementDialog(QtGui.QDialog):
+    """ Defines a window with motion properties. """
+
+    def __init__(self, data):
+        super(MovementDialog, self).__init__()
+
+        self.data = data
+
+        self.setMinimumSize(1400, 650)
+        self.setWindowTitle(__("Motion configuration"))
+        self.ok_button = QtGui.QPushButton(__("Ok"))
+        self.cancel_button = QtGui.QPushButton(__("Cancel"))
+        self.notice_label = QtGui.QLabel("")
+        self.notice_label.setStyleSheet("QLabel { color : red; }")
+        self.target_mk = int(self.data['simobjects'][FreeCADGui.Selection.getSelection()[0].Name][0])
+        self.movements_selected = list(self.data["motion_mks"].get(self.target_mk, list()))
+
+        self.ok_button.clicked.connect(self.on_ok)
+        self.cancel_button.clicked.connect(self.on_cancel)
+
+        self.has_motion_layout = QtGui.QHBoxLayout()
+        self.has_motion_label = QtGui.QLabel(__("Set motion: "))
+        self.has_motion_label.setToolTip(__("Enables motion for the selected MKBound"))
+        self.has_motion_selector = QtGui.QComboBox()
+        self.has_motion_selector.insertItems(0, ["True", "False"])
+        self.has_motion_selector.currentIndexChanged.connect(self.on_motion_change)
+        self.has_motion_helplabel = QtGui.QLabel(
+            "<a href='http://design.sphysics.org/wiki/doku.php?id=featreference#configure_object_motion'>{}</a>".format(
+                __("Movement Help")))
+        self.has_motion_helplabel.setTextFormat(QtCore.Qt.RichText)
+        self.has_motion_helplabel.setTextInteractionFlags(
+            QtCore.Qt.TextBrowserInteraction)
+        self.has_motion_helplabel.setOpenExternalLinks(True)
+        self.has_motion_targetlabel = QtGui.QLabel(__("Target MKBound: ") + str(self.target_mk))
+        self.has_motion_layout.addWidget(self.has_motion_label)
+        self.has_motion_layout.addWidget(self.has_motion_selector)
+        self.has_motion_layout.addStretch(1)
+        self.has_motion_layout.addWidget(self.has_motion_helplabel)
+        self.has_motion_layout.addWidget(self.has_motion_targetlabel)
+
+        self.motion_features_layout = QtGui.QVBoxLayout()
+        self.motion_features_splitter = QtGui.QSplitter()
+
+        self.movement_list_groupbox = QtGui.QGroupBox(__("Global Movements"))
+        self.movement_list_groupbox_layout = QtGui.QVBoxLayout()
+
+        self.movement_list_table = QtGui.QTableWidget(1, 2)
+        self.movement_list_table.setSelectionBehavior(
+            QtGui.QAbstractItemView.SelectItems)
+        self.movement_list_table.setSelectionMode(QtGui.QAbstractItemView.SingleSelection)
+        self.movement_list_table.horizontalHeader().setResizeMode(QtGui.QHeaderView.Stretch)
+        self.movement_list_table.horizontalHeader().setResizeMode(0, QtGui.QHeaderView.Stretch)
+        self.movement_list_table.horizontalHeader().setResizeMode(1, QtGui.QHeaderView.ResizeToContents)
+
+        self.movement_list_table.verticalHeader().setVisible(False)
+        self.movement_list_table.horizontalHeader().setVisible(False)
+
+        self.movement_list_groupbox_layout.addWidget(self.movement_list_table)
+        self.movement_list_groupbox.setLayout(self.movement_list_groupbox_layout)
+
+        self.timeline_groupbox = QtGui.QGroupBox(__("Timeline for the selected movement"))
+        self.timeline_groupbox_layout = QtGui.QVBoxLayout()
+
+        self.timeline_list_table = QtGui.QTableWidget(0, 1)
+        self.timeline_list_table.horizontalHeader().setResizeMode(QtGui.QHeaderView.Stretch)
+        self.timeline_list_table.verticalHeader().setResizeMode(QtGui.QHeaderView.ResizeToContents)
+        self.timeline_list_table.verticalHeader().setVisible(False)
+        self.timeline_list_table.horizontalHeader().setVisible(False)
+        self.timeline_list_table.resizeRowsToContents()
+
+        self.timeline_groupbox_layout.addWidget(self.timeline_list_table)
+        self.timeline_groupbox.setLayout(self.timeline_groupbox_layout)
+
+        self.actions_groupbox = QtGui.QGroupBox(__("Available actions"))
+        self.actions_groupbox_layout = QtGui.QVBoxLayout()
+
+        self.actions_groupbox_table = QtGui.QTableWidget(0, 1)
+        self.actions_groupbox_table.horizontalHeader().setResizeMode(QtGui.QHeaderView.Stretch)
+        self.actions_groupbox_table.verticalHeader().setVisible(False)
+        self.actions_groupbox_table.horizontalHeader().setVisible(False)
+
+        self.actions_groupbox_layout.addWidget(self.actions_groupbox_table)
+        self.actions_groupbox.setLayout(self.actions_groupbox_layout)
+
+        self.motion_features_splitter.addWidget(self.movement_list_groupbox)
+        self.motion_features_splitter.addWidget(self.timeline_groupbox)
+        self.motion_features_splitter.addWidget(self.actions_groupbox)
+        self.motion_features_splitter.setSizePolicy(QtGui.QSizePolicy.Expanding, QtGui.QSizePolicy.Expanding)
+        self.motion_features_layout.addWidget(self.motion_features_splitter)
+
+        self.buttons_layout = QtGui.QHBoxLayout()
+        self.buttons_layout.addWidget(self.notice_label)
+        self.buttons_layout.addStretch(1)
+        self.buttons_layout.addWidget(self.ok_button)
+        self.buttons_layout.addWidget(self.cancel_button)
+
+        self.motion_window_layout = QtGui.QVBoxLayout()
+        self.motion_window_layout.addLayout(self.has_motion_layout)
+        self.motion_window_layout.addLayout(self.motion_features_layout)
+        self.motion_window_layout.addLayout(self.buttons_layout)
+
+        self.setLayout(self.motion_window_layout)
+
+        self.refresh_movements_table()
+        self.movement_list_table.cellChanged.connect(self.on_movement_name_change)
+        self.movement_list_table.cellClicked.connect(self.on_movement_selected)
+
+        self.actions_groupbox_table.setRowCount(9)
+        self.bt_to_add = QtGui.QPushButton(guiutils.get_icon("left-arrow.png"), __("Add a delay"))
+        self.bt_to_add.setStyleSheet("text-align: left")
+        self.bt_to_add.clicked.connect(self.on_add_delay)
+        self.actions_groupbox_table.setCellWidget(0, 0, self.bt_to_add)
+        self.bt_to_add = QtGui.QPushButton(guiutils.get_icon("left-arrow.png"), __("Add a rectilinear motion"))
+        self.bt_to_add.setStyleSheet("text-align: left")
+        self.bt_to_add.clicked.connect(self.on_add_rectilinear)
+        self.actions_groupbox_table.setCellWidget(1, 0, self.bt_to_add)
+        self.bt_to_add = QtGui.QPushButton(guiutils.get_icon("left-arrow.png"), __("Add an accelerated rectilinear motion"))
+        self.bt_to_add.setStyleSheet("text-align: left")
+        self.bt_to_add.clicked.connect(self.on_add_accrectilinear)
+        self.actions_groupbox_table.setCellWidget(2, 0, self.bt_to_add)
+        self.bt_to_add = QtGui.QPushButton(guiutils.get_icon("left-arrow.png"), __("Add a rotational motion"))
+        self.bt_to_add.setStyleSheet("text-align: left")
+        self.bt_to_add.clicked.connect(self.on_add_rotational)
+        self.actions_groupbox_table.setCellWidget(3, 0, self.bt_to_add)
+        self.bt_to_add = QtGui.QPushButton(guiutils.get_icon("left-arrow.png"), __("Add an accelerated rotational motion"))
+        self.bt_to_add.setStyleSheet("text-align: left")
+        self.bt_to_add.clicked.connect(self.on_add_acc_rotational)
+        self.actions_groupbox_table.setCellWidget(4, 0, self.bt_to_add)
+        self.bt_to_add = QtGui.QPushButton(guiutils.get_icon("left-arrow.png"), __("Add an accelerated circular motion"))
+        self.bt_to_add.setStyleSheet("text-align: left")
+        self.bt_to_add.clicked.connect(self.on_add_acc_circular)
+        self.actions_groupbox_table.setCellWidget(5, 0, self.bt_to_add)
+        self.bt_to_add = QtGui.QPushButton(guiutils.get_icon("left-arrow.png"), __("Add a sinusoidal rotational motion"))
+        self.bt_to_add.setStyleSheet("text-align: left")
+        self.bt_to_add.clicked.connect(self.on_add_sinu_rot)
+        self.actions_groupbox_table.setCellWidget(6, 0, self.bt_to_add)
+        self.bt_to_add = QtGui.QPushButton(guiutils.get_icon("left-arrow.png"), __("Add a sinusoidal circular motion"))
+        self.bt_to_add.setStyleSheet("text-align: left")
+        self.bt_to_add.clicked.connect(self.on_add_sinu_cir)
+        self.actions_groupbox_table.setCellWidget(7, 0, self.bt_to_add)
+        self.bt_to_add = QtGui.QPushButton(guiutils.get_icon("left-arrow.png"), __("Add a sinusoidal rectilinear motion"))
+        self.bt_to_add.setStyleSheet("text-align: left")
+        self.bt_to_add.clicked.connect(self.on_add_sinu_rect)
+        self.actions_groupbox_table.setCellWidget(8, 0, self.bt_to_add)
+
+        # Set motion suscription for this mk
+        if self.data["motion_mks"].get(self.target_mk, None) is None:
+            self.has_motion_selector.setCurrentIndex(1)
+        else:
+            self.has_motion_selector.setCurrentIndex(0)
+
+        self.exec_()
+
+    def on_ok(self):
+        guiutils.info_dialog(
+            __("This will apply the motion properties to all objects with mkbound = ") + str(self.target_mk))
+        if self.has_motion_selector.currentIndex() == 0:
+            # True has been selected
+            # Reinstance the list and copy every movement selected to avoid referencing problems.
+            self.data["motion_mks"][self.target_mk] = list()
+            for movement in self.movements_selected:
+                self.data["motion_mks"][self.target_mk].append(movement)
+        elif self.has_motion_selector.currentIndex() == 1:
+            # False has been selected
+            self.data["motion_mks"].pop(self.target_mk, None)
+        self.accept()
+
+    def on_cancel(self):
+        self.reject()
+
+    def on_motion_change(self, index):
+        """ Set motion action. Enables or disables parts of the window depending
+        on what option was selected. """
+        if index == 0:
+            self.movement_list_groupbox.setEnabled(True)
+            self.timeline_groupbox.setEnabled(True)
+            self.actions_groupbox.setEnabled(True)
+            self.timeline_list_table.setEnabled(False)
+            self.actions_groupbox_table.setEnabled(False)
+
+            # Put a placeholder in the table
+            self.timeline_list_table.clearContents()
+            self.timeline_list_table.setRowCount(1)
+            self.timeline_list_table.setCellWidget(0, 0, MovementTimelinePlaceholder())
+        else:
+            self.movement_list_groupbox.setEnabled(False)
+            self.timeline_groupbox.setEnabled(False)
+            self.actions_groupbox.setEnabled(False)
+
+    def check_movement_compatibility(self, target_movement):
+        # Wave generators are exclusive
+        if isinstance(target_movement, SpecialMovement):
+            self.notice_label.setText("Notice: Wave generators and file movements are exclusive. "
+                                      "All movements are disabled when using one.")
+            del self.movements_selected[:]
+        elif isinstance(target_movement, Movement):
+            for index, ms in enumerate(self.movements_selected):
+                if isinstance(ms, SpecialMovement):
+                    self.movements_selected.pop(index)
+                    self.notice_label.setText(
+                        "Notice: Regular movements are not compatible with wave generators and file movements.")
+
+    # Movements table actions
+    def on_check_movement(self, index, checked):
+        """ Add or delete a movement from the temporal list of selected movements. """
+        self.notice_label.setText("")  # Reset the notice label if a valid change is made
+        target_movement = self.data["global_movements"][index]
+        if checked:
+            self.check_movement_compatibility(target_movement)
+            self.movements_selected.append(target_movement)
+        else:
+            self.movements_selected.remove(target_movement)
+        self.refresh_movements_table()
+
+    def on_loop_movement(self, index, checked):
+        """ Make a movement loop itself """
+        self.notice_label.setText("")  # Reset the notice label if a valid change is made
+        self.data["global_movements"][index].set_loop(checked)
+
+    def on_delete_movement(self, index):
+        """ Remove a movement from the project. """
+        try:
+            self.movements_selected.remove(self.data["global_movements"][index])
+            # Reset the notice label if a valid change is made
+            self.notice_label.setText("")
+        except ValueError:
+            # Movement wasn't selected
+            pass
+        self.data["global_movements"].pop(index)
+        self.refresh_movements_table()
+        self.on_movement_selected(self.timeline_list_table.rowCount() - 1, None)
+
+    def on_new_movement(self):
+        """ Creates a movement on the project. """
+        self.notice_label.setText("")  # Reset the notice label if a valid change is made
+        to_add = self.Movement(name="New Movement")
+        self.data["global_movements"].append(to_add)
+        self.movements_selected.append(to_add)
+        self.check_movement_compatibility(to_add)
+
+        self.refresh_movements_table()
+
+    def on_new_wave_generator(self, action):
+        """ Creates a movement on the project. """
+        self.notice_label.setText("")  # Reset the notice label if a valid change is made
+        if __("Movement") in action.text():
+            self.on_new_movement()
+            return
+        if __("Regular wave generator (Piston)") in action.text():
+            to_add = SpecialMovement(generator=RegularPistonWaveGen(), name="Regular Wave Generator (Piston)")
+        if __("Irregular wave generator (Piston)") in action.text():
+            to_add = SpecialMovement(generator=IrregularPistonWaveGen(), name="Irregular Wave Generator (Piston)")
+        if __("Regular wave generator (Flap)") in action.text():
+            to_add = SpecialMovement(generator=RegularFlapWaveGen(), name="Regular Wave Generator (Flap)")
+        if __("Irregular wave generator (Flap)") in action.text():
+            to_add = SpecialMovement(generator=IrregularFlapWaveGen(), name="Irregular Wave Generator (Flap)")
+        if __("Linear motion from a file") in action.text():
+            to_add = SpecialMovement(generator=FileGen(), name="Linear motion from a file")
+        if __("Rotation from a file") in action.text():
+            to_add = SpecialMovement(generator=RotationFileGen(), name="Rotation from a file")
+
+        to_add.generator.parent_movement = to_add
+        self.data["global_movements"].append(to_add)
+        self.check_movement_compatibility(to_add)
+        self.movements_selected.append(to_add)
+
+        self.refresh_movements_table()
+
+    def on_movement_name_change(self, row, column):
+        """ Changes the name of a movement on the project. """
+        target_item = self.movement_list_table.item(row, column)
+        if target_item is not None and self.data["global_movements"][row].name != target_item.text():
+            # Reset the notice label if a valid change is made
+            self.notice_label.setText("")
+            self.data["global_movements"][row].name = target_item.text()
+
+    def on_timeline_item_change(self, index, motion_object):
+        """ Changes the values of an item on the timeline. """
+        self.notice_label.setText("")  # Reset the notice label if a valid change is made
+        if isinstance(motion_object, WaveGen):
+            motion_object.parent_movement.set_wavegen(motion_object)
+        else:
+            motion_object.parent_movement.motion_list[index] = motion_object
+
+    def on_timeline_item_delete(self, index, motion_object):
+        """ Deletes an item from the timeline. """
+        self.notice_label.setText("")  # Reset the notice label if a valid change is made
+        motion_object.parent_movement.motion_list.pop(index)
+        self.on_movement_selected(self.movement_list_table.selectedIndexes()[0].row(), None)
+
+    def on_timeline_item_order_up(self, index):
+        # Reset the notice label if a valid change is made
+        self.notice_label.setText("")
+        movement = self.data["global_movements"][self.movement_list_table.selectedIndexes()[0].row()]
+        self.movement.motion_list.insert(index - 1, self.movement.motion_list.pop(index))
+        self.on_movement_selected(self.movement_list_table.selectedIndexes()[0].row(), None)
+
+    def on_timeline_item_order_down(self, index):
+        # Reset the notice label if a valid change is made
+        self.notice_label.setText("")
+        movement = self.data["global_movements"][self.movement_list_table.selectedIndexes()[0].row()]
+        movement.motion_list.insert(index + 1, movement.motion_list.pop(index))
+        self.on_movement_selected(self.movement_list_table.selectedIndexes()[0].row(), None)
+
+    def on_movement_selected(self, row, _):
+        """ Shows the timeline for the selected movement. """
+        try:
+            target_movement = self.data["global_movements"][row]
+        except IndexError:
+            self.timeline_list_table.clearContents()
+            self.timeline_list_table.setEnabled(False)
+            self.timeline_list_table.setRowCount(1)
+            self.timeline_list_table.setCellWidget(0, 0, MovementTimelinePlaceholder())
+            return
+        self.timeline_list_table.clearContents()
+
+        # Reset the notice label if a valid change is made
+        self.notice_label.setText("")
+
+        if isinstance(target_movement, Movement):
+            self.timeline_list_table.setRowCount(len(target_movement.motion_list))
+            self.timeline_list_table.setEnabled(True)
+            self.actions_groupbox_table.setEnabled(True)
+
+            current_row = 0
+            for motion in target_movement.motion_list:
+                if isinstance(motion, RectMotion):
+                    target_to_put = RectilinearMotionTimeline(current_row, motion)
+                elif isinstance(motion, WaitMotion):
+                    target_to_put = WaitMotionTimeline(current_row, motion)
+                elif isinstance(motion, AccRectMotion):
+                    target_to_put = AccRectilinearMotionTimeline(current_row, motion)
+                elif isinstance(motion, RotMotion):
+                    target_to_put = RotationalMotionTimeline(current_row, motion)
+                elif isinstance(motion, AccRotMotion):
+                    target_to_put = AccRotationalMotionTimeline(current_row, motion)
+                elif isinstance(motion, AccCirMotion):
+                    target_to_put = AccCircularMotionTimeline(current_row, motion)
+                elif isinstance(motion, RotSinuMotion):
+                    target_to_put = RotSinuMotionTimeline(current_row, motion)
+                elif isinstance(motion, CirSinuMotion):
+                    target_to_put = CirSinuMotionTimeline(current_row, motion)
+                elif isinstance(motion, RectSinuMotion):
+                    target_to_put = RectSinuMotionTimeline(current_row, motion)
+                else:
+                    raise NotImplementedError("The type of movement: {} is not implemented.".format(
+                        str(motion.__class__.__name__)))
+
+                target_to_put.changed.connect(self.on_timeline_item_change)
+                target_to_put.deleted.connect(self.on_timeline_item_delete)
+                target_to_put.order_up.connect(self.on_timeline_item_order_up)
+                target_to_put.order_down.connect(self.on_timeline_item_order_down)
+                self.timeline_list_table.setCellWidget(current_row, 0, target_to_put)
+
+                if current_row is 0:
+                    target_to_put.disable_order_up_button()
+                elif current_row is len(target_movement.motion_list) - 1:
+                    target_to_put.disable_order_down_button()
+
+                current_row += 1
+        elif isinstance(target_movement, SpecialMovement):
+            self.timeline_list_table.setRowCount(1)
+            self.timeline_list_table.setEnabled(True)
+            self.actions_groupbox_table.setEnabled(False)
+
+            if isinstance(target_movement.generator, RegularPistonWaveGen):
+                target_to_put = RegularPistonWaveMotionTimeline(target_movement.generator)
+            elif isinstance(target_movement.generator, IrregularPistonWaveGen):
+                target_to_put = IrregularPistonWaveMotionTimeline(target_movement.generator)
+            if isinstance(target_movement.generator, RegularFlapWaveGen):
+                target_to_put = RegularFlapWaveMotionTimeline(target_movement.generator)
+            elif isinstance(target_movement.generator, IrregularFlapWaveGen):
+                target_to_put = IrregularFlapWaveMotionTimeline(target_movement.generator)
+            elif isinstance(target_movement.generator, FileGen):
+                target_to_put = FileMotionTimeline(target_movement.generator, data['project_path'])
+            elif isinstance(target_movement.generator, RotationFileGen):
+                target_to_put = RotationFileMotionTimeline(target_movement.generator, data['project_path'])
+
+            target_to_put.changed.connect(self.on_timeline_item_change)
+            self.timeline_list_table.setCellWidget(0, 0, target_to_put)
+
+    # Populate case defined movements
+    def refresh_movements_table(self):
+        """ Refreshes the movement table. """
+        self.movement_list_table.clearContents()
+        self.movement_list_table.setRowCount(len(self.data["global_movements"]) + 1)
+        current_row = 0
+        for movement in self.data["global_movements"]:
+            self.movement_list_table.setItem(current_row, 0, QtGui.QTableWidgetItem(movement.name))
+            try:
+                has_loop = movement.loop
+            except AttributeError:
+                has_loop = False
+            if isinstance(movement, Movement):
+                movement_actions = MovementActions(current_row, movement in self.movements_selected, has_loop)
+                movement_actions.loop.connect(on_loop_movement)
+            elif isinstance(movement, SpecialMovement):
+                movement_actions = WaveMovementActions(current_row, movement in self.movements_selected)
+
+            movement_actions.delete.connect(self.on_delete_movement)
+            movement_actions.use.connect(self.on_check_movement)
+            self.movement_list_table.setCellWidget(current_row, 1, movement_actions)
+
+            current_row += 1
+        create_new_movement_button = QtGui.QToolButton()
+        create_new_movement_button.setPopupMode(QtGui.QToolButton.MenuButtonPopup)
+        create_new_movement_button.setText(__("Create New"))
+        create_new_movement_menu = QtGui.QMenu()
+        create_new_movement_menu.addAction(guiutils.get_icon("movement.png"), __("Movement"))
+        create_new_movement_menu.addAction(guiutils.get_icon("regular_wave.png"), __("Regular wave generator (Piston)"))
+        create_new_movement_menu.addAction(guiutils.get_icon("irregular_wave.png"),
+                                           __("Irregular wave generator (Piston)"))
+        create_new_movement_menu.addAction(guiutils.get_icon("regular_wave.png"), __("Regular wave generator (Flap)"))
+        create_new_movement_menu.addAction(guiutils.get_icon("irregular_wave.png"),
+                                           __("Irregular wave generator (Flap)"))
+        create_new_movement_menu.addAction(guiutils.get_icon("file_mov.png"), __("Linear motion from a file"))
+        create_new_movement_menu.addAction(guiutils.get_icon("file_mov.png"), __("Rotation from a file"))
+        create_new_movement_button.setMenu(create_new_movement_menu)
+        create_new_movement_button.clicked.connect(self.on_new_movement)
+        create_new_movement_menu.triggered.connect(self.on_new_wave_generator)
+        self.movement_list_table.setCellWidget(current_row, 1, create_new_movement_button)
+        self.movement_list_table.setCellWidget(current_row, 0, QtGui.QWidget())
+
+    # Possible actions for adding motions to a movement
+    def on_add_delay(self):
+        """ Adds a WaitMotion to the timeline of the selected movement. """
+        self.notice_label.setText("")  # Reset the notice label if a valid change is made
+        if len(self.movement_list_table.selectedIndexes()) > 0:
+            if self.movement_list_table.selectedIndexes()[0].row() is not len(self.data["global_movements"]):
+                self.data["global_movements"][self.movement_list_table.selectedIndexes()[0].row()].add_motion(WaitMotion())
+                self.on_movement_selected(
+                    self.movement_list_table.selectedIndexes()[0].row(), None)
+
+    def on_add_rectilinear(self):
+        """ Adds a RectMotion to the timeline of the selected movement. """
+        self.notice_label.setText("")  # Reset the notice label if a valid change is made
+        if len(self.movement_list_table.selectedIndexes()) > 0:
+            if self.movement_list_table.selectedIndexes()[0].row() is not len(self.data["global_movements"]):
+                self.data["global_movements"][self.movement_list_table.selectedIndexes()[0].row()].add_motion(RectMotion())
+                self.on_movement_selected(movement_list_table.selectedIndexes()[0].row(), None)
+
+    def on_add_accrectilinear(self):
+        """ Adds a AccRectMotion to the timeline of the selected movement. """
+        self.notice_label.setText("")  # Reset the notice label if a valid change is made
+        if len(self.movement_list_table.selectedIndexes()) > 0:
+            if self.movement_list_table.selectedIndexes()[0].row() is not len(self.data["global_movements"]):
+                self.data["global_movements"][self.movement_list_table.selectedIndexes()[0].row()].add_motion(AccRectMotion())
+                self.on_movement_selected(
+                    self.movement_list_table.selectedIndexes()[0].row(), None)
+
+    def on_add_rotational(self):
+        """ Adds a RotMotion to the timeline of the selected movement. """
+        self.notice_label.setText(
+            "")  # Reset the notice label if a valid change is made
+        if len(self.movement_list_table.selectedIndexes()) > 0:
+            if self.movement_list_table.selectedIndexes()[0].row() is not len(self.data["global_movements"]):
+                self.data["global_movements"][self.movement_list_table.selectedIndexes()[0].row()].add_motion(RotMotion())
+                self.on_movement_selected(
+                    self.movement_list_table.selectedIndexes()[0].row(), None)
+
+    def on_add_acc_rotational(self):
+        """ Adds a AccRotMotion to the timeline of the selected movement. """
+        self.notice_label.setText("")  # Reset the notice label if a valid change is made
+        if len(self.movement_list_table.selectedIndexes()) > 0:
+            if self.movement_list_table.selectedIndexes()[0].row() is not len(self.data["global_movements"]):
+                self.data["global_movements"][self.movement_list_table.selectedIndexes()[0].row()].add_motion(AccRotMotion())
+                self.on_movement_selected(
+                    self.movement_list_table.selectedIndexes()[0].row(), None)
+
+    def on_add_acc_circular(self):
+        """ Adds a AccCirMotion to the timeline of the selected movement. """
+        self.notice_label.setText("")  # Reset the notice label if a valid change is made
+        if len(self.movement_list_table.selectedIndexes()) > 0:
+            if self.movement_list_table.selectedIndexes()[0].row() is not len(self.data["global_movements"]):
+                self.data["global_movements"][self.movement_list_table.selectedIndexes()[0].row()].add_motion(AccCirMotion())
+                self.on_movement_selected(
+                    self.movement_list_table.selectedIndexes()[0].row(), None)
+
+    def on_add_sinu_rot(self):
+        """ Adds a RotSinuMotion to the timeline of the selected movement. """
+        self.notice_label.setText("")  # Reset the notice label if a valid change is made
+        if len(self.movement_list_table.selectedIndexes()) > 0:
+            if self.movement_list_table.selectedIndexes()[0].row() is not len(self.data["global_movements"]):
+                self.data["global_movements"][self.movement_list_table.selectedIndexes()[0].row()].add_motion(RotSinuMotion())
+                self.on_movement_selected(
+                    self.movement_list_table.selectedIndexes()[0].row(), None)
+
+    def on_add_sinu_cir(self):
+        """ Adds a CirSinuMotion to the timeline of the selected movement. """
+        self.notice_label.setText("")  # Reset the notice label if a valid change is made
+        if len(self.movement_list_table.selectedIndexes()) > 0:
+            if self.movement_list_table.selectedIndexes()[0].row() is not len(self.data["global_movements"]):
+                self.data["global_movements"][self.movement_list_table.selectedIndexes()[0].row()].add_motion(CirSinuMotion())
+                self.on_movement_selected(
+                    self.movement_list_table.selectedIndexes()[0].row(), None)
+
+    def on_add_sinu_rect(self):
+        """ Adds a RectSinuMotion to the timeline of the selected movement. """
+        self.notice_label.setText("")  # Reset the notice label if a valid change is made
+        if len(self.movement_list_table.selectedIndexes()) > 0:
+            if self.movement_list_table.selectedIndexes()[0].row() is not len(self.data["global_movements"]):
+                self.data["global_movements"][self.movement_list_table.selectedIndexes()[0].row()].add_motion(RectSinuMotion())
+                self.on_movement_selected(movement_list_table.selectedIndexes()[0].row(), None)
