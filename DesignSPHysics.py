@@ -37,7 +37,7 @@ except:
     from ds_modules import utils, guiutils, xmlimporter, dsphwidgets
     from ds_modules.utils import __
 
-# Copyright (C) 2017 - Andrés Vieira (anvieiravazquez@gmail.com)
+# Copyright (C) 2019
 # EPHYSLAB Environmental Physics Laboratory, Universidade de Vigo
 # EPHYTECH Environmental Physics Technologies
 #
@@ -589,6 +589,7 @@ def on_save_with_gencase():
             '/' + data['project_name'] + '_out/' + data['project_name'],
             '-save:+all'
         ])
+
         process.waitForFinished()
         output = str(process.readAllStandardOutput())
         error_in_gen_case = False
@@ -835,7 +836,7 @@ def on_add_chrono():
 
 def on_add_stl():
     """ Add STL file. Opens a file opener and allows
-    the user to set parameters for the import process"""
+    the user to set parameters for the import process """
 
     # TODO: Low priority: This Dialog should be implemented and designed as a class like AddSTLDialog(QtGui.QDialog)
     filedialog = QtGui.QFileDialog()
@@ -3333,8 +3334,8 @@ material_label = QtGui.QLabel("   {}".format(__("Material")))
 material_label.setToolTip(__("Sets material for this object"))
 motion_label = QtGui.QLabel("   {}".format(__("Motion")))
 motion_label.setToolTip(__("Sets motion for this object"))
-simplewall_label = QtGui.QLabel("   {}".format(__("Simple Wall")))
-simplewall_label.setToolTip(__("Adds a simple wall"))
+simplewall_label = QtGui.QLabel("   {}".format(__("Faces")))
+simplewall_label.setToolTip(__("Adds faces"))
 
 mkgroup_label.setAlignment(QtCore.Qt.AlignLeft)
 material_label.setAlignment(QtCore.Qt.AlignLeft)
@@ -3413,12 +3414,14 @@ def fillmode_change(index):
 
     if fillmode_prop.itemText(index).lower() == "full":
         if objtype_prop.itemText(objtype_prop.currentIndex()).lower() == "fluid":
+            wall_prop.setEnabled(False)
             try:
                 selectiongui.Transparency = 30
             except AttributeError:
                 # Cannot change transparency. Just ignore
                 pass
         elif objtype_prop.itemText(objtype_prop.currentIndex()).lower() == "bound":
+            wall_prop.setEnabled(False)
             try:
                 selectiongui.Transparency = 0
             except AttributeError:
@@ -3426,24 +3429,28 @@ def fillmode_change(index):
                 pass
     elif fillmode_prop.itemText(index).lower() == "solid":
         if objtype_prop.itemText(objtype_prop.currentIndex()).lower() == "fluid":
+            wall_prop.setEnabled(False)
             try:
                 selectiongui.Transparency = 30
             except AttributeError:
                 # Cannot change transparency (fillbox?). Just ignore
                 pass
         elif objtype_prop.itemText(objtype_prop.currentIndex()).lower() == "bound":
+            wall_prop.setEnabled(False)
             try:
                 selectiongui.Transparency = 0
             except AttributeError:
                 # Cannot change transparency (fillbox?). Just ignore
                 pass
     elif fillmode_prop.itemText(index).lower() == "face":
+        wall_prop.setEnabled(True)
         try:
             selectiongui.Transparency = 80
         except AttributeError:
             # Cannot change transparency. Just ignore
             pass
     elif fillmode_prop.itemText(index).lower() == "wire":
+        wall_prop.setEnabled(False)
         try:
             selectiongui.Transparency = 85
         except AttributeError:
@@ -3463,6 +3470,10 @@ def floatstate_change():
     dsphwidgets.FloatStateDialog(data)
 
 
+def faces_change():
+    dsphwidgets.FacesDialog(data)
+
+
 # Property change widgets
 mkgroup_prop = QtGui.QSpinBox()
 objtype_prop = QtGui.QComboBox()
@@ -3471,6 +3482,7 @@ floatstate_prop = QtGui.QPushButton(__("Configure"))
 initials_prop = QtGui.QPushButton(__("Configure"))
 motion_prop = QtGui.QPushButton(__("Configure"))
 wall_prop = QtGui.QPushButton(__("Add"))
+wall_prop.setEnabled(False)
 mkgroup_prop.setRange(0, 240)
 objtype_prop.insertItems(0, ['Fluid', 'Bound'])
 fillmode_prop.insertItems(1, ['Full', 'Solid', 'Face', 'Wire'])
@@ -3480,6 +3492,7 @@ fillmode_prop.currentIndexChanged.connect(fillmode_change)
 floatstate_prop.clicked.connect(floatstate_change)
 initials_prop.clicked.connect(initials_change)
 motion_prop.clicked.connect(motion_change)
+wall_prop.clicked.connect(faces_change)
 object_property_table.setCellWidget(0, 1, objtype_prop)
 object_property_table.setCellWidget(1, 1, mkgroup_prop)
 object_property_table.setCellWidget(2, 1, fillmode_prop)

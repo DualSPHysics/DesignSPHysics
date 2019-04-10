@@ -30,7 +30,7 @@ import constants
 from execution_parameters import *
 
 
-# Copyright (C) 2016 - Andrés Vieira (anvieiravazquez@gmail.com)
+# Copyright (C) 2019
 # EPHYSLAB Environmental Physics Laboratory, Universidade de Vigo
 #
 # This file is part of DesignSPHysics.
@@ -5823,17 +5823,17 @@ class ExecutionParametersDialog(QtGui.QDialog):
         self.timeout_layout.addWidget(self.timeout_label2)
 
         # Increase of Z+
-        self.incz_layout = QtGui.QHBoxLayout()
-        self.incz_label = QtGui.QLabel("Increase of Z+ (%): ")
-        self.incz_input = FocusableLineEdit()
-        self.incz_input.setHelpText(utils.__(constants.HELP_INCZ))
-        self.incz_input.setMaxLength(10)
+        #self.incz_layout = QtGui.QHBoxLayout()
+        #self.incz_label = QtGui.QLabel("Increase of Z+ (%): ")
+        #self.incz_input = FocusableLineEdit()
+        #self.incz_input.setHelpText(utils.__(constants.HELP_INCZ))
+        #self.incz_input.setMaxLength(10)
 
-        self.incz_input.focus.connect(self.on_help_focus)
+        #self.incz_input.focus.connect(self.on_help_focus)
 
-        self.incz_input.setText(str(float(self.data['incz']) * 100))
-        self.incz_layout.addWidget(self.incz_label)
-        self.incz_layout.addWidget(self.incz_input)
+        #self.incz_input.setText(str(float(self.data['incz']) * 100))
+        #self.incz_layout.addWidget(self.incz_label)
+        #self.incz_layout.addWidget(self.incz_input)
 
         # Max parts out allowed
         self.partsoutmax_layout = QtGui.QHBoxLayout()
@@ -5880,69 +5880,69 @@ class ExecutionParametersDialog(QtGui.QDialog):
         self.rhopoutmax_layout.addWidget(self.rhopoutmax_input)
         self.rhopoutmax_layout.addWidget(self.rhopoutmax_label2)
 
-        self.domainfixed_layout = QtGui.QVBoxLayout()
-        self.domainfixed_chk = QtGui.QCheckBox("Fixed Domain")
-        self.domainfixed_chk.setToolTip(utils.__(constants.DOMAINFIXED))
+        #self.domainfixed_layout = QtGui.QVBoxLayout()
+        #self.domainfixed_chk = QtGui.QCheckBox("Fixed Domain")
+        #self.domainfixed_chk.setToolTip(utils.__(constants.DOMAINFIXED))
 
-        self.domainfixed_x_layout = QtGui.QHBoxLayout()
-        self.domainfixed_y_layout = QtGui.QHBoxLayout()
-        self.domainfixed_z_layout = QtGui.QHBoxLayout()
+        #self.domainfixed_x_layout = QtGui.QHBoxLayout()
+        #self.domainfixed_y_layout = QtGui.QHBoxLayout()
+        #self.domainfixed_z_layout = QtGui.QHBoxLayout()
 
-        self.domainfixed_xmin_label = QtGui.QLabel("X Min")
-        self.domainfixed_xmin_label.setToolTip(utils.__(constants.XMIN))
-        self.domainfixed_xmin_input = QtGui.QLineEdit("0")
-        self.domainfixed_xmax_label = QtGui.QLabel("X Max")
-        self.domainfixed_xmax_label.setToolTip(utils.__(constants.XMAX))
-        self.domainfixed_xmax_input = QtGui.QLineEdit("0")
+        #self.domainfixed_xmin_label = QtGui.QLabel("X Min")
+        #self.domainfixed_xmin_label.setToolTip(utils.__(constants.XMIN))
+        #self.domainfixed_xmin_input = QtGui.QLineEdit("0")
+        #self.domainfixed_xmax_label = QtGui.QLabel("X Max")
+        #self.domainfixed_xmax_label.setToolTip(utils.__(constants.XMAX))
+        #self.domainfixed_xmax_input = QtGui.QLineEdit("0")
 
-        self.domainfixed_ymin_label = QtGui.QLabel("Y Min")
-        self.domainfixed_ymin_label.setToolTip(utils.__(constants.YMIN))
-        self.domainfixed_ymin_input = QtGui.QLineEdit("0")
-        self.domainfixed_ymax_label = QtGui.QLabel("Y Max")
-        self.domainfixed_ymax_label.setToolTip(utils.__(constants.YMAX))
-        self.domainfixed_ymax_input = QtGui.QLineEdit("0")
+        #self.domainfixed_ymin_label = QtGui.QLabel("Y Min")
+        #self.domainfixed_ymin_label.setToolTip(utils.__(constants.YMIN))
+        #self.domainfixed_ymin_input = QtGui.QLineEdit("0")
+        #self.domainfixed_ymax_label = QtGui.QLabel("Y Max")
+        #self.domainfixed_ymax_label.setToolTip(utils.__(constants.YMAX))
+        #self.domainfixed_ymax_input = QtGui.QLineEdit("0")
 
-        self.domainfixed_zmin_label = QtGui.QLabel("Z Min")
-        self.domainfixed_zmin_label.setToolTip(utils.__(constants.ZMIN))
-        self.domainfixed_zmin_input = QtGui.QLineEdit("0")
-        self.domainfixed_zmax_label = QtGui.QLabel("Z Max")
-        self.domainfixed_zmax_label.setToolTip(utils.__(constants.ZMAX))
-        self.domainfixed_zmax_input = QtGui.QLineEdit("0")
+        #self.domainfixed_zmin_label = QtGui.QLabel("Z Min")
+        #self.domainfixed_zmin_label.setToolTip(utils.__(constants.ZMIN))
+        #self.domainfixed_zmin_input = QtGui.QLineEdit("0")
+        #self.domainfixed_zmax_label = QtGui.QLabel("Z Max")
+        #self.domainfixed_zmax_label.setToolTip(utils.__(constants.ZMAX))
+        #self.domainfixed_zmax_input = QtGui.QLineEdit("0")
 
-        self.domainfixed_x_layout.addWidget(self.domainfixed_xmin_label)
-        self.domainfixed_x_layout.addWidget(self.domainfixed_xmin_input)
-        self.domainfixed_x_layout.addWidget(self.domainfixed_xmax_label)
-        self.domainfixed_x_layout.addWidget(self.domainfixed_xmax_input)
+        #self.domainfixed_x_layout.addWidget(self.domainfixed_xmin_label)
+        #self.domainfixed_x_layout.addWidget(self.domainfixed_xmin_input)
+        #self.domainfixed_x_layout.addWidget(self.domainfixed_xmax_label)
+        #self.domainfixed_x_layout.addWidget(self.domainfixed_xmax_input)
 
-        self.domainfixed_y_layout.addWidget(self.domainfixed_ymin_label)
-        self.domainfixed_y_layout.addWidget(self.domainfixed_ymin_input)
-        self.domainfixed_y_layout.addWidget(self.domainfixed_ymax_label)
-        self.domainfixed_y_layout.addWidget(self.domainfixed_ymax_input)
+        #self.domainfixed_y_layout.addWidget(self.domainfixed_ymin_label)
+        #self.domainfixed_y_layout.addWidget(self.domainfixed_ymin_input)
+        #self.domainfixed_y_layout.addWidget(self.domainfixed_ymax_label)
+        #self.domainfixed_y_layout.addWidget(self.domainfixed_ymax_input)
 
-        self.domainfixed_z_layout.addWidget(self.domainfixed_zmin_label)
-        self.domainfixed_z_layout.addWidget(self.domainfixed_zmin_input)
-        self.domainfixed_z_layout.addWidget(self.domainfixed_zmax_label)
-        self.domainfixed_z_layout.addWidget(self.domainfixed_zmax_input)
+        #self.domainfixed_z_layout.addWidget(self.domainfixed_zmin_label)
+        #self.domainfixed_z_layout.addWidget(self.domainfixed_zmin_input)
+        #self.domainfixed_z_layout.addWidget(self.domainfixed_zmax_label)
+        #self.domainfixed_z_layout.addWidget(self.domainfixed_zmax_input)
 
-        self.domainfixed_layout.addWidget(self.domainfixed_chk)
-        self.domainfixed_layout.addLayout(self.domainfixed_x_layout)
-        self.domainfixed_layout.addLayout(self.domainfixed_y_layout)
-        self.domainfixed_layout.addLayout(self.domainfixed_z_layout)
+        #self.domainfixed_layout.addWidget(self.domainfixed_chk)
+        #self.domainfixed_layout.addLayout(self.domainfixed_x_layout)
+        #self.domainfixed_layout.addLayout(self.domainfixed_y_layout)
+        #self.domainfixed_layout.addLayout(self.domainfixed_z_layout)
 
-        self.domainfixed_chk.stateChanged.connect(self.on_domainfixed_chk)
+        #self.domainfixed_chk.stateChanged.connect(self.on_domainfixed_chk)
 
-        try:
-            self.domainfixed_chk.setChecked(self.data["domainfixed"].enabled)
-            self.domainfixed_xmin_input.setText(str(self.data["domainfixed"].xmin))
-            self.domainfixed_xmax_input.setText(str(self.data["domainfixed"].xmax))
-            self.domainfixed_ymin_input.setText(str(self.data["domainfixed"].ymin))
-            self.domainfixed_ymax_input.setText(str(self.data["domainfixed"].ymax))
-            self.domainfixed_zmin_input.setText(str(self.data["domainfixed"].zmin))
-            self.domainfixed_zmax_input.setText(str(self.data["domainfixed"].zmax))
-        except:
-            pass
+        #try:
+        #    self.domainfixed_chk.setChecked(self.data["domainfixed"].enabled)
+        #    self.domainfixed_xmin_input.setText(str(self.data["domainfixed"].xmin))
+        #    self.domainfixed_xmax_input.setText(str(self.data["domainfixed"].xmax))
+        #    self.domainfixed_ymin_input.setText(str(self.data["domainfixed"].ymin))
+        #    self.domainfixed_ymax_input.setText(str(self.data["domainfixed"].ymax))
+        #    self.domainfixed_zmin_input.setText(str(self.data["domainfixed"].zmin))
+        #    self.domainfixed_zmax_input.setText(str(self.data["domainfixed"].zmax))
+        #except:
+        #    pass
 
-        self.on_domainfixed_chk()
+        #self.on_domainfixed_chk()
 
         self.period_x_layout = QtGui.QVBoxLayout()
         self.period_x_chk = QtGui.QCheckBox("X periodicity")
@@ -6043,6 +6043,91 @@ class ExecutionParametersDialog(QtGui.QDialog):
         # Change the state of periodicity input on window open
         self.on_period_z_chk()
 
+        # Simulation domain
+        self.simdomain_layout = QtGui.QVBoxLayout()
+        self.simdomain_chk = QtGui.QCheckBox("Simulation Domain")
+        try:
+          self.simdomain_chk.setChecked(self.data['simdomain_chk'])
+        except:
+            pass
+        self.simdomain_posmin_layout = QtGui.QHBoxLayout()
+        self.simdomain_posminx_layout = QtGui.QVBoxLayout()
+        self.simdomain_posminy_layout = QtGui.QVBoxLayout()
+        self.simdomain_posminz_layout = QtGui.QVBoxLayout()
+        self.simdomain_posmax_layout = QtGui.QHBoxLayout()
+        self.simdomain_posmaxx_layout = QtGui.QVBoxLayout()
+        self.simdomain_posmaxy_layout = QtGui.QVBoxLayout()
+        self.simdomain_posmaxz_layout = QtGui.QVBoxLayout()
+        self.simdomain_posmin_label = QtGui.QLabel("Minimum position(x, y, z): ")
+        self.simdomain_posminx_combobox = QtGui.QComboBox()
+        self.simdomain_posminx_combobox.insertItems(0, ['Default', 'Numeric value', 'Default - num', 'Default - %'])
+        self.simdomain_posminx_line_edit = QtGui.QLineEdit(str(self.data['posmin'][1]))
+        self.simdomain_posminy_combobox = QtGui.QComboBox()
+        self.simdomain_posminy_combobox.insertItems(0, ['Default', 'Numeric value', 'Default - num', 'Default - %'])
+        self.simdomain_posminy_line_edit = QtGui.QLineEdit(str(self.data['posmin'][3]))
+        self.simdomain_posminz_combobox = QtGui.QComboBox()
+        self.simdomain_posminz_combobox.insertItems(0, ['Default', 'Numeric value', 'Default - num', 'Default - %'])
+        self.simdomain_posminz_line_edit = QtGui.QLineEdit(str(self.data['posmin'][5]))
+        self.simdomain_posminx_layout.addWidget(self.simdomain_posminx_combobox)
+        self.simdomain_posminx_layout.addWidget(self.simdomain_posminx_line_edit)
+        self.simdomain_posminy_layout.addWidget(self.simdomain_posminy_combobox)
+        self.simdomain_posminy_layout.addWidget(self.simdomain_posminy_line_edit)
+        self.simdomain_posminz_layout.addWidget(self.simdomain_posminz_combobox)
+        self.simdomain_posminz_layout.addWidget(self.simdomain_posminz_line_edit)
+        self.simdomain_posmin_layout.addWidget(self.simdomain_posmin_label)
+        self.simdomain_posmin_layout.addLayout(self.simdomain_posminx_layout)
+        self.simdomain_posmin_layout.addLayout(self.simdomain_posminy_layout)
+        self.simdomain_posmin_layout.addLayout(self.simdomain_posminz_layout)
+        self.simdomain_posmax_label = QtGui.QLabel("Maximum position(x, y, z): ")
+        self.simdomain_posmaxx_combobox = QtGui.QComboBox()
+        self.simdomain_posmaxx_combobox.insertItems(0, ['Default', 'Numeric value', 'Default + num', 'Default + %'])
+        self.simdomain_posmaxx_line_edit = QtGui.QLineEdit(str(self.data['posmax'][1]))
+        self.simdomain_posmaxy_combobox = QtGui.QComboBox()
+        self.simdomain_posmaxy_combobox.insertItems(0, ['Default', 'Numeric value', 'Default + num', 'Default + %'])
+        self.simdomain_posmaxy_line_edit = QtGui.QLineEdit(str(self.data['posmax'][3]))
+        self.simdomain_posmaxz_combobox = QtGui.QComboBox()
+        self.simdomain_posmaxz_combobox.insertItems(0, ['Default', 'Numeric value', 'Default + num', 'Default + %'])
+        self.simdomain_posmaxz_line_edit = QtGui.QLineEdit(str(self.data['posmax'][5]))
+        self.simdomain_posmaxx_layout.addWidget(self.simdomain_posmaxx_combobox)
+        self.simdomain_posmaxx_layout.addWidget(self.simdomain_posmaxx_line_edit)
+        self.simdomain_posmaxy_layout.addWidget(self.simdomain_posmaxy_combobox)
+        self.simdomain_posmaxy_layout.addWidget(self.simdomain_posmaxy_line_edit)
+        self.simdomain_posmaxz_layout.addWidget(self.simdomain_posmaxz_combobox)
+        self.simdomain_posmaxz_layout.addWidget(self.simdomain_posmaxz_line_edit)
+        self.simdomain_posmax_layout.addWidget(self.simdomain_posmax_label)
+        self.simdomain_posmax_layout.addLayout(self.simdomain_posmaxx_layout)
+        self.simdomain_posmax_layout.addLayout(self.simdomain_posmaxy_layout)
+        self.simdomain_posmax_layout.addLayout(self.simdomain_posmaxz_layout)
+
+        try:
+            self.simdomain_posminx_combobox.setCurrentIndex(self.data['posmin'][0])
+            self.simdomain_posminy_combobox.setCurrentIndex(self.data['posmin'][2])
+            self.simdomain_posminz_combobox.setCurrentIndex(self.data['posmin'][4])
+            self.simdomain_posmaxx_combobox.setCurrentIndex(self.data['posmax'][0])
+            self.simdomain_posmaxy_combobox.setCurrentIndex(self.data['posmax'][2])
+            self.simdomain_posmaxz_combobox.setCurrentIndex(self.data['posmax'][4])
+        except:
+            pass
+
+        self.simdomain_layout.addWidget(self.simdomain_chk)
+        self.simdomain_layout.addLayout(self.simdomain_posmin_layout)
+        self.simdomain_layout.addLayout(self.simdomain_posmax_layout)
+        self.simdomain_chk.stateChanged.connect(self.on_simdomain_chk)
+        self.simdomain_posmaxx_combobox.currentIndexChanged.connect(self.on_posmaxx_changed)
+        self.simdomain_posmaxy_combobox.currentIndexChanged.connect(self.on_posmaxy_changed)
+        self.simdomain_posmaxz_combobox.currentIndexChanged.connect(self.on_posmaxz_changed)
+        self.simdomain_posminx_combobox.currentIndexChanged.connect(self.on_posminx_changed)
+        self.simdomain_posminy_combobox.currentIndexChanged.connect(self.on_posminy_changed)
+        self.simdomain_posminz_combobox.currentIndexChanged.connect(self.on_posminz_changed)
+
+        self.on_simdomain_chk()
+        self.on_posmaxx_changed()
+        self.on_posmaxy_changed()
+        self.on_posmaxz_changed()
+        self.on_posminx_changed()
+        self.on_posminy_changed()
+        self.on_posminz_changed()
+
         self.ok_button.clicked.connect(self.on_ok)
         self.cancel_button.clicked.connect(self.on_cancel)
 
@@ -6080,17 +6165,15 @@ class ExecutionParametersDialog(QtGui.QDialog):
         self.ep_main_layout.addLayout(self.dtminauto_layout)
         self.ep_main_layout.addLayout(self.dtmin_layout)
         self.ep_main_layout.addLayout(self.coefdtmin_layout)
-        # ep_main_layout.addLayout(dtallparticles_layout)
         self.ep_main_layout.addLayout(self.timemax_layout)
         self.ep_main_layout.addLayout(self.timeout_layout)
-        self.ep_main_layout.addLayout(self.incz_layout)
         self.ep_main_layout.addLayout(self.partsoutmax_layout)
         self.ep_main_layout.addLayout(self.rhopoutmin_layout)
         self.ep_main_layout.addLayout(self.rhopoutmax_layout)
-        self.ep_main_layout.addLayout(self.domainfixed_layout)
         self.ep_main_layout.addLayout(self.period_x_layout)
         self.ep_main_layout.addLayout(self.period_y_layout)
         self.ep_main_layout.addLayout(self.period_z_layout)
+        self.ep_main_layout.addLayout(self.simdomain_layout)
 
         self.ep_main_layout_scroll_widget.setLayout(self.ep_main_layout)
         self.ep_main_layout_scroll.setWidget(self.ep_main_layout_scroll_widget)
@@ -6155,15 +6238,6 @@ class ExecutionParametersDialog(QtGui.QDialog):
         else:
             self.dtmin_input.setEnabled(True)
 
-    # DomainFixed
-    def on_domainfixed_chk(self):
-        self.domainfixed_xmin_input.setEnabled(self.domainfixed_chk.isChecked())
-        self.domainfixed_xmax_input.setEnabled(self.domainfixed_chk.isChecked())
-        self.domainfixed_ymin_input.setEnabled(self.domainfixed_chk.isChecked())
-        self.domainfixed_ymax_input.setEnabled(self.domainfixed_chk.isChecked())
-        self.domainfixed_zmin_input.setEnabled(self.domainfixed_chk.isChecked())
-        self.domainfixed_zmax_input.setEnabled(self.domainfixed_chk.isChecked())
-
     # Periodicity in X
     def on_period_x_chk(self):
         if self.period_x_chk.isChecked():
@@ -6197,6 +6271,93 @@ class ExecutionParametersDialog(QtGui.QDialog):
             self.period_z_inc_y_input.setEnabled(False)
             self.period_z_inc_z_input.setEnabled(False)
 
+    def on_simdomain_chk(self):
+        if self.simdomain_chk.isChecked():
+            self.simdomain_posminx_combobox.setEnabled(True)
+            self.simdomain_posminy_combobox.setEnabled(True)
+            self.simdomain_posminz_combobox.setEnabled(True)
+            self.simdomain_posmaxx_combobox.setEnabled(True)
+            self.simdomain_posmaxy_combobox.setEnabled(True)
+            self.simdomain_posmaxz_combobox.setEnabled(True)
+            if self.simdomain_posminx_combobox.currentIndex() != 0:
+                self.simdomain_posminx_line_edit.setEnabled(True)
+            else:
+                self.simdomain_posminx_line_edit.setEnabled(False)
+
+            if self.simdomain_posminy_combobox.currentIndex() != 0:
+                self.simdomain_posminy_line_edit.setEnabled(True)
+            else:
+                self.simdomain_posminy_line_edit.setEnabled(False)
+
+            if self.simdomain_posminz_combobox.currentIndex() != 0:
+                self.simdomain_posminz_line_edit.setEnabled(True)
+            else:
+                self.simdomain_posminz_line_edit.setEnabled(False)
+
+            if self.simdomain_posmaxx_combobox.currentIndex() != 0:
+                self.simdomain_posmaxx_line_edit.setEnabled(True)
+            else:
+                self.simdomain_posmaxx_line_edit.setEnabled(False)
+
+            if self.simdomain_posmaxy_combobox.currentIndex() != 0:
+                self.simdomain_posmaxy_line_edit.setEnabled(True)
+            else:
+                self.simdomain_posmaxy_line_edit.setEnabled(False)
+
+            if self.simdomain_posmaxz_combobox.currentIndex() != 0:
+                self.simdomain_posmaxz_line_edit.setEnabled(True)
+            else:
+                self.simdomain_posmaxz_line_edit.setEnabled(False)
+        else:
+            self.simdomain_posminx_combobox.setEnabled(False)
+            self.simdomain_posminy_combobox.setEnabled(False)
+            self.simdomain_posminz_combobox.setEnabled(False)
+            self.simdomain_posmaxx_combobox.setEnabled(False)
+            self.simdomain_posmaxy_combobox.setEnabled(False)
+            self.simdomain_posmaxz_combobox.setEnabled(False)
+            self.simdomain_posminx_line_edit.setEnabled(False)
+            self.simdomain_posminy_line_edit.setEnabled(False)
+            self.simdomain_posminz_line_edit.setEnabled(False)
+            self.simdomain_posmaxx_line_edit.setEnabled(False)
+            self.simdomain_posmaxy_line_edit.setEnabled(False)
+            self.simdomain_posmaxz_line_edit.setEnabled(False)
+
+    def on_posminx_changed(self):
+        if self.simdomain_posminx_combobox.currentIndex() == 0:
+            self.simdomain_posminx_line_edit.setEnabled(False)
+        else:
+            self.simdomain_posminx_line_edit.setEnabled(True)
+
+    def on_posminy_changed(self):
+        if self.simdomain_posminy_combobox.currentIndex() == 0:
+            self.simdomain_posminy_line_edit.setEnabled(False)
+        else:
+            self.simdomain_posminy_line_edit.setEnabled(True)
+
+    def on_posminz_changed(self):
+        if self.simdomain_posminz_combobox.currentIndex() == 0:
+            self.simdomain_posminz_line_edit.setEnabled(False)
+        else:
+            self.simdomain_posminz_line_edit.setEnabled(True)
+
+    def on_posmaxx_changed(self):
+        if self.simdomain_posmaxx_combobox.currentIndex() == 0:
+            self.simdomain_posmaxx_line_edit.setEnabled(False)
+        else:
+            self.simdomain_posmaxx_line_edit.setEnabled(True)
+
+    def on_posmaxy_changed(self):
+        if self.simdomain_posmaxy_combobox.currentIndex() == 0:
+            self.simdomain_posmaxy_line_edit.setEnabled(False)
+        else:
+            self.simdomain_posmaxy_line_edit.setEnabled(True)
+
+    def on_posmaxz_changed(self):
+        if self.simdomain_posmaxz_combobox.currentIndex() == 0:
+            self.simdomain_posmaxz_line_edit.setEnabled(False)
+        else:
+            self.simdomain_posmaxz_line_edit.setEnabled(True)
+
     # ------------ Button behaviour definition --------------
     def on_ok(self):
         self.data['posdouble'] = str(self.posdouble_input.currentIndex())
@@ -6222,18 +6383,9 @@ class ExecutionParametersDialog(QtGui.QDialog):
         self.data['dtallparticles'] = self.dtallparticles_input.text()
         self.data['timemax'] = self.timemax_input.text()
         self.data['timeout'] = self.timeout_input.text()
-        self.data['incz'] = str(float(self.incz_input.text()) / 100)
         self.data['partsoutmax'] = str(float(self.partsoutmax_input.text()) / 100)
         self.data['rhopoutmin'] = self.rhopoutmin_input.text()
         self.data['rhopoutmax'] = self.rhopoutmax_input.text()
-        self.data['domainfixed'] = DomainFixedParameter(
-            self.domainfixed_chk.isChecked(),
-            float(self.domainfixed_xmin_input.text()),
-            float(self.domainfixed_xmax_input.text()),
-            float(self.domainfixed_ymin_input.text()),
-            float(self.domainfixed_ymax_input.text()),
-            float(self.domainfixed_zmin_input.text()),
-            float(self.domainfixed_zmax_input.text()))
 
         self.data['period_x'] = [
             self.period_x_chk.isChecked(),
@@ -6253,12 +6405,93 @@ class ExecutionParametersDialog(QtGui.QDialog):
             float(self.period_z_inc_y_input.text()),
             float(self.period_z_inc_z_input.text())
         ]
+
+        if self.simdomain_chk.isChecked():
+            self.data['simdomain_chk'] = True
+            self.data['posmin'] = [
+                self.simdomain_posminx_combobox.currentIndex(),
+                float(self.simdomain_posminx_line_edit.text()),
+                self.simdomain_posminy_combobox.currentIndex(),
+                float(self.simdomain_posminy_line_edit.text()),
+                self.simdomain_posminz_combobox.currentIndex(),
+                float(self.simdomain_posminz_line_edit.text())
+            ]
+
+            self.data['posmax'] = [
+                self.simdomain_posmaxx_combobox.currentIndex(),
+                float(self.simdomain_posmaxx_line_edit.text()),
+                self.simdomain_posmaxy_combobox.currentIndex(),
+                float(self.simdomain_posmaxy_line_edit.text()),
+                self.simdomain_posmaxz_combobox.currentIndex(),
+                float(self.simdomain_posmaxz_line_edit.text())
+            ]
+            self.simulation_domain()
+        else:
+            self.data['simdomain_chk'] = False
+            self.data['posmin'] = [0, 0.0, 0, 0.0, 0, 0.0]
+            self.data['posmax'] = [0, 0.0, 0, 0.0, 0, 0.0]
+
         utils.log("Execution Parameters changed")
         self.accept()
 
     def on_cancel(self):
         utils.log("Execution Parameters not changed")
         self.reject()
+
+    def simulation_domain(self):
+        if self.data['posmin'][0] == 0:
+            self.data['posminxml'][0] = "default"
+        elif self.data['posmin'][0] == 1:
+            self.data['posminxml'][0] = str(self.data['posmin'][1])
+        elif self.data['posmin'][0] == 2:
+            self.data['posminxml'][0] = 'default-' + str(self.data['posmin'][1])
+        elif data['posmin'][0] == 3:
+            self.data['posminxml'][0] = 'default-' + str(self.data['posmin'][1]) + "%"
+
+        if self.data['posmin'][2] == 0:
+            self.data['posminxml'][1] = "default"
+        elif self.data['posmin'][2] == 1:
+            self.data['posminxml'][1] = str(self.data['posmin'][3])
+        elif self.data['posmin'][2] == 2:
+            self.data['posminxml'][1] = 'default-' + str(self.data['posmin'][3])
+        elif self.data['posmin'][2] == 3:
+            self.data['posminxml'][1] = 'default-' + str(self.data['posmin'][3]) + "%"
+
+        if self.data['posmin'][4] == 0:
+            self.data['posminxml'][2] = "default"
+        elif self.data['posmin'][4] == 1:
+            self.data['posminxml'][2] = str(self.data['posmin'][5])
+        elif self.data['posmin'][4] == 2:
+            self.data['posminxml'][2] = 'default-' + str(self.data['posmin'][5])
+        elif self.data['posmin'][4] == 3:
+            self.data['posminxml'][2] = 'default-' + str(self.data['posmin'][5]) + "%"
+
+        if self.data['posmax'][0] == 0:
+            self.data['posmaxxml'][0] = "default"
+        elif self.data['posmax'][0] == 1:
+            self.data['posmaxxml'][0] = str(self.data['posmax'][1])
+        elif self.data['posmax'][0] == 2:
+            self.data['posmaxxml'][0] = 'default+' + str(self.data['posmax'][1])
+        elif data['posmax'][0] == 3:
+            self.data['posmaxxml'][0] = 'default+' + str(self.data['posmax'][1]) + "%"
+
+        if self.data['posmax'][2] == 0:
+            self.data['posmaxxml'][1] = "default"
+        elif self.data['posmax'][2] == 1:
+            self.data['posmaxxml'][1] = str(self.data['posmax'][3])
+        elif self.data['posmax'][2] == 2:
+            self.data['posmaxxml'][1] = 'default+' + str(self.data['posmax'][3])
+        elif self.data['posmax'][2] == 3:
+            self.data['posmaxxml'][1] = 'default+' + str(self.data['posmax'][3]) + "%"
+
+        if self.data['posmax'][4] == 0:
+            self.data['posmaxxml'][2] = "default"
+        elif self.data['posmax'][4] == 1:
+            self.data['posmaxxml'][2] = str(self.data['posmax'][5])
+        elif self.data['posmax'][4] == 2:
+            self.data['posmaxxml'][2] = 'default+' + str(self.data['posmax'][5])
+        elif self.data['posmax'][4] == 3:
+            self.data['posmaxxml'][2] = 'default+' + str(self.data['posmax'][5]) + "%"
 
 
 class MeasureToolGridDialog(QtGui.QDialog):
@@ -8854,7 +9087,7 @@ class MovementDialog(QtGui.QDialog):
     def on_new_movement(self):
         """ Creates a movement on the project. """
         self.notice_label.setText("")  # Reset the notice label if a valid change is made
-        to_add = self.Movement(name="New Movement")
+        to_add = Movement(name="New Movement")
         self.data["global_movements"].append(to_add)
         self.movements_selected.append(to_add)
         self.check_movement_compatibility(to_add)
@@ -9014,7 +9247,7 @@ class MovementDialog(QtGui.QDialog):
                 has_loop = False
             if isinstance(movement, Movement):
                 movement_actions = MovementActions(current_row, movement in self.movements_selected, has_loop)
-                movement_actions.loop.connect(on_loop_movement)
+                movement_actions.loop.connect(self.on_loop_movement)
             elif isinstance(movement, SpecialMovement):
                 movement_actions = WaveMovementActions(current_row, movement in self.movements_selected)
 
@@ -9122,3 +9355,136 @@ class MovementDialog(QtGui.QDialog):
             if self.movement_list_table.selectedIndexes()[0].row() is not len(self.data["global_movements"]):
                 self.data["global_movements"][self.movement_list_table.selectedIndexes()[0].row()].add_motion(RectSinuMotion())
                 self.on_movement_selected(movement_list_table.selectedIndexes()[0].row(), None)
+
+
+class FacesDialog(QtGui.QDialog):
+    """  """
+    def __init__(self, data):
+        super(FacesDialog, self).__init__()
+
+        self.data = data
+
+        self.setWindowTitle(__("Faces configuration"))
+        self.ok_button = QtGui.QPushButton(__("Ok"))
+        self.cancel_button = QtGui.QPushButton(__("Cancel"))
+        self.main_faces_layout = QtGui.QVBoxLayout()
+
+        self.button_layout = QtGui.QHBoxLayout()
+        self.button_layout.addWidget(self.ok_button)
+        self.button_layout.addWidget(self.cancel_button)
+        self.ok_button.clicked.connect(self.on_ok)
+        self.cancel_button.clicked.connect(self.on_cancel)
+
+        self.faces_layout = QtGui.QVBoxLayout()
+        self.all_faces = QtGui.QCheckBox(__("All faces"))
+        if self.data['all_faces']:
+            self.all_faces.setCheckState(QtCore.Qt.Checked)
+        else:
+            self.all_faces.setCheckState(QtCore.Qt.Unchecked)
+        self.all_faces.toggled.connect(self.on_faces_checkbox)
+        self.front_face = QtGui.QCheckBox(__("Front face"))
+        if self.data['front_face']:
+            self.front_face.setCheckState(QtCore.Qt.Checked)
+        else:
+            self.front_face.setCheckState(QtCore.Qt.Unchecked)
+        self.back_face = QtGui.QCheckBox(__("Back face"))
+        if self.data['back_face']:
+            self.back_face.setCheckState(QtCore.Qt.Checked)
+        else:
+            self.back_face.setCheckState(QtCore.Qt.Unchecked)
+        self.top_face = QtGui.QCheckBox(__("Top face"))
+        if self.data['top_face']:
+            self.top_face.setCheckState(QtCore.Qt.Checked)
+        else:
+            self.top_face.setCheckState(QtCore.Qt.Unchecked)
+        self.bottom_face = QtGui.QCheckBox(__("Bottom face"))
+        if self.data['bottom_face']:
+            self.bottom_face.setCheckState(QtCore.Qt.Checked)
+        else:
+            self.bottom_face.setCheckState(QtCore.Qt.Unchecked)
+        self.left_face = QtGui.QCheckBox(__("Left face"))
+        if self.data['left_face']:
+            self.left_face.setCheckState(QtCore.Qt.Checked)
+        else:
+            self.left_face.setCheckState(QtCore.Qt.Unchecked)
+        self.right_face = QtGui.QCheckBox(__("Right face"))
+        if self.data['right_face']:
+            self.right_face.setCheckState(QtCore.Qt.Checked)
+        else:
+            self.right_face.setCheckState(QtCore.Qt.Unchecked)
+
+        self.faces_layout.addWidget(self.all_faces)
+        self.faces_layout.addWidget(self.front_face)
+        self.faces_layout.addWidget(self.back_face)
+        self.faces_layout.addWidget(self.top_face)
+        self.faces_layout.addWidget(self.bottom_face)
+        self.faces_layout.addWidget(self.left_face)
+        self.faces_layout.addWidget(self.right_face)
+
+        self.main_faces_layout.addLayout(self.faces_layout)
+        self.main_faces_layout.addLayout(self.button_layout)
+
+        self.setLayout(self.main_faces_layout)
+
+        self.on_faces_checkbox()
+
+        self.exec_()
+
+    def on_ok(self):
+
+        if self.all_faces.isChecked():
+            self.data['all_faces'] = True
+        else:
+            self.data['all_faces'] = False
+
+        if self.front_face.isChecked():
+            self.data['front_face'] = True
+        else:
+            self.data['front_face'] = False
+
+        if self.back_face.isChecked():
+            self.data['back_face'] = True
+        else:
+            self.data['back_face'] = False
+
+        if self.top_face.isChecked():
+            self.data['top_face'] = True
+        else:
+            self.data['top_face'] = False
+
+        if self.bottom_face.isChecked():
+            self.data['bottom_face'] = True
+        else:
+            self.data['bottom_face'] = False
+
+        if self.left_face.isChecked():
+            self.data['left_face'] = True
+        else:
+            self.data['left_face'] = False
+
+        if self.right_face.isChecked():
+            self.data['right_face'] = True
+        else:
+            self.data['right_face'] = False
+
+        self.accept()
+
+    def on_cancel(self):
+        self.reject()
+
+    def on_faces_checkbox(self):
+        """ Checks the faces state """
+        if self.all_faces.isChecked():
+            self.front_face.setEnabled(False)
+            self.back_face.setEnabled(False)
+            self.top_face.setEnabled(False)
+            self.bottom_face.setEnabled(False)
+            self.left_face.setEnabled(False)
+            self.right_face.setEnabled(False)
+        else:
+            self.front_face.setEnabled(True)
+            self.back_face.setEnabled(True)
+            self.top_face.setEnabled(True)
+            self.bottom_face.setEnabled(True)
+            self.left_face.setEnabled(True)
+            self.right_face.setEnabled(True)

@@ -40,7 +40,7 @@ from properties import *
 from execution_parameters import *
 
 """
-Copyright (C) 2016 - Andrés Vieira (anvieiravazquez@gmail.com)
+Copyright (C) 2019
 EPHYSLAB Environmental Physics Laboratory, Universidade de Vigo
 
 This file is part of DesignSPHysics.
@@ -483,6 +483,13 @@ def get_default_data():
     data['period_y'] = [False, 0.0, 0.0, 0.0]
     data['period_z'] = [False, 0.0, 0.0, 0.0]
 
+    # Simulation domain [0=default, x_value, 0=default, y_value, 0=default, z_value]
+    data['simdomain_chk'] = False
+    data['posmin'] = [0, 0.0, 0, 0.0, 0, 0.0]
+    data['posminxml'] = ['', '', '']
+    data['posmax'] = [0, 0.0, 0, 0.0, 0, 0.0]
+    data['posmaxxml'] = ['', '', '']
+
     # Stores paths to executables
     # TODO: These should be aggregated into an object like ExecutablePaths()
     data['gencase_path'] = ""
@@ -566,6 +573,15 @@ def get_default_data():
     # INLET/OUTLET objects
     data['inlet_object'] = list()
     data['inlet_zones'] = list()
+
+    # Faces objects
+    data['all_faces'] = False
+    data['top_face'] = False
+    data['bottom_face'] = False
+    data['front_face'] = False
+    data['back_face'] = False
+    data['left_face'] = False
+    data['right_face'] = False
 
     # MultiLayer Pistons: {mk: MLPistonObject}
     data['mlayerpistons'] = dict()
@@ -878,7 +894,15 @@ def dump_to_xml(data, save_name):
                         str(-o.Placement.Rotation.Axis.z) + '" />\n'
                     )
                 f.write('\t\t\t\t\t<drawbox objname="{}">\n'.format(o.Label))
-                f.write('\t\t\t\t\t\t<boxfill>solid</boxfill>\n')
+                if data['all_faces'] == False and data['front_face'] == False and data['back_face'] == False and \
+                        data['top_face'] == False and data['bottom_face'] == False and data['left_face'] == False and \
+                        data['right_face'] == False:
+                    f.write('\t\t\t\t\t\t<boxfill>solid</boxfill>\n')
+                elif data['all_faces']:
+                    f.write('\t\t\t\t\t\t<boxfill>all</boxfill>\n')
+                else:
+                    f.write('\t\t\t\t\t\t<boxfill>'+ face +'</boxfill>\n')
+
                 f.write('\t\t\t\t\t\t<point x="0" y="0" z="0" />\n')
                 f.write(
                     '\t\t\t\t\t\t<size x="' +
@@ -2099,8 +2123,9 @@ def dump_to_xml(data, save_name):
             str(data['timemax']) + '" comment="Time of simulation" units_comment="seconds" />\n')
     f.write('\t\t\t<parameter key="TimeOut" value="' +
             str(data['timeout']) + '" comment="Time out data" units_comment="seconds" />\n')
-    f.write('\t\t\t<parameter key="IncZ" value="' +
-            str(data['incz']) + '" comment="Increase of Z+" units_comment="decimal" />\n')
+    if not data['simdomain_chk']:
+        f.write('\t\t\t<parameter key="IncZ" value="' +
+                str(data['incz']) + '" comment="Increase of Z+" units_comment="decimal" />\n')
     f.write('\t\t\t<parameter key="PartsOutMax" value="' + str(
         data['partsoutmax']) + '" comment="%/100 of fluid particles allowed to be excluded from domain '
                                '(default=1)" units_comment="decimal" />\n')
@@ -2125,7 +2150,7 @@ def dump_to_xml(data, save_name):
         if data['3dmode']:
             f.write('\t\t\t<parameter key="ZPeriodicIncY" value="' +
                     str(data['period_z'][2]) + '"/>\n')
-    if data['domainfixed'].enabled:
+    if data['domainfixed'].enabled and not data['simdomain_chk']:
         f.write(
             '\t\t\t<parameter key="DomainFixedXmin" value="{}" comment="The domain is fixed in the specified limit (default=not applied)" units_comment="metres (m)" />\n'.format(
                 data['domainfixed'].xmin))
@@ -2144,6 +2169,24 @@ def dump_to_xml(data, save_name):
         f.write(
             '\t\t\t<parameter key="DomainFixedZmax" value="{}" comment="The domain is fixed in the specified limit (default=not applied)" units_comment="metres (m)" />\n'.format(
                 data['domainfixed'].zmax))
+    if data['simdomain_chk']:
+        f.write(
+            '\t\t\t<simulationdomain comment="Defines domain of simulation (default=Uses minimun and maximum position of the generated particles)" >\n'
+        )
+        f.write(
+            '\t\t\t\t<posmin x="{}" y="{}" z="{}" comment="e.g.: x=0.5, y=default-1, z=default-10%" />\n'.format(
+                data['posminxml'][0], data['posminxml'][1], data['posminxml'][2]
+            )
+        )
+        f.write(
+            '\t\t\t\t<posmax x="{}" y="{}" z="{}"/>\n'.format(
+                data['posmaxxml'][0], data['posmaxxml'][1], data['posmaxxml'][2]
+            )
+        )
+        f.write(
+            '\t\t\t</simulationdomain>\n'
+        )
+
     f.write('\t\t</parameters>\n')
     f.write('\t</execution>\n')
     f.write('</case>\n')
@@ -2233,3 +2276,34 @@ def create_flowtool_boxes(path, boxes):
             f.write("{} {} {}\n".format(*box[8]))
             f.write("{} {} {}\n".format(*box[9]))
             f.write("\n")
+
+
+def faces_mode(data):
+    face = list()
+    face_aux = list()
+
+    if data['front_face']:
+        face.append('front')
+
+    if data['back_face']:
+        face.append('back')
+
+    if data['top_face']:
+        face.append('top')
+
+    if data['bottom_face']:
+        face.append('bottom')
+
+    if data['left_face']:
+        face.append('left')
+
+    if data['right_face']:
+        face.append('right')
+
+    for part in face:
+        face_aux.append(part)
+        if next(face):
+            face_aux.append('|')
+
+    for part in face_aux:
+        print part
