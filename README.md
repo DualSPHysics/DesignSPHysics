@@ -45,7 +45,7 @@ You can check the [DesignSPHysics Wiki](http://design.sphysics.org/wiki) to get 
 Please check the [CONTRIBUTING file](CONTRIBUTING.md) to view information about how to contribute to the project and how it is structured.
 
 ## Copyright and License
-Copyright (C) 2017 - Andrés Vieira (anvieiravazquez@gmail.com)
+Copyright (C) 2019
 EPHYSLAB Environmental Physics Laboratory, Universidade de Vigo
 EPHYTECH Environmental Physics Technologies
 

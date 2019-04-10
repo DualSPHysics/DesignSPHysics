@@ -56,7 +56,7 @@ The main data structure is a Python Dictionary with different data attached to i
 
 # Need more help?
 If you need help on how to contribute please contact one of the following people
-- Andrés Vieira Vázquez - avieira@uvigo.es
+- Lorena Docasar Vázquez - docasarlorena@gmail.com
 - Orlando García Feal - orlando@uvigo.es
 - José Manuel Domínguez Alonso - jmdalonso@gmail.com
 - Alejandro Jacobo Cabrera Crespo - alexbexe@uvigo.es

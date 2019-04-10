@@ -22,7 +22,7 @@ import xmltodict
 import xml.etree.ElementTree as ElementTree
 
 """
-Copyright (C) 2016 - Andrés Vieira (anvieiravazquez@gmail.com)
+Copyright (C) 2019
 EPHYSLAB Environmental Physics Laboratory, Universidade de Vigo
 
 This file is part of DesignSPHysics.
