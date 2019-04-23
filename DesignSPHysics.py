@@ -842,110 +842,113 @@ def on_add_stl():
     filedialog = QtGui.QFileDialog()
 
     # noinspection PyArgumentList
-    file_name, _ = filedialog.getOpenFileName(fc_main_window, __("Select STL to import"), QtCore.QDir.homePath(), "STL Files (*.stl)")
+    file_name, _ = filedialog.getOpenFileName(fc_main_window, __("Select STL to import"), QtCore.QDir.homePath(),
+                                              "STL Files (*.stl);;PLY Files (*.ply);;VTK Files (*.vtk)")
 
     if len(file_name) <= 1:
         # User didn't select any files
         return
 
     # Defines import stl dialog
-    stl_dialog = QtGui.QDialog()
-    stl_dialog.setModal(True)
-    stl_dialog.setWindowTitle(__("Import STL"))
-    stl_dialog_layout = QtGui.QVBoxLayout()
-    stl_group = QtGui.QGroupBox(__("Import STL options"))
-    stl_group_layout = QtGui.QVBoxLayout()
+    geo_dialog = QtGui.QDialog()
+    geo_dialog.setModal(True)
+    geo_dialog.setWindowTitle(__("Import GEO"))
+    geo_dialog_layout = QtGui.QVBoxLayout()
+    geo_group = QtGui.QGroupBox(__("Import GEO options"))
+    geo_group_layout = QtGui.QVBoxLayout()
 
     # STL File selection
-    stl_file_layout = QtGui.QHBoxLayout()
-    stl_file_label = QtGui.QLabel(__("STL File: "))
-    stl_file_path = QtGui.QLineEdit()
-    stl_file_path.setText(file_name)
-    stl_file_browse = QtGui.QPushButton(__("Browse"))
-    [stl_file_layout.addWidget(x) for x in [stl_file_label, stl_file_path, stl_file_browse]]
+    geo_file_layout = QtGui.QHBoxLayout()
+    geo_file_label = QtGui.QLabel(__("GEO File: "))
+    geo_file_path = QtGui.QLineEdit()
+    geo_file_path.setText(file_name)
+    geo_file_browse = QtGui.QPushButton(__("Browse"))
+    [geo_file_layout.addWidget(x) for x in [geo_file_label, geo_file_path, geo_file_browse]]
     # END STL File selection
 
     # Scaling factor
-    stl_scaling_layout = QtGui.QHBoxLayout()
-    stl_scaling_label = QtGui.QLabel(__("Scaling factor: "))
-    stl_scaling_x_l = QtGui.QLabel("X: ")
-    stl_scaling_x_e = QtGui.QLineEdit("1")
-    stl_scaling_y_l = QtGui.QLabel("Y: ")
-    stl_scaling_y_e = QtGui.QLineEdit("1")
-    stl_scaling_z_l = QtGui.QLabel("Z: ")
-    stl_scaling_z_e = QtGui.QLineEdit("1")
-    [stl_scaling_layout.addWidget(x) for x in [
-        stl_scaling_label,
-        stl_scaling_x_l,
-        stl_scaling_x_e,
-        stl_scaling_y_l,
-        stl_scaling_y_e,
-        stl_scaling_z_l,
-        stl_scaling_z_e,
+    geo_scaling_layout = QtGui.QHBoxLayout()
+    geo_scaling_label = QtGui.QLabel(__("Scaling factor: "))
+    geo_scaling_x_l = QtGui.QLabel("X: ")
+    geo_scaling_x_e = QtGui.QLineEdit("1")
+    geo_scaling_y_l = QtGui.QLabel("Y: ")
+    geo_scaling_y_e = QtGui.QLineEdit("1")
+    geo_scaling_z_l = QtGui.QLabel("Z: ")
+    geo_scaling_z_e = QtGui.QLineEdit("1")
+    [geo_scaling_layout.addWidget(x) for x in [
+        geo_scaling_label,
+        geo_scaling_x_l,
+        geo_scaling_x_e,
+        geo_scaling_y_l,
+        geo_scaling_y_e,
+        geo_scaling_z_l,
+        geo_scaling_z_e,
     ]]
     # END Scaling factor
 
     # Import object name
-    stl_objname_layout = QtGui.QHBoxLayout()
-    stl_objname_label = QtGui.QLabel(__("Import object name: "))
-    stl_objname_text = QtGui.QLineEdit("ImportedSTL")
-    [stl_objname_layout.addWidget(x) for x in [stl_objname_label, stl_objname_text]]
+    geo_objname_layout = QtGui.QHBoxLayout()
+    geo_objname_label = QtGui.QLabel(__("Import object name: "))
+    geo_objname_text = QtGui.QLineEdit("ImportedGEO")
+    [geo_objname_layout.addWidget(x) for x in [geo_objname_label, geo_objname_text]]
     # End object name
 
     # Add component layouts to group layout
-    [stl_group_layout.addLayout(x) for x in [stl_file_layout, stl_scaling_layout, stl_objname_layout]]
-    stl_group_layout.addStretch(1)
-    stl_group.setLayout(stl_group_layout)
+    [geo_group_layout.addLayout(x) for x in [geo_file_layout, geo_scaling_layout, geo_objname_layout]]
+    geo_group_layout.addStretch(1)
+    geo_group.setLayout(geo_group_layout)
 
     # Create button layout
-    stl_button_layout = QtGui.QHBoxLayout()
-    stl_button_ok = QtGui.QPushButton(__("Import"))
-    stl_button_cancel = QtGui.QPushButton(__("Cancel"))
-    stl_button_cancel.clicked.connect(lambda: stl_dialog.reject())
-    stl_button_layout.addStretch(1)
-    stl_button_layout.addWidget(stl_button_cancel)
-    stl_button_layout.addWidget(stl_button_ok)
+    geo_button_layout = QtGui.QHBoxLayout()
+    geo_button_ok = QtGui.QPushButton(__("Import"))
+    geo_button_cancel = QtGui.QPushButton(__("Cancel"))
+    geo_button_cancel.clicked.connect(lambda: geo_dialog.reject())
+    geo_button_layout.addStretch(1)
+    geo_button_layout.addWidget(geo_button_cancel)
+    geo_button_layout.addWidget(geo_button_ok)
 
     # Compose main window layout
-    stl_dialog_layout.addWidget(stl_group)
-    stl_dialog_layout.addStretch(1)
-    stl_dialog_layout.addLayout(stl_button_layout)
+    geo_dialog_layout.addWidget(geo_group)
+    geo_dialog_layout.addStretch(1)
+    geo_dialog_layout.addLayout(geo_button_layout)
 
-    stl_dialog.setLayout(stl_dialog_layout)
+    geo_dialog.setLayout(geo_dialog_layout)
 
     # STL Dialog function definition and connections
-    def stl_ok_clicked():
+    def geo_ok_clicked():
         """ Defines ok button behaviour"""
-        [stl_scaling_edit.setText(stl_scaling_edit.text().replace(",", ".")) for stl_scaling_edit in [
-            stl_scaling_x_e,
-            stl_scaling_y_e,
-            stl_scaling_z_e
+        [geo_scaling_edit.setText(geo_scaling_edit.text().replace(",", ".")) for geo_scaling_edit in [
+            geo_scaling_x_e,
+            geo_scaling_y_e,
+            geo_scaling_z_e
         ]]
         try:
-            utils.import_stl(
-                filename=str(stl_file_path.text()),
-                scale_x=float(stl_scaling_x_e.text()),
-                scale_y=float(stl_scaling_y_e.text()),
-                scale_z=float(stl_scaling_z_e.text()),
-                name=str(stl_objname_text.text()))
-            stl_dialog.accept()
+            utils.import_geo(
+                filename=str(geo_file_path.text()),
+                scale_x=float(geo_scaling_x_e.text()),
+                scale_y=float(geo_scaling_y_e.text()),
+                scale_z=float(geo_scaling_z_e.text()),
+                name=str(geo_objname_text.text()))
+            geo_dialog.accept()
         except ValueError:
             utils.error(__("There was an error. Are you sure you wrote correct float values in the scaling factor?"))
             guiutils.error_dialog(__("There was an error. Are you sure you wrote correct float values in the sacaling factor?"))
 
-    def stl_dialog_browse():
+    def geo_dialog_browse():
         """ Defines the browse button behaviour."""
         # noinspection PyArgumentList
-        file_name_temp, _ = filedialog.getOpenFileName(fc_main_window, __("Select STL to import"), QtCore.QDir.homePath(), "STL Files (*.stl)")
-        stl_file_path.setText(file_name_temp)
-        stl_dialog.raise_()
-        stl_dialog.activateWindow()
+        file_name_temp, _ = filedialog.getOpenFileName(fc_main_window, __("Select GEO to import"),
+                                                       QtCore.QDir.homePath(), "STL Files (*.stl);;PLY Files "
+                                                                               "(*.ply);;VTK Files (*.vtk)")
+        geo_file_path.setText(file_name_temp)
+        geo_dialog.raise_()
+        geo_dialog.activateWindow()
 
-    stl_button_cancel.clicked.connect(lambda: stl_dialog.reject())
-    stl_button_ok.clicked.connect(stl_ok_clicked)
-    stl_file_browse.clicked.connect(stl_dialog_browse)
+    geo_button_cancel.clicked.connect(lambda: geo_dialog.reject())
+    geo_button_ok.clicked.connect(geo_ok_clicked)
+    geo_file_browse.clicked.connect(geo_dialog_browse)
 
-    stl_dialog.exec_()
+    geo_dialog.exec_()
 
 
 def on_import_xml():
@@ -3287,7 +3290,7 @@ properties_scaff_widget = QtGui.QWidget()
 property_widget_layout = QtGui.QVBoxLayout()
 
 # Property table
-object_property_table = QtGui.QTableWidget(7, 2)
+object_property_table = QtGui.QTableWidget(6, 2)
 object_property_table.setMinimumHeight(220)
 object_property_table.setHorizontalHeaderLabels([__("Property Name"), __("Value")])
 object_property_table.verticalHeader().setVisible(False)
@@ -3351,7 +3354,7 @@ object_property_table.setCellWidget(2, 0, fillmode_label)
 object_property_table.setCellWidget(3, 0, floatstate_label)
 object_property_table.setCellWidget(4, 0, initials_label)
 object_property_table.setCellWidget(5, 0, motion_label)
-object_property_table.setCellWidget(6, 0, simplewall_label)
+#object_property_table.setCellWidget(6, 0, simplewall_label)
 
 
 def mkgroup_change(value):
@@ -3499,7 +3502,7 @@ object_property_table.setCellWidget(2, 1, fillmode_prop)
 object_property_table.setCellWidget(3, 1, floatstate_prop)
 object_property_table.setCellWidget(4, 1, initials_prop)
 object_property_table.setCellWidget(5, 1, motion_prop)
-object_property_table.setCellWidget(6, 1, wall_prop)
+#object_property_table.setCellWidget(6, 1, wall_prop)
 
 # Dock the widget to the left side of screen
 fc_main_window.addDockWidget(QtCore.Qt.LeftDockWidgetArea, properties_widget)

@@ -5495,7 +5495,7 @@ class ExecutionParametersDialog(QtGui.QDialog):
         self.posdouble_label = QtGui.QLabel("Precision in particle interaction: ")
         self.posdouble_input = FocusableComboBox()
         self.posdouble_input.insertItems(0,
-                                    ['Simple', 'Double', 'Uses and saves double'])
+                                    ['Double', 'Simple', 'Uses and saves double'])
         self.posdouble_input.setCurrentIndex(int(self.data['posdouble']))
         self.posdouble_input.setHelpText(utils.__(constants.HELP_POSDOUBLE))
 
@@ -5508,7 +5508,7 @@ class ExecutionParametersDialog(QtGui.QDialog):
         self.stepalgorithm_layout = QtGui.QHBoxLayout()
         self.stepalgorithm_label = QtGui.QLabel("Step Algorithm: ")
         self.stepalgorithm_input = FocusableComboBox()
-        self.stepalgorithm_input.insertItems(0, ['Verlet', 'Symplectic'])
+        self.stepalgorithm_input.insertItems(0, ['Symplectic', 'Verlet'])
         self.stepalgorithm_input.setCurrentIndex(int(self.data['stepalgorithm']) - 1)
         self.stepalgorithm_input.setHelpText(utils.__(constants.HELP_STEPALGORITHM))
 
@@ -6425,6 +6425,7 @@ class ExecutionParametersDialog(QtGui.QDialog):
                 self.simdomain_posmaxz_combobox.currentIndex(),
                 float(self.simdomain_posmaxz_line_edit.text())
             ]
+            self.data['incz'] = 0
             self.simulation_domain()
         else:
             self.data['simdomain_chk'] = False
@@ -6803,7 +6804,7 @@ class ChronoConfigDialog(QtGui.QDialog):
         else:
             self.csv_intervals_checkbox.setCheckState(QtCore.Qt.Unchecked)
         self.csv_intervals_checkbox.toggled.connect(self.on_csv_intervals_check)
-        self.csv_intervals_option = QtGui.QLabel(__("CSV intervarls:"))
+        self.csv_intervals_option = QtGui.QLabel(__("CSV intervals:"))
         self.csv_intervals_line_edit = QtGui.QLineEdit(str(self.data['csv_intervals']))
         self.csv_option_layout.addWidget(self.csv_intervals_checkbox)
         self.csv_option_layout.addWidget(self.csv_intervals_option)
@@ -7131,9 +7132,11 @@ class ChronoConfigDialog(QtGui.QDialog):
     def on_link_hinge_add(self):
         """ Adds Link hinge option at list """
         # data['link_hinge'] = [element id, body 1, body 2, rotpoint[x,y,z], rotvector[x,y,z], stiffness, damping]
+        uid_temp = uuid.uuid4()
         self.data['link_hinge'].append([
-            str(uuid.uuid4()), '', '', [0, 0, 0], [0, 0, 0], 0, 0])
-        self.refresh_link_hinge()
+            str(uid_temp), '', '', [0, 0, 0], [0, 0, 0], 0, 0])
+        self.link_hinge_edit(str(uid_temp))
+        #self.refresh_link_hinge()
 
     def link_hinge_delete(self, link_hinge_id):
         """ Delete a link hinge element """
@@ -9226,9 +9229,9 @@ class MovementDialog(QtGui.QDialog):
             elif isinstance(target_movement.generator, IrregularFlapWaveGen):
                 target_to_put = IrregularFlapWaveMotionTimeline(target_movement.generator)
             elif isinstance(target_movement.generator, FileGen):
-                target_to_put = FileMotionTimeline(target_movement.generator, data['project_path'])
+                target_to_put = FileMotionTimeline(target_movement.generator, self.data['project_path'])
             elif isinstance(target_movement.generator, RotationFileGen):
-                target_to_put = RotationFileMotionTimeline(target_movement.generator, data['project_path'])
+                target_to_put = RotationFileMotionTimeline(target_movement.generator, self.data['project_path'])
 
             target_to_put.changed.connect(self.on_timeline_item_change)
             self.timeline_list_table.setCellWidget(0, 0, target_to_put)
@@ -9369,6 +9372,8 @@ class FacesDialog(QtGui.QDialog):
         self.cancel_button = QtGui.QPushButton(__("Cancel"))
         self.main_faces_layout = QtGui.QVBoxLayout()
 
+        self.target_mk = int(self.data['simobjects'][FreeCADGui.Selection.getSelection()[0].Name][0])
+
         self.button_layout = QtGui.QHBoxLayout()
         self.button_layout.addWidget(self.ok_button)
         self.button_layout.addWidget(self.cancel_button)
@@ -9431,6 +9436,8 @@ class FacesDialog(QtGui.QDialog):
         self.exec_()
 
     def on_ok(self):
+
+        fp = FacesProperty()
 
         if self.all_faces.isChecked():
             self.data['all_faces'] = True

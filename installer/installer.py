@@ -34,7 +34,7 @@ from PySide import QtGui, QtCore
 # You should have received a copy of the GNU General Public License
 # along with DesignSPHysics.  If not, see <http://www.gnu.org/licenses/>.
 
-print "Copyright (C) 2016-2017 - Andrés Vieira"
+print "Copyright (C) 2016-2019"
 print "EPHYSLAB Environmental Physics Laboratory, Universidade de Vigo"
 
 
