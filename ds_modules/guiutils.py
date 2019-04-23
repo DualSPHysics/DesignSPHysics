@@ -782,7 +782,7 @@ def case_summary(orig_data):
     }[str(data['stepalgorithm'])]
     data['project_mode'] = '3D' if data['3dmode'] else '2D'
 
-    data['incz'] = float(data['incz']) * 100
+    #data['incz'] = float(data['incz']) * 100
     data['partsoutmax'] = float(data['partsoutmax']) * 100
 
     # Setting certain values to automatic

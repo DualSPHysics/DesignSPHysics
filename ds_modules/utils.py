@@ -66,7 +66,7 @@ DEBUGGING = False
 VERBOSE = False
 DIVIDER = 1000
 PICKLE_PROTOCOL = 1  # Binary mode
-VERSION = "0.5.1812-03"
+VERSION = "0.5.1904-23"
 WIDTH_2D = 0.001
 MAX_PARTICLE_WARNING = 2000000
 HELP_WEBPAGE = "https://github.com/DualSPHysics/DesignSPHysics/wiki"
@@ -469,7 +469,7 @@ def get_default_data():
     data['dtallparticles'] = 0
     data['timemax'] = 1.5
     data['timeout'] = 0.01
-    data['incz'] = 1
+    data['incz'] = 0
     data['partsoutmax'] = 1
     data['rhopoutmin'] = 700
     data['rhopoutmax'] = 1300
@@ -575,6 +575,7 @@ def get_default_data():
     data['inlet_zones'] = list()
 
     # Faces objects
+    data['faces'] = dict()
     data['all_faces'] = False
     data['top_face'] = False
     data['bottom_face'] = False
@@ -2123,7 +2124,7 @@ def dump_to_xml(data, save_name):
             str(data['timemax']) + '" comment="Time of simulation" units_comment="seconds" />\n')
     f.write('\t\t\t<parameter key="TimeOut" value="' +
             str(data['timeout']) + '" comment="Time out data" units_comment="seconds" />\n')
-    if not data['simdomain_chk']:
+    if not data['simdomain_chk'] and data['incz'] > 0:
         f.write('\t\t\t<parameter key="IncZ" value="' +
                 str(data['incz']) + '" comment="Increase of Z+" units_comment="decimal" />\n')
     f.write('\t\t\t<parameter key="PartsOutMax" value="' + str(
@@ -2226,8 +2227,8 @@ def batch_generator(full_path, case_name, gcpath, dsphpath, pvtkpath, exec_param
         bat_file.write(linux_template)
 
 
-def import_stl(filename=None, scale_x=1, scale_y=1, scale_z=1, name=None):
-    """ Opens a STL file, preprocesses it and saves it
+def import_geo(filename=None, scale_x=1, scale_y=1, scale_z=1, name=None):
+    """ Opens a GEO file, preprocesses it and saves it
     int temp files to load with FreeCAD. """
     if scale_x <= 0:
         scale_x = 1
@@ -2237,7 +2238,7 @@ def import_stl(filename=None, scale_x=1, scale_y=1, scale_z=1, name=None):
         scale_z = 1
 
     if not filename:
-        raise RuntimeError("STL Import: file cannot be None")
+        raise RuntimeError("GEO Import: file cannot be None")
     try:
         target = stl.Mesh.from_file(filename)
     except Exception as e:
