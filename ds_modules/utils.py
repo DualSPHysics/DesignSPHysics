@@ -66,7 +66,7 @@ DEBUGGING = False
 VERBOSE = False
 DIVIDER = 1000
 PICKLE_PROTOCOL = 1  # Binary mode
-VERSION = "0.5.1904-23"
+VERSION = "0.5.1905-08"
 WIDTH_2D = 0.001
 MAX_PARTICLE_WARNING = 2000000
 HELP_WEBPAGE = "https://github.com/DualSPHysics/DesignSPHysics/wiki"
@@ -576,13 +576,6 @@ def get_default_data():
 
     # Faces objects
     data['faces'] = dict()
-    data['all_faces'] = False
-    data['top_face'] = False
-    data['bottom_face'] = False
-    data['front_face'] = False
-    data['back_face'] = False
-    data['left_face'] = False
-    data['right_face'] = False
 
     # MultiLayer Pistons: {mk: MLPistonObject}
     data['mlayerpistons'] = dict()
@@ -869,7 +862,6 @@ def dump_to_xml(data, save_name):
         if name != "Case_Limits":
             # Sets MKfluid or bound depending on object properties and resets
             # the matrix
-            f.write('\t\t\t\t\t<matrixreset />\n')
             if valuelist[1].lower() == "fluid":
                 f.write('\t\t\t\t\t<setmkfluid mk="' + str(valuelist[0]) + '"/>\n')
             elif valuelist[1].lower() == "bound":
@@ -895,15 +887,11 @@ def dump_to_xml(data, save_name):
                         str(-o.Placement.Rotation.Axis.z) + '" />\n'
                     )
                 f.write('\t\t\t\t\t<drawbox objname="{}">\n'.format(o.Label))
-                if data['all_faces'] == False and data['front_face'] == False and data['back_face'] == False and \
-                        data['top_face'] == False and data['bottom_face'] == False and data['left_face'] == False and \
-                        data['right_face'] == False:
-                    f.write('\t\t\t\t\t\t<boxfill>solid</boxfill>\n')
-                elif data['all_faces']:
-                    f.write('\t\t\t\t\t\t<boxfill>all</boxfill>\n')
+                if (str(valuelist[0]), o.Label) in data['faces'].keys():
+                    f.write('\t\t\t\t\t\t<boxfill>{}</boxfill>\n'.format(str(data['faces'][str(valuelist[0]), o.Label]
+                                                                             .face_print)))
                 else:
-                    f.write('\t\t\t\t\t\t<boxfill>'+ face +'</boxfill>\n')
-
+                    f.write('\t\t\t\t\t\t<boxfill>solid</boxfill>\n')
                 f.write('\t\t\t\t\t\t<point x="0" y="0" z="0" />\n')
                 f.write(
                     '\t\t\t\t\t\t<size x="' +
@@ -912,6 +900,7 @@ def dump_to_xml(data, save_name):
                     str(o.Height.Value / DIVIDER) + '" />\n'
                 )
                 f.write('\t\t\t\t\t</drawbox>\n')
+                f.write('\t\t\t\t\t<matrixreset />\n')
             elif o.TypeId == "Part::Sphere":
                 if (abs(o.Placement.Base.x) + abs(o.Placement.Base.y) + abs(o.Placement.Base.z)) != 0:
                     f.write(
@@ -2230,6 +2219,10 @@ def batch_generator(full_path, case_name, gcpath, dsphpath, pvtkpath, exec_param
 def import_geo(filename=None, scale_x=1, scale_y=1, scale_z=1, name=None):
     """ Opens a GEO file, preprocesses it and saves it
     int temp files to load with FreeCAD. """
+
+    length_filename = len(filename)
+    file_tipe = "." + filename[length_filename-3] + filename[length_filename-2] + filename[length_filename-1]
+
     if scale_x <= 0:
         scale_x = 1
     if scale_y <= 0:
@@ -2248,9 +2241,9 @@ def import_geo(filename=None, scale_x=1, scale_y=1, scale_z=1, name=None):
     target.y *= scale_y
     target.z *= scale_z
     if not name:
-        temp_file_name = tempfile.gettempdir() + "/" + str(random.randrange(100, 1000, 1)) + ".stl"
+        temp_file_name = tempfile.gettempdir() + "/" + str(random.randrange(100, 1000, 1)) + file_tipe
     else:
-        temp_file_name = tempfile.gettempdir() + "/" + name + ".stl"
+        temp_file_name = tempfile.gettempdir() + "/" + name + file_tipe
 
     target.save(temp_file_name)
 
@@ -2277,34 +2270,3 @@ def create_flowtool_boxes(path, boxes):
             f.write("{} {} {}\n".format(*box[8]))
             f.write("{} {} {}\n".format(*box[9]))
             f.write("\n")
-
-
-def faces_mode(data):
-    face = list()
-    face_aux = list()
-
-    if data['front_face']:
-        face.append('front')
-
-    if data['back_face']:
-        face.append('back')
-
-    if data['top_face']:
-        face.append('top')
-
-    if data['bottom_face']:
-        face.append('bottom')
-
-    if data['left_face']:
-        face.append('left')
-
-    if data['right_face']:
-        face.append('right')
-
-    for part in face:
-        face_aux.append(part)
-        if next(face):
-            face_aux.append('|')
-
-    for part in face_aux:
-        print part
