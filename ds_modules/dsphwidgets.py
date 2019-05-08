@@ -7155,11 +7155,13 @@ class ChronoConfigDialog(QtGui.QDialog):
 
     def on_link_linearspring_add(self):
         """ Adds Link linearspring option at list """
+        uid_temp = uuid.uuid4()
         # data['link_linearspring'] = [element id, body 1, body 2, point_fb1[x,y,z], point_fb2[x,y,z], stiffness,
         # damping, rest_length, savevtk[nside, radius, length]]
         self.data['link_linearspring'].append([
-            str(uuid.uuid4()), '', '', [0, 0, 0], [0, 0, 0], 0, 0, 0, [0, 0, 0]])
-        self.refresh_link_linearspring()
+            str(uid_temp), '', '', [0, 0, 0], [0, 0, 0], 0, 0, 0, [0, 0, 0]])
+        self.link_linearspring_edit(str(uid_temp))
+        #self.refresh_link_linearspring()
 
     def link_linearspring_delete(self, link_linearspring_id):
         """ Delete a link linearspring element """
@@ -7178,10 +7180,12 @@ class ChronoConfigDialog(QtGui.QDialog):
 
     def on_link_spheric_add(self):
         """ Adds Link spheric option at list """
+        uid_temp = uuid.uuid4()
         # data['link_spheric'] = [element id, body 1, body 2, rotpoint[x,y,z], stiffness, damping]
         self.data['link_spheric'].append([
-            str(uuid.uuid4()), '', '', [0, 0, 0], 0, 0])
-        self.refresh_link_spheric()
+            str(uid_temp), '', '', [0, 0, 0], 0, 0])
+        self.link_spheric_edit(str(uid_temp))
+        #self.refresh_link_spheric()
 
     def link_spheric_delete(self, link_spheric_id):
         """ Delete a link spheric element """
@@ -7200,11 +7204,13 @@ class ChronoConfigDialog(QtGui.QDialog):
 
     def on_link_pointline_add(self):
         """ Adds Link pointline option at list """
+        uid_temp = uuid.uuid4()
         # data['link_pointline'] = [element id, body 1, slidingvector[x,y,z], rotpoint[x,y,z], rotvector[x,y,z],
         # rotvector2[x,y,z], stiffness, damping]
         self.data['link_pointline'].append([
-            str(uuid.uuid4()), '', [0, 0, 0], [0, 0, 0], [0, 0, 0], [0, 0, 0], 0, 0])
-        self.refresh_link_pointline()
+            str(uid_temp), '', [0, 0, 0], [0, 0, 0], [0, 0, 0], [0, 0, 0], 0, 0])
+        self.link_pointline_edit(str(uid_temp))
+        #self.refresh_link_pointline()
 
     def link_pointline_delete(self, link_pointline_id):
         """ Delete a link pointline element """
@@ -8018,10 +8024,8 @@ class InletConfigDialog(QtGui.QDialog):
         self.button_layout.addWidget(self.cancel_button)
 
         # Create the list for inlet/outlet objects
-        self.main_inlet = QtGui.QGroupBox("Inlet/Outler objects")
+        self.main_inlet = QtGui.QGroupBox("Inlet/Outler objects (only objects defined with 'Faces')")
         self.inlet_layout = QtGui.QVBoxLayout()
-        self.inlet_button = QtGui.QPushButton(__("Add"))
-        self.inlet_button.clicked.connect(self.on_add_zone)
 
         self.objectlist_table = QtGui.QTableWidget(0, 2)
         self.objectlist_table.setObjectName("Inlet/Outler objects table")
@@ -8036,7 +8040,8 @@ class InletConfigDialog(QtGui.QDialog):
         for key in self.data['simobjects'].keys():
             self.context_object = FreeCAD.getDocument("DSPH_Case").getObject(key)
             if self.data['simobjects'][self.context_object.Name][1] == "Fluid" and \
-                    self.context_object.Name != "Case_Limits":
+                    self.context_object.Name != "Case_Limits" and \
+                    self.data['simobjects'][self.context_object.Name][2] == "Face":
                 self.count += 1
         self.objectlist_table.setRowCount(self.count)
         self.current_row = 0
@@ -8055,6 +8060,8 @@ class InletConfigDialog(QtGui.QDialog):
                 continue
             if self.data['simobjects'][self.context_object.Name][1] == "Bound":
                 continue
+            if self.data['simobjects'][self.context_object.Name][2] != "Face":
+                continue
 
             # Collects the information of the object
             self.target_widget = ObjectIsShowed(
@@ -8066,6 +8073,9 @@ class InletConfigDialog(QtGui.QDialog):
 
             # Save the current object
             self.temp_data.append(self.target_widget)
+
+            self.inlet_button = QtGui.QPushButton(__("Add"))
+            self.inlet_button.clicked.connect(self.on_add_zone)
 
             # Shows the object in table
             self.objectlist_table.setCellWidget(self.current_row, 0, self.target_widget)
@@ -9373,6 +9383,7 @@ class FacesDialog(QtGui.QDialog):
         self.main_faces_layout = QtGui.QVBoxLayout()
 
         self.target_mk = int(self.data['simobjects'][FreeCADGui.Selection.getSelection()[0].Name][0])
+        self.name = FreeCADGui.Selection.getSelection()[0].Label
 
         self.button_layout = QtGui.QHBoxLayout()
         self.button_layout.addWidget(self.ok_button)
@@ -9381,42 +9392,61 @@ class FacesDialog(QtGui.QDialog):
         self.cancel_button.clicked.connect(self.on_cancel)
 
         self.faces_layout = QtGui.QVBoxLayout()
+
         self.all_faces = QtGui.QCheckBox(__("All faces"))
-        if self.data['all_faces']:
-            self.all_faces.setCheckState(QtCore.Qt.Checked)
-        else:
-            self.all_faces.setCheckState(QtCore.Qt.Unchecked)
         self.all_faces.toggled.connect(self.on_faces_checkbox)
+
         self.front_face = QtGui.QCheckBox(__("Front face"))
-        if self.data['front_face']:
-            self.front_face.setCheckState(QtCore.Qt.Checked)
-        else:
-            self.front_face.setCheckState(QtCore.Qt.Unchecked)
+
         self.back_face = QtGui.QCheckBox(__("Back face"))
-        if self.data['back_face']:
-            self.back_face.setCheckState(QtCore.Qt.Checked)
-        else:
-            self.back_face.setCheckState(QtCore.Qt.Unchecked)
+
         self.top_face = QtGui.QCheckBox(__("Top face"))
-        if self.data['top_face']:
-            self.top_face.setCheckState(QtCore.Qt.Checked)
-        else:
-            self.top_face.setCheckState(QtCore.Qt.Unchecked)
+
         self.bottom_face = QtGui.QCheckBox(__("Bottom face"))
-        if self.data['bottom_face']:
-            self.bottom_face.setCheckState(QtCore.Qt.Checked)
-        else:
-            self.bottom_face.setCheckState(QtCore.Qt.Unchecked)
+
         self.left_face = QtGui.QCheckBox(__("Left face"))
-        if self.data['left_face']:
-            self.left_face.setCheckState(QtCore.Qt.Checked)
-        else:
-            self.left_face.setCheckState(QtCore.Qt.Unchecked)
+
         self.right_face = QtGui.QCheckBox(__("Right face"))
-        if self.data['right_face']:
-            self.right_face.setCheckState(QtCore.Qt.Checked)
-        else:
-            self.right_face.setCheckState(QtCore.Qt.Unchecked)
+
+        try:
+            if (str(self.target_mk), self.name) in self.data['faces'].keys():
+                if self.data['faces'][str(self.target_mk), self.name].all_faces:
+                    self.all_faces.setCheckState(QtCore.Qt.Checked)
+                else:
+                    self.all_faces.setCheckState(QtCore.Qt.Unchecked)
+                self.all_faces.toggled.connect(self.on_faces_checkbox)
+
+                if self.data['faces'][str(self.target_mk), self.name].front_face:
+                    self.front_face.setCheckState(QtCore.Qt.Checked)
+                else:
+                    self.front_face.setCheckState(QtCore.Qt.Unchecked)
+
+                if self.data['faces'][str(self.target_mk), self.name].back_face:
+                    self.back_face.setCheckState(QtCore.Qt.Checked)
+                else:
+                    self.back_face.setCheckState(QtCore.Qt.Unchecked)
+
+                if self.data['faces'][str(self.target_mk), self.name].top_face:
+                    self.top_face.setCheckState(QtCore.Qt.Checked)
+                else:
+                    self.top_face.setCheckState(QtCore.Qt.Unchecked)
+
+                if self.data['faces'][str(self.target_mk), self.name].bottom_face:
+                    self.bottom_face.setCheckState(QtCore.Qt.Checked)
+                else:
+                    self.bottom_face.setCheckState(QtCore.Qt.Unchecked)
+
+                if self.data['faces'][str(self.target_mk), self.name].left_face:
+                    self.left_face.setCheckState(QtCore.Qt.Checked)
+                else:
+                    self.left_face.setCheckState(QtCore.Qt.Unchecked)
+
+                if self.data['faces'][str(self.target_mk), self.name].right_face:
+                    self.right_face.setCheckState(QtCore.Qt.Checked)
+                else:
+                    self.right_face.setCheckState(QtCore.Qt.Unchecked)
+        except:
+            pass
 
         self.faces_layout.addWidget(self.all_faces)
         self.faces_layout.addWidget(self.front_face)
@@ -9438,41 +9468,73 @@ class FacesDialog(QtGui.QDialog):
     def on_ok(self):
 
         fp = FacesProperty()
+        fp.mk = self.target_mk
 
         if self.all_faces.isChecked():
-            self.data['all_faces'] = True
+            fp.all_faces = True
+            fp.back_face = False
+            fp.front_face = False
+            fp.top_face = False
+            fp.bottom_face = False
+            fp.left_face = False
+            fp.right_face = False
+            fp.face_print = 'all'
         else:
-            self.data['all_faces'] = False
+            fp.all_faces = False
 
-        if self.front_face.isChecked():
-            self.data['front_face'] = True
-        else:
-            self.data['front_face'] = False
+            if self.front_face.isChecked():
+                fp.front_face = True
+                fp.face_print = 'front'
+            else:
+                fp.front_face = False
 
-        if self.back_face.isChecked():
-            self.data['back_face'] = True
-        else:
-            self.data['back_face'] = False
+            if self.back_face.isChecked():
+                fp.back_face = True
+                if fp.face_print != '':
+                    fp.face_print += ' | back'
+                else:
+                    fp.face_print = 'back'
+            else:
+                fp.back_face = False
 
-        if self.top_face.isChecked():
-            self.data['top_face'] = True
-        else:
-            self.data['top_face'] = False
+            if self.top_face.isChecked():
+                fp.top_face = True
+                if fp.face_print != '':
+                    fp.face_print += ' | top'
+                else:
+                    fp.face_print = 'top'
+            else:
+                fp.top_face = False
 
-        if self.bottom_face.isChecked():
-            self.data['bottom_face'] = True
-        else:
-            self.data['bottom_face'] = False
+            if self.bottom_face.isChecked():
+                fp.bottom_face = True
+                if fp.face_print != '':
+                    fp.face_print += ' | bottom'
+                else:
+                    fp.face_print = 'bottom'
+            else:
+                fp.bottom_face = False
 
-        if self.left_face.isChecked():
-            self.data['left_face'] = True
-        else:
-            self.data['left_face'] = False
+            if self.left_face.isChecked():
+                fp.left_face = True
+                if fp.face_print != '':
+                    fp.face_print += ' | left'
+                else:
+                    fp.face_print = 'left'
+            else:
+                fp.left_face = False
 
-        if self.right_face.isChecked():
-            self.data['right_face'] = True
-        else:
-            self.data['right_face'] = False
+            if self.right_face.isChecked():
+                fp.right_face = True
+                if fp.face_print != '':
+                    fp.face_print += ' | right'
+                else:
+                    fp.face_print = 'right'
+            else:
+                fp.right_face = False
+
+
+        self.data['faces'][str(self.target_mk), self.name] = fp
 
         self.accept()
 

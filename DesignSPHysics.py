@@ -58,12 +58,12 @@ except:
 
 __author__ = "Andrés Vieira"
 __copyright__ = "Copyright 2016-2017, DualSHPysics Team"
-__credits__ = ["Andrés Vieira",
+__credits__ = ["Andrés Vieira", "Lorena Docasar",
                "Alejandro Jacobo Cabrera Crespo", "Orlando García Feal"]
 __license__ = "GPL"
 __version__ = utils.VERSION
-__maintainer__ = "Andrés Vieira"
-__email__ = "anvieiravazquez@gmail.com"
+__maintainer__ = "Lorena Docasar"
+__email__ = "docasarlorena@gmail.com"
 __status__ = "Development"
 
 # Print license at macro start
@@ -260,12 +260,12 @@ casecontrols_bt_addfillbox.setToolTip(__("Adds a FillBox. A FillBox is able to f
 casecontrols_bt_addfillbox.setEnabled(False)
 widget_state_elements['casecontrols_bt_addfillbox'] = casecontrols_bt_addfillbox
 
-# Import STL button
-casecontrols_bt_addstl = QtGui.QPushButton("Import STL")
-casecontrols_bt_addstl.setToolTip(__("Imports a STL with postprocessing. "
+# Import GEO button
+casecontrols_bt_addgeo = QtGui.QPushButton("Import GEO")
+casecontrols_bt_addgeo.setToolTip(__("Imports a GEO object with postprocessing. "
                                      "This way you can set the scale of the imported object."))
-casecontrols_bt_addstl.setEnabled(False)
-widget_state_elements['casecontrols_bt_addstl'] = casecontrols_bt_addstl
+casecontrols_bt_addgeo.setEnabled(False)
+widget_state_elements['casecontrols_bt_addgeo'] = casecontrols_bt_addgeo
 
 # Import XML button
 casecontrols_bt_importxml = QtGui.QPushButton(__("Import XML"))
@@ -842,7 +842,7 @@ def on_add_stl():
     filedialog = QtGui.QFileDialog()
 
     # noinspection PyArgumentList
-    file_name, _ = filedialog.getOpenFileName(fc_main_window, __("Select STL to import"), QtCore.QDir.homePath(),
+    file_name, _ = filedialog.getOpenFileName(fc_main_window, __("Select GEO to import"), QtCore.QDir.homePath(),
                                               "STL Files (*.stl);;PLY Files (*.ply);;VTK Files (*.vtk)")
 
     if len(file_name) <= 1:
@@ -1121,7 +1121,7 @@ def on_special_button():
 
     sp_damping_button = QtGui.QPushButton(__("Damping"))
     sp_inlet_button = QtGui.QPushButton(__("Inlet/Outlet"))
-    sp_inlet_button.setEnabled(False)
+    #sp_inlet_button.setEnabled(False)
     sp_chrono_button = QtGui.QPushButton(__("Coupling CHRONO"))
     #sp_chrono_button.setEnabled(False)
     sp_multilayeredmb_button = QtGui.QPushButton(__("Multi-layered Piston"))
@@ -1366,7 +1366,7 @@ casecontrols_menu_newdoc.triggered.connect(on_newdoc_menu)
 casecontrols_menu_savemenu.triggered.connect(on_save_menu)
 casecontrols_bt_loaddoc.clicked.connect(on_load_button)
 casecontrols_bt_addfillbox.clicked.connect(on_add_fillbox)
-casecontrols_bt_addstl.clicked.connect(on_add_stl)
+casecontrols_bt_addgeo.clicked.connect(on_add_stl)
 casecontrols_bt_importxml.clicked.connect(on_import_xml)
 summary_bt.clicked.connect(on_summary)
 toggle3dbutton.clicked.connect(on_2d_toggle)
@@ -1380,7 +1380,7 @@ ccfilebuttons_layout.addWidget(casecontrols_bt_loaddoc)
 ccsecondrow_layout.addWidget(summary_bt)
 ccsecondrow_layout.addWidget(toggle3dbutton)
 ccthirdrow_layout.addWidget(casecontrols_bt_addfillbox)
-ccthirdrow_layout.addWidget(casecontrols_bt_addstl)
+ccthirdrow_layout.addWidget(casecontrols_bt_addgeo)
 ccthirdrow_layout.addWidget(casecontrols_bt_importxml)
 ccfourthrow_layout.addWidget(casecontrols_bt_special)
 ccfourthrow_layout.addWidget(rungencase_bt)
@@ -3290,7 +3290,7 @@ properties_scaff_widget = QtGui.QWidget()
 property_widget_layout = QtGui.QVBoxLayout()
 
 # Property table
-object_property_table = QtGui.QTableWidget(6, 2)
+object_property_table = QtGui.QTableWidget(7, 2)
 object_property_table.setMinimumHeight(220)
 object_property_table.setHorizontalHeaderLabels([__("Property Name"), __("Value")])
 object_property_table.verticalHeader().setVisible(False)
@@ -3354,7 +3354,7 @@ object_property_table.setCellWidget(2, 0, fillmode_label)
 object_property_table.setCellWidget(3, 0, floatstate_label)
 object_property_table.setCellWidget(4, 0, initials_label)
 object_property_table.setCellWidget(5, 0, motion_label)
-#object_property_table.setCellWidget(6, 0, simplewall_label)
+object_property_table.setCellWidget(6, 0, simplewall_label)
 
 
 def mkgroup_change(value):
@@ -3417,48 +3417,50 @@ def fillmode_change(index):
 
     if fillmode_prop.itemText(index).lower() == "full":
         if objtype_prop.itemText(objtype_prop.currentIndex()).lower() == "fluid":
-            wall_prop.setEnabled(False)
             try:
                 selectiongui.Transparency = 30
             except AttributeError:
                 # Cannot change transparency. Just ignore
                 pass
         elif objtype_prop.itemText(objtype_prop.currentIndex()).lower() == "bound":
-            wall_prop.setEnabled(False)
             try:
                 selectiongui.Transparency = 0
             except AttributeError:
                 # Cannot change transparency. Just ignore
                 pass
+        wall_prop.setEnabled(False)
+        faces_status(selection)
     elif fillmode_prop.itemText(index).lower() == "solid":
         if objtype_prop.itemText(objtype_prop.currentIndex()).lower() == "fluid":
-            wall_prop.setEnabled(False)
             try:
                 selectiongui.Transparency = 30
             except AttributeError:
                 # Cannot change transparency (fillbox?). Just ignore
                 pass
         elif objtype_prop.itemText(objtype_prop.currentIndex()).lower() == "bound":
-            wall_prop.setEnabled(False)
             try:
                 selectiongui.Transparency = 0
             except AttributeError:
                 # Cannot change transparency (fillbox?). Just ignore
                 pass
+        wall_prop.setEnabled(False)
+        faces_status(selection)
     elif fillmode_prop.itemText(index).lower() == "face":
-        wall_prop.setEnabled(True)
         try:
             selectiongui.Transparency = 80
         except AttributeError:
             # Cannot change transparency. Just ignore
             pass
+        wall_prop.setEnabled(True)
+        faces_status(selection)
     elif fillmode_prop.itemText(index).lower() == "wire":
-        wall_prop.setEnabled(False)
         try:
             selectiongui.Transparency = 85
         except AttributeError:
             # Cannot change transparency. Just ignore
             pass
+        wall_prop.setEnabled(False)
+        faces_status(selection)
 
 
 def initials_change():
@@ -3477,6 +3479,18 @@ def faces_change():
     dsphwidgets.FacesDialog(data)
 
 
+def faces_status(selection):
+
+    if wall_prop.isEnabled():
+        pass
+    else:
+        target_mk = int(data['simobjects'][selection.Name][0])
+        name = selection.Label
+
+        if (str(target_mk), name) in data['faces'].keys():
+            data['faces'].pop((str(target_mk), name), None)
+
+
 # Property change widgets
 mkgroup_prop = QtGui.QSpinBox()
 objtype_prop = QtGui.QComboBox()
@@ -3484,7 +3498,7 @@ fillmode_prop = QtGui.QComboBox()
 floatstate_prop = QtGui.QPushButton(__("Configure"))
 initials_prop = QtGui.QPushButton(__("Configure"))
 motion_prop = QtGui.QPushButton(__("Configure"))
-wall_prop = QtGui.QPushButton(__("Add"))
+wall_prop = QtGui.QPushButton(__("Configure"))
 wall_prop.setEnabled(False)
 mkgroup_prop.setRange(0, 240)
 objtype_prop.insertItems(0, ['Fluid', 'Bound'])
@@ -3502,7 +3516,8 @@ object_property_table.setCellWidget(2, 1, fillmode_prop)
 object_property_table.setCellWidget(3, 1, floatstate_prop)
 object_property_table.setCellWidget(4, 1, initials_prop)
 object_property_table.setCellWidget(5, 1, motion_prop)
-#object_property_table.setCellWidget(6, 1, wall_prop)
+object_property_table.setCellWidget(6, 1, wall_prop)
+
 
 # Dock the widget to the left side of screen
 fc_main_window.addDockWidget(QtCore.Qt.LeftDockWidgetArea, properties_widget)
