@@ -1,4 +1,4 @@
-#!/usr/bin/env python2.7
+#!/usr/bin/env python3.7
 # -*- coding: utf-8 -*-
 """
 Initializes a complete interface with DualSPHysics suite related operations.
@@ -21,13 +21,12 @@ import traceback
 import subprocess
 import shutil
 import uuid
-from PySide import QtGui, QtCore
 
-reload(sys)
-sys.setdefaultencoding('utf-8')
+from PySide import QtGui, QtCore
 
 # Fix FreeCAD not searching in the user-set macro folder.
 try:
+    from ds_modules import properties
     from ds_modules.properties import *
     from ds_modules import utils, guiutils, xmlimporter, dsphwidgets
     from ds_modules.utils import __
@@ -84,8 +83,6 @@ if not is_compatible:
         __("This FreeCAD version is not compatible. Please update FreeCAD to version 0.17 or higher.")
     )
 
-# Set QT to UTF-8 encoding
-QtCore.QTextCodec.setCodecForCStrings(QtCore.QTextCodec.codecForName('UTF-8'))
 
 # Main data structure
 # TODO: Big Change: Data structures should be an instance of a class like CaseData() and TempCaseData(), not a dict()
@@ -115,7 +112,7 @@ if utils.document_count() > 0:
         quit()
 
 # If the script is executed even when a previous DSPH Dock is created it makes sure that it's deleted before.
-previous_dock = fc_main_window.findChild(QtGui.QDockWidget, __("DSPH Widget"))
+previous_dock = fc_main_window.findChild(QtGui.QDockWidget, utils.__("DSPH Widget"))
 if previous_dock:
     previous_dock.setParent(None)
     previous_dock = None
@@ -143,7 +140,6 @@ constants_button.setToolTip(__("Use this button to define case constants,\nsuch 
 # Opens constant definition window on button click
 def on_constants_button_pressed():
     constants_window = dsphwidgets.ConstantsDialog(data)
-
     # Constant definition window behaviour and general composing
     constants_window.resize(600, 400)
     constants_window.exec_()
@@ -166,15 +162,12 @@ setup_button.clicked.connect(lambda: guiutils.def_setup_window(data))
 execparams_button = QtGui.QPushButton(__("Execution\nParameters"))
 execparams_button.setToolTip(__("Change execution parameters, such as\ntime of simulation, viscosity, etc."))
 
-
 # Opens execution parameters window on button click
 def on_execparams_button_presed():
     execparams_window = dsphwidgets.ExecutionParametersDialog(data)
-
     # Execution parameters window behaviour and general composing
     execparams_window.resize(800, 600)
     execparams_window.exec_()
-
 
 execparams_button.clicked.connect(on_execparams_button_presed)
 widget_state_elements['execparams_button'] = execparams_button
@@ -222,7 +215,7 @@ casecontrols_bt_newdoc = QtGui.QToolButton()
 casecontrols_bt_newdoc.setPopupMode(QtGui.QToolButton.MenuButtonPopup)
 casecontrols_bt_newdoc.setToolButtonStyle(QtCore.Qt.ToolButtonTextBesideIcon)
 casecontrols_bt_newdoc.setText("  {}".format(__("New\n  Case")))
-casecontrols_bt_newdoc.setToolTip(__("Creates a new case. \nThe opened documents will be closed."))
+casecontrols_bt_newdoc.setToolTip(utils.__("Creates a new case. \nThe opened documents will be closed."))
 casecontrols_bt_newdoc.setIcon(guiutils.get_icon("new.png"))
 casecontrols_bt_newdoc.setIconSize(QtCore.QSize(28, 28))
 casecontrols_menu_newdoc = QtGui.QMenu()
@@ -348,7 +341,6 @@ def on_new_from_freecad_document(prompt=True):
 def on_save_case(save_as=None):
     """ Defines what happens when save case button is clicked.
     Saves a freecad scene definition, and a dump of dsph data for the case."""
-
     # Watch if save path is available.  Prompt the user if not.
     if (data['project_path'] == "" and data['project_name'] == "") or save_as:
         # noinspection PyArgumentList
@@ -370,10 +362,10 @@ def on_save_case(save_as=None):
             os.makedirs("{}/{}_out".format(save_name, project_name))
 
         # Copy files from movements and change its paths to be inside the project.
-        for key, value in data["motion_mks"].iteritems():
+        for key, value in data["motion_mks"].items():
             for movement in value:
-                if isinstance(movement, SpecialMovement):
-                    if isinstance(movement.generator, FileGen) or isinstance(movement.generator, RotationFileGen):
+                if isinstance(movement, properties.SpecialMovement):
+                    if isinstance(movement.generator, properties.FileGen) or isinstance(movement.generator, properties.RotationFileGen):
                         filename = movement.generator.filename
                         utils.debug("Copying {} to {}".format(filename, save_name))
 
@@ -432,7 +424,7 @@ def on_save_case(save_as=None):
                 pass
 
         # Copy files from pistons and change paths to be inside the project folder.
-        for key, piston in data["mlayerpistons"].iteritems():
+        for key, piston in data["mlayerpistons"].items():
             if isinstance(piston, MLPiston1D):
                 filename = piston.filevelx
                 utils.debug("Copying {} to {}".format(filename, save_name + "/" + project_name + "_out"))
@@ -581,9 +573,9 @@ def on_save_with_gencase():
     data['gencase_done'] = False
     if data['gencase_path'] != "":
         # Tries to spawn a process with GenCase to generate the case
+
         process = QtCore.QProcess(fc_main_window)
         gencase_full_path = os.getcwd() + "/" + data['gencase_path']
-        process.setWorkingDirectory(data['project_path'])
         process.start(gencase_full_path, [
             data['project_path'] + '/' + data['project_name'] + '_Def', data['project_path'] +
             '/' + data['project_name'] + '_out/' + data['project_name'],
@@ -591,9 +583,10 @@ def on_save_with_gencase():
         ])
 
         process.waitForFinished()
-        output = str(process.readAllStandardOutput())
-        error_in_gen_case = False
 
+        output = str(process.readAllStandardOutput())
+
+        error_in_gen_case = False
         # If GenCase was successful, check for internal errors
         # This is done because a "clean" exit (return 0) of GenCase does not mean that all went correct.
         if str(process.exitCode()) == "0":
@@ -610,7 +603,6 @@ def on_save_with_gencase():
                                      "and it could take a lot of time to simulate.").format(str(total_particles)))
                 data['gencase_done'] = True
                 guiutils.widget_state_config(widget_state_elements, "gencase done")
-
                 data["last_number_particles"] = int(total_particles)
                 guiutils.gencase_completed_dialog(particle_count=total_particles,
                                                   detail_text=output.split("================================")[1],
@@ -990,7 +982,7 @@ def on_import_xml():
         data.update(config)
 
         # Add results to DSPH objects
-        for key, value in objects.iteritems():
+        for key, value in objects.items():
             add_object_to_sim(key)
             data['simobjects'][key] = value
             # Change visual properties based on fill mode and type
@@ -1121,7 +1113,7 @@ def on_special_button():
 
     sp_damping_button = QtGui.QPushButton(__("Damping"))
     sp_inlet_button = QtGui.QPushButton(__("Inlet/Outlet"))
-    #sp_inlet_button.setEnabled(False)
+    sp_inlet_button.setEnabled(False)
     sp_chrono_button = QtGui.QPushButton(__("Coupling CHRONO"))
     #sp_chrono_button.setEnabled(False)
     sp_multilayeredmb_button = QtGui.QPushButton(__("Multi-layered Piston"))
@@ -3790,11 +3782,11 @@ def on_tree_item_selection_change():
     objectlist_table.clear()
     objectlist_table.setEnabled(True)
     if len(data['export_order']) == 0:
-        data['export_order'] = data['simobjects'].keys()
+        data['export_order'] = list(data['simobjects'].keys())
 
     # Substract one that represent case limits object
     if "Case_Limits" in data['export_order']:
-        data['export_order'].remove("Case_Limits")
+        data['export_order'].remove('Case_Limits')
 
     objectlist_table.setRowCount(len(data['export_order']))
     current_row = 0

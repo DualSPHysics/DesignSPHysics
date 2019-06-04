@@ -1,4 +1,4 @@
-#!/usr/bin/env python2.7
+#!/usr/bin/env python3.7
 # -*- coding: utf-8 -*-
 """DesignSPHysics Custom GUI implementations.
 
@@ -14,20 +14,19 @@ import FreeCAD
 import FreeCADGui
 from PySide import QtCore, QtGui
 import uuid
-import utils
 import shutil
 import glob
 
 import sys
 
-reload(sys)
-sys.setdefaultencoding('utf-8')
-
-from utils import __
-import guiutils
-from properties import *
-import constants
-from execution_parameters import *
+from ds_modules import utils
+from ds_modules.utils import __
+from ds_modules import guiutils
+from ds_modules import properties
+from ds_modules.properties import *
+from ds_modules import constants
+from ds_modules import execution_parameters
+from ds_modules.execution_parameters import *
 
 
 # Copyright (C) 2019
@@ -116,19 +115,21 @@ class WaveMovementActions(QtGui.QWidget):
 class RectilinearMotionTimeline(QtGui.QWidget):
     """ A Rectilinear motion graphical representation for a table-based timeline """
 
-    changed = QtCore.Signal(int, RectMotion)
-    deleted = QtCore.Signal(int, RectMotion)
+    changed = QtCore.Signal(int, properties.RectMotion)
+    deleted = QtCore.Signal(int, properties.RectMotion)
     order_up = QtCore.Signal(int)
     order_down = QtCore.Signal(int)
 
     def __init__(self, index, rect_motion):
-        if not isinstance(rect_motion, RectMotion):
+        if not isinstance(rect_motion, properties.RectMotion):
             raise TypeError(
                 "You tried to spawn a rectilinear motion widget in the timeline with a wrong object")
         if rect_motion is None:
             raise TypeError(
                 "You tried to spawn a rectilinear motion widget in the timeline without a motion object")
         super(RectilinearMotionTimeline, self).__init__()
+
+
         self.index = index
         self.setContentsMargins(0, 0, 0, 0)
         self.main_layout = QtGui.QHBoxLayout()
@@ -209,7 +210,7 @@ class RectilinearMotionTimeline(QtGui.QWidget):
             utils.debug("Introduced an invalid value for a float number.")
 
     def construct_motion_object(self):
-        return RectMotion(
+        return properties.RectMotion(
             velocity=[float(self.x_input.text()),
                       float(self.y_input.text()),
                       float(self.z_input.text())],
@@ -242,6 +243,7 @@ class AccRectilinearMotionTimeline(QtGui.QWidget):
     order_up = QtCore.Signal(int)
     order_down = QtCore.Signal(int)
 
+
     def __init__(self, index, acc_rect_motion):
         if not isinstance(acc_rect_motion, AccRectMotion):
             raise TypeError("You tried to spawn an accelerated rectilinear "
@@ -250,6 +252,8 @@ class AccRectilinearMotionTimeline(QtGui.QWidget):
             raise TypeError("You tried to spawn an accelerated rectilinear "
                             "motion widget in the timeline without a motion object")
         super(AccRectilinearMotionTimeline, self).__init__()
+
+
         self.index = index
         self.setMinimumHeight(50)
         self.setContentsMargins(0, 0, 0, 0)
@@ -413,6 +417,8 @@ class RotationalMotionTimeline(QtGui.QWidget):
             raise TypeError(
                 "You tried to spawn a rotational motion widget in the timeline without a motion object")
         super(RotationalMotionTimeline, self).__init__()
+
+
         self.index = index
         self.setContentsMargins(0, 0, 0, 0)
         self.main_layout = QtGui.QHBoxLayout()
@@ -580,6 +586,8 @@ class AccRotationalMotionTimeline(QtGui.QWidget):
             raise TypeError("You tried to spawn an accelerated rotational "
                             "motion widget in the timeline without a motion object")
         super(AccRotationalMotionTimeline, self).__init__()
+
+
         self.index = index
         self.setContentsMargins(0, 0, 0, 0)
         self.main_layout = QtGui.QHBoxLayout()
@@ -765,6 +773,8 @@ class AccCircularMotionTimeline(QtGui.QWidget):
             raise TypeError("You tried to spawn an accelerated circular "
                             "motion widget in the timeline without a motion object")
         super(AccCircularMotionTimeline, self).__init__()
+
+
         self.index = index
         self.setContentsMargins(0, 0, 0, 0)
         self.main_layout = QtGui.QHBoxLayout()
@@ -984,6 +994,8 @@ class RotSinuMotionTimeline(QtGui.QWidget):
             raise TypeError("You tried to spawn a sinusoidal rotational "
                             "motion widget in the timeline without a motion object")
         super(RotSinuMotionTimeline, self).__init__()
+
+
         self.index = index
         self.setContentsMargins(0, 0, 0, 0)
         self.main_layout = QtGui.QHBoxLayout()
@@ -1175,6 +1187,8 @@ class CirSinuMotionTimeline(QtGui.QWidget):
             raise TypeError("You tried to spawn a sinusoidal circular "
                             "motion widget in the timeline without a motion object")
         super(CirSinuMotionTimeline, self).__init__()
+
+
         self.index = index
         self.setContentsMargins(0, 0, 0, 0)
         self.main_layout = QtGui.QHBoxLayout()
@@ -1396,13 +1410,13 @@ class CirSinuMotionTimeline(QtGui.QWidget):
 class WaitMotionTimeline(QtGui.QWidget):
     """ A wait motion graphical representation for a table-based timeline """
 
-    changed = QtCore.Signal(int, WaitMotion)
-    deleted = QtCore.Signal(int, WaitMotion)
+    changed = QtCore.Signal(int, properties.WaitMotion)
+    deleted = QtCore.Signal(int, properties.WaitMotion)
     order_up = QtCore.Signal(int)
     order_down = QtCore.Signal(int)
 
     def __init__(self, index, wait_motion):
-        if not isinstance(wait_motion, WaitMotion):
+        if not isinstance(wait_motion, properties.WaitMotion):
             raise TypeError(
                 "You tried to spawn a rectilinear motion widget in the timeline with a wrong object")
         if wait_motion is None:
@@ -1418,7 +1432,7 @@ class WaitMotionTimeline(QtGui.QWidget):
         self.parent_movement = wait_motion.parent_movement
         self.label = QtGui.QLabel("Wait")
         self.label.setMinimumWidth(75)
-        self.time_label = QtGui.QLabel(__("Duration (s): "))
+        self.time_label = QtGui.QLabel(utils.__("Duration (s): "))
         self.time_input = QtGui.QLineEdit()
         self.time_input.setStyleSheet("width: 5px;")
         self.delete_button = QtGui.QPushButton(
@@ -1430,7 +1444,6 @@ class WaitMotionTimeline(QtGui.QWidget):
             guiutils.get_icon("up_arrow.png"), None)
         self.order_down_button = QtGui.QPushButton(
             guiutils.get_icon("down_arrow.png"), None)
-
         self.order_button_layout.addWidget(self.order_up_button)
         self.order_button_layout.addWidget(self.order_down_button)
         self.main_layout.addWidget(self.label)
@@ -1466,7 +1479,7 @@ class WaitMotionTimeline(QtGui.QWidget):
         self.time_input.setText(str(wait_motion.duration))
 
     def construct_motion_object(self):
-        return WaitMotion(duration=float(self.time_input.text()), parent_movement=self.parent_movement)
+        return properties.WaitMotion(duration=float(self.time_input.text()), parent_movement=self.parent_movement)
 
     def on_change(self):
         if len(self.time_input.text()) is 0:
@@ -1497,6 +1510,8 @@ class RectSinuMotionTimeline(QtGui.QWidget):
             raise TypeError("You tried to spawn an accelerated circular "
                             "motion widget in the timeline without a motion object")
         super(RectSinuMotionTimeline, self).__init__()
+
+
         self.index = index
         self.setContentsMargins(0, 0, 0, 0)
         self.main_layout = QtGui.QHBoxLayout()
@@ -1671,16 +1686,17 @@ class RectSinuMotionTimeline(QtGui.QWidget):
 class RegularPistonWaveMotionTimeline(QtGui.QWidget):
     """ A Regular Wave motion graphical representation for a table-based timeline """
 
-    changed = QtCore.Signal(int, RegularPistonWaveGen)
+    changed = QtCore.Signal(int, properties.RegularPistonWaveGen)
 
     def __init__(self, reg_wave_gen):
-        if not isinstance(reg_wave_gen, RegularPistonWaveGen):
+        if not isinstance(reg_wave_gen, properties.RegularPistonWaveGen):
             raise TypeError("You tried to spawn a regular wave generator "
                             "motion widget in the timeline with a wrong object")
         if reg_wave_gen is None:
             raise TypeError("You tried to spawn a regular wave generator "
                             "motion widget in the timeline without a motion object")
         super(RegularPistonWaveMotionTimeline, self).__init__()
+
         self.setContentsMargins(0, 0, 0, 0)
         self.main_layout = QtGui.QVBoxLayout()
         self.main_layout.setContentsMargins(10, 10, 10, 10)
@@ -1998,7 +2014,7 @@ class RegularPistonWaveMotionTimeline(QtGui.QWidget):
             correction=_cmo_correction
         )
 
-        return RegularPistonWaveGen(parent_movement=self.parent_movement,
+        return properties.RegularPistonWaveGen(parent_movement=self.parent_movement,
                                     wave_order=self.wave_order_selector.currentIndex() + 1, start=0,
                                     duration=float(self.duration_input.text()), depth=float(self.depth_input.text()),
                                     piston_dir=[float(self.piston_dir_x.text()),
@@ -2044,17 +2060,18 @@ class RegularPistonWaveMotionTimeline(QtGui.QWidget):
 
 class IrregularPistonWaveMotionTimeline(QtGui.QWidget):
     """ An Irregular Wave motion graphical representation for a table-based timeline """
-
-    changed = QtCore.Signal(int, IrregularPistonWaveGen)
+    changed = QtCore.Signal(int, properties.IrregularPistonWaveGen)
 
     def __init__(self, irreg_wave_gen):
-        if not isinstance(irreg_wave_gen, IrregularPistonWaveGen):
+        if not isinstance(irreg_wave_gen, properties.IrregularPistonWaveGen):
             raise TypeError("You tried to spawn an irregular wave generator "
                             "motion widget in the timeline with a wrong object")
         if irreg_wave_gen is None:
             raise TypeError("You tried to spawn an irregular wave generator "
                             "motion widget in the timeline without a motion object")
         super(IrregularPistonWaveMotionTimeline, self).__init__()
+
+
         self.setContentsMargins(0, 0, 0, 0)
         self.main_layout = QtGui.QVBoxLayout()
         self.main_layout.setContentsMargins(10, 10, 10, 10)
@@ -2476,7 +2493,7 @@ class IrregularPistonWaveMotionTimeline(QtGui.QWidget):
             correction=_cmo_correction
         )
 
-        return IrregularPistonWaveGen(parent_movement=self.parent_movement,
+        return properties.IrregularPistonWaveGen(parent_movement=self.parent_movement,
                                       wave_order=self.wave_order_selector.currentIndex() + 1, start=0,
                                       duration=float(self.duration_input.text()), depth=float(self.depth_input.text()),
                                       piston_dir=[float(self.piston_dir_x.text()),
@@ -2550,17 +2567,18 @@ class IrregularPistonWaveMotionTimeline(QtGui.QWidget):
 
 class RegularFlapWaveMotionTimeline(QtGui.QWidget):
     """ A Regular Flap Wave motion graphical representation for a table-based timeline """
-
-    changed = QtCore.Signal(int, RegularFlapWaveGen)
+    changed = QtCore.Signal(int, properties.RegularFlapWaveGen)
 
     def __init__(self, reg_wave_gen):
-        if not isinstance(reg_wave_gen, RegularFlapWaveGen):
+        if not isinstance(reg_wave_gen, properties.RegularFlapWaveGen):
             raise TypeError("You tried to spawn a regular flap wave generator "
                             "motion widget in the timeline with a wrong object")
         if reg_wave_gen is None:
             raise TypeError("You tried to spawn a regular flap wave generator "
                             "motion widget in the timeline without a motion object")
         super(RegularFlapWaveMotionTimeline, self).__init__()
+
+
         self.setContentsMargins(0, 0, 0, 0)
         self.main_layout = QtGui.QVBoxLayout()
         self.main_layout.setContentsMargins(10, 10, 10, 10)
@@ -2707,7 +2725,7 @@ class RegularFlapWaveMotionTimeline(QtGui.QWidget):
             utils.debug("Introduced an invalid value for a float number.")
 
     def construct_motion_object(self):
-        return RegularFlapWaveGen(parent_movement=self.parent_movement,
+        return properties.RegularFlapWaveGen(parent_movement=self.parent_movement,
                                   wave_order=self.wave_order_selector.currentIndex() + 1, start=0,
                                   duration=float(self.duration_input.text()), depth=float(self.depth_input.text()),
                                   flapaxis0=[float(self.flap_axis_0_x.text()),
@@ -2754,17 +2772,18 @@ class RegularFlapWaveMotionTimeline(QtGui.QWidget):
 
 class IrregularFlapWaveMotionTimeline(QtGui.QWidget):
     """ An Irregular Flap Wave motion graphical representation for a table-based timeline """
-
-    changed = QtCore.Signal(int, IrregularFlapWaveGen)
+    changed = QtCore.Signal(int, properties.IrregularFlapWaveGen)
 
     def __init__(self, irreg_wave_gen):
-        if not isinstance(irreg_wave_gen, IrregularFlapWaveGen):
+        if not isinstance(irreg_wave_gen, properties.IrregularFlapWaveGen):
             raise TypeError("You tried to spawn an irregular flap wave generator "
                             "motion widget in the timeline with a wrong object")
         if irreg_wave_gen is None:
             raise TypeError("You tried to spawn an irregular flap wave generator "
                             "motion widget in the timeline without a motion object")
         super(IrregularFlapWaveMotionTimeline, self).__init__()
+
+
         self.setContentsMargins(0, 0, 0, 0)
         self.main_layout = QtGui.QVBoxLayout()
         self.main_layout.setContentsMargins(10, 10, 10, 10)
@@ -3015,7 +3034,7 @@ class IrregularFlapWaveMotionTimeline(QtGui.QWidget):
             utils.debug("Introduced an invalid value for a float number.")
 
     def construct_motion_object(self):
-        return IrregularFlapWaveGen(parent_movement=self.parent_movement,
+        return properties.IrregularFlapWaveGen(parent_movement=self.parent_movement,
                                     wave_order=self.wave_order_selector.currentIndex() + 1, start=0,
                                     duration=float(self.duration_input.text()), depth=float(self.depth_input.text()),
                                     flapaxis0=[float(self.flap_axis_0_x.text()),
@@ -3091,17 +3110,18 @@ class IrregularFlapWaveMotionTimeline(QtGui.QWidget):
 
 class FileMotionTimeline(QtGui.QWidget):
     """ A File motion graphical representation for a table-based timeline """
-
-    changed = QtCore.Signal(int, FileGen)
+    changed = QtCore.Signal(int, properties.FileGen)
 
     def __init__(self, file_wave_gen, project_folder_path):
-        if not isinstance(file_wave_gen, FileGen):
+        if not isinstance(file_wave_gen, properties.FileGen):
             raise TypeError("You tried to spawn a regular wave generator "
                             "motion widget in the timeline with a wrong object")
         if file_wave_gen is None:
             raise TypeError("You tried to spawn a regular wave generator "
                             "motion widget in the timeline without a motion object")
         super(FileMotionTimeline, self).__init__()
+
+
         # Needed for copying movement file to root of the case.
         self.project_folder_path = project_folder_path
         self.setContentsMargins(0, 0, 0, 0)
@@ -3194,7 +3214,7 @@ class FileMotionTimeline(QtGui.QWidget):
             utils.debug("Introduced an invalid value for a float number.")
 
     def construct_motion_object(self):
-        return FileGen(parent_movement=self.parent_movement,
+        return properties.FileGen(parent_movement=self.parent_movement,
                        duration=float(self.duration_input.text()),
                        filename=str(self.filename_input.text()),
                        fields=str(self.fields_input.text()),
@@ -3216,17 +3236,18 @@ class FileMotionTimeline(QtGui.QWidget):
 
 class RotationFileMotionTimeline(QtGui.QWidget):
     """ A rotation file motion graphical representation for a table-based timeline """
-
-    changed = QtCore.Signal(int, RotationFileGen)
+    changed = QtCore.Signal(int, properties.RotationFileGen)
 
     def __init__(self, rot_file_gen, project_folder_path):
-        if not isinstance(rot_file_gen, RotationFileGen):
+        if not isinstance(rot_file_gen, properties.RotationFileGen):
             raise TypeError("You tried to spawn a rotation file generator "
                             "motion widget in the timeline with a wrong object")
         if rot_file_gen is None:
             raise TypeError("You tried to spawn a rotation file generator "
                             "motion widget in the timeline without a motion object")
         super(RotationFileMotionTimeline, self).__init__()
+
+
         # Needed for copying movement file to root of the case.
         self.project_folder_path = project_folder_path
         self.setContentsMargins(0, 0, 0, 0)
@@ -3331,7 +3352,7 @@ class RotationFileMotionTimeline(QtGui.QWidget):
             utils.debug("Introduced an invalid value for a float number.")
 
     def construct_motion_object(self):
-        return RotationFileGen(parent_movement=self.parent_movement,
+        return properties.RotationFileGen(parent_movement=self.parent_movement,
                                duration=float(self.duration_input.text()),
                                filename=str(self.filename_input.text()),
                                anglesunits=str(
@@ -5822,19 +5843,6 @@ class ExecutionParametersDialog(QtGui.QDialog):
         self.timeout_layout.addWidget(self.timeout_input)
         self.timeout_layout.addWidget(self.timeout_label2)
 
-        # Increase of Z+
-        #self.incz_layout = QtGui.QHBoxLayout()
-        #self.incz_label = QtGui.QLabel("Increase of Z+ (%): ")
-        #self.incz_input = FocusableLineEdit()
-        #self.incz_input.setHelpText(utils.__(constants.HELP_INCZ))
-        #self.incz_input.setMaxLength(10)
-
-        #self.incz_input.focus.connect(self.on_help_focus)
-
-        #self.incz_input.setText(str(float(self.data['incz']) * 100))
-        #self.incz_layout.addWidget(self.incz_label)
-        #self.incz_layout.addWidget(self.incz_input)
-
         # Max parts out allowed
         self.partsoutmax_layout = QtGui.QHBoxLayout()
         self.partsoutmax_label = QtGui.QLabel("Max parts out allowed (%): ")
@@ -5880,73 +5888,9 @@ class ExecutionParametersDialog(QtGui.QDialog):
         self.rhopoutmax_layout.addWidget(self.rhopoutmax_input)
         self.rhopoutmax_layout.addWidget(self.rhopoutmax_label2)
 
-        #self.domainfixed_layout = QtGui.QVBoxLayout()
-        #self.domainfixed_chk = QtGui.QCheckBox("Fixed Domain")
-        #self.domainfixed_chk.setToolTip(utils.__(constants.DOMAINFIXED))
-
-        #self.domainfixed_x_layout = QtGui.QHBoxLayout()
-        #self.domainfixed_y_layout = QtGui.QHBoxLayout()
-        #self.domainfixed_z_layout = QtGui.QHBoxLayout()
-
-        #self.domainfixed_xmin_label = QtGui.QLabel("X Min")
-        #self.domainfixed_xmin_label.setToolTip(utils.__(constants.XMIN))
-        #self.domainfixed_xmin_input = QtGui.QLineEdit("0")
-        #self.domainfixed_xmax_label = QtGui.QLabel("X Max")
-        #self.domainfixed_xmax_label.setToolTip(utils.__(constants.XMAX))
-        #self.domainfixed_xmax_input = QtGui.QLineEdit("0")
-
-        #self.domainfixed_ymin_label = QtGui.QLabel("Y Min")
-        #self.domainfixed_ymin_label.setToolTip(utils.__(constants.YMIN))
-        #self.domainfixed_ymin_input = QtGui.QLineEdit("0")
-        #self.domainfixed_ymax_label = QtGui.QLabel("Y Max")
-        #self.domainfixed_ymax_label.setToolTip(utils.__(constants.YMAX))
-        #self.domainfixed_ymax_input = QtGui.QLineEdit("0")
-
-        #self.domainfixed_zmin_label = QtGui.QLabel("Z Min")
-        #self.domainfixed_zmin_label.setToolTip(utils.__(constants.ZMIN))
-        #self.domainfixed_zmin_input = QtGui.QLineEdit("0")
-        #self.domainfixed_zmax_label = QtGui.QLabel("Z Max")
-        #self.domainfixed_zmax_label.setToolTip(utils.__(constants.ZMAX))
-        #self.domainfixed_zmax_input = QtGui.QLineEdit("0")
-
-        #self.domainfixed_x_layout.addWidget(self.domainfixed_xmin_label)
-        #self.domainfixed_x_layout.addWidget(self.domainfixed_xmin_input)
-        #self.domainfixed_x_layout.addWidget(self.domainfixed_xmax_label)
-        #self.domainfixed_x_layout.addWidget(self.domainfixed_xmax_input)
-
-        #self.domainfixed_y_layout.addWidget(self.domainfixed_ymin_label)
-        #self.domainfixed_y_layout.addWidget(self.domainfixed_ymin_input)
-        #self.domainfixed_y_layout.addWidget(self.domainfixed_ymax_label)
-        #self.domainfixed_y_layout.addWidget(self.domainfixed_ymax_input)
-
-        #self.domainfixed_z_layout.addWidget(self.domainfixed_zmin_label)
-        #self.domainfixed_z_layout.addWidget(self.domainfixed_zmin_input)
-        #self.domainfixed_z_layout.addWidget(self.domainfixed_zmax_label)
-        #self.domainfixed_z_layout.addWidget(self.domainfixed_zmax_input)
-
-        #self.domainfixed_layout.addWidget(self.domainfixed_chk)
-        #self.domainfixed_layout.addLayout(self.domainfixed_x_layout)
-        #self.domainfixed_layout.addLayout(self.domainfixed_y_layout)
-        #self.domainfixed_layout.addLayout(self.domainfixed_z_layout)
-
-        #self.domainfixed_chk.stateChanged.connect(self.on_domainfixed_chk)
-
-        #try:
-        #    self.domainfixed_chk.setChecked(self.data["domainfixed"].enabled)
-        #    self.domainfixed_xmin_input.setText(str(self.data["domainfixed"].xmin))
-        #    self.domainfixed_xmax_input.setText(str(self.data["domainfixed"].xmax))
-        #    self.domainfixed_ymin_input.setText(str(self.data["domainfixed"].ymin))
-        #    self.domainfixed_ymax_input.setText(str(self.data["domainfixed"].ymax))
-        #    self.domainfixed_zmin_input.setText(str(self.data["domainfixed"].zmin))
-        #    self.domainfixed_zmax_input.setText(str(self.data["domainfixed"].zmax))
-        #except:
-        #    pass
-
-        #self.on_domainfixed_chk()
-
         self.period_x_layout = QtGui.QVBoxLayout()
         self.period_x_chk = QtGui.QCheckBox("X periodicity")
-        self.period_x_chk.setToolTip(utils.__(constants.PERIODX))
+        #self.period_x_chk.setToolTip(utils.__(constants.PERIODX))
         self.period_x_inc_layout = QtGui.QHBoxLayout()
         self.period_x_inc_x_label = QtGui.QLabel("X Increment")
         self.period_x_inc_x_input = QtGui.QLineEdit("0")
@@ -5979,7 +5923,7 @@ class ExecutionParametersDialog(QtGui.QDialog):
 
         self.period_y_layout = QtGui.QVBoxLayout()
         self.period_y_chk = QtGui.QCheckBox("Y periodicity")
-        self.period_y_chk.setToolTip(utils.__(constants.PERIODY))
+        #self.period_y_chk.setToolTip(utils.__(constants.PERIODY))
         self.period_y_inc_layout = QtGui.QHBoxLayout()
         self.period_y_inc_x_label = QtGui.QLabel("X Increment")
         self.period_y_inc_x_label.setToolTip(utils.__(constants.XINCREMENTY))
@@ -6012,7 +5956,7 @@ class ExecutionParametersDialog(QtGui.QDialog):
 
         self.period_z_layout = QtGui.QVBoxLayout()
         self.period_z_chk = QtGui.QCheckBox("Z periodicity")
-        self.period_z_chk.setToolTip(utils.__(constants.PERIODZ))
+        #self.period_z_chk.setToolTip(utils.__(constants.PERIODZ))
         self.period_z_inc_layout = QtGui.QHBoxLayout()
         self.period_z_inc_x_label = QtGui.QLabel("X Increment")
         self.period_z_inc_x_label.setToolTip(utils.__(constants.XINCREMENTZ))
@@ -6192,7 +6136,7 @@ class ExecutionParametersDialog(QtGui.QDialog):
 
     # Step Algorithm
     def on_step_change(self, index):
-        if index == 0:
+        if index == 1:
             self.verletsteps_input.setEnabled(True)
         else:
             self.verletsteps_input.setEnabled(False)
@@ -6378,6 +6322,7 @@ class ExecutionParametersDialog(QtGui.QDialog):
         self.data['dtini'] = self.dtini_input.text()
         self.data['dtini_auto'] = self.dtiniauto_chk.isChecked()
         self.data['dtmin'] = self.dtmin_input.text()
+        self.data['dtmin'] = self.dtmin_input.text()
         self.data['dtmin_auto'] = self.dtminauto_chk.isChecked()
         self.data['dtfixed'] = self.dtfixed_input.text()
         self.data['dtallparticles'] = self.dtallparticles_input.text()
@@ -6432,7 +6377,7 @@ class ExecutionParametersDialog(QtGui.QDialog):
             self.data['posmin'] = [0, 0.0, 0, 0.0, 0, 0.0]
             self.data['posmax'] = [0, 0.0, 0, 0.0, 0, 0.0]
 
-        utils.log("Execution Parameters changed")
+            utils.log("Execution Parameters changed")
         self.accept()
 
     def on_cancel(self):
@@ -6866,7 +6811,7 @@ class ChronoConfigDialog(QtGui.QDialog):
         self.temp_data = list()
 
         # Select the objects that are going to be listed
-        for key, value in self.data['simobjects'].iteritems():
+        for key, value in self.data['simobjects'].items():
             self.context_object = FreeCAD.getDocument("DSPH_Case").getObject(key)
             if self.context_object.InList != list():
                 self.objects_with_parent.append(self.context_object.Name)
@@ -6889,7 +6834,7 @@ class ChronoConfigDialog(QtGui.QDialog):
             )
 
             # Actualices the state of list options
-            if self.data['chrono_objects'] > 0:
+            if len(self.data['chrono_objects']) > 0:
                 for elem in self.data['chrono_objects']:
                     if elem[0] == str(key) and elem[3] == 1:
                         self.target_widget.object_check.setCheckState(QtCore.Qt.Checked)
@@ -8051,7 +7996,7 @@ class InletConfigDialog(QtGui.QDialog):
         self.temp_data = list()
 
         # Select the objects that are going to be listed
-        for key, value in self.data['simobjects'].iteritems():
+        for key, value in self.data['simobjects'].items():
             self.context_object = FreeCAD.getDocument("DSPH_Case").getObject(key)
             if self.context_object.InList != list():
                 self.objects_with_parent.append(self.context_object.Name)
@@ -8144,14 +8089,14 @@ class InletConfigDialog(QtGui.QDialog):
             to_add_layout2 = QtGui.QHBoxLayout()
             to_add_label2 = QtGui.QLabel(" ")
             to_add_layout2.addWidget(to_add_label2)
-            to_add_label = QtGui.QLabel("Zone")
+            to_add_label = QtGui.QLabel(inletObject.object_name)
             to_add_layout.addWidget(to_add_label)
             to_add_layout.addStretch(1)
             to_add_editbutton = QtGui.QPushButton("Edit")
             to_add_deletebutton = QtGui.QPushButton("Delete")
             to_add_layout.addWidget(to_add_editbutton)
             to_add_layout.addWidget(to_add_deletebutton)
-            #to_add_editbutton.clicked.connect(lambda lp=linkPointline[0]: self.link_pointline_edit(lp))
+            to_add_editbutton.clicked.connect(lambda io=inletObject: self.zone_edit(io))
             to_add_deletebutton.clicked.connect(lambda io=inletObject: self.zone_delete(io))
             self.zones_layout.addLayout(to_add_layout2)
             self.zones_layout.addLayout(to_add_layout)
@@ -8163,6 +8108,7 @@ class InletConfigDialog(QtGui.QDialog):
 
     def zone_edit(self, io):
         """"""
+        InletZoneEdit(self.data, io)
 
     def on_cancel(self):
         self.reject()
@@ -8171,6 +8117,27 @@ class InletConfigDialog(QtGui.QDialog):
         """ Save data """
         # TODO: NEED TO FINISH THIS
         InletConfigDialog.accept(self)
+
+
+class InletZoneEdit(QtGui.QDialog):
+    """  """
+    def __init__(self, data, inlet_object_id):
+        super(InletZoneEdit, self).__init__()
+
+        self.data = data
+        self.inlet_object_id = inlet_object_id
+
+        # Creates a dialog
+        self.setWindowTitle("Inlet/Outlet object edit")
+        self.main_layout = QtGui.QVBoxLayout()
+
+        self.edit_layout = QtGui.QGroupBox("Inlet/Outler edit")
+
+        self.main_layout.addWidget(self.edit_layout)
+
+        self.setLayout(self.main_layout)
+
+        self.exec_()
 
 
 class RunDialog(QtGui.QDialog):
@@ -8891,6 +8858,28 @@ class MovementDialog(QtGui.QDialog):
         self.has_motion_selector = QtGui.QComboBox()
         self.has_motion_selector.insertItems(0, ["True", "False"])
         self.has_motion_selector.currentIndexChanged.connect(self.on_motion_change)
+
+        ##############################################################################
+
+        self.create_new_movement_button = QtGui.QToolButton()
+        self.create_new_movement_button.setPopupMode(QtGui.QToolButton.MenuButtonPopup)
+        self.create_new_movement_button.setText(" {}".format(__("Create New")))
+
+        self.create_new_movement_menu = QtGui.QMenu()
+        self.create_new_movement_menu.addAction(guiutils.get_icon("movement.png"), __("Movement"))
+        self.create_new_movement_menu.addAction(guiutils.get_icon("regular_wave.png"), __("Regular wave generator (Piston)"))
+        self.create_new_movement_menu.addAction(guiutils.get_icon("irregular_wave.png"),
+                                           __("Irregular wave generator (Piston)"))
+        self.create_new_movement_menu.addAction(guiutils.get_icon("regular_wave.png"), __("Regular wave generator (Flap)"))
+        self.create_new_movement_menu.addAction(guiutils.get_icon("irregular_wave.png"),
+                                           __("Irregular wave generator (Flap)"))
+        self.create_new_movement_menu.addAction(guiutils.get_icon("file_mov.png"), __("Linear motion from a file"))
+        self.create_new_movement_menu.addAction(guiutils.get_icon("file_mov.png"), __("Rotation from a file"))
+        self.create_new_movement_button.setMenu(self.create_new_movement_menu)
+
+        ##############################################################################
+
+
         self.has_motion_helplabel = QtGui.QLabel(
             "<a href='http://design.sphysics.org/wiki/doku.php?id=featreference#configure_object_motion'>{}</a>".format(
                 __("Movement Help")))
@@ -8922,6 +8911,7 @@ class MovementDialog(QtGui.QDialog):
         self.movement_list_table.verticalHeader().setVisible(False)
         self.movement_list_table.horizontalHeader().setVisible(False)
 
+        self.movement_list_groupbox_layout.addWidget(self.create_new_movement_button)
         self.movement_list_groupbox_layout.addWidget(self.movement_list_table)
         self.movement_list_groupbox.setLayout(self.movement_list_groupbox_layout)
 
@@ -9056,13 +9046,13 @@ class MovementDialog(QtGui.QDialog):
 
     def check_movement_compatibility(self, target_movement):
         # Wave generators are exclusive
-        if isinstance(target_movement, SpecialMovement):
+        if isinstance(target_movement, properties.SpecialMovement):
             self.notice_label.setText("Notice: Wave generators and file movements are exclusive. "
                                       "All movements are disabled when using one.")
             del self.movements_selected[:]
-        elif isinstance(target_movement, Movement):
+        elif isinstance(target_movement, properties.Movement):
             for index, ms in enumerate(self.movements_selected):
-                if isinstance(ms, SpecialMovement):
+                if isinstance(ms, properties.SpecialMovement):
                     self.movements_selected.pop(index)
                     self.notice_label.setText(
                         "Notice: Regular movements are not compatible with wave generators and file movements.")
@@ -9100,7 +9090,7 @@ class MovementDialog(QtGui.QDialog):
     def on_new_movement(self):
         """ Creates a movement on the project. """
         self.notice_label.setText("")  # Reset the notice label if a valid change is made
-        to_add = Movement(name="New Movement")
+        to_add = properties.Movement(name="New Movement")
         self.data["global_movements"].append(to_add)
         self.movements_selected.append(to_add)
         self.check_movement_compatibility(to_add)
@@ -9109,22 +9099,23 @@ class MovementDialog(QtGui.QDialog):
 
     def on_new_wave_generator(self, action):
         """ Creates a movement on the project. """
+
         self.notice_label.setText("")  # Reset the notice label if a valid change is made
-        if __("Movement") in action.text():
+        if utils.__("Movement") in action.text():
             self.on_new_movement()
             return
-        if __("Regular wave generator (Piston)") in action.text():
-            to_add = SpecialMovement(generator=RegularPistonWaveGen(), name="Regular Wave Generator (Piston)")
-        if __("Irregular wave generator (Piston)") in action.text():
-            to_add = SpecialMovement(generator=IrregularPistonWaveGen(), name="Irregular Wave Generator (Piston)")
-        if __("Regular wave generator (Flap)") in action.text():
-            to_add = SpecialMovement(generator=RegularFlapWaveGen(), name="Regular Wave Generator (Flap)")
-        if __("Irregular wave generator (Flap)") in action.text():
-            to_add = SpecialMovement(generator=IrregularFlapWaveGen(), name="Irregular Wave Generator (Flap)")
-        if __("Linear motion from a file") in action.text():
-            to_add = SpecialMovement(generator=FileGen(), name="Linear motion from a file")
-        if __("Rotation from a file") in action.text():
-            to_add = SpecialMovement(generator=RotationFileGen(), name="Rotation from a file")
+        if utils.__("Regular wave generator (Piston)") in action.text():
+            to_add = properties.SpecialMovement(name="Regular Wave Generator (Piston)", generator=properties.RegularPistonWaveGen())
+        if utils.__("Irregular wave generator (Piston)") in action.text():
+            to_add = properties.SpecialMovement(name="Irregular Wave Generator (Piston)", generator=properties.IrregularPistonWaveGen())
+        if utils.__("Regular wave generator (Flap)") in action.text():
+            to_add = properties.SpecialMovement(name="Regular Wave Generator (Flap)", generator=properties.RegularFlapWaveGen())
+        if utils.__("Irregular wave generator (Flap)") in action.text():
+            to_add = properties.SpecialMovement(name="Irregular Wave Generator (Flap)", generator=properties.IrregularFlapWaveGen())
+        if utils.__("Linear motion from a file") in action.text():
+            to_add = properties.SpecialMovement(name="Linear motion from a file", generator=properties.FileGen())
+        if utils.__("Rotation from a file") in action.text():
+            to_add = properties.SpecialMovement(name="Rotation from a file", generator=properties.RotationFileGen())
 
         to_add.generator.parent_movement = to_add
         self.data["global_movements"].append(to_add)
@@ -9144,7 +9135,7 @@ class MovementDialog(QtGui.QDialog):
     def on_timeline_item_change(self, index, motion_object):
         """ Changes the values of an item on the timeline. """
         self.notice_label.setText("")  # Reset the notice label if a valid change is made
-        if isinstance(motion_object, WaveGen):
+        if isinstance(motion_object, properties.WaveGen):
             motion_object.parent_movement.set_wavegen(motion_object)
         else:
             motion_object.parent_movement.motion_list[index] = motion_object
@@ -9169,6 +9160,7 @@ class MovementDialog(QtGui.QDialog):
         movement.motion_list.insert(index + 1, movement.motion_list.pop(index))
         self.on_movement_selected(self.movement_list_table.selectedIndexes()[0].row(), None)
 
+
     def on_movement_selected(self, row, _):
         """ Shows the timeline for the selected movement. """
         try:
@@ -9184,30 +9176,30 @@ class MovementDialog(QtGui.QDialog):
         # Reset the notice label if a valid change is made
         self.notice_label.setText("")
 
-        if isinstance(target_movement, Movement):
+        if isinstance(target_movement, properties.Movement):
             self.timeline_list_table.setRowCount(len(target_movement.motion_list))
             self.timeline_list_table.setEnabled(True)
             self.actions_groupbox_table.setEnabled(True)
 
             current_row = 0
             for motion in target_movement.motion_list:
-                if isinstance(motion, RectMotion):
+                if isinstance(motion, properties.RectMotion):
                     target_to_put = RectilinearMotionTimeline(current_row, motion)
-                elif isinstance(motion, WaitMotion):
+                elif isinstance(motion, properties.WaitMotion):
                     target_to_put = WaitMotionTimeline(current_row, motion)
-                elif isinstance(motion, AccRectMotion):
+                elif isinstance(motion, properties.AccRectMotion):
                     target_to_put = AccRectilinearMotionTimeline(current_row, motion)
-                elif isinstance(motion, RotMotion):
+                elif isinstance(motion, properties.RotMotion):
                     target_to_put = RotationalMotionTimeline(current_row, motion)
-                elif isinstance(motion, AccRotMotion):
+                elif isinstance(motion, properties.AccRotMotion):
                     target_to_put = AccRotationalMotionTimeline(current_row, motion)
-                elif isinstance(motion, AccCirMotion):
+                elif isinstance(motion, properties.AccCirMotion):
                     target_to_put = AccCircularMotionTimeline(current_row, motion)
-                elif isinstance(motion, RotSinuMotion):
+                elif isinstance(motion, properties.RotSinuMotion):
                     target_to_put = RotSinuMotionTimeline(current_row, motion)
-                elif isinstance(motion, CirSinuMotion):
+                elif isinstance(motion, properties.CirSinuMotion):
                     target_to_put = CirSinuMotionTimeline(current_row, motion)
-                elif isinstance(motion, RectSinuMotion):
+                elif isinstance(motion, properties.RectSinuMotion):
                     target_to_put = RectSinuMotionTimeline(current_row, motion)
                 else:
                     raise NotImplementedError("The type of movement: {} is not implemented.".format(
@@ -9225,22 +9217,22 @@ class MovementDialog(QtGui.QDialog):
                     target_to_put.disable_order_down_button()
 
                 current_row += 1
-        elif isinstance(target_movement, SpecialMovement):
+        elif isinstance(target_movement, properties.SpecialMovement):
             self.timeline_list_table.setRowCount(1)
             self.timeline_list_table.setEnabled(True)
             self.actions_groupbox_table.setEnabled(False)
 
-            if isinstance(target_movement.generator, RegularPistonWaveGen):
+            if isinstance(target_movement.generator, properties.RegularPistonWaveGen):
                 target_to_put = RegularPistonWaveMotionTimeline(target_movement.generator)
-            elif isinstance(target_movement.generator, IrregularPistonWaveGen):
+            elif isinstance(target_movement.generator, properties.IrregularPistonWaveGen):
                 target_to_put = IrregularPistonWaveMotionTimeline(target_movement.generator)
-            if isinstance(target_movement.generator, RegularFlapWaveGen):
+            if isinstance(target_movement.generator, properties.RegularFlapWaveGen):
                 target_to_put = RegularFlapWaveMotionTimeline(target_movement.generator)
-            elif isinstance(target_movement.generator, IrregularFlapWaveGen):
+            elif isinstance(target_movement.generator, properties.IrregularFlapWaveGen):
                 target_to_put = IrregularFlapWaveMotionTimeline(target_movement.generator)
-            elif isinstance(target_movement.generator, FileGen):
+            elif isinstance(target_movement.generator, properties.FileGen):
                 target_to_put = FileMotionTimeline(target_movement.generator, self.data['project_path'])
-            elif isinstance(target_movement.generator, RotationFileGen):
+            elif isinstance(target_movement.generator, properties.RotationFileGen):
                 target_to_put = RotationFileMotionTimeline(target_movement.generator, self.data['project_path'])
 
             target_to_put.changed.connect(self.on_timeline_item_change)
@@ -9258,10 +9250,10 @@ class MovementDialog(QtGui.QDialog):
                 has_loop = movement.loop
             except AttributeError:
                 has_loop = False
-            if isinstance(movement, Movement):
+            if isinstance(movement, properties.Movement):
                 movement_actions = MovementActions(current_row, movement in self.movements_selected, has_loop)
                 movement_actions.loop.connect(self.on_loop_movement)
-            elif isinstance(movement, SpecialMovement):
+            elif isinstance(movement, properties.SpecialMovement):
                 movement_actions = WaveMovementActions(current_row, movement in self.movements_selected)
 
             movement_actions.delete.connect(self.on_delete_movement)
@@ -9269,49 +9261,48 @@ class MovementDialog(QtGui.QDialog):
             self.movement_list_table.setCellWidget(current_row, 1, movement_actions)
 
             current_row += 1
-        create_new_movement_button = QtGui.QToolButton()
-        create_new_movement_button.setPopupMode(QtGui.QToolButton.MenuButtonPopup)
-        create_new_movement_button.setText(__("Create New"))
-        create_new_movement_menu = QtGui.QMenu()
-        create_new_movement_menu.addAction(guiutils.get_icon("movement.png"), __("Movement"))
-        create_new_movement_menu.addAction(guiutils.get_icon("regular_wave.png"), __("Regular wave generator (Piston)"))
-        create_new_movement_menu.addAction(guiutils.get_icon("irregular_wave.png"),
-                                           __("Irregular wave generator (Piston)"))
-        create_new_movement_menu.addAction(guiutils.get_icon("regular_wave.png"), __("Regular wave generator (Flap)"))
-        create_new_movement_menu.addAction(guiutils.get_icon("irregular_wave.png"),
-                                           __("Irregular wave generator (Flap)"))
-        create_new_movement_menu.addAction(guiutils.get_icon("file_mov.png"), __("Linear motion from a file"))
-        create_new_movement_menu.addAction(guiutils.get_icon("file_mov.png"), __("Rotation from a file"))
-        create_new_movement_button.setMenu(create_new_movement_menu)
-        create_new_movement_button.clicked.connect(self.on_new_movement)
-        create_new_movement_menu.triggered.connect(self.on_new_wave_generator)
-        self.movement_list_table.setCellWidget(current_row, 1, create_new_movement_button)
-        self.movement_list_table.setCellWidget(current_row, 0, QtGui.QWidget())
+        #create_new_movement_button = QtGui.QToolButton()
+        #create_new_movement_button.setPopupMode(QtGui.QToolButton.MenuButtonPopup)
+        #create_new_movement_button.setText(__("Create New"))
 
+        #create_new_movement_menu = QtGui.QMenu()
+        #create_new_movement_menu.addAction(guiutils.get_icon("movement.png"), __("Movement"))
+        #create_new_movement_menu.addAction(guiutils.get_icon("regular_wave.png"), __("Regular wave generator (Piston)"))
+        #create_new_movement_menu.addAction(guiutils.get_icon("irregular_wave.png"), __("Irregular wave generator (Piston)"))
+        #create_new_movement_menu.addAction(guiutils.get_icon("regular_wave.png"), __("Regular wave generator (Flap)"))
+        #create_new_movement_menu.addAction(guiutils.get_icon("irregular_wave.png"), __("Irregular wave generator (Flap)"))
+        #create_new_movement_menu.addAction(guiutils.get_icon("file_mov.png"), __("Linear motion from a file"))
+        #create_new_movement_menu.addAction(guiutils.get_icon("file_mov.png"), __("Rotation from a file"))
+        #create_new_movement_button.setMenu(create_new_movement_menu)
+        self.create_new_movement_button.clicked.connect(self.on_new_movement)
+        self.create_new_movement_menu.triggered.connect(self.on_new_wave_generator)
+
+        #self.movement_list_table.setCellWidget(current_row, 1, self.create_new_movement_button)
+        self.movement_list_table.setCellWidget(current_row, 0, QtGui.QWidget())
     # Possible actions for adding motions to a movement
+
     def on_add_delay(self):
         """ Adds a WaitMotion to the timeline of the selected movement. """
         self.notice_label.setText("")  # Reset the notice label if a valid change is made
         if len(self.movement_list_table.selectedIndexes()) > 0:
             if self.movement_list_table.selectedIndexes()[0].row() is not len(self.data["global_movements"]):
-                self.data["global_movements"][self.movement_list_table.selectedIndexes()[0].row()].add_motion(WaitMotion())
-                self.on_movement_selected(
-                    self.movement_list_table.selectedIndexes()[0].row(), None)
+                self.data["global_movements"][self.movement_list_table.selectedIndexes()[0].row()].add_motion(properties.WaitMotion())
+                self.on_movement_selected(self.movement_list_table.selectedIndexes()[0].row(), None)
 
     def on_add_rectilinear(self):
         """ Adds a RectMotion to the timeline of the selected movement. """
         self.notice_label.setText("")  # Reset the notice label if a valid change is made
         if len(self.movement_list_table.selectedIndexes()) > 0:
             if self.movement_list_table.selectedIndexes()[0].row() is not len(self.data["global_movements"]):
-                self.data["global_movements"][self.movement_list_table.selectedIndexes()[0].row()].add_motion(RectMotion())
-                self.on_movement_selected(movement_list_table.selectedIndexes()[0].row(), None)
+                self.data["global_movements"][self.movement_list_table.selectedIndexes()[0].row()].add_motion(properties.RectMotion())
+                self.on_movement_selected(self.movement_list_table.selectedIndexes()[0].row(), None)
 
     def on_add_accrectilinear(self):
         """ Adds a AccRectMotion to the timeline of the selected movement. """
         self.notice_label.setText("")  # Reset the notice label if a valid change is made
         if len(self.movement_list_table.selectedIndexes()) > 0:
             if self.movement_list_table.selectedIndexes()[0].row() is not len(self.data["global_movements"]):
-                self.data["global_movements"][self.movement_list_table.selectedIndexes()[0].row()].add_motion(AccRectMotion())
+                self.data["global_movements"][self.movement_list_table.selectedIndexes()[0].row()].add_motion(properties.AccRectMotion())
                 self.on_movement_selected(
                     self.movement_list_table.selectedIndexes()[0].row(), None)
 
@@ -9321,7 +9312,7 @@ class MovementDialog(QtGui.QDialog):
             "")  # Reset the notice label if a valid change is made
         if len(self.movement_list_table.selectedIndexes()) > 0:
             if self.movement_list_table.selectedIndexes()[0].row() is not len(self.data["global_movements"]):
-                self.data["global_movements"][self.movement_list_table.selectedIndexes()[0].row()].add_motion(RotMotion())
+                self.data["global_movements"][self.movement_list_table.selectedIndexes()[0].row()].add_motion(properties.RotMotion())
                 self.on_movement_selected(
                     self.movement_list_table.selectedIndexes()[0].row(), None)
 
@@ -9330,7 +9321,7 @@ class MovementDialog(QtGui.QDialog):
         self.notice_label.setText("")  # Reset the notice label if a valid change is made
         if len(self.movement_list_table.selectedIndexes()) > 0:
             if self.movement_list_table.selectedIndexes()[0].row() is not len(self.data["global_movements"]):
-                self.data["global_movements"][self.movement_list_table.selectedIndexes()[0].row()].add_motion(AccRotMotion())
+                self.data["global_movements"][self.movement_list_table.selectedIndexes()[0].row()].add_motion(properties.AccRotMotion())
                 self.on_movement_selected(
                     self.movement_list_table.selectedIndexes()[0].row(), None)
 
@@ -9339,7 +9330,7 @@ class MovementDialog(QtGui.QDialog):
         self.notice_label.setText("")  # Reset the notice label if a valid change is made
         if len(self.movement_list_table.selectedIndexes()) > 0:
             if self.movement_list_table.selectedIndexes()[0].row() is not len(self.data["global_movements"]):
-                self.data["global_movements"][self.movement_list_table.selectedIndexes()[0].row()].add_motion(AccCirMotion())
+                self.data["global_movements"][self.movement_list_table.selectedIndexes()[0].row()].add_motion(properties.AccCirMotion())
                 self.on_movement_selected(
                     self.movement_list_table.selectedIndexes()[0].row(), None)
 
@@ -9348,7 +9339,7 @@ class MovementDialog(QtGui.QDialog):
         self.notice_label.setText("")  # Reset the notice label if a valid change is made
         if len(self.movement_list_table.selectedIndexes()) > 0:
             if self.movement_list_table.selectedIndexes()[0].row() is not len(self.data["global_movements"]):
-                self.data["global_movements"][self.movement_list_table.selectedIndexes()[0].row()].add_motion(RotSinuMotion())
+                self.data["global_movements"][self.movement_list_table.selectedIndexes()[0].row()].add_motion(properties.RotSinuMotion())
                 self.on_movement_selected(
                     self.movement_list_table.selectedIndexes()[0].row(), None)
 
@@ -9357,7 +9348,7 @@ class MovementDialog(QtGui.QDialog):
         self.notice_label.setText("")  # Reset the notice label if a valid change is made
         if len(self.movement_list_table.selectedIndexes()) > 0:
             if self.movement_list_table.selectedIndexes()[0].row() is not len(self.data["global_movements"]):
-                self.data["global_movements"][self.movement_list_table.selectedIndexes()[0].row()].add_motion(CirSinuMotion())
+                self.data["global_movements"][self.movement_list_table.selectedIndexes()[0].row()].add_motion(properties.CirSinuMotion())
                 self.on_movement_selected(
                     self.movement_list_table.selectedIndexes()[0].row(), None)
 
@@ -9366,8 +9357,8 @@ class MovementDialog(QtGui.QDialog):
         self.notice_label.setText("")  # Reset the notice label if a valid change is made
         if len(self.movement_list_table.selectedIndexes()) > 0:
             if self.movement_list_table.selectedIndexes()[0].row() is not len(self.data["global_movements"]):
-                self.data["global_movements"][self.movement_list_table.selectedIndexes()[0].row()].add_motion(RectSinuMotion())
-                self.on_movement_selected(movement_list_table.selectedIndexes()[0].row(), None)
+                self.data["global_movements"][self.movement_list_table.selectedIndexes()[0].row()].add_motion(properties.RectSinuMotion())
+                self.on_movement_selected(self.movement_list_table.selectedIndexes()[0].row(), None)
 
 
 class FacesDialog(QtGui.QDialog):
@@ -9532,7 +9523,6 @@ class FacesDialog(QtGui.QDialog):
                     fp.face_print = 'right'
             else:
                 fp.right_face = False
-
 
         self.data['faces'][str(self.target_mk), self.name] = fp
 

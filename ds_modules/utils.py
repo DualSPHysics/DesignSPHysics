@@ -1,4 +1,4 @@
-#!/usr/bin/env python2.7
+#!/usr/bin/env python3.7
 # -*- coding: utf-8 -*-
 """DesignSPHysics Utils.
 
@@ -23,21 +23,21 @@ import traceback
 import webbrowser
 import json
 import shutil
+import os
 from sys import platform
 from datetime import datetime
 
 import sys
 
-reload(sys)
-sys.setdefaultencoding('utf-8')
-
 from PySide import QtGui, QtCore
+from ds_modules import guiutils
+from ds_modules import stl
+from ds_modules import execution_parameters
+from ds_modules import properties
+from ds_modules.properties import *
+from ds_modules.execution_parameters import *
 
-import guiutils
-import stl
-import os
-from properties import *
-from execution_parameters import *
+from future.utils import iteritems
 
 """
 Copyright (C) 2019
@@ -60,13 +60,13 @@ along with DesignSPHysics.  If not, see <http://www.gnu.org/licenses/>.
 """
 
 # ------ CONSTANTS DEFINITION ------
-FREECAD_MIN_VERSION = "017"
+FREECAD_MIN_VERSION = "018"
 APP_NAME = "DesignSPHysics"
 DEBUGGING = False
 VERBOSE = False
 DIVIDER = 1000
 PICKLE_PROTOCOL = 1  # Binary mode
-VERSION = "0.5.1905-08"
+VERSION = "0.5.1.1906-03"
 WIDTH_2D = 0.001
 MAX_PARTICLE_WARNING = 2000000
 HELP_WEBPAGE = "https://github.com/DualSPHysics/DesignSPHysics/wiki"
@@ -80,7 +80,7 @@ def is_compatible_version():
 
     version_num = FreeCAD.Version()[0] + FreeCAD.Version()[1]
     if int(version_num) < int(FREECAD_MIN_VERSION):
-        guiutils.warning_dialog("This version of FreeCAD is not supported!. Install version 0.17 or higher.")
+        ds_modules.guiutils.warning_dialog("This version of FreeCAD is not supported!. Install version 0.17 or higher.")
         return False
     else:
         return True
@@ -89,31 +89,30 @@ def is_compatible_version():
 def log(message):
     """ Prints a log in the default output."""
     if VERBOSE:
-        print "[" + APP_NAME + "] " + message.encode('utf-8')
+        print ("[" + APP_NAME + "]" + message)
 
 
 def warning(message):
     """ Prints a warning in the default output. """
     if VERBOSE:
-        print "[" + APP_NAME + "] " + "[WARNING]" + ": " + str(message)
+        print ("[" + APP_NAME + "] " + "[WARNING]" + ": " + str(message))
 
 
 def error(message):
     """ Prints an error in the default output."""
     if VERBOSE:
-        print "[" + APP_NAME + "] " + "[ERROR]" + ": " + str(message)
+        print ("[" + APP_NAME + "] " + "[ERROR]" + ": " + str(message))
 
 
 def debug(message):
     """ Prints a debug message in the default output"""
     if DEBUGGING and VERBOSE:
-        print "[" + APP_NAME + "] " + "[<<<<DEBUG>>>>]" + ": " + str(message)
+        print ("[" + APP_NAME + "] " + "[<<<<DEBUG>>>>]" + ": " + str(message))
 
 
 def __(text):
     """ Translation helper. Takes a string and tries to return its translation to the current FreeCAD locale.
     If the translation is missing or the file does not exists, return default english string. """
-
     # Get FreeCAD current language
     freecad_locale = FreeCADGui.getLocale().lower().replace(", ", "-").replace(" ", "-")
     # Find ds_modules directory
@@ -128,7 +127,7 @@ def __(text):
     to_ret = translation.get(text, None)
     if not to_ret:
         translation[text] = text
-        with open(filename, "wb") as f:
+        with open(filename, "w", encoding="utf8") as f:
             json.dump(translation, f, indent=4)
         return text
     else:
@@ -295,7 +294,7 @@ def check_executables(data):
         bundled_execs_present = are_executables_bundled()
 
         if bundled_execs_present:
-            user_selection = guiutils.ok_cancel_dialog(APP_NAME,
+            user_selection = ds_modules.guiutils.ok_cancel_dialog(APP_NAME,
                                                        "The path of some of the executables "
                                                        "in “Setup Plugin” is not correct.\n"
                                                        "DualSPHysics was detected. "
@@ -312,7 +311,7 @@ def check_executables(data):
             if not execs_correct:
                 warning("One or more of the executables in the setup is not correct. "
                         "Check plugin setup to fix missing binaries")
-                guiutils.warning_dialog("One or more of the executables in the setup is not correct. "
+                ds_modules.guiutils.warning_dialog("One or more of the executables in the setup is not correct. "
                                         "Check plugin setup to fix missing binaries.")
     return data, execs_correct
 
@@ -326,7 +325,7 @@ def are_executables_bundled():
 def float_list_to_float_property(floating_mks):
     """ Transforms a float lists from an old case format to the new properties. """
     to_ret = dict()
-    for key, value in floating_mks.iteritems():
+    for key, value in floating_mks.items():
         if isinstance(value, list):
             # Is in old mode. Change to OOP
             fp = FloatProperty(
@@ -387,7 +386,7 @@ def float_list_to_float_property(floating_mks):
 def initials_list_to_initials_property(initials_mks):
     """ Transforms initials lists to properties from old cases. """
     to_ret = dict()
-    for key, value in initials_mks.iteritems():
+    for key, value in initials_mks.items():
         if isinstance(value, list):
             # Is in old mode. Change to OOP
             ip = InitialsProperty(mk=int(key), force=value)
@@ -473,7 +472,7 @@ def get_default_data():
     data['partsoutmax'] = 1
     data['rhopoutmin'] = 700
     data['rhopoutmax'] = 1300
-    data['domainfixed'] = DomainFixedParameter(False, 0, 0, 0, 0, 0, 0)
+    data['domainfixed'] = execution_parameters.DomainFixedParameter(False, 0, 0, 0, 0, 0, 0)
 
     # Damping object dictionary: {'ObjectName': DampingObject}
     data['damping'] = dict()
@@ -584,7 +583,7 @@ def get_default_data():
     data['relaxationzone'] = None
 
     # Acceleration Input
-    data['accinput'] = AccelerationInput()
+    data['accinput'] = properties.AccelerationInput()
 
     # Temporal data dict to control execution features.
     temp_data['current_process'] = None
@@ -664,13 +663,13 @@ def get_first_mk_not_used(objtype, data):
     if objtype == "fluid":
         endval = 10
         mkset = set()
-        for key, value in data["simobjects"].iteritems():
+        for key, value in data["simobjects"].items():
             if value[1].lower() == "fluid":
                 mkset.add(value[0])
     else:
         endval = 240
         mkset = set()
-        for key, value in data["simobjects"].iteritems():
+        for key, value in data["simobjects"].items():
             if value[1].lower() == "bound":
                 mkset.add(value[0])
     for i in range(0, endval):
@@ -694,7 +693,7 @@ def print_license():
     if os.path.isfile(licpath):
         with open(licpath) as licfile:
             if VERBOSE:
-                print licfile.read()
+                print (licfile.read())
     else:
         raise EnvironmentError(
             "LICENSE file could not be found. Are you sure you didn't delete it?")
@@ -724,7 +723,7 @@ def document_count():
 def valid_document_environment():
     """ Returns a boolean if a correct document environment is found.
     A correct document environment is defined if only a DSPH_Case document is currently opened in FreeCAD. """
-    return True if document_count() is 1 and 'dsph_case' in FreeCAD.listDocuments().keys()[0].lower() else False
+    return True if document_count() is 1 and 'dsph_case' in list(FreeCAD.listDocuments().keys())[0].lower() else False
 
 
 def create_dsph_document():
@@ -780,11 +779,11 @@ def dump_to_xml(data, save_name):
         to disk. Generates a GenCase compatible XML. """
     # Saves all the data in XML format.
     log("Saving data in " + data["project_path"] + ".")
-    FreeCAD.getDocument("DSPH_Case").saveAs(save_name.encode('utf-8') + "/DSPH_Case.FCStd")
+    FreeCAD.getDocument("DSPH_Case").saveAs(save_name + "/DSPH_Case.FCStd")
     FreeCADGui.SendMsgToActiveView("Save")
-    f = open(save_name + "/" + save_name.split('/')[-1] + "_Def.xml", 'w')
+    f = open(save_name + "/" + save_name.split('/')[-1] + "_Def.xml", 'w', encoding='utf-8')
     f.write('<?xml version="1.0" encoding="UTF-8" ?>\n')
-    f.write('<!-- Case name: {} -->\n'.format(data["project_name"].encode('utf-8')))
+    f.write('<!-- Case name: {} -->\n'.format(data["project_name"]))
     f.write('<case app="{} v{}" date="{}">\n'.format(APP_NAME, VERSION, datetime.now().strftime('%d-%m-%Y %H:%M:%S')))
     f.write('\t<casedef>\n')
     f.write('\t\t<constantsdef>\n')
@@ -871,14 +870,14 @@ def dump_to_xml(data, save_name):
             # If special objects are found, exported in an specific manner (p.e FillBox)
             # The rest of the things are exported in STL format.
             if o.TypeId == "Part::Box":
-                if (abs(o.Placement.Base.x) + abs(o.Placement.Base.y) + abs(o.Placement.Base.z)) != 0:
-                    f.write(
-                        '\t\t\t\t\t<move x="' +
-                        str(o.Placement.Base.x / DIVIDER) + '" y="' +
-                        str(o.Placement.Base.y / DIVIDER) + '" z="' +
-                        str(o.Placement.Base.z / DIVIDER) + '" />\n'
-                    )
                 if math.degrees(o.Placement.Rotation.Angle) != 0:
+                    if (abs(o.Placement.Base.x) + abs(o.Placement.Base.y) + abs(o.Placement.Base.z)) != 0:
+                        f.write(
+                            '\t\t\t\t\t<move x="' +
+                            str(o.Placement.Base.x / DIVIDER) + '" y="' +
+                            str(o.Placement.Base.y / DIVIDER) + '" z="' +
+                            str(o.Placement.Base.z / DIVIDER) + '" />\n'
+                        )
                     f.write(
                         '\t\t\t\t\t<rotate ang="' +
                         str(math.degrees(o.Placement.Rotation.Angle)) + '" x="' +
@@ -886,13 +885,22 @@ def dump_to_xml(data, save_name):
                         str(-o.Placement.Rotation.Axis.y) + '" z="' +
                         str(-o.Placement.Rotation.Axis.z) + '" />\n'
                     )
+
                 f.write('\t\t\t\t\t<drawbox objname="{}">\n'.format(o.Label))
                 if (str(valuelist[0]), o.Label) in data['faces'].keys():
                     f.write('\t\t\t\t\t\t<boxfill>{}</boxfill>\n'.format(str(data['faces'][str(valuelist[0]), o.Label]
                                                                              .face_print)))
                 else:
                     f.write('\t\t\t\t\t\t<boxfill>solid</boxfill>\n')
-                f.write('\t\t\t\t\t\t<point x="0" y="0" z="0" />\n')
+
+                if math.degrees(o.Placement.Rotation.Angle) == 0:
+                    f.write('\t\t\t\t\t\t<point x="' +
+                            str(o.Placement.Base.x / DIVIDER) + '" y="' +
+                            str(o.Placement.Base.y / DIVIDER) + '" z="' +
+                            str(o.Placement.Base.z / DIVIDER) + '" />\n')
+                else:
+                    f.write('\t\t\t\t\t\t<point x="0" y="0" z="0" />\n')
+
                 f.write(
                     '\t\t\t\t\t\t<size x="' +
                     str(o.Length.Value / DIVIDER) + '" y="' +
@@ -900,7 +908,8 @@ def dump_to_xml(data, save_name):
                     str(o.Height.Value / DIVIDER) + '" />\n'
                 )
                 f.write('\t\t\t\t\t</drawbox>\n')
-                f.write('\t\t\t\t\t<matrixreset />\n')
+                if math.degrees(o.Placement.Rotation.Angle) != 0:
+                    f.write('\t\t\t\t\t<matrixreset />\n')
             elif o.TypeId == "Part::Sphere":
                 if (abs(o.Placement.Base.x) + abs(o.Placement.Base.y) + abs(o.Placement.Base.z)) != 0:
                     f.write(
@@ -1007,7 +1016,7 @@ def dump_to_xml(data, save_name):
     # Writes initials
     if len(data["initials_mks"].keys()) > 0:
         f.write('\t\t<initials>\n')
-        for key, value in data["initials_mks"].iteritems():
+        for key, value in data["initials_mks"].items():
             f.write(
                 '\t\t\t<velocity mkfluid="' +
                 str(key) + '" x="' +
@@ -1019,7 +1028,7 @@ def dump_to_xml(data, save_name):
     # Writes floatings
     if len(data["floating_mks"].keys()) > 0:
         f.write('\t\t<floatings>\n')
-        for key, value in data["floating_mks"].iteritems():
+        for key, value in data["floating_mks"].items():
             if value.mass_density_type == 0:
                 # is massbody
                 f.write('\t\t\t<floating mkbound="' + str(key) + '">\n')
@@ -1082,14 +1091,14 @@ def dump_to_xml(data, save_name):
     if len(data["motion_mks"]) > 0 or len(data['mlayerpistons'].keys()) > 0:
         f.write('\t\t<motion>\n')
         mov_counter = 1
-        for key, value in data['mlayerpistons'].iteritems():
+        for key, value in data['mlayerpistons'].items():
             f.write('\t\t\t<objreal ref="' + str(key) + '">\n')
             f.write('\t\t\t\t<begin mov="{}" start="0"/>\n'.format(mov_counter))
             f.write('\t\t\t\t<mvnull id="{}" />\n'.format(mov_counter))
             f.write('\t\t\t</objreal>\n')
             mov_counter += 1
 
-        for key, value in data["motion_mks"].iteritems():
+        for key, value in data["motion_mks"].items():
             f.write('\t\t\t<objreal ref="' + str(key) + '">\n')
             mot_counter = 1
             for movement in value:
@@ -1303,8 +1312,8 @@ def dump_to_xml(data, save_name):
                             f.write('\t\t\t\t</mvrectsinu>\n')
 
                         mot_counter += 1
-                elif isinstance(movement, SpecialMovement):
-                    if isinstance(movement.generator, FileGen):
+                elif isinstance(movement, properties.SpecialMovement):
+                    if isinstance(movement.generator, properties.FileGen):
                         f.write('\t\t\t\t<mvfile id="{}" duration="{}">\n '.format(
                             mov_counter, movement.generator.duration))
                         f.write('\t\t\t\t\t<file name="{}" fields="{}" fieldtime="{}" '
@@ -1314,7 +1323,7 @@ def dump_to_xml(data, save_name):
                                                                        movement.generator.fieldx,
                                                                        movement.generator.fieldy))
                         f.write('\t\t\t\t</mvfile>\n ')
-                    elif isinstance(movement.generator, RotationFileGen):
+                    elif isinstance(movement.generator, properties.RotationFileGen):
                         f.write('\t\t\t\t<mvrotfile id="{}" duration="{}" anglesunits="{}">\n '.format(mov_counter,
                                                                                                        movement.generator.duration,
                                                                                                        movement.generator.anglesunits))
@@ -1358,7 +1367,7 @@ def dump_to_xml(data, save_name):
     # Damping support
     if len(data['damping']) > 0:
         f.write('\t\t\t<damping>\n')
-        for objname, damping_object in data["damping"].iteritems():
+        for objname, damping_object in data["damping"].items():
             fc_obj = FreeCAD.ActiveDocument.getObject(objname)
             if fc_obj is not None and damping_object.enabled:
                 f.write('\t\t\t\t<dampingzone>\n')
@@ -1528,20 +1537,20 @@ def dump_to_xml(data, save_name):
 
     # A counter for special movements. Controls when and how to open/close tags
     written_movements_counter = 0
-    for mk, motlist in data["motion_mks"].iteritems():
+    for mk, motlist in data["motion_mks"].items():
         # Check if object has motion enabled but no motions selected
         if len(motlist) < 1:
             continue
-        if isinstance(motlist[0], SpecialMovement):
+        if isinstance(motlist[0], properties.SpecialMovement):
             mot = motlist[0].generator
-            if isinstance(mot, FileGen) or isinstance(mot, RotationFileGen):
+            if isinstance(mot, properties.FileGen) or isinstance(mot, properties.RotationFileGen):
                 continue
 
             # Open tags only for the first movement
             if written_movements_counter == 0:
                 f.write('\t\t\t<wavepaddles>\n')
 
-            if isinstance(mot, RegularPistonWaveGen):
+            if isinstance(mot, properties.RegularPistonWaveGen):
                 f.write('\t\t\t\t<piston>\n')
                 f.write('\t\t\t\t\t<mkbound value="{}" comment="Mk-Bound of selected particles" />\n'.format(mk))
                 f.write(
@@ -1628,7 +1637,7 @@ def dump_to_xml(data, save_name):
                 f.write('\t\t\t\t</piston>\n')
                 written_movements_counter += 1
 
-            elif isinstance(mot, IrregularPistonWaveGen):
+            elif isinstance(mot, properties.IrregularPistonWaveGen):
                 f.write('\t\t\t\t<piston_spectrum>\n')
                 f.write(
                     '\t\t\t\t\t<mkbound value="{}" comment="Mk-Bound of selected particles" />\n'.format(mk))
@@ -1746,7 +1755,7 @@ def dump_to_xml(data, save_name):
                 f.write('\t\t\t\t</piston_spectrum>\n')
                 written_movements_counter += 1
 
-            elif isinstance(mot, RegularFlapWaveGen):
+            elif isinstance(mot, properties.RegularFlapWaveGen):
                 f.write('\t\t\t\t<flap>\n')
                 f.write(
                     '\t\t\t\t\t<mkbound value="{}" comment="Mk-Bound of selected particles" />\n'.format(mk))
@@ -1786,7 +1795,7 @@ def dump_to_xml(data, save_name):
                 f.write('\t\t\t\t</flap>\n')
                 written_movements_counter += 1
 
-            elif isinstance(mot, IrregularFlapWaveGen):
+            elif isinstance(mot, properties.IrregularFlapWaveGen):
                 f.write('\t\t\t\t<flap_spectrum>\n')
                 f.write(
                     '\t\t\t\t\t<mkbound value="{}" comment="Mk-Bound of selected particles" />\n'.format(mk))
@@ -1862,7 +1871,7 @@ def dump_to_xml(data, save_name):
 
     if len(data['mlayerpistons'].keys()) > 0:
         f.write('\t\t\t<mlayerpistons>\n')
-        for mk, pistonobject in data['mlayerpistons'].iteritems():
+        for mk, pistonobject in data['mlayerpistons'].items():
             if isinstance(pistonobject, MLPiston1D):
                 f.write('\t\t\t\t<piston1d>\n')
                 f.write('\t\t\t\t\t<mkbound value="{}" comment="Mk-Bound of selected particles" />\n'.format(mk))
@@ -2194,12 +2203,12 @@ def batch_generator(full_path, case_name, gcpath, dsphpath, pvtkpath, exec_param
     lib_folder = os.path.dirname(os.path.realpath(__file__))
     with open('{}/templates/template.bat'.format(lib_folder), 'r') as content_file:
         win_template = content_file.read().format(
-            app_name=APP_NAME, case_name=case_name.encode('utf-8'), gcpath=gcpath, dsphpath=dsphpath, pvtkpath=pvtkpath,
+            app_name=APP_NAME, case_name=case_name, gcpath=gcpath, dsphpath=dsphpath, pvtkpath=pvtkpath,
             exec_params=exec_params)
     with open('{}/templates/template.sh'.format(lib_folder), 'r') as content_file:
         linux_template = content_file.read().format(
             app_name=APP_NAME,
-            case_name=case_name.encode('utf-8'),
+            case_name=case_name,
             gcpath=gcpath,
             dsphpath=dsphpath,
             pvtkpath=pvtkpath,

@@ -1,4 +1,4 @@
-#!/usr/bin/env python2.7
+#!/usr/bin/env python3.7
 # -*- coding: utf-8 -*-
 """DesignSPHysics Execution Parameters.
 
@@ -9,9 +9,6 @@ in a DSPH related case.
 """
 
 import sys
-reload(sys)
-sys.setdefaultencoding('utf-8')
-
 
 # Copyright (C) 2019
 # EPHYSLAB Environmental Physics Laboratory, Universidade de Vigo
