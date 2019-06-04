@@ -1,4 +1,4 @@
-#!/usr/bin/env python2.7
+#!/usr/bin/env python3.7
 # -*- coding: utf-8 -*-
 """DesignSPHysics Properties.
 
@@ -9,8 +9,6 @@ in a DSPH related case.
 
 import sys
 
-reload(sys)
-sys.setdefaultencoding('utf-8')
 import random
 from ds_modules.propenums import *
 
