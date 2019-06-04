@@ -1,7 +1,7 @@
 {
     "windows":{
         "gencase_path": "./dualsphysics/bin/GenCase4_win64.exe",
-        "dsphysics_path": "./dualsphysics/bin/DualSPHysics4.2_win64.exe",
+        "dsphysics_path": "./dualsphysics/bin/DualSPHysics4.4_win64.exe",
         "partvtk4_path": "./dualsphysics/bin/PartVTK4_win64.exe",
         "computeforces_path": "./dualsphysics/bin/ComputeForces4_win64.exe",
         "floatinginfo_path": "./dualsphysics/bin/FloatingInfo4_win64.exe",
@@ -12,7 +12,7 @@
     },
     "linux":{
         "gencase_path": "./dualsphysics/bin/GenCase4_linux64",
-        "dsphysics_path": "./dualsphysics/bin/DualSPHysics4.2_linux64",
+        "dsphysics_path": "./dualsphysics/bin/DualSPHysics4.4_linux64",
         "partvtk4_path": "./dualsphysics/bin/PartVTK4_linux64",
         "computeforces_path": "./dualsphysics/bin/ComputeForces4_linux64",
         "floatinginfo_path": "./dualsphysics/bin/FloatingInfo4_linux64",

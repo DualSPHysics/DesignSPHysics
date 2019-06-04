@@ -1,4 +1,4 @@
-#!/usr/bin/env python2.7
+#!/usr/bin/env python3.7
 # -*- coding: utf-8 -*-
 """DesignSPHysics Properties.
 
@@ -9,13 +9,11 @@ in a DSPH related case.
 
 import sys
 
-reload(sys)
-sys.setdefaultencoding('utf-8')
 import random
 from ds_modules.propenums import *
 
 
-# Copyright (C) 2016 - Andrés Vieira (anvieiravazquez@gmail.com)
+# Copyright (C) 2019
 # EPHYSLAB Environmental Physics Laboratory, Universidade de Vigo
 #
 # This file is part of DesignSPHysics.
@@ -45,11 +43,13 @@ class FloatProperty(object):
         inertia: Coords in [x, y, z] format. Blank list() for auto.
         initial_linear_velocity: Coords in [x, y, z] format. Blank list() for auto.
         initial_angular_velocity: Coords in [x, y, z] format. Blank list() for auto.
+        rotation_restriction: Coords in [x,y,z] format. Blank list() for auto.
     """
 
     def __init__(self, mk=-1, mass_density_type=0, mass_density_value=100,
                  gravity_center=list(), inertia=list(), initial_linear_velocity=list(),
-                 initial_angular_velocity=list()):
+                 initial_angular_velocity=list(), translation_restriction=list(), rotation_restriction=list(),
+                 material=""):
         self.mk = mk
         self.mass_density_type = mass_density_type
         self.mass_density_value = mass_density_value
@@ -57,6 +57,23 @@ class FloatProperty(object):
         self.inertia = inertia
         self.initial_linear_velocity = initial_linear_velocity
         self.initial_angular_velocity = initial_angular_velocity
+        self.translation_restriction = translation_restriction
+        self.rotation_restriction = rotation_restriction
+        self.material = material
+
+
+class FacesProperty(object):
+    def __init__(self, mk=-1, all_faces=False, front_face=False, back_face=False, top_face=False, bottom_face=False,
+                 left_face=False, right_face=False, face_print=''):
+        self.mk = mk
+        self.all_faces = all_faces
+        self.front_face = front_face
+        self.back_face = back_face
+        self.top_face = top_face
+        self.bottom_face = bottom_face
+        self.left_face = left_face
+        self.right_face = right_face
+        self.face_print = face_print
 
 
 class InitialsProperty(object):
@@ -820,7 +837,7 @@ class RelaxationZoneIrregular(object):
                  discretization=IrregularDiscretization.REGULAR, waveorder=1, waveheight=1,
                  waveperiod=2, waves=50, randomseed=random.randint(0, 9999), depth=1, swl=1, center=None,
                  width=0.5, ramptime=0, serieini=0,
-                 savemotion_periods=24, savemotion_periodsteps=20, savemotion_xpos=0, savemotion_zpos=0,
+                 savemotion_time=50, savemotion_timedt=0.1, savemotion_xpos=0, savemotion_zpos=0,
                  saveserie_timemin=0, saveserie_timemax=100, saveserie_timedt=0.1, saveserie_xpos=0,
                  saveseriewaves_timemin=0, saveseriewaves_timemax=1000, saveseriewaves_xpos=0,
                  coefdir=None, coefdt=1000, function_psi=0.9, function_beta=1, driftcorrection=0):
@@ -840,8 +857,8 @@ class RelaxationZoneIrregular(object):
         self.width = width
         self.ramptime = ramptime
         self.serieini = serieini
-        self.savemotion_periods = savemotion_periods
-        self.savemotion_periodsteps = savemotion_periodsteps
+        self.savemotion_time = savemotion_time
+        self.savemotion_timedt = savemotion_timedt
         self.savemotion_xpos = savemotion_xpos
         self.savemotion_zpos = savemotion_zpos
         self.saveserie_timemin = saveserie_timemin

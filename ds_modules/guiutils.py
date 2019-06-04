@@ -1,4 +1,4 @@
-#!/usr/bin/env python2.7
+#!/usr/bin/env python3.7
 # -*- coding: utf-8 -*-
 """DesignSPHysics GUI Utils.
 
@@ -12,19 +12,16 @@ import FreeCADGui
 import pickle
 import sys
 import os
-import utils
-import constants
+import ds_modules.utils
+import ds_modules.constants
 import subprocess
 from sys import platform
 
-reload(sys)
-sys.setdefaultencoding('utf-8')
-
 from PySide import QtGui, QtCore
-from execution_parameters import *
+from ds_modules.execution_parameters import *
 
 """
-Copyright (C) 2016 - Andrés Vieira (anvieiravazquez@gmail.com)
+Copyright (C) 2019
 EPHYSLAB Environmental Physics Laboratory, Universidade de Vigo
 
 This file is part of DesignSPHysics.
@@ -285,17 +282,17 @@ def def_setup_window(data):
         data['boundaryvtk_path'] = boundaryvtk_input.text()
         data['flowtool_path'] = flowtool_input.text()
         data['paraview_path'] = paraview_input.text()
-        data_to_merge, state = utils.check_executables(data)
+        data_to_merge, state = ds_modules.utils.check_executables(data)
         data.update(data_to_merge)
-        with open(FreeCAD.getUserAppDataDir() + '/dsph_data-{}.dsphdata'.format(utils.VERSION),
+        with open(FreeCAD.getUserAppDataDir() + '/dsph_data-{}.dsphdata'.format(ds_modules.utils.VERSION),
                   'wb') as picklefile:
-            pickle.dump(data, picklefile, utils.PICKLE_PROTOCOL)
-        utils.log("Setup changed. Saved to " + FreeCAD.getUserAppDataDir() +
-                  '/dsph_data-{}.dsphdata'.format(utils.VERSION))
+            pickle.dump(data, picklefile, ds_modules.utils.PICKLE_PROTOCOL)
+        ds_modules.utils.log("Setup changed. Saved to " + FreeCAD.getUserAppDataDir() +
+                  '/dsph_data-{}.dsphdata'.format(ds_modules.utils.VERSION))
         setup_window.accept()
 
     def on_cancel():
-        utils.log("Setup not changed")
+        ds_modules.utils.log("Setup not changed")
         setup_window.reject()
 
     def on_gencase_browse():
@@ -314,7 +311,7 @@ def def_setup_window(data):
             if "gencase" in output[0:15].lower():
                 gencasepath_input.setText(file_name)
             else:
-                utils.error(
+                ds_modules.utils.error(
                     "I can't recognize GenCase in that executable.! "
                     "Check that the file corresponds with the appropriate tool and that you have permissions to execute it"
                 )
@@ -345,7 +342,7 @@ def def_setup_window(data):
             if "dualsphysics" in output[0:20].lower():
                 dsphpath_input.setText(file_name)
             else:
-                utils.error(
+                ds_modules.utils.error(
                     "I can't recognize DualSPHysics in that executable.! "
                     "Check that the file corresponds with the appropriate tool and that you have permissions to execute it"
                 )
@@ -372,7 +369,7 @@ def def_setup_window(data):
             if "partvtk4" in output[0:20].lower():
                 partvtk4path_input.setText(file_name)
             else:
-                utils.error(
+                ds_modules.utils.error(
                     "I can't recognize PartVTK4 in that executable.! "
                     "Check that the file corresponds with the appropriate tool and that you have permissions to execute it"
                 )
@@ -399,7 +396,7 @@ def def_setup_window(data):
             if "computeforces" in output[0:22].lower():
                 computeforces_input.setText(file_name)
             else:
-                utils.error(
+                ds_modules.utils.error(
                     "I can't recognize ComputeForces in that executable.! "
                     "Check that the file corresponds with the appropriate tool and that you have permissions to execute it"
                 )
@@ -426,7 +423,7 @@ def def_setup_window(data):
             if "floatinginfo" in output[0:22].lower():
                 floatinginfo_input.setText(file_name)
             else:
-                utils.error(
+                ds_modules.utils.error(
                     "I can't recognize FloatingInfo in that executable.! "
                     "Check that the file corresponds with the appropriate tool and that you have permissions to execute it"
                 )
@@ -453,7 +450,7 @@ def def_setup_window(data):
             if "measuretool" in output[0:22].lower():
                 measuretool_input.setText(file_name)
             else:
-                utils.error(
+                ds_modules.utils.error(
                     "I can't recognize MeasureTool in that executable.! "
                     "Check that the file corresponds with the appropriate tool and that you have permissions to execute it"
                 )
@@ -480,7 +477,7 @@ def def_setup_window(data):
             if "isosurface" in output[0:22].lower():
                 isosurface_input.setText(file_name)
             else:
-                utils.error(
+                ds_modules.utils.error(
                     "I can't recognize IsoSurface in that executable.! "
                     "Check that the file corresponds with the appropriate tool and that you have permissions to execute it"
                 )
@@ -507,7 +504,7 @@ def def_setup_window(data):
             if "boundaryvtk" in output[0:22].lower():
                 boundaryvtk_input.setText(file_name)
             else:
-                utils.error(
+                ds_modules.utils.error(
                     "I can't recognize BoundaryVTK in that executable.! "
                     "Check that the file corresponds with the appropriate tool and that you have permissions to execute it"
                 )
@@ -534,7 +531,7 @@ def def_setup_window(data):
             if "flowtool" in output[0:22].lower():
                 flowtool_input.setText(file_name)
             else:
-                utils.error(
+                ds_modules.utils.error(
                     "I can't recognize FlowTool in that executable.! "
                     "Check that the file corresponds with the appropriate tool and that you have permissions to execute it"
                 )
@@ -599,127 +596,6 @@ def def_setup_window(data):
     setup_window.exec_()
 
 
-def damping_config_window(data, object_key):
-    """Defines the setup window.
-    Modifies data dictionary passed as parameter."""
-
-    # TODO: This should be implemented as a custom class like DampingConfigDialog(QtGui.QDialog)
-
-    # Creates a dialog and 2 main buttons
-    damping_window = QtGui.QDialog()
-    damping_window.setWindowTitle("Damping configuration")
-    ok_button = QtGui.QPushButton("Save")
-    cancel_button = QtGui.QPushButton("Cancel")
-
-    main_layout = QtGui.QVBoxLayout()
-
-    enabled_checkbox = QtGui.QCheckBox("Enabled")
-
-    main_groupbox = QtGui.QGroupBox("Damping parameters")
-    main_groupbox_layout = QtGui.QVBoxLayout()
-
-    limitmin_layout = QtGui.QHBoxLayout()
-    limitmin_label = QtGui.QLabel("Limit Min. (X, Y, Z) (m): ")
-    limitmin_input_x = QtGui.QLineEdit()
-    limitmin_input_y = QtGui.QLineEdit()
-    limitmin_input_z = QtGui.QLineEdit()
-    [limitmin_layout.addWidget(x) for x in [limitmin_label, limitmin_input_x, limitmin_input_y, limitmin_input_z]]
-
-    limitmax_layout = QtGui.QHBoxLayout()
-    limitmax_label = QtGui.QLabel("Limit Max. (X, Y, Z) (m): ")
-    limitmax_input_x = QtGui.QLineEdit()
-    limitmax_input_y = QtGui.QLineEdit()
-    limitmax_input_z = QtGui.QLineEdit()
-    [limitmax_layout.addWidget(x) for x in [limitmax_label, limitmax_input_x, limitmax_input_y, limitmax_input_z]]
-
-    overlimit_layout = QtGui.QHBoxLayout()
-    overlimit_label = QtGui.QLabel("Overlimit (m): ")
-    overlimit_input = QtGui.QLineEdit()
-    [overlimit_layout.addWidget(x) for x in [overlimit_label, overlimit_input]]
-
-    redumax_layout = QtGui.QHBoxLayout()
-    redumax_label = QtGui.QLabel("Redumax: ")
-    redumax_input = QtGui.QLineEdit()
-    [redumax_layout.addWidget(x) for x in [redumax_label, redumax_input]]
-
-    main_groupbox_layout.addLayout(limitmin_layout)
-    main_groupbox_layout.addLayout(limitmax_layout)
-    main_groupbox_layout.addLayout(overlimit_layout)
-    main_groupbox_layout.addLayout(redumax_layout)
-
-    main_groupbox.setLayout(main_groupbox_layout)
-
-    button_layout = QtGui.QHBoxLayout()
-    button_layout.addStretch(1)
-    button_layout.addWidget(ok_button)
-    button_layout.addWidget(cancel_button)
-
-    main_layout.addWidget(enabled_checkbox)
-    main_layout.addWidget(main_groupbox)
-    main_layout.addLayout(button_layout)
-
-    damping_window.setLayout(main_layout)
-
-    # Window logic
-    def on_ok():
-        data["damping"][object_key].enabled = enabled_checkbox.isChecked()
-        data["damping"][object_key].overlimit = float(overlimit_input.text())
-        data["damping"][object_key].redumax = float(redumax_input.text())
-        damping_group = FreeCAD.ActiveDocument.getObject(object_key)
-        damping_group.OutList[0].Start = (float(limitmin_input_x.text()) * 1000,
-                                          float(limitmin_input_y.text()) * 1000,
-                                          float(limitmin_input_z.text()) * 1000)
-        damping_group.OutList[0].End = (float(limitmax_input_x.text()) * 1000,
-                                        float(limitmax_input_y.text()) * 1000,
-                                        float(limitmax_input_z.text()) * 1000)
-        damping_group.OutList[1].Start = damping_group.OutList[0].End
-
-        overlimit_vector = FreeCAD.Vector(*damping_group.OutList[0].End) - FreeCAD.Vector(*damping_group.OutList[0].Start)
-        overlimit_vector.normalize()
-        overlimit_vector = overlimit_vector * data["damping"][object_key].overlimit * 1000
-        overlimit_vector = overlimit_vector + FreeCAD.Vector(*damping_group.OutList[0].End)
-
-        damping_group.OutList[1].End = (overlimit_vector.x, overlimit_vector.y, overlimit_vector.z)
-        FreeCAD.ActiveDocument.recompute()
-        damping_window.accept()
-
-    def on_cancel():
-        damping_window.reject()
-
-    def on_enable_chk(state):
-        if state == QtCore.Qt.Checked:
-            main_groupbox.setEnabled(True)
-        else:
-            main_groupbox.setEnabled(False)
-
-    def on_value_change():
-        [x.setText(x.text().replace(",", ".")) for x in
-         [overlimit_input, redumax_input, limitmin_input_x, limitmin_input_y, limitmin_input_z, limitmax_input_x,
-          limitmax_input_y, limitmax_input_z]]
-
-    ok_button.clicked.connect(on_ok)
-    cancel_button.clicked.connect(on_cancel)
-    enabled_checkbox.stateChanged.connect(on_enable_chk)
-    [x.textChanged.connect(on_value_change) for x in [overlimit_input, redumax_input]]
-
-    # Fill fields with case data
-    enabled_checkbox.setChecked(data["damping"][object_key].enabled)
-    group = FreeCAD.ActiveDocument.getObject(object_key)
-    limitmin_input_x.setText(str(group.OutList[0].Start[0] / 1000))
-    limitmin_input_y.setText(str(group.OutList[0].Start[1] / 1000))
-    limitmin_input_z.setText(str(group.OutList[0].Start[2] / 1000))
-    limitmax_input_x.setText(str(group.OutList[0].End[0] / 1000))
-    limitmax_input_y.setText(str(group.OutList[0].End[1] / 1000))
-    limitmax_input_z.setText(str(group.OutList[0].End[2] / 1000))
-    overlimit_input.setText(str(group.OutList[1].Length.Value / 1000))
-    redumax_input.setText(str(data["damping"][object_key].redumax))
-    redumax_input.setText(str(data["damping"][object_key].redumax))
-    on_enable_chk(
-        QtCore.Qt.Checked if data["damping"][object_key].enabled else QtCore.Qt.Unchecked)
-
-    damping_window.exec_()
-
-
 def widget_state_config(widgets, config):
     """ Takes an widget dictionary and a config string to
         enable and disable certain widgets base on a case. """
@@ -729,7 +605,7 @@ def widget_state_config(widgets, config):
         widgets["constants_button"].setEnabled(False)
         widgets["execparams_button"].setEnabled(False)
         widgets["casecontrols_bt_addfillbox"].setEnabled(False)
-        widgets["casecontrols_bt_addstl"].setEnabled(False)
+        widgets["casecontrols_bt_addgeo"].setEnabled(False)
         widgets["ex_button"].setEnabled(False)
         widgets["ex_additional"].setEnabled(False)
         widgets["ex_selector_combo"].setEnabled(False)
@@ -762,7 +638,7 @@ def widget_state_config(widgets, config):
         widgets['post_proc_boundaryvtk_button'].setEnabled(False)
         widgets['post_proc_flowtool_button'].setEnabled(False)
         widgets["casecontrols_bt_addfillbox"].setEnabled(True)
-        widgets["casecontrols_bt_addstl"].setEnabled(True)
+        widgets["casecontrols_bt_addgeo"].setEnabled(True)
         widgets["summary_bt"].setEnabled(True)
         widgets["toggle3dbutton"].setEnabled(True)
         widgets["dampingbutton"].setEnabled(True)
@@ -781,7 +657,7 @@ def widget_state_config(widgets, config):
         widgets["rungencase_bt"].setEnabled(True)
         widgets["dp_input"].setEnabled(True)
         widgets["casecontrols_bt_addfillbox"].setEnabled(True)
-        widgets["casecontrols_bt_addstl"].setEnabled(True)
+        widgets["casecontrols_bt_addgeo"].setEnabled(True)
         widgets["summary_bt"].setEnabled(True)
         widgets["toggle3dbutton"].setEnabled(True)
         widgets["dampingbutton"].setEnabled(True)
@@ -878,8 +754,9 @@ def case_summary(orig_data):
 
     # TODO: This should be implemented as a custom class like CaseSummary(QtGui.QDialog)
 
-    if not utils.valid_document_environment():
+    if not ds_modules.utils.valid_document_environment():
         return
+
 
     # Data copy to avoid referencing issues
     data = dict(orig_data)
@@ -887,15 +764,15 @@ def case_summary(orig_data):
     # Preprocess data to show in data copy
     data['gravity'] = "({}, {}, {})".format(*data['gravity'])
     if data['project_name'] == "":
-        data['project_name'] = "<i>{}</i>".format(utils.__("Not yet saved"))
+        data['project_name'] = "<i>{}</i>".format(ds_modules.utils.__("Not yet saved"))
 
     if data['project_path'] == "":
-        data['project_path'] = "<i>{}</i>".format(utils.__("Not yet saved"))
+        data['project_path'] = "<i>{}</i>".format(ds_modules.utils.__("Not yet saved"))
 
     for k in ['gencase_path', 'dsphysics_path', 'partvtk4_path']:
         if data[k] == "":
             data[k] = "<i>{}</i>".format(
-                utils.__("Executable not correctly set"))
+                ds_modules.utils.__("Executable not correctly set"))
 
     data['stepalgorithm'] = {
         '1': 'Verlet',
@@ -903,7 +780,7 @@ def case_summary(orig_data):
     }[str(data['stepalgorithm'])]
     data['project_mode'] = '3D' if data['3dmode'] else '2D'
 
-    data['incz'] = float(data['incz']) * 100
+    #data['incz'] = float(data['incz']) * 100
     data['partsoutmax'] = float(data['partsoutmax']) * 100
 
     # Setting certain values to automatic
@@ -919,17 +796,17 @@ def case_summary(orig_data):
         data['objects_info'] += "<ul>"
         # data['simobjects'] is a dict with format
         # {'key': ['mk', 'type', 'fill']} where key is an internal name.
-        for key, value in data['simobjects'].iteritems():
+        for key, value in data['simobjects'].items():
             if key.lower() == 'case_limits':
                 continue
-            fc_object = utils.get_fc_object(key)
-            is_floating = utils.__('Yes') if str(
-                value[0]) in data['floating_mks'].keys() else utils.__('No')
-            is_floating = utils.__('No') if value[
+            fc_object = ds_modules.utils.get_fc_object(key)
+            is_floating = ds_modules.utils.__('Yes') if str(
+                value[0]) in data['floating_mks'].keys() else ds_modules.utils.__('No')
+            is_floating = ds_modules.utils.__('No') if value[
                                                 1].lower() == "fluid" else is_floating
-            has_initials = utils.__('Yes') if str(
-                value[0]) in data['initials_mks'].keys() else utils.__('No')
-            has_initials = utils.__('No') if value[
+            has_initials = ds_modules.utils.__('Yes') if str(
+                value[0]) in data['initials_mks'].keys() else ds_modules.utils.__('No')
+            has_initials = ds_modules.utils.__('No') if value[
                                                  1].lower() == "bound" else has_initials
             real_mk = value[0] + 11 if value[
                                            1].lower() == "bound" else value[0] + 1
@@ -947,7 +824,7 @@ def case_summary(orig_data):
                                                                             initials=has_initials)
         data['objects_info'] += "</ul>"
     else:
-        data['objects_info'] += utils.__(
+        data['objects_info'] += ds_modules.utils.__(
             "No objects were added to the simulation yet.")
     # endregion Formatting objects info
 
@@ -962,7 +839,7 @@ def case_summary(orig_data):
                 movtype = mov.__class__.__name__
 
             mklist = list()
-            for key, value in data['motion_mks'].iteritems():
+            for key, value in data['motion_mks'].items():
                 if mov in value:
                     mklist.append(str(key))
 
@@ -991,7 +868,6 @@ def case_summary(orig_data):
     data['last_number_particles'] = data['last_number_particles'] if data['last_number_particles'] >= 0 else "GenCase wasn't executed"
 
     # endregion Formatting movement info
-
     # Dialog creation and template filling
     main_window = QtGui.QDialog()
     main_layout = QtGui.QVBoxLayout()
@@ -1032,32 +908,33 @@ def gencase_completed_dialog(particle_count=0, detail_text="No details", data=di
     # Window Creation
     window = QtGui.QDialog()
     window.setWindowModality(QtCore.Qt.NonModal)
-    window.setWindowTitle(utils.__("Save & GenCase"))
+    window.setWindowTitle(ds_modules.utils.__("Save & GenCase"))
 
     # Main Layout creation
     main_layout = QtGui.QVBoxLayout()
 
     # Main Layout elements
     info_message = QtGui.QLabel(
-        utils.__("Gencase exported {} particles.\nPress \"Details\" to check the output").format(
+        ds_modules.utils.__("Gencase exported {} particles.\nPress \"Details\" to check the output").format(
             str(particle_count)))
 
     button_layout = QtGui.QHBoxLayout()
-    bt_open_with_paraview = QtGui.QPushButton(utils.__("Open with Paraview"))
+    bt_open_with_paraview = QtGui.QPushButton(ds_modules.utils.__("Open with Paraview"))
     temp_data['widget_saver'] = QtGui.QMenu()
     temp_data['widget_saver'].addAction("{}_MkCells.vtk".format(data['project_name']))
     temp_data['widget_saver'].addAction("{}_All.vtk".format(data['project_name']))
     temp_data['widget_saver'].addAction("{}_Fluid.vtk".format(data['project_name']))
     temp_data['widget_saver'].addAction("{}_Bound.vtk".format(data['project_name']))
     bt_open_with_paraview.setMenu(temp_data['widget_saver'])
-    bt_details = QtGui.QPushButton(utils.__("Details"))
-    bt_ok = QtGui.QPushButton(utils.__("Ok"))
+    bt_details = QtGui.QPushButton(ds_modules.utils.__("Details"))
+    bt_ok = QtGui.QPushButton(ds_modules.utils.__("Ok"))
     button_layout.addWidget(bt_open_with_paraview)
     button_layout.addWidget(bt_details)
     button_layout.addWidget(bt_ok)
 
     # Details popup window
     detail_text_dialog = QtGui.QDialog()
+    detail_text_dialog.setMinimumWidth(650)
     detail_text_dialog.setModal(False)
     detail_text_dialog_layout = QtGui.QVBoxLayout()
 
@@ -1099,7 +976,7 @@ def gencase_completed_dialog(particle_count=0, detail_text="No details", data=di
                     data['paraview_path'],
                     "--data={}\\{}".format(
                         data['project_path'] + '\\' +
-                        data['project_name'] + '_out',
+                        data['project_name'].decode('utf-8') + '_out',
                         action.text()
                     )
                 ],

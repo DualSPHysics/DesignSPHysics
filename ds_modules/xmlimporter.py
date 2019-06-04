@@ -1,4 +1,4 @@
-#!/usr/bin/env python2.7
+#!/usr/bin/env python3.7
 # -*- coding: utf-8 -*-
 """DesignSPHysics XML Importer.
 
@@ -14,15 +14,13 @@ import Mesh
 import json
 import sys
 
-reload(sys)
-sys.setdefaultencoding('utf-8')
+from ds_modules import utils
+from ds_modules import xmltodict
 
-import utils
-import xmltodict
 import xml.etree.ElementTree as ElementTree
 
 """
-Copyright (C) 2016 - Andrés Vieira (anvieiravazquez@gmail.com)
+Copyright (C) 2019
 EPHYSLAB Environmental Physics Laboratory, Universidade de Vigo
 
 This file is part of DesignSPHysics.

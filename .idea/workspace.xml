@@ -1,18 +1,23 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="BookmarkManager">
-    <bookmark url="file://$PROJECT_DIR$/DesignSPHysics.py" line="2266" mnemonic="2" />
-    <bookmark url="file://$PROJECT_DIR$/DesignSPHysics.py" line="2291" mnemonic="3" />
-    <bookmark url="file://$PROJECT_DIR$/DesignSPHysics.py" line="2113" mnemonic="1" />
-    <bookmark url="file://$PROJECT_DIR$/DesignSPHysics.py" line="2176" mnemonic="4" />
-    <bookmark url="file://$PROJECT_DIR$/ds_modules/dsphwidgets.py" line="5851" mnemonic="8" />
-    <bookmark url="file://$PROJECT_DIR$/DesignSPHysics.py" line="2371" mnemonic="9" />
+    <bookmark url="file://$PROJECT_DIR$/ds_modules/dsphwidgets.py" line="7249" />
+    <bookmark url="file://$PROJECT_DIR$/ds_modules/dsphwidgets.py" line="9186" mnemonic="4" />
+    <bookmark url="file://$PROJECT_DIR$/ds_modules/dsphwidgets.py" line="9224" mnemonic="5" />
+    <bookmark url="file://$PROJECT_DIR$/ds_modules/dsphwidgets.py" line="9253" mnemonic="6" />
+    <bookmark url="file://$PROJECT_DIR$/ds_modules/dsphwidgets.py" line="1478" mnemonic="3" />
+    <bookmark url="file://$PROJECT_DIR$/ds_modules/dsphwidgets.py" line="9010" mnemonic="9" />
+    <bookmark url="file://$PROJECT_DIR$/DesignSPHysics.py" line="346" mnemonic="8" />
+    <bookmark url="file://$PROJECT_DIR$/DesignSPHysics.py" line="356" />
+    <bookmark url="file://$PROJECT_DIR$/DesignSPHysics.py" line="825" mnemonic="1" />
+    <bookmark url="file://$PROJECT_DIR$/ds_modules/dsphwidgets.py" line="6827" mnemonic="2" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="22d76f4b-310a-4afb-8788-a472c77b2c87" name="Default" comment="Removed the variable &quot;fixed_depth&quot;&#10;&#10;Updated the Copyright in &quot;constants&quot;">
+    <list default="true" id="22d76f4b-310a-4afb-8788-a472c77b2c87" name="Default" comment="Changes in Faces option in DSPH Object Properties.">
+      <change afterPath="$PROJECT_DIR$/dualsphysics/bin/desktop.ini" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/ds_modules/lang/spanish.json" beforeDir="false" afterPath="$PROJECT_DIR$/ds_modules/lang/spanish.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/ds_modules/utils.py" beforeDir="false" afterPath="$PROJECT_DIR$/ds_modules/utils.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/DesignSPHysics.py" beforeDir="false" afterPath="$PROJECT_DIR$/DesignSPHysics.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/README.md" beforeDir="false" afterPath="$PROJECT_DIR$/README.md" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
@@ -22,6 +27,7 @@
   </component>
   <component name="CoverageDataManager">
     <SUITE FILE_PATH="coverage/Macro$Reopen_FreeCAD_and_Execute.coverage" NAME="Reopen FreeCAD and Execute Coverage Results" MODIFIED="1499847116881" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/../../DSPH" />
+    <SUITE FILE_PATH="coverage/DesignSPHysics$Reopen_FreeCAD_and_Execute.coverage" NAME="Reopen FreeCAD and Execute Coverage Results" MODIFIED="1551175604277" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="C:/Program Files/FreeCAD 0.17" />
   </component>
   <component name="CreatePatchCommitExecutor">
     <option name="PATCH_PATH" value="" />
@@ -40,181 +46,37 @@
     <expand />
     <select />
   </component>
-  <component name="FUSProjectUsageTrigger">
-    <session id="-669578045">
-      <usages-collector id="statistics.lifecycle.project">
-        <counts>
-          <entry key="project.closed" value="1" />
-          <entry key="project.open.time.11" value="1" />
-          <entry key="project.open.time.12" value="1" />
-          <entry key="project.open.time.13" value="1" />
-          <entry key="project.opened" value="3" />
-        </counts>
-      </usages-collector>
-      <usages-collector id="statistics.file.types.open">
-        <counts>
-          <entry key="Bash" value="1" />
-          <entry key="HTML" value="1" />
-          <entry key="JSON" value="3" />
-          <entry key="Markdown" value="3" />
-          <entry key="PLAIN_TEXT" value="2" />
-          <entry key="Python" value="18" />
-        </counts>
-      </usages-collector>
-      <usages-collector id="statistics.file.extensions.open">
-        <counts>
-          <entry key="FCMacro" value="1" />
-          <entry key="LICENSE" value="1" />
-          <entry key="README" value="1" />
-          <entry key="html" value="1" />
-          <entry key="json" value="3" />
-          <entry key="md" value="3" />
-          <entry key="py" value="17" />
-          <entry key="sh" value="1" />
-        </counts>
-      </usages-collector>
-      <usages-collector id="statistics.file.extensions.edit">
-        <counts>
-          <entry key="md" value="6733" />
-          <entry key="py" value="46" />
-        </counts>
-      </usages-collector>
-      <usages-collector id="statistics.js.language.service.starts" />
-      <usages-collector id="statistics.file.types.edit">
-        <counts>
-          <entry key="Markdown" value="6733" />
-          <entry key="Python" value="46" />
-        </counts>
-      </usages-collector>
-    </session>
-    <session id="970593039">
-      <usages-collector id="statistics.vcs.git.usages">
-        <counts>
-          <entry key="git.branch.checkout.local" value="2" />
-          <entry key="git.branch.checkout.remote" value="1" />
-        </counts>
-      </usages-collector>
-      <usages-collector id="statistics.file.extensions.edit">
-        <counts>
-          <entry key="dummy" value="11" />
-          <entry key="md" value="6" />
-          <entry key="py" value="10569" />
-          <entry key="txt" value="815" />
-        </counts>
-      </usages-collector>
-      <usages-collector id="statistics.file.types.edit">
-        <counts>
-          <entry key="Markdown" value="6" />
-          <entry key="PLAIN_TEXT" value="826" />
-          <entry key="Python" value="10569" />
-        </counts>
-      </usages-collector>
-      <usages-collector id="statistics.file.extensions.open">
-        <counts>
-          <entry key="FCMacro" value="1" />
-          <entry key="exe" value="1" />
-          <entry key="ico" value="1" />
-          <entry key="json" value="6" />
-          <entry key="md" value="5" />
-          <entry key="py" value="77" />
-          <entry key="pylintrc" value="1" />
-        </counts>
-      </usages-collector>
-      <usages-collector id="statistics.file.types.open">
-        <counts>
-          <entry key="Image" value="1" />
-          <entry key="JSON" value="6" />
-          <entry key="Markdown" value="5" />
-          <entry key="PLAIN_TEXT" value="2" />
-          <entry key="Python" value="78" />
-        </counts>
-      </usages-collector>
-      <usages-collector id="statistics.lifecycle.project">
-        <counts>
-          <entry key="project.closed" value="37" />
-          <entry key="project.open.time.5" value="5" />
-          <entry key="project.open.time.6" value="16" />
-          <entry key="project.open.time.7" value="18" />
-          <entry key="project.open.time.8" value="1" />
-          <entry key="project.open.time.9" value="1" />
-          <entry key="project.opened" value="41" />
-        </counts>
-      </usages-collector>
-    </session>
-  </component>
   <component name="FavoritesManager">
     <favorites_list name="Macro" />
   </component>
   <component name="FileEditorManager">
-    <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
+    <leaf>
       <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/ds_modules/dsphwidgets.py">
+        <entry file="file://$PROJECT_DIR$/ds_modules/constants.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="2547">
-              <caret line="3074" column="56" selection-start-line="3074" selection-start-column="56" selection-end-line="3074" selection-end-column="56" />
-              <folding>
-                <element signature="e#273#287#0" expanded="true" />
-                <marker date="1543861825729" expanded="true" signature="245615:245618" ph="..." />
-              </folding>
+            <state>
+              <caret column="24" selection-start-column="24" selection-end-column="24" />
             </state>
           </provider>
         </entry>
       </file>
       <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/ds_modules/constants.py">
+        <entry file="file://$PROJECT_DIR$/ds_modules/dsphwidgets.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="272">
-              <caret line="16" column="33" selection-start-line="16" selection-start-column="33" selection-end-line="16" selection-end-column="33" />
+            <state relative-caret-position="374">
+              <caret line="22" column="31" lean-forward="true" selection-start-line="22" selection-start-column="31" selection-end-line="22" selection-end-column="31" />
             </state>
           </provider>
         </entry>
       </file>
       <file pinned="false" current-in-tab="true">
-        <entry file="file://$PROJECT_DIR$/ds_modules/utils.py">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="541">
-              <caret line="68" column="22" selection-start-line="68" selection-start-column="22" selection-end-line="68" selection-end-column="22" />
-              <folding>
-                <element signature="e#253#267#0" expanded="true" />
-              </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/DesignSPHysics.py">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="65">
-              <caret line="40" column="53" selection-start-line="40" selection-start-column="48" selection-end-line="40" selection-end-column="53" />
-              <folding>
-                <element signature="e#286#300#0" expanded="true" />
-                <element signature="e#13665#14731#0" />
-                <element signature="e#15977#17492#0" />
-                <element signature="e#17646#18677#0" />
-                <element signature="e#18837#21344#0" />
-                <element signature="e#21540#22798#0" />
-              </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/ds_modules/properties.py">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="17">
-              <caret line="147" column="13" selection-start-line="147" selection-start-column="13" selection-end-line="147" selection-end-column="13" />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/ds_modules/guiutils.py">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="621">
-              <caret line="1110" column="41" selection-start-line="1110" selection-start-column="41" selection-end-line="1110" selection-end-column="41" />
-              <folding>
-                <element signature="e#163#177#0" expanded="true" />
-              </folding>
+        <entry file="file://$PROJECT_DIR$/README.md">
+          <provider selected="true" editor-type-id="split-provider[text-editor;markdown-preview-editor]">
+            <state split_layout="SPLIT">
+              <first_editor relative-caret-position="306">
+                <caret line="18" lean-forward="true" selection-start-line="18" selection-end-line="18" />
+              </first_editor>
+              <second_editor />
             </state>
           </provider>
         </entry>
@@ -230,36 +92,36 @@
   </component>
   <component name="FindInProjectRecents">
     <findStrings>
-      <find>onlyprocess</find>
-      <find>onlyid</find>
-      <find>finfo_onlyprocess_text</find>
-      <find>cfces_onlyprocess_text</find>
-      <find>flap</find>
-      <find>create_new_movement_button</find>
-      <find>has_motion_selector</find>
-      <find>fixed_depth_label</find>
-      <find>computefo</find>
-      <find>onlyp</find>
-      <find>on_cfces_export</find>
-      <find>onlyprocess_tag</find>
-      <find>export_parameters</find>
-      <find>export_process.start(data['computeforces_path'], static_params_exp)</find>
-      <find>save_mode</find>
-      <find>GRAVITY</find>
-      <find>constants.RHOPOUTMAX</find>
-      <find>contants.GRAVITY</find>
-      <find>computeforces_export</find>
-      <find>export_process</find>
-      <find>static_params_exp</find>
-      <find>fixeddepth</find>
-      <find>fixed depth</find>
-      <find>generator</find>
-      <find>RegularPistonWaveMotionTimeline</find>
-      <find>fixed_depth_input</find>
-      <find>Fluid depth</find>
-      <find>WaveGen</find>
-      <find>fixed_depth</find>
-      <find>versi</find>
+      <find>enco</find>
+      <find>rungencase_bt</find>
+      <find>readAllStandardOutput</find>
+      <find>dsph_case</find>
+      <find>dsph_cas</find>
+      <find>label</find>
+      <find>decode</find>
+      <find>data['project_name']</find>
+      <find>project_name</find>
+      <find>fc_main_window</find>
+      <find>encoding</find>
+      <find>utf-</find>
+      <find>utf-8</find>
+      <find>.decode('utf-8')</find>
+      <find>QtCore.QTextCodec.codecForName('UTF-8')</find>
+      <find>QtCore.QTextCodec</find>
+      <find>save_</find>
+      <find>project_path</find>
+      <find>chron</find>
+      <find>chrono</find>
+      <find>FreeCAD.getDocument(&quot;DSPH_Case&quot;)</find>
+      <find>getObject</find>
+      <find>save</find>
+      <find>on_sa</find>
+      <find>inle</find>
+      <find>VERSION</find>
+      <find>keys(</find>
+      <find>VERSION =</find>
+      <find>#!/usr/bin/env python2.7</find>
+      <find>018</find>
     </findStrings>
     <replaceStrings>
       <replace>self.time_label</replace>
@@ -271,6 +133,9 @@
       <replace>images</replace>
       <replace>on_focus</replace>
       <replace>on_help_focus</replace>
+      <replace>self.</replace>
+      <replace>self</replace>
+      <replace>ds_modules.guiutils.</replace>
     </replaceStrings>
     <dirStrings>
       <dir>C:\Users\anvie\AppData\Roaming\FreeCAD\Mod\DesignSPHysics\.vscode</dir>
@@ -282,6 +147,7 @@
       <list>
         <option value="LoreDocasar &lt;docasarlorena@gmail.com&gt;" />
         <option value="Lorena Docasar &lt;docasarlorena@gmail.com&gt;" />
+        <option value="lo" />
         <option value="docasarlorena@gmail.com" />
         <option value="Andrés Vieira &lt;anvieiravazquez@gmail.com&gt;" />
       </list>
@@ -289,7 +155,7 @@
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
     <option name="RECENT_BRANCH_BY_REPOSITORY">
       <map>
-        <entry key="$PROJECT_DIR$" value="master" />
+        <entry key="$PROJECT_DIR$" value="GitLabMaster" />
       </map>
     </option>
   </component>
@@ -303,32 +169,37 @@
         <option value="$PROJECT_DIR$/.gitignore" />
         <option value="$PROJECT_DIR$/dsphfc/xmltodict.py" />
         <option value="$PROJECT_DIR$/dsphfc/lang/english.json" />
-        <option value="$PROJECT_DIR$/LICENSE" />
         <option value="$PROJECT_DIR$/DSPH.py" />
         <option value="$PROJECT_DIR$/dsphfc/xmlimporter.py" />
         <option value="$PROJECT_DIR$/dsphfc/templates/case_summary_template.html" />
-        <option value="$PROJECT_DIR$/installer/installer.py" />
         <option value="$APPLICATION_CONFIG_DIR$/pycharm64.exe.vmoptions" />
         <option value="$PROJECT_DIR$/dsphfc/properties.py" />
         <option value="$PROJECT_DIR$/dsphfc/dsphwidgets.py" />
         <option value="$PROJECT_DIR$/dsphfc/utils.py" />
         <option value="$PROJECT_DIR$/dsphfc/guiutils.py" />
         <option value="$PROJECT_DIR$/dsphfc/propenums.py" />
-        <option value="$PROJECT_DIR$/default-config.json" />
         <option value="$PROJECT_DIR$/build-release.bat" />
         <option value="$PROJECT_DIR$/build-release.sh" />
         <option value="$PROJECT_DIR$/pylintrc" />
-        <option value="$PROJECT_DIR$/CONTRIBUTING.md" />
-        <option value="$PROJECT_DIR$/README.md" />
         <option value="$PROJECT_DIR$/ds_modules/Define Constants.py" />
         <option value="$PROJECT_DIR$/ds_modules/widgets/HoverableLabel.py" />
         <option value="$PROJECT_DIR$/ds_modules/widgets/__init__.py" />
+        <option value="$PROJECT_DIR$/ds_modules/propenums.py" />
+        <option value="$PROJECT_DIR$/CONTRIBUTING.md" />
+        <option value="$PROJECT_DIR$/default-config.json" />
+        <option value="$PROJECT_DIR$/ds_modules/lang/english.json" />
+        <option value="$PROJECT_DIR$/ds_modules/lang/spanish.json" />
+        <option value="$PROJECT_DIR$/LICENSE" />
+        <option value="$PROJECT_DIR$/ds_modules/execution_parameters.py" />
         <option value="$PROJECT_DIR$/ds_modules/guiutils.py" />
-        <option value="$PROJECT_DIR$/ds_modules/dsphwidgets.py" />
         <option value="$PROJECT_DIR$/ds_modules/properties.py" />
-        <option value="$PROJECT_DIR$/ds_modules/constants.py" />
+        <option value="$PROJECT_DIR$/ds_modules/xmlimporter.py" />
         <option value="$PROJECT_DIR$/DesignSPHysics.py" />
+        <option value="$PROJECT_DIR$/installer/installer.py" />
         <option value="$PROJECT_DIR$/ds_modules/utils.py" />
+        <option value="$PROJECT_DIR$/ds_modules/constants.py" />
+        <option value="$PROJECT_DIR$/ds_modules/dsphwidgets.py" />
+        <option value="$PROJECT_DIR$/README.md" />
       </list>
     </option>
   </component>
@@ -339,8 +210,8 @@
     <sorting>DEFINITION_ORDER</sorting>
   </component>
   <component name="ProjectFrameBounds">
-    <option name="x" value="1244" />
-    <option name="width" value="1309" />
+    <option name="x" value="1164" />
+    <option name="width" value="1401" />
     <option name="height" value="1047" />
   </component>
   <component name="ProjectInspectionProfilesVisibleTreeState">
@@ -367,6 +238,7 @@
       <foldersAlwaysOnTop value="true" />
     </navigator>
     <panes>
+      <pane id="Scope" />
       <pane id="ProjectPane">
         <subPane>
           <expand>
@@ -379,20 +251,32 @@
               <item name="DesignSPHysics" type="462c0819:PsiDirectoryNode" />
               <item name="ds_modules" type="462c0819:PsiDirectoryNode" />
             </path>
+            <path>
+              <item name="DesignSPHysics" type="b2602c69:ProjectViewProjectNode" />
+              <item name="DesignSPHysics" type="462c0819:PsiDirectoryNode" />
+              <item name="installer" type="462c0819:PsiDirectoryNode" />
+            </path>
           </expand>
           <select />
         </subPane>
       </pane>
-      <pane id="Scope" />
     </panes>
   </component>
   <component name="PropertiesComponent">
-    <property name="SearchEverywhereHistoryKey" value="readm&#9;FILE&#9;file://C:/Users/ephyslab/Documents/Proyectos/DesignSPHysics/README.md&#10;motion&#9;null&#9;null&#10;onproper&#9;null&#9;null&#10;onsave&#9;null&#9;null&#10;onex&#9;null&#9;null&#10;onnewca&#9;null&#9;null&#10;newcase&#9;null&#9;null&#10;onnew&#9;null&#9;null&#10;on save&#9;null&#9;null&#10;addfill&#9;null&#9;null&#10;batch&#9;null&#9;null&#10;dumpto&#9;null&#9;null&#10;on_e&#9;null&#9;null&#10;on selec&#9;null&#9;null&#10;simulate&#9;null&#9;null&#10;onsav&#9;null&#9;null&#10;onexsi&#9;null&#9;null&#10;addtos&#9;null&#9;null&#10;add&#9;null&#9;null&#10;newca&#9;null&#9;null&#10;dsph&#9;FILE&#9;file://C:/Users/ndrs/AppData/Roaming/FreeCAD/Macro/dsphfc/dsphwidgets.py&#10;xml&#9;null&#9;null&#10;selection&#9;null&#9;null&#10;on_impor&#9;null&#9;null&#10;save_case&#9;null&#9;null" />
+    <property name="SearchEverywhereHistoryKey" value="&#9;FILE&#9;file://C:/Users/ephyslab/Documents/Proyectos/DesignSPHysics/DesignSPHysics.py&#10;readm&#9;FILE&#9;file://C:/Users/ephyslab/Documents/Proyectos/DesignSPHysics/README.md&#10;motion&#9;null&#9;null&#10;onproper&#9;null&#9;null&#10;onsave&#9;null&#9;null&#10;onex&#9;null&#9;null&#10;onnewca&#9;null&#9;null&#10;newcase&#9;null&#9;null&#10;onnew&#9;null&#9;null&#10;on save&#9;null&#9;null&#10;addfill&#9;null&#9;null&#10;batch&#9;null&#9;null&#10;dumpto&#9;null&#9;null&#10;on_e&#9;null&#9;null&#10;on selec&#9;null&#9;null&#10;simulate&#9;null&#9;null&#10;onsav&#9;null&#9;null&#10;onexsi&#9;null&#9;null&#10;addtos&#9;null&#9;null&#10;add&#9;null&#9;null&#10;newca&#9;null&#9;null&#10;dsph&#9;FILE&#9;file://C:/Users/ndrs/AppData/Roaming/FreeCAD/Macro/dsphfc/dsphwidgets.py&#10;xml&#9;null&#9;null&#10;selection&#9;null&#9;null&#10;on_impor&#9;null&#9;null&#10;save_case&#9;null&#9;null" />
     <property name="WebServerToolWindowFactoryState" value="false" />
+    <property name="js.buildTools.gulp.gulp_package_dir" value="" />
     <property name="js.eslint.eslintPackage" value="" />
-    <property name="last_opened_file_path" value="$PROJECT_DIR$" />
+    <property name="last_opened_file_path" value="C:/Program Files/FreeCAD 0.18/bin" />
     <property name="run.code.analysis.last.selected.profile" value="pProject Default" />
-    <property name="settings.editor.selected.configurable" value="preferences.sourceCode" />
+    <property name="settings.editor.selected.configurable" value="com.jetbrains.python.configuration.PyActiveSdkModuleConfigurable" />
+  </component>
+  <component name="PyConsoleOptionsProvider">
+    <option name="myPythonConsoleState">
+      <console-settings>
+        <option name="useSoftWraps" value="true" />
+      </console-settings>
+    </option>
   </component>
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">
@@ -411,7 +295,7 @@
       </list>
     </option>
   </component>
-  <component name="RunManager">
+  <component name="RunManager" selected="Python.DesignSPHysics">
     <configuration default="true" type="tests" factoryName="Attests">
       <option name="INTERPRETER_OPTIONS" value="" />
       <option name="PARENT_ENVS" value="true" />
@@ -432,26 +316,79 @@
       <option name="USE_PATTERN" value="false" />
       <method />
     </configuration>
-    <configuration name="Reopen FreeCAD and Execute" type="PythonConfigurationType" factoryName="Python" activateToolWindowBeforeRun="false">
+    <configuration name="DesignSPHysics" type="PythonConfigurationType" factoryName="Python" temporary="true">
       <module name="Macro" />
       <option name="INTERPRETER_OPTIONS" value="" />
       <option name="PARENT_ENVS" value="true" />
       <envs>
         <env name="PYTHONUNBUFFERED" value="1" />
       </envs>
-      <option name="SDK_HOME" value="C:\Python27\python.exe" />
-      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/../../DSPH" />
-      <option name="IS_MODULE_SDK" value="false" />
+      <option name="SDK_HOME" value="C:\Program Files\FreeCAD 0.17\bin\python.exe" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$" />
+      <option name="IS_MODULE_SDK" value="true" />
       <option name="ADD_CONTENT_ROOTS" value="true" />
       <option name="ADD_SOURCE_ROOTS" value="true" />
       <EXTENSION ID="PythonCoverageRunConfigurationExtension" runner="coverage.py" />
-      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/../../DSPH/fc_execute.py" />
+      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/DesignSPHysics.py" />
       <option name="PARAMETERS" value="" />
       <option name="SHOW_COMMAND_LINE" value="false" />
       <option name="EMULATE_TERMINAL" value="false" />
       <option name="MODULE_MODE" value="false" />
       <option name="REDIRECT_INPUT" value="false" />
       <option name="INPUT_FILE" value="" />
+      <method v="2" />
+    </configuration>
+    <configuration name="FreeCad" type="PythonConfigurationType" factoryName="Python">
+      <module name="Macro" />
+      <option name="INTERPRETER_OPTIONS" value="" />
+      <option name="PARENT_ENVS" value="true" />
+      <envs>
+        <env name="PYTHONUNBUFFERED" value="1" />
+      </envs>
+      <option name="SDK_HOME" value="C:\Program Files\FreeCAD 0.17\bin\python.exe" />
+      <option name="WORKING_DIRECTORY" value="C:/Program Files/FreeCAD 0.18" />
+      <option name="IS_MODULE_SDK" value="false" />
+      <option name="ADD_CONTENT_ROOTS" value="true" />
+      <option name="ADD_SOURCE_ROOTS" value="true" />
+      <EXTENSION ID="PythonCoverageRunConfigurationExtension" runner="coverage.py" />
+      <option name="SCRIPT_NAME" value="C:/Program Files/FreeCAD 0.18/bin" />
+      <option name="PARAMETERS" value="" />
+      <option name="SHOW_COMMAND_LINE" value="false" />
+      <option name="EMULATE_TERMINAL" value="false" />
+      <option name="MODULE_MODE" value="false" />
+      <option name="REDIRECT_INPUT" value="false" />
+      <option name="INPUT_FILE" value="" />
+      <method v="2" />
+    </configuration>
+    <configuration default="true" type="PythonConfigurationType" factoryName="Python">
+      <module name="Macro" />
+      <option name="INTERPRETER_OPTIONS" value="" />
+      <option name="PARENT_ENVS" value="true" />
+      <envs>
+        <env name="PYTHONUNBUFFERED" value="1" />
+      </envs>
+      <option name="SDK_HOME" value="C:\Program Files\FreeCAD 0.17\bin\python.exe" />
+      <option name="WORKING_DIRECTORY" value="" />
+      <option name="IS_MODULE_SDK" value="false" />
+      <option name="ADD_CONTENT_ROOTS" value="true" />
+      <option name="ADD_SOURCE_ROOTS" value="true" />
+      <EXTENSION ID="PythonCoverageRunConfigurationExtension" runner="coverage.py" />
+      <option name="SCRIPT_NAME" value="" />
+      <option name="PARAMETERS" value="" />
+      <option name="SHOW_COMMAND_LINE" value="false" />
+      <option name="EMULATE_TERMINAL" value="false" />
+      <option name="MODULE_MODE" value="false" />
+      <option name="REDIRECT_INPUT" value="false" />
+      <option name="INPUT_FILE" value="" />
+      <method v="2" />
+    </configuration>
+    <configuration default="true" type="js.build_tools.gulp" factoryName="Gulp.js">
+      <node-interpreter>project</node-interpreter>
+      <node-options />
+      <gulpfile />
+      <tasks />
+      <arguments />
+      <envs />
       <method v="2" />
     </configuration>
     <configuration default="true" type="tests" factoryName="Nosetests">
@@ -501,6 +438,15 @@
       <option name="_new_targetType" value="&quot;PATH&quot;" />
       <method v="2" />
     </configuration>
+    <list>
+      <item itemvalue="Python.FreeCad" />
+      <item itemvalue="Python.DesignSPHysics" />
+    </list>
+    <recent_temporary>
+      <list>
+        <item itemvalue="Python.DesignSPHysics" />
+      </list>
+    </recent_temporary>
   </component>
   <component name="SvnConfiguration">
     <configuration />
@@ -512,153 +458,36 @@
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
       <updated>1486981492000</updated>
-    </task>
-    <task id="LOCAL-00034" summary="Adds FlowTool to Case Summary">
-      <created>1527237995524</created>
-      <option name="number" value="00034" />
-      <option name="presentableId" value="LOCAL-00034" />
-      <option name="project" value="LOCAL" />
-      <updated>1527237995524</updated>
-    </task>
-    <task id="LOCAL-00035" summary="Various fixes and additions&#10;&#10;Fixes typos in case summary.&#10;Adds new type of info dialog for post-processing.&#10;Disables batch script generation.&#10;Changes texts on some components.">
-      <created>1527249775913</created>
-      <option name="number" value="00035" />
-      <option name="presentableId" value="LOCAL-00035" />
-      <option name="project" value="LOCAL" />
-      <updated>1527249775913</updated>
-    </task>
-    <task id="LOCAL-00036" summary="Filters move and rotate commands on the XML&#10;&#10;They no longer appear if the values don't make any difference.">
-      <created>1527495325100</created>
-      <option name="number" value="00036" />
-      <option name="presentableId" value="LOCAL-00036" />
-      <option name="project" value="LOCAL" />
-      <updated>1527495325100</updated>
-    </task>
-    <task id="LOCAL-00037" summary="Now STL files are referenced with relative paths">
-      <created>1527497545143</created>
-      <option name="number" value="00037" />
-      <option name="presentableId" value="LOCAL-00037" />
-      <option name="project" value="LOCAL" />
-      <updated>1527497545143</updated>
-    </task>
-    <task id="LOCAL-00038" summary="Changes AWAS config labels to show units">
-      <created>1527498169527</created>
-      <option name="number" value="00038" />
-      <option name="presentableId" value="LOCAL-00038" />
-      <option name="project" value="LOCAL" />
-      <updated>1527498169527</updated>
-    </task>
-    <task id="LOCAL-00039" summary="Adds Slice or Surface selector to IsoSurface post-processing tool">
-      <created>1527499107676</created>
-      <option name="number" value="00039" />
-      <option name="presentableId" value="LOCAL-00039" />
-      <option name="project" value="LOCAL" />
-      <updated>1527499107676</updated>
-    </task>
-    <task id="LOCAL-00040" summary="Adds mk/id/position selector to ComputeForces export">
-      <created>1527502245379</created>
-      <option name="number" value="00040" />
-      <option name="presentableId" value="LOCAL-00040" />
-      <option name="project" value="LOCAL" />
-      <updated>1527502245379</updated>
-    </task>
-    <task id="LOCAL-00041" summary="Changes open with paraview button from save menu">
-      <created>1527503792662</created>
-      <option name="number" value="00041" />
-      <option name="presentableId" value="LOCAL-00041" />
-      <option name="project" value="LOCAL" />
-      <updated>1527503792662</updated>
-    </task>
-    <task id="LOCAL-00042" summary="Makes details dialog on GenCase saving a popup.&#10;&#10;Hacked through the garbage collector to do it, so the menu appears&#10;when the dialog is not modal, avoiding using exec_()">
-      <created>1527505678322</created>
-      <option name="number" value="00042" />
-      <option name="presentableId" value="LOCAL-00042" />
-      <option name="project" value="LOCAL" />
-      <updated>1527505678322</updated>
-    </task>
-    <task id="LOCAL-00043" summary="Fixes FlowTool point order and changes the reference image">
-      <created>1527581388146</created>
-      <option name="number" value="00043" />
-      <option name="presentableId" value="LOCAL-00043" />
-      <option name="project" value="LOCAL" />
-      <updated>1527581388146</updated>
-    </task>
-    <task id="LOCAL-00044" summary="Removes space restrictions on save path&#10;&#10;DualSPHysics now supports paths with spaces on it, so there's no&#10;need to keep DesignSPHysics forcing the users to save in a folder which&#10;path contains no spaces.&#10;&#10;Fixes #18">
-      <created>1527582458791</created>
-      <option name="number" value="00044" />
-      <option name="presentableId" value="LOCAL-00044" />
-      <option name="project" value="LOCAL" />
-      <updated>1527582458791</updated>
-    </task>
-    <task id="LOCAL-00045" summary="Implements FlowTool executable check&#10;&#10;Now when the FlowTool executable is missing or incorrect the application&#10;will try to load one from the config file and warn the user.">
-      <created>1527588685125</created>
-      <option name="number" value="00045" />
-      <option name="presentableId" value="LOCAL-00045" />
-      <option name="project" value="LOCAL" />
-      <updated>1527588685125</updated>
-    </task>
-    <task id="LOCAL-00046" summary="Fixes xml dump for fillboxes and corrects some strings">
-      <created>1527679167895</created>
-      <option name="number" value="00046" />
-      <option name="presentableId" value="LOCAL-00046" />
-      <option name="project" value="LOCAL" />
-      <updated>1527679167896</updated>
-    </task>
-    <task id="LOCAL-00047" summary="Implements draft of MultiLayered Pistons and Relaxation Zones">
-      <created>1527851980395</created>
-      <option name="number" value="00047" />
-      <option name="presentableId" value="LOCAL-00047" />
-      <option name="project" value="LOCAL" />
-      <updated>1527851980396</updated>
-    </task>
-    <task id="LOCAL-00048" summary="Added Milti-Layer Pistons 2D">
-      <created>1527873341125</created>
-      <option name="number" value="00048" />
-      <option name="presentableId" value="LOCAL-00048" />
-      <option name="project" value="LOCAL" />
-      <updated>1527873341125</updated>
-    </task>
-    <task id="LOCAL-00049" summary="Disbled damping overlimit visualization temporarily until it's fixed">
-      <created>1527874169073</created>
-      <option name="number" value="00049" />
-      <option name="presentableId" value="LOCAL-00049" />
-      <option name="project" value="LOCAL" />
-      <updated>1527874169073</updated>
-    </task>
-    <task id="LOCAL-00050" summary="Adds particle count to Case Summary">
-      <created>1528274008301</created>
-      <option name="number" value="00050" />
-      <option name="presentableId" value="LOCAL-00050" />
-      <option name="project" value="LOCAL" />
-      <updated>1528274008314</updated>
-    </task>
-    <task id="LOCAL-00051" summary="Adds option to open IsoSurface export with Paraview&#10;&#10;Also, removes type selection from IsoSurface as it can only export&#10;fluids, so it does not need it.">
-      <created>1528275114754</created>
-      <option name="number" value="00051" />
-      <option name="presentableId" value="LOCAL-00051" />
-      <option name="project" value="LOCAL" />
-      <updated>1528275114755</updated>
-    </task>
-    <task id="LOCAL-00052" summary="Now opening with Paraview in PartVTK is only enabled if VTK is selected">
-      <created>1528275508313</created>
-      <option name="number" value="00052" />
-      <option name="presentableId" value="LOCAL-00052" />
-      <option name="project" value="LOCAL" />
-      <updated>1528275508313</updated>
-    </task>
-    <task id="LOCAL-00053" summary="Fixes an error where FloatingInfo would put -onlyprocess instead of &#10;-onlymk">
-      <created>1528275813229</created>
-      <option name="number" value="00053" />
-      <option name="presentableId" value="LOCAL-00053" />
-      <option name="project" value="LOCAL" />
-      <updated>1528275813229</updated>
-    </task>
-    <task id="LOCAL-00054" summary="Removes size constraints in multiple windows">
-      <created>1528280245388</created>
-      <option name="number" value="00054" />
-      <option name="presentableId" value="LOCAL-00054" />
-      <option name="project" value="LOCAL" />
-      <updated>1528280245388</updated>
+      <workItem from="1550763965937" duration="7022000" />
+      <workItem from="1550827368465" duration="8300000" />
+      <workItem from="1551107622780" duration="1330000" />
+      <workItem from="1551108976832" duration="20000" />
+      <workItem from="1551109475390" duration="186000" />
+      <workItem from="1551109700950" duration="306000" />
+      <workItem from="1551110295446" duration="76000" />
+      <workItem from="1551110501792" duration="227000" />
+      <workItem from="1551110960291" duration="234000" />
+      <workItem from="1551111223014" duration="14000" />
+      <workItem from="1551111741092" duration="1112000" />
+      <workItem from="1551112958647" duration="206000" />
+      <workItem from="1551173134844" duration="685000" />
+      <workItem from="1551174101140" duration="86000" />
+      <workItem from="1551175004755" duration="169000" />
+      <workItem from="1551175188680" duration="150000" />
+      <workItem from="1551175353567" duration="225000" />
+      <workItem from="1551175593482" duration="581000" />
+      <workItem from="1551176196527" duration="491000" />
+      <workItem from="1551176702837" duration="47000" />
+      <workItem from="1551176844422" duration="299000" />
+      <workItem from="1551177365350" duration="2960000" />
+      <workItem from="1551180412678" duration="89000" />
+      <workItem from="1551180514695" duration="183000" />
+      <workItem from="1551180711749" duration="410000" />
+      <workItem from="1551181135498" duration="117000" />
+      <workItem from="1551181634289" duration="746000" />
+      <workItem from="1551182394901" duration="907000" />
+      <workItem from="1551183318097" duration="833000" />
+      <workItem from="1551184270278" duration="946000" />
     </task>
     <task id="LOCAL-00055" summary="Changes Motion Configuration window to have a QSplitter instead of fixed&#10;components.">
       <created>1528717505552</created>
@@ -856,8 +685,158 @@
       <option name="project" value="LOCAL" />
       <updated>1543862355816</updated>
     </task>
-    <option name="localTasksCounter" value="83" />
+    <task id="LOCAL-00083" summary="Refactorizes Grid of points Dialog to be a new class&#10;&#10;In Grid of points, change background color of the final points">
+      <created>1545072826885</created>
+      <option name="number" value="00083" />
+      <option name="presentableId" value="LOCAL-00083" />
+      <option name="project" value="LOCAL" />
+      <updated>1545072826886</updated>
+    </task>
+    <task id="LOCAL-00084" summary="Refactorizes Damping Dialog to be a new class&#10;&#10;In Damping option, been corrected Overlimit units.">
+      <created>1545154685340</created>
+      <option name="number" value="00084" />
+      <option name="presentableId" value="LOCAL-00084" />
+      <option name="project" value="LOCAL" />
+      <updated>1545154685340</updated>
+    </task>
+    <task id="LOCAL-00085" summary="Updated some variables in Relaxation Zone_Irregular waves">
+      <created>1545241342243</created>
+      <option name="number" value="00085" />
+      <option name="presentableId" value="LOCAL-00085" />
+      <option name="project" value="LOCAL" />
+      <updated>1545241342244</updated>
+    </task>
+    <task id="LOCAL-00086" summary="Corrected file name in &quot;filesvel&quot; variable">
+      <created>1545393518131</created>
+      <option name="number" value="00086" />
+      <option name="presentableId" value="LOCAL-00086" />
+      <option name="project" value="LOCAL" />
+      <updated>1545393518131</updated>
+    </task>
+    <task id="LOCAL-00087" summary="Refactorizes RunDialog to be a new class&#10;&#10;Resized &quot;details&quot; box.&#10;Updated binaries.">
+      <created>1546968777930</created>
+      <option name="number" value="00087" />
+      <option name="presentableId" value="LOCAL-00087" />
+      <option name="project" value="LOCAL" />
+      <updated>1546968777931</updated>
+    </task>
+    <task id="LOCAL-00088" summary="Relocated the button &quot;Run GenCase&quot;&#10;&#10;Starting develop Coupling CHRONO">
+      <created>1548268300687</created>
+      <option name="number" value="00088" />
+      <option name="presentableId" value="LOCAL-00088" />
+      <option name="project" value="LOCAL" />
+      <updated>1548268300687</updated>
+    </task>
+    <task id="LOCAL-00089" summary="Develop Coupling CHRONO">
+      <created>1551108688430</created>
+      <option name="number" value="00089" />
+      <option name="presentableId" value="LOCAL-00089" />
+      <option name="project" value="LOCAL" />
+      <updated>1551108688430</updated>
+    </task>
+    <task id="LOCAL-00090" summary="Develop Coupling CHRONO">
+      <created>1552414657245</created>
+      <option name="number" value="00090" />
+      <option name="presentableId" value="LOCAL-00090" />
+      <option name="project" value="LOCAL" />
+      <updated>1552414657246</updated>
+    </task>
+    <task id="LOCAL-00091" summary="Develop Coupling CHRONO">
+      <created>1552415063641</created>
+      <option name="number" value="00091" />
+      <option name="presentableId" value="LOCAL-00091" />
+      <option name="project" value="LOCAL" />
+      <updated>1552415063641</updated>
+    </task>
+    <task id="LOCAL-00092" summary="Added rotation restriction to &quot;Float state&quot; option">
+      <created>1552649354509</created>
+      <option name="number" value="00092" />
+      <option name="presentableId" value="LOCAL-00092" />
+      <option name="project" value="LOCAL" />
+      <updated>1552649354510</updated>
+    </task>
+    <task id="LOCAL-00093" summary="Added translation restriction to &quot;Float state&quot; option">
+      <created>1552652956604</created>
+      <option name="number" value="00093" />
+      <option name="presentableId" value="LOCAL-00093" />
+      <option name="project" value="LOCAL" />
+      <updated>1552652956605</updated>
+    </task>
+    <task id="LOCAL-00094" summary="Added material to &quot;Float state&quot; option">
+      <created>1553103146727</created>
+      <option name="number" value="00094" />
+      <option name="presentableId" value="LOCAL-00094" />
+      <option name="project" value="LOCAL" />
+      <updated>1553103146728</updated>
+    </task>
+    <task id="LOCAL-00095" summary="Added material to &quot;Float state&quot; option">
+      <created>1553103503448</created>
+      <option name="number" value="00095" />
+      <option name="presentableId" value="LOCAL-00095" />
+      <option name="project" value="LOCAL" />
+      <updated>1553103503448</updated>
+    </task>
+    <task id="LOCAL-00096" summary="Changes &quot;LineEdit&quot; for &quot;ComboBox&quot; in chrono options">
+      <created>1553193983381</created>
+      <option name="number" value="00096" />
+      <option name="presentableId" value="LOCAL-00096" />
+      <option name="project" value="LOCAL" />
+      <updated>1553193983383</updated>
+    </task>
+    <task id="LOCAL-00097" summary="Some changes&#10;&#10;Cosmetic change about links lists in Chrono options.&#10;Refactorizes initials_change() to be a new class.">
+      <created>1553258236370</created>
+      <option name="number" value="00097" />
+      <option name="presentableId" value="LOCAL-00097" />
+      <option name="project" value="LOCAL" />
+      <updated>1553258236371</updated>
+    </task>
+    <task id="LOCAL-00098" summary="Refactorizes motion_change() to be a new class">
+      <created>1553534477501</created>
+      <option name="number" value="00098" />
+      <option name="presentableId" value="LOCAL-00098" />
+      <option name="project" value="LOCAL" />
+      <updated>1553534477502</updated>
+    </task>
+    <task id="LOCAL-00099" summary="Big changes&#10;&#10;Updated the copyright in some files.&#10;Updated binaries and libraries.&#10;Cosmetic changes in Coupling CHRONO.&#10;Updated Execution Parameters, removed unsupported options and added &quot;Simulation Domain&quot; option.&#10;Added option Faces in DSPH Object Properties (in development).">
+      <created>1554915283864</created>
+      <option name="number" value="00099" />
+      <option name="presentableId" value="LOCAL-00099" />
+      <option name="project" value="LOCAL" />
+      <updated>1554915283865</updated>
+    </task>
+    <task id="LOCAL-00100" summary="Merge branch 'develop'">
+      <created>1555317083549</created>
+      <option name="number" value="00100" />
+      <option name="presentableId" value="LOCAL-00100" />
+      <option name="project" value="LOCAL" />
+      <updated>1555317083550</updated>
+    </task>
+    <task id="LOCAL-00101" summary="Fixes an error in &quot;Linear motion from a file&quot;">
+      <created>1556037177013</created>
+      <option name="number" value="00101" />
+      <option name="presentableId" value="LOCAL-00101" />
+      <option name="project" value="LOCAL" />
+      <updated>1556037177014</updated>
+    </task>
+    <task id="LOCAL-00102" summary="Changes in Faces option in DSPH Object Properties&#10;&#10;Cosmetic changes in Inlet/Outlet.&#10;&quot;Import STL&quot; changes to &quot;Import GEO&quot;, this mode adds *.vtk and *.ply options.">
+      <created>1557338313205</created>
+      <option name="number" value="00102" />
+      <option name="presentableId" value="LOCAL-00102" />
+      <option name="project" value="LOCAL" />
+      <updated>1557338313206</updated>
+    </task>
+    <task id="LOCAL-00103" summary="Changes the Macro to make it compatible with python 3.x">
+      <created>1559659288330</created>
+      <option name="number" value="00103" />
+      <option name="presentableId" value="LOCAL-00103" />
+      <option name="project" value="LOCAL" />
+      <updated>1559659288331</updated>
+    </task>
+    <option name="localTasksCounter" value="104" />
     <servers />
+  </component>
+  <component name="TimeTrackingManager">
+    <option name="totallyTimeSpent" value="28957000" />
   </component>
   <component name="TodoView">
     <todo-panel id="selected-file">
@@ -869,10 +848,10 @@
     </todo-panel>
   </component>
   <component name="ToolWindowManager">
-    <frame x="1244" y="0" width="1309" height="1047" extended-state="0" />
+    <frame x="1164" y="0" width="1401" height="1047" extended-state="0" />
     <editor active="true" />
     <layout>
-      <window_info content_ui="combo" id="Project" order="0" sideWeight="0.4993498" visible="true" weight="0.19055244" />
+      <window_info active="true" content_ui="combo" id="Project" order="0" sideWeight="0.4993498" visible="true" weight="0.27293065" />
       <window_info id="Structure" order="1" sideWeight="0.50200266" side_tool="true" weight="0.13036565" />
       <window_info id="Favorites" order="2" sideWeight="0.50065017" side_tool="true" weight="0.10771065" />
       <window_info x="2363" y="239" width="619" height="687" id="Notes" order="3" weight="0.30063966" />
@@ -882,19 +861,19 @@
       <window_info anchor="bottom" id="Debug" order="3" weight="0.4" />
       <window_info anchor="bottom" id="Cvs" order="4" weight="0.25" />
       <window_info anchor="bottom" id="Inspection" order="5" weight="0.4" />
-      <window_info active="true" anchor="bottom" id="TODO" order="6" sideWeight="0.49517685" visible="true" weight="0.19605696" />
-      <window_info anchor="bottom" id="Event Log" order="7" sideWeight="0.50520414" side_tool="true" weight="0.2245345" />
+      <window_info anchor="bottom" id="TODO" order="6" sideWeight="0.49477613" weight="0.19496167" />
+      <window_info anchor="bottom" id="Event Log" order="7" sideWeight="0.5264728" side_tool="true" visible="true" weight="0.15224534" />
       <window_info anchor="bottom" id="Docker" order="8" show_stripe_button="false" />
       <window_info anchor="bottom" id="Messages" order="9" />
-      <window_info anchor="bottom" id="Python Console" order="10" weight="0.3263965" />
+      <window_info anchor="bottom" id="Python Console" order="10" sideWeight="0.47352722" visible="true" weight="0.15224534" />
       <window_info anchor="bottom" id="Database Changes" order="11" show_stripe_button="false" />
-      <window_info anchor="bottom" id="Terminal" order="12" sideWeight="0.49719775" weight="0.2245345" />
-      <window_info anchor="bottom" id="Version Control" order="13" sideWeight="0.47878304" weight="0.16210295" />
+      <window_info anchor="bottom" id="Terminal" order="12" sideWeight="0.44891873" weight="0.15881708" />
+      <window_info anchor="bottom" id="Version Control" order="13" sideWeight="0.48396719" weight="0.16100767" />
       <window_info anchor="bottom" id="Inspection Results" order="14" weight="0.32935324" />
       <window_info anchor="right" x="0" y="0" width="590" height="880" id="Documentation" order="0" side_tool="true" weight="0.32962227" />
       <window_info anchor="right" id="Commander" order="1" weight="0.4" />
       <window_info anchor="right" id="Ant Build" order="2" weight="0.25" />
-      <window_info anchor="right" content_ui="combo" id="Hierarchy" order="3" weight="0.25" />
+      <window_info anchor="right" content_ui="combo" id="Hierarchy" order="3" weight="0.24925373" />
       <window_info anchor="right" id="Database" order="4" sideWeight="0.49799734" weight="0.32962227" />
       <window_info anchor="right" id="SciView" order="5" sideWeight="0.4992785" weight="0.32962227" />
       <window_info anchor="right" id="Data View" order="6" />
@@ -937,24 +916,6 @@
   </component>
   <component name="VcsManagerConfiguration">
     <option name="RELOAD_CONTEXT" value="false" />
-    <MESSAGE value="Removes matrixreset from fillboxes" />
-    <MESSAGE value="Changes version" />
-    <MESSAGE value="Implemented Damping with overlimit" />
-    <MESSAGE value="Fixes XML end tags on Acceleration Inputs" />
-    <MESSAGE value="Implemented Uniform Velocity Relaxation Zone" />
-    <MESSAGE value="Fixes rotation from a file (Movement) being detected as wave generator" />
-    <MESSAGE value="Fixes some errors with movements" />
-    <MESSAGE value="Implemented basic functionality for external waves (SWASH)" />
-    <MESSAGE value="Relaxation Zone with external data now copies the velocity files to the&#10;out folder and changes its path to a relative one." />
-    <MESSAGE value="Commenting and refactor pass." />
-    <MESSAGE value="Adds DualSPHysics executables in a new directory" />
-    <MESSAGE value="Changed how different needed files for the cases are copied&#10;&#10;Changing the name of the project would make a reference error due to&#10;relative paths. To solve this the files needed to movements, accinputs,&#10;etc. are now copied both to the case root and the out folder. If the out&#10;folder gets removed of its name changes, the files on the project root&#10;will be copied instead of having to search for the file full path again." />
-    <MESSAGE value="Prevents movements from exporting into the XML if they don't exist" />
-    <MESSAGE value="Did some code cleaning and refactoring" />
-    <MESSAGE value="Fixes an error when adding an object to the case" />
-    <MESSAGE value="Adds text constants for help messages&#10;&#10;Also adds a custom QLabel implementation with hover event.&#10;&#10;Changes some bits like minimum required version and some details&#10;in the README.md file." />
-    <MESSAGE value="Refactorizes Constant Definition Dialog to be a new class" />
-    <MESSAGE value="Adds a custom QLineEdit implementation with focus event&#10;&#10;Adds more text constants for help messages" />
     <MESSAGE value="Refactorizes Execution Parameters Dialog to be a new class&#10;&#10;Did code cleaning." />
     <MESSAGE value="Added a warning window about save case in &quot;Run GenCase&quot;&#10;&#10;Added &quot;run_gencase.png&quot; to images folder" />
     <MESSAGE value="Merges develop. Version 0.5.1811-08" />
@@ -962,187 +923,27 @@
     <MESSAGE value="Adds a custom QComboBox implementation with focus event&#10;&#10;Adds more text constants for help messages&#10;Adds an error message if ParaView path is wrong" />
     <MESSAGE value="Adds some changes in help texts" />
     <MESSAGE value="Removed the variable &quot;fixed_depth&quot;&#10;&#10;Updated the Copyright in &quot;constants&quot;" />
-    <option name="LAST_COMMIT_MESSAGE" value="Removed the variable &quot;fixed_depth&quot;&#10;&#10;Updated the Copyright in &quot;constants&quot;" />
+    <MESSAGE value="Refactorizes Grid of points Dialog to be a new class&#10;&#10;In Grid of points, change background color of the final points" />
+    <MESSAGE value="Refactorizes Damping Dialog to be a new class&#10;&#10;In Damping option, been corrected Overlimit units." />
+    <MESSAGE value="Updated some variables in Relaxation Zone_Irregular waves" />
+    <MESSAGE value="Corrected file name in &quot;filesvel&quot; variable" />
+    <MESSAGE value="Refactorizes RunDialog to be a new class&#10;&#10;Resized &quot;details&quot; box.&#10;Updated binaries." />
+    <MESSAGE value="Relocated the button &quot;Run GenCase&quot;&#10;&#10;Starting develop Coupling CHRONO" />
+    <MESSAGE value="Develop Coupling CHRONO" />
+    <MESSAGE value="Added rotation restriction to &quot;Float state&quot; option" />
+    <MESSAGE value="Added translation restriction to &quot;Float state&quot; option" />
+    <MESSAGE value="Added material to &quot;Float state&quot; option" />
+    <MESSAGE value="Changes &quot;LineEdit&quot; for &quot;ComboBox&quot; in chrono options" />
+    <MESSAGE value="Some changes&#10;&#10;Cosmetic change about links lists in Chrono options.&#10;Refactorizes initials_change() to be a new class." />
+    <MESSAGE value="Refactorizes motion_change() to be a new class" />
+    <MESSAGE value="Big changes&#10;&#10;Updated the copyright in some files.&#10;Updated binaries and libraries.&#10;Cosmetic changes in Coupling CHRONO.&#10;Updated Execution Parameters, removed unsupported options and added &quot;Simulation Domain&quot; option.&#10;Added option Faces in DSPH Object Properties (in development)." />
+    <MESSAGE value="Merge branch 'develop'" />
+    <MESSAGE value="Fixes an error in &quot;Linear motion from a file&quot;" />
+    <MESSAGE value="Changes in Faces option in DSPH Object Properties&#10;&#10;Cosmetic changes in Inlet/Outlet.&#10;&quot;Import STL&quot; changes to &quot;Import GEO&quot;, this mode adds *.vtk and *.ply options." />
+    <MESSAGE value="Changes the Macro to make it compatible with python 3.x" />
+    <option name="LAST_COMMIT_MESSAGE" value="Changes the Macro to make it compatible with python 3.x" />
   </component>
   <component name="editorHistoryManager">
-    <entry file="file://$PROJECT_DIR$/ds_modules/templates/case_summary_template.html">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-690">
-          <caret line="3" column="55" lean-forward="true" selection-start-line="3" selection-start-column="55" selection-end-line="3" selection-end-column="55" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/ds_modules/xmltodict.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="5037">
-          <caret line="220" column="11" lean-forward="true" selection-start-line="220" selection-start-column="11" selection-end-line="220" selection-end-column="11" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/CONTRIBUTING.md">
-      <provider selected="true" editor-type-id="split-provider[text-editor;markdown-preview-editor]">
-        <state split_layout="SPLIT">
-          <first_editor relative-caret-position="374">
-            <caret line="22" column="17" selection-start-line="22" selection-start-column="17" selection-end-line="22" selection-end-column="17" />
-          </first_editor>
-          <second_editor />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/.vscode/.ropeproject/config.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-1116" />
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/.vscode/settings.json">
-      <provider selected="true" editor-type-id="text-editor" />
-    </entry>
-    <entry file="file://$PROJECT_DIR$/DesignSPHysics.FCMacro">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="187">
-          <caret line="11" lean-forward="true" selection-start-line="11" selection-end-line="11" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$USER_HOME$/.PyCharm2018.2/system/python_stubs/703128353/PySide/QtCore/Qt.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="652">
-          <caret line="770" column="4" selection-start-line="770" selection-start-column="4" selection-end-line="770" selection-end-column="4" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/ds_modules/python_utils/__about__.py">
-      <provider selected="true" editor-type-id="text-editor" />
-    </entry>
-    <entry file="file://$PROJECT_DIR$/ds_modules/python_utils/__init__.py">
-      <provider selected="true" editor-type-id="text-editor" />
-    </entry>
-    <entry file="file://$PROJECT_DIR$/ds_modules/python_utils/compat.py">
-      <provider selected="true" editor-type-id="text-editor" />
-    </entry>
-    <entry file="file://$PROJECT_DIR$/ds_modules/python_utils/converters.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-2918" />
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/ds_modules/python_utils/formatters.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="193">
-          <caret line="90" column="15" lean-forward="true" selection-start-line="90" selection-start-column="15" selection-end-line="90" selection-end-column="15" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/ds_modules/python_utils/import_.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-759" />
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/ds_modules/python_utils/logger.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-453" />
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/ds_modules/stl/__about__.py">
-      <provider selected="true" editor-type-id="text-editor" />
-    </entry>
-    <entry file="file://$PROJECT_DIR$/ds_modules/stl/__init__.py">
-      <provider selected="true" editor-type-id="text-editor" />
-    </entry>
-    <entry file="file://$PROJECT_DIR$/ds_modules/stl/base.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-2771">
-          <caret line="8" lean-forward="true" selection-start-line="8" selection-end-line="8" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/ds_modules/stl/main.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-912" />
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/ds_modules/stl/mesh.py">
-      <provider selected="true" editor-type-id="text-editor" />
-    </entry>
-    <entry file="file://$PROJECT_DIR$/ds_modules/stl/stl.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-4777">
-          <caret line="5" column="16" selection-start-line="5" selection-start-column="16" selection-end-line="5" selection-end-column="16" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/ds_modules/stl/utils.py">
-      <provider selected="true" editor-type-id="text-editor" />
-    </entry>
-    <entry file="file://$PROJECT_DIR$/ds_modules/propenums.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="74">
-          <caret line="38" column="45" selection-start-line="38" selection-start-column="45" selection-end-line="38" selection-end-column="45" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/pylintrc">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="675">
-          <caret line="144" column="19" selection-start-line="144" selection-start-column="19" selection-end-line="144" selection-end-column="19" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/ds_modules/lang/slovak.json">
-      <provider selected="true" editor-type-id="text-editor" />
-    </entry>
-    <entry file="file://$PROJECT_DIR$/ds_modules/lang/russian.json">
-      <provider selected="true" editor-type-id="text-editor" />
-    </entry>
-    <entry file="file://$PROJECT_DIR$/ds_modules/xmlimporter.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="23">
-          <caret line="41" column="3" selection-start-line="41" selection-start-column="3" selection-end-line="41" selection-end-column="3" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/ds_modules/lang/spanish.json">
-      <provider selected="true" editor-type-id="text-editor" />
-    </entry>
-    <entry file="file://$PROJECT_DIR$/default-config.json">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="374">
-          <caret line="22" column="5" lean-forward="true" selection-start-line="22" selection-start-column="5" selection-end-line="22" selection-end-column="5" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/ds_modules/widgets/HoverableLabel.py" />
-    <entry file="file://$PROJECT_DIR$/ds_modules/widgets/__init__.py" />
-    <entry file="file://$USER_HOME$/.PyCharm2018.2/system/python_stubs/703128353/PySide/QtCore/QObject.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="366">
-          <caret line="143" lean-forward="true" selection-start-line="143" selection-end-line="143" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$USER_HOME$/.PyCharm2018.2/system/python_stubs/703128353/PySide/QtGui/QTextEdit.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="246">
-          <caret line="293" column="8" selection-start-line="293" selection-start-column="8" selection-end-line="293" selection-end-column="8" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$USER_HOME$/.PyCharm2018.2/system/python_stubs/703128353/PySide/QtGui/QLineEdit.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="246">
-          <caret line="107" column="8" selection-start-line="107" selection-start-column="8" selection-end-line="107" selection-end-column="8" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/installer/resource/install.ico">
-      <provider selected="true" editor-type-id="images" />
-    </entry>
-    <entry file="file://$PROJECT_DIR$/installer/installer.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="221">
-          <caret line="18" column="20" selection-start-line="18" selection-start-column="18" selection-end-line="18" selection-end-column="20" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$USER_HOME$/.PyCharm2018.2/system/python_stubs/703128353/PySide/QtGui/QLayout.py">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="683">
@@ -1157,15 +958,249 @@
         </state>
       </provider>
     </entry>
+    <entry file="file://$USER_HOME$/.PyCharm2018.2/system/python_stubs/703128353/PySide/QtGui/QComboBox.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="236">
+          <caret line="69" column="8" selection-start-line="69" selection-start-column="8" selection-end-line="69" selection-end-column="8" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$USER_HOME$/Desktop/Untitled-1.py" />
+    <entry file="file://Z:/exports/ndrs/thredds_downloader/thredds_downloader.py" />
+    <entry file="file://Z:/exports/ndrs/thredds_downloader/download.py" />
+    <entry file="file://$PROJECT_DIR$/dualsphysics/bin/ComputeForces4_win64.exe">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="236">
+          <caret line="4513" column="7" selection-start-line="4513" selection-start-column="7" selection-end-line="4513" selection-end-column="7" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Untitled-1.py" />
+    <entry file="file://$APPLICATION_HOME_DIR$/helpers/third_party/thriftpy/_shaded_thriftpy/transport/sslsocket.py" />
+    <entry file="file://C:/Program Files/FreeCAD 0.17/bin/Lib/ssl.py" />
+    <entry file="file://$PROJECT_DIR$/ds_modules/enum/README">
+      <provider selected="true" editor-type-id="text-editor" />
+    </entry>
+    <entry file="file://$PROJECT_DIR$/ds_modules/enum/test.py">
+      <provider selected="true" editor-type-id="text-editor" />
+    </entry>
+    <entry file="file://$PROJECT_DIR$/ds_modules/enum/LICENSE">
+      <provider selected="true" editor-type-id="text-editor" />
+    </entry>
+    <entry file="file://$PROJECT_DIR$/ds_modules/python_utils/__about__.py">
+      <provider selected="true" editor-type-id="text-editor" />
+    </entry>
+    <entry file="file://$PROJECT_DIR$/ds_modules/stl/__about__.py">
+      <provider selected="true" editor-type-id="text-editor" />
+    </entry>
+    <entry file="file://$PROJECT_DIR$/ds_modules/enum/__init__.py">
+      <provider selected="true" editor-type-id="text-editor" />
+    </entry>
+    <entry file="file://$PROJECT_DIR$/ds_modules/stl/__init__.py">
+      <provider selected="true" editor-type-id="text-editor" />
+    </entry>
+    <entry file="file://$PROJECT_DIR$/.gitignore">
+      <provider selected="true" editor-type-id="text-editor" />
+    </entry>
+    <entry file="file://$PROJECT_DIR$/build-release.bat">
+      <provider selected="true" editor-type-id="text-editor" />
+    </entry>
+    <entry file="file://$PROJECT_DIR$/build-release.sh">
+      <provider selected="true" editor-type-id="text-editor" />
+    </entry>
+    <entry file="file://$PROJECT_DIR$/CONTRIBUTING.md">
+      <provider selected="true" editor-type-id="split-provider[text-editor;markdown-preview-editor]">
+        <state split_layout="SPLIT">
+          <first_editor relative-caret-position="534">
+            <caret line="58" column="50" selection-start-line="58" selection-start-column="50" selection-end-line="58" selection-end-column="50" />
+          </first_editor>
+          <second_editor />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/default-config.json">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="238">
+          <caret line="14" column="61" selection-start-line="14" selection-start-column="61" selection-end-line="14" selection-end-column="61" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/ds_modules/stl/utils.py">
+      <provider selected="true" editor-type-id="text-editor" />
+    </entry>
+    <entry file="file://$PROJECT_DIR$/ds_modules/stl/base.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-255" />
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/ds_modules/stl/mesh.py">
+      <provider selected="true" editor-type-id="text-editor" />
+    </entry>
+    <entry file="file://$PROJECT_DIR$/ds_modules/stl/main.py">
+      <provider selected="true" editor-type-id="text-editor" />
+    </entry>
+    <entry file="file://$PROJECT_DIR$/ds_modules/stl/stl.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="646">
+          <caret line="48" column="8" selection-start-line="48" selection-start-column="8" selection-end-line="48" selection-end-column="8" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/ds_modules/lang/finnish.json">
+      <provider selected="true" editor-type-id="text-editor" />
+    </entry>
+    <entry file="file://$PROJECT_DIR$/ds_modules/lang/dutch.json">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="34">
+          <caret line="2" column="1" lean-forward="true" selection-start-line="2" selection-start-column="1" selection-end-line="2" selection-end-column="1" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$USER_HOME$/.PyCharm2018.2/system/python_stubs/703128353/__builtin__.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="7038">
+          <caret line="414" column="4" selection-start-line="414" selection-start-column="4" selection-end-line="414" selection-end-column="4" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$USER_HOME$/.PyCharm2018.2/system/python_stubs/703128353/PySide/QtGui/QListView.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="471">
+          <caret line="234" column="4" selection-start-line="234" selection-start-column="4" selection-end-line="234" selection-end-column="4" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/ds_modules/lang/spanish.json">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="8194">
+          <caret line="482" column="50" selection-start-line="482" selection-start-column="50" selection-end-line="482" selection-end-column="50" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/ds_modules/lang/english.json">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="17">
+          <caret line="1" column="4" selection-start-line="1" selection-start-column="4" selection-end-line="1" selection-end-column="4" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$USER_HOME$/.PyCharm2018.2/system/python_stubs/703128353/PySide/QtGui/QMenu.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="240">
+          <caret line="35" column="8" selection-start-line="35" selection-start-column="8" selection-end-line="35" selection-end-column="8" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$USER_HOME$/.PyCharm2018.2/system/python_stubs/703128353/PySide/QtGui/QTableWidget.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="238">
+          <caret line="19" column="8" selection-start-line="19" selection-start-column="8" selection-end-line="19" selection-end-column="8" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/LICENSE">
+      <provider selected="true" editor-type-id="text-editor">
+        <state>
+          <caret column="65" selection-start-column="65" selection-end-column="65" />
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/ds_modules/execution_parameters.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="781">
-          <caret line="46" column="8" selection-start-line="46" selection-start-column="8" selection-end-line="46" selection-end-column="8" />
+        <state relative-caret-position="170">
+          <caret line="10" column="10" selection-start-line="10" selection-start-column="10" selection-end-line="10" selection-end-column="10" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/ds_modules/properties.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="170">
+          <caret line="10" selection-start-line="10" selection-end-line="10" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/ds_modules/xmlimporter.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="306">
+          <caret line="18" selection-start-line="18" selection-end-line="18" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/ds_modules/xmltodict.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="3740">
+          <caret line="220" column="11" lean-forward="true" selection-start-line="220" selection-start-column="11" selection-end-line="220" selection-end-column="11" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/ds_modules/guiutils.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="289">
+          <caret line="17" column="24" selection-start-line="17" selection-start-column="24" selection-end-line="17" selection-end-column="24" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/ds_modules/propenums.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="136">
+          <caret line="8" column="20" selection-start-line="8" selection-start-column="20" selection-end-line="8" selection-end-column="20" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/DesignSPHysics.FCMacro">
+      <provider selected="true" editor-type-id="text-editor">
+        <state>
+          <caret column="24" selection-start-column="24" selection-end-column="24" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/pylintrc">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="2839">
+          <caret line="167" column="6" selection-start-line="167" selection-start-column="6" selection-end-line="167" selection-end-column="6" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/DesignSPHysics.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="408">
+          <caret line="24" column="32" selection-start-line="24" selection-start-column="32" selection-end-line="24" selection-end-column="32" />
+          <folding>
+            <element signature="e#286#300#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/ds_modules/utils.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="425">
+          <caret line="25" column="9" selection-start-line="25" selection-start-column="9" selection-end-line="25" selection-end-column="9" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/installer/installer.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="1054">
+          <caret line="62" column="42" selection-start-line="62" selection-start-column="42" selection-end-line="62" selection-end-column="42" />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/ds_modules/__init__.py">
       <provider selected="true" editor-type-id="text-editor" />
+    </entry>
+    <entry file="file://$PROJECT_DIR$/ds_modules/constants.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state>
+          <caret column="24" selection-start-column="24" selection-end-column="24" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/ds_modules/dsphwidgets.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="374">
+          <caret line="22" column="31" lean-forward="true" selection-start-line="22" selection-start-column="31" selection-end-line="22" selection-end-column="31" />
+        </state>
+      </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/README.md">
       <provider editor-type-id="text-editor">
@@ -1175,99 +1210,10 @@
       </provider>
       <provider selected="true" editor-type-id="split-provider[text-editor;markdown-preview-editor]">
         <state split_layout="SPLIT">
-          <first_editor relative-caret-position="595">
-            <caret line="35" lean-forward="true" selection-start-line="35" selection-end-line="35" />
+          <first_editor relative-caret-position="306">
+            <caret line="18" lean-forward="true" selection-start-line="18" selection-end-line="18" />
           </first_editor>
           <second_editor />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$USER_HOME$/.PyCharm2018.2/system/python_stubs/703128353/PySide/QtGui/QComboBox.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="236">
-          <caret line="69" column="8" selection-start-line="69" selection-start-column="8" selection-end-line="69" selection-end-column="8" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$USER_HOME$/Desktop/Untitled-1.py" />
-    <entry file="file://Z:/exports/ndrs/thredds_downloader/thredds_downloader.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="289">
-          <caret line="17" column="52" selection-start-line="17" selection-start-column="44" selection-end-line="17" selection-end-column="52" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://Z:/exports/ndrs/thredds_downloader/download.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="153">
-          <caret line="9" column="32" selection-start-line="9" selection-start-column="28" selection-end-line="9" selection-end-column="32" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/dualsphysics/bin/ComputeForces4_win64.exe">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="236">
-          <caret line="4513" column="7" selection-start-line="4513" selection-start-column="7" selection-end-line="4513" selection-end-column="7" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/ds_modules/guiutils.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="621">
-          <caret line="1110" column="41" selection-start-line="1110" selection-start-column="41" selection-end-line="1110" selection-end-column="41" />
-          <folding>
-            <element signature="e#163#177#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/ds_modules/properties.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="17">
-          <caret line="147" column="13" selection-start-line="147" selection-start-column="13" selection-end-line="147" selection-end-column="13" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/ds_modules/dsphwidgets.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="2547">
-          <caret line="3074" column="56" selection-start-line="3074" selection-start-column="56" selection-end-line="3074" selection-end-column="56" />
-          <folding>
-            <element signature="e#273#287#0" expanded="true" />
-            <marker date="1543861825729" expanded="true" signature="245615:245618" ph="..." />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/ds_modules/constants.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="272">
-          <caret line="16" column="33" selection-start-line="16" selection-start-column="33" selection-end-line="16" selection-end-column="33" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/DesignSPHysics.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="65">
-          <caret line="40" column="53" selection-start-line="40" selection-start-column="48" selection-end-line="40" selection-end-column="53" />
-          <folding>
-            <element signature="e#286#300#0" expanded="true" />
-            <element signature="e#13665#14731#0" />
-            <element signature="e#15977#17492#0" />
-            <element signature="e#17646#18677#0" />
-            <element signature="e#18837#21344#0" />
-            <element signature="e#21540#22798#0" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/ds_modules/utils.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="541">
-          <caret line="68" column="22" selection-start-line="68" selection-start-column="22" selection-end-line="68" selection-end-column="22" />
-          <folding>
-            <element signature="e#253#267#0" expanded="true" />
-          </folding>
         </state>
       </provider>
     </entry>

@@ -1,4 +1,4 @@
-#!/usr/bin/env python2.7
+#!/usr/bin/env python3.7
 # -*- coding: utf-8 -*-
 """DesignSPHysics Define Constants.
 
@@ -8,7 +8,7 @@ This file contains a collection of constants meant to use with DesignSPHysics.
 
 
 """
-Copyright (C) 2018 - Andrés Vieira (anvieiravazquez@gmail.com) & Lorena Docasar Vázquez (docasarlorena@gmail.com)
+Copyright (C) 2019
 EPHYSLAB Environmental Physics Laboratory, Universidade de Vigo
 
 This file is part of DesignSPHysics.

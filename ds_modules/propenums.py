@@ -1,4 +1,4 @@
-#!/usr/bin/env python2.7
+#!/usr/bin/env python3.7
 # -*- coding: utf-8 -*-
 """DesignSPHysics Property enums.
 
@@ -6,7 +6,7 @@ This file holds a collection of useful enums
 in class forms, for code organization
 """
 
-# Copyright (C) 2016 - Andrés Vieira (anvieiravazquez@gmail.com)
+# Copyright (C) 2019
 # EPHYSLAB Environmental Physics Laboratory, Universidade de Vigo
 #
 # This file is part of DesignSPHysics.
