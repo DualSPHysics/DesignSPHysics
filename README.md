@@ -15,7 +15,7 @@ It includes support for pre-processing with GenCase, simulation with DualSPHysic
 
 In the future the code will be modular, so integration with different SPH solvers can be used. Right now it's optimized to be used with DualSPHysics 4.X
 
-It is developed as a FreeCAD module with a macro bootstrapper, in Python 2.7, using the QT libraries via PySide.
+It is developed as a FreeCAD module with a macro bootstrapper, in Python 3.7, using the QT libraries via PySide.
 
 ## Installation instructions
 To install DesignSPHysics you have 2 options: Using an installer (release version) or using a development build (git)

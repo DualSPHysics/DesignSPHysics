@@ -15,31 +15,9 @@
   <component name="ChangeListManager">
     <list default="true" id="22d76f4b-310a-4afb-8788-a472c77b2c87" name="Default" comment="Changes in Faces option in DSPH Object Properties.">
       <change afterPath="$PROJECT_DIR$/dualsphysics/bin/desktop.ini" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/Macro.iml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/Macro.iml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/DesignSPHysics.FCMacro" beforeDir="false" afterPath="$PROJECT_DIR$/DesignSPHysics.FCMacro" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/DesignSPHysics.py" beforeDir="false" afterPath="$PROJECT_DIR$/DesignSPHysics.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/LICENSE" beforeDir="false" afterPath="$PROJECT_DIR$/LICENSE" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/ds_modules/constants.py" beforeDir="false" afterPath="$PROJECT_DIR$/ds_modules/constants.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/ds_modules/dsphwidgets.py" beforeDir="false" afterPath="$PROJECT_DIR$/ds_modules/dsphwidgets.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/ds_modules/execution_parameters.py" beforeDir="false" afterPath="$PROJECT_DIR$/ds_modules/execution_parameters.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/ds_modules/guiutils.py" beforeDir="false" afterPath="$PROJECT_DIR$/ds_modules/guiutils.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/ds_modules/lang/english.json" beforeDir="false" afterPath="$PROJECT_DIR$/ds_modules/lang/english.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/ds_modules/lang/spanish.json" beforeDir="false" afterPath="$PROJECT_DIR$/ds_modules/lang/spanish.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/ds_modules/propenums.py" beforeDir="false" afterPath="$PROJECT_DIR$/ds_modules/propenums.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/ds_modules/properties.py" beforeDir="false" afterPath="$PROJECT_DIR$/ds_modules/properties.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/ds_modules/utils.py" beforeDir="false" afterPath="$PROJECT_DIR$/ds_modules/utils.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/ds_modules/xmlimporter.py" beforeDir="false" afterPath="$PROJECT_DIR$/ds_modules/xmlimporter.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/ds_modules/xmltodict.py" beforeDir="false" afterPath="$PROJECT_DIR$/ds_modules/xmltodict.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/dualsphysics/bin/DualSPHysics4.3CPU_linux64" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/dualsphysics/bin/DualSPHysics4.3CPU_win64.exe" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/dualsphysics/bin/DualSPHysics4.3_linux64" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/dualsphysics/bin/DualSPHysics4.3_win64.exe" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/dualsphysics/bin/GenCase4_MkWord_linux64" beforeDir="false" afterPath="$PROJECT_DIR$/dualsphysics/bin/GenCase4_MkWord_linux64" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/dualsphysics/bin/GenCase4_MkWord_win64.exe" beforeDir="false" afterPath="$PROJECT_DIR$/dualsphysics/bin/GenCase4_MkWord_win64.exe" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/dualsphysics/bin/GenCase4_linux64" beforeDir="false" afterPath="$PROJECT_DIR$/dualsphysics/bin/GenCase4_linux64" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/dualsphysics/bin/GenCase4_win64.exe" beforeDir="false" afterPath="$PROJECT_DIR$/dualsphysics/bin/GenCase4_win64.exe" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/README.md" beforeDir="false" afterPath="$PROJECT_DIR$/README.md" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
@@ -82,11 +60,23 @@
           </provider>
         </entry>
       </file>
-      <file pinned="false" current-in-tab="true">
+      <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/ds_modules/dsphwidgets.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="340">
-              <caret line="20" lean-forward="true" selection-start-line="20" selection-end-line="20" />
+            <state relative-caret-position="374">
+              <caret line="22" column="31" lean-forward="true" selection-start-line="22" selection-start-column="31" selection-end-line="22" selection-end-column="31" />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/README.md">
+          <provider selected="true" editor-type-id="split-provider[text-editor;markdown-preview-editor]">
+            <state split_layout="SPLIT">
+              <first_editor relative-caret-position="306">
+                <caret line="18" lean-forward="true" selection-start-line="18" selection-end-line="18" />
+              </first_editor>
+              <second_editor />
             </state>
           </provider>
         </entry>
@@ -102,7 +92,6 @@
   </component>
   <component name="FindInProjectRecents">
     <findStrings>
-      <find>batch</find>
       <find>enco</find>
       <find>rungencase_bt</find>
       <find>readAllStandardOutput</find>
@@ -132,6 +121,7 @@
       <find>keys(</find>
       <find>VERSION =</find>
       <find>#!/usr/bin/env python2.7</find>
+      <find>018</find>
     </findStrings>
     <replaceStrings>
       <replace>self.time_label</replace>
@@ -155,8 +145,8 @@
   <component name="Git.Settings">
     <option name="PREVIOUS_COMMIT_AUTHORS">
       <list>
-        <option value="Lorena Docasar &lt;docasarlorena@gmail.com&gt;" />
         <option value="LoreDocasar &lt;docasarlorena@gmail.com&gt;" />
+        <option value="Lorena Docasar &lt;docasarlorena@gmail.com&gt;" />
         <option value="lo" />
         <option value="docasarlorena@gmail.com" />
         <option value="Andrés Vieira &lt;anvieiravazquez@gmail.com&gt;" />
@@ -196,7 +186,6 @@
         <option value="$PROJECT_DIR$/ds_modules/widgets/__init__.py" />
         <option value="$PROJECT_DIR$/ds_modules/propenums.py" />
         <option value="$PROJECT_DIR$/CONTRIBUTING.md" />
-        <option value="$PROJECT_DIR$/README.md" />
         <option value="$PROJECT_DIR$/default-config.json" />
         <option value="$PROJECT_DIR$/ds_modules/lang/english.json" />
         <option value="$PROJECT_DIR$/ds_modules/lang/spanish.json" />
@@ -210,6 +199,7 @@
         <option value="$PROJECT_DIR$/ds_modules/utils.py" />
         <option value="$PROJECT_DIR$/ds_modules/constants.py" />
         <option value="$PROJECT_DIR$/ds_modules/dsphwidgets.py" />
+        <option value="$PROJECT_DIR$/README.md" />
       </list>
     </option>
   </component>
@@ -498,13 +488,6 @@
       <workItem from="1551182394901" duration="907000" />
       <workItem from="1551183318097" duration="833000" />
       <workItem from="1551184270278" duration="946000" />
-    </task>
-    <task id="LOCAL-00054" summary="Removes size constraints in multiple windows">
-      <created>1528280245388</created>
-      <option name="number" value="00054" />
-      <option name="presentableId" value="LOCAL-00054" />
-      <option name="project" value="LOCAL" />
-      <updated>1528280245388</updated>
     </task>
     <task id="LOCAL-00055" summary="Changes Motion Configuration window to have a QSplitter instead of fixed&#10;components.">
       <created>1528717505552</created>
@@ -842,7 +825,14 @@
       <option name="project" value="LOCAL" />
       <updated>1557338313206</updated>
     </task>
-    <option name="localTasksCounter" value="103" />
+    <task id="LOCAL-00103" summary="Changes the Macro to make it compatible with python 3.x">
+      <created>1559659288330</created>
+      <option name="number" value="00103" />
+      <option name="presentableId" value="LOCAL-00103" />
+      <option name="project" value="LOCAL" />
+      <updated>1559659288331</updated>
+    </task>
+    <option name="localTasksCounter" value="104" />
     <servers />
   </component>
   <component name="TimeTrackingManager">
@@ -861,7 +851,7 @@
     <frame x="1164" y="0" width="1401" height="1047" extended-state="0" />
     <editor active="true" />
     <layout>
-      <window_info content_ui="combo" id="Project" order="0" sideWeight="0.4993498" visible="true" weight="0.27293065" />
+      <window_info active="true" content_ui="combo" id="Project" order="0" sideWeight="0.4993498" visible="true" weight="0.27293065" />
       <window_info id="Structure" order="1" sideWeight="0.50200266" side_tool="true" weight="0.13036565" />
       <window_info id="Favorites" order="2" sideWeight="0.50065017" side_tool="true" weight="0.10771065" />
       <window_info x="2363" y="239" width="619" height="687" id="Notes" order="3" weight="0.30063966" />
@@ -875,7 +865,7 @@
       <window_info anchor="bottom" id="Event Log" order="7" sideWeight="0.5264728" side_tool="true" visible="true" weight="0.15224534" />
       <window_info anchor="bottom" id="Docker" order="8" show_stripe_button="false" />
       <window_info anchor="bottom" id="Messages" order="9" />
-      <window_info active="true" anchor="bottom" id="Python Console" order="10" sideWeight="0.47352722" visible="true" weight="0.15224534" />
+      <window_info anchor="bottom" id="Python Console" order="10" sideWeight="0.47352722" visible="true" weight="0.15224534" />
       <window_info anchor="bottom" id="Database Changes" order="11" show_stripe_button="false" />
       <window_info anchor="bottom" id="Terminal" order="12" sideWeight="0.44891873" weight="0.15881708" />
       <window_info anchor="bottom" id="Version Control" order="13" sideWeight="0.48396719" weight="0.16100767" />
@@ -926,7 +916,6 @@
   </component>
   <component name="VcsManagerConfiguration">
     <option name="RELOAD_CONTEXT" value="false" />
-    <MESSAGE value="Adds a custom QLineEdit implementation with focus event&#10;&#10;Adds more text constants for help messages" />
     <MESSAGE value="Refactorizes Execution Parameters Dialog to be a new class&#10;&#10;Did code cleaning." />
     <MESSAGE value="Added a warning window about save case in &quot;Run GenCase&quot;&#10;&#10;Added &quot;run_gencase.png&quot; to images folder" />
     <MESSAGE value="Merges develop. Version 0.5.1811-08" />
@@ -951,7 +940,8 @@
     <MESSAGE value="Merge branch 'develop'" />
     <MESSAGE value="Fixes an error in &quot;Linear motion from a file&quot;" />
     <MESSAGE value="Changes in Faces option in DSPH Object Properties&#10;&#10;Cosmetic changes in Inlet/Outlet.&#10;&quot;Import STL&quot; changes to &quot;Import GEO&quot;, this mode adds *.vtk and *.ply options." />
-    <option name="LAST_COMMIT_MESSAGE" value="Changes in Faces option in DSPH Object Properties&#10;&#10;Cosmetic changes in Inlet/Outlet.&#10;&quot;Import STL&quot; changes to &quot;Import GEO&quot;, this mode adds *.vtk and *.ply options." />
+    <MESSAGE value="Changes the Macro to make it compatible with python 3.x" />
+    <option name="LAST_COMMIT_MESSAGE" value="Changes the Macro to make it compatible with python 3.x" />
   </component>
   <component name="editorHistoryManager">
     <entry file="file://$USER_HOME$/.PyCharm2018.2/system/python_stubs/703128353/PySide/QtGui/QLayout.py">
@@ -1008,21 +998,6 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/ds_modules/stl/__init__.py">
       <provider selected="true" editor-type-id="text-editor" />
-    </entry>
-    <entry file="file://$PROJECT_DIR$/README.md">
-      <provider editor-type-id="text-editor">
-        <state relative-caret-position="560">
-          <caret line="35" column="57" selection-start-line="35" selection-start-column="57" selection-end-line="35" selection-end-column="57" />
-        </state>
-      </provider>
-      <provider selected="true" editor-type-id="split-provider[text-editor;markdown-preview-editor]">
-        <state split_layout="SPLIT">
-          <first_editor relative-caret-position="347">
-            <caret line="50" selection-start-line="50" selection-end-line="50" />
-          </first_editor>
-          <second_editor />
-        </state>
-      </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/.gitignore">
       <provider selected="true" editor-type-id="text-editor" />
@@ -1222,8 +1197,23 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/ds_modules/dsphwidgets.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="340">
-          <caret line="20" lean-forward="true" selection-start-line="20" selection-end-line="20" />
+        <state relative-caret-position="374">
+          <caret line="22" column="31" lean-forward="true" selection-start-line="22" selection-start-column="31" selection-end-line="22" selection-end-column="31" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/README.md">
+      <provider editor-type-id="text-editor">
+        <state relative-caret-position="560">
+          <caret line="35" column="57" selection-start-line="35" selection-start-column="57" selection-end-line="35" selection-end-column="57" />
+        </state>
+      </provider>
+      <provider selected="true" editor-type-id="split-provider[text-editor;markdown-preview-editor]">
+        <state split_layout="SPLIT">
+          <first_editor relative-caret-position="306">
+            <caret line="18" lean-forward="true" selection-start-line="18" selection-end-line="18" />
+          </first_editor>
+          <second_editor />
         </state>
       </provider>
     </entry>
