@@ -976,7 +976,7 @@ def gencase_completed_dialog(particle_count=0, detail_text="No details", data=di
                     data['paraview_path'],
                     "--data={}\\{}".format(
                         data['project_path'] + '\\' +
-                        data['project_name'].decode('utf-8') + '_out',
+                        data['project_name'] + '_out',
                         action.text()
                     )
                 ],
