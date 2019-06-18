@@ -37,7 +37,6 @@ from ds_modules import properties
 from ds_modules.properties import *
 from ds_modules.execution_parameters import *
 
-from future.utils import iteritems
 
 """
 Copyright (C) 2019
@@ -66,7 +65,7 @@ DEBUGGING = False
 VERBOSE = False
 DIVIDER = 1000
 PICKLE_PROTOCOL = 1  # Binary mode
-VERSION = "0.5.1.1906-04"
+VERSION = "0.5.1.1906-18"
 WIDTH_2D = 0.001
 MAX_PARTICLE_WARNING = 2000000
 HELP_WEBPAGE = "https://github.com/DualSPHysics/DesignSPHysics/wiki"
@@ -79,7 +78,7 @@ def is_compatible_version():
         for this macro. """
 
     version_num = FreeCAD.Version()[0] + FreeCAD.Version()[1]
-    if int(version_num) < int(FREECAD_MIN_VERSION):
+    if float(version_num) < float(FREECAD_MIN_VERSION):
         ds_modules.guiutils.warning_dialog("This version of FreeCAD is not supported!. Install version 0.17 or higher.")
         return False
     else:
@@ -294,7 +293,7 @@ def check_executables(data):
         bundled_execs_present = are_executables_bundled()
 
         if bundled_execs_present:
-            user_selection = ds_modules.guiutils.ok_cancel_dialog(APP_NAME,
+            user_selection = guiutils.ok_cancel_dialog(APP_NAME,
                                                        "The path of some of the executables "
                                                        "in “Setup Plugin” is not correct.\n"
                                                        "DualSPHysics was detected. "
@@ -570,8 +569,8 @@ def get_default_data():
     data['modelnormal_print'] = "original"
 
     # INLET/OUTLET objects
+    #[id, convertfluid, layers, [zone2/3D, mk, direction], [velocity, value], [density, value], [elevation,zbottom, zsurf]]
     data['inlet_object'] = list()
-    data['inlet_zones'] = list()
 
     # Faces objects
     data['faces'] = dict()
@@ -2228,9 +2227,9 @@ def batch_generator(full_path, case_name, gcpath, dsphpath, pvtkpath, exec_param
 def import_geo(filename=None, scale_x=1, scale_y=1, scale_z=1, name=None):
     """ Opens a GEO file, preprocesses it and saves it
     int temp files to load with FreeCAD. """
-
     length_filename = len(filename)
-    file_tipe = "." + filename[length_filename-3] + filename[length_filename-2] + filename[length_filename-1]
+    file_tipe = "." + filename[length_filename-3:]
+    file_tipe = file_tipe.strip()
 
     if scale_x <= 0:
         scale_x = 1

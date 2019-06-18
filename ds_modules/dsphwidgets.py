@@ -7910,29 +7910,6 @@ class LinkPointlineEdit(QtGui.QDialog):
             link_pointline_error_dialog.exec_()
 
 
-class ObjectIsShowed(QtGui.QWidget):
-    """ Widget shows an object """
-
-    def __init__(self, key, object_name="No name", object_mk=-1, mktype="fluid"):
-        super(ObjectIsShowed, self).__init__()
-        self.setContentsMargins(0, 0, 0, 0)
-
-        self.key = key
-        self.object_name = object_name
-        self.object_mk = object_mk + 1
-        self.main_layout = QtGui.QHBoxLayout()
-        self.main_layout.setContentsMargins(10, 0, 10, 0)
-        self.mk_label = QtGui.QLabel(
-            "<b>{}{}</b>".format(mktype[0].upper(), str(self.object_mk)))
-        self.name_label = QtGui.QLabel(str(self.object_name))
-
-        self.main_layout.addWidget(self.mk_label)
-        self.main_layout.addWidget(self.name_label)
-        self.main_layout.addStretch(1)
-
-        self.setLayout(self.main_layout)
-
-
 class InletConfigDialog(QtGui.QDialog):
     """ Defines the Inlet/Outlet dialog window.
        Modifies data dictionary passed as parameter. """
@@ -7944,17 +7921,52 @@ class InletConfigDialog(QtGui.QDialog):
 
         # Creates a dialog
         self.setWindowTitle("Inlet/Outlet configuration")
+        self.setModal(False)
+        self.setMinimumWidth(500)
+        self.setMinimumHeight(200)
         self.main_layout = QtGui.QVBoxLayout()
+
+        # Creates layout for content first options
+        self.option_layout = QtGui.QHBoxLayout()
+
+        # Creates reuseids option
+        self.reuseids_layout = QtGui.QHBoxLayout()
+        self.reuseids_option = QtGui.QLabel(__("Reuseids: "))
+        self.reuseids_combobox = QtGui.QComboBox()
+        self.reuseids_combobox.insertItems(0, [__("False"), __("True")])
+
+        self.reuseids_layout.addWidget(self.reuseids_option)
+        self.reuseids_layout.addWidget(self.reuseids_combobox)
+        self.reuseids_layout.addStretch(1)
+
+        # Creates resizetime option
+        self.resizetime_layout = QtGui.QHBoxLayout()
+        self.resizetime_option = QtGui.QLabel(__("Resizetime: "))
+        self.resizetime_line_edit = QtGui.QLineEdit()
+
+        self.resizetime_layout.addWidget(self.resizetime_option)
+        self.resizetime_layout.addWidget(self.resizetime_line_edit)
+        self.resizetime_layout.addStretch(1)
 
         # Creates use refilling option
         self.refilling_layout = QtGui.QHBoxLayout()
-        self.refilling_option = QtGui.QLabel(__("Use refilling: "))
+        self.refilling_option = QtGui.QLabel(__("Refilling: "))
         self.refilling_combobox = QtGui.QComboBox()
         self.refilling_combobox.insertItems(0, [__("False"), __("True")])
 
         self.refilling_layout.addWidget(self.refilling_option)
         self.refilling_layout.addWidget(self.refilling_combobox)
         self.refilling_layout.addStretch(1)
+
+        # Creates use determlimit option
+        self.determlimit_layout = QtGui.QHBoxLayout()
+        self.determlimit_option = QtGui.QLabel(__("Determlimit: "))
+        self.determlimit_combobox = QtGui.QComboBox()
+        self.determlimit_combobox.insertItems(0, [__("1e+3"), __("1e-3")])
+
+        self.determlimit_layout.addWidget(self.determlimit_option)
+        self.determlimit_layout.addWidget(self.determlimit_combobox)
+        self.determlimit_layout.addStretch(1)
 
         # Creates 2 main buttons
         self.ok_button = QtGui.QPushButton("Save")
@@ -7968,81 +7980,35 @@ class InletConfigDialog(QtGui.QDialog):
         self.button_layout.addWidget(self.ok_button)
         self.button_layout.addWidget(self.cancel_button)
 
-        # Create the list for inlet/outlet objects
-        self.main_inlet = QtGui.QGroupBox("Inlet/Outler objects (only objects defined with 'Faces')")
-        self.inlet_layout = QtGui.QVBoxLayout()
-
-        self.objectlist_table = QtGui.QTableWidget(0, 2)
-        self.objectlist_table.setObjectName("Inlet/Outler objects table")
-        self.objectlist_table.verticalHeader().setVisible(False)
-        self.objectlist_table.horizontalHeader().setVisible(False)
-        self.objectlist_table.horizontalHeader().setResizeMode(0, QtGui.QHeaderView.Stretch)
-
-        self.objectlist_table.setEnabled(True)
-
-        # Create the necessary spaces in the list
-        self.count = 0
-        for key in self.data['simobjects'].keys():
-            self.context_object = FreeCAD.getDocument("DSPH_Case").getObject(key)
-            if self.data['simobjects'][self.context_object.Name][1] == "Fluid" and \
-                    self.context_object.Name != "Case_Limits" and \
-                    self.data['simobjects'][self.context_object.Name][2] == "Face":
-                self.count += 1
-        self.objectlist_table.setRowCount(self.count)
-        self.current_row = 0
-        self.objects_with_parent = list()
-        self.is_floating = ""
-        # TODO: LOW PRIORITY, CHANGE THIS FOR GLOBAL TEMP_TADA
-        self.temp_data = list()
-
-        # Select the objects that are going to be listed
-        for key, value in self.data['simobjects'].items():
-            self.context_object = FreeCAD.getDocument("DSPH_Case").getObject(key)
-            if self.context_object.InList != list():
-                self.objects_with_parent.append(self.context_object.Name)
-                continue
-            if self.context_object.Name == "Case_Limits":
-                continue
-            if self.data['simobjects'][self.context_object.Name][1] == "Bound":
-                continue
-            if self.data['simobjects'][self.context_object.Name][2] != "Face":
-                continue
-
-            # Collects the information of the object
-            self.target_widget = ObjectIsShowed(
-                key=key,
-                object_mk=self.data['simobjects'][self.context_object.Name][0],
-                mktype=self.data['simobjects'][self.context_object.Name][1],
-                object_name=self.context_object.Label
-            )
-
-            # Save the current object
-            self.temp_data.append(self.target_widget)
-
-            self.inlet_button = QtGui.QPushButton(__("Add"))
-            self.inlet_button.clicked.connect(self.on_add_zone)
-
-            # Shows the object in table
-            self.objectlist_table.setCellWidget(self.current_row, 0, self.target_widget)
-            self.objectlist_table.setCellWidget(self.current_row, 1, self.inlet_button)
-
-            self.current_row += 1
-
-        # Add table to the layout
-        self.inlet_layout.addWidget(self.objectlist_table)
-
-        self.main_inlet.setLayout(self.inlet_layout)
-
         # Create the list for zones
-        self.main_zones = QtGui.QGroupBox("Inlet/Outler zones")
+        self.main_zones = QtGui.QGroupBox("Inlet/Outlet zones")
         self.zones_layout = QtGui.QVBoxLayout()
+        self.zones_layout_list = QtGui.QVBoxLayout()
+
+        # Add button
+        self.inlet_button_layout = QtGui.QHBoxLayout()
+        self.button_link_inlet = QtGui.QPushButton("Add Zone")
+        self.inlet_button_layout.addStretch(1)
+        self.inlet_button_layout.addWidget(self.button_link_inlet)
+        self.button_link_inlet.clicked.connect(self.on_add_zone)
+
+        self.zones_layout.addLayout(self.inlet_button_layout)
+        self.zones_layout.addLayout(self.zones_layout_list)
 
         self.main_zones.setLayout(self.zones_layout)
 
-        # Adds all layouts to main
-        self.main_layout.addLayout(self.refilling_layout)
-        self.main_layout.addWidget(self.main_inlet)
+        self.refresh_zones()
+
+        # Adds options to option layout
+        self.option_layout.addLayout(self.reuseids_layout)
+        self.option_layout.addLayout(self.resizetime_layout)
+        self.option_layout.addLayout(self.refilling_layout)
+        self.option_layout.addLayout(self.determlimit_layout)
+
+        # Adds options to main
+        self.main_layout.addLayout(self.option_layout)
         self.main_layout.addWidget(self.main_zones)
+        self.main_layout.addStretch(1)
 
         # Adds scroll area
         self.main_layout_dialog = QtGui.QVBoxLayout()
@@ -8064,32 +8030,26 @@ class InletConfigDialog(QtGui.QDialog):
         self.exec_()
 
     def on_add_zone(self):
-        """ """
-
-        if self.target_widget in self.data['inlet_object']:
-            # Warning window about save_case
-            self.zone_warning_dialog = QtGui.QMessageBox()
-            self.zone_warning_dialog.setWindowTitle(__("Warning!"))
-            self.zone_warning_dialog.setText(__("This zone already exists..."))
-            self.zone_warning_dialog.setIcon(QtGui.QMessageBox.Warning)
-            self.refresh_zones()
-            self.zone_warning_dialog.exec_()
-        else:
-            self.data['inlet_object'].append(self.target_widget)
-            self.refresh_zones()
+        """  """
+        uid_temp = uuid.uuid4()
+        self.data['inlet_object'].append([
+            str(uid_temp), 0, 0, [0, 0, 0], [0, 0], [0, 0], [0, 0, 0]])
+        self.zone_edit(str(uid_temp))
 
     def refresh_zones(self):
         """ Refreshes the zones list """
-        while self.zones_layout.count() > 0:
-            target = self.zones_layout.takeAt(0)
+        count = 0
+        while self.zones_layout_list.count() > 0:
+            target = self.zones_layout_list.takeAt(0)
             target.setParent(None)
 
         for inletObject in self.data['inlet_object']:
+            count += 1
             to_add_layout = QtGui.QHBoxLayout()
             to_add_layout2 = QtGui.QHBoxLayout()
             to_add_label2 = QtGui.QLabel(" ")
             to_add_layout2.addWidget(to_add_label2)
-            to_add_label = QtGui.QLabel(inletObject.object_name)
+            to_add_label = QtGui.QLabel("I/O Zone " + str(count))
             to_add_layout.addWidget(to_add_label)
             to_add_layout.addStretch(1)
             to_add_editbutton = QtGui.QPushButton("Edit")
@@ -8098,8 +8058,8 @@ class InletConfigDialog(QtGui.QDialog):
             to_add_layout.addWidget(to_add_deletebutton)
             to_add_editbutton.clicked.connect(lambda io=inletObject: self.zone_edit(io))
             to_add_deletebutton.clicked.connect(lambda io=inletObject: self.zone_delete(io))
-            self.zones_layout.addLayout(to_add_layout2)
-            self.zones_layout.addLayout(to_add_layout)
+            self.zones_layout_list.addLayout(to_add_layout2)
+            self.zones_layout_list.addLayout(to_add_layout)
 
     def zone_delete(self, io):
         """ Delete one zone from the list """
@@ -8109,6 +8069,7 @@ class InletConfigDialog(QtGui.QDialog):
     def zone_edit(self, io):
         """"""
         InletZoneEdit(self.data, io)
+        self.refresh_zones()
 
     def on_cancel(self):
         self.reject()
@@ -8131,13 +8092,242 @@ class InletZoneEdit(QtGui.QDialog):
         self.setWindowTitle("Inlet/Outlet object edit")
         self.main_layout = QtGui.QVBoxLayout()
 
-        self.edit_layout = QtGui.QGroupBox("Inlet/Outler edit")
+        # Add Convert Fluid option
+        self.convertfluid_layout = QtGui.QHBoxLayout()
+        self.convertfluid_option = QtGui.QLabel(__("Convertfluid: "))
+        self.convertfluid_combobox = QtGui.QComboBox()
+        self.convertfluid_combobox.insertItems(0, [__("True"), __("False")])
 
-        self.main_layout.addWidget(self.edit_layout)
+        self.convertfluid_layout.addWidget(self.convertfluid_option)
+        self.convertfluid_layout.addWidget(self.convertfluid_combobox)
+        self.convertfluid_layout.addStretch(1)
+
+        # Add Layers option
+        self.layers_layout = QtGui.QHBoxLayout()
+        self.layers_option = QtGui.QLabel(__("Layers: "))
+        self.layers_line_edit = QtGui.QLineEdit()
+
+        self.layers_layout.addWidget(self.layers_option)
+        self.layers_layout.addWidget(self.layers_line_edit)
+
+        # Add Zone 2d or 3d
+        self.zone2d3d_main_layout = QtGui.QGroupBox("Zone 2D/3D")
+        self.zone2d3d_layout = QtGui.QVBoxLayout()
+        self.zone2d3d_zones_layout = QtGui.QHBoxLayout()
+        self.zone2d3d_mk_layout = QtGui.QHBoxLayout()
+        self.zone2d3d_combobox_layout = QtGui.QHBoxLayout()
+        self.zone2d_option = QtGui.QCheckBox("Zone 2D")
+        self.zone3d_option = QtGui.QCheckBox("Zone 3D")
+        self.zone2d3d_mk_label = QtGui.QLabel("MK fluid: ")
+        self.zone2d3d_mk_line_edit = QtGui.QLineEdit()
+        self.zone2d3d_mk_line_edit.setEnabled(False)
+        self.zone2d3d_combobox_label = QtGui.QLabel(__("Direction: "))
+        self.zone2d3d_combobox = QtGui.QComboBox()
+        self.zone2d3d_combobox.setEnabled(False)
+        self.zone2d3d_combobox.insertItems(0,
+                                           [__("Left"), __("Right"), __("Front"), __("Back"), __("Top"), __("Bottom")])
+
+        self.zone2d_option.toggled.connect(self.on_zone_check)
+        self.zone3d_option.toggled.connect(self.on_zone_check)
+
+        self.zone2d3d_zones_layout.addWidget(self.zone2d_option)
+        self.zone2d3d_zones_layout.addWidget(self.zone3d_option)
+        self.zone2d3d_zones_layout.addStretch(1)
+        self.zone2d3d_mk_layout.addWidget(self.zone2d3d_mk_label)
+        self.zone2d3d_mk_layout.addWidget(self.zone2d3d_mk_line_edit)
+        self.zone2d3d_combobox_layout.addWidget(self.zone2d3d_combobox_label)
+        self.zone2d3d_combobox_layout.addWidget(self.zone2d3d_combobox)
+        self.zone2d3d_combobox_layout.addStretch(1)
+
+        self.zone2d3d_layout.addLayout(self.zone2d3d_zones_layout)
+        self.zone2d3d_layout.addLayout(self.zone2d3d_mk_layout)
+        self.zone2d3d_layout.addLayout(self.zone2d3d_combobox_layout)
+
+        self.zone2d3d_main_layout.setLayout(self.zone2d3d_layout)
+
+        # Add Imposed velocity option
+        self.imposevelocity_layout = QtGui.QGroupBox("Velocity")
+        self.imposevelocity_options_layout = QtGui.QVBoxLayout()
+        self.imposevelocity_velocity_layout = QtGui.QHBoxLayout()
+        self.imposevelocity_value_layout = QtGui.QHBoxLayout()
+        self.imposevelocity_combobox_label = QtGui.QLabel(__("Velocity: "))
+        self.imposevelocity_combobox = QtGui.QComboBox()
+        self.imposevelocity_combobox.insertItems(0,
+                                                 [__("Fixed"), __("Variable"), __("Extrapolated"), __("Interpolated")])
+        self.imposevelocity_velocity_label = QtGui.QLabel("Value: ")
+        self.imposevelocity_velocity_line_edit = QtGui.QLineEdit()
+
+        self.imposevelocity_combobox.currentIndexChanged.connect(self.on_imposevelocity_change)
+
+        self.imposevelocity_velocity_layout.addWidget(self.imposevelocity_combobox_label)
+        self.imposevelocity_velocity_layout.addWidget(self.imposevelocity_combobox)
+        self.imposevelocity_velocity_layout.addStretch(1)
+        self.imposevelocity_value_layout.addWidget(self.imposevelocity_velocity_label)
+        self.imposevelocity_value_layout.addWidget(self.imposevelocity_velocity_line_edit)
+
+        self.imposevelocity_options_layout.addLayout(self.imposevelocity_velocity_layout)
+        self.imposevelocity_options_layout.addLayout(self.imposevelocity_value_layout)
+        self.imposevelocity_layout.setLayout(self.imposevelocity_options_layout)
+
+        # Add Outlet rhop option
+        self.imposerhop_layout = QtGui.QGroupBox("Density")
+        self.imposerhop_combobox_layout = QtGui.QHBoxLayout()
+        self.imposerhop_value_layout = QtGui.QHBoxLayout()
+        self.imposerhop_options_layout = QtGui.QVBoxLayout()
+        self.imposerhop_label = QtGui.QLabel(__("Density: "))
+        self.imposerhop_combobox = QtGui.QComboBox()
+        self.imposerhop_combobox.insertItems(0, [__("Fixed"), __("Hydrostatic"), __("Extrapolated")])
+        self.imposerhop_value_label = QtGui.QLabel("Value: ")
+        self.imposerhop_value_line_edit = QtGui.QLineEdit()
+
+        self.imposerhop_combobox_layout.addWidget(self.imposerhop_label)
+        self.imposerhop_combobox_layout.addWidget(self.imposerhop_combobox)
+        self.imposerhop_combobox_layout.addStretch(1)
+        self.imposerhop_value_layout.addWidget(self.imposerhop_value_label)
+        self.imposerhop_value_layout.addWidget(self.imposerhop_value_line_edit)
+
+        self.imposerhop_options_layout.addLayout(self.imposerhop_combobox_layout)
+        self.imposerhop_options_layout.addLayout(self.imposerhop_value_layout)
+        self.imposerhop_layout.setLayout(self.imposerhop_options_layout)
+
+        # Add Inlet Z-surface option
+        self.imposezsurf_layout = QtGui.QGroupBox("Elevation")
+        self.imposezsurf_options_layout = QtGui.QVBoxLayout()
+        self.imposezsurf_combobox_layout = QtGui.QHBoxLayout()
+        self.imposezsurf_fixed_layout = QtGui.QHBoxLayout()
+        self.imposezsurf_automatic_layout = QtGui.QHBoxLayout()
+        self.imposezsurf_combobox_label = QtGui.QLabel("Elevation: ")
+        self.imposezsurf_combobox = QtGui.QComboBox()
+        self.imposezsurf_combobox.insertItems(0, [__("Fixed"), __("Variable"), __("Automatic")])
+
+        self.imposezsurf_fixed_zbottom_label = QtGui.QLabel("Fixed Zbottom: ")
+        self.imposezsurf_fixed_zbottom = QtGui.QLineEdit()
+        self.imposezsurf_fixed_zbottom_units = QtGui.QLabel("metres")
+        self.imposezsurf_fixed_zsurf_label = QtGui.QLabel("Fixed Zsurf: ")
+        self.imposezsurf_fixed_zsurf = QtGui.QLineEdit()
+        self.imposezsurf_fixed_zsurf_units = QtGui.QLabel("metres")
+
+        self.imposezsurf_automatic_zbottom_label = QtGui.QLabel("Autom. Zbottom: ")
+        self.imposezsurf_automatic_zbottom = QtGui.QLineEdit()
+        self.imposezsurf_automatic_zbottom_units = QtGui.QLabel("metres")
+        self.imposezsurf_automatic_zsurf_label = QtGui.QLabel("Autom. Zsurf: ")
+        self.imposezsurf_automatic_zsurf = QtGui.QLineEdit()
+        self.imposezsurf_automatic_zsurf_units = QtGui.QLabel("metres")
+
+        self.imposezsurf_fixed_zbottom.setEnabled(True)
+        self.imposezsurf_fixed_zsurf.setEnabled(True)
+        self.imposezsurf_automatic_zbottom.setEnabled(False)
+        self.imposezsurf_automatic_zsurf.setEnabled(False)
+
+        self.imposezsurf_combobox.currentIndexChanged.connect(self.on_imposezsurf_change)
+
+        self.imposezsurf_combobox_layout.addWidget(self.imposezsurf_combobox_label)
+        self.imposezsurf_combobox_layout.addWidget(self.imposezsurf_combobox)
+        self.imposezsurf_combobox_layout.addStretch(1)
+        self.imposezsurf_fixed_layout.addWidget(self.imposezsurf_fixed_zbottom_label)
+        self.imposezsurf_fixed_layout.addWidget(self.imposezsurf_fixed_zbottom)
+        self.imposezsurf_fixed_layout.addWidget(self.imposezsurf_fixed_zbottom_units)
+        self.imposezsurf_fixed_layout.addStretch(1)
+        self.imposezsurf_fixed_layout.addWidget(self.imposezsurf_fixed_zsurf_label)
+        self.imposezsurf_fixed_layout.addWidget(self.imposezsurf_fixed_zsurf)
+        self.imposezsurf_fixed_layout.addWidget(self.imposezsurf_fixed_zsurf_units)
+        self.imposezsurf_automatic_layout.addWidget(self.imposezsurf_automatic_zbottom_label)
+        self.imposezsurf_automatic_layout.addWidget(self.imposezsurf_automatic_zbottom)
+        self.imposezsurf_automatic_layout.addWidget(self.imposezsurf_automatic_zbottom_units)
+        self.imposezsurf_automatic_layout.addStretch(1)
+        self.imposezsurf_automatic_layout.addWidget(self.imposezsurf_automatic_zsurf_label)
+        self.imposezsurf_automatic_layout.addWidget(self.imposezsurf_automatic_zsurf)
+        self.imposezsurf_automatic_layout.addWidget(self.imposezsurf_automatic_zsurf_units)
+
+        self.imposezsurf_options_layout.addLayout(self.imposezsurf_combobox_layout)
+        self.imposezsurf_options_layout.addLayout(self.imposezsurf_fixed_layout)
+        self.imposezsurf_options_layout.addLayout(self.imposezsurf_automatic_layout)
+
+        self.imposezsurf_layout.setLayout(self.imposezsurf_options_layout)
+
+        # Creates 2 main buttons
+        self.ok_button = QtGui.QPushButton("Save")
+        self.cancel_button = QtGui.QPushButton("Cancel")
+        self.button_layout = QtGui.QHBoxLayout()
+        self.button_layout.addStretch(1)
+
+        self.ok_button.clicked.connect(self.on_ok)
+        self.cancel_button.clicked.connect(self.on_cancel)
+
+        self.button_layout.addWidget(self.ok_button)
+        self.button_layout.addWidget(self.cancel_button)
+
+        self.main_layout.addLayout(self.convertfluid_layout)
+        self.main_layout.addLayout(self.layers_layout)
+        self.main_layout.addWidget(self.zone2d3d_main_layout)
+        self.main_layout.addWidget(self.imposevelocity_layout)
+        self.main_layout.addWidget(self.imposerhop_layout)
+        self.main_layout.addWidget(self.imposezsurf_layout)
+        self.main_layout.addLayout(self.button_layout)
 
         self.setLayout(self.main_layout)
 
         self.exec_()
+
+    def on_imposevelocity_change(self):
+        if self.imposevelocity_combobox.currentIndex() == 0:
+            self.imposevelocity_velocity_line_edit.setEnabled(True)
+        else:
+            self.imposevelocity_velocity_line_edit.setEnabled(False)
+
+    def on_imposezsurf_change(self):
+
+        if self.imposezsurf_combobox.currentIndex() == 0:
+            self.imposezsurf_fixed_zbottom.setEnabled(True)
+            self.imposezsurf_fixed_zsurf.setEnabled(True)
+            self.imposezsurf_automatic_zbottom.setEnabled(False)
+            self.imposezsurf_automatic_zsurf.setEnabled(False)
+        elif self.imposezsurf_combobox.currentIndex() == 2:
+            self.imposezsurf_automatic_zbottom.setEnabled(True)
+            self.imposezsurf_automatic_zsurf.setEnabled(True)
+            self.imposezsurf_fixed_zbottom.setEnabled(False)
+            self.imposezsurf_fixed_zsurf.setEnabled(False)
+        else:
+            self.imposezsurf_fixed_zbottom.setEnabled(False)
+            self.imposezsurf_fixed_zsurf.setEnabled(False)
+            self.imposezsurf_automatic_zbottom.setEnabled(False)
+            self.imposezsurf_automatic_zsurf.setEnabled(False)
+
+    def on_zone_check(self):
+        """  """
+        if self.zone2d_option.isChecked() or self.zone3d_option.isChecked():
+            self.zone2d3d_mk_line_edit.setEnabled(True)
+            self.zone2d3d_combobox.setEnabled(True)
+            if self.zone2d_option.isChecked():
+                self.zone3d_option.setEnabled(False)
+            elif not self.zone2d_option.isChecked():
+                self.zone3d_option.setEnabled(True)
+
+            if self.zone3d_option.isChecked():
+                self.zone2d_option.setEnabled(False)
+            elif not self.zone3d_option.isChecked():
+                self.zone2d_option.setEnabled(True)
+        else:
+            self.zone2d3d_mk_line_edit.setEnabled(False)
+            self.zone2d3d_combobox.setEnabled(False)
+            if self.zone2d_option.isChecked():
+                self.zone3d_option.setEnabled(False)
+            elif not self.zone2d_option.isChecked():
+                self.zone3d_option.setEnabled(True)
+
+            if self.zone3d_option.isChecked():
+                self.zone2d_option.setEnabled(False)
+            elif not self.zone3d_option.isChecked():
+                self.zone2d_option.setEnabled(True)
+
+    def on_cancel(self):
+        self.reject()
+
+    def on_ok(self):
+        """ Save data """
+        # TODO: NEED TO FINISH THIS
+        #self.data['inlet_object'][self.inlet_object_id]
+        InletZoneEdit.accept(self)
 
 
 class RunDialog(QtGui.QDialog):

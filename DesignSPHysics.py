@@ -565,7 +565,6 @@ def on_save_with_gencase():
 
     # Save Case as usual so all the data needed for GenCase is on disk
     on_save_case()
-
     # Ensure the current working directory is the DesignSPHysics directory
     utils.refocus_cwd()
 
@@ -575,7 +574,13 @@ def on_save_with_gencase():
         # Tries to spawn a process with GenCase to generate the case
 
         process = QtCore.QProcess(fc_main_window)
-        gencase_full_path = os.getcwd() + "/" + data['gencase_path']
+
+        if "./" in data['gencase_path']:
+            gencase_full_path = os.getcwd() + "/" + data['gencase_path']
+        else:
+            gencase_full_path = data['gencase_path']
+
+        process.setWorkingDirectory(data['project_path'])
         process.start(gencase_full_path, [
             data['project_path'] + '/' + data['project_name'] + '_Def', data['project_path'] +
             '/' + data['project_name'] + '_out/' + data['project_name'],
@@ -585,11 +590,11 @@ def on_save_with_gencase():
         process.waitForFinished()
 
         output = str(process.readAllStandardOutput())
-
         error_in_gen_case = False
         # If GenCase was successful, check for internal errors
         # This is done because a "clean" exit (return 0) of GenCase does not mean that all went correct.
         if str(process.exitCode()) == "0":
+
             try:
                 total_particles_text = output[output.index("Total particles: "):output.index(" (bound=")]
                 total_particles = int(total_particles_text[total_particles_text.index(": ") + 2:])
@@ -615,16 +620,24 @@ def on_save_with_gencase():
     if data['project_path'] != '':
         # If for some reason GenCase failed
         if str(process.exitCode()) != "0" or error_in_gen_case:
-            # Multiple possible causes. Let the user know
-            gencase_out_file = open(data['project_path'] + '/' + data['project_name'] + '_out/' + data['project_name'] + ".out", "rb")
-            gencase_failed_dialog = QtGui.QMessageBox()
-            gencase_failed_dialog.setText(__("Error executing GenCase. Did you add objects to the case?. "
-                                             "Another reason could be memory issues. View details for more info."))
-            gencase_failed_dialog.setDetailedText(gencase_out_file.read().split("================================")[1])
-            gencase_failed_dialog.setIcon(QtGui.QMessageBox.Critical)
-            gencase_out_file.close()
-            gencase_failed_dialog.exec_()
-            utils.warning(__("GenCase Failed."))
+            try:
+                # Multiple possible causes. Let the user know
+                gencase_out_file = open(data['project_path'] + '/' + data['project_name'] + '_out/' + data['project_name'] + ".out", "r")
+                gencase_failed_dialog = QtGui.QMessageBox()
+                gencase_failed_dialog.setText(__("Error executing GenCase. Did you add objects to the case?. "
+                                                 "Another reason could be memory issues. View details for more info."))
+                gencase_failed_dialog.setDetailedText(gencase_out_file.read().split("================================")[1])
+                gencase_failed_dialog.setIcon(QtGui.QMessageBox.Critical)
+                gencase_out_file.close()
+                gencase_failed_dialog.exec_()
+                utils.warning(__("GenCase Failed."))
+            except:
+                guiutils.warning_dialog(
+                    "I can't recognize GenCase in that executable.! "
+                    "Check that the file corresponds with the appropriate tool and that you have permissions to execute it",
+                    detailed_text="If you're working with GNU/Linux, you can give permissions to an executable from the terminal "
+                                  "with: chmod +R 755 /path/to/the/executable"
+                )
 
         # Save results again so all the data is updated if something changes.
         on_save_case()
@@ -3524,7 +3537,7 @@ damping_config_button.hide()
 def add_object_to_sim(name=None):
     """ Defines what happens when "Add object to sim" button is presseed.
     Takes the selection of FreeCAD and watches what type of thing it is adding """
-    if name is None:
+    if (name is None) or (name is False):
         selection = FreeCADGui.Selection.getSelection()
     else:
         selection = list()
