@@ -1126,7 +1126,7 @@ def on_special_button():
 
     sp_damping_button = QtGui.QPushButton(__("Damping"))
     sp_inlet_button = QtGui.QPushButton(__("Inlet/Outlet"))
-    sp_inlet_button.setEnabled(False)
+    #sp_inlet_button.setEnabled(False)
     sp_chrono_button = QtGui.QPushButton(__("Coupling CHRONO"))
     #sp_chrono_button.setEnabled(False)
     sp_multilayeredmb_button = QtGui.QPushButton(__("Multi-layered Piston"))

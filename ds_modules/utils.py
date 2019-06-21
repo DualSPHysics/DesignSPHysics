@@ -65,7 +65,7 @@ DEBUGGING = False
 VERBOSE = False
 DIVIDER = 1000
 PICKLE_PROTOCOL = 1  # Binary mode
-VERSION = "0.5.1.1906-18"
+VERSION = "0.5.1.1906-21"
 WIDTH_2D = 0.001
 MAX_PARTICLE_WARNING = 2000000
 HELP_WEBPAGE = "https://github.com/DualSPHysics/DesignSPHysics/wiki"
@@ -570,7 +570,9 @@ def get_default_data():
 
     # INLET/OUTLET objects
     #[id, convertfluid, layers, [zone2/3D, mk, direction], [velocity, value], [density, value], [elevation,zbottom, zsurf]]
-    data['inlet_object'] = list()
+    data['inlet_zone'] = list()
+    #[reuseids, resizetime, userefilling, determlimit]
+    data['inlet_object'] = [0, 0.5, 0, 0]
 
     # Faces objects
     data['faces'] = dict()
@@ -1533,6 +1535,38 @@ def dump_to_xml(data, save_name):
                 f.write('\t\t\t\t\t<damping value="{}" comment="Torsional damping [-]" />\n'.format(lp[7]))
                 f.write('\t\t\t\t</link_pointline>\n')
         f.write('\t\t\t</chrono>\n')
+
+    # Inlet/Outlet objects
+    if len(data['inlet_zone']) > 0:
+        f.write('\t\t\t<inout reuseids="{}" resizetime="{}">\n'.format(str(data['inlet_object'][0]), float(data['inlet_object'][1])))
+        f.write('\t\t\t\t<userefilling value="{}" comment="Use advanced refilling algorithm but slower. It is necessary when outflow becomes inflow (default=false)" />\n'.format(str(data['inlet_object'][2])))
+        f.write('\t\t\t\t<determlimit value="{}" comment="Use 1e-3 for first_order or 1e+3 for zeroth_order (default=1e+3)" />\n'.format(str(data['inlet_object'][3])))
+        for target_zone in data['inlet_zone']:
+            f.write('\t\t\t\t<inoutzone>\n')
+            f.write('\t\t\t\t\t<convertfluid value="{}" comment="Converts fluid in inlet/outlet area (default=true)" />\n'.format(str(target_zone[1])))
+            f.write('\t\t\t\t\t<layers value="{}" comment="Number of inlet/outlet particle layers" />\n'.format(float(target_zone[2])))
+            if target_zone[3][0] == "zone2d":
+                f.write('\t\t\t\t\t<zone2d comment="Input zone for 2-D simulations">\n')
+                f.write('\t\t\t\t\t\t<particles mkfluid="{}" direction="{}" />\n'.format(int(target_zone[3][1]), str(target_zone[3][2])))
+                f.write('\t\t\t\t\t</zone2d>\n')
+            else:
+                f.write('\t\t\t\t\t<zone3d comment="">\n')
+                f.write('\t\t\t\t\t</zone3d>\n')
+            f.write('\t\t\t\t\t<imposevelocity mode="{}" comment="Imposed velocity 0:fixed value, 1:variable value, 2:Extrapolated velocity, 3:Interpolated velocity (default=0)">\n'.format(int(target_zone[4][0])))
+            if target_zone[4][0] == 0:
+                f.write('\t\t\t\t\t\t<velocity v="{}" comment="Uniform velocity" units_comment="m/s" />\n'.format(float(target_zone[4][1])))
+            f.write('\t\t\t\t\t</imposevelocity>\n')
+            f.write('\t\t\t\t\t<imposerhop mode="{}" comment="Outlet rhop 0:Imposed fixed value, 1:Hydrostatic, 2:Extrapolated from ghost nodes (default=0)" />\n'.format(int(target_zone[5][0])))
+            f.write('\t\t\t\t\t<imposezsurf mode="{}" comment="Inlet Z-surface 0:Imposed fixed value, 1:Imposed variable value, 2:Calculated from fluid domain (default=0)">\n'.format(int(target_zone[6][0])))
+            if target_zone[6][0] == 0:
+                f.write('\t\t\t\t\t\t<zbottom value="{}" comment="Bottom level of water (used for Hydrostatic option)" units_comment="m" />\n'.format(float(target_zone[6][1])))
+                f.write('\t\t\t\t\t\t<zsurf value="{}" comment="Characteristic inlet Z-surface (used for Hydrostatic option)" units_comment="m" />\n'.format(float(target_zone[6][2])))
+            elif target_zone[6][0] == 2:
+                f.write('\t\t\t\t\t\t<zbottom value="{}" comment="Bottom level of water (used for Hydrostatic option)" units_comment="m" />\n'.format(float(target_zone[6][3])))
+                f.write('\t\t\t\t\t\t<zsurf value="{}" comment="Characteristic inlet Z-surface (used for Hydrostatic option)" units_comment="m" />\n'.format(float(target_zone[6][4])))
+            f.write('\t\t\t\t\t</imposezsurf>\n')
+            f.write('\t\t\t\t</inoutzone>\n')
+        f.write('\t\t\t</inout>\n')
 
     # A counter for special movements. Controls when and how to open/close tags
     written_movements_counter = 0

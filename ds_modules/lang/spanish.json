@@ -593,5 +593,7 @@
     "Total particles out: {}": "Total particles out: {}",
     "Import GEO": "Import GEO",
     "Import GEO options": "Import GEO options",
-    "GEO File: ": "GEO File: "
+    "GEO File: ": "GEO File: ",
+    "Error!": "Error!",
+    "bodies are necesary!": "bodies are necesary!"
 }
