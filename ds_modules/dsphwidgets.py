@@ -5893,13 +5893,15 @@ class ExecutionParametersDialog(QtGui.QDialog):
         #self.period_x_chk.setToolTip(utils.__(constants.PERIODX))
         self.period_x_inc_layout = QtGui.QHBoxLayout()
         self.period_x_inc_x_label = QtGui.QLabel("X Increment")
-        self.period_x_inc_x_input = QtGui.QLineEdit("0")
+        self.period_x_inc_x_input = FocusableLineEdit()
         self.period_x_inc_y_label = QtGui.QLabel("Y Increment")
-        self.period_x_inc_y_label.setToolTip(utils.__(constants.YINCEMENTX))
-        self.period_x_inc_y_input = QtGui.QLineEdit("0")
+        self.period_x_inc_y_input = FocusableLineEdit()
+        self.period_x_inc_y_input.setHelpText(utils.__(constants.HELP_YINCEMENTX))
+        self.period_x_inc_y_input.focus.connect(self.on_help_focus)
         self.period_x_inc_z_label = QtGui.QLabel("Z Increment")
-        self.period_x_inc_z_label.setToolTip(utils.__(constants.ZINCREMENTX))
-        self.period_x_inc_z_input = QtGui.QLineEdit("0")
+        self.period_x_inc_z_input = FocusableLineEdit()
+        self.period_x_inc_z_input.setHelpText(utils.__(constants.HELP_ZINCREMENTX))
+        self.period_x_inc_z_input.focus.connect(self.on_help_focus)
         self.period_x_inc_layout.addWidget(self.period_x_inc_x_label)
         self.period_x_inc_layout.addWidget(self.period_x_inc_x_input)
         self.period_x_inc_layout.addWidget(self.period_x_inc_y_label)
@@ -5927,12 +5929,16 @@ class ExecutionParametersDialog(QtGui.QDialog):
         self.period_y_inc_layout = QtGui.QHBoxLayout()
         self.period_y_inc_x_label = QtGui.QLabel("X Increment")
         self.period_y_inc_x_label.setToolTip(utils.__(constants.XINCREMENTY))
-        self.period_y_inc_x_input = QtGui.QLineEdit("0")
+        self.period_y_inc_x_input = FocusableLineEdit()
+        self.period_y_inc_x_input.setHelpText(utils.__(constants.HELP_XINCREMENTY))
+        self.period_y_inc_x_input.focus.connect(self.on_help_focus)
         self.period_y_inc_y_label = QtGui.QLabel("Y Increment")
-        self.period_y_inc_y_input = QtGui.QLineEdit("0")
+        self.period_y_inc_y_input = FocusableLineEdit()
         self.period_y_inc_z_label = QtGui.QLabel("Z Increment")
         self.period_y_inc_z_label.setToolTip(utils.__(constants.XINCREMENTY))
-        self.period_y_inc_z_input = QtGui.QLineEdit("0")
+        self.period_y_inc_z_input = FocusableLineEdit()
+        self.period_y_inc_z_input.setHelpText(utils.__(constants.HELP_ZINCREMENTY))
+        self.period_y_inc_z_input.focus.connect(self.on_help_focus)
         self.period_y_inc_layout.addWidget(self.period_y_inc_x_label)
         self.period_y_inc_layout.addWidget(self.period_y_inc_x_input)
         self.period_y_inc_layout.addWidget(self.period_y_inc_y_label)
@@ -5960,12 +5966,16 @@ class ExecutionParametersDialog(QtGui.QDialog):
         self.period_z_inc_layout = QtGui.QHBoxLayout()
         self.period_z_inc_x_label = QtGui.QLabel("X Increment")
         self.period_z_inc_x_label.setToolTip(utils.__(constants.XINCREMENTZ))
-        self.period_z_inc_x_input = QtGui.QLineEdit("0")
+        self.period_z_inc_x_input = FocusableLineEdit()
+        self.period_z_inc_x_input.setHelpText(utils.__(constants.HELP_XINCREMENTZ))
+        self.period_z_inc_x_input.focus.connect(self.on_help_focus)
         self.period_z_inc_y_label = QtGui.QLabel("Y Increment")
         self.period_z_inc_y_label.setToolTip(utils.__(constants.YINCEMENTZ))
-        self.period_z_inc_y_input = QtGui.QLineEdit("0")
+        self.period_z_inc_y_input = FocusableLineEdit()
+        self.period_z_inc_y_input.setHelpText(utils.__(constants.HELP_YINCEMENTZ))
+        self.period_z_inc_y_input.focus.connect(self.on_help_focus)
         self.period_z_inc_z_label = QtGui.QLabel("Z Increment")
-        self.period_z_inc_z_input = QtGui.QLineEdit("0")
+        self.period_z_inc_z_input = FocusableLineEdit()
         self.period_z_inc_layout.addWidget(self.period_z_inc_x_label)
         self.period_z_inc_layout.addWidget(self.period_z_inc_x_input)
         self.period_z_inc_layout.addWidget(self.period_z_inc_y_label)
@@ -6004,14 +6014,23 @@ class ExecutionParametersDialog(QtGui.QDialog):
         self.simdomain_posmaxz_layout = QtGui.QVBoxLayout()
         self.simdomain_posmin_label = QtGui.QLabel("Minimum position(x, y, z): ")
         self.simdomain_posminx_combobox = QtGui.QComboBox()
-        self.simdomain_posminx_combobox.insertItems(0, ['Default', 'Numeric value', 'Default - num', 'Default - %'])
-        self.simdomain_posminx_line_edit = QtGui.QLineEdit(str(self.data['posmin'][1]))
+        self.simdomain_posminx_combobox.insertItems(0, ['Default', 'Value', 'Default - value', 'Default - %'])
+        self.simdomain_posminx_line_edit = FocusableLineEdit()
+        self.simdomain_posminx_line_edit.setHelpText(utils.__(constants.HELP_POSMINX))
+        self.simdomain_posminx_line_edit.focus.connect(self.on_help_focus)
+        self.simdomain_posminx_line_edit.setText(str(self.data['posmin'][1]))
         self.simdomain_posminy_combobox = QtGui.QComboBox()
-        self.simdomain_posminy_combobox.insertItems(0, ['Default', 'Numeric value', 'Default - num', 'Default - %'])
-        self.simdomain_posminy_line_edit = QtGui.QLineEdit(str(self.data['posmin'][3]))
+        self.simdomain_posminy_combobox.insertItems(0, ['Default', 'Value', 'Default - value', 'Default - %'])
+        self.simdomain_posminy_line_edit = FocusableLineEdit()
+        self.simdomain_posminy_line_edit.setHelpText(utils.__(constants.HELP_POSMINY))
+        self.simdomain_posminy_line_edit.focus.connect(self.on_help_focus)
+        self.simdomain_posminy_line_edit.setText(str(self.data['posmin'][3]))
         self.simdomain_posminz_combobox = QtGui.QComboBox()
-        self.simdomain_posminz_combobox.insertItems(0, ['Default', 'Numeric value', 'Default - num', 'Default - %'])
-        self.simdomain_posminz_line_edit = QtGui.QLineEdit(str(self.data['posmin'][5]))
+        self.simdomain_posminz_combobox.insertItems(0, ['Default', 'Value', 'Default - value', 'Default - %'])
+        self.simdomain_posminz_line_edit = FocusableLineEdit()
+        self.simdomain_posminz_line_edit.setHelpText(utils.__(constants.HELP_POSMINZ))
+        self.simdomain_posminz_line_edit.focus.connect(self.on_help_focus)
+        self.simdomain_posminz_line_edit.setText(str(self.data['posmin'][5]))
         self.simdomain_posminx_layout.addWidget(self.simdomain_posminx_combobox)
         self.simdomain_posminx_layout.addWidget(self.simdomain_posminx_line_edit)
         self.simdomain_posminy_layout.addWidget(self.simdomain_posminy_combobox)
@@ -6024,14 +6043,23 @@ class ExecutionParametersDialog(QtGui.QDialog):
         self.simdomain_posmin_layout.addLayout(self.simdomain_posminz_layout)
         self.simdomain_posmax_label = QtGui.QLabel("Maximum position(x, y, z): ")
         self.simdomain_posmaxx_combobox = QtGui.QComboBox()
-        self.simdomain_posmaxx_combobox.insertItems(0, ['Default', 'Numeric value', 'Default + num', 'Default + %'])
-        self.simdomain_posmaxx_line_edit = QtGui.QLineEdit(str(self.data['posmax'][1]))
+        self.simdomain_posmaxx_combobox.insertItems(0, ['Default', 'Value', 'Default + value', 'Default + %'])
+        self.simdomain_posmaxx_line_edit = FocusableLineEdit()
+        self.simdomain_posmaxx_line_edit.setHelpText(utils.__(constants.HELP_POSMAXX))
+        self.simdomain_posmaxx_line_edit.focus.connect(self.on_help_focus)
+        self.simdomain_posmaxx_line_edit.setText(str(self.data['posmax'][1]))
         self.simdomain_posmaxy_combobox = QtGui.QComboBox()
-        self.simdomain_posmaxy_combobox.insertItems(0, ['Default', 'Numeric value', 'Default + num', 'Default + %'])
-        self.simdomain_posmaxy_line_edit = QtGui.QLineEdit(str(self.data['posmax'][3]))
+        self.simdomain_posmaxy_combobox.insertItems(0, ['Default', 'Value', 'Default + value', 'Default + %'])
+        self.simdomain_posmaxy_line_edit = FocusableLineEdit()
+        self.simdomain_posmaxy_line_edit.setHelpText(utils.__(constants.HELP_POSMAXY))
+        self.simdomain_posmaxy_line_edit.focus.connect(self.on_help_focus)
+        self.simdomain_posmaxy_line_edit.setText(str(self.data['posmax'][3]))
         self.simdomain_posmaxz_combobox = QtGui.QComboBox()
-        self.simdomain_posmaxz_combobox.insertItems(0, ['Default', 'Numeric value', 'Default + num', 'Default + %'])
-        self.simdomain_posmaxz_line_edit = QtGui.QLineEdit(str(self.data['posmax'][5]))
+        self.simdomain_posmaxz_combobox.insertItems(0, ['Default', 'Value', 'Default + value', 'Default + %'])
+        self.simdomain_posmaxz_line_edit = FocusableLineEdit()
+        self.simdomain_posmaxz_line_edit.setHelpText(utils.__(constants.HELP_POSMAXZ))
+        self.simdomain_posmaxz_line_edit.focus.connect(self.on_help_focus)
+        self.simdomain_posmaxz_line_edit.setText(str(self.data['posmax'][5]))
         self.simdomain_posmaxx_layout.addWidget(self.simdomain_posmaxx_combobox)
         self.simdomain_posmaxx_layout.addWidget(self.simdomain_posmaxx_line_edit)
         self.simdomain_posmaxy_layout.addWidget(self.simdomain_posmaxy_combobox)
@@ -7081,7 +7109,6 @@ class ChronoConfigDialog(QtGui.QDialog):
         self.data['link_hinge'].append([
             str(uid_temp), '', '', [0, 0, 0], [0, 0, 0], 0, 0])
         self.link_hinge_edit(str(uid_temp))
-        #self.refresh_link_hinge()
 
     def link_hinge_delete(self, link_hinge_id):
         """ Delete a link hinge element """
@@ -7106,7 +7133,6 @@ class ChronoConfigDialog(QtGui.QDialog):
         self.data['link_linearspring'].append([
             str(uid_temp), '', '', [0, 0, 0], [0, 0, 0], 0, 0, 0, [0, 0, 0]])
         self.link_linearspring_edit(str(uid_temp))
-        #self.refresh_link_linearspring()
 
     def link_linearspring_delete(self, link_linearspring_id):
         """ Delete a link linearspring element """
@@ -7130,7 +7156,6 @@ class ChronoConfigDialog(QtGui.QDialog):
         self.data['link_spheric'].append([
             str(uid_temp), '', '', [0, 0, 0], 0, 0])
         self.link_spheric_edit(str(uid_temp))
-        #self.refresh_link_spheric()
 
     def link_spheric_delete(self, link_spheric_id):
         """ Delete a link spheric element """
@@ -7155,7 +7180,6 @@ class ChronoConfigDialog(QtGui.QDialog):
         self.data['link_pointline'].append([
             str(uid_temp), '', [0, 0, 0], [0, 0, 0], [0, 0, 0], [0, 0, 0], 0, 0])
         self.link_pointline_edit(str(uid_temp))
-        #self.refresh_link_pointline()
 
     def link_pointline_delete(self, link_pointline_id):
         """ Delete a link pointline element """
@@ -7929,25 +7953,13 @@ class InletConfigDialog(QtGui.QDialog):
         # Creates layout for content first options
         self.option_layout = QtGui.QHBoxLayout()
 
-        # Creates a control option
-        #self.use_layout = QtGui.QHBoxLayout()
-        #self.use_option = QtGui.QCheckBox("Use")
-
-        #if self.data['inlet_control']:
-        #    self.use_option.setCheckState(QtCore.Qt.Checked)
-        #else:
-        #    self.use_option.setCheckState(QtCore.Qt.Unchecked)
-
-        #self.use_layout.addWidget(self.use_option)
-        #self.use_layout.addStretch(1)
-
         # Creates reuseids option
         self.reuseids_layout = QtGui.QHBoxLayout()
         self.reuseids_option = QtGui.QLabel(__("Reuseids: "))
         self.reuseids_combobox = QtGui.QComboBox()
         self.reuseids_combobox.insertItems(0, [__("False"), __("True")])
 
-        if self.data['inlet_object'][0] == "False":
+        if str(self.data['inlet_object'][0]) == "False":
             self.reuseids_combobox.setCurrentIndex(0)
         else:
             self.reuseids_combobox.setCurrentIndex(1)
@@ -7971,7 +7983,7 @@ class InletConfigDialog(QtGui.QDialog):
         self.refilling_combobox = QtGui.QComboBox()
         self.refilling_combobox.insertItems(0, [__("False"), __("True")])
 
-        if self.data['inlet_object'][0] == "False":
+        if str(self.data['inlet_object'][2]) == "False":
             self.refilling_combobox.setCurrentIndex(0)
         else:
             self.refilling_combobox.setCurrentIndex(1)
@@ -7986,7 +7998,7 @@ class InletConfigDialog(QtGui.QDialog):
         self.determlimit_combobox = QtGui.QComboBox()
         self.determlimit_combobox.insertItems(0, [__("1e+3"), __("1e-3")])
 
-        if self.data['inlet_object'][0] == "1e+3":
+        if str(self.data['inlet_object'][3]) == "1e+3":
             self.determlimit_combobox.setCurrentIndex(0)
         else:
             self.determlimit_combobox.setCurrentIndex(1)
@@ -8036,7 +8048,6 @@ class InletConfigDialog(QtGui.QDialog):
         # Adds options to main
         self.main_layout.addLayout(self.option_layout)
         self.main_layout.addWidget(self.main_zones)
-        #self.main_layout.addLayout(self.use_layout)
         self.main_layout.addStretch(1)
 
         # Adds scroll area
@@ -8061,10 +8072,10 @@ class InletConfigDialog(QtGui.QDialog):
         self.exec_()
 
     def on_add_zone(self):
-        """  """
+        """ Adds Inlet/Outlet zone """
         uid_temp = uuid.uuid4()
         self.data['inlet_zone'].append([
-            str(uid_temp), 0, 0, [0, 0, 0], [0, 0], [0, 0], [0, 0, 0, 0, 0]])
+            str(uid_temp), 0, 0, [0, 0, 0], [0, 0], [0, 0], [0, 0, 0]])
         self.zone_edit(str(uid_temp))
 
     def refresh_zones(self):
@@ -8087,7 +8098,7 @@ class InletConfigDialog(QtGui.QDialog):
             to_add_deletebutton = QtGui.QPushButton("Delete")
             to_add_layout.addWidget(to_add_editbutton)
             to_add_layout.addWidget(to_add_deletebutton)
-            to_add_editbutton.clicked.connect(lambda io=inletObject: self.zone_edit(io))
+            to_add_editbutton.clicked.connect(lambda io=inletObject[0]: self.zone_edit(io))
             to_add_deletebutton.clicked.connect(lambda io=inletObject: self.zone_delete(io))
             self.zones_layout_list.addLayout(to_add_layout2)
             self.zones_layout_list.addLayout(to_add_layout)
@@ -8098,7 +8109,7 @@ class InletConfigDialog(QtGui.QDialog):
         self.refresh_zones()
 
     def zone_edit(self, io):
-        """"""
+        """ Calls a window for edit zones """
         InletZoneEdit(self.data, io)
         self.refresh_zones()
 
@@ -8115,13 +8126,11 @@ class InletConfigDialog(QtGui.QDialog):
 
 
 class InletZoneEdit(QtGui.QDialog):
-    """  """
+    """ Defines Inlet/Outlet window dialog """
     def __init__(self, data, inlet_object_id):
         super(InletZoneEdit, self).__init__()
-
         self.data = data
         self.inlet_object_id = inlet_object_id
-
         # Creates a dialog
         self.setWindowTitle("Inlet/Outlet object edit")
         self.main_layout = QtGui.QVBoxLayout()
@@ -8220,6 +8229,7 @@ class InletZoneEdit(QtGui.QDialog):
                                                  [__("Fixed"), __("Variable"), __("Extrapolated"), __("Interpolated")])
         self.imposevelocity_velocity_label = QtGui.QLabel("Value: ")
         self.imposevelocity_velocity_line_edit = QtGui.QLineEdit(str(target_inlet_zone[4][1]))
+        self.imposevelocity_velocity_units = QtGui.QLabel(__("m/s"))
 
         self.imposevelocity_combobox.currentIndexChanged.connect(self.on_imposevelocity_change)
 
@@ -8237,6 +8247,7 @@ class InletZoneEdit(QtGui.QDialog):
         self.imposevelocity_velocity_layout.addStretch(1)
         self.imposevelocity_value_layout.addWidget(self.imposevelocity_velocity_label)
         self.imposevelocity_value_layout.addWidget(self.imposevelocity_velocity_line_edit)
+        self.imposevelocity_value_layout.addWidget(self.imposevelocity_velocity_units)
 
         self.imposevelocity_options_layout.addLayout(self.imposevelocity_velocity_layout)
         self.imposevelocity_options_layout.addLayout(self.imposevelocity_value_layout)
@@ -8277,29 +8288,19 @@ class InletZoneEdit(QtGui.QDialog):
         self.imposezsurf_options_layout = QtGui.QVBoxLayout()
         self.imposezsurf_combobox_layout = QtGui.QHBoxLayout()
         self.imposezsurf_fixed_layout = QtGui.QHBoxLayout()
-        self.imposezsurf_automatic_layout = QtGui.QHBoxLayout()
         self.imposezsurf_combobox_label = QtGui.QLabel("Elevation: ")
         self.imposezsurf_combobox = QtGui.QComboBox()
         self.imposezsurf_combobox.insertItems(0, [__("Fixed"), __("Variable"), __("Automatic")])
 
-        self.imposezsurf_fixed_zbottom_label = QtGui.QLabel("Fixed Zbottom: ")
+        self.imposezsurf_fixed_zbottom_label = QtGui.QLabel("Zbottom: ")
         self.imposezsurf_fixed_zbottom = QtGui.QLineEdit(str(target_inlet_zone[6][1]))
         self.imposezsurf_fixed_zbottom_units = QtGui.QLabel("metres")
-        self.imposezsurf_fixed_zsurf_label = QtGui.QLabel("Fixed Zsurf: ")
+        self.imposezsurf_fixed_zsurf_label = QtGui.QLabel("Zsurf: ")
         self.imposezsurf_fixed_zsurf = QtGui.QLineEdit(str(target_inlet_zone[6][2]))
         self.imposezsurf_fixed_zsurf_units = QtGui.QLabel("metres")
 
-        self.imposezsurf_automatic_zbottom_label = QtGui.QLabel("Autom. Zbottom: ")
-        self.imposezsurf_automatic_zbottom = QtGui.QLineEdit(str(target_inlet_zone[6][3]))
-        self.imposezsurf_automatic_zbottom_units = QtGui.QLabel("metres")
-        self.imposezsurf_automatic_zsurf_label = QtGui.QLabel("Autom. Zsurf: ")
-        self.imposezsurf_automatic_zsurf = QtGui.QLineEdit(str(target_inlet_zone[6][4]))
-        self.imposezsurf_automatic_zsurf_units = QtGui.QLabel("metres")
-
         self.imposezsurf_fixed_zbottom.setEnabled(True)
         self.imposezsurf_fixed_zsurf.setEnabled(True)
-        self.imposezsurf_automatic_zbottom.setEnabled(False)
-        self.imposezsurf_automatic_zsurf.setEnabled(False)
 
         self.imposezsurf_combobox.currentIndexChanged.connect(self.on_imposezsurf_change)
 
@@ -8320,17 +8321,9 @@ class InletZoneEdit(QtGui.QDialog):
         self.imposezsurf_fixed_layout.addWidget(self.imposezsurf_fixed_zsurf_label)
         self.imposezsurf_fixed_layout.addWidget(self.imposezsurf_fixed_zsurf)
         self.imposezsurf_fixed_layout.addWidget(self.imposezsurf_fixed_zsurf_units)
-        self.imposezsurf_automatic_layout.addWidget(self.imposezsurf_automatic_zbottom_label)
-        self.imposezsurf_automatic_layout.addWidget(self.imposezsurf_automatic_zbottom)
-        self.imposezsurf_automatic_layout.addWidget(self.imposezsurf_automatic_zbottom_units)
-        self.imposezsurf_automatic_layout.addStretch(1)
-        self.imposezsurf_automatic_layout.addWidget(self.imposezsurf_automatic_zsurf_label)
-        self.imposezsurf_automatic_layout.addWidget(self.imposezsurf_automatic_zsurf)
-        self.imposezsurf_automatic_layout.addWidget(self.imposezsurf_automatic_zsurf_units)
 
         self.imposezsurf_options_layout.addLayout(self.imposezsurf_combobox_layout)
         self.imposezsurf_options_layout.addLayout(self.imposezsurf_fixed_layout)
-        self.imposezsurf_options_layout.addLayout(self.imposezsurf_automatic_layout)
 
         self.imposezsurf_layout.setLayout(self.imposezsurf_options_layout)
 
@@ -8359,37 +8352,30 @@ class InletZoneEdit(QtGui.QDialog):
         self.exec_()
 
     def on_imposerhop_change(self):
+        """ Checks for imposerhop changes """
         if self.imposerhop_combobox.currentIndex() == 0:
             self.imposerhop_value_line_edit.setEnabled(True)
         else:
             self.imposerhop_value_line_edit.setEnabled(False)
 
     def on_imposevelocity_change(self):
+        """ Checks for imposevelocity changes """
         if self.imposevelocity_combobox.currentIndex() == 0:
             self.imposevelocity_velocity_line_edit.setEnabled(True)
         else:
             self.imposevelocity_velocity_line_edit.setEnabled(False)
 
     def on_imposezsurf_change(self):
-
-        if self.imposezsurf_combobox.currentIndex() == 0:
+        """ Checks for imposezsurf changes """
+        if self.imposezsurf_combobox.currentIndex() == 0 or self.imposezsurf_combobox.currentIndex() == 2:
             self.imposezsurf_fixed_zbottom.setEnabled(True)
             self.imposezsurf_fixed_zsurf.setEnabled(True)
-            self.imposezsurf_automatic_zbottom.setEnabled(False)
-            self.imposezsurf_automatic_zsurf.setEnabled(False)
-        elif self.imposezsurf_combobox.currentIndex() == 2:
-            self.imposezsurf_automatic_zbottom.setEnabled(True)
-            self.imposezsurf_automatic_zsurf.setEnabled(True)
-            self.imposezsurf_fixed_zbottom.setEnabled(False)
-            self.imposezsurf_fixed_zsurf.setEnabled(False)
         else:
             self.imposezsurf_fixed_zbottom.setEnabled(False)
             self.imposezsurf_fixed_zsurf.setEnabled(False)
-            self.imposezsurf_automatic_zbottom.setEnabled(False)
-            self.imposezsurf_automatic_zsurf.setEnabled(False)
 
     def on_zone_check(self):
-        """  """
+        """ Checks for 2D or 3D options """
         if self.zone2d_option.isChecked() or self.zone3d_option.isChecked():
             self.zone2d3d_mk_line_edit.setEnabled(True)
             self.zone2d3d_combobox.setEnabled(True)
@@ -8442,9 +8428,7 @@ class InletZoneEdit(QtGui.QDialog):
                                                      float(self.imposerhop_value_line_edit.text())]
                 self.data['inlet_zone'][count][6] = [int(self.imposezsurf_combobox.currentIndex()),
                                                      float(self.imposezsurf_fixed_zbottom.text()),
-                                                     float(self.imposezsurf_fixed_zsurf.text()),
-                                                     float(self.imposezsurf_automatic_zbottom.text()),
-                                                     float(self.imposezsurf_automatic_zsurf.text())]
+                                                     float(self.imposezsurf_fixed_zsurf.text())]
         InletZoneEdit.accept(self)
 
 
@@ -9055,11 +9039,11 @@ class InitialsDialog(QtGui.QDialog):
         self.has_initials_layout.addStretch(1)
         self.has_initials_layout.addWidget(self.has_initials_targetlabel)
 
-        self.initials_props_group = QtGui.QGroupBox(__("Initials properties"))
+        self.initials_props_group = QtGui.QGroupBox(__("Initial properties"))
         self.initials_props_layout = QtGui.QVBoxLayout()
 
         self.initials_vector_layout = QtGui.QHBoxLayout()
-        self.initials_vector_label = QtGui.QLabel(__("Movement vector: "))
+        self.initials_vector_label = QtGui.QLabel(__("Velocity (m/s): "))
         self.initials_vector_label.setToolTip(__("Sets the mk group movement vector."))
         self.initials_vector_label_x = QtGui.QLabel("X")
         self.initials_vector_input_x = QtGui.QLineEdit()
@@ -9670,7 +9654,7 @@ class MovementDialog(QtGui.QDialog):
 
 
 class FacesDialog(QtGui.QDialog):
-    """  """
+    """ Defines a window with faces properties. """
     def __init__(self, data):
         super(FacesDialog, self).__init__()
 
@@ -9693,6 +9677,7 @@ class FacesDialog(QtGui.QDialog):
         self.faces_layout = QtGui.QVBoxLayout()
 
         self.all_faces = QtGui.QCheckBox(__("All faces"))
+        self.all_faces.setCheckState(QtCore.Qt.Checked)
         self.all_faces.toggled.connect(self.on_faces_checkbox)
 
         self.front_face = QtGui.QCheckBox(__("Front face"))
@@ -9745,7 +9730,7 @@ class FacesDialog(QtGui.QDialog):
                 else:
                     self.right_face.setCheckState(QtCore.Qt.Unchecked)
         except:
-            pass
+            self.all_faces.setCheckState(QtCore.Qt.Checked)
 
         self.faces_layout.addWidget(self.all_faces)
         self.faces_layout.addWidget(self.front_face)

@@ -898,8 +898,19 @@ def on_add_stl():
     [geo_objname_layout.addWidget(x) for x in [geo_objname_label, geo_objname_text]]
     # End object name
 
+    # Autofill
+    geo_autofil_layout = QtGui.QHBoxLayout()
+    geo_autofil_chck = QtGui.QCheckBox("Autofill")
+    geo_autofil_layout.addWidget(geo_autofil_chck)
+
+    if geo_autofil_chck.isChecked():
+        geo_autofil_chck.setCheckState(QtCore.Qt.Checked)
+    else:
+        geo_autofil_chck.setCheckState(QtCore.Qt.Unchecked)
+    # End autofill
+
     # Add component layouts to group layout
-    [geo_group_layout.addLayout(x) for x in [geo_file_layout, geo_scaling_layout, geo_objname_layout]]
+    [geo_group_layout.addLayout(x) for x in [geo_file_layout, geo_scaling_layout, geo_objname_layout, geo_autofil_layout]]
     geo_group_layout.addStretch(1)
     geo_group.setLayout(geo_group_layout)
 
@@ -934,6 +945,12 @@ def on_add_stl():
                 scale_y=float(geo_scaling_y_e.text()),
                 scale_z=float(geo_scaling_z_e.text()),
                 name=str(geo_objname_text.text()))
+
+            #if geo_autofil_chck.isChecked():
+            #    data['geo_autofil'] = True
+            #else:
+            #    data['geo_autofil'] = False
+
             geo_dialog.accept()
         except ValueError:
             utils.error(__("There was an error. Are you sure you wrote correct float values in the scaling factor?"))

@@ -595,5 +595,12 @@
     "Import GEO options": "Import GEO options",
     "GEO File: ": "GEO File: ",
     "Error!": "Error!",
-    "bodies are necesary!": "bodies are necesary!"
+    "bodies are necesary!": "bodies are necesary!",
+    "This will apply the initials properties to all objects with mkfluid = ": "This will apply the initials properties to all objects with mkfluid = ",
+    "Velocity (m/s): ": "Velocity (m/s): ",
+    "2": "2",
+    "3": "3",
+    "1": "1",
+    "Initial properties": "Initial properties",
+    "m/s": "m/s"
 }
