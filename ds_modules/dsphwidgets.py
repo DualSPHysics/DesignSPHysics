@@ -7959,10 +7959,13 @@ class InletConfigDialog(QtGui.QDialog):
         self.reuseids_combobox = QtGui.QComboBox()
         self.reuseids_combobox.insertItems(0, [__("False"), __("True")])
 
-        if str(self.data['inlet_object'][0]) == "False":
+        try:
+            if str(self.data['inlet_object'][0]) == "False":
+                self.reuseids_combobox.setCurrentIndex(0)
+            else:
+                self.reuseids_combobox.setCurrentIndex(1)
+        except:
             self.reuseids_combobox.setCurrentIndex(0)
-        else:
-            self.reuseids_combobox.setCurrentIndex(1)
 
         self.reuseids_layout.addWidget(self.reuseids_option)
         self.reuseids_layout.addWidget(self.reuseids_combobox)
@@ -7971,7 +7974,10 @@ class InletConfigDialog(QtGui.QDialog):
         # Creates resizetime option
         self.resizetime_layout = QtGui.QHBoxLayout()
         self.resizetime_option = QtGui.QLabel(__("Resizetime: "))
-        self.resizetime_line_edit = QtGui.QLineEdit(str(self.data['inlet_object'][1]))
+        try:
+            self.resizetime_line_edit = QtGui.QLineEdit(str(self.data['inlet_object'][1]))
+        except:
+            self.resizetime_line_edit = QtGui.QLineEdit("0.5")
 
         self.resizetime_layout.addWidget(self.resizetime_option)
         self.resizetime_layout.addWidget(self.resizetime_line_edit)
@@ -7983,10 +7989,13 @@ class InletConfigDialog(QtGui.QDialog):
         self.refilling_combobox = QtGui.QComboBox()
         self.refilling_combobox.insertItems(0, [__("False"), __("True")])
 
-        if str(self.data['inlet_object'][2]) == "False":
+        try:
+            if str(self.data['inlet_object'][2]) == "False":
+                self.refilling_combobox.setCurrentIndex(0)
+            else:
+                self.refilling_combobox.setCurrentIndex(1)
+        except:
             self.refilling_combobox.setCurrentIndex(0)
-        else:
-            self.refilling_combobox.setCurrentIndex(1)
 
         self.refilling_layout.addWidget(self.refilling_option)
         self.refilling_layout.addWidget(self.refilling_combobox)
@@ -7998,10 +8007,13 @@ class InletConfigDialog(QtGui.QDialog):
         self.determlimit_combobox = QtGui.QComboBox()
         self.determlimit_combobox.insertItems(0, [__("1e+3"), __("1e-3")])
 
-        if str(self.data['inlet_object'][3]) == "1e+3":
+        try:
+            if str(self.data['inlet_object'][3]) == "1e+3":
+                self.determlimit_combobox.setCurrentIndex(0)
+            else:
+                self.determlimit_combobox.setCurrentIndex(1)
+        except:
             self.determlimit_combobox.setCurrentIndex(0)
-        else:
-            self.determlimit_combobox.setCurrentIndex(1)
 
         self.determlimit_layout.addWidget(self.determlimit_option)
         self.determlimit_layout.addWidget(self.determlimit_combobox)
@@ -8118,6 +8130,10 @@ class InletConfigDialog(QtGui.QDialog):
 
     def on_ok(self):
         """ Save data """
+
+        if len(self.data['inlet_object']) <= 0:
+            self.data['inlet_object'] = [0, 0.5, 0, 0]
+
         self.data['inlet_object'][0] = self.reuseids_combobox.currentText()
         self.data['inlet_object'][1] = self.resizetime_line_edit.text()
         self.data['inlet_object'][2] = self.refilling_combobox.currentText()
@@ -8413,7 +8429,7 @@ class InletZoneEdit(QtGui.QDialog):
             if inlet_zone[0] == self.inlet_object_id:
                 #[id, convertfluid, layers, [zone2 / 3D, mk, direction], [velocity, value], [density, value],[elevation, zbottom, zsurf]]
                 self.data['inlet_zone'][count][1] = str(self.convertfluid_combobox.currentText())
-                self.data['inlet_zone'][count][2] = float(self.layers_line_edit.text())
+                self.data['inlet_zone'][count][2] = int(self.layers_line_edit.text())
                 if self.zone2d_option.isChecked():
                     self.data['inlet_zone'][count][3] = ["zone2d",
                                                          int(self.zone2d3d_mk_line_edit.text()),

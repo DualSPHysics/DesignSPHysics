@@ -1547,7 +1547,7 @@ def dump_to_xml(data, save_name):
         for target_zone in data['inlet_zone']:
             f.write('\t\t\t\t<inoutzone>\n')
             f.write('\t\t\t\t\t<convertfluid value="{}" comment="Converts fluid in inlet/outlet area (default=true)" />\n'.format(str(target_zone[1]).lower()))
-            f.write('\t\t\t\t\t<layers value="{}" comment="Number of inlet/outlet particle layers" />\n'.format(float(target_zone[2])))
+            f.write('\t\t\t\t\t<layers value="{}" comment="Number of inlet/outlet particle layers" />\n'.format(int(target_zone[2])))
             if target_zone[3][0] == "zone2d":
                 f.write('\t\t\t\t\t<zone2d comment="Input zone for 2-D simulations">\n')
                 f.write('\t\t\t\t\t\t<particles mkfluid="{}" direction="{}" />\n'.format(int(target_zone[3][1]), str(target_zone[3][2]).lower()))

@@ -2,25 +2,45 @@
 <project version="4">
   <component name="BookmarkManager">
     <bookmark url="file://$PROJECT_DIR$/ds_modules/dsphwidgets.py" line="7273" />
-    <bookmark url="file://$PROJECT_DIR$/ds_modules/dsphwidgets.py" line="9478" mnemonic="4" />
-    <bookmark url="file://$PROJECT_DIR$/ds_modules/dsphwidgets.py" line="9516" mnemonic="5" />
-    <bookmark url="file://$PROJECT_DIR$/ds_modules/dsphwidgets.py" line="9545" mnemonic="6" />
-    <bookmark url="file://$PROJECT_DIR$/ds_modules/dsphwidgets.py" line="9302" mnemonic="9" />
+    <bookmark url="file://$PROJECT_DIR$/ds_modules/dsphwidgets.py" line="9494" mnemonic="4" />
+    <bookmark url="file://$PROJECT_DIR$/ds_modules/dsphwidgets.py" line="9532" mnemonic="5" />
+    <bookmark url="file://$PROJECT_DIR$/ds_modules/dsphwidgets.py" line="9561" mnemonic="6" />
+    <bookmark url="file://$PROJECT_DIR$/ds_modules/dsphwidgets.py" line="9318" mnemonic="9" />
     <bookmark url="file://$PROJECT_DIR$/DesignSPHysics.py" line="346" mnemonic="8" />
     <bookmark url="file://$PROJECT_DIR$/DesignSPHysics.py" line="356" />
-    <bookmark url="file://$PROJECT_DIR$/ds_modules/dsphwidgets.py" line="8146" />
+    <bookmark url="file://$PROJECT_DIR$/ds_modules/dsphwidgets.py" line="8162" />
     <bookmark url="file://$PROJECT_DIR$/DesignSPHysics.py" line="903" mnemonic="1" />
     <bookmark url="file://$PROJECT_DIR$/DesignSPHysics.py" line="941" mnemonic="2" />
     <bookmark url="file://$PROJECT_DIR$/ds_modules/utils.py" line="2260" mnemonic="3" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="22d76f4b-310a-4afb-8788-a472c77b2c87" name="Default" comment="Added Inlet/Outlet option (not finished)">
+    <list default="true" id="22d76f4b-310a-4afb-8788-a472c77b2c87" name="Default" comment="Fixed issues in Inlet/Outlet option&#10;&#10;Adds comments.&#10;Cosmetic changes.">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/DesignSPHysics.py" beforeDir="false" afterPath="$PROJECT_DIR$/DesignSPHysics.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/ds_modules/constants.py" beforeDir="false" afterPath="$PROJECT_DIR$/ds_modules/constants.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/ds_modules/dsphwidgets.py" beforeDir="false" afterPath="$PROJECT_DIR$/ds_modules/dsphwidgets.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/ds_modules/lang/spanish.json" beforeDir="false" afterPath="$PROJECT_DIR$/ds_modules/lang/spanish.json" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/ds_modules/utils.py" beforeDir="false" afterPath="$PROJECT_DIR$/ds_modules/utils.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/dualsphysics/bin/BoundaryVTK4_linux64" beforeDir="false" afterPath="$PROJECT_DIR$/dualsphysics/bin/BoundaryVTK4_linux64" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/dualsphysics/bin/BoundaryVTK4_win64.exe" beforeDir="false" afterPath="$PROJECT_DIR$/dualsphysics/bin/BoundaryVTK4_win64.exe" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/dualsphysics/bin/ComputeForces4_linux64" beforeDir="false" afterPath="$PROJECT_DIR$/dualsphysics/bin/ComputeForces4_linux64" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/dualsphysics/bin/ComputeForces4_win64.exe" beforeDir="false" afterPath="$PROJECT_DIR$/dualsphysics/bin/ComputeForces4_win64.exe" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/dualsphysics/bin/DualSPHysics4.4CPU_linux64" beforeDir="false" afterPath="$PROJECT_DIR$/dualsphysics/bin/DualSPHysics4.4CPU_linux64" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/dualsphysics/bin/DualSPHysics4.4_linux64" beforeDir="false" afterPath="$PROJECT_DIR$/dualsphysics/bin/DualSPHysics4.4_linux64" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/dualsphysics/bin/DualSPHysics4.4_win64.exe" beforeDir="false" afterPath="$PROJECT_DIR$/dualsphysics/bin/DualSPHysics4.4_win64.exe" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/dualsphysics/bin/FloatingInfo4_linux64" beforeDir="false" afterPath="$PROJECT_DIR$/dualsphysics/bin/FloatingInfo4_linux64" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/dualsphysics/bin/FloatingInfo4_win64.exe" beforeDir="false" afterPath="$PROJECT_DIR$/dualsphysics/bin/FloatingInfo4_win64.exe" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/dualsphysics/bin/FlowTool4_linux64" beforeDir="false" afterPath="$PROJECT_DIR$/dualsphysics/bin/FlowTool4_linux64" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/dualsphysics/bin/FlowTool4_win64.exe" beforeDir="false" afterPath="$PROJECT_DIR$/dualsphysics/bin/FlowTool4_win64.exe" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/dualsphysics/bin/GenCase4_MkWord_linux64" beforeDir="false" afterPath="$PROJECT_DIR$/dualsphysics/bin/GenCase4_MkWord_linux64" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/dualsphysics/bin/GenCase4_MkWord_win64.exe" beforeDir="false" afterPath="$PROJECT_DIR$/dualsphysics/bin/GenCase4_MkWord_win64.exe" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/dualsphysics/bin/GenCase4_linux64" beforeDir="false" afterPath="$PROJECT_DIR$/dualsphysics/bin/GenCase4_linux64" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/dualsphysics/bin/GenCase4_win64.exe" beforeDir="false" afterPath="$PROJECT_DIR$/dualsphysics/bin/GenCase4_win64.exe" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/dualsphysics/bin/IsoSurface4_linux64" beforeDir="false" afterPath="$PROJECT_DIR$/dualsphysics/bin/IsoSurface4_linux64" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/dualsphysics/bin/IsoSurface4_win64.exe" beforeDir="false" afterPath="$PROJECT_DIR$/dualsphysics/bin/IsoSurface4_win64.exe" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/dualsphysics/bin/MeasureTool4_linux64" beforeDir="false" afterPath="$PROJECT_DIR$/dualsphysics/bin/MeasureTool4_linux64" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/dualsphysics/bin/MeasureTool4_win64.exe" beforeDir="false" afterPath="$PROJECT_DIR$/dualsphysics/bin/MeasureTool4_win64.exe" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/dualsphysics/bin/PartVTK4_linux64" beforeDir="false" afterPath="$PROJECT_DIR$/dualsphysics/bin/PartVTK4_linux64" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/dualsphysics/bin/PartVTK4_win64.exe" beforeDir="false" afterPath="$PROJECT_DIR$/dualsphysics/bin/PartVTK4_win64.exe" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/dualsphysics/bin/PartVTKOut4_linux64" beforeDir="false" afterPath="$PROJECT_DIR$/dualsphysics/bin/PartVTKOut4_linux64" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/dualsphysics/bin/PartVTKOut4_win64.exe" beforeDir="false" afterPath="$PROJECT_DIR$/dualsphysics/bin/PartVTKOut4_win64.exe" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
@@ -54,11 +74,11 @@
   </component>
   <component name="FileEditorManager">
     <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
-      <file pinned="false" current-in-tab="true">
+      <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/DesignSPHysics.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="725">
-              <caret line="923" column="45" lean-forward="true" selection-start-line="923" selection-start-column="45" selection-end-line="923" selection-end-column="45" />
+            <state relative-caret-position="399">
+              <caret line="1513" column="21" selection-start-line="1513" selection-start-column="4" selection-end-line="1513" selection-end-column="21" />
               <folding>
                 <element signature="e#286#300#0" expanded="true" />
               </folding>
@@ -66,11 +86,11 @@
           </provider>
         </entry>
       </file>
-      <file pinned="false" current-in-tab="false">
+      <file pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/ds_modules/utils.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="586">
-              <caret line="1566" column="42" selection-start-line="1566" selection-start-column="42" selection-end-line="1566" selection-end-column="42" />
+            <state relative-caret-position="365">
+              <caret line="1549" column="115" selection-start-line="1549" selection-start-column="115" selection-end-line="1549" selection-end-column="115" />
               <folding>
                 <element signature="e#253#267#0" expanded="true" />
               </folding>
@@ -81,7 +101,7 @@
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/ds_modules/constants.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="1445">
+            <state relative-caret-position="642">
               <caret line="85" column="94" selection-start-line="85" selection-start-column="94" selection-end-line="85" selection-end-column="94" />
             </state>
           </provider>
@@ -111,22 +131,15 @@
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/ds_modules/dsphwidgets.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="-966">
-              <caret line="7182" selection-start-line="7182" selection-end-line="7182" />
+            <state relative-caret-position="136">
+              <caret line="8431" column="55" selection-start-line="8431" selection-start-column="55" selection-end-line="8431" selection-end-column="55" />
               <folding>
                 <element signature="e#273#287#0" expanded="true" />
                 <element signature="e#247303#267554#0" />
-                <element signature="e#353811#361428#0" />
-                <element signature="e#361478#371296#0" />
-                <element signature="e#371341#377943#0" />
-                <element signature="e#377990#388238#0" />
-                <element signature="e#388285#395889#0" />
-                <element signature="e#395932#413360#0" />
-                <element signature="e#413399#416228#0" />
-                <element signature="e#416274#445302#0" />
-                <element signature="e#445346#450772#0" />
-                <element signature="e#450816#482223#0" />
-                <element signature="e#482264#489017#0" />
+                <element signature="e#353658#361275#0" />
+                <element signature="e#361325#371143#0" />
+                <element signature="e#371188#377790#0" />
+                <element signature="e#377837#388085#0" />
               </folding>
             </state>
           </provider>
@@ -152,7 +165,6 @@
   </component>
   <component name="FindInProjectRecents">
     <findStrings>
-      <find>on_sa</find>
       <find>origina</find>
       <find>link_pointline</find>
       <find>chron</find>
@@ -174,14 +186,14 @@
       <find>.lower()</find>
       <find>initials</find>
       <find>execution para</find>
-      <find>run</find>
       <find>import geo</find>
       <find>casecontrols_bt_addgeo</find>
-      <find>inlet</find>
       <find>isch</find>
       <find>drawfilestl</find>
-      <find>geo_objname_layout</find>
       <find>unche</find>
+      <find>geo_objname_layout</find>
+      <find>inlet</find>
+      <find>run</find>
     </findStrings>
     <replaceStrings>
       <replace>self.time_label</replace>
@@ -292,6 +304,7 @@
       <foldersAlwaysOnTop value="true" />
     </navigator>
     <panes>
+      <pane id="Scope" />
       <pane id="ProjectPane">
         <subPane>
           <expand>
@@ -313,7 +326,6 @@
           <select />
         </subPane>
       </pane>
-      <pane id="Scope" />
     </panes>
   </component>
   <component name="PropertiesComponent">
@@ -563,14 +575,8 @@
       <workItem from="1561102115169" duration="20786000" />
       <workItem from="1561385249638" duration="5646000" />
       <workItem from="1561471786409" duration="10044000" />
-      <workItem from="1561558552041" duration="8786000" />
-    </task>
-    <task id="LOCAL-00057" summary="Now when DesignSPHysics autofills the executable paths, it gets saved&#10;to the disk">
-      <created>1528800664142</created>
-      <option name="number" value="00057" />
-      <option name="presentableId" value="LOCAL-00057" />
-      <option name="project" value="LOCAL" />
-      <updated>1528800664143</updated>
+      <workItem from="1561558552041" duration="9487000" />
+      <workItem from="1561620071918" duration="4673000" />
     </task>
     <task id="LOCAL-00058" summary="Now linear and rotational motions from file uses relative paths.">
       <created>1528880398423</created>
@@ -908,11 +914,18 @@
       <option name="project" value="LOCAL" />
       <updated>1561115747146</updated>
     </task>
-    <option name="localTasksCounter" value="106" />
+    <task id="LOCAL-00106" summary="Fixed issues in Inlet/Outlet option&#10;&#10;Adds comments.&#10;Cosmetic changes.">
+      <created>1561568064561</created>
+      <option name="number" value="00106" />
+      <option name="presentableId" value="LOCAL-00106" />
+      <option name="project" value="LOCAL" />
+      <updated>1561568064561</updated>
+    </task>
+    <option name="localTasksCounter" value="107" />
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="190383000" />
+    <option name="totallyTimeSpent" value="195757000" />
   </component>
   <component name="TodoView" selected-index="4">
     <todo-panel id="selected-file">
@@ -927,7 +940,7 @@
     <frame x="1163" y="0" width="1402" height="1047" extended-state="0" />
     <editor active="true" />
     <layout>
-      <window_info active="true" content_ui="combo" id="Project" order="0" sideWeight="0.4993498" visible="true" weight="0.20864381" />
+      <window_info content_ui="combo" id="Project" order="0" sideWeight="0.4993498" visible="true" weight="0.21162444" />
       <window_info id="Structure" order="1" sideWeight="0.50200266" side_tool="true" weight="0.13036565" />
       <window_info id="Favorites" order="2" sideWeight="0.50065017" side_tool="true" weight="0.10771065" />
       <window_info x="2363" y="239" width="619" height="687" id="Notes" order="3" weight="0.30063966" />
@@ -938,10 +951,10 @@
       <window_info anchor="bottom" id="Cvs" order="4" weight="0.25" />
       <window_info anchor="bottom" id="Inspection" order="5" weight="0.4" />
       <window_info anchor="bottom" id="TODO" order="6" sideWeight="0.49403876" weight="0.19474836" />
-      <window_info anchor="bottom" id="Event Log" order="7" sideWeight="0.54172873" side_tool="true" visible="true" weight="0.20787746" />
+      <window_info anchor="bottom" id="Event Log" order="7" sideWeight="0.5424739" side_tool="true" visible="true" weight="0.20787746" />
       <window_info anchor="bottom" id="Docker" order="8" show_stripe_button="false" />
       <window_info anchor="bottom" id="Messages" order="9" />
-      <window_info anchor="bottom" id="Python Console" order="10" sideWeight="0.45827124" visible="true" weight="0.20787746" />
+      <window_info active="true" anchor="bottom" id="Python Console" order="10" sideWeight="0.4575261" visible="true" weight="0.20787746" />
       <window_info anchor="bottom" id="Database Changes" order="11" show_stripe_button="false" />
       <window_info anchor="bottom" id="Terminal" order="12" sideWeight="0.44262296" weight="0.18271334" />
       <window_info anchor="bottom" id="Version Control" order="13" sideWeight="0.48360655" weight="0.16083151" />
@@ -1003,7 +1016,6 @@
   </component>
   <component name="VcsManagerConfiguration">
     <option name="RELOAD_CONTEXT" value="false" />
-    <MESSAGE value="Added a warning window in &quot;Run&quot; option&#10;&#10;Changed QGroupBox to QScrollArea in &quot;Define Constants&quot;" />
     <MESSAGE value="Adds a custom QComboBox implementation with focus event&#10;&#10;Adds more text constants for help messages&#10;Adds an error message if ParaView path is wrong" />
     <MESSAGE value="Adds some changes in help texts" />
     <MESSAGE value="Removed the variable &quot;fixed_depth&quot;&#10;&#10;Updated the Copyright in &quot;constants&quot;" />
@@ -1028,7 +1040,8 @@
     <MESSAGE value="Compatibility errors corrected for FreeCAD version 018.1.&#10;Updated binaries and libraries.." />
     <MESSAGE value="Compatibility errors corrected for FreeCAD version 018.1.&#10;Updated binaries and libraries." />
     <MESSAGE value="Added Inlet/Outlet option (not finished)" />
-    <option name="LAST_COMMIT_MESSAGE" value="Added Inlet/Outlet option (not finished)" />
+    <MESSAGE value="Fixed issues in Inlet/Outlet option&#10;&#10;Adds comments.&#10;Cosmetic changes." />
+    <option name="LAST_COMMIT_MESSAGE" value="Fixed issues in Inlet/Outlet option&#10;&#10;Adds comments.&#10;Cosmetic changes." />
   </component>
   <component name="editorHistoryManager">
     <entry file="file://$USER_HOME$/.PyCharm2018.2/system/python_stubs/703128353/PySide/QtGui/QLayout.py">
@@ -1191,17 +1204,17 @@
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/README.md">
+      <provider editor-type-id="text-editor">
+        <state relative-caret-position="560">
+          <caret line="35" column="57" selection-start-line="35" selection-start-column="57" selection-end-line="35" selection-end-column="57" />
+        </state>
+      </provider>
       <provider selected="true" editor-type-id="split-provider[text-editor;markdown-preview-editor]">
         <state split_layout="SPLIT">
           <first_editor relative-caret-position="608">
             <caret line="65" lean-forward="true" selection-start-line="65" selection-end-line="65" />
           </first_editor>
           <second_editor />
-        </state>
-      </provider>
-      <provider editor-type-id="text-editor">
-        <state relative-caret-position="560">
-          <caret line="35" column="57" selection-start-line="35" selection-start-column="57" selection-end-line="35" selection-end-column="57" />
         </state>
       </provider>
     </entry>
@@ -1245,12 +1258,18 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/ds_modules/constants.py">
+    <entry file="file://$PROJECT_DIR$/ds_modules/stl/utils.py">
+      <provider selected="true" editor-type-id="text-editor" />
+    </entry>
+    <entry file="file://$PROJECT_DIR$/ds_modules/stl/stl.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="1445">
-          <caret line="85" column="94" selection-start-line="85" selection-start-column="94" selection-end-line="85" selection-end-column="94" />
+        <state relative-caret-position="-4594">
+          <caret line="48" column="8" selection-start-line="48" selection-start-column="8" selection-end-line="48" selection-end-column="8" />
         </state>
       </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/ds_modules/stl/mesh.py">
+      <provider selected="true" editor-type-id="text-editor" />
     </entry>
     <entry file="file://$PROJECT_DIR$/ds_modules/guiutils.py">
       <provider selected="true" editor-type-id="text-editor">
@@ -1276,57 +1295,44 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/ds_modules/stl/utils.py">
-      <provider selected="true" editor-type-id="text-editor" />
-    </entry>
-    <entry file="file://$PROJECT_DIR$/ds_modules/stl/stl.py">
+    <entry file="file://$PROJECT_DIR$/ds_modules/constants.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-4594">
-          <caret line="48" column="8" selection-start-line="48" selection-start-column="8" selection-end-line="48" selection-end-column="8" />
+        <state relative-caret-position="642">
+          <caret line="85" column="94" selection-start-line="85" selection-start-column="94" selection-end-line="85" selection-end-column="94" />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/ds_modules/stl/mesh.py">
-      <provider selected="true" editor-type-id="text-editor" />
+    <entry file="file://$PROJECT_DIR$/DesignSPHysics.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="399">
+          <caret line="1513" column="21" selection-start-line="1513" selection-start-column="4" selection-end-line="1513" selection-end-column="21" />
+          <folding>
+            <element signature="e#286#300#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/ds_modules/dsphwidgets.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-966">
-          <caret line="7182" selection-start-line="7182" selection-end-line="7182" />
+        <state relative-caret-position="136">
+          <caret line="8431" column="55" selection-start-line="8431" selection-start-column="55" selection-end-line="8431" selection-end-column="55" />
           <folding>
             <element signature="e#273#287#0" expanded="true" />
             <element signature="e#247303#267554#0" />
-            <element signature="e#353811#361428#0" />
-            <element signature="e#361478#371296#0" />
-            <element signature="e#371341#377943#0" />
-            <element signature="e#377990#388238#0" />
-            <element signature="e#388285#395889#0" />
-            <element signature="e#395932#413360#0" />
-            <element signature="e#413399#416228#0" />
-            <element signature="e#416274#445302#0" />
-            <element signature="e#445346#450772#0" />
-            <element signature="e#450816#482223#0" />
-            <element signature="e#482264#489017#0" />
+            <element signature="e#353658#361275#0" />
+            <element signature="e#361325#371143#0" />
+            <element signature="e#371188#377790#0" />
+            <element signature="e#377837#388085#0" />
           </folding>
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/ds_modules/utils.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="586">
-          <caret line="1566" column="42" selection-start-line="1566" selection-start-column="42" selection-end-line="1566" selection-end-column="42" />
+        <state relative-caret-position="365">
+          <caret line="1549" column="115" selection-start-line="1549" selection-start-column="115" selection-end-line="1549" selection-end-column="115" />
           <folding>
             <element signature="e#253#267#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/DesignSPHysics.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="725">
-          <caret line="923" column="45" lean-forward="true" selection-start-line="923" selection-start-column="45" selection-end-line="923" selection-end-column="45" />
-          <folding>
-            <element signature="e#286#300#0" expanded="true" />
           </folding>
         </state>
       </provider>
