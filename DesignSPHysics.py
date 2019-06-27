@@ -1561,6 +1561,11 @@ def on_ex_simulate():
                 except RuntimeError:
                     run_group_label_eta.setText(__("Estimated time to complete simulation: ") + "Calculating...")
         elif "Particles out:" in run_file_data[-1]:
+            last_line_parttime = run_file_data[-2].split(".")
+            current_value = (float(last_line_parttime[0].split(" ")[-1] + "." + last_line_parttime[1][:2]) * float(100)) / float(data['timemax'])
+            run_dialog.run_progbar_bar.setValue(current_value)
+            run_dialog.setWindowTitle(__("DualSPHysics Simulation: {}%").format(str(format(current_value, ".2f"))))
+
             totalpartsout = int(run_file_data[-1].split("(total: ")[1].split(")")[0])
             data['total_particles_out'] = totalpartsout
             run_dialog.run_group_label_partsout.setText(__("Total particles out: {}").format(str(data['total_particles_out'])))
