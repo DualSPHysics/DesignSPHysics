@@ -30,7 +30,6 @@ import sys
 
 from PySide import QtGui, QtCore
 from ds_modules import guiutils
-from ds_modules import stl
 from ds_modules import execution_parameters
 from ds_modules import properties
 from ds_modules.properties import *
@@ -1008,6 +1007,7 @@ def dump_to_xml(data, save_name):
                     # Not a xml parametric object.  Needs exporting
                     __objs__ = list()
                     __objs__.append(o)
+                    # TODO: Convert to STL or maintain original format?
                     stl_file_path = save_name + "/" + o.Name + ".stl"
                     Mesh.export(__objs__, stl_file_path)
                     relative_file_path = os.path.relpath(
@@ -2267,7 +2267,7 @@ def import_geo(filename=None, scale_x=1, scale_y=1, scale_z=1, name=None, autofi
     """ Opens a GEO file, preprocesses it and saves it
     int temp files to load with FreeCAD. """
     length_filename = len(filename)
-    file_tipe = "." + filename[length_filename-3:]
+    file_type = "." + filename.split(".")[-1]
 
     if scale_x <= 0:
         scale_x = 1
@@ -2276,26 +2276,15 @@ def import_geo(filename=None, scale_x=1, scale_y=1, scale_z=1, name=None, autofi
     if scale_z <= 0:
         scale_z = 1
 
-    if not filename:
-        raise RuntimeError("GEO Import: file cannot be None")
-    try:
-        target = stl.Mesh.from_file(filename)
-    except Exception as e:
-        raise e
-
-    target.x *= scale_x
-    target.y *= scale_y
-    target.z *= scale_z
-
-    if not name:
-        temp_file_name = tempfile.gettempdir() + "/" + str(random.randrange(100, 1000, 1)) + file_tipe
-    else:
-        temp_file_name = tempfile.gettempdir() + "/" + name + file_tipe
-
-    target.save(temp_file_name)
+    # TODO: take into accoutn auto-fill
     autofill = autofill
 
-    Mesh.insert(temp_file_name, FreeCAD.activeDocument().Name)
+    # TODO: Adapt to VTL (FEM lib, convert to other format)
+    loaded_mesh = Mesh.read(filename)
+    scale_matrix = FreeCAD.Matrix()
+    scale_matrix.scale(scale_x, scale_y, scale_z)
+    loaded_mesh.transform(scale_matrix)
+    Mesh.show(loaded_mesh, name)
     FreeCADGui.SendMsgToActiveView("ViewFit")
 
 
