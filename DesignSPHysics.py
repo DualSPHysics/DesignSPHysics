@@ -1544,29 +1544,19 @@ def on_ex_simulate():
                 if "TimeMax=" in l:
                     data['timemax'] = float(l.split("=")[1])
 
-        # Check how much of the simulation is done and fill estimated time
-        if "Part_" in run_file_data[-1]:
-            last_line_parttime = run_file_data[-1].split(".")
-            if "Part_" in last_line_parttime[0]:
-                current_value = (float(last_line_parttime[0].split(" ")[-1] + "." + last_line_parttime[1][:2]) * float(100)) / float(data['timemax'])
-                run_dialog.run_progbar_bar.setValue(current_value)
-                run_dialog.setWindowTitle(__("DualSPHysics Simulation: {}%").format(
-                    str(format(current_value, ".2f"))))
-
-            last_line_time = run_file_data[-1].split("  ")[-1]
-            if ("===" not in last_line_time) and ("CellDiv" not in last_line_time) and ("memory" not in last_line_time) and ("-" in last_line_time):
-                # Update time field
-                try:
-                    run_dialog.run_group_label_eta.setText(__("Estimated time to complete simulation: ") + last_line_time)
-                except RuntimeError:
-                    run_group_label_eta.setText(__("Estimated time to complete simulation: ") + "Calculating...")
-        elif "Particles out:" in run_file_data[-1]:
-            last_line_parttime = run_file_data[-2].split(".")
-            current_value = (float(last_line_parttime[0].split(" ")[-1] + "." + last_line_parttime[1][:2]) * float(100)) / float(data['timemax'])
+        # Update execution metrics on GUI
+        last_part_lines = list(filter(lambda x: "Part_" in x and "stored" not in x and "      " in x, run_file_data))
+        if len(last_part_lines):
+            current_value = (float(last_part_lines[-1].split("      ")[1]) * float(100)) / float(data['timemax'])
             run_dialog.run_progbar_bar.setValue(current_value)
             run_dialog.setWindowTitle(__("DualSPHysics Simulation: {}%").format(str(format(current_value, ".2f"))))
+            run_dialog.run_group_label_eta.setText(__("Estimated time to complete simulation: ") + last_part_lines[-1].split("  ")[-1])
 
-            totalpartsout = int(run_file_data[-1].split("(total: ")[1].split(")")[0])
+        # Update particles out on GUI
+        last_particles_out_lines = list(filter(lambda x: "(total: " in x and "Particles out:" in x, run_file_data))
+        if len(last_particles_out_lines):
+            utils.dump_to_disk("".join(last_particles_out_lines))
+            totalpartsout = int(last_particles_out_lines[-1].split("(total: ")[1].split(")")[0])
             data['total_particles_out'] = totalpartsout
             run_dialog.run_group_label_partsout.setText(__("Total particles out: {}").format(str(data['total_particles_out'])))
 
