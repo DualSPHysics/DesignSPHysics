@@ -23,7 +23,6 @@ import traceback
 import webbrowser
 import json
 import shutil
-import os
 from sys import platform
 from datetime import datetime
 
@@ -69,6 +68,7 @@ VERSION = "0.5.1.1906-26"
 WIDTH_2D = 0.001
 MAX_PARTICLE_WARNING = 2000000
 HELP_WEBPAGE = "https://github.com/DualSPHysics/DesignSPHysics/wiki"
+DISK_DUMP_FILE_NAME = "designsphysics-{}.log".format(VERSION)
 
 
 # ------ END CONSTANTS DEFINITION ------
@@ -79,7 +79,7 @@ def is_compatible_version():
 
     version_num = FreeCAD.Version()[0] + FreeCAD.Version()[1]
     if float(version_num) < float(FREECAD_MIN_VERSION):
-        ds_modules.guiutils.warning_dialog("This version of FreeCAD is not supported!. Install version 0.17 or higher.")
+        guiutils.warning_dialog("This version of FreeCAD is not supported!. Install version 0.17 or higher.")
         return False
     else:
         return True
@@ -107,6 +107,11 @@ def debug(message):
     """ Prints a debug message in the default output"""
     if DEBUGGING and VERBOSE:
         print ("[" + APP_NAME + "] " + "[<<<<DEBUG>>>>]" + ": " + str(message))
+
+def dump_to_disk(text):
+    """ Dumps text content into a file on disk """
+    with open('/tmp/{}'.format(DISK_DUMP_FILE_NAME), 'w') as error_dump:
+        error_dump.write(text)
 
 
 def __(text):
