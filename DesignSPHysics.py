@@ -8,6 +8,8 @@ It allows an user to create DualSPHysics compatible cases, automating a bunch of
 More info in http://design.sphysics.org/
 """
 
+# Fix FreeCAD not searching in the user-set macro folder.
+
 import FreeCAD
 import FreeCADGui
 import Draft
@@ -22,19 +24,14 @@ import subprocess
 import shutil
 import uuid
 
-from PySide import QtGui, QtCore
+sys.path.append(os.path.dirname(os.path.abspath(__file__)))
 
-# Fix FreeCAD not searching in the user-set macro folder.
-try:
-    from ds_modules import properties
-    from ds_modules.properties import *
-    from ds_modules import utils, guiutils, xmlimporter, dsphwidgets
-    from ds_modules.utils import __
-except:
-    sys.path.append(os.path.dirname(os.path.abspath(__file__)))
-    from ds_modules.properties import *
-    from ds_modules import utils, guiutils, xmlimporter, dsphwidgets
-    from ds_modules.utils import __
+from PySide import QtGui, QtCore
+from ds_modules import properties
+from ds_modules.properties import *
+from ds_modules import utils, guiutils, xmlimporter, dsphwidgets
+from ds_modules.utils import __
+from ds_modules.dataobjects import Case
 
 # Copyright (C) 2019
 # EPHYSLAB Environmental Physics Laboratory, Universidade de Vigo
