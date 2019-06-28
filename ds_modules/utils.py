@@ -13,6 +13,7 @@ meant to use with FreeCAD.
 import FreeCAD
 import FreeCADGui
 import Mesh
+import Fem
 import Draft
 import math
 import os
@@ -25,6 +26,7 @@ import json
 import shutil
 from sys import platform
 from datetime import datetime
+from femmesh.femmesh2mesh import femmesh_2_mesh
 
 import sys
 
@@ -2267,7 +2269,7 @@ def import_geo(filename=None, scale_x=1, scale_y=1, scale_z=1, name=None, autofi
     """ Opens a GEO file, preprocesses it and saves it
     int temp files to load with FreeCAD. """
     length_filename = len(filename)
-    file_type = "." + filename.split(".")[-1]
+    file_type = ".{}".format(filename.split(".")[-1]).lower()
 
     if scale_x <= 0:
         scale_x = 1
@@ -2280,7 +2282,11 @@ def import_geo(filename=None, scale_x=1, scale_y=1, scale_z=1, name=None, autofi
     autofill = autofill
 
     # TODO: Adapt to VTL (FEM lib, convert to other format)
-    loaded_mesh = Mesh.read(filename)
+    if file_type == ".vtk":
+        loaded_mesh = Mesh.Mesh(femmesh_2_mesh(Fem.read(filename)))
+    else:
+        loaded_mesh = Mesh.read(filename)
+
     scale_matrix = FreeCAD.Matrix()
     scale_matrix.scale(scale_x, scale_y, scale_z)
     loaded_mesh.transform(scale_matrix)
