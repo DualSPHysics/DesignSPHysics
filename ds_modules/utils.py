@@ -583,8 +583,8 @@ def get_default_data():
     # Faces objects
     data['faces'] = dict()
 
-    # GEO autofill
-    data['geo_autofil'] = False
+    # GEO autofill. {name: true/false}
+    data['geo_autofill'] = dict()
 
     # MultiLayer Pistons: {mk: MLPistonObject}
     data['mlayerpistons'] = dict()
@@ -1016,7 +1016,8 @@ def dump_to_xml(data, save_name):
                         stl_file_path,
                         os.path.dirname(os.path.abspath(stl_file_path))
                     )
-                    f.write('\t\t\t\t\t<drawfilestl file="{}" objname="{}" autofill="false">\n'.format(relative_file_path, o.Label))
+                    autofill_enabled = str(data["geo_autofill"][o.Name] if o.Name in data["geo_autofill"].keys() else False).lower()
+                    f.write('\t\t\t\t\t<drawfilestl file="{}" objname="{}" autofill="{}">\n'.format(relative_file_path, o.Label, autofill_enabled))
                     f.write('\t\t\t\t\t\t<drawscale x="0.001" y="0.001" z="0.001" />\n')
                     f.write('\t\t\t\t\t</drawfilestl>\n')
                     del __objs__
@@ -2265,9 +2266,11 @@ def batch_generator(full_path, case_name, gcpath, dsphpath, pvtkpath, exec_param
         bat_file.write(linux_template)
 
 
-def import_geo(filename=None, scale_x=1, scale_y=1, scale_z=1, name=None, autofill=False):
+def import_geo(filename=None, scale_x=1, scale_y=1, scale_z=1, name=None, autofill=False, data=None):
     """ Opens a GEO file, preprocesses it and saves it
     int temp files to load with FreeCAD. """
+    if data == None:
+        raise RuntimeError("Data parameter must be populated")
     length_filename = len(filename)
     file_type = ".{}".format(filename.split(".")[-1]).lower()
 
@@ -2278,8 +2281,6 @@ def import_geo(filename=None, scale_x=1, scale_y=1, scale_z=1, name=None, autofi
     if scale_z <= 0:
         scale_z = 1
 
-    # TODO: take into accoutn auto-fill
-    autofill = autofill
 
     # TODO: Adapt to VTL (FEM lib, convert to other format)
     if file_type == ".vtk":
@@ -2292,6 +2293,8 @@ def import_geo(filename=None, scale_x=1, scale_y=1, scale_z=1, name=None, autofi
     loaded_mesh.transform(scale_matrix)
     Mesh.show(loaded_mesh, name)
     FreeCADGui.SendMsgToActiveView("ViewFit")
+
+    data["geo_autofill"][name] = autofill
 
 
 def get_fc_object(internal_name):
