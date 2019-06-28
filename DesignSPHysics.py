@@ -900,13 +900,13 @@ def on_add_stl():
 
     # Autofill
     geo_autofil_layout = QtGui.QHBoxLayout()
-    geo_autofil_chck = QtGui.QCheckBox("Autofill")
-    geo_autofil_layout.addWidget(geo_autofil_chck)
+    geo_autofill_chck = QtGui.QCheckBox("Autofill")
+    geo_autofil_layout.addWidget(geo_autofill_chck)
 
-    if geo_autofil_chck.isChecked():
-        geo_autofil_chck.setCheckState(QtCore.Qt.Checked)
+    if geo_autofill_chck.isChecked():
+        geo_autofill_chck.setCheckState(QtCore.Qt.Checked)
     else:
-        geo_autofil_chck.setCheckState(QtCore.Qt.Unchecked)
+        geo_autofill_chck.setCheckState(QtCore.Qt.Unchecked)
     # End autofill
 
     # Add component layouts to group layout
@@ -944,12 +944,9 @@ def on_add_stl():
                 scale_x=float(geo_scaling_x_e.text()),
                 scale_y=float(geo_scaling_y_e.text()),
                 scale_z=float(geo_scaling_z_e.text()),
-                name=str(geo_objname_text.text()))
-
-            #if geo_autofil_chck.isChecked():
-            #    data['geo_autofil'] = True
-            #else:
-            #    data['geo_autofil'] = False
+                name=str(geo_objname_text.text()),
+                autofill=geo_autofill_chck.isChecked(),
+                data=data)
 
             geo_dialog.accept()
         except ValueError:
