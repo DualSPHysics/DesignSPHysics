@@ -1,26 +1,26 @@
 #!/usr/bin/env python3.7
 # -*- coding: utf-8 -*-
-"""DesignSPHysics GUI Utils.
+'''DesignSPHysics GUI Utils.
 
 This module stores functionality useful for GUI
 operations in DesignSPHysics.
 
-"""
+'''
 
 import FreeCAD
 import FreeCADGui
 import pickle
 import sys
 import os
-import ds_modules.utils
-import ds_modules.constants
+import mod.utils
+import mod.constants
 import subprocess
 from sys import platform
 
 from PySide import QtGui, QtCore
-from ds_modules.execution_parameters import *
+from mod.execution_parameters import *
 
-"""
+'''
 Copyright (C) 2019
 EPHYSLAB Environmental Physics Laboratory, Universidade de Vigo
 
@@ -38,11 +38,11 @@ GNU General Public License for more details.
 
 You should have received a copy of the GNU General Public License
 along with DesignSPHysics.  If not, see <http://www.gnu.org/licenses/>.
-"""
+'''
 
 
 def h_line_generator():
-    """ Generates an horizontal line that can be used as a separator."""
+    ''' Generates an horizontal line that can be used as a separator.'''
     to_ret = QtGui.QFrame()
     to_ret.setFrameShape(QtGui.QFrame.HLine)
     to_ret.setFrameShadow(QtGui.QFrame.Sunken)
@@ -50,7 +50,7 @@ def h_line_generator():
 
 
 def v_line_generator():
-    """ Generates a vertical line that can be used as a separator"""
+    ''' Generates a vertical line that can be used as a separator'''
     to_ret = QtGui.QFrame()
     to_ret.setFrameShape(QtGui.QFrame.VLine)
     to_ret.setFrameShadow(QtGui.QFrame.Sunken)
@@ -58,7 +58,7 @@ def v_line_generator():
 
 
 def warning_dialog(warn_text, detailed_text=None):
-    """Spawns a warning dialog with the text and details passed."""
+    '''Spawns a warning dialog with the text and details passed.'''
 
     warning_messagebox = QtGui.QMessageBox()
     warning_messagebox.setText(str(warn_text))
@@ -69,7 +69,7 @@ def warning_dialog(warn_text, detailed_text=None):
 
 
 def error_dialog(error_text, detailed_text=None):
-    """Spawns an error dialog with the text and details passed."""
+    '''Spawns an error dialog with the text and details passed.'''
 
     error_messagebox = QtGui.QMessageBox()
     error_messagebox.setText(error_text)
@@ -80,7 +80,7 @@ def error_dialog(error_text, detailed_text=None):
 
 
 def info_dialog(info_text, detailed_text=None):
-    """Spawns an info dialog with the text and details passed."""
+    '''Spawns an info dialog with the text and details passed.'''
 
     info_messagebox = QtGui.QMessageBox()
     info_messagebox.setText(info_text)
@@ -91,7 +91,7 @@ def info_dialog(info_text, detailed_text=None):
 
 
 def ok_cancel_dialog(title, text):
-    """Spawns an okay/cancel dialog with the title and text passed"""
+    '''Spawns an okay/cancel dialog with the title and text passed'''
 
     open_confirm_dialog = QtGui.QMessageBox()
     open_confirm_dialog.setWindowTitle(title)
@@ -103,8 +103,8 @@ def ok_cancel_dialog(title, text):
 
 
 def get_icon(file_name, return_only_path=False):
-    """ Returns a QIcon to use with DesignSPHysics.
-    Retrieves a file with filename (like image.png) from the images folder. """
+    ''' Returns a QIcon to use with DesignSPHysics.
+    Retrieves a file with filename (like image.png) from the images folder. '''
     file_to_load = os.path.dirname(os.path.abspath(__file__)) + "/../images/{}".format(file_name)
     if os.path.isfile(file_to_load):
         return file_to_load if return_only_path else QtGui.QIcon(file_to_load)
@@ -113,13 +113,13 @@ def get_icon(file_name, return_only_path=False):
 
 
 def get_fc_main_window():
-    """ Returns FreeCAD main window. """
+    ''' Returns FreeCAD main window. '''
     return FreeCADGui.getMainWindow()
 
 
-def def_setup_window(data):
-    """Defines the setup window.
-    Modifies data dictionary passed as parameter."""
+def def_setup_window():
+    '''Defines the setup window.
+    Modifies data dictionary passed as parameter.'''
 
     # TODO: This should be implemented as a custom class like SetupDialog(QtGui.QDialog)
 
@@ -282,17 +282,17 @@ def def_setup_window(data):
         data['boundaryvtk_path'] = boundaryvtk_input.text()
         data['flowtool_path'] = flowtool_input.text()
         data['paraview_path'] = paraview_input.text()
-        data_to_merge, state = ds_modules.utils.check_executables(data)
+        data_to_merge, state = mod.utils.check_executables(data)
         data.update(data_to_merge)
-        with open(FreeCAD.getUserAppDataDir() + '/dsph_data-{}.dsphdata'.format(ds_modules.utils.VERSION),
+        with open(FreeCAD.getUserAppDataDir() + '/dsph_data-{}.dsphdata'.format(mod.utils.VERSION),
                   'wb') as picklefile:
-            pickle.dump(data, picklefile, ds_modules.utils.PICKLE_PROTOCOL)
-        ds_modules.utils.log("Setup changed. Saved to " + FreeCAD.getUserAppDataDir() +
-                  '/dsph_data-{}.dsphdata'.format(ds_modules.utils.VERSION))
+            pickle.dump(data, picklefile, mod.utils.PICKLE_PROTOCOL)
+        mod.utils.log("Setup changed. Saved to " + FreeCAD.getUserAppDataDir() +
+                  '/dsph_data-{}.dsphdata'.format(mod.utils.VERSION))
         setup_window.accept()
 
     def on_cancel():
-        ds_modules.utils.log("Setup not changed")
+        mod.utils.log("Setup not changed")
         setup_window.reject()
 
     def on_gencase_browse():
@@ -311,7 +311,7 @@ def def_setup_window(data):
             if "gencase" in output[0:15].lower():
                 gencasepath_input.setText(file_name)
             else:
-                ds_modules.utils.error(
+                mod.utils.error(
                     "I can't recognize GenCase in that executable.! "
                     "Check that the file corresponds with the appropriate tool and that you have permissions to execute it"
                 )
@@ -342,7 +342,7 @@ def def_setup_window(data):
             if "dualsphysics" in output[0:20].lower():
                 dsphpath_input.setText(file_name)
             else:
-                ds_modules.utils.error(
+                mod.utils.error(
                     "I can't recognize DualSPHysics in that executable.! "
                     "Check that the file corresponds with the appropriate tool and that you have permissions to execute it"
                 )
@@ -369,7 +369,7 @@ def def_setup_window(data):
             if "partvtk4" in output[0:20].lower():
                 partvtk4path_input.setText(file_name)
             else:
-                ds_modules.utils.error(
+                mod.utils.error(
                     "I can't recognize PartVTK4 in that executable.! "
                     "Check that the file corresponds with the appropriate tool and that you have permissions to execute it"
                 )
@@ -396,7 +396,7 @@ def def_setup_window(data):
             if "computeforces" in output[0:22].lower():
                 computeforces_input.setText(file_name)
             else:
-                ds_modules.utils.error(
+                mod.utils.error(
                     "I can't recognize ComputeForces in that executable.! "
                     "Check that the file corresponds with the appropriate tool and that you have permissions to execute it"
                 )
@@ -423,7 +423,7 @@ def def_setup_window(data):
             if "floatinginfo" in output[0:22].lower():
                 floatinginfo_input.setText(file_name)
             else:
-                ds_modules.utils.error(
+                mod.utils.error(
                     "I can't recognize FloatingInfo in that executable.! "
                     "Check that the file corresponds with the appropriate tool and that you have permissions to execute it"
                 )
@@ -450,7 +450,7 @@ def def_setup_window(data):
             if "measuretool" in output[0:22].lower():
                 measuretool_input.setText(file_name)
             else:
-                ds_modules.utils.error(
+                mod.utils.error(
                     "I can't recognize MeasureTool in that executable.! "
                     "Check that the file corresponds with the appropriate tool and that you have permissions to execute it"
                 )
@@ -477,7 +477,7 @@ def def_setup_window(data):
             if "isosurface" in output[0:22].lower():
                 isosurface_input.setText(file_name)
             else:
-                ds_modules.utils.error(
+                mod.utils.error(
                     "I can't recognize IsoSurface in that executable.! "
                     "Check that the file corresponds with the appropriate tool and that you have permissions to execute it"
                 )
@@ -504,7 +504,7 @@ def def_setup_window(data):
             if "boundaryvtk" in output[0:22].lower():
                 boundaryvtk_input.setText(file_name)
             else:
-                ds_modules.utils.error(
+                mod.utils.error(
                     "I can't recognize BoundaryVTK in that executable.! "
                     "Check that the file corresponds with the appropriate tool and that you have permissions to execute it"
                 )
@@ -531,7 +531,7 @@ def def_setup_window(data):
             if "flowtool" in output[0:22].lower():
                 flowtool_input.setText(file_name)
             else:
-                ds_modules.utils.error(
+                mod.utils.error(
                     "I can't recognize FlowTool in that executable.! "
                     "Check that the file corresponds with the appropriate tool and that you have permissions to execute it"
                 )
@@ -597,8 +597,8 @@ def def_setup_window(data):
 
 
 def widget_state_config(widgets, config):
-    """ Takes an widget dictionary and a config string to
-        enable and disable certain widgets base on a case. """
+    ''' Takes an widget dictionary and a config string to
+        enable and disable certain widgets base on a case. '''
     if config == "no case":
         widgets["casecontrols_bt_savedoc"].setEnabled(False)
         widgets["rungencase_bt"].setEnabled(False)
@@ -750,11 +750,11 @@ def widget_state_config(widgets, config):
 
 
 def case_summary(orig_data):
-    """ Displays a dialog with a summary of the current opened case. """
+    ''' Displays a dialog with a summary of the current opened case. '''
 
     # TODO: This should be implemented as a custom class like CaseSummary(QtGui.QDialog)
 
-    if not ds_modules.utils.valid_document_environment():
+    if not mod.utils.valid_document_environment():
         return
 
 
@@ -764,15 +764,15 @@ def case_summary(orig_data):
     # Preprocess data to show in data copy
     data['gravity'] = "({}, {}, {})".format(*data['gravity'])
     if data['project_name'] == "":
-        data['project_name'] = "<i>{}</i>".format(ds_modules.utils.__("Not yet saved"))
+        data['project_name'] = "<i>{}</i>".format(mod.utils.__("Not yet saved"))
 
     if data['project_path'] == "":
-        data['project_path'] = "<i>{}</i>".format(ds_modules.utils.__("Not yet saved"))
+        data['project_path'] = "<i>{}</i>".format(mod.utils.__("Not yet saved"))
 
     for k in ['gencase_path', 'dsphysics_path', 'partvtk4_path']:
         if data[k] == "":
             data[k] = "<i>{}</i>".format(
-                ds_modules.utils.__("Executable not correctly set"))
+                mod.utils.__("Executable not correctly set"))
 
     data['stepalgorithm'] = {
         '1': 'Verlet',
@@ -799,14 +799,14 @@ def case_summary(orig_data):
         for key, value in data['simobjects'].items():
             if key.lower() == 'case_limits':
                 continue
-            fc_object = ds_modules.utils.get_fc_object(key)
-            is_floating = ds_modules.utils.__('Yes') if str(
-                value[0]) in data['floating_mks'].keys() else ds_modules.utils.__('No')
-            is_floating = ds_modules.utils.__('No') if value[
+            fc_object = mod.utils.get_fc_object(key)
+            is_floating = mod.utils.__('Yes') if str(
+                value[0]) in data['floating_mks'].keys() else mod.utils.__('No')
+            is_floating = mod.utils.__('No') if value[
                                                 1].lower() == "fluid" else is_floating
-            has_initials = ds_modules.utils.__('Yes') if str(
-                value[0]) in data['initials_mks'].keys() else ds_modules.utils.__('No')
-            has_initials = ds_modules.utils.__('No') if value[
+            has_initials = mod.utils.__('Yes') if str(
+                value[0]) in data['initials_mks'].keys() else mod.utils.__('No')
+            has_initials = mod.utils.__('No') if value[
                                                  1].lower() == "bound" else has_initials
             real_mk = value[0] + 11 if value[
                                            1].lower() == "bound" else value[0] + 1
@@ -824,7 +824,7 @@ def case_summary(orig_data):
                                                                             initials=has_initials)
         data['objects_info'] += "</ul>"
     else:
-        data['objects_info'] += ds_modules.utils.__(
+        data['objects_info'] += mod.utils.__(
             "No objects were added to the simulation yet.")
     # endregion Formatting objects info
 
@@ -895,39 +895,39 @@ def case_summary(orig_data):
 
 
 def get_fc_view_object(internal_name):
-    """ Returns a FreeCADGui View provider object by a name. """
+    ''' Returns a FreeCADGui View provider object by a name. '''
     return FreeCADGui.getDocument("DSPH_Case").getObject(internal_name)
 
 
 def gencase_completed_dialog(particle_count=0, detail_text="No details", data=dict(), temp_data=dict()):
-    """ Creates a gencase save dialog with different options, like
-    open the results with paraview, show details or dismiss. """
+    ''' Creates a gencase save dialog with different options, like
+    open the results with paraview, show details or dismiss. '''
 
     # TODO: This should be implemented as a custom class like GenCaseCompleteDialog(QtGui.QDialog)
 
     # Window Creation
     window = QtGui.QDialog()
     window.setWindowModality(QtCore.Qt.NonModal)
-    window.setWindowTitle(ds_modules.utils.__("Save & GenCase"))
+    window.setWindowTitle(mod.utils.__("Save & GenCase"))
 
     # Main Layout creation
     main_layout = QtGui.QVBoxLayout()
 
     # Main Layout elements
     info_message = QtGui.QLabel(
-        ds_modules.utils.__("Gencase exported {} particles.\nPress \"Details\" to check the output").format(
+        mod.utils.__("Gencase exported {} particles.\nPress \"Details\" to check the output").format(
             str(particle_count)))
 
     button_layout = QtGui.QHBoxLayout()
-    bt_open_with_paraview = QtGui.QPushButton(ds_modules.utils.__("Open with Paraview"))
+    bt_open_with_paraview = QtGui.QPushButton(mod.utils.__("Open with Paraview"))
     temp_data['widget_saver'] = QtGui.QMenu()
     temp_data['widget_saver'].addAction("{}_MkCells.vtk".format(data['project_name']))
     temp_data['widget_saver'].addAction("{}_All.vtk".format(data['project_name']))
     temp_data['widget_saver'].addAction("{}_Fluid.vtk".format(data['project_name']))
     temp_data['widget_saver'].addAction("{}_Bound.vtk".format(data['project_name']))
     bt_open_with_paraview.setMenu(temp_data['widget_saver'])
-    bt_details = QtGui.QPushButton(ds_modules.utils.__("Details"))
-    bt_ok = QtGui.QPushButton(ds_modules.utils.__("Ok"))
+    bt_details = QtGui.QPushButton(mod.utils.__("Details"))
+    bt_ok = QtGui.QPushButton(mod.utils.__("Ok"))
     button_layout.addWidget(bt_open_with_paraview)
     button_layout.addWidget(bt_details)
     button_layout.addWidget(bt_ok)

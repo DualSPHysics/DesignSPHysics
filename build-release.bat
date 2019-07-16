@@ -10,7 +10,7 @@ xcopy ..\DesignSPHysics.FCMacro .\resource /Y
 xcopy ..\default-config.json .\resource /Y
 xcopy ..\LICENSE .\resource /Y
 xcopy ..\images .\resource\images\ /S /E /Y
-xcopy ..\ds_modules .\resource\ds_modules\ /S /E /Y
+xcopy ..\mod .\resource\mod\ /S /E /Y
 xcopy ..\dualsphysics .\resource\dualsphysics\ /S /E /Y
 del .\installer.spec /Q
 rmdir .\build /S /Q

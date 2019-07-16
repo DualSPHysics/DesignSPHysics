@@ -1,0 +1,3 @@
+        <initials>
+            <velocity mkfluid="{mk}" x="{force[0]}" y="{force[1]}" z="{force[2]}"/>
+        </initials>

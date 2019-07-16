@@ -1,13 +1,13 @@
 #!/usr/bin/env python3.7
 # -*- coding: utf-8 -*-
-"""DesignSPHysics Define Constants.
+'''DesignSPHysics Define Constants.
 
 This file contains a collection of constants meant to use with DesignSPHysics.
 
-"""
+'''
 
 
-"""
+'''
 Copyright (C) 2019
 EPHYSLAB Environmental Physics Laboratory, Universidade de Vigo
 
@@ -25,11 +25,11 @@ GNU General Public License for more details.
 
 You should have received a copy of the GNU General Public License
 along with DesignSPHysics.  If not, see <http://www.gnu.org/licenses/>.
-"""
+'''
 
 # ------ DEFINE CONSTANTS  ------
 
-""" --------- Help Window -------------- """
+''' --------- Help Window -------------- '''
 
 HELP_GRAVITYX = "Gravitational acceleration in X direction."
 HELP_GRAVITYY = "Gravitational acceleration in Y direction."
@@ -46,7 +46,7 @@ HELP_CFLNUMBER = "Coefficient to multiply variable dt."
 
 # ------ EXECUTION PARAMETERS  ------
 
-""" --------- ToolTip -------------- """
+''' --------- ToolTip -------------- '''
 
 DOMAINFIXED = "The domain is fixed with the specified values (xmin:ymin:zmin:xmax:ymax:zmax)"
 
@@ -71,7 +71,7 @@ PERIODZ = ""
 XINCREMENTZ = "Increase of X with periodic BC in axis Z"
 YINCEMENTZ = "Increase of Y with periodic BC in axis Z"
 
-""" --------- Help Window -------------- """
+''' --------- Help Window -------------- '''
 
 HELP_POSDOUBLE = "Precision in particle interaction 0:Simple, 1:Double, 2:Uses and saves double (default=0)."
 HELP_STEPALGORITHM = "Time-integrator algorithm 1:Verlet, 2:Symplectic (default=1)."

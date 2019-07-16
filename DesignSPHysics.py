@@ -1,21 +1,19 @@
 #!/usr/bin/env python3.7
 # -*- coding: utf-8 -*-
-"""
+'''
 Initializes a complete interface with DualSPHysics suite related operations.
 
 It allows an user to create DualSPHysics compatible cases, automating a bunch of things needed to use them.
 
 More info in http://design.sphysics.org/
-"""
-
-# Fix FreeCAD not searching in the user-set macro folder.
+'''
 
 import FreeCAD
 import FreeCADGui
 import Draft
 import glob
-import os
 import sys
+import os
 import time
 import pickle
 import threading
@@ -27,11 +25,11 @@ import uuid
 sys.path.append(os.path.dirname(os.path.abspath(__file__)))
 
 from PySide import QtGui, QtCore
-from ds_modules import properties
-from ds_modules.properties import *
-from ds_modules import utils, guiutils, xmlimporter, dsphwidgets
-from ds_modules.utils import __
-from ds_modules.dataobjects import Case
+from mod.dataobjects import *
+from mod.widgets import *
+from mod.utils import __
+from mod.xml import XMLExporter
+from mod import utils, guiutils, xmlimporter
 
 # Copyright (C) 2019
 # EPHYSLAB Environmental Physics Laboratory, Universidade de Vigo
@@ -58,8 +56,8 @@ __credits__ = ["Andrés Vieira", "Lorena Docasar",
                "Alejandro Jacobo Cabrera Crespo", "Orlando García Feal"]
 __license__ = "GPL"
 __version__ = utils.VERSION
-__maintainer__ = "Lorena Docasar"
-__email__ = "docasarlorena@gmail.com"
+__maintainer__ = "Andrés Vieira"
+__email__ = "avieira@uvigo.es"
 __status__ = "Development"
 
 # Print license at macro start
@@ -80,11 +78,6 @@ if not is_compatible:
         __("This FreeCAD version is not compatible. Please update FreeCAD to version 0.17 or higher.")
     )
 
-
-# Main data structure
-# TODO: Big Change: Data structures should be an instance of a class like CaseData() and TempCaseData(), not a dict()
-data = dict()  # Used to save on disk case parameters and related data
-temp_data = dict()  # Used to store temporal useful items (like processes)
 # Used to store widgets that will be disabled/enabled, so they are centralized
 widget_state_elements = dict()
 
@@ -96,10 +89,8 @@ dsph_main_dock = QtGui.QDockWidget()  # DSPH main dock
 # Scaffolding widget, only useful to apply to the dsph_dock widget
 dsph_main_dock_scaff_widget = QtGui.QWidget()
 
-# Executes the default data function the first time and merges results with current data structure.
-default_data, default_temp_data = utils.get_default_data()
-data.update(default_data)
-temp_data.update(default_temp_data)
+# Resets data structure to default values
+Case.instance().reset()
 
 # The script needs only one document open, called DSPH_Case.
 # This section tries to close all the current documents.
@@ -134,9 +125,9 @@ constants_button = QtGui.QPushButton(__("Define\nConstants"))
 constants_button.setToolTip(__("Use this button to define case constants,\nsuch as gravity or fluid reference density."))
 
 
-# Opens constant definition window on button click
 def on_constants_button_pressed():
-    constants_window = dsphwidgets.ConstantsDialog(data)
+    ''' Opens constant definition window on button click. '''
+    constants_window = ConstantsDialog()
     # Constant definition window behaviour and general composing
     constants_window.resize(600, 400)
     constants_window.exec_()
@@ -153,7 +144,7 @@ help_button.clicked.connect(utils.open_help)
 # Setup window button.
 setup_button = QtGui.QPushButton(__("Setup\nPlugin"))
 setup_button.setToolTip(__("Setup of the simulator executables"))
-setup_button.clicked.connect(lambda: guiutils.def_setup_window(data))
+setup_button.clicked.connect(lambda: guiutils.def_setup_window())
 
 # Execution parameters button.
 execparams_button = QtGui.QPushButton(__("Execution\nParameters"))
@@ -161,7 +152,8 @@ execparams_button.setToolTip(__("Change execution parameters, such as\ntime of s
 
 # Opens execution parameters window on button click
 def on_execparams_button_presed():
-    execparams_window = dsphwidgets.ExecutionParametersDialog(data)
+    ''' Opens a dialog to tweak the simulation's execution parameters '''
+    execparams_window = ExecutionParametersDialog()
     # Execution parameters window behaviour and general composing
     execparams_window.resize(800, 600)
     execparams_window.exec_()
@@ -175,9 +167,9 @@ logo_label.setPixmap(guiutils.get_icon(file_name="logo.png", return_only_path=Tr
 
 
 def on_dp_changed():
-    """ DP Introduction.
-    Changes the dp at the moment the user changes the text. """
-    data['dp'] = float(dp_input.text())
+    ''' DP Introduction.
+    Changes the dp at the moment the user changes the text. '''
+    Case.instance().dp = float(dp_input.text())
 
 
 # DP Introduction layout
@@ -188,7 +180,7 @@ dp_input = QtGui.QLineEdit()
 dp_input.setToolTip(__("Lower DP to have more particles in the case."))
 dp_label2 = QtGui.QLabel(" meters")
 dp_input.setMaxLength(10)
-dp_input.setText(str(data['dp']))
+dp_input.setText(str(Case.instance().dp))
 dp_input.textChanged.connect(on_dp_changed)
 widget_state_elements['dp_input'] = dp_input
 dp_validator = QtGui.QDoubleValidator(0.0, 100, 8, dp_input)
@@ -290,8 +282,8 @@ widget_state_elements['rungencase_bt'] = rungencase_bt
 
 
 def on_new_case(prompt=True):
-    """ Defines what happens when new case is clicked. Closes all documents
-        if possible and creates a FreeCAD document with Case Limits object. """
+    ''' Defines what happens when new case is clicked. Closes all documents
+        if possible and creates a FreeCAD document with Case Limits object. '''
 
     # Closes all documents as there can only be one open.
     if utils.document_count() > 0:
@@ -300,21 +292,19 @@ def on_new_case(prompt=True):
             return
 
     # Creates a new document and merges default data to the current data structure.
-    new_case_default_data, new_case_temp_data = utils.get_default_data()
-    data.update(new_case_default_data)
-    temp_data.update(new_case_temp_data)
+    Case.instance().reset()
     utils.create_dsph_document()
     guiutils.widget_state_config(widget_state_elements, "new case")
-    data['simobjects']['Case_Limits'] = ["mkspecial", "typespecial", "fillspecial"]
-    dp_input.setText(str(data["dp"]))
+    Case.instance().add_object(SimulationObject('Case_Limits', -1, ObjectType.SPECIAL, ObjectFillMode.SPECIAL))
+    dp_input.setText(str(Case.instance().dp))
 
     # Forces call to item selection change function so all changes are taken into account
     on_tree_item_selection_change()
 
 
 def on_new_from_freecad_document(prompt=True):
-    """ Creates a new case based on an existing FreeCAD document.
-    This is specially useful for CAD users that want to use existing geometry for DesignSPHysics. """
+    ''' Creates a new case based on an existing FreeCAD document.
+    This is specially useful for CAD users that want to use existing geometry for DesignSPHysics. '''
     file_name, _ = QtGui.QFileDialog().getOpenFileName(guiutils.get_fc_main_window(), "Select document to import", QtCore.QDir.homePath())
 
     if utils.document_count() > 0:
@@ -323,27 +313,25 @@ def on_new_from_freecad_document(prompt=True):
             return
 
     # Creates a new document and merges default data to the current data structure.
-    new_case_default_data, new_case_temp_data = utils.get_default_data()
-    data.update(new_case_default_data)
-    temp_data.update(new_case_temp_data)
+    Case.instance().reset()
     utils.create_dsph_document_from_fcstd(file_name)
     guiutils.widget_state_config(widget_state_elements, "new case")
-    data['simobjects']['Case_Limits'] = ["mkspecial", "typespecial", "fillspecial"]
-    dp_input.setText(str(data["dp"]))
+    Case.instance().add_object_to_sim(SimulationObject('Case_Limits', -1, ObjectType.SPECIAL, ObjectFillMode.SPECIAL))
+    dp_input.setText(Case.instance().dp)
 
     # Forces call to item selection change function so all changes are taken into account
     on_tree_item_selection_change()
 
 
 def on_save_case(save_as=None):
-    """ Defines what happens when save case button is clicked.
-    Saves a freecad scene definition, and a dump of dsph data for the case."""
+    ''' Defines what happens when save case button is clicked.
+    Saves a freecad scene definition, and a dump of dsph data for the case.'''
     # Watch if save path is available.  Prompt the user if not.
-    if (data['project_path'] == "" and data['project_name'] == "") or save_as:
+    if (Case.instance().was_not_saved()) or save_as:
         # noinspection PyArgumentList
         save_name, _ = QtGui.QFileDialog.getSaveFileName(dsph_main_dock, __("Save Case"), QtCore.QDir.homePath())
     else:
-        save_name = data['project_path']
+        save_name = Case.instance().path
 
     # Check if there is any path, a blank one meant the user cancelled the save file dialog
     if save_name != '':
@@ -351,47 +339,47 @@ def on_save_case(save_as=None):
         # Watch if folder already exists or create it
         if not os.path.exists(save_name):
             os.makedirs(save_name)
-        data['project_path'] = save_name
-        data['project_name'] = project_name
+        Case.instance().path = save_name
+        Case.instance().name = project_name
 
         # Create out folder for the case
         if not os.path.exists("{}/{}_out".format(save_name, project_name)):
             os.makedirs("{}/{}_out".format(save_name, project_name))
 
         # Copy files from movements and change its paths to be inside the project.
-        for key, value in data["motion_mks"].items():
-            for movement in value:
-                if isinstance(movement, properties.SpecialMovement):
-                    if isinstance(movement.generator, properties.FileGen) or isinstance(movement.generator, properties.RotationFileGen):
-                        filename = movement.generator.filename
-                        utils.debug("Copying {} to {}".format(filename, save_name))
+        for _, mkproperties in Case.instance().mkbasedproperties.items():
+            for movement in mkproperties.movements:
+                    if isinstance(movement, SpecialMovement):
+                        if isinstance(movement.generator, FileGen) or isinstance(movement.generator, RotationFileGen):
+                            filename = movement.generator.filename
+                            utils.debug("Copying {} to {}".format(filename, save_name))
 
-                        # Change directory to de case one, so if file path is already relative it copies it to the
-                        # out folder
-                        os.chdir(save_name)
+                            # Change directory to de case one, so if file path is already relative it copies it to the
+                            # out folder
+                            os.chdir(save_name)
 
-                        try:
-                            # Copy to project root
-                            shutil.copy2(filename, save_name)
-                        except IOError:
-                            utils.error("Unable to copy {} into {}".format(filename, save_name))
-                        except shutil.Error:
-                            # Probably already copied the file.
-                            pass
+                            try:
+                                # Copy to project root
+                                shutil.copy2(filename, save_name)
+                            except shutil.Error:
+                                # Probably already copied the file.
+                                pass
+                            except IOError:
+                                utils.error("Unable to copy {} into {}".format(filename, save_name))
 
-                        try:
-                            # Copy to project out folder
-                            shutil.copy2(filename, save_name + "/" + project_name + "_out")
+                            try:
+                                # Copy to project out folder
+                                shutil.copy2(filename, save_name + "/" + project_name + "_out")
 
-                            movement.generator.filename = "{}".format(filename.split("/")[-1])
-                        except IOError:
-                            utils.error("Unable to copy {} into {}".format(filename, save_name))
-                        except shutil.Error:
-                            # Probably already copied the file.
-                            pass
+                                movement.generator.filename = "{}".format(filename.split("/")[-1])
+                            except shutil.Error:
+                                # Probably already copied the file.
+                                pass
+                            except IOError:
+                                utils.error("Unable to copy {} into {}".format(filename, save_name))
 
         # Copy files from Acceleration input and change paths to be inside the project folder.
-        for aid in data['accinput'].acclist:
+        for aid in Case.instance().acceleration_input.acclist:
             filename = aid.datafile
             utils.debug("Copying {} to {}".format(filename, save_name + "/" + project_name + "_out"))
 
@@ -402,11 +390,11 @@ def on_save_case(save_as=None):
             try:
                 # Copy to project root
                 shutil.copy2(filename, save_name)
-            except IOError:
-                utils.error("Unable to copy {} into {}".format(filename, save_name))
             except shutil.Error:
                 # Probably already copied the file.
                 pass
+            except IOError:
+                utils.error("Unable to copy {} into {}".format(filename, save_name))
 
             try:
                 # Copy to project out folder
@@ -414,16 +402,16 @@ def on_save_case(save_as=None):
 
                 aid.datafile = filename.split("/")[-1]
 
-            except IOError:
-                utils.error("Unable to copy {} into {}".format(filename, save_name))
             except shutil.Error:
                 # Probably already copied the file.
                 pass
+            except IOError:
+                utils.error("Unable to copy {} into {}".format(filename, save_name))
 
         # Copy files from pistons and change paths to be inside the project folder.
-        for key, piston in data["mlayerpistons"].items():
-            if isinstance(piston, MLPiston1D):
-                filename = piston.filevelx
+        for _, mkproperties in Case.instance().mkbasedproperties.items():
+            if isinstance(mkproperties.mlayerpiston, MLPiston1D):
+                filename = mkproperties.mlayerpiston.filevelx
                 utils.debug("Copying {} to {}".format(filename, save_name + "/" + project_name + "_out"))
                 # Change directory to de case one, so if file path is already relative it copies it to the
                 # out folder
@@ -432,25 +420,25 @@ def on_save_case(save_as=None):
                 try:
                     # Copy to project root
                     shutil.copy2(filename, save_name)
-                except IOError:
-                    utils.error("Unable to copy {} into {}".format(filename, save_name))
                 except shutil.Error:
                     # Probably already copied the file.
                     pass
+                except IOError:
+                    utils.error("Unable to copy {} into {}".format(filename, save_name))
 
                 try:
                     # Copy to project out folder
                     shutil.copy2(filename, save_name + "/" + project_name + "_out")
 
-                    piston.filevelx = filename.split("/")[-1]
-                except IOError:
-                    utils.error("Unable to copy {} into {}".format(filename, save_name))
+                    mkproperties.mlayerpiston.filevelx = filename.split("/")[-1]
                 except shutil.Error:
                     # Probably already copied the file.
                     pass
+                except IOError:
+                    utils.error("Unable to copy {} into {}".format(filename, save_name))
 
-            if isinstance(piston, MLPiston2D):
-                veldata = piston.veldata
+            if isinstance(mkproperties.mlayerpiston, MLPiston2D):
+                veldata = mkproperties.mlayerpiston.veldata
                 for v in veldata:
                     filename = v.filevelx
                     utils.debug("Copying {} to {}".format(filename, save_name + "/" + project_name + "_out"))
@@ -461,27 +449,27 @@ def on_save_case(save_as=None):
                     try:
                         # Copy to project root
                         shutil.copy2(filename, save_name)
-                    except IOError:
-                        utils.error("Unable to copy {} into {}".format(filename, save_name))
                     except shutil.Error:
                         # Probably already copied the file.
                         pass
+                    except IOError:
+                        utils.error("Unable to copy {} into {}".format(filename, save_name))
 
                     try:
                         # Copy to project out folder
                         shutil.copy2(filename, save_name + "/" + project_name + "_out")
 
                         v.filevelx = filename.split("/")[-1]
-                    except IOError:
-                        utils.error("Unable to copy {} into {}".format(filename, save_name))
                     except shutil.Error:
                         # Probably already copied the file.
                         pass
+                    except IOError:
+                        utils.error("Unable to copy {} into {}".format(filename, save_name))
 
         # Copies files needed for RelaxationZones into the project folder and changes data paths to relative ones.
-        if isinstance(data['relaxationzone'], RelaxationZoneFile):
+        if isinstance(Case.instance().relaxation_zone, RelaxationZoneFile):
             # Need to copy the abc_x*_y*.csv file series to the out folder
-            filename = data['relaxationzone'].filesvel
+            filename = Case.instance().relaxation_zone.filesvel
 
             # Change directory to de case one, so if file path is already relative it copies it to the
             # out folder
@@ -492,53 +480,33 @@ def on_save_case(save_as=None):
                 try:
                     # Copy to project root
                     shutil.copy2(f, save_name)
-                except IOError:
-                    utils.error("Unable to copy {} into {}".format(filename, save_name))
                 except shutil.Error:
                     # Probably already copied the file.
                     pass
+                except IOError:
+                    utils.error("Unable to copy {} into {}".format(filename, save_name))
 
                 try:
                     # Copy to project out folder
                     shutil.copy2(f, save_name + "/" + project_name + "_out")
 
-                    data['relaxationzone'].filesvel = filename.split("/")[-1]
-
-                except IOError:
-                    utils.error("Unable to copy {} into {}".format(filename, save_name))
+                    Case.instance().relaxation_zone.filesvel = filename.split("/")[-1]
                 except shutil.Error:
                     # Probably already copied the file.
                     pass
+                except IOError:
+                    utils.error("Unable to copy {} into {}".format(filename, save_name))
+
 
         # Dumps all the case data to an XML file.
-        utils.dump_to_xml(data, save_name)
+        XMLExporter().save_to_disk(save_name)
 
-        # Generate batch file in disk
-        # TODO: Batch file generation needs to be updated.
-        # Batch files need to have all the data they can have into it. Also, users should have options to include
-        # different post-processing tools in the batch files. It is disabled for now because it's not really useful.
-
-        # if (data['gencase_path'] == "") or (data['dsphysics_path'] == "") or (data['partvtk4_path'] == ""):
-        #     utils.warning(
-        #         __("Can't create executable bat file! One or more of the paths in plugin setup is not set"))
-        # else:
-        #     # Export batch files
-        #     utils.batch_generator(
-        #         full_path=save_name,
-        #         case_name=project_name,
-        #         gcpath=data['gencase_path'],
-        #         dsphpath=data['dsphysics_path'],
-        #         pvtkpath=data['partvtk4_path'],
-        #         exec_params="-{} {}".format(
-        #             str(ex_selector_combo.currentText()).lower(), data['additional_parameters']),
-        #         lib_path='/'.join(data['gencase_path'].split('/')[:-1]))
-
-        data['run_gen_case_first'] = False
+        Case.instance().info.needs_to_run_gencase = False
 
         # Save data array on disk. It is saved as a binary file with Pickle.
         try:
             with open(save_name + "/casedata.dsphdata", 'wb') as picklefile:
-                pickle.dump(data, picklefile, utils.PICKLE_PROTOCOL)
+                pickle.dump(Case.instance(), picklefile, utils.PICKLE_PROTOCOL)
         except Exception as e:
             traceback.print_exc()
             guiutils.error_dialog(__("There was a problem saving the DSPH information file (casedata.dsphdata)."))
@@ -549,10 +517,10 @@ def on_save_case(save_as=None):
 
 
 def on_save_with_gencase():
-    """ Saves data into disk and uses GenCase to generate the case files."""
+    ''' Saves data into disk and uses GenCase to generate the case files.'''
 
     # Check if the project is saved, if no shows the following message
-    if data['project_path'] == '':
+    if Case.instance().path == '':
         # Warning window about save_case
         gencase_warning_dialog = QtGui.QMessageBox()
         gencase_warning_dialog.setWindowTitle(__("Warning!"))
@@ -566,21 +534,21 @@ def on_save_with_gencase():
     utils.refocus_cwd()
 
     # Use gencase if possible to generate the case final definition
-    data['gencase_done'] = False
-    if data['gencase_path'] != "":
+    Case.instance().info.is_gencase_done = False
+    if Case.instance().executable_paths.gencase != "":
         # Tries to spawn a process with GenCase to generate the case
 
         process = QtCore.QProcess(fc_main_window)
 
-        if "./" in data['gencase_path']:
-            gencase_full_path = os.getcwd() + "/" + data['gencase_path']
+        if "./" in Case.instance().executable_paths.gencase:
+            gencase_full_path = os.getcwd() + "/" + Case.instance().executable_paths.gencase
         else:
-            gencase_full_path = data['gencase_path']
+            gencase_full_path = Case.instance().executable_paths.gencase
 
-        process.setWorkingDirectory(data['project_path'])
+        process.setWorkingDirectory(Case.instance().path)
         process.start(gencase_full_path, [
-            data['project_path'] + '/' + data['project_name'] + '_Def', data['project_path'] +
-            '/' + data['project_name'] + '_out/' + data['project_name'],
+            Case.instance().path + '/' + Case.instance().name + '_Def', Case.instance().path +
+            '/' + Case.instance().name + '_out/' + Case.instance().name,
             '-save:+all'
         ])
 
@@ -595,7 +563,7 @@ def on_save_with_gencase():
             try:
                 total_particles_text = output[output.index("Total particles: "):output.index(" (bound=")]
                 total_particles = int(total_particles_text[total_particles_text.index(": ") + 2:])
-                data['total_particles'] = total_particles
+                Case.instance().info.particle_number = total_particles
                 utils.log(__("Total number of particles exported: ") + str(total_particles))
                 if total_particles < 300:
                     utils.warning(__("Are you sure all the parameters are set right? The number of particles is very low ({}). "
@@ -603,23 +571,22 @@ def on_save_with_gencase():
                 elif total_particles > 200000:
                     utils.warning(__("Number of particles is pretty high ({}) "
                                      "and it could take a lot of time to simulate.").format(str(total_particles)))
-                data['gencase_done'] = True
+                Case.instance().info.is_gencase_done = True
                 guiutils.widget_state_config(widget_state_elements, "gencase done")
-                data["last_number_particles"] = int(total_particles)
+                Case.instance().info.previous_particle_number = int(total_particles)
                 guiutils.gencase_completed_dialog(particle_count=total_particles,
-                                                  detail_text=output.split("================================")[1],
-                                                  data=data, temp_data=temp_data)
+                                                  detail_text=output.split("================================")[1])
             except ValueError:
                 # Not an expected result. GenCase had a not handled error
                 error_in_gen_case = True
 
     # Check if there is any path, a blank one meant the user cancelled the save file dialog
-    if data['project_path'] != '':
+    if Case.instance().path != '':
         # If for some reason GenCase failed
         if str(process.exitCode()) != "0" or error_in_gen_case:
             try:
                 # Multiple possible causes. Let the user know
-                gencase_out_file = open(data['project_path'] + '/' + data['project_name'] + '_out/' + data['project_name'] + ".out", "r")
+                gencase_out_file = open(Case.instance().path + '/' + Case.instance().name + '_out/' + Case.instance().name + ".out", "r")
                 gencase_failed_dialog = QtGui.QMessageBox()
                 gencase_failed_dialog.setText(__("Error executing GenCase. Did you add objects to the case?. "
                                                  "Another reason could be memory issues. View details for more info."))
@@ -641,11 +608,11 @@ def on_save_with_gencase():
     else:
         utils.log(__("Saving cancelled."))
 
-    data['run_gen_case_first'] = True
+    Case.instance().info.needs_to_run_gencase = True
 
 
 def on_newdoc_menu(action):
-    """ Handles the new document button and its dropdown items. """
+    ''' Handles the new document button and its dropdown items. '''
     if __("New") in action.text():
         on_new_case()
     if __("Import FreeCAD Document") in action.text():
@@ -653,13 +620,13 @@ def on_newdoc_menu(action):
 
 
 def on_save_menu(action):
-    """ Handles the save button and its dropdown items. """
+    ''' Handles the save button and its dropdown items. '''
     if __("Save as...") in action.text():
         on_save_case(save_as=True)
 
 
 def on_load_button():
-    """ Defines load case button behaviour. This is made so errors can be detected and handled. """
+    ''' Defines load case button behaviour. This is made so errors can be detected and handled. '''
     try:
         on_load_case()
     except ImportError:
@@ -670,9 +637,9 @@ def on_load_button():
 
 
 def on_load_case():
-    """Defines loading case mechanism.
+    '''Defines loading case mechanism.
     Load points to a dsphdata custom file, that stores all the relevant info.
-    If FCStd file is not found the project is considered corrupt."""
+    If FCStd file is not found the project is considered corrupt.'''
     # noinspection PyArgumentList
     load_name, _ = QtGui.QFileDialog.getOpenFileName(dsph_main_dock, __("Load Case"), QtCore.QDir.homePath(), "casedata.dsphdata")
     if load_name == "":
@@ -696,7 +663,6 @@ def on_load_case():
     FreeCAD.open(load_path_project_folder + "/DSPH_Case.FCStd")
 
     # Loads own file and sets data and button behaviour
-    global data
     global dp_input
     try:
         # Previous versions of DesignSPHysics saved the data on disk in an ASCII way (pickle protocol 0), so sometimes
@@ -712,46 +678,42 @@ def on_load_case():
                 return
 
         # Remove exec paths from loaded data if user have already correct ones.
-        _, already_correct = utils.check_executables(data)
+        _, already_correct = utils.check_executables()
         if already_correct:
             [load_disk_data.pop(x, None) for x in
              ['gencase_path', 'dsphysics_path', 'partvtk4_path', 'floatinginfo_path', 'computeforces_path',
               'measuretool_path', 'isosurface_path', 'boundaryvtk_path']]
 
         # Update data structure with disk loaded one
-        data.update(load_disk_data)
+        data.update(load_disk_data) #TODO: Update mechanism for new data
     except (EOFError, ValueError):
         guiutils.error_dialog(
-            __("There was an error importing the case properties. You probably need to set them again."
+            __("There was an error importing the case  You probably need to set them again."
                "\n\n"
                "This could be caused due to file corruption, "
                "caused by operating system based line endings or ends-of-file, or other related aspects."))
 
     # Fill some data
-    dp_input.setText(str(data['dp']))
-    data['project_path'] = load_path_project_folder
-    data['project_name'] = load_path_project_folder.split("/")[-1]
-
-    # Compatibility code. Transform content from previous version to this one.
-    # Make FloatProperty compatible
-    data['floating_mks'] = utils.float_list_to_float_property(data['floating_mks'])
-    data['initials_mks'] = utils.initials_list_to_initials_property(data['initials_mks'])
+    dp_input.setText(str(Case.instance().dp))
+    
+    Case.instance().path = load_path_project_folder
+    Case.instance().name = load_path_project_folder.split("/")[-1]
 
     # Adapt widget state to case info
     guiutils.widget_state_config(widget_state_elements, "load base")
-    if data['gencase_done']:
+    if Case.instance().info.is_gencase_done:
         guiutils.widget_state_config(widget_state_elements, "gencase done")
     else:
         guiutils.widget_state_config(widget_state_elements, "gencase not done")
 
-    if data['simulation_done']:
+    if Case.instance().info.is_simulation_done:
         guiutils.widget_state_config(widget_state_elements, "simulation done")
     else:
         guiutils.widget_state_config(widget_state_elements, "simulation not done")
 
     # Check executable paths
     utils.refocus_cwd()
-    data, correct_execs = utils.check_executables(data)
+    data, correct_execs = utils.check_executables()
     if not correct_execs:
         guiutils.widget_state_config(widget_state_elements, "execs not correct")
 
@@ -760,10 +722,10 @@ def on_load_case():
 
 
 def on_add_fillbox():
-    """ Add fillbox group. It consists
+    ''' Add fillbox group. It consists
     in a group with 2 objects inside: a point and a box.
     The point represents the fill seed and the box sets
-    the bounds for the filling"""
+    the bounds for the filling'''
     fillbox_gp = FreeCAD.getDocument("DSPH_Case").addObject("App::DocumentObjectGroup", "FillBox")
     fillbox_point = FreeCAD.ActiveDocument.addObject("Part::Sphere", "FillPoint")
     fillbox_limits = FreeCAD.ActiveDocument.addObject("Part::Box", "FillLimit")
@@ -782,9 +744,9 @@ def on_add_fillbox():
 
 
 def on_add_damping_zone():
-    """ Adds a damping zone into the case. It consist on a solid line that rempresents the damping vector
+    ''' Adds a damping zone into the case. It consist on a solid line that rempresents the damping vector
     and a dashed line representing the overlimit. It can be adjusted in the damping property window
-    or changing the lines itselves."""
+    or changing the lines itselves.'''
     damping_group = FreeCAD.ActiveDocument.addObject("App::DocumentObjectGroup", "DampingZone")
 
     # Limits line
@@ -820,25 +782,26 @@ def on_add_damping_zone():
 
     FreeCAD.ActiveDocument.recompute()
     FreeCADGui.SendMsgToActiveView("ViewFit")
+    
     # Save damping in the main data structure.
-    data["damping"][damping_group.Name] = Damping()
+    Case.instance().get_simulation_object(damping_group.Name).damping = Damping()
     # Opens damping configuration window to tweak the added damping zone.
-    dsphwidgets.DampingConfigDialog(data, damping_group.Name)
+    DampingConfigDialog(damping_group.Name)
 
 
 def on_add_inlet():
     # Opens Inlet/Outlet configuration window to configurate the inlet/outlet options.
-    dsphwidgets.InletConfigDialog(data)
+    InletConfigDialog()
 
 
 def on_add_chrono():
     # Opens chrono configuration window to configurate the chrono options.
-    dsphwidgets.ChronoConfigDialog(data)
+    ChronoConfigDialog()
 
 
 def on_add_stl():
-    """ Add STL file. Opens a file opener and allows
-    the user to set parameters for the import process """
+    ''' Add STL file. Opens a file opener and allows
+    the user to set parameters for the import process '''
 
     # TODO: Low priority: This Dialog should be implemented and designed as a class like AddSTLDialog(QtGui.QDialog)
     filedialog = QtGui.QFileDialog()
@@ -929,7 +892,7 @@ def on_add_stl():
 
     # STL Dialog function definition and connections
     def geo_ok_clicked():
-        """ Defines ok button behaviour"""
+        ''' Defines ok button behaviour'''
         [geo_scaling_edit.setText(geo_scaling_edit.text().replace(",", ".")) for geo_scaling_edit in [
             geo_scaling_x_e,
             geo_scaling_y_e,
@@ -942,8 +905,7 @@ def on_add_stl():
                 scale_y=float(geo_scaling_y_e.text()),
                 scale_z=float(geo_scaling_z_e.text()),
                 name=str(geo_objname_text.text()),
-                autofill=geo_autofill_chck.isChecked(),
-                data=data)
+                autofill=geo_autofill_chck.isChecked())
 
             geo_dialog.accept()
         except ValueError:
@@ -951,7 +913,7 @@ def on_add_stl():
             guiutils.error_dialog(__("There was an error. Are you sure you wrote correct float values in the sacaling factor?"))
 
     def geo_dialog_browse():
-        """ Defines the browse button behaviour."""
+        ''' Defines the browse button behaviour.'''
         # noinspection PyArgumentList
         file_name_temp, _ = filedialog.getOpenFileName(fc_main_window, __("Select GEO to import"),
                                                        QtCore.QDir.homePath(), "STL Files (*.stl);;PLY Files "
@@ -968,91 +930,96 @@ def on_add_stl():
 
 
 def on_import_xml():
-    """ Imports an already created GenCase/DSPH compatible
-    file and loads it in the scene. """
+    ''' Imports an already created GenCase/DSPH compatible
+    file and loads it in the scene. '''
 
-    guiutils.warning_dialog(__("This feature is experimental. It's meant to help to build a case importing bits from"
-                               "previous, non DesignSPHysics code. This is not intended neither to import all objects "
-                               "nor its properties."))
+    guiutils.error_dialog(__("This feature is disabled in this version. Sorry for the inconvenience"))
+
+    return
+   
+    # guiutils.warning_dialog(__("This feature is experimental. It's meant to help to build a case importing bits from"
+    #                            "previous, non DesignSPHysics code. This is not intended neither to import all objects "
+    #                            "nor its "))
 
     # noinspection PyArgumentList
-    import_name, _ = QtGui.QFileDialog.getOpenFileName(dsph_main_dock, __("Import XML"), QtCore.QDir.homePath(), "XML Files (*.xml)")
-    if import_name == "":
-        # User pressed cancel.  No path is selected.
-        return
-    else:
-        if utils.get_number_of_documents() > 0:
-            if utils.prompt_close_all_documents():
-                on_new_case()
-            else:
-                return
-        else:
-            on_new_case()
-        config, objects = xmlimporter.import_xml_file(import_name)
+    # import_name, _ = QtGui.QFileDialog.getOpenFileName(dsph_main_dock, __("Import XML"), QtCore.QDir.homePath(), "XML Files (*.xml)")
+    # if import_name == "":
+    #     # User pressed cancel.  No path is selected.
+    #     return
+    # else:
+    #     if utils.get_number_of_documents() > 0:
+    #         if utils.prompt_close_all_documents():
+    #             on_new_case()
+    #         else:
+    #             return
+    #     else:
+    #         on_new_case()
+    #     config, objects = xmlimporter.import_xml_file(import_name)
 
-        # Set Config
-        dp_input.setText(str(config['dp']))
-        limits_point_min = config['limits_min']
-        limits_point_max = config['limits_max']
-        # noinspection PyArgumentList
-        FreeCAD.ActiveDocument.getObject('Case_Limits').Placement = FreeCAD.Placement(
-            FreeCAD.Vector(limits_point_min[0] * 1000, limits_point_min[1] * 1000, limits_point_min[2] * 1000),
-            FreeCAD.Rotation(FreeCAD.Vector(0, 0, 1), 0))
-        FreeCAD.ActiveDocument.getObject("Case_Limits").Length = str(limits_point_max[0] - limits_point_min[0]) + ' m'
-        FreeCAD.ActiveDocument.getObject("Case_Limits").Width = str(limits_point_max[1] - limits_point_min[1]) + ' m'
-        FreeCAD.ActiveDocument.getObject("Case_Limits").Height = str(limits_point_max[2] - limits_point_min[2]) + ' m'
+    #     # Set Config
+    #     dp_input.setText(str(config['dp']))
+    #     limits_point_min = config['limits_min']
+    #     limits_point_max = config['limits_max']
+    #     # noinspection PyArgumentList
+    #     FreeCAD.ActiveDocument.getObject('Case_Limits').Placement = FreeCAD.Placement(
+    #         FreeCAD.Vector(limits_point_min[0] * 1000, limits_point_min[1] * 1000, limits_point_min[2] * 1000),
+    #         FreeCAD.Rotation(FreeCAD.Vector(0, 0, 1), 0))
+    #     FreeCAD.ActiveDocument.getObject("Case_Limits").Length = str(limits_point_max[0] - limits_point_min[0]) + ' m'
+    #     FreeCAD.ActiveDocument.getObject("Case_Limits").Width = str(limits_point_max[1] - limits_point_min[1]) + ' m'
+    #     FreeCAD.ActiveDocument.getObject("Case_Limits").Height = str(limits_point_max[2] - limits_point_min[2]) + ' m'
 
-        # Merges and updates current data with the imported one.
-        data.update(config)
+    #     # Merges and updates current data with the imported one.
+    #     # data.update(config)
 
-        # Add results to DSPH objects
-        for key, value in objects.items():
-            add_object_to_sim(key)
-            data['simobjects'][key] = value
-            # Change visual properties based on fill mode and type
-            target_object = FreeCADGui.ActiveDocument.getObject(key)
-            if "bound" in value[1]:
-                if "full" in value[2]:
-                    target_object.ShapeColor = (0.80, 0.80, 0.80)
-                    target_object.Transparency = 0
-                elif "solid" in value[2]:
-                    target_object.ShapeColor = (0.80, 0.80, 0.80)
-                    target_object.Transparency = 0
-                elif "face" in value[2]:
-                    target_object.ShapeColor = (0.80, 0.80, 0.80)
-                    target_object.Transparency = 80
-                elif "wire" in value[2]:
-                    target_object.ShapeColor = (0.80, 0.80, 0.80)
-                    target_object.Transparency = 85
-            if "fluid" in value[1]:
-                if "full" in value[2]:
-                    target_object.ShapeColor = (0.00, 0.45, 1.00)
-                    target_object.Transparency = 30
-                elif "solid" in value[2]:
-                    target_object.ShapeColor = (0.00, 0.45, 1.00)
-                    target_object.Transparency = 30
-                elif "face" in value[2]:
-                    target_object.ShapeColor = (0.00, 0.45, 1.00)
-                    target_object.Transparency = 80
-                elif "wire" in value[2]:
-                    target_object.ShapeColor = (0.00, 0.45, 1.00)
-                    target_object.Transparency = 85
+    #     # Add results to DSPH objects
+    #     for key, value in objects.items():
+    #         add_object_to_sim(key)
+    #         # data['simobjects'][key] = value
 
-            # Notify change to refresh UI elements related.
-            on_tree_item_selection_change()
-    guiutils.info_dialog(__("Importing successful. Note that some objects may not be automatically added to the case, "
-                            "and other may not have its properties correctly applied."))
+    #         # Change visual properties based on fill mode and type
+    #         target_object = FreeCADGui.ActiveDocument.getObject(key)
+    #         if "bound" in value[1]:
+    #             if "full" in value[2]:
+    #                 target_object.ShapeColor = (0.80, 0.80, 0.80)
+    #                 target_object.Transparency = 0
+    #             elif "solid" in value[2]:
+    #                 target_object.ShapeColor = (0.80, 0.80, 0.80)
+    #                 target_object.Transparency = 0
+    #             elif "face" in value[2]:
+    #                 target_object.ShapeColor = (0.80, 0.80, 0.80)
+    #                 target_object.Transparency = 80
+    #             elif "wire" in value[2]:
+    #                 target_object.ShapeColor = (0.80, 0.80, 0.80)
+    #                 target_object.Transparency = 85
+    #         if "fluid" in value[1]:
+    #             if "full" in value[2]:
+    #                 target_object.ShapeColor = (0.00, 0.45, 1.00)
+    #                 target_object.Transparency = 30
+    #             elif "solid" in value[2]:
+    #                 target_object.ShapeColor = (0.00, 0.45, 1.00)
+    #                 target_object.Transparency = 30
+    #             elif "face" in value[2]:
+    #                 target_object.ShapeColor = (0.00, 0.45, 1.00)
+    #                 target_object.Transparency = 80
+    #             elif "wire" in value[2]:
+    #                 target_object.ShapeColor = (0.00, 0.45, 1.00)
+    #                 target_object.Transparency = 85
+
+    #         # Notify change to refresh UI elements related.
+    #         on_tree_item_selection_change()
+    # guiutils.info_dialog(__("Importing successful. Note that some objects may not be automatically added to the case, "
+    #                         "and other may not have its properties correctly applied."))
 
 
 def on_summary():
-    """ Handles Case Summary button """
-    guiutils.case_summary(data)
+    ''' Handles Case Summary button '''
+    guiutils.case_summary()
 
 
 def on_2d_toggle():
-    """ Handles Toggle 3D/2D Button. Changes the Case Limits object accordingly. """
+    ''' Handles Toggle 3D/2D Button. Changes the Case Limits object accordingly. '''
     if utils.valid_document_environment():
-        if data['3dmode']:
+        if Case.instance().mode3d:
             # Change to 2D
 
             # TODO: Low-priority: This dialog should be implemented as a class like 2DModeConfig(QtGui.QDialog)
@@ -1064,7 +1031,7 @@ def on_2d_toggle():
 
             # Ok Button handler
             def on_ok():
-                temp_data['3d_width'] = utils.get_fc_object('Case_Limits').Width.Value
+                Case.instance().info.last_3d_width = utils.get_fc_object('Case_Limits').Width.Value
 
                 try:
                     utils.get_fc_object('Case_Limits').Placement.Base.y = float(y2_pos_input.text())
@@ -1076,8 +1043,8 @@ def on_2d_toggle():
                 guiutils.get_fc_view_object('Case_Limits').ShapeColor = (1.00, 0.00, 0.00)
                 guiutils.get_fc_view_object('Case_Limits').Transparency = 90
                 # Toggle 3D Mode and change name
-                data['3dmode'] = not data['3dmode']
-                utils.get_fc_object('Case_Limits').Label = "Case Limits (3D)" if data['3dmode'] else "Case Limits (2D)"
+                Case.instance().mode3d = not Case.instance().mode3d
+                utils.get_fc_object('Case_Limits').Label = "Case Limits (3D)" if Case.instance().mode3d else "Case Limits (2D)"
                 y_pos_2d_window.accept()
 
             # Cancel Button handler
@@ -1108,26 +1075,26 @@ def on_2d_toggle():
             y_pos_2d_window.setLayout(y_pos_2d_layout)
             y_pos_2d_window.exec_()
         else:
-            # Change to 3D
-            try:
-                # Try to restore original Width.
-                utils.get_fc_object('Case_Limits').Width = temp_data['3d_width']
-            except:
-                # If its not saved just set it same as Length
+            # Toggle 3D Mode and change name
+            Case.instance().mode3d = not Case.instance().mode3d
+            
+            # Try to restore original Width.
+            if Case.instance().info.last_3d_width > 0.0:
+                utils.get_fc_object('Case_Limits').Width = Case.instance().info.last_3d_width
+            else:
                 utils.get_fc_object('Case_Limits').Width = utils.get_fc_object('Case_Limits').Length
 
             guiutils.get_fc_view_object('Case_Limits').DisplayMode = 'Wireframe'
             guiutils.get_fc_view_object('Case_Limits').ShapeColor = (0.80, 0.80, 0.80)
             guiutils.get_fc_view_object('Case_Limits').Transparency = 0
-            # Toggle 3D Mode and change name
-            data['3dmode'] = not data['3dmode']
-            utils.get_fc_object('Case_Limits').Label = "Case Limits (3D)" if data['3dmode'] else "Case Limits (2D)"
+            
+            utils.get_fc_object('Case_Limits').Label = "Case Limits (3D)" if Case.instance().mode3d else "Case Limits (2D)"
     else:
         utils.error("Not a valid case environment")
 
 
 def on_special_button():
-    """ Spawns a dialog with special options. This is only a selector """
+    ''' Spawns a dialog with special options. This is only a selector '''
 
     # TODO: Low-priority: This should be implemented in a class like SpecialOptionsSelector(QtGui.QDialog)
     sp_window = QtGui.QDialog()
@@ -1157,22 +1124,22 @@ def on_special_button():
     sp_accinput_button = QtGui.QPushButton(__("Acceleration Inputs"))
 
     def on_damping_option():
-        """ Defines damping button behaviour"""
+        ''' Defines damping button behaviour'''
         on_add_damping_zone()
         sp_window.accept()
 
     def on_inlet_option():
-        """ Defines Inlet/Outlet behaviour """
+        ''' Defines Inlet/Outlet behaviour '''
         on_add_inlet()
         sp_window.accept()
 
     def on_chrono_option():
-        """ Defines Coupling CHRONO behaviour"""
+        ''' Defines Coupling CHRONO behaviour'''
         on_add_chrono()
         sp_window.accept()
 
     def on_multilayeredmb_menu(action):
-        """ Defines MLPiston menu behaviour"""
+        ''' Defines MLPiston menu behaviour'''
         # Get currently selected object
         try:
             selection = FreeCADGui.Selection.getSelection()[0]
@@ -1181,21 +1148,21 @@ def on_special_button():
             return
 
         # Check if object is in the simulation
-        if selection.Name not in data['simobjects'].keys():
+        if Case.instance().is_object_in_simulation(selection.Name):
             guiutils.error_dialog(__("The selected object must be added to the simulation"))
             return
 
         # Check if it is fluid and warn the user.
-        if "fluid" in data["simobjects"][selection.Name][1].lower():
+        if Case.instance().get_simulation_object(selection.Name).type == ObjectType.FLUID:
             guiutils.error_dialog(__("You can't apply a piston movement to a fluid.\n"
                                      "Please select a boundary and try again"))
             return
 
         # Get selection mk
-        selection_mk = data["simobjects"][selection.Name][0]
+        selection_mk = Case.instance().get_simulation_object(selection.Name).obj_mk
 
         # Check that this mk has no other motions applied
-        if selection_mk in data['motion_mks'].keys():
+        if Case.instance().get_mk_base_properties(selection_mk).has_movements():
             # MK has motions applied. Warn the user and delete them
             motion_delete_warning = guiutils.ok_cancel_dialog(
                 utils.APP_NAME,
@@ -1206,7 +1173,7 @@ def on_special_button():
             if motion_delete_warning == QtGui.QMessageBox.Cancel:
                 return
             else:
-                data['motion_mks'].pop(selection_mk, None)
+                Case.instance().get_mk_base_properties(selection_mk).remove_all_movements()
 
         # 1D or 2D piston
         if __("1 Dimension") in action.text():
@@ -1221,11 +1188,11 @@ def on_special_button():
                         return
 
             if selection_mk in data['mlayerpistons'].keys() and isinstance(data['mlayerpistons'][selection_mk], MLPiston1D):
-                config_dialog = dsphwidgets.MLPiston1DConfigDialog(
+                config_dialog = MLPiston1DConfigDialog(
                     selection_mk, data['mlayerpistons'][selection_mk]
                 )
             else:
-                config_dialog = dsphwidgets.MLPiston1DConfigDialog(
+                config_dialog = MLPiston1DConfigDialog(
                     selection_mk, None
                 )
 
@@ -1250,11 +1217,11 @@ def on_special_button():
 
             if selection_mk in data['mlayerpistons'].keys() and isinstance(data['mlayerpistons'][selection_mk],
                                                                            MLPiston2D):
-                config_dialog = dsphwidgets.MLPiston2DConfigDialog(
+                config_dialog = MLPiston2DConfigDialog(
                     selection_mk, data['mlayerpistons'][selection_mk]
                 )
             else:
-                config_dialog = dsphwidgets.MLPiston2DConfigDialog(
+                config_dialog = MLPiston2DConfigDialog(
                     selection_mk, None
                 )
 
@@ -1269,7 +1236,7 @@ def on_special_button():
         sp_window.accept()
 
     def on_relaxationzone_menu(action):
-        """ Defines Relaxation Zone menu behaviour."""
+        ''' Defines Relaxation Zone menu behaviour.'''
 
         # Check which type of relaxationzone it is
         if action.text() == __("Regular waves"):
@@ -1285,7 +1252,7 @@ def on_special_button():
                     else:
                         data['relaxationzone'] = RelaxationZoneRegular()
 
-            config_dialog = dsphwidgets.RelaxationZoneRegularConfigDialog(data['relaxationzone'])
+            config_dialog = RelaxationZoneRegularConfigDialog(data['relaxationzone'])
 
             # Set the relaxation zone. Can be an object or be None
             data['relaxationzone'] = config_dialog.relaxationzone
@@ -1302,7 +1269,7 @@ def on_special_button():
                     else:
                         data['relaxationzone'] = RelaxationZoneIrregular()
 
-            config_dialog = dsphwidgets.RelaxationZoneIrregularConfigDialog(
+            config_dialog = RelaxationZoneIrregularConfigDialog(
                 data['relaxationzone']
             )
 
@@ -1322,7 +1289,7 @@ def on_special_button():
                     else:
                         data['relaxationzone'] = RelaxationZoneFile()
 
-            config_dialog = dsphwidgets.RelaxationZoneFileConfigDialog(data['relaxationzone'])
+            config_dialog = RelaxationZoneFileConfigDialog(data['relaxationzone'])
 
             # Set the relaxation zone. Can be an object or be None
             data['relaxationzone'] = config_dialog.relaxationzone
@@ -1341,7 +1308,7 @@ def on_special_button():
                     else:
                         data['relaxationzone'] = RelaxationZoneUniform()
 
-            config_dialog = dsphwidgets.RelaxationZoneUniformConfigDialog(data['relaxationzone'])
+            config_dialog = RelaxationZoneUniformConfigDialog(data['relaxationzone'])
 
             # Set the relaxation zone. Can be an object or be None
             data['relaxationzone'] = config_dialog.relaxationzone
@@ -1349,8 +1316,8 @@ def on_special_button():
         sp_window.accept()
 
     def on_accinput_button():
-        """ Acceleration input button behaviour."""
-        accinput_dialog = dsphwidgets.AccelerationInputDialog(data['accinput'])
+        ''' Acceleration input button behaviour.'''
+        accinput_dialog = AccelerationInputDialog(data['accinput'])
         result = accinput_dialog.exec_()
         if result == QtGui.QDialog.Accepted:
             data['accinput'] = accinput_dialog.get_result()
@@ -1409,11 +1376,11 @@ cc_layout.addLayout(ccfourthrow_layout)
 
 
 def on_ex_simulate():
-    """ Defines what happens on simulation button press.
+    ''' Defines what happens on simulation button press.
     It shows the run window and starts a background process
-    with dualsphysics running. Updates the window with useful info."""
+    with dualsphysics running. Updates the window with useful info.'''
 
-    if data['run_gen_case_first'] != True:
+    if Case.instance().info.needs_to_run_gencase != True:
         # Warning window about save_case
         run_warning_dialog = QtGui.QMessageBox()
         run_warning_dialog.setWindowTitle(__("Warning!"))
@@ -1422,32 +1389,32 @@ def on_ex_simulate():
         run_warning_dialog.setIcon(QtGui.QMessageBox.Warning)
         run_warning_dialog.exec_()
 
-    run_dialog = dsphwidgets.RunDialog()
+    run_dialog = RunDialog()
     run_dialog.run_progbar_bar.setValue(0)
-    data['simulation_done'] = False
+    Case.instance().info.is_simulation_done = False
     guiutils.widget_state_config(widget_state_elements, "sim start")
     run_dialog.run_button_cancel.setText(__("Cancel Simulation"))
     run_dialog.setWindowTitle(__("DualSPHysics Simulation: {}%").format("0"))
-    run_dialog.run_group_label_case.setText(__("Case name: ") + data['project_name'])
+    run_dialog.run_group_label_case.setText(__("Case name: ") + Case.instance().name)
     run_dialog.run_group_label_proc.setText(__("Simulation processor: ") + str(ex_selector_combo.currentText()))
-    run_dialog.run_group_label_part.setText(__("Number of particles: ") + str(data['total_particles']))
+    run_dialog.run_group_label_part.setText(__("Number of particles: ") + str(Case.instance().info.particle_number))
     run_dialog.run_group_label_partsout.setText(__("Total particles out: ") + "0")
     run_dialog.run_group_label_eta.setText(__("Estimated time to complete simulation: ") + __("Calculating..."))
 
     # Cancel button handler
     def on_cancel():
         utils.log(__("Stopping simulation"))
-        if temp_data['current_process'] is not None:
-            temp_data['current_process'].kill()
+        if Case.instance().info.current_process is not None:
+            Case.instance().info.current_process.kill()
         run_dialog.hide()
         run_dialog.run_details.hide()
-        data['simulation_done'] = False
+        Case.instance().info.is_simulation_done = False
         guiutils.widget_state_config(widget_state_elements, "sim cancel")
 
     run_dialog.run_button_cancel.clicked.connect(on_cancel)
 
     def on_details():
-        """ Details button handler. Opens and closes the details pane on the execution window."""
+        ''' Details button handler. Opens and closes the details pane on the execution window.'''
         if run_dialog.run_details.isVisible():
             utils.debug('Hiding details pane on execution')
             run_dialog.run_details.hide()
@@ -1465,25 +1432,25 @@ def on_ex_simulate():
     run_dialog.run_button_details.clicked.connect(on_details)
 
     # Launch simulation and watch filesystem to monitor simulation
-    filelist = [f for f in os.listdir(data['project_path'] + '/' + data['project_name'] + "_out/") if f.startswith("Part")]
+    filelist = [f for f in os.listdir(Case.instance().path + '/' + Case.instance().name + "_out/") if f.startswith("Part")]
     for f in filelist:
-        os.remove(data['project_path'] + '/' + data['project_name'] + "_out/" + f)
+        os.remove(Case.instance().path + '/' + Case.instance().name + "_out/" + f)
 
     def on_dsph_sim_finished(exit_code):
-        """ Simulation finish handler. Defines what happens when the process finishes."""
+        ''' Simulation finish handler. Defines what happens when the process finishes.'''
 
         # Reads output and completes the progress bar
-        output = temp_data['current_process'].readAllStandardOutput()
+        output = Case.instance().info.current_process.readAllStandardOutput()
         run_dialog.run_details_text.setText(str(output))
         run_dialog.run_details_text.moveCursor(QtGui.QTextCursor.End)
-        run_dialog.run_watcher.removePath(data['project_path'] + '/' + data['project_name'] + "_out/")
+        run_dialog.run_watcher.removePath(Case.instance().path + '/' + Case.instance().name + "_out/")
         run_dialog.setWindowTitle(__("DualSPHysics Simulation: Complete"))
         run_dialog.run_progbar_bar.setValue(100)
         run_dialog.run_button_cancel.setText(__("Close"))
 
         if exit_code == 0:
             # Simulation went correctly
-            data['simulation_done'] = True
+            Case.instance().info.is_simulation_done = True
             guiutils.widget_state_config(widget_state_elements, "sim finished")
         else:
             # In case of an error
@@ -1504,26 +1471,26 @@ def on_ex_simulate():
     # Launches a QProcess in background
     process = QtCore.QProcess(run_dialog)
     process.finished.connect(on_dsph_sim_finished)
-    temp_data['current_process'] = process
+    Case.instance().info.current_process = process
     static_params_exe = [
-        data['project_path'] + '/' + data['project_name'] + "_out/" +
-        data['project_name'], data['project_path'] +
-        '/' + data['project_name'] + "_out/",
+        Case.instance().path + '/' + Case.instance().name + "_out/" +
+        Case.instance().name, Case.instance().path +
+        '/' + Case.instance().name + "_out/",
         "-svres", "-" + str(ex_selector_combo.currentText()).lower()
     ]
-    if len(data['additional_parameters']) < 2:
+    if len(Case.instance().info.run_additional_parameters) < 2:
         additional_params_ex = list()
     else:
-        additional_params_ex = data['additional_parameters'].split(" ")
+        additional_params_ex = Case.instance().info.run_additional_parameters.split(" ")
     final_params_ex = static_params_exe + additional_params_ex
-    temp_data['current_process'].start(data['dsphysics_path'], final_params_ex)
+    Case.instance().info.current_process.start(Case.instance().executable_paths.dsphysics, final_params_ex)
 
     def on_fs_change():
-        """ Executed each time the filesystem changes. This updates the percentage of the simulation and its
-        details."""
+        ''' Executed each time the filesystem changes. This updates the percentage of the simulation and its
+        details.'''
         run_file_data = ''
         try:
-            with open(data['project_path'] + '/' + data['project_name'] + "_out/Run.out", "r") as run_file:
+            with open(Case.instance().path + '/' + Case.instance().name + "_out/Run.out", "r") as run_file:
                 run_file_data = run_file.readlines()
         except Exception as e:
             pass
@@ -1534,14 +1501,14 @@ def on_ex_simulate():
 
         # Set percentage scale based on timemax
         for l in run_file_data:
-            if data['timemax'] == -1:
+            if Case.instance().execution_parameters.timemax == -1:
                 if "TimeMax=" in l:
-                    data['timemax'] = float(l.split("=")[1])
+                    Case.instance().execution_parameters.timemax = float(l.split("=")[1])
 
         # Update execution metrics on GUI
         last_part_lines = list(filter(lambda x: "Part_" in x and "stored" not in x and "      " in x, run_file_data))
         if len(last_part_lines):
-            current_value = (float(last_part_lines[-1].split("      ")[1]) * float(100)) / float(data['timemax'])
+            current_value = (float(last_part_lines[-1].split("      ")[1]) * float(100)) / float(Case.instance().execution_parameters.timemax)
             run_dialog.run_progbar_bar.setValue(current_value)
             run_dialog.setWindowTitle(__("DualSPHysics Simulation: {}%").format(str(format(current_value, ".2f"))))
             run_dialog.run_group_label_eta.setText(__("Estimated time to complete simulation: ") + last_part_lines[-1].split("  ")[-1])
@@ -1551,20 +1518,20 @@ def on_ex_simulate():
         if len(last_particles_out_lines):
             utils.dump_to_disk("".join(last_particles_out_lines))
             totalpartsout = int(last_particles_out_lines[-1].split("(total: ")[1].split(")")[0])
-            data['total_particles_out'] = totalpartsout
-            run_dialog.run_group_label_partsout.setText(__("Total particles out: {}").format(str(data['total_particles_out'])))
+            Case.instance().info.particles_out = totalpartsout
+            run_dialog.run_group_label_partsout.setText(__("Total particles out: {}").format(str(Case.instance().info.particles_out)))
 
     # Set filesystem watcher to the out directory.
-    run_dialog.run_watcher.addPath(data['project_path'] + '/' + data['project_name'] + "_out/")
+    run_dialog.run_watcher.addPath(Case.instance().path + '/' + Case.instance().name + "_out/")
     run_dialog.run_watcher.directoryChanged.connect(on_fs_change)
 
-    data['run_gen_case_first'] = False
+    Case.instance().info.needs_to_run_gencase = False
 
     # Handle error on simulation start
-    if temp_data['current_process'].state() == QtCore.QProcess.NotRunning:
+    if Case.instance().info.current_process.state() == QtCore.QProcess.NotRunning:
         # Probably error happened.
-        run_watcher.removePath(data['project_path'] + '/' + data['project_name'] + "_out/")
-        temp_data['current_process'] = ""
+        run_dialog.run_watcher.removePath(Case.instance().path + '/' + Case.instance().name + "_out/")
+        Case.instance().info.current_process = ""
         exec_not_correct_dialog = QtGui.QMessageBox()
         exec_not_correct_dialog.setText(__("Error on simulation start. Is the path of DualSPHysics correctly placed?"))
         exec_not_correct_dialog.setIcon(QtGui.QMessageBox.Critical)
@@ -1574,7 +1541,7 @@ def on_ex_simulate():
 
 
 def on_additional_parameters():
-    """ Handles additional parameters button for execution """
+    ''' Handles additional parameters button for execution '''
     # TODO: This should be a custom implementation in a class like AdditionalParametersDialog(QtGui.QDialog)
     additional_parameters_window = QtGui.QDialog()
     additional_parameters_window.setWindowTitle(__("Additional parameters"))
@@ -1583,12 +1550,12 @@ def on_additional_parameters():
     cancel_button = QtGui.QPushButton(__("Cancel"))
 
     def on_ok():
-        """ OK Button handler."""
-        data['additional_parameters'] = export_params.text()
+        ''' OK Button handler.'''
+        Case.instance().info.run_additional_parameters = export_params.text()
         additional_parameters_window.accept()
 
     def on_cancel():
-        """ Cancel button handler."""
+        ''' Cancel button handler.'''
         additional_parameters_window.reject()
 
     ok_button.clicked.connect(on_ok)
@@ -1603,7 +1570,7 @@ def on_additional_parameters():
     paramintro_layout = QtGui.QHBoxLayout()
     paramintro_label = QtGui.QLabel(__("Additional Parameters: "))
     export_params = QtGui.QLineEdit()
-    export_params.setText(data['additional_parameters'])
+    export_params.setText(Case.instance().info.run_additional_parameters)
     paramintro_layout.addWidget(paramintro_label)
     paramintro_layout.addWidget(export_params)
 
@@ -1680,16 +1647,16 @@ export_dialog.setLayout(export_dialog_layout)
 
 
 def partvtk_export(export_parameters):
-    """ Export VTK button behaviour.
-    Launches a process while disabling the button. """
+    ''' Export VTK button behaviour.
+    Launches a process while disabling the button. '''
     guiutils.widget_state_config(widget_state_elements, "export start")
     widget_state_elements['post_proc_partvtk_button'].setText("Exporting...")
 
     # Find total export parts and adjust progress bar
-    partfiles = glob.glob(data['project_path'] + '/' + data['project_name'] + "_out/" + "Part_*.bi4")
+    partfiles = glob.glob(Case.instance().path + '/' + Case.instance().name + "_out/" + "Part_*.bi4")
     for filename in partfiles:
-        temp_data['total_export_parts'] = max(int(filename.split("Part_")[1].split(".bi4")[0]), temp_data['total_export_parts'])
-    export_progbar_bar.setRange(0, temp_data['total_export_parts'])
+        Case.instance().info.exported_parts = max(int(filename.split("Part_")[1].split(".bi4")[0]), Case.instance().info.exported_parts)
+    export_progbar_bar.setRange(0, Case.instance().info.exported_parts)
     export_progbar_bar.setValue(0)
 
     export_dialog.show()
@@ -1697,8 +1664,8 @@ def partvtk_export(export_parameters):
     # Cancel button handler
     def on_cancel():
         utils.log(__("Stopping export"))
-        if temp_data['current_export_process'] is not None:
-            temp_data['current_export_process'].kill()
+        if Case.instance().info.current_export_process is not None:
+            Case.instance().info.current_export_process.kill()
             widget_state_elements['post_proc_partvtk_button'].setText(
                 __("PartVTK"))
         guiutils.widget_state_config(widget_state_elements, "export cancel")
@@ -1715,14 +1682,14 @@ def partvtk_export(export_parameters):
 
         if exit_code == 0:
             # Exported correctly
-            temp_data['current_info_dialog'] = dsphwidgets.InfoDialog(
+            Case.instance().info.current_info_dialog = InfoDialog(
                 info_text=__("PartVTK finished successfully"),
-                detailed_text=temp_data['current_output']
+                detailed_text=Case.instance().info.current_output
             )
         else:
             guiutils.error_dialog(
                 __("There was an error on the post-processing. Show details to view the errors."),
-                detailed_text=temp_data['current_output']
+                detailed_text=Case.instance().info.current_output
             )
 
         # Bit of code that tries to open ParaView if the option was selected.
@@ -1730,13 +1697,13 @@ def partvtk_export(export_parameters):
             formats = {0: "vtk", 1: "csv", 2: "asc"}
             subprocess.Popen(
                 [
-                    data['paraview_path'],
-                    "--data={}\\{}_..{}".format(data['project_path'] + '\\' + data['project_name'] + '_out',
+                    Case.instance().executable_paths.paraview,
+                    "--data={}\\{}_..{}".format(Case.instance().path + '\\' + Case.instance().name + '_out',
                                                 export_parameters['file_name'], formats[export_parameters['save_mode']])
                 ],
                 stdout=subprocess.PIPE)
 
-    temp_data['current_output'] = ""
+    Case.instance().info.current_output = ""
     export_process = QtCore.QProcess(dsph_main_dock)
     export_process.finished.connect(on_export_finished)
 
@@ -1751,25 +1718,25 @@ def partvtk_export(export_parameters):
 
     # Build parameters
     static_params_exp = [
-        '-dirin ' + data['project_path'] +
-        '/' + data['project_name'] + '_out/',
-        save_mode + data['project_path'] + '/' + data['project_name'] +
+        '-dirin ' + Case.instance().path +
+        '/' + Case.instance().name + '_out/',
+        save_mode + Case.instance().path + '/' + Case.instance().name +
         '_out/' + export_parameters['file_name'],
         '-onlytype:' + export_parameters['save_types'] +
         " " + export_parameters['additional_parameters']
     ]
 
-    utils.debug("Going to execute: {} {}".format(data['partvtk4_path'], " ".join(static_params_exp)))
+    utils.debug("Going to execute: {} {}".format(Case.instance().executable_paths.partvtk4, " ".join(static_params_exp)))
 
     # Start process
-    export_process.start(data['partvtk4_path'], static_params_exp)
-    temp_data['current_export_process'] = export_process
+    export_process.start(Case.instance().executable_paths.partvtk4, static_params_exp)
+    Case.instance().info.current_export_process = export_process
 
     # Information ready handler.
     def on_stdout_ready():
         # Update progress bar
-        current_output = str(temp_data['current_export_process'].readAllStandardOutput())
-        temp_data['current_output'] += current_output
+        current_output = str(Case.instance().info.current_export_process.readAllStandardOutput())
+        Case.instance().info.current_output += current_output
         try:
             current_part = current_output.split(
                 "{}_".format(export_parameters['file_name']))[1]
@@ -1782,13 +1749,13 @@ def partvtk_export(export_parameters):
         except IndexError:
             current_part = export_progbar_bar.value()
         export_progbar_bar.setValue(current_part)
-        export_dialog.setWindowTitle(__("Exporting: ") + str(current_part) + "/" + str(temp_data['total_export_parts']))
+        export_dialog.setWindowTitle(__("Exporting: ") + str(current_part) + "/" + str(Case.instance().info.exported_parts))
 
-    temp_data['current_export_process'].readyReadStandardOutput.connect(on_stdout_ready)
+    Case.instance().info.current_export_process.readyReadStandardOutput.connect(on_stdout_ready)
 
 
 def on_partvtk():
-    """ Opens a dialog with PartVTK exporting options """
+    ''' Opens a dialog with PartVTK exporting options '''
     # TODO: This should be a custom implementation in a class like PartVTKDialog(QtGui.QDialog)
     partvtk_tool_dialog = QtGui.QDialog()
 
@@ -1839,7 +1806,7 @@ def on_partvtk():
     pvtk_parameters_layout.addWidget(pvtk_parameters_text)
 
     pvtk_open_at_end = QtGui.QCheckBox("Open with ParaView")
-    pvtk_open_at_end.setEnabled(data['paraview_path'] != "")
+    pvtk_open_at_end.setEnabled(Case.instance().executable_paths.paraview != "")
 
     pvtk_export_button = QtGui.QPushButton(__("Export"))
     pvtk_cancel_button = QtGui.QPushButton(__("Cancel"))
@@ -1857,11 +1824,11 @@ def on_partvtk():
     partvtk_tool_dialog.setLayout(partvtk_tool_layout)
 
     def on_pvtk_cancel():
-        """ Cancel button behaviour """
+        ''' Cancel button behaviour '''
         partvtk_tool_dialog.reject()
 
     def on_pvtk_export():
-        """ Export button behaviour """
+        ''' Export button behaviour '''
         export_parameters = dict()
         export_parameters['save_mode'] = outformat_combobox.currentIndex()
         export_parameters['save_types'] = '-all'
@@ -1899,7 +1866,7 @@ def on_partvtk():
         partvtk_tool_dialog.accept()
 
     def on_pvtk_type_all_change(state):
-        """ 'All' type selection handler """
+        ''' 'All' type selection handler '''
         if state == QtCore.Qt.Checked:
             [chk.setCheckState(QtCore.Qt.Unchecked) for chk in [
                 pvtk_types_chk_bound,
@@ -1910,33 +1877,33 @@ def on_partvtk():
             ]]
 
     def on_pvtk_type_bound_change(state):
-        """ 'Bound' type selection handler """
+        ''' 'Bound' type selection handler '''
         if state == QtCore.Qt.Checked:
             pvtk_types_chk_all.setCheckState(QtCore.Qt.Unchecked)
 
     def on_pvtk_type_fluid_change(state):
-        """ 'Fluid' type selection handler """
+        ''' 'Fluid' type selection handler '''
         if state == QtCore.Qt.Checked:
             pvtk_types_chk_all.setCheckState(QtCore.Qt.Unchecked)
 
     def on_pvtk_type_fixed_change(state):
-        """ 'Fixed' type selection handler """
+        ''' 'Fixed' type selection handler '''
         if state == QtCore.Qt.Checked:
             pvtk_types_chk_all.setCheckState(QtCore.Qt.Unchecked)
 
     def on_pvtk_type_moving_change(state):
-        """ 'Moving' type selection handler """
+        ''' 'Moving' type selection handler '''
         if state == QtCore.Qt.Checked:
             pvtk_types_chk_all.setCheckState(QtCore.Qt.Unchecked)
 
     def on_pvtk_type_floating_change(state):
-        """ 'Floating' type selection handler """
+        ''' 'Floating' type selection handler '''
         if state == QtCore.Qt.Checked:
             pvtk_types_chk_all.setCheckState(QtCore.Qt.Unchecked)
 
     def on_pvtk_export_format_change(index):
-        """ Export format combobox handler"""
-        if "vtk" in outformat_combobox.currentText().lower() and data['paraview_path'] != "":
+        ''' Export format combobox handler'''
+        if "vtk" in outformat_combobox.currentText().lower() and Case.instance().executable_paths.paraview != "":
             pvtk_open_at_end.setEnabled(True)
         else:
             pvtk_open_at_end.setEnabled(False)
@@ -1954,23 +1921,23 @@ def on_partvtk():
 
 
 def floatinginfo_export(export_parameters):
-    """ FloatingInfo tool export. """
+    ''' FloatingInfo tool export. '''
     guiutils.widget_state_config(widget_state_elements, "export start")
     widget_state_elements['post_proc_floatinginfo_button'].setText("Exporting...")
 
     # Find total export parts
-    partfiles = glob.glob(data['project_path'] + '/' + data['project_name'] + "_out/" + "Part_*.bi4")
+    partfiles = glob.glob(Case.instance().path + '/' + Case.instance().name + "_out/" + "Part_*.bi4")
     for filename in partfiles:
-        temp_data['total_export_parts'] = max(int(filename.split("Part_")[1].split(".bi4")[0]), temp_data['total_export_parts'])
-    export_progbar_bar.setRange(0, temp_data['total_export_parts'])
+        Case.instance().info.exported_parts = max(int(filename.split("Part_")[1].split(".bi4")[0]), Case.instance().info.exported_parts)
+    export_progbar_bar.setRange(0, Case.instance().info.exported_parts)
     export_progbar_bar.setValue(0)
 
     export_dialog.show()
 
     def on_cancel():
         utils.log(__("Stopping export"))
-        if temp_data['current_export_process'] is not None:
-            temp_data['current_export_process'].kill()
+        if Case.instance().info.current_export_process is not None:
+            Case.instance().info.current_export_process.kill()
             widget_state_elements['post_proc_floatinginfo_button'].setText(__("FloatingInfo"))
         guiutils.widget_state_config(widget_state_elements, "export cancel")
         export_dialog.hide()
@@ -1983,48 +1950,48 @@ def floatinginfo_export(export_parameters):
         export_dialog.hide()
         if exit_code == 0:
             # Exported correctly
-            temp_data['current_info_dialog'] = dsphwidgets.InfoDialog(
+            Case.instance().info.current_info_dialog = InfoDialog(
                 info_text=__("FloatingInfo finished successfully"),
-                detailed_text=temp_data['current_output'])
+                detailed_text=Case.instance().info.current_output)
         else:
             guiutils.error_dialog(
                 __("There was an error on the post-processing. Press the details button to see the error"),
-                detailed_text=temp_data['current_output']
+                detailed_text=Case.instance().info.current_output
             )
 
-    temp_data['current_output'] = ""
+    Case.instance().info.current_output = ""
     export_process = QtCore.QProcess(dsph_main_dock)
     export_process.finished.connect(on_export_finished)
 
     static_params_exp = [
-        '-dirin ' + data['project_path'] + '/' + data['project_name'] +
+        '-dirin ' + Case.instance().path + '/' + Case.instance().name +
         '_out/', '-savemotion',
-        '-savedata ' + data['project_path'] + '/' + data['project_name'] + '_out/' +
+        '-savedata ' + Case.instance().path + '/' + Case.instance().name + '_out/' +
         export_parameters['filename'], export_parameters['additional_parameters']
     ]
 
     if len(export_parameters['onlyprocess']) > 0:
         static_params_exp.append('-onlymk:' + export_parameters['onlyprocess'])
 
-    export_process.start(data['floatinginfo_path'], static_params_exp)
-    temp_data['current_export_process'] = export_process
+    export_process.start(Case.instance().executable_paths.floatinginfo, static_params_exp)
+    Case.instance().info.current_export_process = export_process
 
     def on_stdout_ready():
         # update progress bar
-        current_output = str(temp_data['current_export_process'].readAllStandardOutput())
-        temp_data['current_output'] += current_output
+        current_output = str(Case.instance().info.current_export_process.readAllStandardOutput())
+        Case.instance().info.current_output += current_output
         try:
             current_part = current_output.split("Part_")[1].split("  ")[0]
         except IndexError:
             current_part = export_progbar_bar.value()
         export_progbar_bar.setValue(int(current_part))
-        export_dialog.setWindowTitle(__("Exporting: ") + str(current_part) + "/" + str(temp_data['total_export_parts']))
+        export_dialog.setWindowTitle(__("Exporting: ") + str(current_part) + "/" + str(Case.instance().info.exported_parts))
 
-    temp_data['current_export_process'].readyReadStandardOutput.connect(on_stdout_ready)
+    Case.instance().info.current_export_process.readyReadStandardOutput.connect(on_stdout_ready)
 
 
 def on_floatinginfo():
-    """ Opens a dialog with FloatingInfo exporting options """
+    ''' Opens a dialog with FloatingInfo exporting options '''
     # TODO: This should be implemented in a custom class like FloatingInfoDialog(QtCore.QDialog)
     floatinfo_tool_dialog = QtGui.QDialog()
 
@@ -2068,11 +2035,11 @@ def on_floatinginfo():
     floatinfo_tool_dialog.setLayout(floatinfo_tool_layout)
 
     def on_finfo_cancel():
-        """ Cancel button behaviour."""
+        ''' Cancel button behaviour.'''
         floatinfo_tool_dialog.reject()
 
     def on_finfo_export():
-        """ Export button behaviour."""
+        ''' Export button behaviour.'''
         export_parameters = dict()
         export_parameters['onlyprocess'] = finfo_onlyprocess_text.text()
         export_parameters['filename'] = finfo_filename_text.text()
@@ -2087,23 +2054,23 @@ def on_floatinginfo():
 
 
 def computeforces_export(export_parameters):
-    """ ComputeForces tool export. """
+    ''' ComputeForces tool export. '''
     guiutils.widget_state_config(widget_state_elements, "export start")
     widget_state_elements['post_proc_computeforces_button'].setText("Exporting...")
 
     # Find total export parts
-    partfiles = glob.glob(data['project_path'] + '/' + data['project_name'] + "_out/" + "Part_*.bi4")
+    partfiles = glob.glob(Case.instance().path + '/' + Case.instance().name + "_out/" + "Part_*.bi4")
     for filename in partfiles:
-        temp_data['total_export_parts'] = max(int(filename.split("Part_")[1].split(".bi4")[0]), temp_data['total_export_parts'])
-    export_progbar_bar.setRange(0, temp_data['total_export_parts'])
+        Case.instance().info.exported_parts = max(int(filename.split("Part_")[1].split(".bi4")[0]), Case.instance().info.exported_parts)
+    export_progbar_bar.setRange(0, Case.instance().info.exported_parts)
     export_progbar_bar.setValue(0)
 
     export_dialog.show()
 
     def on_cancel():
         utils.log(__("Stopping export"))
-        if temp_data['current_export_process'] is not None:
-            temp_data['current_export_process'].kill()
+        if Case.instance().info.current_export_process is not None:
+            Case.instance().info.current_export_process.kill()
             widget_state_elements['post_proc_computeforces_button'].setText(__("ComputeForces"))
         guiutils.widget_state_config(widget_state_elements, "export cancel")
         export_dialog.hide()
@@ -2116,17 +2083,17 @@ def computeforces_export(export_parameters):
         export_dialog.hide()
         if exit_code == 0:
             # Exported correctly
-            temp_data['current_info_dialog'] = dsphwidgets.InfoDialog(
+            Case.instance().info.current_info_dialog = InfoDialog(
                 info_text=__("ComputeForces finished successfully."),
-                detailed_text=temp_data['current_output']
+                detailed_text=Case.instance().info.current_output
             )
         else:
             guiutils.error_dialog(
                 __("There was an error on the post-processing. Press the details button to see the error"),
-                detailed_text=temp_data['current_output']
+                detailed_text=Case.instance().info.current_output
             )
 
-    temp_data['current_output'] = ""
+    Case.instance().info.current_output = ""
     export_process = QtCore.QProcess(dsph_main_dock)
     export_process.finished.connect(on_export_finished)
 
@@ -2139,37 +2106,37 @@ def computeforces_export(export_parameters):
         save_mode = '-saveascii '
 
     static_params_exp = [
-        '-dirin ' + data['project_path'] +
-        '/' + data['project_name'] + '_out/',
-        '-filexml ' + data['project_path'] + '/' +
-        data['project_name'] + '_out/' + data['project_name'] + '.xml',
-        save_mode + data['project_path'] + '/' + data['project_name'] + '_out/' +
+        '-dirin ' + Case.instance().path +
+        '/' + Case.instance().name + '_out/',
+        '-filexml ' + Case.instance().path + '/' +
+        Case.instance().name + '_out/' + Case.instance().name + '.xml',
+        save_mode + Case.instance().path + '/' + Case.instance().name + '_out/' +
         export_parameters['filename'], export_parameters['additional_parameters']
     ]
 
     if len(export_parameters['onlyprocess']) > 0:
         static_params_exp.append(export_parameters['onlyprocess_tag'] + export_parameters['onlyprocess'])
 
-    export_process.start(data['computeforces_path'], static_params_exp)
-    temp_data['current_export_process'] = export_process
+    export_process.start(Case.instance().executable_paths.computeforces, static_params_exp)
+    Case.instance().info.current_export_process = export_process
 
     def on_stdout_ready():
         # update progress bar
-        current_output = str(temp_data['current_export_process'].readAllStandardOutput())
-        temp_data['current_output'] += current_output
+        current_output = str(Case.instance().info.current_export_process.readAllStandardOutput())
+        Case.instance().info.current_output += current_output
         try:
             current_part = current_output.split("Part_")[1].split(".bi4")[0]
         except IndexError:
             current_part = export_progbar_bar.value()
         export_progbar_bar.setValue(int(current_part))
-        export_dialog.setWindowTitle(__("Exporting: ") + str(current_part) + "/" + str(temp_data['total_export_parts']))
+        export_dialog.setWindowTitle(__("Exporting: ") + str(current_part) + "/" + str(Case.instance().info.exported_parts))
 
-    temp_data['current_export_process'].readyReadStandardOutput.connect(
+    Case.instance().info.current_export_process.readyReadStandardOutput.connect(
         on_stdout_ready)
 
 
 def on_computeforces():
-    """ Opens a dialog with ComputeForces exporting options """
+    ''' Opens a dialog with ComputeForces exporting options '''
     # TODO: This should be implemented in a custom class like ComputerForcesDialog(QtGui.QDialog)
     compforces_tool_dialog = QtGui.QDialog()
 
@@ -2226,11 +2193,11 @@ def on_computeforces():
     compforces_tool_dialog.setLayout(compforces_tool_layout)
 
     def on_cfces_cancel():
-        """ Cancel button behaviour."""
+        ''' Cancel button behaviour.'''
         compforces_tool_dialog.reject()
 
     def on_cfces_export():
-        """ Export button behaviour."""
+        ''' Export button behaviour.'''
         export_parameters = dict()
         export_parameters['save_mode'] = outformat_combobox.currentIndex()
 
@@ -2265,23 +2232,23 @@ def on_computeforces():
 
 
 def measuretool_export(export_parameters):
-    """ MeasureTool tool export. """
+    ''' MeasureTool tool export. '''
     guiutils.widget_state_config(widget_state_elements, "export start")
     widget_state_elements['post_proc_measuretool_button'].setText("Exporting...")
 
     # Find total export parts
-    partfiles = glob.glob(data['project_path'] + '/' + data['project_name'] + "_out/" + "Part_*.bi4")
+    partfiles = glob.glob(Case.instance().path + '/' + Case.instance().name + "_out/" + "Part_*.bi4")
     for filename in partfiles:
-        temp_data['total_export_parts'] = max(int(filename.split("Part_")[1].split(".bi4")[0]), temp_data['total_export_parts'])
-    export_progbar_bar.setRange(0, temp_data['total_export_parts'])
+        Case.instance().info.exported_parts = max(int(filename.split("Part_")[1].split(".bi4")[0]), Case.instance().info.exported_parts)
+    export_progbar_bar.setRange(0, Case.instance().info.exported_parts)
     export_progbar_bar.setValue(0)
 
     export_dialog.show()
 
     def on_cancel():
         utils.log(__("Stopping export"))
-        if temp_data['current_export_process'] is not None:
-            temp_data['current_export_process'].kill()
+        if Case.instance().info.current_export_process is not None:
+            Case.instance().info.current_export_process.kill()
             widget_state_elements['post_proc_measuretool_button'].setText(__("MeasureTool"))
         guiutils.widget_state_config(widget_state_elements, "export cancel")
         export_dialog.hide()
@@ -2294,17 +2261,17 @@ def measuretool_export(export_parameters):
         export_dialog.hide()
         if exit_code == 0:
             # Exported correctly
-            temp_data['current_info_dialog'] = dsphwidgets.InfoDialog(
+            Case.instance().info.current_info_dialog = InfoDialog(
                 info_text=__("MeasureTool finished successfully."),
-                detailed_text=temp_data['current_output']
+                detailed_text=Case.instance().info.current_output
             )
         else:
             guiutils.error_dialog(
                 __("There was an error on the post-processing. Press the details button to see the error"),
-                detailed_text=temp_data['current_output']
+                detailed_text=Case.instance().info.current_output
             )
 
-    temp_data['current_output'] = ""
+    Case.instance().info.current_output = ""
     export_process = QtCore.QProcess(dsph_main_dock)
     export_process.finished.connect(on_export_finished)
 
@@ -2317,52 +2284,52 @@ def measuretool_export(export_parameters):
         save_mode = '-saveascii '
 
     # Save points to disk to later use them as parameter
-    if len(temp_data['measuretool_points']) > len(temp_data['measuretool_grid']):
+    if len(Case.instance().info.measuretool_points) > len(Case.instance().info.measuretool_grid):
         # Save points
-        with open(data['project_path'] + '/' + 'points.txt', 'w') as f:
+        with open(Case.instance().path + '/' + 'points.txt', 'w') as f:
             f.write("POINTS\n")
-            for curr_point in temp_data['measuretool_points']:
+            for curr_point in Case.instance().info.measuretool_points:
                 f.write("{}  {}  {}\n".format(*curr_point))
     else:
         # Save grid
-        with open(data['project_path'] + '/' + 'points.txt', 'w') as f:
-            for curr_point in temp_data['measuretool_grid']:
+        with open(Case.instance().path + '/' + 'points.txt', 'w') as f:
+            for curr_point in Case.instance().info.measuretool_grid:
                 f.write("POINTSLIST\n")
                 f.write("{}  {}  {}\n{}  {}  {}\n{}  {}  {}\n".format(*curr_point))
 
     calculate_height = '-height' if export_parameters['calculate_water_elevation'] else ''
 
     static_params_exp = [
-        '-dirin ' + data['project_path'] +
-        '/' + data['project_name'] + '_out/',
-        '-filexml ' + data['project_path'] + '/' +
-        data['project_name'] + '_out/' + data['project_name'] + '.xml',
-        save_mode + data['project_path'] + '/' +
-        data['project_name'] + '_out/' + export_parameters['filename'],
-        '-points ' + data['project_path'] + '/points.txt', '-vars:' +
+        '-dirin ' + Case.instance().path +
+        '/' + Case.instance().name + '_out/',
+        '-filexml ' + Case.instance().path + '/' +
+        Case.instance().name + '_out/' + Case.instance().name + '.xml',
+        save_mode + Case.instance().path + '/' +
+        Case.instance().name + '_out/' + export_parameters['filename'],
+        '-points ' + Case.instance().path + '/points.txt', '-vars:' +
         export_parameters['save_vars'], calculate_height,
         export_parameters['additional_parameters']
     ]
 
-    export_process.start(data['measuretool_path'], static_params_exp)
-    temp_data['current_export_process'] = export_process
+    export_process.start(Case.instance().executable_paths.measuretool, static_params_exp)
+    Case.instance().info.current_export_process = export_process
 
     def on_stdout_ready():
         # update progress bar
-        current_output = str(temp_data['current_export_process'].readAllStandardOutput())
-        temp_data['current_output'] += current_output
+        current_output = str(Case.instance().info.current_export_process.readAllStandardOutput())
+        Case.instance().info.current_output += current_output
         try:
             current_part = current_output.split("/Part_")[1].split(".bi4")[0]
         except IndexError:
             current_part = export_progbar_bar.value()
         export_progbar_bar.setValue(int(current_part))
-        export_dialog.setWindowTitle(__("Exporting: ") + str(current_part) + "/" + str(temp_data['total_export_parts']))
+        export_dialog.setWindowTitle(__("Exporting: ") + str(current_part) + "/" + str(Case.instance().info.exported_parts))
 
-    temp_data['current_export_process'].readyReadStandardOutput.connect(on_stdout_ready)
+    Case.instance().info.current_export_process.readyReadStandardOutput.connect(on_stdout_ready)
 
 
 def on_measuretool():
-    """ Opens a dialog with MeasureTool exporting options """
+    ''' Opens a dialog with MeasureTool exporting options '''
     # TODO: This should be implemented in a custom class like MeasureToolDialog(QtGui.QDialog)
     measuretool_tool_dialog = QtGui.QDialog()
 
@@ -2446,11 +2413,11 @@ def on_measuretool():
     measuretool_tool_dialog.setLayout(measuretool_tool_layout)
 
     def on_mtool_cancel():
-        """ Cancel button behaviour."""
+        ''' Cancel button behaviour.'''
         measuretool_tool_dialog.reject()
 
     def on_mtool_export():
-        """ Export button behaviour."""
+        ''' Export button behaviour.'''
         export_parameters = dict()
         export_parameters['save_mode'] = outformat_combobox.currentIndex()
         export_parameters['save_vars'] = '-all'
@@ -2495,7 +2462,7 @@ def on_measuretool():
         measuretool_tool_dialog.accept()
 
     def on_mtool_measure_all_change(state):
-        """ 'All' checkbox behaviour"""
+        ''' 'All' checkbox behaviour'''
         if state == QtCore.Qt.Checked:
             [chk.setCheckState(QtCore.Qt.Unchecked) for chk in [
                 mtool_types_chk_vel,
@@ -2510,12 +2477,12 @@ def on_measuretool():
             ]]
 
     def on_mtool_measure_single_change(state):
-        """ Behaviour for all checkboxes except 'All' """
+        ''' Behaviour for all checkboxes except 'All' '''
         if state == QtCore.Qt.Checked:
             mtool_types_chk_all.setCheckState(QtCore.Qt.Unchecked)
 
     def on_mtool_set_points():
-        """ Point list button behaviour."""
+        ''' Point list button behaviour.'''
         # TODO: This should be implemented in a custom class like MeasureToolPointsDialog(QtGui.QDialog)
         measurepoints_tool_dialog = QtGui.QDialog()
         measurepoints_tool_dialog.setModal(False)
@@ -2527,14 +2494,14 @@ def on_measuretool():
         mpoints_table.verticalHeader().setVisible(False)
         mpoints_table.setHorizontalHeaderLabels(["X", "Y", "Z"])
 
-        for i, point in enumerate(temp_data['measuretool_points']):
+        for i, point in enumerate(Case.instance().info.measuretool_points):
             mpoints_table.setItem(i, 0, QtGui.QTableWidgetItem(str(point[0])))
             mpoints_table.setItem(i, 1, QtGui.QTableWidgetItem(str(point[1])))
             mpoints_table.setItem(i, 2, QtGui.QTableWidgetItem(str(point[2])))
 
         def on_mpoints_accept():
-            """ MeasureTool points dialog accept button behaviour. """
-            temp_data['measuretool_points'] = list()
+            ''' MeasureTool points dialog accept button behaviour. '''
+            Case.instance().info.measuretool_points = list()
             for mtool_row in range(0, mpoints_table.rowCount()):
                 try:
                     current_point = [
@@ -2542,16 +2509,16 @@ def on_measuretool():
                         float(mpoints_table.item(mtool_row, 1).text()),
                         float(mpoints_table.item(mtool_row, 2).text())
                     ]
-                    temp_data['measuretool_points'].append(current_point)
+                    Case.instance().info.measuretool_points.append(current_point)
                 except (ValueError, AttributeError):
                     pass
 
             # Deletes the grid points (not compatible together)
-            temp_data['measuretool_grid'] = list()
+            Case.instance().info.measuretool_grid = list()
             measurepoints_tool_dialog.accept()
 
         def on_mpoints_cancel():
-            """ MeasureTool points dialog cancel button behaviour. """
+            ''' MeasureTool points dialog cancel button behaviour. '''
             measurepoints_tool_dialog.reject()
 
         mpoints_bt_layout = QtGui.QHBoxLayout()
@@ -2572,7 +2539,7 @@ def on_measuretool():
 
     def on_mtool_set_grid():
 
-        measuregrid_tool_dialog = dsphwidgets.MeasureToolGridDialog(temp_data)
+        measuregrid_tool_dialog = MeasureToolGridDialog()
         measuregrid_tool_dialog.setModal(False)
 
     mtool_types_chk_all.stateChanged.connect(on_mtool_measure_all_change)
@@ -2593,16 +2560,16 @@ def on_measuretool():
 
 
 def isosurface_export(export_parameters):
-    """ Export IsoSurface button behaviour.
-    Launches a process while disabling the button. """
+    ''' Export IsoSurface button behaviour.
+    Launches a process while disabling the button. '''
     guiutils.widget_state_config(widget_state_elements, "export start")
     widget_state_elements['post_proc_isosurface_button'].setText("Exporting...")
 
     # Find total export parts and adjust progress bar
-    partfiles = glob.glob(data['project_path'] + '/' + data['project_name'] + "_out/" + "Part_*.bi4")
+    partfiles = glob.glob(Case.instance().path + '/' + Case.instance().name + "_out/" + "Part_*.bi4")
     for filename in partfiles:
-        temp_data['total_export_parts'] = max(int(filename.split("Part_")[1].split(".bi4")[0]), temp_data['total_export_parts'])
-    export_progbar_bar.setRange(0, temp_data['total_export_parts'])
+        Case.instance().info.exported_parts = max(int(filename.split("Part_")[1].split(".bi4")[0]), Case.instance().info.exported_parts)
+    export_progbar_bar.setRange(0, Case.instance().info.exported_parts)
     export_progbar_bar.setValue(0)
 
     export_dialog.show()
@@ -2610,8 +2577,8 @@ def isosurface_export(export_parameters):
     # Cancel button handler
     def on_cancel():
         utils.log(__("Stopping export"))
-        if temp_data['current_export_process'] is not None:
-            temp_data['current_export_process'].kill()
+        if Case.instance().info.current_export_process is not None:
+            Case.instance().info.current_export_process.kill()
             widget_state_elements['post_proc_isosurface_button'].setText(__("IsoSurface"))
         guiutils.widget_state_config(widget_state_elements, "export cancel")
         export_dialog.hide()
@@ -2627,58 +2594,58 @@ def isosurface_export(export_parameters):
 
         if exit_code == 0:
             # Exported correctly
-            temp_data['current_info_dialog'] = dsphwidgets.InfoDialog(
+            Case.instance().info.current_info_dialog = InfoDialog(
                 info_text=__("IsoSurface finished successfully."),
-                detailed_text=temp_data['current_output'])
+                detailed_text=Case.instance().info.current_output)
         else:
             guiutils.error_dialog(
                 __("There was an error on the post-processing."),
-                detailed_text=temp_data['current_output']
+                detailed_text=Case.instance().info.current_output
             )
 
         # Bit of code that tries to open ParaView if the option was selected.
         if export_parameters['open_paraview']:
             subprocess.Popen(
-                [data['paraview_path'], "--data={}\\{}_..{}".format(
-                    data['project_path'] + '\\' + data['project_name'] + '_out',
+                [Case.instance().executable_paths.paraview, "--data={}\\{}_..{}".format(
+                    Case.instance().path + '\\' + Case.instance().name + '_out',
                     export_parameters['file_name'], "vtk")],
                 stdout=subprocess.PIPE)
 
-    temp_data['current_output'] = ""
+    Case.instance().info.current_output = ""
     export_process = QtCore.QProcess(dsph_main_dock)
     export_process.finished.connect(on_export_finished)
 
     # Build parameters
     static_params_exp = [
-        '-dirin ' + data['project_path'] +
-        '/' + data['project_name'] + '_out/',
-        export_parameters["surface_or_slice"] + " " + data['project_path'] + '/' +
-        data['project_name'] + '_out/' + export_parameters['file_name'] +
+        '-dirin ' + Case.instance().path +
+        '/' + Case.instance().name + '_out/',
+        export_parameters["surface_or_slice"] + " " + Case.instance().path + '/' +
+        Case.instance().name + '_out/' + export_parameters['file_name'] +
         " " + export_parameters['additional_parameters']
     ]
 
     # Start process
-    export_process.start(data['isosurface_path'], static_params_exp)
-    temp_data['current_export_process'] = export_process
+    export_process.start(Case.instance().executable_paths.isosurface, static_params_exp)
+    Case.instance().info.current_export_process = export_process
 
     # Information ready handler.
     def on_stdout_ready():
         # Update progress bar
-        current_output = str(temp_data['current_export_process'].readAllStandardOutput())
-        temp_data['current_output'] += current_output
+        current_output = str(Case.instance().info.current_export_process.readAllStandardOutput())
+        Case.instance().info.current_output += current_output
         try:
             current_part = current_output.split("{}_".format(export_parameters['file_name']))[1]
             current_part = int(current_part.split(".vtk")[0])
         except IndexError:
             current_part = export_progbar_bar.value()
         export_progbar_bar.setValue(current_part)
-        export_dialog.setWindowTitle(__("Exporting: ") + str(current_part) + "/" + str(temp_data['total_export_parts']))
+        export_dialog.setWindowTitle(__("Exporting: ") + str(current_part) + "/" + str(Case.instance().info.exported_parts))
 
-    temp_data['current_export_process'].readyReadStandardOutput.connect(on_stdout_ready)
+    Case.instance().info.current_export_process.readyReadStandardOutput.connect(on_stdout_ready)
 
 
 def on_isosurface():
-    """ Opens a dialog with IsoSurface exporting options """
+    ''' Opens a dialog with IsoSurface exporting options '''
     # TODO: This should be implemented as a custom class like IsoSurfaceDialog(QtGui.QDialog)
     isosurface_tool_dialog = QtGui.QDialog()
 
@@ -2709,7 +2676,7 @@ def on_isosurface():
     isosfc_parameters_layout.addWidget(isosfc_parameters_text)
 
     isosfc_open_at_end = QtGui.QCheckBox("Open with ParaView")
-    isosfc_open_at_end.setEnabled(data['paraview_path'] != "")
+    isosfc_open_at_end.setEnabled(Case.instance().executable_paths.paraview != "")
 
     isosfc_export_button = QtGui.QPushButton(__("Export"))
     isosfc_cancel_button = QtGui.QPushButton(__("Cancel"))
@@ -2726,11 +2693,11 @@ def on_isosurface():
     isosurface_tool_dialog.setLayout(isosurface_tool_layout)
 
     def on_isosfc_cancel():
-        """ IsoSurface dialog cancel button behaviour."""
+        ''' IsoSurface dialog cancel button behaviour.'''
         isosurface_tool_dialog.reject()
 
     def on_isosfc_export():
-        """ IsoSurface dialog export button behaviour."""
+        ''' IsoSurface dialog export button behaviour.'''
         export_parameters = dict()
 
         if "surface" in isosfc_selector.currentText().lower():
@@ -2759,16 +2726,16 @@ def on_isosurface():
 
 
 def flowtool_export(export_parameters):
-    """ Export FlowTool button behaviour.
-    Launches a process while disabling the button. """
+    ''' Export FlowTool button behaviour.
+    Launches a process while disabling the button. '''
     guiutils.widget_state_config(widget_state_elements, "export start")
     widget_state_elements['post_proc_flowtool_button'].setText("Exporting...")
 
     # Find total export parts and adjust progress bar
-    partfiles = glob.glob(data['project_path'] + '/' + data['project_name'] + "_out/" + "Part_*.bi4")
+    partfiles = glob.glob(Case.instance().path + '/' + Case.instance().name + "_out/" + "Part_*.bi4")
     for filename in partfiles:
-        temp_data['total_export_parts'] = max(int(filename.split("Part_")[1].split(".bi4")[0]), temp_data['total_export_parts'])
-    export_progbar_bar.setRange(0, temp_data['total_export_parts'])
+        Case.instance().info.exported_parts = max(int(filename.split("Part_")[1].split(".bi4")[0]), Case.instance().info.exported_parts)
+    export_progbar_bar.setRange(0, Case.instance().info.exported_parts)
     export_progbar_bar.setValue(0)
 
     export_dialog.show()
@@ -2776,8 +2743,8 @@ def flowtool_export(export_parameters):
     # Cancel button handler
     def on_cancel():
         utils.log(__("Stopping export"))
-        if temp_data['current_export_process'] is not None:
-            temp_data['current_export_process'].kill()
+        if Case.instance().info.current_export_process is not None:
+            Case.instance().info.current_export_process.kill()
             widget_state_elements['post_proc_flowtool_button'].setText(__("FlowTool"))
         guiutils.widget_state_config(widget_state_elements, "export cancel")
         export_dialog.hide()
@@ -2792,53 +2759,53 @@ def flowtool_export(export_parameters):
 
         if exit_code == 0:
             # Exported correctly
-            temp_data['current_info_dialog'] = dsphwidgets.InfoDialog(
+            Case.instance().info.current_info_dialog = InfoDialog(
                 info_text=__("FlowTool finished successfully."),
-                detailed_text=temp_data['current_output'])
+                detailed_text=Case.instance().info.current_output)
         else:
             guiutils.error_dialog(
                 __("There was an error on the post-processing."),
-                detailed_text=temp_data['current_output']
+                detailed_text=Case.instance().info.current_output
             )
 
-    temp_data['current_output'] = ""
+    Case.instance().info.current_output = ""
     export_process = QtCore.QProcess(dsph_main_dock)
     export_process.finished.connect(on_export_finished)
 
     # Build parameters
     static_params_exp = [
-        '-dirin ' + data['project_path'] +
-        '/' + data['project_name'] + '_out/',
-        '-fileboxes ' + data['project_path'] + '/' + 'fileboxes.txt',
-        '-savecsv ' + data['project_path'] + '/' + data['project_name'] +
+        '-dirin ' + Case.instance().path +
+        '/' + Case.instance().name + '_out/',
+        '-fileboxes ' + Case.instance().path + '/' + 'fileboxes.txt',
+        '-savecsv ' + Case.instance().path + '/' + Case.instance().name +
         '_out/' + '{}.csv'.format(export_parameters['csv_name']),
-        '-savevtk ' + data['project_path'] + '/' + data['project_name'] + '_out/' + '{}.vtk'.format(
+        '-savevtk ' + Case.instance().path + '/' + Case.instance().name + '_out/' + '{}.vtk'.format(
             export_parameters['vtk_name']) +
         " " + export_parameters['additional_parameters']
     ]
 
     # Start process
-    export_process.start(data['flowtool_path'], static_params_exp)
-    temp_data['current_export_process'] = export_process
+    export_process.start(Case.instance().executable_paths.flowtool, static_params_exp)
+    Case.instance().info.current_export_process = export_process
 
     # Information ready handler.
     def on_stdout_ready():
         # Update progress bar
-        current_output = str(temp_data['current_export_process'].readAllStandardOutput())
-        temp_data['current_output'] += current_output
+        current_output = str(Case.instance().info.current_export_process.readAllStandardOutput())
+        Case.instance().info.current_output += current_output
         try:
             current_part = current_output.split("{}_".format(export_parameters['vtk_name']))[1]
             current_part = int(current_part.split(".vtk")[0])
         except IndexError:
             current_part = export_progbar_bar.value()
         export_progbar_bar.setValue(current_part)
-        export_dialog.setWindowTitle(__("Exporting: ") + str(current_part) + "/" + str(temp_data['total_export_parts']))
+        export_dialog.setWindowTitle(__("Exporting: ") + str(current_part) + "/" + str(Case.instance().info.exported_parts))
 
-    temp_data['current_export_process'].readyReadStandardOutput.connect(on_stdout_ready)
+    Case.instance().info.current_export_process.readyReadStandardOutput.connect(on_stdout_ready)
 
 
 def on_flowtool():
-    """ Opens a dialog with FlowTool exporting options """
+    ''' Opens a dialog with FlowTool exporting options '''
     # TODO: This should be implemented as a custom class like FlowToolDialog(QtGui.QDialog)
     flowtool_tool_dialog = QtGui.QDialog()
 
@@ -2897,7 +2864,7 @@ def on_flowtool():
     flowtool_tool_dialog.setLayout(flowtool_tool_layout)
 
     def box_edit(box_id):
-        """ Box edit button behaviour. Opens a dialog to edit the selected FlowTool Box"""
+        ''' Box edit button behaviour. Opens a dialog to edit the selected FlowTool Box'''
         # TODO: This should be implemented as a custom class like FlowToolBoxEditDialog(QtGui.QDialog)
         box_edit_dialog = QtGui.QDialog()
         box_edit_layout = QtGui.QVBoxLayout()
@@ -3041,7 +3008,7 @@ def on_flowtool():
         box_edit_dialog.setLayout(box_edit_layout)
 
         def on_ok():
-            """ FlowTool box edit ok behaviour."""
+            ''' FlowTool box edit ok behaviour.'''
             box_to_edit_index = -1
             for box_index, box_value in enumerate(data['flowtool_boxes']):
                 if box_value[0] == box_id:
@@ -3076,7 +3043,7 @@ def on_flowtool():
             box_edit_dialog.accept()
 
         def on_cancel():
-            """ FlowTool box edit cancel button behaviour."""
+            ''' FlowTool box edit cancel button behaviour.'''
             box_edit_dialog.reject()
 
         box_edit_button_ok.clicked.connect(on_ok)
@@ -3085,7 +3052,7 @@ def on_flowtool():
         box_edit_dialog.exec_()
 
     def box_delete(box_id):
-        """ Box delete button behaviour. Tries to find the box for which the button was pressed and deletes it."""
+        ''' Box delete button behaviour. Tries to find the box for which the button was pressed and deletes it.'''
         box_to_remove = None
         for box in data['flowtool_boxes']:
             if box[0] == box_id:
@@ -3095,7 +3062,7 @@ def on_flowtool():
             refresh_boxlist()
 
     def refresh_boxlist():
-        """ Refreshes the FlowTool box list."""
+        ''' Refreshes the FlowTool box list.'''
         while fltool_boxlist_layout.count() > 0:
             target = fltool_boxlist_layout.takeAt(0)
             target.setParent(None)
@@ -3114,7 +3081,7 @@ def on_flowtool():
             fltool_boxlist_layout.addLayout(to_add_layout)
 
     def on_fltool_addbox():
-        """ Adds a box to the data structure."""
+        ''' Adds a box to the data structure.'''
         data['flowtool_boxes'].append([
             str(uuid.uuid4()),
             'BOX',
@@ -3130,11 +3097,11 @@ def on_flowtool():
         refresh_boxlist()
 
     def on_fltool_cancel():
-        """ FlowTool cancel button behaviour."""
+        ''' FlowTool cancel button behaviour.'''
         flowtool_tool_dialog.reject()
 
     def on_fltool_export():
-        """ FlowTool export button behaviour."""
+        ''' FlowTool export button behaviour.'''
         export_parameters = dict()
 
         if len(fltool_csv_file_name_text.text()) > 0:
@@ -3152,7 +3119,7 @@ def on_flowtool():
         else:
             export_parameters['additional_parameters'] = ''
 
-        utils.create_flowtool_boxes(data['project_path'] + '/' + 'fileboxes.txt', data['flowtool_boxes'])
+        utils.create_flowtool_boxes(Case.instance().path + '/' + 'fileboxes.txt', data['flowtool_boxes'])
 
         flowtool_export(export_parameters)
         flowtool_tool_dialog.accept()
@@ -3166,7 +3133,7 @@ def on_flowtool():
 
 # TODO: Implement BoundaryVTK post-processing tool
 def on_boundaryvtk():
-    """ Opens a dialog with BoundaryVTK exporting options """
+    ''' Opens a dialog with BoundaryVTK exporting options '''
     # TODO: This should be implemented as a custom class like BoundaryVTKDialog(QtGui.QDialog)
     guiutils.warning_dialog("Not implemented yet")
     return
@@ -3235,7 +3202,7 @@ objectlist_table.verticalHeader().setVisible(False)
 objectlist_table.horizontalHeader().setVisible(False)
 objectlist_table.horizontalHeader().setResizeMode(0, QtGui.QHeaderView.Stretch)
 widget_state_elements['objectlist_table'] = objectlist_table
-temp_data['objectlist_table'] = objectlist_table
+Case.instance().info.objectlist_table = objectlist_table
 objectlist_layout.addWidget(objectlist_label)
 objectlist_layout.addWidget(objectlist_table)
 
@@ -3369,20 +3336,22 @@ object_property_table.setCellWidget(6, 0, simplewall_label)
 
 
 def mkgroup_change(value):
-    """ Defines what happens when MKGroup is changed. """
+    ''' Defines what happens when MKGroup is changed. '''
     selection = FreeCADGui.Selection.getSelection()[0]
-    data['simobjects'][selection.Name][0] = value
+    Case.instance().get_simulation_object(selection.Name).obj_mk = value
 
 
 def objtype_change(index):
-    """ Defines what happens when type of object is changed """
+    ''' Defines what happens when type of object is changed '''
     selection = FreeCADGui.Selection.getSelection()[0]
     selectiongui = FreeCADGui.getDocument("DSPH_Case").getObject(selection.Name)
+    simulation_object = Case.instance().get_simulation_object(selection.Name)
+    mk_properties = Case.instance().get_mk_base_properties(simulation_object.obj_mk)
 
     if objtype_prop.itemText(index).lower() == "bound":
         mkgroup_prop.setRange(0, 240)
-        if data['simobjects'][selection.Name][1].lower() != "bound":
-            mkgroup_prop.setValue(int(utils.get_first_mk_not_used("bound", data)))
+        if simulation_object.type != ObjectType.BOUND:
+            mkgroup_prop.setValue(int(Case.instance().get_first_mk_not_used(ObjectType.BOUND)))
         try:
             selectiongui.ShapeColor = (0.80, 0.80, 0.80)
             selectiongui.Transparency = 0
@@ -3396,8 +3365,8 @@ def objtype_change(index):
         )
     elif objtype_prop.itemText(index).lower() == "fluid":
         mkgroup_prop.setRange(0, 10)
-        if data['simobjects'][selection.Name][1].lower() != "fluid":
-            mkgroup_prop.setValue(int(utils.get_first_mk_not_used("fluid", data)))
+        if simulation_object.type != ObjectType.FLUID:
+            mkgroup_prop.setValue(int(Case.instance().get_first_mk_not_used(ObjectType.FLUID)))
         try:
             selectiongui.ShapeColor = (0.00, 0.45, 1.00)
             selectiongui.Transparency = 30
@@ -3405,28 +3374,35 @@ def objtype_change(index):
             # Can't change attributes
             pass
         # Remove floating properties if it is changed to fluid
-        if str(data['simobjects'][selection.Name][0]) in data['floating_mks'].keys():
-            data['floating_mks'].pop(str(data['simobjects'][selection.Name][0]), None)
+        if mk_properties.float_property != None:
+            mk_properties.float_property
+
         # Remove motion properties if it is changed to fluid
-        if data['simobjects'][selection.Name][0] in data['motion_mks'].keys():
-            data['motion_mks'].pop(data['simobjects'][selection.Name][0], None)
+        if mk_properties.has_movements():
+            mk_properties.remove_all_movements()
+
         floatstate_prop.setEnabled(False)
         initials_prop.setEnabled(True)
         mkgroup_label.setText(
             "&nbsp;&nbsp;&nbsp;" + __("MKFluid") + " <a href='http://design.sphysics.org/wiki/doku.php?id=concepts'>?</a>"
         )
 
-    data['simobjects'][selection.Name][1] = objtype_prop.itemText(index)
+    # Update simulation object type
+    simulation_object.type = ObjectType.FLUID if index == 0 else ObjectType.BOUND
     on_tree_item_selection_change()
 
 
 def fillmode_change(index):
-    """ Defines what happens when fill mode is changed """
+    ''' Defines what happens when fill mode is changed '''
     selection = FreeCADGui.Selection.getSelection()[0]
     selectiongui = FreeCADGui.getDocument("DSPH_Case").getObject(selection.Name)
-    data['simobjects'][selection.Name][2] = fillmode_prop.itemText(index)
+    simulation_object = Case.instance().get_simulation_object(selection.Name)
+    mk_properties = Case.instance().get_mk_base_properties(simulation_object.obj_mk)
 
-    if fillmode_prop.itemText(index).lower() == "full":
+    # Update simulation object fill mode
+    simulation_object.fillmode = [ObjectFillMode.FULL, ObjectFillMode.SOLID, ObjectFillMode.FACE, ObjectFillMode.WIRE][index]
+
+    if simulation_object.fillmode == ObjectFillMode.FULL:
         if objtype_prop.itemText(objtype_prop.currentIndex()).lower() == "fluid":
             try:
                 selectiongui.Transparency = 30
@@ -3440,8 +3416,8 @@ def fillmode_change(index):
                 # Cannot change transparency. Just ignore
                 pass
         wall_prop.setEnabled(False)
-        faces_status(selection)
-    elif fillmode_prop.itemText(index).lower() == "solid":
+        update_faces_property(selection)
+    elif simulation_object.fillmode == ObjectFillMode.SOLID:
         if objtype_prop.itemText(objtype_prop.currentIndex()).lower() == "fluid":
             try:
                 selectiongui.Transparency = 30
@@ -3455,51 +3431,48 @@ def fillmode_change(index):
                 # Cannot change transparency (fillbox?). Just ignore
                 pass
         wall_prop.setEnabled(False)
-        faces_status(selection)
-    elif fillmode_prop.itemText(index).lower() == "face":
+        update_faces_property(selection)
+    elif simulation_object.fillmode == ObjectFillMode.FACE:
         try:
             selectiongui.Transparency = 80
         except AttributeError:
             # Cannot change transparency. Just ignore
             pass
         wall_prop.setEnabled(True)
-        faces_status(selection)
-    elif fillmode_prop.itemText(index).lower() == "wire":
+        update_faces_property(selection)
+    elif simulation_object.fillmode == ObjectFillMode.WIRE:
         try:
             selectiongui.Transparency = 85
         except AttributeError:
             # Cannot change transparency. Just ignore
             pass
         wall_prop.setEnabled(False)
-        faces_status(selection)
+        update_faces_property(selection)
 
 
 def initials_change():
-    dsphwidgets.InitialsDialog(data)
+    InitialsDialog()
 
 
 def motion_change():
-    dsphwidgets.MovementDialog(data)
+    MovementDialog()
 
 
 def floatstate_change():
-    dsphwidgets.FloatStateDialog(data)
+    FloatStateDialog()
 
 
 def faces_change():
-    dsphwidgets.FacesDialog(data)
+    FacesDialog(FreeCADGui.Selection.getSelection()[0].Name)
 
 
-def faces_status(selection):
-
+def update_faces_property(selection):
+    ''' Deletes information about faces if the new fill mode does not support it. '''
     if wall_prop.isEnabled():
-        pass
-    else:
-        target_mk = int(data['simobjects'][selection.Name][0])
-        name = selection.Label
-
-        if (str(target_mk), name) in data['faces'].keys():
-            data['faces'].pop((str(target_mk), name), None)
+        return
+    
+    sim_object = Case.instance().get_simulation_object(selection.Name)
+    sim_object.clean_faces()
 
 
 # Property change widgets
@@ -3541,8 +3514,8 @@ damping_config_button.hide()
 
 
 def add_object_to_sim(name=None):
-    """ Defines what happens when "Add object to sim" button is presseed.
-    Takes the selection of FreeCAD and watches what type of thing it is adding """
+    ''' Defines what happens when "Add object to sim" button is presseed.
+    Takes the selection of FreeCAD and watches what type of thing it is adding '''
     if (name is None) or (name is False):
         selection = FreeCADGui.Selection.getSelection()
     else:
@@ -3554,40 +3527,31 @@ def add_object_to_sim(name=None):
             continue
         if len(each.InList) > 0:
             continue
-        if each.Name not in data['simobjects'].keys():
+        if not Case.instance().is_object_in_simulation(each.Name): 
             if "fillbox" in each.Name.lower():
-                mktoput = utils.get_first_mk_not_used("fluid", data)
-                if not mktoput:
-                    mktoput = 0
-                data['simobjects'][each.Name] = [mktoput, 'fluid', 'solid']
-                data['mkfluidused'].append(mktoput)
+                mktoput = Case.instance().get_first_mk_not_used(ObjectType.FLUID)
+                Case.instance().add_object(SimulationObject(each.Name, mktoput, ObjectType.FLUID, ObjectFillMode.SOLID))
             else:
-                mktoput = utils.get_first_mk_not_used("bound", data)
-                if not mktoput:
-                    mktoput = 0
-                data['simobjects'][each.Name] = [mktoput, 'bound', 'full']
-                data['mkboundused'].append(mktoput)
-            data['export_order'].append(each.Name)
+                mktoput = Case.instance().get_first_mk_not_used(ObjectType.BOUND)
+                Case.instance().add_object(SimulationObject(each.Name, mktoput, ObjectType.BOUND, ObjectFillMode.FULL))
     on_tree_item_selection_change()
 
 
 def remove_object_from_sim():
-    """ Defines what happens when removing objects from
-    the simulation """
+    ''' Defines what happens when removing objects from
+    the simulation '''
     selection = FreeCADGui.Selection.getSelection()
     for each in selection:
         if each.Name == "Case_Limits":
             continue
-        if each.Name in data['export_order']:
-            data['export_order'].remove(each.Name)
-        data['simobjects'].pop(each.Name, None)
+        Case.instance().remove_object(each.Name)
     on_tree_item_selection_change()
 
 
 def on_damping_config():
-    """ Configures the damping configuration for the selected obejct """
+    ''' Configures the damping configuration for the selected obejct '''
     selection = FreeCADGui.Selection.getSelection()
-    guiutils.damping_config_window(data, selection[0].Name)
+    guiutils.damping_config_window(selection[0].Name)
 
 
 # Connects buttons to its functions
@@ -3647,17 +3611,12 @@ def on_tree_item_selection_change():
         object_names.append(each.Name)
 
     # Detect object deletion
-    for key in data['simobjects'].keys():
-        if key not in object_names:
-            data['simobjects'].pop(key, None)
-            data['export_order'].remove(key)
-
-    # Detect damping deletion
-    for key in data['damping'].keys():
-        if key not in object_names:
-            data['damping'].pop(key, None)
+    for sim_object_name in Case.instance().get_all_simulation_object_names():
+        if sim_object_name not in object_names:
+            Case.instance().remove_object(sim_object_name)
 
     addtodsph_button.setEnabled(True)
+    
     if len(selection) > 0:
         if len(selection) > 1:
             # Multiple objects selected
@@ -3679,30 +3638,33 @@ def on_tree_item_selection_change():
                 addtodsph_button.hide()
                 removefromdsph_button.hide()
                 damping_config_button.show()
-            elif selection[0].Name in data['simobjects'].keys():
+            elif Case.instance().is_object_in_simulation(selection[0].Name):
                 # Show properties on table
                 object_property_table.show()
                 addtodsph_button.hide()
                 removefromdsph_button.show()
                 damping_config_button.hide()
 
+                # Reference to the object inside the simulation
+                sim_object = Case.instance().get_simulation_object(selection[0].Name)
+
                 # MK config
                 mkgroup_prop.setRange(0, 240)
                 to_change = object_property_table.cellWidget(1, 1)
-                to_change.setValue(data['simobjects'][selection[0].Name][0])
+                to_change.setValue(sim_object.obj_mk)
 
                 # type config
                 to_change = object_property_table.cellWidget(0, 1)
-                if selection[0].TypeId in temp_data['supported_types']:
+                if selection[0].TypeId in Case.SUPPORTED_TYPES:
                     # Supported object
                     to_change.setEnabled(True)
-                    if data['simobjects'][selection[0].Name][1].lower() == "fluid":
+                    if sim_object.type is ObjectType.FLUID:
                         to_change.setCurrentIndex(0)
                         mkgroup_prop.setRange(0, 10)
                         mkgroup_label.setText(
                             "&nbsp;&nbsp;&nbsp;" + __("MKFluid") + " <a href='http://design.sphysics.org/wiki/doku.php?id=concepts'>?</a>"
                         )
-                    elif data['simobjects'][selection[0].Name][1].lower() == "bound":
+                    elif sim_object.type is ObjectType.BOUND:
                         to_change.setCurrentIndex(1)
                         mkgroup_prop.setRange(0, 240)
                         mkgroup_label.setText(
@@ -3712,13 +3674,13 @@ def on_tree_item_selection_change():
                         selection[0].TypeId == "App::DocumentObjectGroup" and "fillbox" in selection[0].Name.lower()):
                     # Is an object that will be exported to STL
                     to_change.setEnabled(True)
-                    if data['simobjects'][selection[0].Name][1].lower() == "fluid":
+                    if sim_object.type is ObjectType.FLUID:
                         to_change.setCurrentIndex(0)
                         mkgroup_prop.setRange(0, 10)
                         mkgroup_label.setText(
                             "&nbsp;&nbsp;&nbsp;" + __("MKFluid") + " <a href='http://design.sphysics.org/wiki/doku.php?id=concepts'>?</a>"
                         )
-                    elif data['simobjects'][selection[0].Name][1].lower() == "bound":
+                    elif sim_object.type is ObjectType.BOUND:
                         to_change.setCurrentIndex(1)
                         mkgroup_prop.setRange(0, 240)
                         mkgroup_label.setText(
@@ -3731,16 +3693,16 @@ def on_tree_item_selection_change():
 
                 # fill mode config
                 to_change = object_property_table.cellWidget(2, 1)
-                if selection[0].TypeId in temp_data['supported_types']:
+                if selection[0].TypeId in Case.SUPPORTED_TYPES:
                     # Object is a supported type. Fill with its type and enable selector.
                     to_change.setEnabled(True)
-                    if data['simobjects'][selection[0].Name][2].lower() == "full":
+                    if sim_object.fillmode is ObjectFillMode.FULL:
                         to_change.setCurrentIndex(0)
-                    elif data['simobjects'][selection[0].Name][2].lower() == "solid":
+                    elif sim_object.fillmode is ObjectFillMode.SOLID:
                         to_change.setCurrentIndex(1)
-                    elif data['simobjects'][selection[0].Name][2].lower() == "face":
+                    elif sim_object.fillmode is ObjectFillMode.FACE:
                         to_change.setCurrentIndex(2)
-                    elif data['simobjects'][selection[0].Name][2].lower() == "wire":
+                    elif sim_object.fillmode is ObjectFillMode.WIRE:
                         to_change.setCurrentIndex(3)
                 elif selection[0].TypeId == 'App::DocumentObjectGroup':
                     # Is a fillbox. Set fill mode to solid and disable
@@ -3753,25 +3715,25 @@ def on_tree_item_selection_change():
 
                 # float state config
                 to_change = object_property_table.cellWidget(3, 1)
-                if selection[0].TypeId in temp_data['supported_types'] or (selection[0].TypeId == "App::DocumentObjectGroup"
+                if selection[0].TypeId in Case.SUPPORTED_TYPES or (selection[0].TypeId == "App::DocumentObjectGroup"
                                                                            and "fillbox" in selection[0].Name.lower()):
-                    if data['simobjects'][selection[0].Name][1].lower() == "fluid":
+                    if sim_object.type is ObjectType.FLUID:
                         to_change.setEnabled(False)
                     else:
                         to_change.setEnabled(True)
 
                 # initials restrictions
                 to_change = object_property_table.cellWidget(4, 1)
-                if data['simobjects'][selection[0].Name][1].lower() == "fluid":
+                if sim_object.type is ObjectType.FLUID:
                     to_change.setEnabled(True)
                 else:
                     to_change.setEnabled(False)
 
                 # motion restrictions
                 to_change = object_property_table.cellWidget(5, 1)
-                if selection[0].TypeId in temp_data['supported_types'] or "Mesh::Feature" in str(selection[0].TypeId) or \
+                if selection[0].TypeId in Case.SUPPORTED_TYPES or "Mesh::Feature" in str(selection[0].TypeId) or \
                         (selection[0].TypeId == "App::DocumentObjectGroup" and "fillbox" in selection[0].Name.lower()):
-                    if data['simobjects'][selection[0].Name][1].lower() == "fluid":
+                    if sim_object.type is ObjectType.FLUID:
                         to_change.setEnabled(False)
                     else:
                         to_change.setEnabled(True)
@@ -3800,31 +3762,24 @@ def on_tree_item_selection_change():
     # Update dsph objects list
     objectlist_table.clear()
     objectlist_table.setEnabled(True)
-    if len(data['export_order']) == 0:
-        data['export_order'] = list(data['simobjects'].keys())
 
-    # Substract one that represent case limits object
-    if "Case_Limits" in data['export_order']:
-        data['export_order'].remove('Case_Limits')
-
-    objectlist_table.setRowCount(len(data['export_order']))
+    objectlist_table.setRowCount(Case.instance().number_of_objects_in_simulation())
     current_row = 0
     objects_with_parent = list()
-    for key in data['export_order']:
-        context_object = FreeCAD.getDocument("DSPH_Case").getObject(key)
+    for object_name in Case.instance().get_all_simulation_object_names():
+        context_object = FreeCAD.getDocument("DSPH_Case").getObject(object_name)
         if not context_object:
-            data['export_order'].remove(key)
+            Case.instance().remove_object(object_name)
             continue
         if context_object.InList != list():
             objects_with_parent.append(context_object.Name)
             continue
         if context_object.Name == "Case_Limits":
             continue
-        # objectlist_table.setCellWidget(current_row, 0, QtGui.QLabel("   " + context_object.Label))
-        target_widget = dsphwidgets.ObjectOrderWidget(
+        target_widget = ObjectOrderWidget(
             index=current_row,
-            object_mk=data['simobjects'][context_object.Name][0],
-            mktype=data['simobjects'][context_object.Name][1],
+            object_mk=Case.instance().get_simulation_object(context_object.Name).obj_mk,
+            mktype=Case.instance().get_simulation_object(context_object.Name).type,
             object_name=context_object.Label
         )
 
@@ -3833,19 +3788,18 @@ def on_tree_item_selection_change():
 
         if current_row is 0:
             target_widget.disable_up()
-        if (current_row + 1) is len(data['export_order']):
+        if current_row is Case.instance().number_of_objects_in_simulation() - 1:
             target_widget.disable_down()
 
         objectlist_table.setCellWidget(current_row, 0, target_widget)
 
         current_row += 1
-    for each in objects_with_parent:
+    for object_name in objects_with_parent:
         try:
-            data['simobjects'].pop(each, None)
+            Case.instance().remove_object(object_name)
         except ValueError:
             # Not in list, probably because now is part of a compound object
             pass
-        data['export_order'].remove(each)
     properties_scaff_widget.adjustSize()
     properties_widget.adjustSize()
 
@@ -3882,7 +3836,7 @@ def selection_monitor():
                     if o.Placement.Rotation.Angle != 0.0:
                         o.Placement.Rotation.Angle = 0.0
                         utils.error(__("Can't change rotation!"))
-                    if not data['3dmode'] and o.Width.Value != utils.WIDTH_2D:
+                    if not Case.instance().mode3d and o.Width.Value != utils.WIDTH_2D:
                         o.Width.Value = utils.WIDTH_2D
                         utils.error(__("Can't change width if the case is in 2D Mode!"))
 
@@ -3896,9 +3850,9 @@ def selection_monitor():
                 if case_limits_obj.Selectable:
                     case_limits_obj.Selectable = False
 
-            for gn in data["damping"]:
-                damping_group = FreeCAD.ActiveDocument.getObject(gn)
-                data["damping"][gn].overlimit = damping_group.OutList[1].Length.Value
+            for sim_object in Case.instance().get_all_objects_with_damping():
+                damping_group = FreeCAD.ActiveDocument.getObject(sim_object)
+                sim_object.damping.overlimit = damping_group.OutList[1].Length.Value
 
         except (NameError, AttributeError):
             # DSPH Case not opened, disable things

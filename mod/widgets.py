@@ -1,6 +1,6 @@
 #!/usr/bin/env python3.7
 # -*- coding: utf-8 -*-
-"""DesignSPHysics Custom GUI implementations.
+'''DesignSPHysics Custom GUI implementations.
 
 This file contains a collection of custom GUI implementations
 to use with DesignSPHysics.
@@ -8,7 +8,7 @@ to use with DesignSPHysics.
 This module is needed for some specific actions not supported
 in QT by default.
 
-"""
+'''
 
 import FreeCAD
 import FreeCADGui
@@ -19,14 +19,12 @@ import glob
 
 import sys
 
-from ds_modules import utils
-from ds_modules.utils import __
-from ds_modules import guiutils
-from ds_modules import properties
-from ds_modules.properties import *
-from ds_modules import constants
-from ds_modules import execution_parameters
-from ds_modules.execution_parameters import *
+from mod import utils
+from mod.utils import __
+from mod import guiutils
+from mod import constants
+from mod.dataobjects import *
+from mod.execution_parameters import *
 
 
 # Copyright (C) 2019
@@ -49,7 +47,7 @@ from ds_modules.execution_parameters import *
 
 
 class MovementActions(QtGui.QWidget):
-    """ A set of movement actions (use and delete) with its custom signals"""
+    ''' A set of movement actions (use and delete) with its custom signals'''
     delete = QtCore.Signal(int)
     use = QtCore.Signal(int, bool)
     loop = QtCore.Signal(int, bool)
@@ -85,7 +83,7 @@ class MovementActions(QtGui.QWidget):
 
 
 class WaveMovementActions(QtGui.QWidget):
-    """ A set of wave movement actions (use and delete) with its custom signals"""
+    ''' A set of wave movement actions (use and delete) with its custom signals'''
     delete = QtCore.Signal(int)
     use = QtCore.Signal(int, bool)
 
@@ -113,15 +111,15 @@ class WaveMovementActions(QtGui.QWidget):
 
 
 class RectilinearMotionTimeline(QtGui.QWidget):
-    """ A Rectilinear motion graphical representation for a table-based timeline """
+    ''' A Rectilinear motion graphical representation for a table-based timeline '''
 
-    changed = QtCore.Signal(int, properties.RectMotion)
-    deleted = QtCore.Signal(int, properties.RectMotion)
+    changed = QtCore.Signal(int, RectMotion)
+    deleted = QtCore.Signal(int, RectMotion)
     order_up = QtCore.Signal(int)
     order_down = QtCore.Signal(int)
 
     def __init__(self, index, rect_motion):
-        if not isinstance(rect_motion, properties.RectMotion):
+        if not isinstance(rect_motion, RectMotion):
             raise TypeError(
                 "You tried to spawn a rectilinear motion widget in the timeline with a wrong object")
         if rect_motion is None:
@@ -210,7 +208,7 @@ class RectilinearMotionTimeline(QtGui.QWidget):
             utils.debug("Introduced an invalid value for a float number.")
 
     def construct_motion_object(self):
-        return properties.RectMotion(
+        return RectMotion(
             velocity=[float(self.x_input.text()),
                       float(self.y_input.text()),
                       float(self.z_input.text())],
@@ -236,7 +234,7 @@ class RectilinearMotionTimeline(QtGui.QWidget):
 
 
 class AccRectilinearMotionTimeline(QtGui.QWidget):
-    """ Am accelerated ectilinear motion graphical representation for a table-based timeline """
+    ''' Am accelerated ectilinear motion graphical representation for a table-based timeline '''
 
     changed = QtCore.Signal(int, AccRectMotion)
     deleted = QtCore.Signal(int, AccRectMotion)
@@ -402,7 +400,7 @@ class AccRectilinearMotionTimeline(QtGui.QWidget):
 
 
 class RotationalMotionTimeline(QtGui.QWidget):
-    """ A Rotational motion graphical representation for a table-based timeline """
+    ''' A Rotational motion graphical representation for a table-based timeline '''
 
     changed = QtCore.Signal(int, RotMotion)
     deleted = QtCore.Signal(int, RotMotion)
@@ -571,7 +569,7 @@ class RotationalMotionTimeline(QtGui.QWidget):
 
 
 class AccRotationalMotionTimeline(QtGui.QWidget):
-    """ An accelerated rotational motion graphical representation for a table-based timeline """
+    ''' An accelerated rotational motion graphical representation for a table-based timeline '''
 
     changed = QtCore.Signal(int, AccRotMotion)
     deleted = QtCore.Signal(int, AccRotMotion)
@@ -758,7 +756,7 @@ class AccRotationalMotionTimeline(QtGui.QWidget):
 
 
 class AccCircularMotionTimeline(QtGui.QWidget):
-    """ An accelerated circular motion graphical representation for a table-based timeline """
+    ''' An accelerated circular motion graphical representation for a table-based timeline '''
 
     changed = QtCore.Signal(int, AccCirMotion)
     deleted = QtCore.Signal(int, AccCirMotion)
@@ -979,7 +977,7 @@ class AccCircularMotionTimeline(QtGui.QWidget):
 
 
 class RotSinuMotionTimeline(QtGui.QWidget):
-    """ A sinusoidal rotational motion graphical representation for a table-based timeline """
+    ''' A sinusoidal rotational motion graphical representation for a table-based timeline '''
 
     changed = QtCore.Signal(int, RotSinuMotion)
     deleted = QtCore.Signal(int, RotSinuMotion)
@@ -1172,7 +1170,7 @@ class RotSinuMotionTimeline(QtGui.QWidget):
 
 
 class CirSinuMotionTimeline(QtGui.QWidget):
-    """ A sinusoidal circular motion graphical representation for a table-based timeline """
+    ''' A sinusoidal circular motion graphical representation for a table-based timeline '''
 
     changed = QtCore.Signal(int, CirSinuMotion)
     deleted = QtCore.Signal(int, CirSinuMotion)
@@ -1408,15 +1406,15 @@ class CirSinuMotionTimeline(QtGui.QWidget):
 
 
 class WaitMotionTimeline(QtGui.QWidget):
-    """ A wait motion graphical representation for a table-based timeline """
+    ''' A wait motion graphical representation for a table-based timeline '''
 
-    changed = QtCore.Signal(int, properties.WaitMotion)
-    deleted = QtCore.Signal(int, properties.WaitMotion)
+    changed = QtCore.Signal(int, WaitMotion)
+    deleted = QtCore.Signal(int, WaitMotion)
     order_up = QtCore.Signal(int)
     order_down = QtCore.Signal(int)
 
     def __init__(self, index, wait_motion):
-        if not isinstance(wait_motion, properties.WaitMotion):
+        if not isinstance(wait_motion, WaitMotion):
             raise TypeError(
                 "You tried to spawn a rectilinear motion widget in the timeline with a wrong object")
         if wait_motion is None:
@@ -1479,7 +1477,7 @@ class WaitMotionTimeline(QtGui.QWidget):
         self.time_input.setText(str(wait_motion.duration))
 
     def construct_motion_object(self):
-        return properties.WaitMotion(duration=float(self.time_input.text()), parent_movement=self.parent_movement)
+        return WaitMotion(duration=float(self.time_input.text()), parent_movement=self.parent_movement)
 
     def on_change(self):
         if len(self.time_input.text()) is 0:
@@ -1495,7 +1493,7 @@ class WaitMotionTimeline(QtGui.QWidget):
 
 
 class RectSinuMotionTimeline(QtGui.QWidget):
-    """ A sinusoidal rectilinear motion graphical representation for a table-based timeline """
+    ''' A sinusoidal rectilinear motion graphical representation for a table-based timeline '''
 
     changed = QtCore.Signal(int, RectSinuMotion)
     deleted = QtCore.Signal(int, RectSinuMotion)
@@ -1684,12 +1682,12 @@ class RectSinuMotionTimeline(QtGui.QWidget):
 
 
 class RegularPistonWaveMotionTimeline(QtGui.QWidget):
-    """ A Regular Wave motion graphical representation for a table-based timeline """
+    ''' A Regular Wave motion graphical representation for a table-based timeline '''
 
-    changed = QtCore.Signal(int, properties.RegularPistonWaveGen)
+    changed = QtCore.Signal(int, RegularPistonWaveGen)
 
     def __init__(self, reg_wave_gen):
-        if not isinstance(reg_wave_gen, properties.RegularPistonWaveGen):
+        if not isinstance(reg_wave_gen, RegularPistonWaveGen):
             raise TypeError("You tried to spawn a regular wave generator "
                             "motion widget in the timeline with a wrong object")
         if reg_wave_gen is None:
@@ -2014,7 +2012,7 @@ class RegularPistonWaveMotionTimeline(QtGui.QWidget):
             correction=_cmo_correction
         )
 
-        return properties.RegularPistonWaveGen(parent_movement=self.parent_movement,
+        return RegularPistonWaveGen(parent_movement=self.parent_movement,
                                     wave_order=self.wave_order_selector.currentIndex() + 1, start=0,
                                     duration=float(self.duration_input.text()), depth=float(self.depth_input.text()),
                                     piston_dir=[float(self.piston_dir_x.text()),
@@ -2059,11 +2057,11 @@ class RegularPistonWaveMotionTimeline(QtGui.QWidget):
 
 
 class IrregularPistonWaveMotionTimeline(QtGui.QWidget):
-    """ An Irregular Wave motion graphical representation for a table-based timeline """
-    changed = QtCore.Signal(int, properties.IrregularPistonWaveGen)
+    ''' An Irregular Wave motion graphical representation for a table-based timeline '''
+    changed = QtCore.Signal(int, IrregularPistonWaveGen)
 
     def __init__(self, irreg_wave_gen):
-        if not isinstance(irreg_wave_gen, properties.IrregularPistonWaveGen):
+        if not isinstance(irreg_wave_gen, IrregularPistonWaveGen):
             raise TypeError("You tried to spawn an irregular wave generator "
                             "motion widget in the timeline with a wrong object")
         if irreg_wave_gen is None:
@@ -2493,7 +2491,7 @@ class IrregularPistonWaveMotionTimeline(QtGui.QWidget):
             correction=_cmo_correction
         )
 
-        return properties.IrregularPistonWaveGen(parent_movement=self.parent_movement,
+        return IrregularPistonWaveGen(parent_movement=self.parent_movement,
                                       wave_order=self.wave_order_selector.currentIndex() + 1, start=0,
                                       duration=float(self.duration_input.text()), depth=float(self.depth_input.text()),
                                       piston_dir=[float(self.piston_dir_x.text()),
@@ -2566,11 +2564,11 @@ class IrregularPistonWaveMotionTimeline(QtGui.QWidget):
 
 
 class RegularFlapWaveMotionTimeline(QtGui.QWidget):
-    """ A Regular Flap Wave motion graphical representation for a table-based timeline """
-    changed = QtCore.Signal(int, properties.RegularFlapWaveGen)
+    ''' A Regular Flap Wave motion graphical representation for a table-based timeline '''
+    changed = QtCore.Signal(int, RegularFlapWaveGen)
 
     def __init__(self, reg_wave_gen):
-        if not isinstance(reg_wave_gen, properties.RegularFlapWaveGen):
+        if not isinstance(reg_wave_gen, RegularFlapWaveGen):
             raise TypeError("You tried to spawn a regular flap wave generator "
                             "motion widget in the timeline with a wrong object")
         if reg_wave_gen is None:
@@ -2725,7 +2723,7 @@ class RegularFlapWaveMotionTimeline(QtGui.QWidget):
             utils.debug("Introduced an invalid value for a float number.")
 
     def construct_motion_object(self):
-        return properties.RegularFlapWaveGen(parent_movement=self.parent_movement,
+        return RegularFlapWaveGen(parent_movement=self.parent_movement,
                                   wave_order=self.wave_order_selector.currentIndex() + 1, start=0,
                                   duration=float(self.duration_input.text()), depth=float(self.depth_input.text()),
                                   flapaxis0=[float(self.flap_axis_0_x.text()),
@@ -2771,11 +2769,11 @@ class RegularFlapWaveMotionTimeline(QtGui.QWidget):
 
 
 class IrregularFlapWaveMotionTimeline(QtGui.QWidget):
-    """ An Irregular Flap Wave motion graphical representation for a table-based timeline """
-    changed = QtCore.Signal(int, properties.IrregularFlapWaveGen)
+    ''' An Irregular Flap Wave motion graphical representation for a table-based timeline '''
+    changed = QtCore.Signal(int, IrregularFlapWaveGen)
 
     def __init__(self, irreg_wave_gen):
-        if not isinstance(irreg_wave_gen, properties.IrregularFlapWaveGen):
+        if not isinstance(irreg_wave_gen, IrregularFlapWaveGen):
             raise TypeError("You tried to spawn an irregular flap wave generator "
                             "motion widget in the timeline with a wrong object")
         if irreg_wave_gen is None:
@@ -3034,7 +3032,7 @@ class IrregularFlapWaveMotionTimeline(QtGui.QWidget):
             utils.debug("Introduced an invalid value for a float number.")
 
     def construct_motion_object(self):
-        return properties.IrregularFlapWaveGen(parent_movement=self.parent_movement,
+        return IrregularFlapWaveGen(parent_movement=self.parent_movement,
                                     wave_order=self.wave_order_selector.currentIndex() + 1, start=0,
                                     duration=float(self.duration_input.text()), depth=float(self.depth_input.text()),
                                     flapaxis0=[float(self.flap_axis_0_x.text()),
@@ -3109,11 +3107,11 @@ class IrregularFlapWaveMotionTimeline(QtGui.QWidget):
 
 
 class FileMotionTimeline(QtGui.QWidget):
-    """ A File motion graphical representation for a table-based timeline """
-    changed = QtCore.Signal(int, properties.FileGen)
+    ''' A File motion graphical representation for a table-based timeline '''
+    changed = QtCore.Signal(int, FileGen)
 
     def __init__(self, file_wave_gen, project_folder_path):
-        if not isinstance(file_wave_gen, properties.FileGen):
+        if not isinstance(file_wave_gen, FileGen):
             raise TypeError("You tried to spawn a regular wave generator "
                             "motion widget in the timeline with a wrong object")
         if file_wave_gen is None:
@@ -3214,7 +3212,7 @@ class FileMotionTimeline(QtGui.QWidget):
             utils.debug("Introduced an invalid value for a float number.")
 
     def construct_motion_object(self):
-        return properties.FileGen(parent_movement=self.parent_movement,
+        return FileGen(parent_movement=self.parent_movement,
                        duration=float(self.duration_input.text()),
                        filename=str(self.filename_input.text()),
                        fields=str(self.fields_input.text()),
@@ -3235,11 +3233,11 @@ class FileMotionTimeline(QtGui.QWidget):
 
 
 class RotationFileMotionTimeline(QtGui.QWidget):
-    """ A rotation file motion graphical representation for a table-based timeline """
-    changed = QtCore.Signal(int, properties.RotationFileGen)
+    ''' A rotation file motion graphical representation for a table-based timeline '''
+    changed = QtCore.Signal(int, RotationFileGen)
 
     def __init__(self, rot_file_gen, project_folder_path):
-        if not isinstance(rot_file_gen, properties.RotationFileGen):
+        if not isinstance(rot_file_gen, RotationFileGen):
             raise TypeError("You tried to spawn a rotation file generator "
                             "motion widget in the timeline with a wrong object")
         if rot_file_gen is None:
@@ -3352,7 +3350,7 @@ class RotationFileMotionTimeline(QtGui.QWidget):
             utils.debug("Introduced an invalid value for a float number.")
 
     def construct_motion_object(self):
-        return properties.RotationFileGen(parent_movement=self.parent_movement,
+        return RotationFileGen(parent_movement=self.parent_movement,
                                duration=float(self.duration_input.text()),
                                filename=str(self.filename_input.text()),
                                anglesunits=str(
@@ -3376,7 +3374,7 @@ class RotationFileMotionTimeline(QtGui.QWidget):
 
 
 class ObjectOrderWidget(QtGui.QWidget):
-    """ A widget representing the object order. """
+    ''' A widget representing the object order. '''
 
     up = QtCore.Signal(int)  # Passes element index
     down = QtCore.Signal(int)  # Passes element index
@@ -3428,7 +3426,7 @@ class ObjectOrderWidget(QtGui.QWidget):
 
 
 class ObjectIsCheked(QtGui.QWidget):
-    """ Widget shows check options for an object """
+    ''' Widget shows check options for an object '''
 
     def __init__(self, key, object_name="No name", object_mk=-1, mktype="bound", is_floating=""):
         super(ObjectIsCheked, self).__init__()
@@ -3459,7 +3457,7 @@ class ObjectIsCheked(QtGui.QWidget):
 
 
 class MovementTimelinePlaceholder(QtGui.QWidget):
-    """ A placeholder for the movement timeline table. """
+    ''' A placeholder for the movement timeline table. '''
 
     def __init__(self):
         super(MovementTimelinePlaceholder, self).__init__()
@@ -3482,7 +3480,7 @@ class MovementTimelinePlaceholder(QtGui.QWidget):
 
 
 class InfoDialogDetails(QtGui.QDialog):
-    """ A popup dialog with a text box to show details."""
+    ''' A popup dialog with a text box to show details.'''
 
     def __init__(self, text=None):
         super(InfoDialogDetails, self).__init__()
@@ -3501,7 +3499,7 @@ class InfoDialogDetails(QtGui.QDialog):
 
 
 class InfoDialog(QtGui.QDialog):
-    """ An information dialog with popup details and ok button."""
+    ''' An information dialog with popup details and ok button.'''
 
     def __init__(self, info_text="", detailed_text=None):
         super(InfoDialog, self).__init__()
@@ -4570,10 +4568,10 @@ class RelaxationZoneFileConfigDialog(QtGui.QDialog):
 
 
 class AccelerationInputDialog(QtGui.QDialog):
-    """ A Dialog which shows the contents of the case AccelerationInput object.
+    ''' A Dialog which shows the contents of the case AccelerationInput object.
     Shows a list with the AccelerationInputData objects defined for the case and
     its details when clicked.
-    Returns: AccelerationInput object"""
+    Returns: AccelerationInput object'''
 
     def __init__(self, accinput):
         super(AccelerationInputDialog, self).__init__()
@@ -4673,7 +4671,7 @@ class AccelerationInputDialog(QtGui.QDialog):
         self.init_connections()
 
     def get_result(self):
-        """ Returns the AccelerationInput object """
+        ''' Returns the AccelerationInput object '''
         return self.accinput
 
     def fill_data(self):
@@ -4939,7 +4937,7 @@ class RelaxationZoneUniformConfigDialog(QtGui.QDialog):
 
 
 class VelocityTimesDialog(QtGui.QDialog):
-    """ Dialog with a table to create velocity times. """
+    ''' Dialog with a table to create velocity times. '''
 
     def __init__(self, relaxationzone):
         super(VelocityTimesDialog, self).__init__()
@@ -5032,10 +5030,8 @@ class FocusableComboBox(QtGui.QComboBox):
 
 class ConstantsDialog(QtGui.QDialog):
 
-    def __init__(self, data):
+    def __init__(self):
         super(ConstantsDialog, self).__init__()
-
-        self.data = data
 
         self.setWindowTitle("DSPH Constant definition")
         self.help_window = QtGui.QTextEdit()
@@ -5049,7 +5045,7 @@ class ConstantsDialog(QtGui.QDialog):
         self.lattice_label = QtGui.QLabel("Lattice for Boundaries: ")
         self.lattice_input = QtGui.QComboBox()
         self.lattice_input.insertItems(0, ['Lattice 1', 'Lattice 2'])
-        self.lattice_input.setCurrentIndex(int(self.data['lattice_bound']) - 1)
+        self.lattice_input.setCurrentIndex(Case.instance().constants.lattice_bound - 1)
 
         self.lattice_layout.addWidget(self.lattice_label)
         self.lattice_layout.addWidget(self.lattice_input)
@@ -5060,7 +5056,7 @@ class ConstantsDialog(QtGui.QDialog):
         self.lattice2_label = QtGui.QLabel("Lattice for Fluids: ")
         self.lattice2_input = QtGui.QComboBox()
         self.lattice2_input.insertItems(0, ['Lattice 1', 'Lattice 2'])
-        self.lattice2_input.setCurrentIndex(int(self.data['lattice_fluid']) - 1)
+        self.lattice2_input.setCurrentIndex(Case.instance().constants.lattice_fluid - 1)
 
         self.lattice2_layout.addWidget(self.lattice2_label)
         self.lattice2_layout.addWidget(self.lattice2_input)
@@ -5078,7 +5074,7 @@ class ConstantsDialog(QtGui.QDialog):
         self.gravityx_input.focus.connect(self.on_help_focus)
 
         self.gravityx_validator = QtGui.QDoubleValidator(-200, 200, 8, self.gravityx_input)
-        self.gravityx_input.setText(str(self.data['gravity'][0]))
+        self.gravityx_input.setText(str(Case.instance().constants.gravity[0]))
         self.gravityx_input.setValidator(self.gravityx_validator)
 
         self.gravityy_input = QtGui.QLineEdit()
@@ -5089,7 +5085,7 @@ class ConstantsDialog(QtGui.QDialog):
         self.gravityy_input.focus.connect(self.on_help_focus)
 
         self.gravityy_validator = QtGui.QDoubleValidator(-200, 200, 8, self.gravityy_input)
-        self.gravityy_input.setText(str(self.data['gravity'][1]))
+        self.gravityy_input.setText(str(Case.instance().constants.gravity[1]))
         self.gravityy_input.setValidator(self.gravityy_validator)
 
         self.gravityz_input = QtGui.QLineEdit()
@@ -5100,7 +5096,7 @@ class ConstantsDialog(QtGui.QDialog):
         self.gravityz_input.focus.connect(self.on_help_focus)
 
         self.gravityz_validator = QtGui.QDoubleValidator(-200, 200, 8, self.gravityz_input)
-        self.gravityz_input.setText(str(self.data['gravity'][2]))
+        self.gravityz_input.setText(str(Case.instance().constants.gravity[2]))
         self.gravityz_input.setValidator(self.gravityz_validator)
 
         self.gravity_label2 = QtGui.QLabel(
@@ -5124,7 +5120,7 @@ class ConstantsDialog(QtGui.QDialog):
         self.rhop0_input.focus.connect(self.on_help_focus)
 
         self.rhop0_validator = QtGui.QIntValidator(0, 10000, self.rhop0_input)
-        self.rhop0_input.setText(str(self.data['rhop0']))
+        self.rhop0_input.setText(str(Case.instance().constants.rhop0))
         self.rhop0_input.setValidator(self.rhop0_validator)
         self.rhop0_label2 = QtGui.QLabel(
             "kg/m<span style='vertical-align:super'>3<span>")
@@ -5137,7 +5133,7 @@ class ConstantsDialog(QtGui.QDialog):
         # components
         self.hswlauto_layout = QtGui.QHBoxLayout()
         self.hswlauto_chk = QtGui.QCheckBox("Auto HSWL ")
-        if self.data['hswl_auto']:
+        if Case.instance().constants.hswl_auto:
             self.hswlauto_chk.setCheckState(QtCore.Qt.Checked)
         else:
             self.hswlauto_chk.setCheckState(QtCore.Qt.Unchecked)
@@ -5155,7 +5151,7 @@ class ConstantsDialog(QtGui.QDialog):
         self.hswl_input.focus.connect(self.on_help_focus)
 
         self.hswl_validator = QtGui.QIntValidator(0, 10000, self.hswl_input)
-        self.hswl_input.setText(str(self.data['hswl']))
+        self.hswl_input.setText(str(Case.instance().constants.hswl))
         self.hswl_input.setValidator(self.hswl_validator)
         self.hswl_label2 = QtGui.QLabel("metres")
 
@@ -5177,7 +5173,7 @@ class ConstantsDialog(QtGui.QDialog):
         self.gamma_input.focus.connect(self.on_help_focus)
 
         self.gamma_validator = QtGui.QIntValidator(0, 999, self.gamma_input)
-        self.gamma_input.setText(str(self.data['gamma']))
+        self.gamma_input.setText(str(Case.instance().constants.gamma))
         self.gamma_input.setValidator(self.gamma_validator)
         self.gamma_label2 = QtGui.QLabel("units")
 
@@ -5188,7 +5184,7 @@ class ConstantsDialog(QtGui.QDialog):
         # Speedsystem: layout and components
         self.speedsystemauto_layout = QtGui.QHBoxLayout()
         self.speedsystemauto_chk = QtGui.QCheckBox("Auto Speedsystem ")
-        if self.data['speedsystem_auto']:
+        if Case.instance().constants.speedsystem_auto:
             self.speedsystemauto_chk.setCheckState(QtCore.Qt.Checked)
         else:
             self.speedsystemauto_chk.setCheckState(QtCore.Qt.Unchecked)
@@ -5206,7 +5202,7 @@ class ConstantsDialog(QtGui.QDialog):
         self.speedsystem_input.focus.connect(self.on_help_focus)
 
         self.speedsystem_validator = QtGui.QIntValidator(0, 10000, self.speedsystem_input)
-        self.speedsystem_input.setText(str(self.data['speedsystem']))
+        self.speedsystem_input.setText(str(Case.instance().constants.speedsystem))
         self.speedsystem_input.setValidator(self.speedsystem_validator)
         self.speedsystem_label2 = QtGui.QLabel("m/s")
 
@@ -5228,7 +5224,7 @@ class ConstantsDialog(QtGui.QDialog):
         self.coefsound_input.focus.connect(self.on_help_focus)
 
         self.coefsound_validator = QtGui.QIntValidator(0, 999, self.coefsound_input)
-        self.coefsound_input.setText(str(self.data['coefsound']))
+        self.coefsound_input.setText(str(Case.instance().constants.coefsound))
         self.coefsound_input.setValidator(self.coefsound_validator)
         self.coefsound_label2 = QtGui.QLabel("units")
 
@@ -5239,7 +5235,7 @@ class ConstantsDialog(QtGui.QDialog):
         # Speedsound: layout and components
         self.speedsoundauto_layout = QtGui.QHBoxLayout()
         self.speedsoundauto_chk = QtGui.QCheckBox("Auto Speedsound ")
-        if self.data['speedsound_auto']:
+        if Case.instance().constants.speedsound_auto:
             self.speedsoundauto_chk.setCheckState(QtCore.Qt.Checked)
         else:
             self.speedsoundauto_chk.setCheckState(QtCore.Qt.Unchecked)
@@ -5257,7 +5253,7 @@ class ConstantsDialog(QtGui.QDialog):
         self.speedsound_input.focus.connect(self.on_help_focus)
 
         self.speedsound_validator = QtGui.QIntValidator(0, 10000, self.speedsound_input)
-        self.speedsound_input.setText(str(self.data['speedsound']))
+        self.speedsound_input.setText(str(Case.instance().constants.speedsound))
         self.speedsound_input.setValidator(self.speedsound_validator)
         self.speedsound_label2 = QtGui.QLabel("m/s")
 
@@ -5279,7 +5275,7 @@ class ConstantsDialog(QtGui.QDialog):
         self.coefh_input.focus.connect(self.on_help_focus)
 
         self.coefh_validator = QtGui.QDoubleValidator(0, 10, 8, self.coefh_input)
-        self.coefh_input.setText(str(self.data['coefh']))
+        self.coefh_input.setText(str(Case.instance().constants.coefh))
         self.coefh_input.setValidator(self.coefh_validator)
         self.coefh_label2 = QtGui.QLabel("units")
 
@@ -5298,7 +5294,7 @@ class ConstantsDialog(QtGui.QDialog):
         self.cflnumber_input.focus.connect(self.on_help_focus)
 
         self.cflnumber_validator = QtGui.QDoubleValidator(0, 10, 8, self.coefh_input)
-        self.cflnumber_input.setText(str(self.data['cflnumber']))
+        self.cflnumber_input.setText(str(Case.instance().constants.cflnumber))
         self.cflnumber_input.setValidator(self.cflnumber_validator)
         self.cflnumber_label2 = QtGui.QLabel("units")
 
@@ -5309,7 +5305,7 @@ class ConstantsDialog(QtGui.QDialog):
         # h: layout and components
         self.hauto_layout = QtGui.QHBoxLayout()
         self.hauto_chk = QtGui.QCheckBox("Auto Smoothing length ")
-        if self.data['h_auto']:
+        if Case.instance().constants.h_auto:
             self.hauto_chk.setCheckState(QtCore.Qt.Checked)
         else:
             self.hauto_chk.setCheckState(QtCore.Qt.Unchecked)
@@ -5327,7 +5323,7 @@ class ConstantsDialog(QtGui.QDialog):
         self.h_input.focus.connect(self.on_help_focus)
 
         self.h_validator = QtGui.QDoubleValidator(0, 100, 8, self.h_input)
-        self.h_input.setText(str(self.data['h']))
+        self.h_input.setText(str(Case.instance().constants.h))
         self.h_input.setValidator(self.h_validator)
         self.h_label2 = QtGui.QLabel("metres")
 
@@ -5341,7 +5337,7 @@ class ConstantsDialog(QtGui.QDialog):
         # b: layout and components
         self.bauto_layout = QtGui.QHBoxLayout()
         self.bauto_chk = QtGui.QCheckBox("Auto b constant for EOS ")
-        if self.data['b_auto']:
+        if Case.instance().constants.b_auto:
             self.bauto_chk.setCheckState(QtCore.Qt.Checked)
         else:
             self.bauto_chk.setCheckState(QtCore.Qt.Unchecked)
@@ -5359,7 +5355,7 @@ class ConstantsDialog(QtGui.QDialog):
         self.b_input.focus.connect(self.on_help_focus)
 
         self.b_validator = QtGui.QDoubleValidator(0, 100, 8, self.b_input)
-        self.b_input.setText(str(self.data['b']))
+        self.b_input.setText(str(Case.instance().constants.b))
         self.b_input.setValidator(self.b_validator)
         self.b_label2 = QtGui.QLabel("Pascal")
 
@@ -5464,28 +5460,28 @@ class ConstantsDialog(QtGui.QDialog):
             self.b_input.setEnabled(True)
 
     def on_ok(self):
-        self.data['lattice_bound'] = str(self.lattice_input.currentIndex() + 1)
-        self.data['lattice_fluid'] = str(self.lattice2_input.currentIndex() + 1)
-        self.data['gravity'] = [
-            self.gravityx_input.text(),
-            self.gravityy_input.text(),
-            self.gravityz_input.text()
+        Case.instance().constants.lattice_bound = self.lattice_input.currentIndex() + 1
+        Case.instance().constants.lattice_fluid = self.lattice2_input.currentIndex() + 1
+        Case.instance().constants.gravity = [
+            float(self.gravityx_input.text()),
+            float(self.gravityy_input.text()),
+            float(self.gravityz_input.text())
         ]
-        self.data['rhop0'] = self.rhop0_input.text()
-        self.data['hswl'] = self.hswl_input.text()
-        self.data['hswl_auto'] = self.hswlauto_chk.isChecked()
-        self.data['gamma'] = self.gamma_input.text()
-        self.data['speedsystem'] = self.speedsystem_input.text()
-        self.data['speedsystem_auto'] = self.speedsystemauto_chk.isChecked()
-        self.data['coefsound'] = self.coefsound_input.text()
-        self.data['speedsound'] = self.speedsound_input.text()
-        self.data['speedsound_auto'] = self.speedsoundauto_chk.isChecked()
-        self.data['coefh'] = self.coefh_input.text()
-        self.data['cflnumber'] = self.cflnumber_input.text()
-        self.data['h'] = self.h_input.text()
-        self.data['h_auto'] = self.hauto_chk.isChecked()
-        self.data['b'] = self.b_input.text()
-        self.data['b_auto'] = self.bauto_chk.isChecked()
+        Case.instance().constants.rhop0 = float(self.rhop0_input.text())
+        Case.instance().constants.hswl = float(self.hswl_input.text())
+        Case.instance().constants.hswl_auto = self.hswlauto_chk.isChecked()
+        Case.instance().constants.gamma = float(self.gamma_input.text())
+        Case.instance().constants.speedsystem = float(self.speedsystem_input.text())
+        Case.instance().constants.speedsystem_auto = self.speedsystemauto_chk.isChecked()
+        Case.instance().constants.coefsound = float(self.coefsound_input.text())
+        Case.instance().constants.speedsound = float(self.speedsound_input.text())
+        Case.instance().constants.speedsound_auto = self.speedsoundauto_chk.isChecked()
+        Case.instance().constants.coefh = float(self.coefh_input.text())
+        Case.instance().constants.cflnumber = float(self.cflnumber_input.text())
+        Case.instance().constants.h = float(self.h_input.text())
+        Case.instance().constants.h_auto = self.hauto_chk.isChecked()
+        Case.instance().constants.b = float(self.b_input.text())
+        Case.instance().constants.b_auto = self.bauto_chk.isChecked()
         utils.log("Constants changed")
         self.accept()
 
@@ -5495,13 +5491,11 @@ class ConstantsDialog(QtGui.QDialog):
 
 
 class ExecutionParametersDialog(QtGui.QDialog):
-    """Defines the execution parameters window.
-    Modifies the data dictionary passed as parameter."""
+    '''Defines the execution parameters window.
+    Modifies the data dictionary passed as parameter.'''
 
-    def __init__(self, data):
+    def __init__(self):
         super(ExecutionParametersDialog, self).__init__()
-
-        self.data = data
 
         # Creates a dialog and 2 main buttons
         self.setWindowTitle("DSPH Execution Parameters")
@@ -5517,7 +5511,7 @@ class ExecutionParametersDialog(QtGui.QDialog):
         self.posdouble_input = FocusableComboBox()
         self.posdouble_input.insertItems(0,
                                     ['Double', 'Simple', 'Uses and saves double'])
-        self.posdouble_input.setCurrentIndex(int(self.data['posdouble']))
+        self.posdouble_input.setCurrentIndex(int(Case.instance().execution_parameters.posdouble))
         self.posdouble_input.setHelpText(utils.__(constants.HELP_POSDOUBLE))
 
         self.posdouble_input.focus.connect(self.on_help_focus)
@@ -5530,7 +5524,7 @@ class ExecutionParametersDialog(QtGui.QDialog):
         self.stepalgorithm_label = QtGui.QLabel("Step Algorithm: ")
         self.stepalgorithm_input = FocusableComboBox()
         self.stepalgorithm_input.insertItems(0, ['Symplectic', 'Verlet'])
-        self.stepalgorithm_input.setCurrentIndex(int(self.data['stepalgorithm']) - 1)
+        self.stepalgorithm_input.setCurrentIndex(int(Case.instance().execution_parameters.stepalgorithm) - 1)
         self.stepalgorithm_input.setHelpText(utils.__(constants.HELP_STEPALGORITHM))
 
         self.stepalgorithm_input.focus.connect(self.on_help_focus)
@@ -5552,14 +5546,15 @@ class ExecutionParametersDialog(QtGui.QDialog):
         self.verletsteps_input.focus.connect(self.on_help_focus)
 
         self.verletsteps_validator = QtGui.QIntValidator(0, 9999, self.verletsteps_input)
-        self.verletsteps_input.setText(str(self.data['verletsteps']))
+        self.verletsteps_input.setText(str(Case.instance().execution_parameters.verletsteps))
         self.verletsteps_input.setValidator(self.verletsteps_validator)
 
-        # Enable/Disable fields depending on selection
-        self.on_step_change(self.stepalgorithm_input.currentIndex)
 
         self.verletsteps_layout.addWidget(self.verletsteps_label)
         self.verletsteps_layout.addWidget(self.verletsteps_input)
+        
+        # Enable/Disable fields depending on selection
+        self.on_step_change(self.stepalgorithm_input.currentIndex)
 
         # Kernel
         self.kernel_layout = QtGui.QHBoxLayout()
@@ -5567,7 +5562,7 @@ class ExecutionParametersDialog(QtGui.QDialog):
         self.kernel_input = FocusableComboBox()
         self.kernel_input.insertItems(0, ['Cubic spline', 'Wendland'])
         self.kernel_input.setHelpText(utils.__(constants.HELP_KERNEL))
-        self.kernel_input.setCurrentIndex(int(self.data['kernel']) - 1)
+        self.kernel_input.setCurrentIndex(int(Case.instance().execution_parameters.kernel) - 1)
 
         self.kernel_input.focus.connect(self.on_help_focus)
 
@@ -5581,7 +5576,7 @@ class ExecutionParametersDialog(QtGui.QDialog):
         self.viscotreatment_input = FocusableComboBox()
         self.viscotreatment_input.insertItems(0, ['Artificial', 'Laminar + SPS'])
         self.viscotreatment_input.setHelpText(utils.__(constants.HELP_VISCOTREATMENT))
-        self.viscotreatment_input.setCurrentIndex(int(self.data['viscotreatment']) - 1)
+        self.viscotreatment_input.setCurrentIndex(int(Case.instance().execution_parameters.viscotreatment) - 1)
 
         self.viscotreatment_input.focus.connect(self.on_help_focus)
 
@@ -5603,8 +5598,8 @@ class ExecutionParametersDialog(QtGui.QDialog):
         self.visco_layout.addWidget(self.visco_input)
         self.visco_layout.addWidget(self.visco_units_label)
 
-        self.on_viscotreatment_change(int(self.data['viscotreatment']) - 1)
-        self.visco_input.setText(str(self.data['visco']))
+        self.on_viscotreatment_change(int(Case.instance().execution_parameters.viscotreatment) - 1)
+        self.visco_input.setText(str(Case.instance().execution_parameters.visco))
 
         self.viscotreatment_input.currentIndexChanged.connect(self.on_viscotreatment_change)
 
@@ -5619,7 +5614,7 @@ class ExecutionParametersDialog(QtGui.QDialog):
 
         self.viscoboundfactor_input.focus.connect(self.on_help_focus)
 
-        self.viscoboundfactor_input.setText(str(self.data['viscoboundfactor']))
+        self.viscoboundfactor_input.setText(str(Case.instance().execution_parameters.viscoboundfactor))
 
         self.viscoboundfactor_layout.addWidget(self.viscoboundfactor_label)
         self.viscoboundfactor_layout.addWidget(self.viscoboundfactor_input)
@@ -5628,7 +5623,7 @@ class ExecutionParametersDialog(QtGui.QDialog):
         self.deltasph_en_label = QtGui.QLabel("Enable DeltaSPH: ")
         self.deltasph_en_input = QtGui.QComboBox()
         self.deltasph_en_input.insertItems(0, ['No', 'Yes'])
-        self.deltasph_en_input.setCurrentIndex(int(self.data['deltasph_en']))
+        self.deltasph_en_input.setCurrentIndex(int(Case.instance().execution_parameters.deltasph_en))
         self.deltasph_en_input.currentIndexChanged.connect(self.on_deltasph_en_change)
 
         self.deltasph_en_layout.addWidget(self.deltasph_en_label)
@@ -5644,7 +5639,7 @@ class ExecutionParametersDialog(QtGui.QDialog):
 
         self.deltasph_input.focus.connect(self.on_help_focus)
 
-        self.deltasph_input.setText(str(self.data['deltasph']))
+        self.deltasph_input.setText(str(Case.instance().execution_parameters.deltasph))
         self.deltasph_layout.addWidget(self.deltasph_label)
         self.deltasph_layout.addWidget(self.deltasph_input)
 
@@ -5662,7 +5657,7 @@ class ExecutionParametersDialog(QtGui.QDialog):
 
         self.shifting_input.focus.connect(self.on_help_focus)
 
-        self.shifting_input.setCurrentIndex(int(self.data['shifting']))
+        self.shifting_input.setCurrentIndex(int(Case.instance().execution_parameters.shifting))
         self.shifting_input.currentIndexChanged.connect(self.on_shifting_change)
 
         self.shifting_layout.addWidget(self.shifting_label)
@@ -5678,7 +5673,7 @@ class ExecutionParametersDialog(QtGui.QDialog):
 
         self.shiftcoef_input.focus.connect(self.on_help_focus)
 
-        self.shiftcoef_input.setText(str(self.data['shiftcoef']))
+        self.shiftcoef_input.setText(str(Case.instance().execution_parameters.shiftcoef))
         self.shiftcoef_layout.addWidget(self.shiftcoef_label)
         self.shiftcoef_layout.addWidget(self.shiftcoef_input)
 
@@ -5691,7 +5686,7 @@ class ExecutionParametersDialog(QtGui.QDialog):
 
         self.shifttfs_input.focus.connect(self.on_help_focus)
 
-        self.shifttfs_input.setText(str(self.data['shifttfs']))
+        self.shifttfs_input.setText(str(Case.instance().execution_parameters.shifttfs))
         self.shifttfs_layout.addWidget(self.shifttfs_label)
         self.shifttfs_layout.addWidget(self.shifttfs_input)
 
@@ -5704,7 +5699,7 @@ class ExecutionParametersDialog(QtGui.QDialog):
         self.rigidalgorithm_input = FocusableComboBox()
         self.rigidalgorithm_input.insertItems(0, ['SPH', 'DEM', 'CHRONO'])
         self.rigidalgorithm_input.setHelpText(utils.__(constants.HELP_RIGIDALGORITHM))
-        self.rigidalgorithm_input.setCurrentIndex(int(self.data['rigidalgorithm']) - 1)
+        self.rigidalgorithm_input.setCurrentIndex(int(Case.instance().execution_parameters.rigidalgorithm) - 1)
 
         self.rigidalgorithm_input.focus.connect(self.on_help_focus)
 
@@ -5721,7 +5716,7 @@ class ExecutionParametersDialog(QtGui.QDialog):
 
         self.ftpause_input.focus.connect(self.on_help_focus)
 
-        self.ftpause_input.setText(str(self.data['ftpause']))
+        self.ftpause_input.setText(str(Case.instance().execution_parameters.ftpause))
         self.ftpause_label2 = QtGui.QLabel("seconds")
         self.ftpause_layout.addWidget(self.ftpause_label)
         self.ftpause_layout.addWidget(self.ftpause_input)
@@ -5736,14 +5731,14 @@ class ExecutionParametersDialog(QtGui.QDialog):
 
         self.coefdtmin_input.focus.connect(self.on_help_focus)
 
-        self.coefdtmin_input.setText(str(self.data['coefdtmin']))
+        self.coefdtmin_input.setText(str(Case.instance().execution_parameters.coefdtmin))
         self.coefdtmin_layout.addWidget(self.coefdtmin_label)
         self.coefdtmin_layout.addWidget(self.coefdtmin_input)
 
         # Initial time step
         self.dtiniauto_layout = QtGui.QHBoxLayout()
         self.dtiniauto_chk = QtGui.QCheckBox("Initial time step auto")
-        if self.data['dtini_auto']:
+        if Case.instance().execution_parameters.dtini_auto:
             self.dtiniauto_chk.setCheckState(QtCore.Qt.Checked)
         else:
             self.dtiniauto_chk.setCheckState(QtCore.Qt.Unchecked)
@@ -5758,7 +5753,7 @@ class ExecutionParametersDialog(QtGui.QDialog):
 
         self.dtini_input.focus.connect(self.on_help_focus)
 
-        self.dtini_input.setText(str(self.data['dtini']))
+        self.dtini_input.setText(str(Case.instance().execution_parameters.dtini))
         self.dtini_label2 = QtGui.QLabel("seconds")
         self.dtini_layout.addWidget(self.dtini_label)
         self.dtini_layout.addWidget(self.dtini_input)
@@ -5768,7 +5763,7 @@ class ExecutionParametersDialog(QtGui.QDialog):
         # Minimium time step
         self.dtminauto_layout = QtGui.QHBoxLayout()
         self.dtminauto_chk = QtGui.QCheckBox("Minimum time step: ")
-        if self.data['dtmin_auto']:
+        if Case.instance().execution_parameters.dtmin_auto:
             self.dtminauto_chk.setCheckState(QtCore.Qt.Checked)
         else:
             self.dtminauto_chk.setCheckState(QtCore.Qt.Unchecked)
@@ -5783,7 +5778,7 @@ class ExecutionParametersDialog(QtGui.QDialog):
 
         self.dtmin_input.focus.connect(self.on_help_focus)
 
-        self.dtmin_input.setText(str(self.data['dtmin']))
+        self.dtmin_input.setText(str(Case.instance().execution_parameters.dtmin))
         self.dtmin_label2 = QtGui.QLabel("seconds")
         self.dtmin_layout.addWidget(self.dtmin_label)
         self.dtmin_layout.addWidget(self.dtmin_input)
@@ -5794,7 +5789,7 @@ class ExecutionParametersDialog(QtGui.QDialog):
         self.dtfixed_layout = QtGui.QHBoxLayout()
         self.dtfixed_label = QtGui.QLabel("Fixed DT file: ")
         self.dtfixed_input = QtGui.QLineEdit()
-        self.dtfixed_input.setText(str(self.data['dtfixed']))
+        self.dtfixed_input.setText(str(Case.instance().execution_parameters.dtfixed))
         self.dtfixed_label2 = QtGui.QLabel("file")
         self.dtfixed_layout.addWidget(self.dtfixed_label)
         self.dtfixed_layout.addWidget(self.dtfixed_input)
@@ -5806,7 +5801,7 @@ class ExecutionParametersDialog(QtGui.QDialog):
         self.dtallparticles_input = QtGui.QLineEdit()
         self.dtallparticles_input.setMaxLength(1)
         self.dtallparticles_validator = QtGui.QIntValidator(0, 1, self.dtallparticles_input)
-        self.dtallparticles_input.setText(str(self.data['dtallparticles']))
+        self.dtallparticles_input.setText(str(Case.instance().execution_parameters.dtallparticles))
         self.dtallparticles_input.setValidator(self.dtallparticles_validator)
         self.dtallparticles_label2 = QtGui.QLabel("[0,1]")
         self.dtallparticles_layout.addWidget(self.dtallparticles_label)
@@ -5822,7 +5817,7 @@ class ExecutionParametersDialog(QtGui.QDialog):
 
         self.timemax_input.focus.connect(self.on_help_focus)
 
-        self.timemax_input.setText(str(self.data['timemax']))
+        self.timemax_input.setText(str(Case.instance().execution_parameters.timemax))
         self.timemax_label2 = QtGui.QLabel("seconds")
         self.timemax_layout.addWidget(self.timemax_label)
         self.timemax_layout.addWidget(self.timemax_input)
@@ -5837,7 +5832,7 @@ class ExecutionParametersDialog(QtGui.QDialog):
 
         self.timeout_input.focus.connect(self.on_help_focus)
 
-        self.timeout_input.setText(str(self.data['timeout']))
+        self.timeout_input.setText(str(Case.instance().execution_parameters.timeout))
         self.timeout_label2 = QtGui.QLabel("seconds")
         self.timeout_layout.addWidget(self.timeout_label)
         self.timeout_layout.addWidget(self.timeout_input)
@@ -5852,7 +5847,7 @@ class ExecutionParametersDialog(QtGui.QDialog):
 
         self.partsoutmax_input.focus.connect(self.on_help_focus)
 
-        self.partsoutmax_input.setText(str(float(self.data['partsoutmax']) * 100))
+        self.partsoutmax_input.setText(str(float(Case.instance().execution_parameters.partsoutmax) * 100))
         self.partsoutmax_layout.addWidget(self.partsoutmax_label)
         self.partsoutmax_layout.addWidget(self.partsoutmax_input)
 
@@ -5865,7 +5860,7 @@ class ExecutionParametersDialog(QtGui.QDialog):
 
         self.rhopoutmin_input.focus.connect(self.on_help_focus)
 
-        self.rhopoutmin_input.setText(str(self.data['rhopoutmin']))
+        self.rhopoutmin_input.setText(str(Case.instance().execution_parameters.rhopoutmin))
         self.rhopoutmin_label2 = QtGui.QLabel(
             "kg/m<span style='vertical-align:super'>3</span>")
         self.rhopoutmin_layout.addWidget(self.rhopoutmin_label)
@@ -5881,7 +5876,7 @@ class ExecutionParametersDialog(QtGui.QDialog):
 
         self.rhopoutmax_input.focus.connect(self.on_help_focus)
 
-        self.rhopoutmax_input.setText(str(self.data['rhopoutmax']))
+        self.rhopoutmax_input.setText(str(Case.instance().execution_parameters.rhopoutmax))
         self.rhopoutmax_label2 = QtGui.QLabel(
             "kg/m<span style='vertical-align:super'>3</span>")
         self.rhopoutmax_layout.addWidget(self.rhopoutmax_label)
@@ -5912,13 +5907,10 @@ class ExecutionParametersDialog(QtGui.QDialog):
         self.period_x_layout.addLayout(self.period_x_inc_layout)
         self.period_x_chk.stateChanged.connect(self.on_period_x_chk)
 
-        try:
-            self.period_x_chk.setChecked(self.data["period_x"][0])
-            self.period_x_inc_x_input.setText(str(self.data["period_x"][1]))
-            self.period_x_inc_y_input.setText(str(self.data["period_x"][2]))
-            self.period_x_inc_z_input.setText(str(self.data["period_x"][3]))
-        except:
-            pass
+        self.period_x_chk.setChecked(Case.instance().periodicity.x_periodicity.enabled)
+        self.period_x_inc_x_input.setText(str(Case.instance().periodicity.x_periodicity.x_increment))
+        self.period_x_inc_y_input.setText(str(Case.instance().periodicity.x_periodicity.y_increment))
+        self.period_x_inc_z_input.setText(str(Case.instance().periodicity.x_periodicity.z_increment))
 
         # Change the state of periodicity input on window open
         self.on_period_x_chk()
@@ -5949,13 +5941,10 @@ class ExecutionParametersDialog(QtGui.QDialog):
         self.period_y_layout.addLayout(self.period_y_inc_layout)
         self.period_y_chk.stateChanged.connect(self.on_period_y_chk)
 
-        try:
-            self.period_y_chk.setChecked(self.data["period_y"][0])
-            self.period_y_inc_x_input.setText(str(self.data["period_y"][1]))
-            self.period_y_inc_y_input.setText(str(self.data["period_y"][2]))
-            self.period_y_inc_z_input.setText(str(self.data["period_y"][3]))
-        except:
-            pass
+        self.period_y_chk.setChecked(Case.instance().periodicity.y_periodicity.enabled)
+        self.period_y_inc_x_input.setText(str(Case.instance().periodicity.y_periodicity.x_increment))
+        self.period_y_inc_y_input.setText(str(Case.instance().periodicity.y_periodicity.y_increment))
+        self.period_y_inc_z_input.setText(str(Case.instance().periodicity.y_periodicity.z_increment))
 
         # Change the state of periodicity input on window open
         self.on_period_y_chk()
@@ -5986,13 +5975,10 @@ class ExecutionParametersDialog(QtGui.QDialog):
         self.period_z_layout.addLayout(self.period_z_inc_layout)
         self.period_z_chk.stateChanged.connect(self.on_period_z_chk)
 
-        try:
-            self.period_z_chk.setChecked(self.data["period_z"][0])
-            self.period_z_inc_x_input.setText(str(self.data["period_z"][1]))
-            self.period_z_inc_y_input.setText(str(self.data["period_z"][2]))
-            self.period_z_inc_z_input.setText(str(self.data["period_z"][3]))
-        except:
-            pass
+        self.period_z_chk.setChecked(Case.instance().periodicity.z_periodicity.enabled)
+        self.period_z_inc_x_input.setText(str(Case.instance().periodicity.z_periodicity.x_increment))
+        self.period_z_inc_y_input.setText(str(Case.instance().periodicity.z_periodicity.y_increment))
+        self.period_z_inc_z_input.setText(str(Case.instance().periodicity.z_periodicity.z_increment))
 
         # Change the state of periodicity input on window open
         self.on_period_z_chk()
@@ -6000,10 +5986,9 @@ class ExecutionParametersDialog(QtGui.QDialog):
         # Simulation domain
         self.simdomain_layout = QtGui.QVBoxLayout()
         self.simdomain_chk = QtGui.QCheckBox("Simulation Domain")
-        try:
-          self.simdomain_chk.setChecked(self.data['simdomain_chk'])
-        except:
-            pass
+
+        self.simdomain_chk.setChecked(Case.instance().domain.enabled)
+
         self.simdomain_posmin_layout = QtGui.QHBoxLayout()
         self.simdomain_posminx_layout = QtGui.QVBoxLayout()
         self.simdomain_posminy_layout = QtGui.QVBoxLayout()
@@ -6018,19 +6003,19 @@ class ExecutionParametersDialog(QtGui.QDialog):
         self.simdomain_posminx_line_edit = FocusableLineEdit()
         self.simdomain_posminx_line_edit.setHelpText(utils.__(constants.HELP_POSMINX))
         self.simdomain_posminx_line_edit.focus.connect(self.on_help_focus)
-        self.simdomain_posminx_line_edit.setText(str(self.data['posmin'][1]))
+        self.simdomain_posminx_line_edit.setText(str(Case.instance().domain.posmin_x.value))
         self.simdomain_posminy_combobox = QtGui.QComboBox()
         self.simdomain_posminy_combobox.insertItems(0, ['Default', 'Value', 'Default - value', 'Default - %'])
         self.simdomain_posminy_line_edit = FocusableLineEdit()
         self.simdomain_posminy_line_edit.setHelpText(utils.__(constants.HELP_POSMINY))
         self.simdomain_posminy_line_edit.focus.connect(self.on_help_focus)
-        self.simdomain_posminy_line_edit.setText(str(self.data['posmin'][3]))
+        self.simdomain_posminy_line_edit.setText(str(Case.instance().domain.posmin_y.value))
         self.simdomain_posminz_combobox = QtGui.QComboBox()
         self.simdomain_posminz_combobox.insertItems(0, ['Default', 'Value', 'Default - value', 'Default - %'])
         self.simdomain_posminz_line_edit = FocusableLineEdit()
         self.simdomain_posminz_line_edit.setHelpText(utils.__(constants.HELP_POSMINZ))
         self.simdomain_posminz_line_edit.focus.connect(self.on_help_focus)
-        self.simdomain_posminz_line_edit.setText(str(self.data['posmin'][5]))
+        self.simdomain_posminz_line_edit.setText(str(Case.instance().domain.posmin_z.value))
         self.simdomain_posminx_layout.addWidget(self.simdomain_posminx_combobox)
         self.simdomain_posminx_layout.addWidget(self.simdomain_posminx_line_edit)
         self.simdomain_posminy_layout.addWidget(self.simdomain_posminy_combobox)
@@ -6047,19 +6032,19 @@ class ExecutionParametersDialog(QtGui.QDialog):
         self.simdomain_posmaxx_line_edit = FocusableLineEdit()
         self.simdomain_posmaxx_line_edit.setHelpText(utils.__(constants.HELP_POSMAXX))
         self.simdomain_posmaxx_line_edit.focus.connect(self.on_help_focus)
-        self.simdomain_posmaxx_line_edit.setText(str(self.data['posmax'][1]))
+        self.simdomain_posmaxx_line_edit.setText(str(Case.instance().domain.posmax_x.value))
         self.simdomain_posmaxy_combobox = QtGui.QComboBox()
         self.simdomain_posmaxy_combobox.insertItems(0, ['Default', 'Value', 'Default + value', 'Default + %'])
         self.simdomain_posmaxy_line_edit = FocusableLineEdit()
         self.simdomain_posmaxy_line_edit.setHelpText(utils.__(constants.HELP_POSMAXY))
         self.simdomain_posmaxy_line_edit.focus.connect(self.on_help_focus)
-        self.simdomain_posmaxy_line_edit.setText(str(self.data['posmax'][3]))
+        self.simdomain_posmaxy_line_edit.setText(str(Case.instance().domain.posmax_y.value))
         self.simdomain_posmaxz_combobox = QtGui.QComboBox()
         self.simdomain_posmaxz_combobox.insertItems(0, ['Default', 'Value', 'Default + value', 'Default + %'])
         self.simdomain_posmaxz_line_edit = FocusableLineEdit()
         self.simdomain_posmaxz_line_edit.setHelpText(utils.__(constants.HELP_POSMAXZ))
         self.simdomain_posmaxz_line_edit.focus.connect(self.on_help_focus)
-        self.simdomain_posmaxz_line_edit.setText(str(self.data['posmax'][5]))
+        self.simdomain_posmaxz_line_edit.setText(str(Case.instance().domain.posmax_z.value))
         self.simdomain_posmaxx_layout.addWidget(self.simdomain_posmaxx_combobox)
         self.simdomain_posmaxx_layout.addWidget(self.simdomain_posmaxx_line_edit)
         self.simdomain_posmaxy_layout.addWidget(self.simdomain_posmaxy_combobox)
@@ -6071,15 +6056,12 @@ class ExecutionParametersDialog(QtGui.QDialog):
         self.simdomain_posmax_layout.addLayout(self.simdomain_posmaxy_layout)
         self.simdomain_posmax_layout.addLayout(self.simdomain_posmaxz_layout)
 
-        try:
-            self.simdomain_posminx_combobox.setCurrentIndex(self.data['posmin'][0])
-            self.simdomain_posminy_combobox.setCurrentIndex(self.data['posmin'][2])
-            self.simdomain_posminz_combobox.setCurrentIndex(self.data['posmin'][4])
-            self.simdomain_posmaxx_combobox.setCurrentIndex(self.data['posmax'][0])
-            self.simdomain_posmaxy_combobox.setCurrentIndex(self.data['posmax'][2])
-            self.simdomain_posmaxz_combobox.setCurrentIndex(self.data['posmax'][4])
-        except:
-            pass
+        self.simdomain_posminx_combobox.setCurrentIndex(Case.instance().domain.posmin_x.type)
+        self.simdomain_posminy_combobox.setCurrentIndex(Case.instance().domain.posmin_y.type)
+        self.simdomain_posminz_combobox.setCurrentIndex(Case.instance().domain.posmin_z.type)
+        self.simdomain_posmaxx_combobox.setCurrentIndex(Case.instance().domain.posmax_x.type)
+        self.simdomain_posmaxy_combobox.setCurrentIndex(Case.instance().domain.posmax_y.type)
+        self.simdomain_posmaxz_combobox.setCurrentIndex(Case.instance().domain.posmax_z.type)
 
         self.simdomain_layout.addWidget(self.simdomain_chk)
         self.simdomain_layout.addLayout(self.simdomain_posmin_layout)
@@ -6332,145 +6314,82 @@ class ExecutionParametersDialog(QtGui.QDialog):
 
     # ------------ Button behaviour definition --------------
     def on_ok(self):
-        self.data['posdouble'] = str(self.posdouble_input.currentIndex())
-        self.data['stepalgorithm'] = str(self.stepalgorithm_input.currentIndex() + 1)
-        self.data['verletsteps'] = self.verletsteps_input.text()
-        self.data['kernel'] = str(self.kernel_input.currentIndex() + 1)
-        self.data['viscotreatment'] = self.viscotreatment_input.currentIndex() + 1
-        self.data['visco'] = self.visco_input.text()
-        self.data['viscoboundfactor'] = self.viscoboundfactor_input.text()
-        self.data['deltasph'] = self.deltasph_input.text()
-        self.data['deltasph_en'] = self.deltasph_en_input.currentIndex()
-        self.data['shifting'] = str(self.shifting_input.currentIndex())
-        self.data['shiftcoef'] = self.shiftcoef_input.text()
-        self.data['shifttfs'] = self.shifttfs_input.text()
-        self.data['rigidalgorithm'] = str(self.rigidalgorithm_input.currentIndex() + 1)
-        self.data['ftpause'] = self.ftpause_input.text()
-        self.data['coefdtmin'] = self.coefdtmin_input.text()
-        self.data['dtini'] = self.dtini_input.text()
-        self.data['dtini_auto'] = self.dtiniauto_chk.isChecked()
-        self.data['dtmin'] = self.dtmin_input.text()
-        self.data['dtmin'] = self.dtmin_input.text()
-        self.data['dtmin_auto'] = self.dtminauto_chk.isChecked()
-        self.data['dtfixed'] = self.dtfixed_input.text()
-        self.data['dtallparticles'] = self.dtallparticles_input.text()
-        self.data['timemax'] = self.timemax_input.text()
-        self.data['timeout'] = self.timeout_input.text()
-        self.data['partsoutmax'] = str(float(self.partsoutmax_input.text()) / 100)
-        self.data['rhopoutmin'] = self.rhopoutmin_input.text()
-        self.data['rhopoutmax'] = self.rhopoutmax_input.text()
+        Case.instance().execution_parameters.posdouble = str(self.posdouble_input.currentIndex())
+        Case.instance().execution_parameters.stepalgorithm = str(self.stepalgorithm_input.currentIndex() + 1)
+        Case.instance().execution_parameters.verletsteps = self.verletsteps_input.text()
+        Case.instance().execution_parameters.kernel = str(self.kernel_input.currentIndex() + 1)
+        Case.instance().execution_parameters.viscotreatment = self.viscotreatment_input.currentIndex() + 1
+        Case.instance().execution_parameters.visco = self.visco_input.text()
+        Case.instance().execution_parameters.viscoboundfactor = self.viscoboundfactor_input.text()
+        Case.instance().execution_parameters.deltasph = self.deltasph_input.text()
+        Case.instance().execution_parameters.deltasph_en = self.deltasph_en_input.currentIndex()
+        Case.instance().execution_parameters.shifting = str(self.shifting_input.currentIndex())
+        Case.instance().execution_parameters.shiftcoef = self.shiftcoef_input.text()
+        Case.instance().execution_parameters.shifttfs = self.shifttfs_input.text()
+        Case.instance().execution_parameters.rigidalgorithm = str(self.rigidalgorithm_input.currentIndex() + 1)
+        Case.instance().execution_parameters.ftpause = self.ftpause_input.text()
+        Case.instance().execution_parameters.coefdtmin = self.coefdtmin_input.text()
+        Case.instance().execution_parameters.dtini = self.dtini_input.text()
+        Case.instance().execution_parameters.dtini_auto = self.dtiniauto_chk.isChecked()
+        Case.instance().execution_parameters.dtmin = self.dtmin_input.text()
+        Case.instance().execution_parameters.dtmin = self.dtmin_input.text()
+        Case.instance().execution_parameters.dtmin_auto = self.dtminauto_chk.isChecked()
+        Case.instance().execution_parameters.dtfixed = self.dtfixed_input.text()
+        Case.instance().execution_parameters.dtallparticles = self.dtallparticles_input.text()
+        Case.instance().execution_parameters.timemax = self.timemax_input.text()
+        Case.instance().execution_parameters.timeout = self.timeout_input.text()
+        Case.instance().execution_parameters.partsoutmax = str(float(self.partsoutmax_input.text()) / 100)
+        Case.instance().execution_parameters.rhopoutmin = self.rhopoutmin_input.text()
+        Case.instance().execution_parameters.rhopoutmax = self.rhopoutmax_input.text()
 
-        self.data['period_x'] = [
+        Case.instance().periodicity = Periodicity()
+        Case.instance().periodicity.x_periodicity = PeriodicityInfo(
             self.period_x_chk.isChecked(),
             float(self.period_x_inc_x_input.text()),
             float(self.period_x_inc_y_input.text()),
             float(self.period_x_inc_z_input.text())
-        ]
-        self.data['period_y'] = [
+        )
+
+        Case.instance().periodicity.y_periodicity = PeriodicityInfo(
             self.period_y_chk.isChecked(),
             float(self.period_y_inc_x_input.text()),
             float(self.period_y_inc_y_input.text()),
             float(self.period_y_inc_z_input.text())
-        ]
-        self.data['period_z'] = [
+        )
+
+        Case.instance().periodicity.z_periodicity = PeriodicityInfo(
             self.period_z_chk.isChecked(),
             float(self.period_z_inc_x_input.text()),
             float(self.period_z_inc_y_input.text()),
             float(self.period_z_inc_z_input.text())
-        ]
+        )
 
         if self.simdomain_chk.isChecked():
-            self.data['simdomain_chk'] = True
-            self.data['posmin'] = [
-                self.simdomain_posminx_combobox.currentIndex(),
-                float(self.simdomain_posminx_line_edit.text()),
-                self.simdomain_posminy_combobox.currentIndex(),
-                float(self.simdomain_posminy_line_edit.text()),
-                self.simdomain_posminz_combobox.currentIndex(),
-                float(self.simdomain_posminz_line_edit.text())
-            ]
+            Case.instance().domain.enabled = True
+            # IncZ must be 0 in simulations with specified domain
+            Case.instance().execution_parameters.incz = 0
+            
+            Case.instance().domain.posmin_x = SDPositionProperty(self.simdomain_posminx_combobox.currentIndex(), float(self.simdomain_posminx_line_edit.text()))
+            Case.instance().domain.posmin_y = SDPositionProperty(self.simdomain_posminy_combobox.currentIndex(), float(self.simdomain_posminy_line_edit.text()))
+            Case.instance().domain.posmin_z = SDPositionProperty(self.simdomain_posminz_combobox.currentIndex(), float(self.simdomain_posminz_line_edit.text()))
 
-            self.data['posmax'] = [
-                self.simdomain_posmaxx_combobox.currentIndex(),
-                float(self.simdomain_posmaxx_line_edit.text()),
-                self.simdomain_posmaxy_combobox.currentIndex(),
-                float(self.simdomain_posmaxy_line_edit.text()),
-                self.simdomain_posmaxz_combobox.currentIndex(),
-                float(self.simdomain_posmaxz_line_edit.text())
-            ]
-            self.data['incz'] = 0
-            self.simulation_domain()
+            Case.instance().domain.posmax_x = SDPositionProperty(self.simdomain_posmaxx_combobox.currentIndex(), float(self.simdomain_posmaxx_line_edit.text()))
+            Case.instance().domain.posmax_y = SDPositionProperty(self.simdomain_posmaxy_combobox.currentIndex(), float(self.simdomain_posmaxy_line_edit.text()))
+            Case.instance().domain.posmax_z = SDPositionProperty(self.simdomain_posmaxz_combobox.currentIndex(), float(self.simdomain_posmaxz_line_edit.text()))
         else:
-            self.data['simdomain_chk'] = False
-            self.data['posmin'] = [0, 0.0, 0, 0.0, 0, 0.0]
-            self.data['posmax'] = [0, 0.0, 0, 0.0, 0, 0.0]
+            Case.instance().domain.enabled = False
+            Case.instance().reset_simulation_domain()
 
-            utils.log("Execution Parameters changed")
+        utils.log("Execution Parameters changed")
         self.accept()
 
     def on_cancel(self):
         utils.log("Execution Parameters not changed")
         self.reject()
 
-    def simulation_domain(self):
-        if self.data['posmin'][0] == 0:
-            self.data['posminxml'][0] = "default"
-        elif self.data['posmin'][0] == 1:
-            self.data['posminxml'][0] = str(self.data['posmin'][1])
-        elif self.data['posmin'][0] == 2:
-            self.data['posminxml'][0] = 'default-' + str(self.data['posmin'][1])
-        elif data['posmin'][0] == 3:
-            self.data['posminxml'][0] = 'default-' + str(self.data['posmin'][1]) + "%"
-
-        if self.data['posmin'][2] == 0:
-            self.data['posminxml'][1] = "default"
-        elif self.data['posmin'][2] == 1:
-            self.data['posminxml'][1] = str(self.data['posmin'][3])
-        elif self.data['posmin'][2] == 2:
-            self.data['posminxml'][1] = 'default-' + str(self.data['posmin'][3])
-        elif self.data['posmin'][2] == 3:
-            self.data['posminxml'][1] = 'default-' + str(self.data['posmin'][3]) + "%"
-
-        if self.data['posmin'][4] == 0:
-            self.data['posminxml'][2] = "default"
-        elif self.data['posmin'][4] == 1:
-            self.data['posminxml'][2] = str(self.data['posmin'][5])
-        elif self.data['posmin'][4] == 2:
-            self.data['posminxml'][2] = 'default-' + str(self.data['posmin'][5])
-        elif self.data['posmin'][4] == 3:
-            self.data['posminxml'][2] = 'default-' + str(self.data['posmin'][5]) + "%"
-
-        if self.data['posmax'][0] == 0:
-            self.data['posmaxxml'][0] = "default"
-        elif self.data['posmax'][0] == 1:
-            self.data['posmaxxml'][0] = str(self.data['posmax'][1])
-        elif self.data['posmax'][0] == 2:
-            self.data['posmaxxml'][0] = 'default+' + str(self.data['posmax'][1])
-        elif data['posmax'][0] == 3:
-            self.data['posmaxxml'][0] = 'default+' + str(self.data['posmax'][1]) + "%"
-
-        if self.data['posmax'][2] == 0:
-            self.data['posmaxxml'][1] = "default"
-        elif self.data['posmax'][2] == 1:
-            self.data['posmaxxml'][1] = str(self.data['posmax'][3])
-        elif self.data['posmax'][2] == 2:
-            self.data['posmaxxml'][1] = 'default+' + str(self.data['posmax'][3])
-        elif self.data['posmax'][2] == 3:
-            self.data['posmaxxml'][1] = 'default+' + str(self.data['posmax'][3]) + "%"
-
-        if self.data['posmax'][4] == 0:
-            self.data['posmaxxml'][2] = "default"
-        elif self.data['posmax'][4] == 1:
-            self.data['posmaxxml'][2] = str(self.data['posmax'][5])
-        elif self.data['posmax'][4] == 2:
-            self.data['posmaxxml'][2] = 'default+' + str(self.data['posmax'][5])
-        elif self.data['posmax'][4] == 3:
-            self.data['posmaxxml'][2] = 'default+' + str(self.data['posmax'][5]) + "%"
-
-
 class MeasureToolGridDialog(QtGui.QDialog):
-    """ Defines grid point button behaviour."""
-    def __init__(self, temp_data):
+    ''' Defines grid point button behaviour.'''
+    def __init__(self):
         super(MeasureToolGridDialog, self).__init__()
 
         self.temp_data = temp_data
@@ -6535,7 +6454,7 @@ class MeasureToolGridDialog(QtGui.QDialog):
         self.exec_()
 
     def on_mgrid_change(self, row, column):
-        """ Defines what happens when a field changes on the table"""
+        ''' Defines what happens when a field changes on the table'''
         if column > 8:
             return
         for self.mgrid_row in range(0, self.mgrid_table.rowCount()):
@@ -6598,7 +6517,7 @@ class MeasureToolGridDialog(QtGui.QDialog):
                 pass
 
     def on_mgrid_accept(self):
-        """ MeasureTool point grid accept button behaviour."""
+        ''' MeasureTool point grid accept button behaviour.'''
         self.temp_data['measuretool_grid'] = list()
         for self.mgrid_row in range(0, self.mgrid_table.rowCount()):
             try:
@@ -6626,15 +6545,15 @@ class MeasureToolGridDialog(QtGui.QDialog):
         self.accept()
 
     def on_mgrid_cancel(self):
-        """ MeasureTool point grid cancel button behaviour"""
+        ''' MeasureTool point grid cancel button behaviour'''
         self.reject()
 
 
 class DampingConfigDialog(QtGui.QDialog):
-    """Defines the setup window.
-    Modifies data dictionary passed as parameter."""
+    '''Defines the setup window.
+    Modifies data dictionary passed as parameter.'''
 
-    def __init__(self, data, object_key):
+    def __init__(self, object_key):
         super(DampingConfigDialog, self).__init__()
 
         self.data = data
@@ -6755,10 +6674,10 @@ class DampingConfigDialog(QtGui.QDialog):
 
 
 class ChronoConfigDialog(QtGui.QDialog):
-    """ Defines the Chrono dialog window.
-    Modifies data dictionary passed as parameter. """
+    ''' Defines the Chrono dialog window.
+    Modifies data dictionary passed as parameter. '''
 
-    def __init__(self, data):
+    def __init__(self):
         super(ChronoConfigDialog, self).__init__()
 
         self.data = data
@@ -6998,28 +6917,28 @@ class ChronoConfigDialog(QtGui.QDialog):
         self.exec_()
 
     def on_collisiondp_checkbox(self):
-        """ Checks the collisiondp state """
+        ''' Checks the collisiondp state '''
         if self.collisiondp_checkbox.isChecked():
             self.collisiondp_line_edit.setEnabled(True)
         else:
             self.collisiondp_line_edit.setEnabled(False)
 
     def on_scale_scheme_checkbox(self):
-        """ Checks the scale scheme state """
+        ''' Checks the scale scheme state '''
         if self.scale_scheme_checkbox.isChecked():
             self.scale_scheme_line_edit.setEnabled(True)
         else:
             self.scale_scheme_line_edit.setEnabled(False)
 
     def on_csv_intervals_check(self):
-        """ Checks the csv intervals state """
+        ''' Checks the csv intervals state '''
         if self.csv_intervals_checkbox.isChecked():
             self.csv_intervals_line_edit.setEnabled(True)
         else:
             self.csv_intervals_line_edit.setEnabled(False)
 
     def refresh_link_hinge(self):
-        """ Refreshes the link hinge list """
+        ''' Refreshes the link hinge list '''
         count = 0
         while self.link_hinge_layout2.count() > 0:
             target = self.link_hinge_layout2.takeAt(0)
@@ -7040,7 +6959,7 @@ class ChronoConfigDialog(QtGui.QDialog):
             self.link_hinge_layout2.addLayout(to_add_layout)
 
     def refresh_link_linearspring(self):
-        """ Refreshes the link linearspring list """
+        ''' Refreshes the link linearspring list '''
         count = 0
         while self.link_linearspring_layout2.count() > 0:
             target = self.link_linearspring_layout2.takeAt(0)
@@ -7061,7 +6980,7 @@ class ChronoConfigDialog(QtGui.QDialog):
             self.link_linearspring_layout2.addLayout(to_add_layout)
 
     def refresh_link_spheric(self):
-        """ Refreshes the link spheric list """
+        ''' Refreshes the link spheric list '''
         count = 0
         while self.link_spheric_layout2.count() > 0:
             target = self.link_spheric_layout2.takeAt(0)
@@ -7082,7 +7001,7 @@ class ChronoConfigDialog(QtGui.QDialog):
             self.link_spheric_layout2.addLayout(to_add_layout)
 
     def refresh_link_pointline(self):
-        """ Refreshes the link pointline list """
+        ''' Refreshes the link pointline list '''
         count = 0
         while self.link_pointline_layout2.count() > 0:
             target = self.link_pointline_layout2.takeAt(0)
@@ -7103,7 +7022,7 @@ class ChronoConfigDialog(QtGui.QDialog):
             self.link_pointline_layout2.addLayout(to_add_layout)
 
     def on_link_hinge_add(self):
-        """ Adds Link hinge option at list """
+        ''' Adds Link hinge option at list '''
         # data['link_hinge'] = [element id, body 1, body 2, rotpoint[x,y,z], rotvector[x,y,z], stiffness, damping]
         uid_temp = uuid.uuid4()
         self.data['link_hinge'].append([
@@ -7111,7 +7030,7 @@ class ChronoConfigDialog(QtGui.QDialog):
         self.link_hinge_edit(str(uid_temp))
 
     def link_hinge_delete(self, link_hinge_id):
-        """ Delete a link hinge element """
+        ''' Delete a link hinge element '''
         link_hinge_to_remove = None
         for lh in self.data['link_hinge']:
             if lh[0] == link_hinge_id:
@@ -7121,12 +7040,12 @@ class ChronoConfigDialog(QtGui.QDialog):
             self.refresh_link_hinge()
 
     def link_hinge_edit(self, link_hinge_id):
-        """ Edit a link hinge element """
+        ''' Edit a link hinge element '''
         LinkHingeEdit(self.data, self.temp_data, link_hinge_id)
         self.refresh_link_hinge()
 
     def on_link_linearspring_add(self):
-        """ Adds Link linearspring option at list """
+        ''' Adds Link linearspring option at list '''
         uid_temp = uuid.uuid4()
         # data['link_linearspring'] = [element id, body 1, body 2, point_fb1[x,y,z], point_fb2[x,y,z], stiffness,
         # damping, rest_length, savevtk[nside, radius, length]]
@@ -7135,7 +7054,7 @@ class ChronoConfigDialog(QtGui.QDialog):
         self.link_linearspring_edit(str(uid_temp))
 
     def link_linearspring_delete(self, link_linearspring_id):
-        """ Delete a link linearspring element """
+        ''' Delete a link linearspring element '''
         link_linearspring_to_remove = None
         for ll in self.data['link_linearspring']:
             if ll[0] == link_linearspring_id:
@@ -7145,12 +7064,12 @@ class ChronoConfigDialog(QtGui.QDialog):
             self.refresh_link_linearspring()
 
     def link_linearspring_edit(self, link_linearspring_id):
-        """ Edit a link linearspring element """
+        ''' Edit a link linearspring element '''
         LinkLinearspringEdit(self.data, self.temp_data, link_linearspring_id)
         self.refresh_link_linearspring()
 
     def on_link_spheric_add(self):
-        """ Adds Link spheric option at list """
+        ''' Adds Link spheric option at list '''
         uid_temp = uuid.uuid4()
         # data['link_spheric'] = [element id, body 1, body 2, rotpoint[x,y,z], stiffness, damping]
         self.data['link_spheric'].append([
@@ -7158,7 +7077,7 @@ class ChronoConfigDialog(QtGui.QDialog):
         self.link_spheric_edit(str(uid_temp))
 
     def link_spheric_delete(self, link_spheric_id):
-        """ Delete a link spheric element """
+        ''' Delete a link spheric element '''
         link_spheric_to_remove = None
         for ls in self.data['link_spheric']:
             if ls[0] == link_spheric_id:
@@ -7168,12 +7087,12 @@ class ChronoConfigDialog(QtGui.QDialog):
             self.refresh_link_spheric()
 
     def link_spheric_edit(self, link_spheric_id):
-        """ Edit a link spheric element """
+        ''' Edit a link spheric element '''
         LinkSphericEdit(self.data, self.temp_data, link_spheric_id)
         self.refresh_link_spheric()
 
     def on_link_pointline_add(self):
-        """ Adds Link pointline option at list """
+        ''' Adds Link pointline option at list '''
         uid_temp = uuid.uuid4()
         # data['link_pointline'] = [element id, body 1, slidingvector[x,y,z], rotpoint[x,y,z], rotvector[x,y,z],
         # rotvector2[x,y,z], stiffness, damping]
@@ -7182,7 +7101,7 @@ class ChronoConfigDialog(QtGui.QDialog):
         self.link_pointline_edit(str(uid_temp))
 
     def link_pointline_delete(self, link_pointline_id):
-        """ Delete a link pointline element """
+        ''' Delete a link pointline element '''
         link_pointline_to_remove = None
         for lp in self.data['link_pointline']:
             if lp[0] == link_pointline_id:
@@ -7192,7 +7111,7 @@ class ChronoConfigDialog(QtGui.QDialog):
             self.refresh_link_pointline()
 
     def link_pointline_edit(self, link_pointline_id):
-        """ Edit a link pointline element """
+        ''' Edit a link pointline element '''
         LinkPointlineEdit(self.data, self.temp_data, link_pointline_id)
         self.refresh_link_pointline()
 
@@ -7200,7 +7119,7 @@ class ChronoConfigDialog(QtGui.QDialog):
         self.reject()
 
     def update_to_save(self):
-        """ Check all the conditions before save """
+        ''' Check all the conditions before save '''
 
         # Clean the chrono object list
         self.data['chrono_objects'] = list()
@@ -7253,16 +7172,16 @@ class ChronoConfigDialog(QtGui.QDialog):
             self.data['collisiondp'] = ""
 
     def on_ok(self):
-        """ Save data """
+        ''' Save data '''
         self.update_to_save()
 
         ChronoConfigDialog.accept(self)
 
 
 class LinkHingeEdit(QtGui.QDialog):
-    """ Defines Link hinge window dialog """
+    ''' Defines Link hinge window dialog '''
 
-    def __init__(self, data, temp_data, link_hinge_id):
+    def __init__(self, link_hinge_id):
         super(LinkHingeEdit, self).__init__()
 
         self.data = data
@@ -7384,11 +7303,11 @@ class LinkHingeEdit(QtGui.QDialog):
         self.exec_()
 
     def on_cancel(self):
-        """ Link hinge edit cancel button behaviour."""
+        ''' Link hinge edit cancel button behaviour.'''
         self.reject()
 
     def on_save(self):
-        """ Link hinge save button behaviour"""
+        ''' Link hinge save button behaviour'''
         count = -1
         for link_hinge_value in self.data['link_hinge']:
             count += 1
@@ -7415,9 +7334,9 @@ class LinkHingeEdit(QtGui.QDialog):
 
 
 class LinkLinearspringEdit(QtGui.QDialog):
-    """ Defines Link linearspring window dialog """
+    ''' Defines Link linearspring window dialog '''
 
-    def __init__(self, data, temp_data, link_linearspring_id):
+    def __init__(self, link_linearspring_id):
         super(LinkLinearspringEdit, self).__init__()
 
         self.data = data
@@ -7567,11 +7486,11 @@ class LinkLinearspringEdit(QtGui.QDialog):
         self.exec_()
 
     def on_cancel(self):
-        """ Link linearspring edit cancel button behaviour."""
+        ''' Link linearspring edit cancel button behaviour.'''
         self.reject()
 
     def on_save(self):
-        """ Link linearspring save button behaviour"""
+        ''' Link linearspring save button behaviour'''
         count = -1
         for link_linearspring_value in self.data['link_linearspring']:
             count += 1
@@ -7602,9 +7521,9 @@ class LinkLinearspringEdit(QtGui.QDialog):
 
 
 class LinkSphericEdit(QtGui.QDialog):
-    """ Defines Link spheric window dialog """
+    ''' Defines Link spheric window dialog '''
 
-    def __init__(self, data, temp_data, link_spheric_id):
+    def __init__(self, link_spheric_id):
         super(LinkSphericEdit, self).__init__()
 
         self.data = data
@@ -7714,11 +7633,11 @@ class LinkSphericEdit(QtGui.QDialog):
         self.exec_()
 
     def on_cancel(self):
-        """ Link Spheric edit cancel button behaviour."""
+        ''' Link Spheric edit cancel button behaviour.'''
         self.reject()
 
     def on_save(self):
-        """ Link Spheric save button behaviour"""
+        ''' Link Spheric save button behaviour'''
         count = -1
         for link_spheric_value in self.data['link_spheric']:
             count += 1
@@ -7742,9 +7661,9 @@ class LinkSphericEdit(QtGui.QDialog):
 
 
 class LinkPointlineEdit(QtGui.QDialog):
-    """ Defines Link pontline window dialog """
+    ''' Defines Link pontline window dialog '''
 
-    def __init__(self, data, temp_data, link_pointline_id):
+    def __init__(self, link_pointline_id):
         super(LinkPointlineEdit, self).__init__()
 
         self.data = data
@@ -7899,11 +7818,11 @@ class LinkPointlineEdit(QtGui.QDialog):
         self.exec_()
 
     def on_cancel(self):
-        """ Link pointline edit cancel button behaviour."""
+        ''' Link pointline edit cancel button behaviour.'''
         self.reject()
 
     def on_save(self):
-        """ Link pointline save button behaviour"""
+        ''' Link pointline save button behaviour'''
         count = -1
         for link_pointline_value in self.data['link_pointline']:
             count += 1
@@ -7935,10 +7854,10 @@ class LinkPointlineEdit(QtGui.QDialog):
 
 
 class InletConfigDialog(QtGui.QDialog):
-    """ Defines the Inlet/Outlet dialog window.
-       Modifies data dictionary passed as parameter. """
+    ''' Defines the Inlet/Outlet dialog window.
+       Modifies data dictionary passed as parameter. '''
 
-    def __init__(self, data):
+    def __init__(self):
         super(InletConfigDialog, self).__init__()
 
         self.data = data
@@ -8084,14 +8003,14 @@ class InletConfigDialog(QtGui.QDialog):
         self.exec_()
 
     def on_add_zone(self):
-        """ Adds Inlet/Outlet zone """
+        ''' Adds Inlet/Outlet zone '''
         uid_temp = uuid.uuid4()
         self.data['inlet_zone'].append([
             str(uid_temp), 0, 0, [0, 0, 0], [0, 0], [0, 0], [0, 0, 0]])
         self.zone_edit(str(uid_temp))
 
     def refresh_zones(self):
-        """ Refreshes the zones list """
+        ''' Refreshes the zones list '''
         count = 0
         while self.zones_layout_list.count() > 0:
             target = self.zones_layout_list.takeAt(0)
@@ -8116,12 +8035,12 @@ class InletConfigDialog(QtGui.QDialog):
             self.zones_layout_list.addLayout(to_add_layout)
 
     def zone_delete(self, io):
-        """ Delete one zone from the list """
+        ''' Delete one zone from the list '''
         self.data['inlet_zone'].remove(io)
         self.refresh_zones()
 
     def zone_edit(self, io):
-        """ Calls a window for edit zones """
+        ''' Calls a window for edit zones '''
         InletZoneEdit(self.data, io)
         self.refresh_zones()
 
@@ -8129,7 +8048,7 @@ class InletConfigDialog(QtGui.QDialog):
         self.reject()
 
     def on_ok(self):
-        """ Save data """
+        ''' Save data '''
 
         if len(self.data['inlet_object']) <= 0:
             self.data['inlet_object'] = [0, 0.5, 0, 0]
@@ -8142,8 +8061,8 @@ class InletConfigDialog(QtGui.QDialog):
 
 
 class InletZoneEdit(QtGui.QDialog):
-    """ Defines Inlet/Outlet window dialog """
-    def __init__(self, data, inlet_object_id):
+    ''' Defines Inlet/Outlet window dialog '''
+    def __init__(self, inlet_object_id):
         super(InletZoneEdit, self).__init__()
         self.data = data
         self.inlet_object_id = inlet_object_id
@@ -8368,21 +8287,21 @@ class InletZoneEdit(QtGui.QDialog):
         self.exec_()
 
     def on_imposerhop_change(self):
-        """ Checks for imposerhop changes """
+        ''' Checks for imposerhop changes '''
         if self.imposerhop_combobox.currentIndex() == 0:
             self.imposerhop_value_line_edit.setEnabled(True)
         else:
             self.imposerhop_value_line_edit.setEnabled(False)
 
     def on_imposevelocity_change(self):
-        """ Checks for imposevelocity changes """
+        ''' Checks for imposevelocity changes '''
         if self.imposevelocity_combobox.currentIndex() == 0:
             self.imposevelocity_velocity_line_edit.setEnabled(True)
         else:
             self.imposevelocity_velocity_line_edit.setEnabled(False)
 
     def on_imposezsurf_change(self):
-        """ Checks for imposezsurf changes """
+        ''' Checks for imposezsurf changes '''
         if self.imposezsurf_combobox.currentIndex() == 0 or self.imposezsurf_combobox.currentIndex() == 2:
             self.imposezsurf_fixed_zbottom.setEnabled(True)
             self.imposezsurf_fixed_zsurf.setEnabled(True)
@@ -8391,7 +8310,7 @@ class InletZoneEdit(QtGui.QDialog):
             self.imposezsurf_fixed_zsurf.setEnabled(False)
 
     def on_zone_check(self):
-        """ Checks for 2D or 3D options """
+        ''' Checks for 2D or 3D options '''
         if self.zone2d_option.isChecked() or self.zone3d_option.isChecked():
             self.zone2d3d_mk_line_edit.setEnabled(True)
             self.zone2d3d_combobox.setEnabled(True)
@@ -8421,7 +8340,7 @@ class InletZoneEdit(QtGui.QDialog):
         self.reject()
 
     def on_ok(self):
-        """ Save data """
+        ''' Save data '''
         count = -1
 
         for inlet_zone in self.data['inlet_zone']:
@@ -8449,7 +8368,7 @@ class InletZoneEdit(QtGui.QDialog):
 
 
 class RunDialog(QtGui.QDialog):
-    """ Defines run window dialog """
+    ''' Defines run window dialog '''
 
     def __init__(self):
         super(RunDialog, self).__init__()
@@ -8516,9 +8435,9 @@ class RunDialog(QtGui.QDialog):
 
 
 class FloatStateDialog(QtGui.QDialog):
-    """ Defines a window with floating properties. """
+    ''' Defines a window with floating  '''
 
-    def __init__(self, data):
+    def __init__(self):
         super(FloatStateDialog, self).__init__()
 
         self.data = data
@@ -9029,8 +8948,8 @@ class FloatStateDialog(QtGui.QDialog):
 
 
 class InitialsDialog(QtGui.QDialog):
-    """ Defines a window with initials properties. """
-    def __init__(self, data):
+    ''' Defines a window with initials  '''
+    def __init__(self):
         super(InitialsDialog, self).__init__()
 
         self.data = data
@@ -9141,9 +9060,9 @@ class InitialsDialog(QtGui.QDialog):
 
 
 class MovementDialog(QtGui.QDialog):
-    """ Defines a window with motion properties. """
+    ''' Defines a window with motion  '''
 
-    def __init__(self, data):
+    def __init__(self):
         super(MovementDialog, self).__init__()
 
         self.data = data
@@ -9334,8 +9253,8 @@ class MovementDialog(QtGui.QDialog):
         self.reject()
 
     def on_motion_change(self, index):
-        """ Set motion action. Enables or disables parts of the window depending
-        on what option was selected. """
+        ''' Set motion action. Enables or disables parts of the window depending
+        on what option was selected. '''
         if index == 0:
             self.movement_list_groupbox.setEnabled(True)
             self.timeline_groupbox.setEnabled(True)
@@ -9354,20 +9273,20 @@ class MovementDialog(QtGui.QDialog):
 
     def check_movement_compatibility(self, target_movement):
         # Wave generators are exclusive
-        if isinstance(target_movement, properties.SpecialMovement):
+        if isinstance(target_movement, SpecialMovement):
             self.notice_label.setText("Notice: Wave generators and file movements are exclusive. "
                                       "All movements are disabled when using one.")
             del self.movements_selected[:]
-        elif isinstance(target_movement, properties.Movement):
+        elif isinstance(target_movement, Movement):
             for index, ms in enumerate(self.movements_selected):
-                if isinstance(ms, properties.SpecialMovement):
+                if isinstance(ms, SpecialMovement):
                     self.movements_selected.pop(index)
                     self.notice_label.setText(
                         "Notice: Regular movements are not compatible with wave generators and file movements.")
 
     # Movements table actions
     def on_check_movement(self, index, checked):
-        """ Add or delete a movement from the temporal list of selected movements. """
+        ''' Add or delete a movement from the temporal list of selected movements. '''
         self.notice_label.setText("")  # Reset the notice label if a valid change is made
         target_movement = self.data["global_movements"][index]
         if checked:
@@ -9378,12 +9297,12 @@ class MovementDialog(QtGui.QDialog):
         self.refresh_movements_table()
 
     def on_loop_movement(self, index, checked):
-        """ Make a movement loop itself """
+        ''' Make a movement loop itself '''
         self.notice_label.setText("")  # Reset the notice label if a valid change is made
         self.data["global_movements"][index].set_loop(checked)
 
     def on_delete_movement(self, index):
-        """ Remove a movement from the project. """
+        ''' Remove a movement from the project. '''
         try:
             self.movements_selected.remove(self.data["global_movements"][index])
             # Reset the notice label if a valid change is made
@@ -9396,9 +9315,9 @@ class MovementDialog(QtGui.QDialog):
         self.on_movement_selected(self.timeline_list_table.rowCount() - 1, None)
 
     def on_new_movement(self):
-        """ Creates a movement on the project. """
+        ''' Creates a movement on the project. '''
         self.notice_label.setText("")  # Reset the notice label if a valid change is made
-        to_add = properties.Movement(name="New Movement")
+        to_add = Movement(name="New Movement")
         self.data["global_movements"].append(to_add)
         self.movements_selected.append(to_add)
         self.check_movement_compatibility(to_add)
@@ -9406,24 +9325,24 @@ class MovementDialog(QtGui.QDialog):
         self.refresh_movements_table()
 
     def on_new_wave_generator(self, action):
-        """ Creates a movement on the project. """
+        ''' Creates a movement on the project. '''
 
         self.notice_label.setText("")  # Reset the notice label if a valid change is made
         if utils.__("Movement") in action.text():
             self.on_new_movement()
             return
         if utils.__("Regular wave generator (Piston)") in action.text():
-            to_add = properties.SpecialMovement(name="Regular Wave Generator (Piston)", generator=properties.RegularPistonWaveGen())
+            to_add = SpecialMovement(name="Regular Wave Generator (Piston)", generator=RegularPistonWaveGen())
         if utils.__("Irregular wave generator (Piston)") in action.text():
-            to_add = properties.SpecialMovement(name="Irregular Wave Generator (Piston)", generator=properties.IrregularPistonWaveGen())
+            to_add = SpecialMovement(name="Irregular Wave Generator (Piston)", generator=IrregularPistonWaveGen())
         if utils.__("Regular wave generator (Flap)") in action.text():
-            to_add = properties.SpecialMovement(name="Regular Wave Generator (Flap)", generator=properties.RegularFlapWaveGen())
+            to_add = SpecialMovement(name="Regular Wave Generator (Flap)", generator=RegularFlapWaveGen())
         if utils.__("Irregular wave generator (Flap)") in action.text():
-            to_add = properties.SpecialMovement(name="Irregular Wave Generator (Flap)", generator=properties.IrregularFlapWaveGen())
+            to_add = SpecialMovement(name="Irregular Wave Generator (Flap)", generator=IrregularFlapWaveGen())
         if utils.__("Linear motion from a file") in action.text():
-            to_add = properties.SpecialMovement(name="Linear motion from a file", generator=properties.FileGen())
+            to_add = SpecialMovement(name="Linear motion from a file", generator=FileGen())
         if utils.__("Rotation from a file") in action.text():
-            to_add = properties.SpecialMovement(name="Rotation from a file", generator=properties.RotationFileGen())
+            to_add = SpecialMovement(name="Rotation from a file", generator=RotationFileGen())
 
         to_add.generator.parent_movement = to_add
         self.data["global_movements"].append(to_add)
@@ -9433,7 +9352,7 @@ class MovementDialog(QtGui.QDialog):
         self.refresh_movements_table()
 
     def on_movement_name_change(self, row, column):
-        """ Changes the name of a movement on the project. """
+        ''' Changes the name of a movement on the project. '''
         target_item = self.movement_list_table.item(row, column)
         if target_item is not None and self.data["global_movements"][row].name != target_item.text():
             # Reset the notice label if a valid change is made
@@ -9441,15 +9360,15 @@ class MovementDialog(QtGui.QDialog):
             self.data["global_movements"][row].name = target_item.text()
 
     def on_timeline_item_change(self, index, motion_object):
-        """ Changes the values of an item on the timeline. """
+        ''' Changes the values of an item on the timeline. '''
         self.notice_label.setText("")  # Reset the notice label if a valid change is made
-        if isinstance(motion_object, properties.WaveGen):
+        if isinstance(motion_object, WaveGen):
             motion_object.parent_movement.set_wavegen(motion_object)
         else:
             motion_object.parent_movement.motion_list[index] = motion_object
 
     def on_timeline_item_delete(self, index, motion_object):
-        """ Deletes an item from the timeline. """
+        ''' Deletes an item from the timeline. '''
         self.notice_label.setText("")  # Reset the notice label if a valid change is made
         motion_object.parent_movement.motion_list.pop(index)
         self.on_movement_selected(self.movement_list_table.selectedIndexes()[0].row(), None)
@@ -9470,7 +9389,7 @@ class MovementDialog(QtGui.QDialog):
 
 
     def on_movement_selected(self, row, _):
-        """ Shows the timeline for the selected movement. """
+        ''' Shows the timeline for the selected movement. '''
         try:
             target_movement = self.data["global_movements"][row]
         except IndexError:
@@ -9484,30 +9403,30 @@ class MovementDialog(QtGui.QDialog):
         # Reset the notice label if a valid change is made
         self.notice_label.setText("")
 
-        if isinstance(target_movement, properties.Movement):
+        if isinstance(target_movement, Movement):
             self.timeline_list_table.setRowCount(len(target_movement.motion_list))
             self.timeline_list_table.setEnabled(True)
             self.actions_groupbox_table.setEnabled(True)
 
             current_row = 0
             for motion in target_movement.motion_list:
-                if isinstance(motion, properties.RectMotion):
+                if isinstance(motion, RectMotion):
                     target_to_put = RectilinearMotionTimeline(current_row, motion)
-                elif isinstance(motion, properties.WaitMotion):
+                elif isinstance(motion, WaitMotion):
                     target_to_put = WaitMotionTimeline(current_row, motion)
-                elif isinstance(motion, properties.AccRectMotion):
+                elif isinstance(motion, AccRectMotion):
                     target_to_put = AccRectilinearMotionTimeline(current_row, motion)
-                elif isinstance(motion, properties.RotMotion):
+                elif isinstance(motion, RotMotion):
                     target_to_put = RotationalMotionTimeline(current_row, motion)
-                elif isinstance(motion, properties.AccRotMotion):
+                elif isinstance(motion, AccRotMotion):
                     target_to_put = AccRotationalMotionTimeline(current_row, motion)
-                elif isinstance(motion, properties.AccCirMotion):
+                elif isinstance(motion, AccCirMotion):
                     target_to_put = AccCircularMotionTimeline(current_row, motion)
-                elif isinstance(motion, properties.RotSinuMotion):
+                elif isinstance(motion, RotSinuMotion):
                     target_to_put = RotSinuMotionTimeline(current_row, motion)
-                elif isinstance(motion, properties.CirSinuMotion):
+                elif isinstance(motion, CirSinuMotion):
                     target_to_put = CirSinuMotionTimeline(current_row, motion)
-                elif isinstance(motion, properties.RectSinuMotion):
+                elif isinstance(motion, RectSinuMotion):
                     target_to_put = RectSinuMotionTimeline(current_row, motion)
                 else:
                     raise NotImplementedError("The type of movement: {} is not implemented.".format(
@@ -9525,22 +9444,22 @@ class MovementDialog(QtGui.QDialog):
                     target_to_put.disable_order_down_button()
 
                 current_row += 1
-        elif isinstance(target_movement, properties.SpecialMovement):
+        elif isinstance(target_movement, SpecialMovement):
             self.timeline_list_table.setRowCount(1)
             self.timeline_list_table.setEnabled(True)
             self.actions_groupbox_table.setEnabled(False)
 
-            if isinstance(target_movement.generator, properties.RegularPistonWaveGen):
+            if isinstance(target_movement.generator, RegularPistonWaveGen):
                 target_to_put = RegularPistonWaveMotionTimeline(target_movement.generator)
-            elif isinstance(target_movement.generator, properties.IrregularPistonWaveGen):
+            elif isinstance(target_movement.generator, IrregularPistonWaveGen):
                 target_to_put = IrregularPistonWaveMotionTimeline(target_movement.generator)
-            if isinstance(target_movement.generator, properties.RegularFlapWaveGen):
+            if isinstance(target_movement.generator, RegularFlapWaveGen):
                 target_to_put = RegularFlapWaveMotionTimeline(target_movement.generator)
-            elif isinstance(target_movement.generator, properties.IrregularFlapWaveGen):
+            elif isinstance(target_movement.generator, IrregularFlapWaveGen):
                 target_to_put = IrregularFlapWaveMotionTimeline(target_movement.generator)
-            elif isinstance(target_movement.generator, properties.FileGen):
+            elif isinstance(target_movement.generator, FileGen):
                 target_to_put = FileMotionTimeline(target_movement.generator, self.data['project_path'])
-            elif isinstance(target_movement.generator, properties.RotationFileGen):
+            elif isinstance(target_movement.generator, RotationFileGen):
                 target_to_put = RotationFileMotionTimeline(target_movement.generator, self.data['project_path'])
 
             target_to_put.changed.connect(self.on_timeline_item_change)
@@ -9548,7 +9467,7 @@ class MovementDialog(QtGui.QDialog):
 
     # Populate case defined movements
     def refresh_movements_table(self):
-        """ Refreshes the movement table. """
+        ''' Refreshes the movement table. '''
         self.movement_list_table.clearContents()
         self.movement_list_table.setRowCount(len(self.data["global_movements"]) + 1)
         current_row = 0
@@ -9558,10 +9477,10 @@ class MovementDialog(QtGui.QDialog):
                 has_loop = movement.loop
             except AttributeError:
                 has_loop = False
-            if isinstance(movement, properties.Movement):
+            if isinstance(movement, Movement):
                 movement_actions = MovementActions(current_row, movement in self.movements_selected, has_loop)
                 movement_actions.loop.connect(self.on_loop_movement)
-            elif isinstance(movement, properties.SpecialMovement):
+            elif isinstance(movement, SpecialMovement):
                 movement_actions = WaveMovementActions(current_row, movement in self.movements_selected)
 
             movement_actions.delete.connect(self.on_delete_movement)
@@ -9590,88 +9509,88 @@ class MovementDialog(QtGui.QDialog):
     # Possible actions for adding motions to a movement
 
     def on_add_delay(self):
-        """ Adds a WaitMotion to the timeline of the selected movement. """
+        ''' Adds a WaitMotion to the timeline of the selected movement. '''
         self.notice_label.setText("")  # Reset the notice label if a valid change is made
         if len(self.movement_list_table.selectedIndexes()) > 0:
             if self.movement_list_table.selectedIndexes()[0].row() is not len(self.data["global_movements"]):
-                self.data["global_movements"][self.movement_list_table.selectedIndexes()[0].row()].add_motion(properties.WaitMotion())
+                self.data["global_movements"][self.movement_list_table.selectedIndexes()[0].row()].add_motion(WaitMotion())
                 self.on_movement_selected(self.movement_list_table.selectedIndexes()[0].row(), None)
 
     def on_add_rectilinear(self):
-        """ Adds a RectMotion to the timeline of the selected movement. """
+        ''' Adds a RectMotion to the timeline of the selected movement. '''
         self.notice_label.setText("")  # Reset the notice label if a valid change is made
         if len(self.movement_list_table.selectedIndexes()) > 0:
             if self.movement_list_table.selectedIndexes()[0].row() is not len(self.data["global_movements"]):
-                self.data["global_movements"][self.movement_list_table.selectedIndexes()[0].row()].add_motion(properties.RectMotion())
+                self.data["global_movements"][self.movement_list_table.selectedIndexes()[0].row()].add_motion(RectMotion())
                 self.on_movement_selected(self.movement_list_table.selectedIndexes()[0].row(), None)
 
     def on_add_accrectilinear(self):
-        """ Adds a AccRectMotion to the timeline of the selected movement. """
+        ''' Adds a AccRectMotion to the timeline of the selected movement. '''
         self.notice_label.setText("")  # Reset the notice label if a valid change is made
         if len(self.movement_list_table.selectedIndexes()) > 0:
             if self.movement_list_table.selectedIndexes()[0].row() is not len(self.data["global_movements"]):
-                self.data["global_movements"][self.movement_list_table.selectedIndexes()[0].row()].add_motion(properties.AccRectMotion())
+                self.data["global_movements"][self.movement_list_table.selectedIndexes()[0].row()].add_motion(AccRectMotion())
                 self.on_movement_selected(
                     self.movement_list_table.selectedIndexes()[0].row(), None)
 
     def on_add_rotational(self):
-        """ Adds a RotMotion to the timeline of the selected movement. """
+        ''' Adds a RotMotion to the timeline of the selected movement. '''
         self.notice_label.setText(
             "")  # Reset the notice label if a valid change is made
         if len(self.movement_list_table.selectedIndexes()) > 0:
             if self.movement_list_table.selectedIndexes()[0].row() is not len(self.data["global_movements"]):
-                self.data["global_movements"][self.movement_list_table.selectedIndexes()[0].row()].add_motion(properties.RotMotion())
+                self.data["global_movements"][self.movement_list_table.selectedIndexes()[0].row()].add_motion(RotMotion())
                 self.on_movement_selected(
                     self.movement_list_table.selectedIndexes()[0].row(), None)
 
     def on_add_acc_rotational(self):
-        """ Adds a AccRotMotion to the timeline of the selected movement. """
+        ''' Adds a AccRotMotion to the timeline of the selected movement. '''
         self.notice_label.setText("")  # Reset the notice label if a valid change is made
         if len(self.movement_list_table.selectedIndexes()) > 0:
             if self.movement_list_table.selectedIndexes()[0].row() is not len(self.data["global_movements"]):
-                self.data["global_movements"][self.movement_list_table.selectedIndexes()[0].row()].add_motion(properties.AccRotMotion())
+                self.data["global_movements"][self.movement_list_table.selectedIndexes()[0].row()].add_motion(AccRotMotion())
                 self.on_movement_selected(
                     self.movement_list_table.selectedIndexes()[0].row(), None)
 
     def on_add_acc_circular(self):
-        """ Adds a AccCirMotion to the timeline of the selected movement. """
+        ''' Adds a AccCirMotion to the timeline of the selected movement. '''
         self.notice_label.setText("")  # Reset the notice label if a valid change is made
         if len(self.movement_list_table.selectedIndexes()) > 0:
             if self.movement_list_table.selectedIndexes()[0].row() is not len(self.data["global_movements"]):
-                self.data["global_movements"][self.movement_list_table.selectedIndexes()[0].row()].add_motion(properties.AccCirMotion())
+                self.data["global_movements"][self.movement_list_table.selectedIndexes()[0].row()].add_motion(AccCirMotion())
                 self.on_movement_selected(
                     self.movement_list_table.selectedIndexes()[0].row(), None)
 
     def on_add_sinu_rot(self):
-        """ Adds a RotSinuMotion to the timeline of the selected movement. """
+        ''' Adds a RotSinuMotion to the timeline of the selected movement. '''
         self.notice_label.setText("")  # Reset the notice label if a valid change is made
         if len(self.movement_list_table.selectedIndexes()) > 0:
             if self.movement_list_table.selectedIndexes()[0].row() is not len(self.data["global_movements"]):
-                self.data["global_movements"][self.movement_list_table.selectedIndexes()[0].row()].add_motion(properties.RotSinuMotion())
+                self.data["global_movements"][self.movement_list_table.selectedIndexes()[0].row()].add_motion(RotSinuMotion())
                 self.on_movement_selected(
                     self.movement_list_table.selectedIndexes()[0].row(), None)
 
     def on_add_sinu_cir(self):
-        """ Adds a CirSinuMotion to the timeline of the selected movement. """
+        ''' Adds a CirSinuMotion to the timeline of the selected movement. '''
         self.notice_label.setText("")  # Reset the notice label if a valid change is made
         if len(self.movement_list_table.selectedIndexes()) > 0:
             if self.movement_list_table.selectedIndexes()[0].row() is not len(self.data["global_movements"]):
-                self.data["global_movements"][self.movement_list_table.selectedIndexes()[0].row()].add_motion(properties.CirSinuMotion())
+                self.data["global_movements"][self.movement_list_table.selectedIndexes()[0].row()].add_motion(CirSinuMotion())
                 self.on_movement_selected(
                     self.movement_list_table.selectedIndexes()[0].row(), None)
 
     def on_add_sinu_rect(self):
-        """ Adds a RectSinuMotion to the timeline of the selected movement. """
+        ''' Adds a RectSinuMotion to the timeline of the selected movement. '''
         self.notice_label.setText("")  # Reset the notice label if a valid change is made
         if len(self.movement_list_table.selectedIndexes()) > 0:
             if self.movement_list_table.selectedIndexes()[0].row() is not len(self.data["global_movements"]):
-                self.data["global_movements"][self.movement_list_table.selectedIndexes()[0].row()].add_motion(properties.RectSinuMotion())
+                self.data["global_movements"][self.movement_list_table.selectedIndexes()[0].row()].add_motion(RectSinuMotion())
                 self.on_movement_selected(self.movement_list_table.selectedIndexes()[0].row(), None)
 
 
 class FacesDialog(QtGui.QDialog):
-    """ Defines a window with faces properties. """
-    def __init__(self, data):
+    ''' Defines a window with faces  '''
+    def __init__(self, selection_name):
         super(FacesDialog, self).__init__()
 
         self.data = data
@@ -9681,8 +9600,8 @@ class FacesDialog(QtGui.QDialog):
         self.cancel_button = QtGui.QPushButton(__("Cancel"))
         self.main_faces_layout = QtGui.QVBoxLayout()
 
-        self.target_mk = int(self.data['simobjects'][FreeCADGui.Selection.getSelection()[0].Name][0])
-        self.name = FreeCADGui.Selection.getSelection()[0].Label
+        self.target_mk = int(self.data['simobjects'][selection_name][0])
+        self.name = selection_name
 
         self.button_layout = QtGui.QHBoxLayout()
         self.button_layout.addWidget(self.ok_button)
@@ -9841,7 +9760,7 @@ class FacesDialog(QtGui.QDialog):
         self.reject()
 
     def on_faces_checkbox(self):
-        """ Checks the faces state """
+        ''' Checks the faces state '''
         if self.all_faces.isChecked():
             self.front_face.setEnabled(False)
             self.back_face.setEnabled(False)

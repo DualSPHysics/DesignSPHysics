@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-"""DesignSPHysics Installer.
+'''DesignSPHysics Installer.
 
 This file spawns a Qt window that installs DSPH files
 into FreeCAD's default Macro directory.
@@ -7,7 +7,7 @@ into FreeCAD's default Macro directory.
 This script is meant to use with pyinstaller to generate
 a simple standalone executable for release.
 
-"""
+'''
 
 import sys
 import shutil
@@ -34,17 +34,17 @@ from PySide import QtGui, QtCore
 # You should have received a copy of the GNU General Public License
 # along with DesignSPHysics.  If not, see <http://www.gnu.org/licenses/>.
 
-print "Copyright (C) 2016-2019"
-print "EPHYSLAB Environmental Physics Laboratory, Universidade de Vigo"
+print("Copyright (C) 2016-2019")
+print("EPHYSLAB Environmental Physics Laboratory, Universidade de Vigo")
 
 
 def dprint(string):
-    """ Prints a debug message in the terminal window """
-    print ">>>Debug: " + str(string)
+    ''' Prints a debug message in the terminal window '''
+    print(">>>Debug: ") + str(string)
 
 
 def is_user_admin():
-    """ Return True if user has admin privileges. """
+    ''' Return True if user has admin privileges. '''
 
     try:
         return ctypes.windll.shell32.IsUserAnAdmin() == 1
@@ -54,8 +54,8 @@ def is_user_admin():
 
 
 def main():
-    """ Main function of the installer. Initializes a window
-        that enables the user to install the software. """
+    ''' Main function of the installer. Initializes a window
+        that enables the user to install the software. '''
 
     app = QtGui.QApplication(sys.argv)
 
@@ -94,8 +94,8 @@ def main():
     install_layout.addLayout(install_button_layout)
 
     def on_install():
-        """ Defines what happens when install button
-            is pressed. """
+        ''' Defines what happens when install button
+            is pressed. '''
         install_button.setEnabled(False)
         install_button.setText('Installing...')
         system = platform.system()
@@ -151,7 +151,7 @@ def main():
                     # Directory does not exists.  Ignoring
                     pass
                 try:
-                    shutil.rmtree(macro_dir + '/ds_modules')
+                    shutil.rmtree(macro_dir + '/mod')
                 except OSError:
                     # Directory does not exists.  Ignoring
                     pass
@@ -176,7 +176,7 @@ def main():
                 shutil.copy("./resource/DesignSPHysics.FCMacro", macro_dir)
                 shutil.copy("./resource/default-config.json", fc_default_mod_dir + '/DesignSPHysics')
                 shutil.copytree("./resource/images", fc_default_mod_dir + '/DesignSPHysics' + '/images')
-                shutil.copytree("./resource/ds_modules", fc_default_mod_dir + '/DesignSPHysics' + '/ds_modules')
+                shutil.copytree("./resource/mod", fc_default_mod_dir + '/DesignSPHysics' + '/mod')
 
                 if installopts_selector.currentIndex() is 0:
                     try:

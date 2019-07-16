@@ -1,10 +1,10 @@
 #!/usr/bin/env python3.7
 # -*- coding: utf-8 -*-
-"""DesignSPHysics Property enums.
+'''DesignSPHysics Property enums.
 
 This file holds a collection of useful enums
 in class forms, for code organization
-"""
+'''
 
 # Copyright (C) 2019
 # EPHYSLAB Environmental Physics Laboratory, Universidade de Vigo
@@ -26,7 +26,7 @@ in class forms, for code organization
 
 
 class IrregularSpectrum(object):
-    """ Types of supported wave spectrums. """
+    ''' Types of supported wave spectrums. '''
     JONSWAP = 0
     PIERSON_MOSKOWITZ = 1
 
@@ -36,7 +36,7 @@ class IrregularSpectrum(object):
 
 
 class IrregularDiscretization(object):
-    """ Types of supported spectrum discretization. """
+    ''' Types of supported spectrum discretization. '''
     REGULAR = 0
     RANDOM = 1
     STRETCHED = 2
@@ -47,22 +47,44 @@ class IrregularDiscretization(object):
         pass
 
 
-class AWASWaveOrder(object):
-    """ Wave order to calculate elevation """
+class AWASWaveOrder():
+    ''' Wave order to calculate elevation '''
     FIRST_ORDER = 1
     SECOND_ORDER = 2
 
-    def __init__(self):
-        # Dummy init
-        pass
 
-
-class AWASSaveMethod(object):
-    """ Saving method for AWAS CSV """
+class AWASSaveMethod:
+    ''' Saving method for AWAS CSV '''
     BY_PART = 1
     MORE_INFO = 2
     BY_STEP = 3
 
-    def __init__(self):
-        # Dummy init
-        pass
+
+class SDPositionPropertyType:
+    ''' Simulation domain property type. '''
+    DEFAULT = 0
+    VALUE = 1
+    DEFAULT_VALUE = 2
+    DEFAULT_PERCENTAGE = 3
+
+
+class ObjectType:
+    ''' Simulation domain property type. '''
+    BOUND = "bound"
+    FLUID = "fluid"
+    SPECIAL = "mkspecial"
+
+
+class ObjectFillMode:
+    ''' Simulation domain property type. '''
+    FULL = "full"
+    SOLID = "solid"
+    FACE = "face"
+    WIRE = "wire"
+    SPECIAL = "fillspecial"
+
+
+class FloatingDensityType:
+    ''' Density type for floating mks. '''
+    MASSBODY = 0
+    RHOPBODY = 1

@@ -1,12 +1,12 @@
 #!/usr/bin/env python3.7
 # -*- coding: utf-8 -*-
-"""DesignSPHysics Execution Parameters.
+'''DesignSPHysics Execution Parameters.
 
 This file contains a collection of 
 Execution Parameters to add
 in a DSPH related case.
 
-"""
+'''
 
 import sys
 
@@ -30,7 +30,7 @@ import sys
 
 
 class DomainFixedParameter(object):
-    """ Fixed Domain for a DSPH case.
+    ''' Fixed Domain for a DSPH case.
 
     Attributes:
         xmin = Minimun X coordinate for the fixed domain
@@ -39,7 +39,7 @@ class DomainFixedParameter(object):
         ymax = Maximum Y coordinate for the fixed domain
         zmin = Minimun Z coordinate for the fixed domain
         zmax = Maximum Z coordinate for the fixed domain
-    """
+    '''
 
     def __init__(self, enabled, xmin, xmax, ymin, ymax, zmin, zmax):
         self.enabled = enabled
@@ -51,11 +51,11 @@ class DomainFixedParameter(object):
         self.zmax = zmax
 
     def __str__(self):
-        to_ret = """
+        to_ret = '''
             Enabled: {}\n
             Xmin & Xmax: {} ; {}\n
             Ymin & Ymax: {} ; {}\n
             Zmin & Zmax: {} ; {}\n
-            """
+            '''
         return to_ret.format(self.enabled, self.xmin, self.xmax, self.ymin, self.ymax,
                      self.zmin, self.zmax)

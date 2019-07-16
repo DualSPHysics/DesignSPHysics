@@ -25,16 +25,13 @@ This is a brief description on how the project files are structure and what each
 - `DesignSPHysics.FCMacro`: Macro file designed to use with FreeCAD. It only includes the DesignSPHysics FreeCAD module installed on the system, if there is any.
 - `DesignSPHysics.py`: Main code file. From here all the data structures and GUI elements are created. 
 - `build-release.*`: Scripts to automate installer creation for release.
-- `ds_modules`: DesignSPHysics modules. It contains all the code used by `DesignSPHysics.py`.
-    - `enum`: Enum support for python 2.7. Used by the `stl` module.
-    - `python_utils`: A set of python utilities. Used by the `stl` module.
-    - `stl`: Module to manage STL files.
+- `mod`: DesignSPHysics modules. It contains all the code used by `DesignSPHysics.py`.
     - `lang`: Language files and translations.
     - `templates`: Template files used in DesignSPHysics to create batch files, represent information on screen etc.
-    - `dsphwidgets.py`: Contains classes extending visual components to use in the interface.
+    - `widgets.py`: Contains classes extending visual components to use in the interface.
     - `execution_parameters.py`: Contains data classes to structure execution parameters for DualSPHysics
-    - `properties.py`: Contains data classes to structure different DualSPHysics properties, parameters and configurations
-    - `propenums.py`: Contains enums to manage property data with names.
+    - `dataobjects.py`: Contains data classes to structure different DualSPHysics properties, parameters and configurations
+    - `enums.py`: Contains enums to manage property data with names.
     - `utils.py`: Contains helper functions for all of the DesignSPHysics utilities.
     - `guiutils.py`: Similar to `utils.py` but containing only utilities related with user interface operations.
     - `xmlimporter.py`: Code related with importing existing DualSPHysics cases to DesignSPHysics (uses lib `xmltodict.py`)
@@ -52,7 +49,7 @@ For example, when the "Load Case" button is pressed, the function binded to it g
 
 To implement a new UI component with a feature just create, for example, a button and a function to execute when pressed.
 
-The main data structure is a Python Dictionary with different data attached to its keys. To see a reference to the strucutre, check the `get_default_data()` function in `ds_modules.utils`.
+The main data structure is a Python Dictionary with different data attached to its keys. To see a reference to the strucutre, check the `get_default_data()` function in `mod.utils`.
 
 # Need more help?
 If you need help on how to contribute please contact one of the following people

@@ -183,7 +183,7 @@ class _DictSAXHandler(object):
 
 def parse(xml_input, encoding=None, expat=expat, process_namespaces=False,
           namespace_separator=':', **kwargs):
-    """Parse the given XML input and convert it into a dictionary.
+    '''Parse the given XML input and convert it into a dictionary.
 
     `xml_input` can either be a `string` or a file-like object.
 
@@ -284,7 +284,7 @@ def parse(xml_input, encoding=None, expat=expat, process_namespaces=False,
         `force_list` can also be a callable that receives `path`, `key` and
         `value`. This is helpful in cases where the logic that decides whether
         a list should be forced is more complex.
-    """
+    '''
     handler = _DictSAXHandler(namespace_separator=namespace_separator,
                               **kwargs)
     if isinstance(xml_input, _unicode):
@@ -373,7 +373,7 @@ def _emit(key, value, content_handler,
 
 def unparse(input_dict, output=None, encoding='utf-8', full_document=True,
             **kwargs):
-    """Emit an XML document for the given `input_dict` (reverse of `parse`).
+    '''Emit an XML document for the given `input_dict` (reverse of `parse`).
 
     The resulting XML document is returned as a string, but if `output` (a
     file-like object) is specified, it is written there instead.
@@ -386,7 +386,7 @@ def unparse(input_dict, output=None, encoding='utf-8', full_document=True,
     mode, lines are terminated with `'\n'` and indented with `'\t'`, but this
     can be customized with the `newl` and `indent` parameters.
 
-    """
+    '''
     if full_document and len(input_dict) != 1:
         raise ValueError('Document must have exactly one root.')
     must_return = False
