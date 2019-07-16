@@ -1,12 +1,12 @@
 #!/usr/bin/env python3.7
 # -*- coding: utf-8 -*-
-"""DesignSPHysics XML Importer.
+'''DesignSPHysics XML Importer.
 
 This script contains functionality useful for
 unpacking an XML file from disk and process it as
 a dictionary.
 
-"""
+'''
 
 import FreeCAD
 import FreeCADGui
@@ -14,12 +14,12 @@ import Mesh
 import json
 import sys
 
-from ds_modules import utils
-from ds_modules import xmltodict
+from mod import utils
+from mod import xmltodict
 
 import xml.etree.ElementTree as ElementTree
 
-"""
+'''
 Copyright (C) 2019
 EPHYSLAB Environmental Physics Laboratory, Universidade de Vigo
 
@@ -37,13 +37,13 @@ GNU General Public License for more details.
 
 You should have received a copy of the GNU General Public License
 along with DesignSPHysics.  If not, see <http://www.gnu.org/licenses/>.
-"""
+'''
 
 
 def import_xml_file(filename):
-    """ Returns data dictionary with values found
+    ''' Returns data dictionary with values found
         in a GenCase/DSPH compatible XML file and a
-       list of objects to add to simulation """
+       list of objects to add to simulation '''
 
     with open(filename, "rb") as target_file:
         target_xml = target_file.read().replace('\n', '')
@@ -65,8 +65,8 @@ def import_xml_file(filename):
 
 
 def filter_data(raw):
-    """ Filters a raw json representing an XML file to
-        a compatible data dictionary. """
+    ''' Filters a raw json representing an XML file to
+        a compatible data dictionary. '''
 
     fil = dict()
 
@@ -148,9 +148,9 @@ def filter_data(raw):
 
 
 def create_fc_objects(f, path):
-    """ Creates supported objects on scene. Iterates over
+    ''' Creates supported objects on scene. Iterates over
         <mainlist> items and tries to recreate the commands in
-        the current opened scene. """
+        the current opened scene. '''
     movement = (0.0, 0.0, 0.0)
     rotation = (0.0, 0.0, 0.0, 0.0)
     mk = ("void", "0")

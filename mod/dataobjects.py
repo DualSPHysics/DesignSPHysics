@@ -1,20 +1,19 @@
-#!/usr/bin/env python3.7
 # -*- coding: utf-8 -*-
-"""DesignSPHysics Properties.
+'''Data objects for DesignSPHysics
 
-This file contains a collection of Properties to add
-in a DSPH related case.
+This module contains multiple data objects used in the execution
+of DesignSPHysics.
 
-"""
+'''
 
-import sys
-
-import random
-from ds_modules.propenums import *
-
+from random import randint
+from PySide import QtCore, QtGui
+from mod.enums import *
+from mod.utils import VERSION
 
 # Copyright (C) 2019
 # EPHYSLAB Environmental Physics Laboratory, Universidade de Vigo
+# EPHYTECH Environmental Physics Technologies
 #
 # This file is part of DesignSPHysics.
 #
@@ -32,24 +31,24 @@ from ds_modules.propenums import *
 # along with DesignSPHysics.  If not, see <http://www.gnu.org/licenses/>.
 
 
-class FloatProperty(object):
-    """ Float property of an DSPH object.
+class FloatProperty():
+    ''' Float property of an DSPH object.
 
     Attributes:
         mk: Mk to witch this FloatProperty is binded.
         mass_density_type: Density type 0 is massbody; 1 is rhopbody.
         mass_density_value: Value for mass/density
-        gravity_center: Coords in [x, y, z] format. Blank list() for auto.
-        inertia: Coords in [x, y, z] format. Blank list() for auto.
-        initial_linear_velocity: Coords in [x, y, z] format. Blank list() for auto.
-        initial_angular_velocity: Coords in [x, y, z] format. Blank list() for auto.
-        rotation_restriction: Coords in [x,y,z] format. Blank list() for auto.
-    """
+        gravity_center: Coords in [x, y, z] format. None for auto.
+        inertia: Coords in [x, y, z] format. None for auto.
+        initial_linear_velocity: Coords in [x, y, z] format. None for auto.
+        initial_angular_velocity: Coords in [x, y, z] format. None for auto.
+        rotation_restriction: Coords in [x,y,z] format. None for auto.
+    '''
 
-    def __init__(self, mk=-1, mass_density_type=0, mass_density_value=100,
-                 gravity_center=list(), inertia=list(), initial_linear_velocity=list(),
-                 initial_angular_velocity=list(), translation_restriction=list(), rotation_restriction=list(),
-                 material=""):
+    def __init__(self, mk=-1, mass_density_type=FloatingDensityType.MASSBODY, mass_density_value=100,
+                 gravity_center=None, inertia=None, initial_linear_velocity=None,
+                 initial_angular_velocity=None, translation_restriction=None,
+                 rotation_restriction=None, material=None):
         self.mk = mk
         self.mass_density_type = mass_density_type
         self.mass_density_value = mass_density_value
@@ -62,8 +61,11 @@ class FloatProperty(object):
         self.material = material
 
 
-class FacesProperty(object):
-    def __init__(self, mk=-1, all_faces=False, front_face=False, back_face=False, top_face=False, bottom_face=False,
+class FacesProperty():
+    ''' Stores the faces selected to generate on GenCase for a given object '''
+
+    def __init__(self, mk=-1, all_faces=False, front_face=False,
+                 back_face=False, top_face=False, bottom_face=False,
                  left_face=False, right_face=False, face_print=''):
         self.mk = mk
         self.all_faces = all_faces
@@ -76,32 +78,32 @@ class FacesProperty(object):
         self.face_print = face_print
 
 
-class InitialsProperty(object):
-    """ Initial movement property of an DSPH object.
+class InitialsProperty():
+    ''' Initial movement property of an DSPH object.
 
     Attributes:
         mk: Mk to witch this InitialsProperty is binded.
         force: Force in [x, y, z] format.
-    """
+    '''
 
-    def __init__(self, mk=-1, force=list()):
+    def __init__(self, mk=-1, force=None):
         self.mk = mk
-        self.force = force
+        self.force = force or []
 
 
-class Material(object):
-    """ DualSPHysics compatible material.
+class Material():
+    ''' DualSPHysics compatible material.
 
     Attributes:
         bound_mk: List of mk groups this material is binded
-    """
+    '''
 
-    def __init__(self, mk=list()):
-        self.bound_mk = mk
+    def __init__(self, mk=None):
+        self.bound_mk = mk or []
 
 
-class Movement(object):
-    """ DualSPHysics compatible movement.
+class Movement():
+    ''' DualSPHysics compatible movement.
         It includes a list of different motions to represent an entire simulation
         movement.
 
@@ -109,18 +111,16 @@ class Movement(object):
             name: Name for this motion given by the user
             motion_list: List of motion objects in order
             loop: Boolean indicating if it is a loop
-        """
+        '''
 
     def __init__(self, name="New Movement", motion_list=None, loop=False):
         self.name = name
         self.type = "Movement"
-        if not motion_list:
-            motion_list = list()
-        self.motion_list = motion_list
+        self.motion_list = motion_list or []
         self.loop = loop
 
     def add_motion(self, motion):
-        """ Adds a motion to the movement """
+        ''' Adds a motion to the movement '''
         if isinstance(motion, BaseMotion):
             motion.parent_movement = self
             self.motion_list.append(motion)
@@ -129,7 +129,7 @@ class Movement(object):
                 "You are trying to append a non-motion object to a movement list.")
 
     def set_loop(self, state):
-        """ Set loop state for the movement """
+        ''' Set loop state for the movement '''
         if isinstance(state, bool):
             self.loop = state
         else:
@@ -137,7 +137,7 @@ class Movement(object):
                 state.__class__.__name__))
 
     def remove_motion(self, position):
-        """ Removes a motion from the list """
+        ''' Removes a motion from the list '''
         self.motion_list.pop(position)
 
     def __str__(self):
@@ -148,14 +148,14 @@ class Movement(object):
         return to_ret
 
 
-class SpecialMovement(object):
-    """ DualSPHysics compatible special movement.
+class SpecialMovement():
+    ''' DualSPHysics compatible special movement.
         It includes regular/irregular wave generators and file movements
 
         Attributes:
             name: Name for this motion given by the user
             generator: Generator assigned
-        """
+        '''
 
     def __init__(self, name="New Movement", generator=None):
         self.name = name
@@ -165,7 +165,7 @@ class SpecialMovement(object):
         self.generator = generator
 
     def set_wavegen(self, generator):
-        """ Sets the wave generator for the special movement """
+        ''' Sets the wave generator for the special movement '''
         if isinstance(generator, WaveGen):
             generator.parent_movement = self
             self.generator = generator
@@ -178,8 +178,8 @@ class SpecialMovement(object):
         return to_ret
 
 
-class WaveGen(object):
-    """ Base Wave Generator. It holds properties common to Regular and Irregular waves.
+class WaveGen():
+    ''' Base Wave Generator. It holds properties common to Regular and Irregular waves.
 
     Attributes:
         parent_movement: The movement in which this property is contained
@@ -190,7 +190,7 @@ class WaveGen(object):
         depth: Fluid depth (def 0)
         wave_height: Wave height (def 0.5)
         wave_period: Wave period (def 1)
-    """
+    '''
 
     def __init__(self, parent_movement=None, wave_order=1, start=0, duration=0, depth=0, wave_height=0.5,
                  wave_period=1):
@@ -206,7 +206,7 @@ class WaveGen(object):
 
 
 class RegularPistonWaveGen(WaveGen):
-    """ Piston Regular Wave Generator.
+    ''' Piston Regular Wave Generator.
 
     Attributes:
         phase: Initial wave phase in function of PI
@@ -217,11 +217,12 @@ class RegularPistonWaveGen(WaveGen):
         disksave_zpos:
         piston_dir: Movement direction (def [1,0,0])
         awas: AWAS object
-    """
+    '''
 
-    def __init__(self, parent_movement=None, wave_order=2, start=0, duration=0, depth=0, wave_height=0.5,
-                 wave_period=1, phase=0, ramp=0, disksave_periods=24,
-                 disksave_periodsteps=20, disksave_xpos=2, disksave_zpos=-0.15, piston_dir=None, awas=None):
+    def __init__(self, parent_movement=None, wave_order=2, start=0, duration=0,
+                 depth=0, wave_height=0.5, wave_period=1, phase=0, ramp=0,
+                 disksave_periods=24, disksave_periodsteps=20, disksave_xpos=2,
+                 disksave_zpos=-0.15, piston_dir=None, awas=None):
         super(RegularPistonWaveGen, self).__init__(parent_movement, wave_order, start,
                                                    duration, depth, wave_height, wave_period)
         self.type = "Regular Piston Wave Generator"
@@ -235,8 +236,8 @@ class RegularPistonWaveGen(WaveGen):
         self.awas = AWAS() if awas is None else awas
 
 
-class AWAS(object):
-    """ AWAS configuration.
+class AWAS():
+    ''' AWAS configuration.
 
     Attributes:
         startawas: Time to start AWAS correction
@@ -251,7 +252,7 @@ class AWAS(object):
         savedata: Saves CSV with information
         limitace: Factor to limit maximum value of acceleration, with 0 disabled
         correction: Drift correction configuration
-    """
+    '''
 
     def __init__(self, enabled=False, startawas=0, swl=0, elevation=AWASWaveOrder.SECOND_ORDER,
                  gaugex=0, gaugey=0, gaugezmin=0, gaugezmax=0, gaugedp=0, coefmasslimit=0,
@@ -271,8 +272,8 @@ class AWAS(object):
         self.correction = correction if correction is not None else AWASCorrection()
 
 
-class AWASCorrection(object):
-    """ AWAS drift correction property """
+class AWASCorrection():
+    ''' AWAS drift correction property '''
 
     def __init__(self, enabled=False, coefstroke=1.8, coefperiod=1, powerfunc=3):
         self.enabled = enabled
@@ -282,7 +283,7 @@ class AWASCorrection(object):
 
 
 class IrregularPistonWaveGen(WaveGen):
-    """ Piston Regular Wave Generator.
+    ''' Piston Regular Wave Generator.
 
     Attributes:
         spectrum: Spectrum type selected for the generation
@@ -293,12 +294,12 @@ class IrregularPistonWaveGen(WaveGen):
         serieini: Initial time in irregular wave serie
         ramptime: Time of ramp
         piston_dir: Movement direction (def [1,0,0])
-    """
+    '''
 
     def __init__(self, parent_movement=None, wave_order=1, start=0, duration=0, depth=0, wave_height=0.5,
                  wave_period=1, spectrum=IrregularSpectrum.JONSWAP,
                  discretization=IrregularDiscretization.STRETCHED,
-                 peak_coef=0.1, waves=50, randomseed=random.randint(0, 9999), serieini=0, ramptime=0,
+                 peak_coef=0.1, waves=50, randomseed=randint(0, 9999), serieini=0, ramptime=0,
                  serieini_autofit=True, savemotion_time=30, savemotion_timedt=0.05, savemotion_xpos=2,
                  savemotion_zpos=-0.15, saveserie_timemin=0, saveserie_timemax=1300, saveserie_timedt=0.05,
                  saveserie_xpos=0, saveseriewaves_timemin=0, saveseriewaves_timemax=1000, saveseriewaves_xpos=2,
@@ -330,7 +331,7 @@ class IrregularPistonWaveGen(WaveGen):
 
 
 class RegularFlapWaveGen(WaveGen):
-    """ Flap Regular Wave Generator.
+    ''' Flap Regular Wave Generator.
 
     Attributes:
         phase: Initial wave phase in function of PI
@@ -338,7 +339,7 @@ class RegularFlapWaveGen(WaveGen):
         variable_draft: Position of the wavemaker hinge
         flapaxis0: Point 0 of axis rotation
         flapaxis1: Point 1 of axis rotation
-    """
+    '''
 
     def __init__(self, parent_movement=None, wave_order=2, start=0, duration=0, depth=0, wave_height=0.5,
                  wave_period=1, phase=0, ramp=0, disksave_periods=24,
@@ -359,7 +360,7 @@ class RegularFlapWaveGen(WaveGen):
 
 
 class IrregularFlapWaveGen(WaveGen):
-    """ Flap Irregular Wave Generator.
+    ''' Flap Irregular Wave Generator.
 
     Attributes:
         spectrum: Spectrum type selected for the generation
@@ -372,12 +373,12 @@ class IrregularFlapWaveGen(WaveGen):
         variable_draft: Position of the wavemaker hinge
         flapaxis0: Point 0 of axis rotation
         flapaxis1: Point 1 of axis rotation
-    """
+    '''
 
     def __init__(self, parent_movement=None, wave_order=1, start=0, duration=0, depth=0, wave_height=0.5,
                  wave_period=1, spectrum=IrregularSpectrum.JONSWAP,
                  discretization=IrregularDiscretization.STRETCHED,
-                 peak_coef=0.1, waves=50, randomseed=random.randint(0, 9999), serieini=0, ramptime=0,
+                 peak_coef=0.1, waves=50, randomseed=randint(0, 9999), serieini=0, ramptime=0,
                  serieini_autofit=True, savemotion_time=30, savemotion_timedt=0.05, savemotion_xpos=2,
                  savemotion_zpos=-0.15, saveserie_timemin=0, saveserie_timemax=1300, saveserie_timedt=0.05,
                  saveserie_xpos=0, saveseriewaves_timemin=0, saveseriewaves_timemax=1000, saveseriewaves_xpos=2,
@@ -410,7 +411,7 @@ class IrregularFlapWaveGen(WaveGen):
 
 
 class FileGen(WaveGen):
-    """ File Generator. Loads movements from file
+    ''' File Generator. Loads movements from file
 
     Attributes:
         duration: Duration in seconds
@@ -420,7 +421,7 @@ class FileGen(WaveGen):
         fieldx: Column with X-position
         fieldy: Column with Y-position
         fieldz: Column with Z-position
-    """
+    '''
 
     def __init__(self, parent_movement=None, duration=0, filename="", fields=0, fieldtime=0, fieldx=0, fieldy=0,
                  fieldz=0):
@@ -436,7 +437,7 @@ class FileGen(WaveGen):
 
 
 class RotationFileGen(WaveGen):
-    """ Rotation File Generator. Loads rotation movements from file
+    ''' Rotation File Generator. Loads rotation movements from file
 
     Attributes:
         duration: Duration in seconds
@@ -444,7 +445,7 @@ class RotationFileGen(WaveGen):
         filename: File path to use
         axisp1: Point 1 of the axis
         axisp2: Point 2 of the axis
-    """
+    '''
 
     def __init__(self, parent_movement=None, duration=0, filename="", anglesunits="degrees", axisp1=None, axisp2=None):
         super(RotationFileGen, self).__init__(parent_movement)
@@ -460,12 +461,12 @@ class RotationFileGen(WaveGen):
         self.axisp2 = axisp2
 
 
-class BaseMotion(object):
-    """ Base motion class to inherit by others.
+class BaseMotion():
+    ''' Base motion class to inherit by others.
 
         Attributes:
             duration: Movement duration in seconds
-        """
+        '''
 
     def __init__(self, duration=1, parent_movement=None):
         self.duration = duration
@@ -477,11 +478,11 @@ class BaseMotion(object):
 
 
 class RectMotion(BaseMotion):
-    """ DualSPHysics rectilinear motion.
+    ''' DualSPHysics rectilinear motion.
 
         Attributes:
             velocity: Velocity vector that defines the movement
-        """
+        '''
 
     def __init__(self, duration=1, velocity=None, parent_movement=None):
         if velocity is None:
@@ -496,12 +497,12 @@ class RectMotion(BaseMotion):
 
 
 class AccRectMotion(BaseMotion):
-    """ DualSPHysics accelerated rectilinear motion.
+    ''' DualSPHysics accelerated rectilinear motion.
 
         Attributes:
             velocity: Velocity vector that defines the movement
             acceleration: Acceleration vector that defines the aceleration
-        """
+        '''
 
     def __init__(self, duration=1, velocity=None, acceleration=None, parent_movement=None):
         if velocity is None:
@@ -520,13 +521,13 @@ class AccRectMotion(BaseMotion):
 
 
 class RotMotion(BaseMotion):
-    """ DualSPHysics rotational motion.
+    ''' DualSPHysics rotational motion.
 
         Attributes:
             ang_vel: Angular velocity of the movement
             axis1: Starting point of the vector that defines the rotation axis
             axis2: Finishing point of the vector that defines the rotation axis
-        """
+        '''
 
     def __init__(self, duration=1, ang_vel=None, axis1=None, axis2=None, parent_movement=None):
         if axis1 is None:
@@ -548,14 +549,14 @@ class RotMotion(BaseMotion):
 
 
 class AccRotMotion(BaseMotion):
-    """ DualSPHysics rotational motion.
+    ''' DualSPHysics rotational motion.
 
         Attributes:
             ang_vel: Angular velocity of the movement
             ang_acc: Angular acceleration of the movement
             axis1: Starting point of the vector that defines the rotation axis
             axis2: Finishing point of the vector that defines the rotation axis
-        """
+        '''
 
     def __init__(self, duration=1, ang_vel=None, ang_acc=None, axis1=None, axis2=None, parent_movement=None):
         if axis1 is None:
@@ -580,7 +581,7 @@ class AccRotMotion(BaseMotion):
 
 
 class AccCirMotion(BaseMotion):
-    """ DualSPHysics circular motion.
+    ''' DualSPHysics circular motion.
 
         Attributes:
             ang_vel: Angular velocity of the movement
@@ -588,7 +589,7 @@ class AccCirMotion(BaseMotion):
             reference: Point of the object that rotates with the axis
             axis1: Starting point of the vector that defines the rotation axis
             axis2: Finishing point of the vector that defines the rotation axis
-        """
+        '''
 
     def __init__(self, duration=1, ang_vel=None, ang_acc=None, reference=None, axis1=None, axis2=None,
                  parent_movement=None):
@@ -622,10 +623,10 @@ class AccCirMotion(BaseMotion):
 
 
 class WaitMotion(BaseMotion):
-    """ DualSPHysics rectilinear motion.
+    ''' DualSPHysics rectilinear motion.
 
         Attributes inherited from superclass.
-        """
+        '''
 
     def __init__(self, duration=1, parent_movement=None):
         BaseMotion.__init__(self, duration)
@@ -637,7 +638,7 @@ class WaitMotion(BaseMotion):
 
 
 class RotSinuMotion(BaseMotion):
-    """ DualSPHysics sinusoidal rotational motion.
+    ''' DualSPHysics sinusoidal rotational motion.
 
         Attributes:
             axis1: Starting point of the vector that defines the rotation axis
@@ -645,7 +646,7 @@ class RotSinuMotion(BaseMotion):
             freq: Frequency
             ampl: Amplitude
             phase: Phase
-        """
+        '''
 
     def __init__(self, duration=1, axis1=None, axis2=None, freq=None, ampl=None, phase=None, parent_movement=None):
         if axis1 is None:
@@ -678,7 +679,7 @@ class RotSinuMotion(BaseMotion):
 
 
 class CirSinuMotion(BaseMotion):
-    """ DualSPHysics sinusoidal circular motion.
+    ''' DualSPHysics sinusoidal circular motion.
 
         Attributes:
             reference: Point of the object that rotates with the axis
@@ -687,7 +688,7 @@ class CirSinuMotion(BaseMotion):
             freq: Frequency
             ampl: Amplitude
             phase: Phase
-        """
+        '''
 
     def __init__(self, reference=None, duration=1, axis1=None, axis2=None, freq=None, ampl=None, phase=None,
                  parent_movement=None):
@@ -725,13 +726,13 @@ class CirSinuMotion(BaseMotion):
 
 
 class RectSinuMotion(BaseMotion):
-    """ DualSPHysics sinusoidal rectilinear motion.
+    ''' DualSPHysics sinusoidal rectilinear motion.
 
         Attributes:
             freq: Frequency (vector)
             ampl: Amplitude (vector)
             phase: Phase (vector)
-        """
+        '''
 
     def __init__(self, duration=1, freq=None, ampl=None, phase=None, parent_movement=None):
         if freq is None:
@@ -755,8 +756,8 @@ class RectSinuMotion(BaseMotion):
             self.phase)
 
 
-class Damping(object):
-    """ DualSPHysics damping settings """
+class Damping():
+    ''' DualSPHysics damping settings '''
 
     def __init__(self, enabled=True, overlimit=1, redumax=10):
         self.enabled = enabled
@@ -772,18 +773,25 @@ class Damping(object):
         return to_ret
 
 
-class MLPiston1D(object):
-    """ Multi-Layer Pistons using external velocity (for example, from SWASH) """
+class MLPiston():
+    ''' Multi-Layer Piston common attributes '''
+
+    def __init__(self, incz=0):
+        self.incz = incz
+
+
+class MLPiston1D(MLPiston):
+    ''' Multi-Layer Pistons using external velocity (for example, from SWASH) '''
 
     def __init__(self, filevelx=None, incz=0, timedataini=0, smooth=0):
+        super().__init__(incz=incz)
         self.filevelx = filevelx
-        self.incz = incz
         self.timedataini = timedataini
         self.smooth = smooth
 
 
-class MLPiston2DVeldata(object):
-    """ VelData attribute for MLPiston2D """
+class MLPiston2DVeldata():
+    ''' VelData attribute for MLPiston2D '''
 
     def __init__(self, filevelx="", posy=0, timedataini=0):
         self.filevelx = filevelx
@@ -791,23 +799,31 @@ class MLPiston2DVeldata(object):
         self.timedataini = timedataini
 
 
-class MLPiston2D(object):
-    """ Multi-Layer Pistons using external velocity (for example, from SWASH) """
+class MLPiston2D(MLPiston):
+    ''' Multi-Layer Pistons using external velocity (for example, from SWASH) '''
 
     def __init__(self, incz=0, smoothz=0, smoothy=0, veldata=None):
-        self.incz = incz
+        super().__init__(incz=incz)
         self.smoothz = smoothz
         self.smoothy = smoothy
-        self.veldata = list() if veldata is None else veldata
+        self.veldata = veldata or []  # [MLPiston2DVeldata]
 
 
-class RelaxationZoneRegular(object):
-    """ Relaxation zone for regular wave generation """
+class RelaxationZone():
+    ''' Base class for Relaxation Zone objects '''
+
+    def __init__(self):
+        pass
+
+
+class RelaxationZoneRegular(RelaxationZone):
+    ''' Relaxation zone for regular wave generation '''
 
     def __init__(self, start=0, duration=0, waveorder=1, waveheight=1, waveperiod=2, depth=1, swl=1, center=None,
                  width=0.5, phase=0, ramp=0,
                  savemotion_periods=24, savemotion_periodsteps=20, savemotion_xpos=0, savemotion_zpos=0,
                  coefdir=None, coefdt=1000, function_psi=0.9, function_beta=1, driftcorrection=0):
+        super().__init__()
         self.start = start
         self.duration = duration
         self.waveorder = waveorder
@@ -830,17 +846,18 @@ class RelaxationZoneRegular(object):
         self.driftcorrection = driftcorrection
 
 
-class RelaxationZoneIrregular(object):
-    """ Relaxation zone for irregular wave generation """
+class RelaxationZoneIrregular(RelaxationZone):
+    ''' Relaxation zone for irregular wave generation '''
 
     def __init__(self, start=0, duration=0, peakcoef=3.3, spectrum=IrregularSpectrum.JONSWAP,
                  discretization=IrregularDiscretization.REGULAR, waveorder=1, waveheight=1,
-                 waveperiod=2, waves=50, randomseed=random.randint(0, 9999), depth=1, swl=1, center=None,
+                 waveperiod=2, waves=50, randomseed=randint(0, 9999), depth=1, swl=1, center=None,
                  width=0.5, ramptime=0, serieini=0,
                  savemotion_time=50, savemotion_timedt=0.1, savemotion_xpos=0, savemotion_zpos=0,
                  saveserie_timemin=0, saveserie_timemax=100, saveserie_timedt=0.1, saveserie_xpos=0,
                  saveseriewaves_timemin=0, saveseriewaves_timemax=1000, saveseriewaves_xpos=0,
                  coefdir=None, coefdt=1000, function_psi=0.9, function_beta=1, driftcorrection=0):
+        super().__init__()
         self.start = start
         self.duration = duration
         self.peakcoef = peakcoef
@@ -875,13 +892,14 @@ class RelaxationZoneIrregular(object):
         self.driftcorrection = driftcorrection
 
 
-class RelaxationZoneFile(object):
-    """ Relaxation zone with external file wave definition """
+class RelaxationZoneFile(RelaxationZone):
+    ''' Relaxation zone with external file wave definition '''
 
     def __init__(self, start=0, duration=0, depth=1, swl=1, filesvel="", filesvelx_initial=0,
                  filesvelx_count=5, usevelz=False, movedata=None, dpz=2, smooth=0, center=None, width=0.5,
                  coefdir=None, coefdt=1000, function_psi=0.9, function_beta=1, driftcorrection=0,
                  driftinitialramp=0):
+        super().__init__()
         self.driftinitialramp = driftinitialramp
         self.smooth = smooth
         self.dpz = dpz
@@ -903,12 +921,13 @@ class RelaxationZoneFile(object):
         self.driftcorrection = driftcorrection
 
 
-class RelaxationZoneUniform(object):
-    """ Relaxation zone for uniform velocity wave generation """
+class RelaxationZoneUniform(RelaxationZone):
+    ''' Relaxation zone for uniform velocity wave generation '''
 
     def __init__(self, start=0, duration=0, domainbox_point=None, domainbox_size=None, domainbox_direction=None,
                  domainbox_rotateaxis_angle=0, domainbox_rotateaxis_point1=None, domainbox_rotateaxis_point2=None,
                  use_velocity=True, velocity=0, velocity_times=None, coefdt=1000, function_psi=0.9, function_beta=1):
+        super().__init__()
         self.start = start
         self.duration = duration
         self.domainbox_point = domainbox_point if domainbox_point is not None else [0, 0, 0]
@@ -921,33 +940,343 @@ class RelaxationZoneUniform(object):
             0, 0, 0]
         self.use_velocity = use_velocity
         self.velocity = velocity
-        self.velocity_times = velocity_times if velocity_times is not None else list()
+        self.velocity_times = velocity_times or []
         self.coefdt = coefdt
         self.function_psi = function_psi
         self.function_beta = function_beta
 
 
-class AccelerationInput(object):
-    """ Acceleration Input control structure. Includes enabling/disabling and a list
-    of AccelerationInputData objects"""
+class AccelerationInput():
+    ''' Acceleration Input control structure. Includes enabling/disabling and a list
+    of AccelerationInputData objects'''
 
     def __init__(self, enabled=False, acclist=None):
         self.enabled = enabled
-        self.acclist = acclist if acclist is not None else list()
+        self.acclist = acclist or []
 
     def set_list(self, acclist):
+        ''' Sets the acceleration input list. '''
         self.acclist = acclist
 
     def set_enabled(self, state):
+        ''' Enables/Disables acceleration input. '''
         self.enabled = state
 
 
-class AccelerationInputData(object):
-    """ Acceleration Input Data """
+class AccelerationInputData():
+    ''' Acceleration Input Data '''
 
     def __init__(self, label="Acceleration Input", mkfluid=0, acccentre=None, globalgravity=True, datafile=""):
         self.label = label
         self.mkfluid = mkfluid
-        self.acccentre = acccentre if acccentre is not None else [0, 0, 0]
+        self.acccentre = acccentre or [0, 0, 0]
         self.globalgravity = globalgravity
         self.datafile = datafile
+
+
+class DomainFixedParameter():
+    ''' Fixed Domain for a DSPH case.
+
+    Attributes:
+        xmin = Minimun X coordinate for the fixed domain
+        xmax = Maximum X coordinate for the fixed domain
+        ymin = Minimun Y coordinate for the fixed domain
+        ymax = Maximum Y coordinate for the fixed domain
+        zmin = Minimun Z coordinate for the fixed domain
+        zmax = Maximum Z coordinate for the fixed domain
+    '''
+
+    def __init__(self, enabled, xmin, xmax, ymin, ymax, zmin, zmax):
+        self.enabled = enabled
+        self.xmin = xmin
+        self.xmax = xmax
+        self.ymin = ymin
+        self.ymax = ymax
+        self.zmin = zmin
+        self.zmax = zmax
+
+    def __str__(self):
+        to_ret = '''
+            Enabled: {}\n
+            Xmin & Xmax: {} ; {}\n
+            Ymin & Ymax: {} ; {}\n
+            Zmin & Zmax: {} ; {}\n
+            '''
+        return to_ret.format(self.enabled, self.xmin, self.xmax, self.ymin, self.ymax, self.zmin, self.zmax)
+
+
+class Constants():
+    ''' Case constants '''
+
+    def __init__(self):
+        self.lattice_bound: int = 1
+        self.lattice_fluid: int = 1
+        self.gravity: list = [0, 0, -9.81]
+        self.rhop0: float = 1000
+        self.hswl: float = 0
+        self.hswl_auto: bool = True
+        self.gamma: float = 7
+        self.speedsystem: float = 0
+        self.speedsystem_auto: bool = True
+        self.coefsound: float = 20
+        self.speedsound: float = 0
+        self.speedsound_auto: bool = True
+        self.coefh: float = 1
+        self.cflnumber: float = 0.2
+        self.h: float = 0
+        self.h_auto: bool = True
+        self.b: float = 0
+        self.b_auto: bool = True
+        self.massbound: float = 0
+        self.massbound_auto: bool = True
+        self.massfluid: float = 0
+        self.massfluid_auto: bool = True
+
+
+class ExecutionParameters():
+    ''' Execution parameters for the case '''
+
+    def __init__(self):
+        self.posdouble: int = 0
+        self.stepalgorithm: int = 1
+        self.verletsteps: int = 40
+        self.kernel: int = 2
+        self.viscotreatment: int = 1
+        self.visco: float = 0.01
+        self.viscoboundfactor: int = 1
+        self.deltasph: int = 0
+        self.deltasph_en: int = 0
+        self.shifting: int = 0
+        self.shiftcoef: int = -2
+        self.shifttfs: int = 0
+        self.rigidalgorithm: int = 1
+        self.ftpause: float = 0.0
+        self.coefdtmin: float = 0.05
+        self.dtini: float = 0.0001
+        self.dtini_auto: bool = True
+        self.dtmin: float = 0.00001
+        self.dtmin_auto: bool = True
+        self.dtallparticles: int = 0
+        self.dtfixed: str = 'DtFixed.dat'
+        self.timemax: float = 1.5
+        self.timeout: float = 0.01
+        self.partsoutmax: int = 1
+        self.rhopoutmin: int = 700
+        self.rhopoutmax: int = 1300
+        self.domainfixed: DomainFixedParameter = DomainFixedParameter(False, 0, 0, 0, 0, 0, 0)
+
+
+class SimulationObject():
+    ''' Represents an object on a DualSPHysics / GenCase case '''
+
+    def __init__(self, name: str, obj_mk: int, obj_type: ObjectType, fillmode: ObjectFillMode):
+        self.name: str = name
+        self.obj_mk: int = obj_mk
+        self.type: ObjectType = obj_type
+        self.fillmode: ObjectFillMode = fillmode
+        self.damping: Damping = None
+        self.faces_configuration: FacesProperty = None
+
+    def clean_faces(self):
+        ''' Deletes face rendering information from this object '''
+        self.faces_configuration: FacesProperty = None
+
+
+class PeriodicityInfo():
+    ''' Defines periodicty for an axis '''
+
+    def __init__(self, enabled=False, x_increment=0.0, y_increment=0.0, z_increment=0.0):
+        self.enabled: bool = enabled
+        self.x_increment: float = x_increment
+        self.y_increment: float = y_increment
+        self.z_increment: float = z_increment
+
+
+class Periodicity():
+    ''' Periodicity information for the current case '''
+
+    def __init__(self):
+        self.x_periodicity: PeriodicityInfo = PeriodicityInfo()
+        self.y_periodicity: PeriodicityInfo = PeriodicityInfo()
+        self.z_periodicity: PeriodicityInfo = PeriodicityInfo()
+
+
+class SDPositionProperty():
+    ''' Position property for Simulation Domain '''
+
+    def __init__(self, sdptype=SDPositionPropertyType.DEFAULT, value=0.0):
+        self.type: SDPositionPropertyType = sdptype
+        self.value: float = value
+
+
+class SimulationDomain():
+    ''' Case domain data information '''
+
+    def __init__(self):
+        self.enabled: bool = False
+        self.posmin_x: SDPositionProperty = SDPositionProperty()
+        self.posmin_y: SDPositionProperty = SDPositionProperty()
+        self.posmin_z: SDPositionProperty = SDPositionProperty()
+        self.posmax_x: SDPositionProperty = SDPositionProperty()
+        self.posmax_y: SDPositionProperty = SDPositionProperty()
+        self.posmax_z: SDPositionProperty = SDPositionProperty()
+
+
+class ExecutablePaths():
+    ''' Executables used by the application '''
+
+    def __init__(self):
+        self.gencase: str = ''
+        self.dsphysics: str = ''
+        self.partvtk4: str = ''
+        self.floatinginfo: str = ''
+        self.computeforces: str = ''
+        self.measuretool: str = ''
+        self.isosurface: str = ''
+        self.boundaryvtk: str = ''
+        self.flowtool: str = ''
+        self.paraview: str = ''
+
+
+class CaseInformation():
+    ''' Stores miscellaneous information related with the case. '''
+
+    def __init__(self):
+        self.is_gencase_done: bool = False
+        self.is_simulation_done: bool = False
+        self.previous_particle_number: int = 0
+        self.particle_number: int = 0
+        self.particles_out: int = 0
+        self.exported_parts: int = 0
+        self.run_additional_parameters: str = ''
+        self.needs_to_run_gencase: bool = True
+        self.current_process: QtCore.QProcess = None
+        self.current_export_process: QtCore.QProcess = None
+        self.current_info_dialog: QtGui.QDialog = None
+        self.current_output: str = ""
+        self.measuretool_points: list = []
+        self.measuretool_grid: list = []
+        self.objectlist_table: QtGui.QTableWidget = None
+        self.last_3d_width: float = -1.0
+
+
+class MKBasedProperties():
+    ''' Stores data related with an mk number on the case. '''
+
+    def __init__(self, mk=None):
+        self.mk: int = mk
+        self.movements: list = []  # [Movement]
+        self.float_property: FloatProperty = None
+        self.initials: InitialsProperty = None
+        self.mlayerpiston: MLPiston = None
+
+    def has_movements(self) -> bool:
+        ''' Returns whether this mk contains definition for movements or not '''
+        return len(self.movements) > 0
+
+    def remove_all_movements(self) -> None:
+        ''' Removes all movements for the current mk properties '''
+        self.movements: list = []
+
+
+class Case():
+    ''' Main data structure for the data inside a case properties, objects
+    etcetera. Used as a way to store information and transform it for
+    multiple needs '''
+    __instance: 'Case' = None
+    SUPPORTED_TYPES = ["Part::Box", "Part::Sphere", "Part::Cylinder"]
+
+    def __init__(self, reset=False):
+        ''' Virtually private constructor. '''
+        if Case.__instance is not None and not reset:
+            raise Exception(
+                'Case class is a singleton and should not be initialized twice')
+        Case.__instance = self
+        self.version: str = VERSION
+        self.name: str = ''
+        self.path: str = ''
+        self.dp: float = 0.01
+        self.mode3d: bool = True
+        self.constants: Constants = Constants()
+        self.execution_parameters: ExecutionParameters = ExecutionParameters()
+        self.objects: list = list()  # [SimulationObject]
+        self.mkbasedproperties: dict = dict()  # {mk: MKBasedProperties}
+        self.periodicity: Periodicity = Periodicity()
+        self.domain: SimulationDomain = SimulationDomain()
+        self.executable_paths: ExecutablePaths = ExecutablePaths()
+        self.info: CaseInformation = CaseInformation()
+        self.acceleration_input: AccelerationInput = AccelerationInput()
+        self.relaxation_zone: RelaxationZone = None
+
+    @staticmethod
+    def instance() -> 'Case':
+        ''' Static access method. '''
+        if Case.__instance is None:
+            Case()
+        return Case.__instance
+
+    def get_first_mk_not_used(self, object_type: ObjectType):
+        ''' Checks simulation objects to find the first not used MK group number. '''
+        mkset = set(map(lambda x: x.obj_mk, filter(lambda y: y.type == object_type, self.objects)))
+        limit = {ObjectType.FLUID: 10, ObjectType.BOUND: 240}[object_type]
+        for i in range(0, limit):
+            if i not in mkset:
+                return i
+        return 0
+
+    def get_all_simulation_object_names(self):
+        ''' Returns a list with all the internal names used by the objects in the simulation. '''
+        return list(map(lambda obj: obj.name, self.objects))
+
+    def get_simulation_object(self, name) -> SimulationObject:
+        ''' Returns a simulation object from its internal name.
+        Raises an exception if the selected object is not added to the simulation. '''
+        return next(filter(lambda obj: obj.name == name, self.objects), None)
+
+    def number_of_objects_in_simulation(self):
+        ''' Return the total number of objects in the simulation '''
+        return len(list(filter(lambda obj: obj.type != ObjectType.SPECIAL, self.objects)))
+
+    def get_mk_base_properties(self, mknumber: int) -> MKBasedProperties:
+        ''' Returns the properties set for a given MK number '''
+        if mknumber not in self.mkbasedproperties.keys():
+            raise RuntimeError('MK has no properties applied! This should not happen.')
+        return self.mkbasedproperties[mknumber]
+
+    def has_mk_properties(self, mk) -> bool:
+        ''' Returns whether a given mk has properties applier or not. '''
+        return mk in self.mkbasedproperties.keys()
+
+    def is_object_in_simulation(self, name) -> bool:
+        ''' Returns whether an object is contained in the current case for simulating or not. '''
+        return name in self.get_all_simulation_object_names()
+
+    def reset(self):
+        ''' Recreates the object from scratch. '''
+        self.__init__(reset=True)
+
+    def add_object(self, simobject: SimulationObject):
+        ''' Adds an object to the current case '''
+        if simobject.name in self.get_all_simulation_object_names():
+            raise RuntimeError('Object with the name: {} is already added to the case'.format(simobject.name))
+        self.objects.append(simobject)
+        if not self.has_mk_properties(simobject.obj_mk):
+            self.mkbasedproperties[simobject.obj_mk] = MKBasedProperties(mk=simobject.obj_mk)
+
+    def remove_object(self, object_name: str) -> SimulationObject:
+        ''' Tries to remove the given object name from the simulation.
+        If no element is found an error is raised. '''
+        if object_name not in self.get_all_simulation_object_names():
+            raise RuntimeError('The object that you are trying to remove ({}) is not present in the simulation')
+        self.objects = list(filter(lambda obj: obj.name != object_name, self.objects))
+
+    def get_all_objects_with_damping(self):
+        ''' Returns a list of SimulationObject that have damping '''
+        return list(filter(lambda obj: obj.damping is not None, self.objects))
+
+    def was_not_saved(self) -> bool:
+        ''' Returns whether this case was or not saved before '''
+        return self.path == '' and self.name == ''
+
+    def reset_simulation_domain(self) -> None:
+        self.domain = SimulationDomain()

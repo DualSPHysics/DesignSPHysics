@@ -1,0 +1,185 @@
+# -*- coding: utf-8 -*-
+'''XML Exporter for DesignSPHysics
+
+The utilities on this module creates
+
+'''
+
+import os
+from datetime import datetime
+from mod.utils import APP_NAME, DIVIDER, LINE_END
+from mod.dataobjects import Case
+from mod.enums import FloatingDensityType
+import FreeCAD
+
+# Copyright (C) 2019
+# EPHYSLAB Environmental Physics Laboratory, Universidade de Vigo
+# EPHYTECH Environmental Physics Technologies
+#
+# This file is part of DesignSPHysics.
+#
+# DesignSPHysics is free software: you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation, either version 3 of the License, or
+# (at your option) any later version.
+#
+# DesignSPHysics is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with DesignSPHysics.  If not, see <http://www.gnu.org/licenses/>.
+
+
+class XMLExporter():
+    ''' Handles XML generation and data transformation to adapt to DualSPHysics
+    preprocessing tools '''
+
+    BASE_XML = "/templates/gencase/base.xml"
+    DEFINITION_XML = "/templates/gencase/definition.xml"
+    SIMULATIONDOMAIN_XML = "/templates/gencase/simulationdomain.xml"
+    INITIALS_XML = "/templates/gencase/simulationdomain.xml"
+    FLOATINGS_XML = "/templates/gencase/floatings/base.xml"
+    FLOATINGS_EACH_XML = "/templates/gencase/floatings/each/base.xml"
+    FLOATINGS_CENTER_XML = "/templates/gencase/floatings/each/center.xml"
+    FLOATINGS_INERTIA_XML = "/templates/gencase/floatings/each/inertia.xml"
+    FLOATINGS_LINEARVELINI_XML = "/templates/gencase/floatings/each/linearvleini.xml"
+    FLOATINGS_ANGULARVELINI_XML = "/templates/gencase/floatings/each/angularvelini.xml"
+    FLOATINGS_ROTATION_XML = "/templates/gencase/floatings/each/rotation.xml"
+    FLOATINGS_TRANSLATION_XML = "/templates/gencase/floatings/each/translation.xml"
+    FLOATINGS_MATERIAL_XML = "/templates/gencase/floatings/each/material.xml"
+    GENCASE_XML_SUFFIX = "_Def.xml"
+
+    def __init__(self):
+        self.mod_folder = os.path.dirname(os.path.realpath(__file__))
+
+    def obj_to_dict(self, obj, classkey=None):
+        ''' Converts an object to dictionary recursively. '''
+        if isinstance(obj, dict):
+            data = {}
+            for (k, v) in obj.items():
+                data[k] = self.obj_to_dict(v, classkey)
+            return data
+        if hasattr(obj, "_ast"):
+            return self.obj_to_dict(obj._ast())  # pylint: disable=protected-access
+        if hasattr(obj, "__iter__") and not isinstance(obj, str):
+            return [self.obj_to_dict(v, classkey) for v in obj]
+        if hasattr(obj, "__dict__"):
+            data = {key: self.obj_to_dict(value, classkey) for key, value in obj.__dict__.items() if not callable(value) and not key.startswith('_')}
+            if classkey is not None and hasattr(obj, "__class__"):
+                data[classkey] = obj.__class__.__name__
+            return data
+        return obj
+
+    def get_template_text(self, template_path) -> str:
+        ''' Returns the text for a given template. '''
+        template_data = ""
+        with open("{}{}".format(self.mod_folder, template_path), "r") as template:
+            template_data = template.read()
+        return template_data
+
+    def transform_bools_to_strs(self, value):
+        ''''Transforms a boolean value to a string representing its state, understandable by GenCase. '''
+        if isinstance(value, bool):
+            return "true" if value else "false"
+        if isinstance(value, dict):
+            return {k: self.transform_bools_to_strs(v) for k, v in value.items()}
+        return value
+
+    def get_definition_template(self, data) -> str:
+        ''' Renders the <definition> part for the GenCase XML. '''
+        template = self.get_template_text(self.DEFINITION_XML)
+        fc_object = FreeCAD.ActiveDocument.getObject("Case_Limits")
+        min_point = fc_object.Placement.Base
+        formatter = {
+            'dp': data['dp'],
+            'pointmin': [min_point.x / DIVIDER, min_point.y / DIVIDER, min_point.z / DIVIDER],
+            'pointmax': [
+                min_point.x / DIVIDER + fc_object.Length.Value / DIVIDER,
+                min_point.y / DIVIDER + fc_object.Width.Value / DIVIDER if data['mode3d'] else min_point.y / DIVIDER,
+                min_point.z / DIVIDER + fc_object.Height.Value / DIVIDER
+            ]
+        }
+        return template.format(**formatter)
+
+    def get_simulationdomain_template(self, data) -> str:
+        ''' Renders the <simulationdomain> part for the GenCase XML. '''
+        if data['domain']['enabled'].lower() == 'false':
+            return ""
+        template = self.get_template_text(self.SIMULATIONDOMAIN_XML)
+        formatter = {}
+        for key in ['posmin_x', 'posmin_y', 'posmin_z', 'posmax_x', 'posmax_y', 'posmax_z']:
+            value = data['domain'][key]['value']
+            symbol = '+' if value >= 0 else '-'
+            modes = {
+                0: 'default',
+                1: str(value),
+                2: 'default{}{}'.format(symbol, str(abs(value))),
+                3: 'default{}{}%'.format(symbol, str(abs(value)))
+            }
+            formatter[key] = modes[data['domain'][key]['type']]
+        return template.format(**formatter)
+
+    def get_initials_template(self, data) -> str:
+        ''' Renders the <initials> part for the GenCase XML. '''
+        template = self.get_template_text(self.INITIALS_XML)
+        initials = map(lambda y: template.format(**y['mkbasedproperties']['initials']), filter(lambda x: x['initials'] is not None, data['mkbasedproperties'].values()))
+        return LINE_END.join(initials) if initials else ""
+
+    def get_floatings_template(self, data) -> str:
+        ''' Renders the <floatings> part of the GenCase XML. '''
+        float_properties = list(filter(lambda x: x['float_property'] is not None, data['mkbasedproperties'].values()))
+        if not float_properties:
+            return ""
+        float_properties_xmls = []
+        for fp in float_properties:
+            float_property_attributes = []
+            class_attributes = {
+                self.FLOATINGS_CENTER_XML: 'gravity_center',
+                self.FLOATINGS_INERTIA_XML: 'inertia',
+                self.FLOATINGS_LINEARVELINI_XML: 'initial_linear_velocity',
+                self.FLOATINGS_ANGULARVELINI_XML: 'initial_angular_velocity',
+                self.FLOATINGS_TRANSLATION_XML: 'translation_restriction',
+                self.FLOATINGS_ROTATION_XML: 'rotation_restriction',
+                self.FLOATINGS_MATERIAL_XML: 'material'
+            }
+            for xml, attr in class_attributes.items():
+                if fp[attr] is not None:
+                    if isinstance(fp[attr], list):
+                        float_property_attributes.append(self.get_template_text(xml).format(*fp[attr]))
+                    else:
+                        float_property_attributes.append(self.get_template_text(xml).format(**{attr: fp[attr]}))
+
+            formatter = {
+                'floating_mk': fp['mk'],
+                'floating_density_type': {FloatingDensityType.MASSBODY: 'massbody', FloatingDensityType.RHOPBODY: 'rhopbody'}[fp['mass_density_type']],
+                'floating_density_value': fp['mass_density_value'],
+                'float_property_attributes': float_property_attributes
+            }
+            float_properties_xmls.append(self.get_template_text(self.FLOATINGS_EACH_XML).format(**formatter))
+
+        formatter = {'floatings_each': LINE_END.join(float_properties_xmls) if float_properties_xmls else ""}
+        return self.get_template_text(self.FLOATINGS_XML).format(**formatter)
+
+    def get_adapted_case_data(self) -> dict:
+        ''' Adapts the case data to a dictionary used to format the resulting XML '''
+        data: dict = self.obj_to_dict(Case.instance())
+        data = self.transform_bools_to_strs(data)
+
+        data['definition_template'] = self.get_definition_template(data)
+        data['simulationdomain_template'] = self.get_simulationdomain_template(data)
+        data['initials_template'] = self.get_initials_template(data)
+        data['floatings_template'] = self.get_floatings_template(data)
+        data['application'] = APP_NAME
+        data['current_date'] = datetime.now().strftime('%d-%m-%Y %H:%M:%S')
+        return data
+
+    def generate(self) -> str:
+        ''' Returns the GenCase-compatible XML resulting from the case '''
+        return self.get_template_text(self.BASE_XML).format(**self.get_adapted_case_data())
+
+    def save_to_disk(self, path) -> None:
+        ''' Creates a file on disk with the contents of the GenCase generated XML. '''
+        with open("{}/{}{}".format(path, Case.instance().name, self.GENCASE_XML_SUFFIX), 'w', encoding='utf-8') as file:
+            file.write(self.generate())

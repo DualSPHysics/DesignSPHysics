@@ -1,6 +1,6 @@
 #!/usr/bin/env python3.7
 # -*- coding: utf-8 -*-
-"""DesignSPHysics Utils.
+'''DesignSPHysics Utils.
 
 This file contains a collection of constants and
 functions meant to use with DesignSPHysics.
@@ -8,7 +8,7 @@ functions meant to use with DesignSPHysics.
 This module stores non-gui related operations, but
 meant to use with FreeCAD.
 
-"""
+'''
 
 import FreeCAD
 import FreeCADGui
@@ -31,32 +31,30 @@ from femmesh.femmesh2mesh import femmesh_2_mesh
 import sys
 
 from PySide import QtGui, QtCore
-from ds_modules import guiutils
-from ds_modules import execution_parameters
-from ds_modules import properties
-from ds_modules.properties import *
-from ds_modules.execution_parameters import *
+from mod import guiutils
+from mod.execution_parameters import *
+from mod.dataobjects import *
 
 
-"""
-Copyright (C) 2019
-EPHYSLAB Environmental Physics Laboratory, Universidade de Vigo
 
-This file is part of DesignSPHysics.
+# Copyright (C) 2019
+# EPHYSLAB Environmental Physics Laboratory, Universidade de Vigo
 
-DesignSPHysics is free software: you can redistribute it and/or modify
-it under the terms of the GNU General Public License as published by
-the Free Software Foundation, either version 3 of the License, or
-(at your option) any later version.
+# This file is part of DesignSPHysics.
 
-DesignSPHysics is distributed in the hope that it will be useful,
-but WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-GNU General Public License for more details.
+# DesignSPHysics is free software: you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation, either version 3 of the License, or
+# (at your option) any later version.
 
-You should have received a copy of the GNU General Public License
-along with DesignSPHysics.  If not, see <http://www.gnu.org/licenses/>.
-"""
+# DesignSPHysics is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+
+# You should have received a copy of the GNU General Public License
+# along with DesignSPHysics.  If not, see <http://www.gnu.org/licenses/>.
+
 
 # ------ CONSTANTS DEFINITION ------
 FREECAD_MIN_VERSION = "018"
@@ -64,8 +62,9 @@ APP_NAME = "DesignSPHysics"
 DEBUGGING = False
 VERBOSE = False
 DIVIDER = 1000
+LINE_END = '\n'
 PICKLE_PROTOCOL = 1  # Binary mode
-VERSION = "0.5.1.1906-26"
+VERSION = "0.6.0.1907-18"
 WIDTH_2D = 0.001
 MAX_PARTICLE_WARNING = 2000000
 HELP_WEBPAGE = "https://github.com/DualSPHysics/DesignSPHysics/wiki"
@@ -75,8 +74,8 @@ DISK_DUMP_FILE_NAME = "designsphysics-{}.log".format(VERSION)
 # ------ END CONSTANTS DEFINITION ------
 
 def is_compatible_version():
-    """ Checks if the current FreeCAD version is suitable
-        for this macro. """
+    ''' Checks if the current FreeCAD version is suitable
+        for this macro. '''
 
     version_num = FreeCAD.Version()[0] + FreeCAD.Version()[1]
     if float(version_num) < float(FREECAD_MIN_VERSION):
@@ -87,40 +86,40 @@ def is_compatible_version():
 
 
 def log(message):
-    """ Prints a log in the default output."""
+    ''' Prints a log in the default output.'''
     if VERBOSE:
         print ("[" + APP_NAME + "]" + message)
 
 
 def warning(message):
-    """ Prints a warning in the default output. """
+    ''' Prints a warning in the default output. '''
     if VERBOSE:
         print ("[" + APP_NAME + "] " + "[WARNING]" + ": " + str(message))
 
 
 def error(message):
-    """ Prints an error in the default output."""
+    ''' Prints an error in the default output.'''
     if VERBOSE:
         print ("[" + APP_NAME + "] " + "[ERROR]" + ": " + str(message))
 
 
 def debug(message):
-    """ Prints a debug message in the default output"""
+    ''' Prints a debug message in the default output'''
     if DEBUGGING and VERBOSE:
         print ("[" + APP_NAME + "] " + "[<<<<DEBUG>>>>]" + ": " + str(message))
 
 def dump_to_disk(text):
-    """ Dumps text content into a file on disk """
+    ''' Dumps text content into a file on disk '''
     with open('/tmp/{}'.format(DISK_DUMP_FILE_NAME), 'w') as error_dump:
         error_dump.write(text)
 
 
 def __(text):
-    """ Translation helper. Takes a string and tries to return its translation to the current FreeCAD locale.
-    If the translation is missing or the file does not exists, return default english string. """
+    ''' Translation helper. Takes a string and tries to return its translation to the current FreeCAD locale.
+    If the translation is missing or the file does not exists, return default english string. '''
     # Get FreeCAD current language
     freecad_locale = FreeCADGui.getLocale().lower().replace(", ", "-").replace(" ", "-")
-    # Find ds_modules directory
+    # Find mod directory
     utils_dir = os.path.dirname(os.path.abspath(__file__))
     # Open translation file and print the matching string, if it's defined.
     filename = "{utils_dir}/lang/{locale}.json".format(utils_dir=utils_dir, locale=freecad_locale)
@@ -140,14 +139,14 @@ def __(text):
 
 
 def refocus_cwd():
-    """ Ensures the current working directory is the DesignSPHysics folder """
+    ''' Ensures the current working directory is the DesignSPHysics folder '''
     utils_dir = os.path.dirname(os.path.abspath(__file__))
     os.chdir(utils_dir + "/..")
 
 
 def check_executables(data):
-    """ Checks the different executables used by DesignSPHysics. Returns the filtered data structure and a boolean
-    stating if all went correctly. """
+    ''' Checks the different executables used by DesignSPHysics. Returns the filtered data structure and a boolean
+    stating if all went correctly. '''
     execs_correct = True
 
     # Make sure the current working directory is the DesignSPHysics folder
@@ -316,19 +315,19 @@ def check_executables(data):
             if not execs_correct:
                 warning("One or more of the executables in the setup is not correct. "
                         "Check plugin setup to fix missing binaries")
-                ds_modules.guiutils.warning_dialog("One or more of the executables in the setup is not correct. "
+                guiutils.warning_dialog("One or more of the executables in the setup is not correct. "
                                         "Check plugin setup to fix missing binaries.")
     return data, execs_correct
 
 
 def are_executables_bundled():
-    """ Returns if the DualSPHysics executable directory exists"""
+    ''' Returns if the DualSPHysics executable directory exists'''
     dsph_execs_path = os.path.dirname(os.path.realpath(__file__)) + "/../dualsphysics/bin/"
     return os.path.isdir(dsph_execs_path)
 
 
 def float_list_to_float_property(floating_mks):
-    """ Transforms a float lists from an old case format to the new properties. """
+    ''' Transforms a float lists from an old case format to the new  '''
     to_ret = dict()
     for key, value in floating_mks.items():
         if isinstance(value, list):
@@ -389,7 +388,7 @@ def float_list_to_float_property(floating_mks):
 
 
 def initials_list_to_initials_property(initials_mks):
-    """ Transforms initials lists to properties from old cases. """
+    ''' Transforms initials lists to properties from old cases. '''
     to_ret = dict()
     for key, value in initials_mks.items():
         if isinstance(value, list):
@@ -403,7 +402,7 @@ def initials_list_to_initials_property(initials_mks):
 
 
 def get_maximum_particles(dp):
-    """ Gets the maximum number of particles that can be in the Case Limits with the given DP """
+    ''' Gets the maximum number of particles that can be in the Case Limits with the given DP '''
     to_ret = get_fc_object('Case_Limits').Width.Value / (dp * 1000)
     to_ret *= get_fc_object('Case_Limits').Height.Value / (dp * 1000)
     to_ret *= get_fc_object('Case_Limits').Length.Value / (dp * 1000)
@@ -412,9 +411,9 @@ def get_maximum_particles(dp):
 
 
 def get_default_data():
-    """ Sets default data at start of the macro.
+    ''' Sets default data at start of the macro.
         Returns data and temp_data dict with default values.
-        If there is data saved on disk, tries to load it. """
+        If there is data saved on disk, tries to load it. '''
 
     # TODO: Big change. These should be data objects, not dict()
     data = dict()
@@ -477,7 +476,7 @@ def get_default_data():
     data['partsoutmax'] = 1
     data['rhopoutmin'] = 700
     data['rhopoutmax'] = 1300
-    data['domainfixed'] = execution_parameters.DomainFixedParameter(False, 0, 0, 0, 0, 0, 0)
+    data['domainfixed'] = DomainFixedParameter(False, 0, 0, 0, 0, 0, 0)
 
     # Damping object dictionary: {'ObjectName': DampingObject}
     data['damping'] = dict()
@@ -593,7 +592,7 @@ def get_default_data():
     data['relaxationzone'] = None
 
     # Acceleration Input
-    data['accinput'] = properties.AccelerationInput()
+    data['accinput'] = AccelerationInput()
 
     # Temporal data dict to control execution features.
     temp_data['current_process'] = None
@@ -653,7 +652,7 @@ def get_default_data():
 
 
 def get_default_config_file():
-    """ Gets the default-config.json from disk """
+    ''' Gets the default-config.json from disk '''
     current_script_folder = os.path.dirname(os.path.realpath(__file__))
     with open('{}/../default-config.json'.format(current_script_folder)) as data_file:
         loaded_data = json.load(data_file)
@@ -666,40 +665,19 @@ def get_default_config_file():
     return to_ret
 
 
-def get_first_mk_not_used(objtype, data):
-    """ Checks simulation objects to find the first not used
-        MK group. """
-
-    if objtype == "fluid":
-        endval = 10
-        mkset = set()
-        for key, value in data["simobjects"].items():
-            if value[1].lower() == "fluid":
-                mkset.add(value[0])
-    else:
-        endval = 240
-        mkset = set()
-        for key, value in data["simobjects"].items():
-            if value[1].lower() == "bound":
-                mkset.add(value[0])
-    for i in range(0, endval):
-        if i not in mkset:
-            return i
-
-
 def open_help():
-    """ Opens a web browser with this software help. """
+    ''' Opens a web browser with this software help. '''
     webbrowser.open(HELP_WEBPAGE)
 
 
 def get_os():
-    """ Returns the current operating system """
+    ''' Returns the current operating system '''
     return platform
 
 
 def print_license():
-    """ Prints this software license. """
-    licpath = "{}{}".format(os.path.abspath(__file__).split("ds_modules")[0], "LICENSE")
+    ''' Prints this software license. '''
+    licpath = "{}{}".format(os.path.abspath(__file__).split("mod")[0], "LICENSE")
     if os.path.isfile(licpath):
         with open(licpath) as licfile:
             if VERBOSE:
@@ -710,8 +688,8 @@ def print_license():
 
 
 def prompt_close_all_documents(prompt=True):
-    """ Shows a dialog to close all the current documents.
-        If accepted, close all the current documents and return True, else returns False. """
+    ''' Shows a dialog to close all the current documents.
+        If accepted, close all the current documents and return True, else returns False. '''
     if prompt:
         user_selection = guiutils.ok_cancel_dialog(
             APP_NAME, "All documents will be closed")
@@ -726,19 +704,19 @@ def prompt_close_all_documents(prompt=True):
 
 
 def document_count():
-    """ Returns an integer representing the number of current opened documents in FreeCAD. """
+    ''' Returns an integer representing the number of current opened documents in FreeCAD. '''
     return len(FreeCAD.listDocuments().keys())
 
 
 def valid_document_environment():
-    """ Returns a boolean if a correct document environment is found.
-    A correct document environment is defined if only a DSPH_Case document is currently opened in FreeCAD. """
+    ''' Returns a boolean if a correct document environment is found.
+    A correct document environment is defined if only a DSPH_Case document is currently opened in FreeCAD. '''
     return True if document_count() is 1 and 'dsph_case' in list(FreeCAD.listDocuments().keys())[0].lower() else False
 
 
 def create_dsph_document():
-    """ Creates a new DSPH compatible document in FreeCAD.
-        It includes the case limits and a compatible name. """
+    ''' Creates a new DSPH compatible document in FreeCAD.
+        It includes the case limits and a compatible name. '''
     FreeCAD.newDocument("DSPH_Case")
     FreeCAD.setActiveDocument("DSPH_Case")
     FreeCAD.ActiveDocument = FreeCAD.getDocument("DSPH_Case")
@@ -760,8 +738,8 @@ def create_dsph_document():
 
 
 def create_dsph_document_from_fcstd(document_path):
-    """ Creates a new DSPH compatible document in FreeCAD.
-        It includes the case limits and a compatible name. """
+    ''' Creates a new DSPH compatible document in FreeCAD.
+        It includes the case limits and a compatible name. '''
     temp_document_path = tempfile.gettempdir() + "/" + "DSPH_Case.fcstd"
     shutil.copyfile(document_path, temp_document_path)
     FreeCAD.open(temp_document_path)
@@ -785,8 +763,8 @@ def create_dsph_document_from_fcstd(document_path):
 
 
 def dump_to_xml(data, save_name):
-    """ Saves all of the data in the opened case
-        to disk. Generates a GenCase compatible XML. """
+    ''' Saves all of the data in the opened case
+        to disk. Generates a GenCase compatible XML. '''
     # Saves all the data in XML format.
     log("Saving data in " + data["project_path"] + ".")
     FreeCAD.getDocument("DSPH_Case").saveAs(save_name + "/DSPH_Case.FCStd")
@@ -1324,8 +1302,8 @@ def dump_to_xml(data, save_name):
                             f.write('\t\t\t\t</mvrectsinu>\n')
 
                         mot_counter += 1
-                elif isinstance(movement, properties.SpecialMovement):
-                    if isinstance(movement.generator, properties.FileGen):
+                elif isinstance(movement, SpecialMovement):
+                    if isinstance(movement.generator, FileGen):
                         f.write('\t\t\t\t<mvfile id="{}" duration="{}">\n '.format(
                             mov_counter, movement.generator.duration))
                         f.write('\t\t\t\t\t<file name="{}" fields="{}" fieldtime="{}" '
@@ -1335,7 +1313,7 @@ def dump_to_xml(data, save_name):
                                                                        movement.generator.fieldx,
                                                                        movement.generator.fieldy))
                         f.write('\t\t\t\t</mvfile>\n ')
-                    elif isinstance(movement.generator, properties.RotationFileGen):
+                    elif isinstance(movement.generator, RotationFileGen):
                         f.write('\t\t\t\t<mvrotfile id="{}" duration="{}" anglesunits="{}">\n '.format(mov_counter,
                                                                                                        movement.generator.duration,
                                                                                                        movement.generator.anglesunits))
@@ -1582,16 +1560,16 @@ def dump_to_xml(data, save_name):
         # Check if object has motion enabled but no motions selected
         if len(motlist) < 1:
             continue
-        if isinstance(motlist[0], properties.SpecialMovement):
+        if isinstance(motlist[0], SpecialMovement):
             mot = motlist[0].generator
-            if isinstance(mot, properties.FileGen) or isinstance(mot, properties.RotationFileGen):
+            if isinstance(mot, FileGen) or isinstance(mot, RotationFileGen):
                 continue
 
             # Open tags only for the first movement
             if written_movements_counter == 0:
                 f.write('\t\t\t<wavepaddles>\n')
 
-            if isinstance(mot, properties.RegularPistonWaveGen):
+            if isinstance(mot, RegularPistonWaveGen):
                 f.write('\t\t\t\t<piston>\n')
                 f.write('\t\t\t\t\t<mkbound value="{}" comment="Mk-Bound of selected particles" />\n'.format(mk))
                 f.write(
@@ -1678,7 +1656,7 @@ def dump_to_xml(data, save_name):
                 f.write('\t\t\t\t</piston>\n')
                 written_movements_counter += 1
 
-            elif isinstance(mot, properties.IrregularPistonWaveGen):
+            elif isinstance(mot, IrregularPistonWaveGen):
                 f.write('\t\t\t\t<piston_spectrum>\n')
                 f.write(
                     '\t\t\t\t\t<mkbound value="{}" comment="Mk-Bound of selected particles" />\n'.format(mk))
@@ -1796,7 +1774,7 @@ def dump_to_xml(data, save_name):
                 f.write('\t\t\t\t</piston_spectrum>\n')
                 written_movements_counter += 1
 
-            elif isinstance(mot, properties.RegularFlapWaveGen):
+            elif isinstance(mot, RegularFlapWaveGen):
                 f.write('\t\t\t\t<flap>\n')
                 f.write(
                     '\t\t\t\t\t<mkbound value="{}" comment="Mk-Bound of selected particles" />\n'.format(mk))
@@ -1836,7 +1814,7 @@ def dump_to_xml(data, save_name):
                 f.write('\t\t\t\t</flap>\n')
                 written_movements_counter += 1
 
-            elif isinstance(mot, properties.IrregularFlapWaveGen):
+            elif isinstance(mot, IrregularFlapWaveGen):
                 f.write('\t\t\t\t<flap_spectrum>\n')
                 f.write(
                     '\t\t\t\t\t<mkbound value="{}" comment="Mk-Bound of selected particles" />\n'.format(mk))
@@ -2234,13 +2212,13 @@ def dump_to_xml(data, save_name):
 
 
 def get_number_of_documents():
-    """ Returns the number of documents currently
-    opened in FreeCAD. """
+    ''' Returns the number of documents currently
+    opened in FreeCAD. '''
     return len(FreeCAD.listDocuments())
 
 
 def batch_generator(full_path, case_name, gcpath, dsphpath, pvtkpath, exec_params, lib_path):
-    """ Loads a windows & linux template for batch files and saves them formatted to disk. """
+    ''' Loads a windows & linux template for batch files and saves them formatted to disk. '''
     lib_folder = os.path.dirname(os.path.realpath(__file__))
     with open('{}/templates/template.bat'.format(lib_folder), 'r') as content_file:
         win_template = content_file.read().format(
@@ -2267,8 +2245,8 @@ def batch_generator(full_path, case_name, gcpath, dsphpath, pvtkpath, exec_param
 
 
 def import_geo(filename=None, scale_x=1, scale_y=1, scale_z=1, name=None, autofill=False, data=None):
-    """ Opens a GEO file, preprocesses it and saves it
-    int temp files to load with FreeCAD. """
+    ''' Opens a GEO file, preprocesses it and saves it
+    int temp files to load with FreeCAD. '''
     if data == None:
         raise RuntimeError("Data parameter must be populated")
     length_filename = len(filename)
@@ -2298,12 +2276,12 @@ def import_geo(filename=None, scale_x=1, scale_y=1, scale_z=1, name=None, autofi
 
 
 def get_fc_object(internal_name):
-    """ Returns a FreeCAD internal object by a name. """
+    ''' Returns a FreeCAD internal object by a name. '''
     return FreeCAD.getDocument("DSPH_Case").getObject(internal_name)
 
 
 def create_flowtool_boxes(path, boxes):
-    """ Creates a file with flowtool box information """
+    ''' Creates a file with flowtool box information '''
     with open(path, 'w') as f:
         for box in boxes:
             f.write("BOX @{}\n".format(box[1]))
