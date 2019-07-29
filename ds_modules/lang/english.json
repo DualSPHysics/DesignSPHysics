@@ -720,11 +720,14 @@
     "Points: ": "Points: ",
     "Initial properties": "Initial properties",
     "Velocity (m/s): ": "Velocity (m/s): ",
-    "Traslation restriction: ": "Traslation restriction: ",
+    "Translation restriction: ": "Translation restriction: ",
     "Use 0 for translation restriction in the movement (default=(1,1,1))": "Use 0 for translation restriction in the movement (default=(1,1,1))",
     "Rotation restriction: ": "Rotation restriction: ",
     "Use 0 for rotation restriction in the movement (default=(1,1,1))": "Use 0 for rotation restriction in the movement (default=(1,1,1))",
     "Material: ": "Material: ",
     "Autofill": "Autofill",
-    "Sets autofill property for this imported geometry": "Sets autofill property for this imported geometry"
+    "Sets autofill property for this imported geometry": "Sets autofill property for this imported geometry",
+    "Initials Type: ": "Initials Type: ",
+    "Chooses the type of the initial velocity.": "Chooses the type of the initial velocity.",
+    "Sets the mk group direction vector.": "Sets the mk group direction vector."
 }

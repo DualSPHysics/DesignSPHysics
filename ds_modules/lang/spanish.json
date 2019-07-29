@@ -495,7 +495,7 @@
     "Initial wave phase:": "Initial wave phase:",
     "Periods of ramp:": "Periods of ramp:",
     "LICENSE file could not be found. Are you sure you didn't delete it?": "LICENSE file could not be found. Are you sure you didn't delete it?",
-    "Traslation restriction: ": "Traslation restriction: ",
+    "Translation restriction: ": "Translation restriction: ",
     "Use 0 for translation restriction in the movement (default=(1,1,1))": "Use 0 for translation restriction in the movement (default=(1,1,1))",
     "Rotation restriction: ": "Rotation restriction: ",
     "Use 0 for rotation restriction in the movement (default=(1,1,1))": "Use 0 for rotation restriction in the movement (default=(1,1,1))",

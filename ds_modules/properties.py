@@ -81,12 +81,21 @@ class InitialsProperty(object):
 
     Attributes:
         mk: Mk to witch this InitialsProperty is binded.
-        force: Force in [x, y, z] format.
+        direction: Direction in [x, y, z] format.
+        initials_type: Type of the movement: 0 is Uniform, 1 Linear, 2 Parabolic
+        v/z[0-3]: Points of application and velocity
     """
 
-    def __init__(self, mk=-1, force=list()):
+    def __init__(self, mk=-1, direction=list(), initials_type=0, v1=0.0, v2=0.0, v3=0.0, z1=0.0, z2=0.0, z3=0.0):
         self.mk = mk
-        self.force = force
+        self.direction = direction
+        self.initials_type = initials_type
+        self.v1 = v1
+        self.v2 = v2
+        self.v3 = v3
+        self.z1 = z1
+        self.z2 = z2
+        self.z3 = z3
 
 
 class Material(object):
@@ -911,9 +920,12 @@ class RelaxationZoneUniform(object):
                  use_velocity=True, velocity=0, velocity_times=None, coefdt=1000, function_psi=0.9, function_beta=1):
         self.start = start
         self.duration = duration
-        self.domainbox_point = domainbox_point if domainbox_point is not None else [0, 0, 0]
-        self.domainbox_size = domainbox_size if domainbox_size is not None else [0, 0, 0]
-        self.domainbox_direction = domainbox_direction if domainbox_direction is not None else [0, 0, 0]
+        self.domainbox_point = domainbox_point if domainbox_point is not None else [
+            0, 0, 0]
+        self.domainbox_size = domainbox_size if domainbox_size is not None else [
+            0, 0, 0]
+        self.domainbox_direction = domainbox_direction if domainbox_direction is not None else [
+            0, 0, 0]
         self.domainbox_rotateaxis_angle = domainbox_rotateaxis_angle
         self.domainbox_rotateaxis_point1 = domainbox_rotateaxis_point1 if domainbox_rotateaxis_point1 is not None else [
             0, 0, 0]

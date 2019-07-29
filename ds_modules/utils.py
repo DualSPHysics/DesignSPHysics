@@ -525,7 +525,7 @@ def get_default_data():
     data['floating_mks'] = dict()
 
     # Dictionary that defines initials.
-    # Keys are mks enabled (ONLY FLUIDS) and values are a list containing: {'mkfluid': [x, y, z]}
+    # Keys are mks enabled (ONLY FLUIDS) and values are a list containing: {'mkfluid': InitialsProperty()}
     data['initials_mks'] = dict()
 
     # Control data for enabling features
@@ -1029,13 +1029,23 @@ def dump_to_xml(data, save_name):
     if len(data["initials_mks"].keys()) > 0:
         f.write('\t\t<initials>\n')
         for key, value in data["initials_mks"].items():
-            f.write(
-                '\t\t\t<velocity mkfluid="' +
-                str(key) + '" x="' +
-                str(value.force[0]) + '" y="' +
-                str(value.force[1]) + '" z="' +
-                str(value.force[2]) + '"/>\n'
-            )
+            if value.initials_type == 0:
+                f.write('\t\t\t<velocity mkfluid="{}">\n'.format(value.mk))
+                f.write('\t\t\t\t<direction x="{}" y="{}" z="{}" />\n'.format(*value.direction))
+                f.write('\t\t\t\t<velocity v="{}" comment="Uniform profile velocity" units_comment="m/s" />\n'.format(value.v1))
+                f.write('\t\t\t</velocity>\n')
+            elif value.initials_type == 1:
+                f.write('\t\t\t<velocity mkfluid="{}">\n'.format(value.mk))
+                f.write('\t\t\t\t<direction x="{}" y="{}" z="{}" />\n'.format(*value.direction))
+                f.write('\t\t\t\t<velocity2 v="{}" v2="{}" z="{}" z2="{}" comment="Linear profile velocity" units_comment="m/s" />\n'.format(value.v1, value.v2, value.z1, value.z2))
+                f.write('\t\t\t</velocity>\n')
+            elif value.initials_type == 2:
+                f.write('\t\t\t<velocity mkfluid="{}">\n'.format(value.mk))
+                f.write('\t\t\t\t<direction x="{}" y="{}" z="{}" />\n'.format(*value.direction))
+                f.write('\t\t\t\t<velocity3 v="{}" v2="{}" v3="{}" z="{}" z2="{}" z3="{}" comment="Parabolic profile velocity" units_comment="m/s" />\n'.format(
+                        value.v1, value.v2, value.v3, value.z1, value.z2, value.z3
+                    ))
+                f.write('\t\t\t</velocity>\n')
         f.write('\t\t</initials>\n')
     # Writes floatings
     if len(data["floating_mks"].keys()) > 0:
