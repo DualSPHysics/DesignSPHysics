@@ -713,5 +713,18 @@
     "Coefficient to multiply speedsystem": "Coefficient to multiply speedsystem",
     "Speed of sound (by default speedofsound=coefsound*speedsystem). ": "Speed of sound (by default speedofsound=coefsound*speedsystem). ",
     "Coefficient to calculate the smoothing length (h=coefh*sqrt(3*dp^2) in 3D).": "Coefficient to calculate the smoothing length (h=coefh*sqrt(3*dp^2) in 3D).",
-    "Coefficient to multiply variable dt.": "Coefficient to multiply variable dt."
+    "Coefficient to multiply variable dt.": "Coefficient to multiply variable dt.",
+    "Link hinge configuration": "Link hinge configuration",
+    "Points for rotation: ": "Points for rotation: ",
+    "Link spheric configuration": "Link spheric configuration",
+    "Points: ": "Points: ",
+    "Initial properties": "Initial properties",
+    "Velocity (m/s): ": "Velocity (m/s): ",
+    "Traslation restriction: ": "Traslation restriction: ",
+    "Use 0 for translation restriction in the movement (default=(1,1,1))": "Use 0 for translation restriction in the movement (default=(1,1,1))",
+    "Rotation restriction: ": "Rotation restriction: ",
+    "Use 0 for rotation restriction in the movement (default=(1,1,1))": "Use 0 for rotation restriction in the movement (default=(1,1,1))",
+    "Material: ": "Material: ",
+    "Autofill": "Autofill",
+    "Sets autofill property for this imported geometry": "Sets autofill property for this imported geometry"
 }
