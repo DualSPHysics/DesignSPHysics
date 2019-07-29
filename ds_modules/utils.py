@@ -861,7 +861,7 @@ def dump_to_xml(data, save_name):
     f.write('\t\t\t</definition>\n')
     f.write('\t\t\t<commands>\n')
     f.write('\t\t\t\t<mainlist>\n')
-    f.write('\t\t\t\t\t<setshapemode>dp | bound</setshapemode>\n')
+    f.write('\t\t\t\t\t<setshapemode>actual | dp | bound</setshapemode>\n')
     # Export in strict order
     for key in data["export_order"]:
         name = key
@@ -2226,6 +2226,12 @@ def dump_to_xml(data, save_name):
         f.write(
             '\t\t\t</simulationdomain>\n'
         )
+    else:
+        f.write('\t\t\t<simulationdomain comment="Defines domain of simulation (default=Uses minimun and maximum position of the generated particles)">\n')
+        f.write('\t\t\t\t<posmin x="default" y="default" z="default" comment="e.g.: x=0.5, y=default-1, z=default-10%" />\n')
+        f.write('\t\t\t\t<posmax x="default" y="default" z="default + 50%" />\n')
+        f.write('\t\t\t</simulationdomain>\n')
+
 
     f.write('\t\t</parameters>\n')
     f.write('\t</execution>\n')
