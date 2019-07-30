@@ -1450,10 +1450,15 @@ def dump_to_xml(data, save_name):
                 )
 
         for ll in data['link_linearspring']:
-            if ll[1] != "" and ll[2] != "":
-                f.write(
-                    '\t\t\t\t<link_linearspring idbody1="{}" idbody2="{}">\n'.format(str(ll[1]), str(ll[2]))
-                )
+            if ll[1] != "":
+                if ll[2] == "":
+                    f.write(
+                        '\t\t\t\t<link_linearspring idbody1="{}">\n'.format(str(ll[1]))
+                    )
+                else:
+                    f.write(
+                        '\t\t\t\t<link_linearspring idbody1="{}" idbody2="{}">\n'.format(str(ll[1]), str(ll[2]))
+                    )
                 f.write(
                     '\t\t\t\t\t<point_fb1 x="{}" y="{}" z="{}" comment="Point in body 1" />\n'.format(ll[3][0],
                                                                                                       ll[3][1],
@@ -1489,10 +1494,15 @@ def dump_to_xml(data, save_name):
                 f.write('\t\t\t\t</link_linearspring>\n')
 
         for lh in data['link_hinge']:
-            if lh[1] != "" and lh[2] != "":
-                f.write(
-                    '\t\t\t\t<link_hinge idbody1="{}" idbody2="{}">\n'.format(str(lh[1]), str(lh[2]))
-                )
+            if lh[1] != "":
+                if lh[2] == "":
+                    f.write(
+                        '\t\t\t\t<link_hinge idbody1="{}">\n'.format(str(lh[1]))
+                    )
+                else:
+                    f.write(
+                        '\t\t\t\t<link_hinge idbody1="{}" idbody2="{}">\n'.format(str(lh[1]), str(lh[2]))
+                    )
                 f.write(
                     '\t\t\t\t\t<rotpoint x="{}" y="{}" z="{}" comment="Point for rotation" />\n'.format(lh[3][0],
                                                                                                         lh[3][1],

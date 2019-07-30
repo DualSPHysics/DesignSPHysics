@@ -729,5 +729,7 @@
     "Sets autofill property for this imported geometry": "Sets autofill property for this imported geometry",
     "Initials Type: ": "Initials Type: ",
     "Chooses the type of the initial velocity.": "Chooses the type of the initial velocity.",
-    "Sets the mk group direction vector.": "Sets the mk group direction vector."
+    "Sets the mk group direction vector.": "Sets the mk group direction vector.",
+    "At least one body is necessary": "At least one body is necessary",
+    "Not yet saved": "Not yet saved"
 }
