@@ -586,6 +586,9 @@ def get_default_data():
     # GEO autofill. {name: true/false}
     data['geo_autofill'] = dict()
 
+    # Geometry original filetypes. Helps to write original filetype on gencase
+    data["import_geo_filetypes"] = dict()
+
     # MultiLayer Pistons: {mk: MLPistonObject}
     data['mlayerpistons'] = dict()
 
@@ -1010,17 +1013,53 @@ def dump_to_xml(data, save_name):
                     __objs__ = list()
                     __objs__.append(o)
                     # TODO: Convert to STL or maintain original format?
-                    stl_file_path = save_name + "/" + o.Name + ".stl"
-                    Mesh.export(__objs__, stl_file_path)
-                    relative_file_path = os.path.relpath(
-                        stl_file_path,
-                        os.path.dirname(os.path.abspath(stl_file_path))
-                    )
-                    autofill_enabled = str(data["geo_autofill"][o.Name] if o.Name in data["geo_autofill"].keys() else False).lower()
-                    f.write('\t\t\t\t\t<drawfilestl file="{}" objname="{}" autofill="{}">\n'.format(relative_file_path, o.Label, autofill_enabled))
-                    f.write('\t\t\t\t\t\t<drawscale x="0.001" y="0.001" z="0.001" />\n')
-                    f.write('\t\t\t\t\t</drawfilestl>\n')
+                    if o.Name in data["import_geo_filetypes"].keys():
+                        if data["import_geo_filetypes"][o.Name] == ".stl":
+                            stl_file_path = save_name + "/" + o.Name + ".stl"
+                            Mesh.export(__objs__, stl_file_path)
+                            relative_file_path = os.path.relpath(
+                                stl_file_path,
+                                os.path.dirname(os.path.abspath(stl_file_path))
+                            )
+                            autofill_enabled = str(data["geo_autofill"][o.Name] if o.Name in data["geo_autofill"].keys() else False).lower()
+                            f.write('\t\t\t\t\t<drawfilestl file="{}" objname="{}" autofill="{}">\n'.format(relative_file_path, o.Label, autofill_enabled))
+                            f.write('\t\t\t\t\t\t<drawscale x="0.001" y="0.001" z="0.001" />\n')
+                            f.write('\t\t\t\t\t</drawfilestl>\n')
+                        elif data["import_geo_filetypes"][o.Name] == ".ply":
+                            ply_file_path = save_name + "/" + o.Name + ".ply"
+                            Mesh.export(__objs__, ply_file_path)
+                            relative_file_path = os.path.relpath(
+                                ply_file_path,
+                                os.path.dirname(os.path.abspath(ply_file_path))
+                            )
+                            autofill_enabled = str(data["geo_autofill"][o.Name] if o.Name in data["geo_autofill"].keys() else False).lower()
+                            f.write('\t\t\t\t\t<drawfileply file="{}" objname="{}" autofill="{}">\n'.format(relative_file_path, o.Label, autofill_enabled))
+                            f.write('\t\t\t\t\t\t<drawscale x="0.001" y="0.001" z="0.001" />\n')
+                            f.write('\t\t\t\t\t</drawfileply>\n')
+                        elif data["import_geo_filetypes"][o.Name] == ".vtk":
+                            vtk_file_path = save_name + "/" + o.Name + ".vtk"
+                            Fem.export(__objs__, vtk_file_path)
+                            relative_file_path = os.path.relpath(
+                                vtk_file_path,
+                                os.path.dirname(os.path.abspath(vtk_file_path))
+                            )
+                            autofill_enabled = str(data["geo_autofill"][o.Name] if o.Name in data["geo_autofill"].keys() else False).lower()
+                            f.write('\t\t\t\t\t<drawfilevtk file="{}" objname="{}" autofill="{}">\n'.format(relative_file_path, o.Label, autofill_enabled))
+                            f.write('\t\t\t\t\t\t<drawscale x="0.001" y="0.001" z="0.001" />\n')
+                            f.write('\t\t\t\t\t</drawfilevtk>\n')
+                    else:
+                        stl_file_path = save_name + "/" + o.Name + ".stl"
+                        Mesh.export(__objs__, stl_file_path)
+                        relative_file_path = os.path.relpath(
+                            stl_file_path,
+                            os.path.dirname(os.path.abspath(stl_file_path))
+                        )
+                        autofill_enabled = str(data["geo_autofill"][o.Name] if o.Name in data["geo_autofill"].keys() else False).lower()
+                        f.write('\t\t\t\t\t<drawfilestl file="{}" objname="{}" autofill="{}">\n'.format(relative_file_path, o.Label, autofill_enabled))
+                        f.write('\t\t\t\t\t\t<drawscale x="0.001" y="0.001" z="0.001" />\n')
+                        f.write('\t\t\t\t\t</drawfilestl>\n')
                     del __objs__
+
     f.write('\t\t\t\t\t<shapeout file="" />\n')
     f.write('\t\t\t\t</mainlist>\n')
     f.write('\t\t\t</commands>\n')
@@ -2321,6 +2360,7 @@ def import_geo(filename=None, scale_x=1, scale_y=1, scale_z=1, name=None, autofi
     FreeCADGui.SendMsgToActiveView("ViewFit")
 
     data["geo_autofill"][name] = autofill
+    data["import_geo_filetypes"][name] = str(file_type).lower()
 
 
 def get_fc_object(internal_name):
