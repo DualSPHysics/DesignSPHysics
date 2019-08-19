@@ -1677,8 +1677,8 @@ def dump_to_xml(data, save_name):
                     '\t\t\t\t\t<ramp value="{}" comment="Periods of ramp (def=0)" />\n'.format(mot.ramp))
                 f.write('\t\t\t\t\t<savemotion periods="{}" periodsteps="{}" xpos="{}" zpos="{}" '
                         'comment="Saves motion data. xpos and zpos are optional. '
-                        'zpos=-depth of the measuring point" />\n'.format(mot.disksave_periods,
-                                                                          mot.disksave_periodsteps, mot.disksave_xpos,
+                        'zpos=-depth of the measuring point" />\n'.format(int(mot.disksave_periods),
+                                                                          int(mot.disksave_periodsteps), mot.disksave_xpos,
                                                                           mot.disksave_zpos))
                 if mot.awas.enabled:
                     f.write('\t\t\t\t\t<awas_zsurf>\n')
@@ -1889,8 +1889,8 @@ def dump_to_xml(data, save_name):
                     '\t\t\t\t\t<ramp value="{}" comment="Periods of ramp (def=0)" />\n'.format(mot.ramp))
                 f.write('\t\t\t\t\t<savemotion periods="{}" periodsteps="{}" xpos="{}" zpos="{}" '
                         'comment="Saves motion data. xpos and zpos are optional. '
-                        'zpos=-depth of the measuring point" />\n'.format(mot.disksave_periods,
-                                                                          mot.disksave_periodsteps, mot.disksave_xpos,
+                        'zpos=-depth of the measuring point" />\n'.format(int(mot.disksave_periods),
+                                                                          int(mot.disksave_periodsteps), mot.disksave_xpos,
                                                                           mot.disksave_zpos))
                 f.write('\t\t\t\t</flap>\n')
                 written_movements_counter += 1
@@ -2029,7 +2029,7 @@ def dump_to_xml(data, save_name):
             f.write('\t\t\t\t\t<ramp value="{}" comment="Periods of ramp (def=0)" />\n'.format(rzobject.ramp))
             f.write(
                 '\t\t\t\t\t<savemotion periods="{}" periodsteps="{}" xpos="{}" zpos="{}" comment="Saves motion data. xpos and zpos are optional. zpos=-depth of the measuring point" />\n'.format(
-                    rzobject.savemotion_periods, rzobject.savemotion_periodsteps, rzobject.savemotion_xpos,
+                    int(rzobject.savemotion_periods), int(rzobject.savemotion_periodsteps), rzobject.savemotion_xpos,
                     rzobject.savemotion_zpos))
             f.write(
                 '\t\t\t\t\t<coefdir x="{}" y="{}" z="{}" comment="Coefficients for each direction (default=(1,0,0))" />\n'.format(
