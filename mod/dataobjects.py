@@ -6,8 +6,15 @@ of DesignSPHysics.
 
 '''
 
+from os import path, environ
+from sys import platform
 from random import randint
+
+import FreeCAD
+import FreeCADGui
+
 from PySide import QtCore, QtGui
+from mod.utils import __, log, executable_contains_string
 from mod.enums import *
 from mod.constants import *
 
@@ -1137,6 +1144,29 @@ class ExecutablePaths():
         self.flowtool: str = ''
         self.paraview: str = ''
 
+    def check_and_filter(self):
+        ''' Filters the executable removing those not matching the correct application.
+            Returns whether or not all of them were correctly set. '''
+        execs_correct: bool = True
+        execs_to_check = {
+            "gencase": self.gencase,
+            "dualsphysics": self.dsphysics,
+            "partvtk4": self.partvtk4,
+            "floatinginfo": self.floatinginfo,
+            "computeforces": self.computeforces,
+            "measuretool": self.measuretool,
+            "isosurface": self.isosurface,
+            "boundaryvtk": self.boundaryvtk,
+            "flowtool": self.flowtool
+        }
+
+        for word, executable in execs_to_check.items():
+            if not executable_contains_string(executable, word):
+                execs_correct = False
+                executable = ""
+
+        return execs_correct
+
 
 class CaseInformation():
     ''' Stores miscellaneous information related with the case. '''
@@ -1279,4 +1309,5 @@ class Case():
         return self.path == '' and self.name == ''
 
     def reset_simulation_domain(self) -> None:
+        ''' Restores the Simulation Domain to the default one. '''
         self.domain = SimulationDomain()
