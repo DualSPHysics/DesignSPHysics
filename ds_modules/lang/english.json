@@ -731,5 +731,6 @@
     "Chooses the type of the initial velocity.": "Chooses the type of the initial velocity.",
     "Sets the mk group direction vector.": "Sets the mk group direction vector.",
     "At least one body is necessary": "At least one body is necessary",
-    "Not yet saved": "Not yet saved"
+    "Not yet saved": "Not yet saved",
+    "DDT value (default=0.1).": "DDT value (default=0.1)."
 }

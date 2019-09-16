@@ -459,6 +459,8 @@ def get_default_data():
     data['viscoboundfactor'] = 1
     data['deltasph'] = 0
     data['deltasph_en'] = 0
+    data['densitydt_type'] = 0
+    data['densitydt_value'] = 0.1
     data['shifting'] = 0
     data['shiftcoef'] = -2
     data['shifttfs'] = 0
@@ -2187,8 +2189,10 @@ def dump_to_xml(data, save_name):
                          'A value of 0.01 is recommended for near irrotational flows.\n')
     f.write('\t\t\t<parameter key="ViscoBoundFactor" value="' + str(data['viscoboundfactor']) +
             '" comment="Multiply viscosity value with boundary (default=1)" />\n')
-    f.write('\t\t\t<parameter key="DeltaSPH" value="' + str(data['deltasph']) +
-            '" comment="DeltaSPH value, 0.1 is the typical value, with 0 disabled (default=0)" />\n')
+    # f.write('\t\t\t<parameter key="DeltaSPH" value="' + str(data['deltasph']) +
+    #         '" comment="DeltaSPH value, 0.1 is the typical value, with 0 disabled (default=0)" />\n')
+    f.write('\t\t\t<parameter key="DensityDT" value="{}" comment="Density Diffusion Term 0:None, 1:Molteni, 2:Fourtakas, 3:Fourtakas(full) (default=0)" />\n'.format(str(data['densitydt_type'])))
+    f.write('\t\t\t<parameter key="DensityDTvalue" value="{}" comment="DDT value (default=0.1)" />\n'.format(str(data['densitydt_value'])))
     f.write('\t\t\t<parameter key="Shifting" value="' + str(data['shifting']) +
             '" comment="Shifting mode 0:None, 1:Ignore bound, 2:Ignore fixed, 3:Full (default=0)" />\n')
     f.write('\t\t\t<parameter key="ShiftCoef" value="' +
