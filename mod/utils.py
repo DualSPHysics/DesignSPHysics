@@ -37,7 +37,6 @@ from mod.constants import *
 from mod.dataobjects import *
 
 
-
 # Copyright (C) 2019
 # EPHYSLAB Environmental Physics Laboratory, Universidade de Vigo
 
@@ -74,25 +73,26 @@ def is_compatible_version():
 def log(message):
     ''' Prints a log in the default output.'''
     if VERBOSE:
-        print ("[" + APP_NAME + "]" + message)
+        print("[" + APP_NAME + "]" + message)
 
 
 def warning(message):
     ''' Prints a warning in the default output. '''
     if VERBOSE:
-        print ("[" + APP_NAME + "] " + "[WARNING]" + ": " + str(message))
+        print("[" + APP_NAME + "] " + "[WARNING]" + ": " + str(message))
 
 
 def error(message):
     ''' Prints an error in the default output.'''
     if VERBOSE:
-        print ("[" + APP_NAME + "] " + "[ERROR]" + ": " + str(message))
+        print("[" + APP_NAME + "] " + "[ERROR]" + ": " + str(message))
 
 
 def debug(message):
     ''' Prints a debug message in the default output'''
     if DEBUGGING and VERBOSE:
-        print ("[" + APP_NAME + "] " + "[<<<<DEBUG>>>>]" + ": " + str(message))
+        print("[" + APP_NAME + "] " + "[<<<<DEBUG>>>>]" + ": " + str(message))
+
 
 def dump_to_disk(text):
     ''' Dumps text content into a file on disk '''
@@ -304,6 +304,23 @@ def check_executables(data):
                 guiutils.warning_dialog("One or more of the executables in the setup is not correct. "
                                         "Check plugin setup to fix missing binaries.")
     return data, execs_correct
+
+
+def executable_contains_string(executable: str, string: str) -> bool:
+    ''' Returns whether the standard output of the executable contains the passed string. '''
+    if path.isfile(executable):
+        process = QtCore.QProcess(FreeCADGui.getMainWindow())
+
+        if platform in ("linux", "linux2"):
+            environ["LD_LIBRARY_PATH"] = path.dirname(executable)
+
+        process.start('"{}"'.format(executable))
+        process.waitForFinished()
+        output = str(process.readAllStandardOutput())
+
+        return string.lower() in output.lower()
+
+    return False
 
 
 def are_executables_bundled():
@@ -560,7 +577,7 @@ def get_default_data():
     data['modelnormal_print'] = "original"
 
     # INLET/OUTLET objects
-    #[id, convertfluid, layers, [zone2/3D, mk, direction], [velocity, value], [density, value], [elevation,zbottom, zsurf]]
+    # [id, convertfluid, layers, [zone2/3D, mk, direction], [velocity, value], [density, value], [elevation,zbottom, zsurf]]
     data['inlet_zone'] = list()
     #[reuseids, resizetime, userefilling, determlimit]
     data['inlet_object'] = [0, 0.5, 0, 0]
@@ -667,7 +684,7 @@ def print_license():
     if os.path.isfile(licpath):
         with open(licpath) as licfile:
             if VERBOSE:
-                print (licfile.read())
+                print(licfile.read())
     else:
         raise EnvironmentError(
             "LICENSE file could not be found. Are you sure you didn't delete it?")
@@ -1046,7 +1063,7 @@ def dump_to_xml(data, save_name):
                     str(value.translation_restriction[0]) + '" y="' +
                     str(value.translation_restriction[1]) + '" z="' +
                     str(value.translation_restriction[2]) + '" comment="Use 0 for translation restriction in the movement '
-                                                           '(default=(1,1,1))" />\n'
+                    '(default=(1,1,1))" />\n'
                 )
             if len(value.rotation_restriction) != 0:
                 f.write(
@@ -1664,11 +1681,11 @@ def dump_to_xml(data, save_name):
                         *mot.piston_dir))
                 f.write('\t\t\t\t\t<spectrum value="{}" '
                         'comment="Spectrum type: jonswap,pierson-moskowitz" />\n'.format(
-                    ['jonswap', 'pierson-moskowitz'][mot.spectrum]))
+                            ['jonswap', 'pierson-moskowitz'][mot.spectrum]))
                 f.write('\t\t\t\t\t<discretization value="{}" '
                         'comment="Spectrum discretization: regular,random,stretched,cosstretched '
                         '(def=stretched)" />\n'.format(
-                    ['regular', 'random', 'stretched', 'cosstretched'][mot.discretization]))
+                            ['regular', 'random', 'stretched', 'cosstretched'][mot.discretization]))
                 f.write(
                     '\t\t\t\t\t<waveheight value="{}" comment="Wave height" />\n'.format(mot.wave_height))
                 f.write(
@@ -1828,11 +1845,11 @@ def dump_to_xml(data, save_name):
                         mot.flapaxis1[0], mot.flapaxis1[1], mot.flapaxis1[2]))
                 f.write('\t\t\t\t\t<spectrum value="{}" '
                         'comment="Spectrum type: jonswap,pierson-moskowitz" />\n'.format(
-                    ['jonswap', 'pierson-moskowitz'][mot.spectrum]))
+                            ['jonswap', 'pierson-moskowitz'][mot.spectrum]))
                 f.write('\t\t\t\t\t<discretization value="{}" '
                         'comment="Spectrum discretization: regular,random,stretched,cosstretched '
                         '(def=stretched)" />\n'.format(
-                    ['regular', 'random', 'stretched', 'cosstretched'][mot.discretization]))
+                            ['regular', 'random', 'stretched', 'cosstretched'][mot.discretization]))
                 f.write(
                     '\t\t\t\t\t<waveheight value="{}" comment="Wave height" />\n'.format(mot.wave_height))
                 f.write(
@@ -2244,7 +2261,6 @@ def import_geo(filename=None, scale_x=1, scale_y=1, scale_z=1, name=None, autofi
         scale_y = 1
     if scale_z <= 0:
         scale_z = 1
-
 
     # TODO: Adapt to VTL (FEM lib, convert to other format)
     if file_type == ".vtk":
