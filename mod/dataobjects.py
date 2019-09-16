@@ -9,7 +9,7 @@ of DesignSPHysics.
 from random import randint
 from PySide import QtCore, QtGui
 from mod.enums import *
-from mod.utils import VERSION
+from mod.constants import *
 
 # Copyright (C) 2019
 # EPHYSLAB Environmental Physics Laboratory, Universidade de Vigo
