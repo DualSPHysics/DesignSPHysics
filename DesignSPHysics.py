@@ -24,12 +24,13 @@ import uuid
 
 sys.path.append(os.path.dirname(os.path.abspath(__file__)))
 
-from PySide import QtGui, QtCore
-from mod.dataobjects import *
-from mod.widgets import *
-from mod.utils import __
-from mod.xml import XMLExporter
 from mod import utils, guiutils, xmlimporter
+from mod.xml import XMLExporter
+from mod.utils import __
+from mod.widgets import *
+from mod.dataobjects import *
+from PySide import QtGui, QtCore
+
 
 # Copyright (C) 2019
 # EPHYSLAB Environmental Physics Laboratory, Universidade de Vigo
@@ -151,12 +152,15 @@ execparams_button = QtGui.QPushButton(__("Execution\nParameters"))
 execparams_button.setToolTip(__("Change execution parameters, such as\ntime of simulation, viscosity, etc."))
 
 # Opens execution parameters window on button click
+
+
 def on_execparams_button_presed():
     ''' Opens a dialog to tweak the simulation's execution parameters '''
     execparams_window = ExecutionParametersDialog()
     # Execution parameters window behaviour and general composing
     execparams_window.resize(800, 600)
     execparams_window.exec_()
+
 
 execparams_button.clicked.connect(on_execparams_button_presed)
 widget_state_elements['execparams_button'] = execparams_button
@@ -349,34 +353,34 @@ def on_save_case(save_as=None):
         # Copy files from movements and change its paths to be inside the project.
         for _, mkproperties in Case.instance().mkbasedproperties.items():
             for movement in mkproperties.movements:
-                    if isinstance(movement, SpecialMovement):
-                        if isinstance(movement.generator, FileGen) or isinstance(movement.generator, RotationFileGen):
-                            filename = movement.generator.filename
-                            utils.debug("Copying {} to {}".format(filename, save_name))
+                if isinstance(movement, SpecialMovement):
+                    if isinstance(movement.generator, FileGen) or isinstance(movement.generator, RotationFileGen):
+                        filename = movement.generator.filename
+                        utils.debug("Copying {} to {}".format(filename, save_name))
 
-                            # Change directory to de case one, so if file path is already relative it copies it to the
-                            # out folder
-                            os.chdir(save_name)
+                        # Change directory to de case one, so if file path is already relative it copies it to the
+                        # out folder
+                        os.chdir(save_name)
 
-                            try:
-                                # Copy to project root
-                                shutil.copy2(filename, save_name)
-                            except shutil.Error:
-                                # Probably already copied the file.
-                                pass
-                            except IOError:
-                                utils.error("Unable to copy {} into {}".format(filename, save_name))
+                        try:
+                            # Copy to project root
+                            shutil.copy2(filename, save_name)
+                        except shutil.Error:
+                            # Probably already copied the file.
+                            pass
+                        except IOError:
+                            utils.error("Unable to copy {} into {}".format(filename, save_name))
 
-                            try:
-                                # Copy to project out folder
-                                shutil.copy2(filename, save_name + "/" + project_name + "_out")
+                        try:
+                            # Copy to project out folder
+                            shutil.copy2(filename, save_name + "/" + project_name + "_out")
 
-                                movement.generator.filename = "{}".format(filename.split("/")[-1])
-                            except shutil.Error:
-                                # Probably already copied the file.
-                                pass
-                            except IOError:
-                                utils.error("Unable to copy {} into {}".format(filename, save_name))
+                            movement.generator.filename = "{}".format(filename.split("/")[-1])
+                        except shutil.Error:
+                            # Probably already copied the file.
+                            pass
+                        except IOError:
+                            utils.error("Unable to copy {} into {}".format(filename, save_name))
 
         # Copy files from Acceleration input and change paths to be inside the project folder.
         for aid in Case.instance().acceleration_input.acclist:
@@ -496,7 +500,6 @@ def on_save_case(save_as=None):
                     pass
                 except IOError:
                     utils.error("Unable to copy {} into {}".format(filename, save_name))
-
 
         # Dumps all the case data to an XML file.
         XMLExporter().save_to_disk(save_name)
@@ -685,7 +688,7 @@ def on_load_case():
               'measuretool_path', 'isosurface_path', 'boundaryvtk_path']]
 
         # Update data structure with disk loaded one
-        data.update(load_disk_data) #TODO: Update mechanism for new data
+        data.update(load_disk_data)  # TODO: Update mechanism for new data
     except (EOFError, ValueError):
         guiutils.error_dialog(
             __("There was an error importing the case  You probably need to set them again."
@@ -695,7 +698,7 @@ def on_load_case():
 
     # Fill some data
     dp_input.setText(str(Case.instance().dp))
-    
+
     Case.instance().path = load_path_project_folder
     Case.instance().name = load_path_project_folder.split("/")[-1]
 
@@ -782,7 +785,7 @@ def on_add_damping_zone():
 
     FreeCAD.ActiveDocument.recompute()
     FreeCADGui.SendMsgToActiveView("ViewFit")
-    
+
     # Save damping in the main data structure.
     Case.instance().get_simulation_object(damping_group.Name).damping = Damping()
     # Opens damping configuration window to tweak the added damping zone.
@@ -936,7 +939,7 @@ def on_import_xml():
     guiutils.error_dialog(__("This feature is disabled in this version. Sorry for the inconvenience"))
 
     return
-   
+
     # guiutils.warning_dialog(__("This feature is experimental. It's meant to help to build a case importing bits from"
     #                            "previous, non DesignSPHysics code. This is not intended neither to import all objects "
     #                            "nor its "))
@@ -1077,7 +1080,7 @@ def on_2d_toggle():
         else:
             # Toggle 3D Mode and change name
             Case.instance().mode3d = not Case.instance().mode3d
-            
+
             # Try to restore original Width.
             if Case.instance().info.last_3d_width > 0.0:
                 utils.get_fc_object('Case_Limits').Width = Case.instance().info.last_3d_width
@@ -1087,7 +1090,7 @@ def on_2d_toggle():
             guiutils.get_fc_view_object('Case_Limits').DisplayMode = 'Wireframe'
             guiutils.get_fc_view_object('Case_Limits').ShapeColor = (0.80, 0.80, 0.80)
             guiutils.get_fc_view_object('Case_Limits').Transparency = 0
-            
+
             utils.get_fc_object('Case_Limits').Label = "Case Limits (3D)" if Case.instance().mode3d else "Case Limits (2D)"
     else:
         utils.error("Not a valid case environment")
@@ -1104,9 +1107,9 @@ def on_special_button():
 
     sp_damping_button = QtGui.QPushButton(__("Damping"))
     sp_inlet_button = QtGui.QPushButton(__("Inlet/Outlet"))
-    #sp_inlet_button.setEnabled(False)
+    # sp_inlet_button.setEnabled(False)
     sp_chrono_button = QtGui.QPushButton(__("Coupling CHRONO"))
-    #sp_chrono_button.setEnabled(False)
+    # sp_chrono_button.setEnabled(False)
     sp_multilayeredmb_button = QtGui.QPushButton(__("Multi-layered Piston"))
     sp_multilayeredmb_menu = QtGui.QMenu()
     sp_multilayeredmb_menu.addAction(__("1 Dimension"))
@@ -3470,7 +3473,7 @@ def update_faces_property(selection):
     ''' Deletes information about faces if the new fill mode does not support it. '''
     if wall_prop.isEnabled():
         return
-    
+
     sim_object = Case.instance().get_simulation_object(selection.Name)
     sim_object.clean_faces()
 
@@ -3527,7 +3530,7 @@ def add_object_to_sim(name=None):
             continue
         if len(each.InList) > 0:
             continue
-        if not Case.instance().is_object_in_simulation(each.Name): 
+        if not Case.instance().is_object_in_simulation(each.Name):
             if "fillbox" in each.Name.lower():
                 mktoput = Case.instance().get_first_mk_not_used(ObjectType.FLUID)
                 Case.instance().add_object(SimulationObject(each.Name, mktoput, ObjectType.FLUID, ObjectFillMode.SOLID))
@@ -3616,7 +3619,7 @@ def on_tree_item_selection_change():
             Case.instance().remove_object(sim_object_name)
 
     addtodsph_button.setEnabled(True)
-    
+
     if len(selection) > 0:
         if len(selection) > 1:
             # Multiple objects selected
@@ -3716,7 +3719,7 @@ def on_tree_item_selection_change():
                 # float state config
                 to_change = object_property_table.cellWidget(3, 1)
                 if selection[0].TypeId in Case.SUPPORTED_TYPES or (selection[0].TypeId == "App::DocumentObjectGroup"
-                                                                           and "fillbox" in selection[0].Name.lower()):
+                                                                   and "fillbox" in selection[0].Name.lower()):
                     if sim_object.type is ObjectType.FLUID:
                         to_change.setEnabled(False)
                     else:

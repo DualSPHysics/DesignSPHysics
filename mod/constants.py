@@ -27,6 +27,22 @@ You should have received a copy of the GNU General Public License
 along with DesignSPHysics.  If not, see <http://www.gnu.org/licenses/>.
 '''
 
+# ------ APP Constants ------
+
+FREECAD_MIN_VERSION = "018"
+APP_NAME = "DesignSPHysics"
+DEBUGGING = False
+VERBOSE = False
+DIVIDER = 1000
+LINE_END = '\n'
+PICKLE_PROTOCOL = 1  # Binary mode
+VERSION = "0.6.0.1907-18"
+WIDTH_2D = 0.001
+MAX_PARTICLE_WARNING = 2000000
+HELP_WEBPAGE = "https://github.com/DualSPHysics/DesignSPHysics/wiki"
+DISK_DUMP_FILE_NAME = "designsphysics-{}.log".format(VERSION)
+
+
 # ------ DEFINE CONSTANTS  ------
 
 ''' --------- Help Window -------------- '''
