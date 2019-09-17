@@ -450,8 +450,8 @@ def get_default_data():
 
     # Data relative to execution parameters
     # TODO: These should be aggregated into an object like CaseExecutionParameters()
-    data['posdouble'] = 0
-    data['stepalgorithm'] = 1
+    data['posdouble'] = 1
+    data['stepalgorithm'] = 2
     data['verletsteps'] = 40
     data['kernel'] = 2
     data['viscotreatment'] = 1
