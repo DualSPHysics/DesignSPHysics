@@ -732,5 +732,7 @@
     "Sets the mk group direction vector.": "Sets the mk group direction vector.",
     "At least one body is necessary": "At least one body is necessary",
     "Not yet saved": "Not yet saved",
-    "DDT value (default=0.1).": "DDT value (default=0.1)."
+    "DDT value (default=0.1).": "DDT value (default=0.1).",
+    "Please remember to run GenCase again if needed": "Please remember to run GenCase again if needed",
+    "Simulation is finished": "Simulation is finished"
 }
