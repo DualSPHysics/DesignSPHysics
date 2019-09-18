@@ -288,7 +288,7 @@ def def_setup_window(data):
                   'wb') as picklefile:
             pickle.dump(data, picklefile, ds_modules.utils.PICKLE_PROTOCOL)
         ds_modules.utils.log("Setup changed. Saved to " + FreeCAD.getUserAppDataDir() +
-                  '/dsph_data-{}.dsphdata'.format(ds_modules.utils.VERSION))
+                             '/dsph_data-{}.dsphdata'.format(ds_modules.utils.VERSION))
         setup_window.accept()
 
     def on_cancel():
@@ -757,7 +757,6 @@ def case_summary(orig_data):
     if not ds_modules.utils.valid_document_environment():
         return
 
-
     # Data copy to avoid referencing issues
     data = dict(orig_data)
 
@@ -803,13 +802,13 @@ def case_summary(orig_data):
             is_floating = ds_modules.utils.__('Yes') if str(
                 value[0]) in data['floating_mks'].keys() else ds_modules.utils.__('No')
             is_floating = ds_modules.utils.__('No') if value[
-                                                1].lower() == "fluid" else is_floating
+                1].lower() == "fluid" else is_floating
             has_initials = ds_modules.utils.__('Yes') if str(
                 value[0]) in data['initials_mks'].keys() else ds_modules.utils.__('No')
             has_initials = ds_modules.utils.__('No') if value[
-                                                 1].lower() == "bound" else has_initials
+                1].lower() == "bound" else has_initials
             real_mk = value[0] + 11 if value[
-                                           1].lower() == "bound" else value[0] + 1
+                1].lower() == "bound" else value[0] + 1
             data['objects_info'] += "<li><b>{label}</b> (<i>{iname}</i>): <br/>" \
                                     "Type: {type} (MK{type}: <b>{mk}</b> ; MK: <b>{real_mk}</b>)<br/>" \
                                     "Fill mode: {fillmode}<br/>" \
@@ -971,16 +970,28 @@ def gencase_completed_dialog(particle_count=0, detail_text="No details", data=di
 
     def on_open_paraview_menu(action):
         try:
-            subprocess.Popen(
-                [
+            if platform in ("linux", "linux2"):
+                paraview_exec_command = [
                     data['paraview_path'],
-                    "--data={}\\{}".format(
+                    '--data="{}/{}"'.format(
+                        data['project_path'] + '/' +
+                        data['project_name'] + '_out',
+                        action.text()
+                    )
+                ]
+            else:
+                paraview_exec_command[
+                    data['paraview_path'],
+                    '--data="{}\\{}"'.format(
                         data['project_path'] + '\\' +
                         data['project_name'] + '_out',
                         action.text()
                     )
-                ],
-                stdout=subprocess.PIPE)
+                ]
+
+            subprocess.Popen(paraview_exec_command, stdout=subprocess.PIPE)
+            print(" ".join(paraview_exec_command))
+
             detail_text_dialog.hide()
             window.accept()
         except:
