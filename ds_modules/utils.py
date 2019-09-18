@@ -580,7 +580,7 @@ def get_default_data():
     #[id, convertfluid, layers, [zone2/3D, mk, direction], [velocity, value], [density, value], [elevation,zbottom, zsurf]]
     data['inlet_zone'] = list()
     #[reuseids, resizetime, userefilling, determlimit]
-    data['inlet_object'] = [0, 0.5, 0, 0]
+    data['inlet_object'] = [0, 0.5, 0, "1e+3"]
 
     # Faces objects
     data['faces'] = dict()
