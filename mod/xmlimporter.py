@@ -8,36 +8,15 @@ a dictionary.
 
 '''
 
+import json
+import xml.etree.ElementTree as ElementTree
+
 import FreeCAD
 import FreeCADGui
 import Mesh
-import json
-import sys
 
 from mod import utils
 from mod import xmltodict
-
-import xml.etree.ElementTree as ElementTree
-
-'''
-Copyright (C) 2019
-EPHYSLAB Environmental Physics Laboratory, Universidade de Vigo
-
-This file is part of DesignSPHysics.
-
-DesignSPHysics is free software: you can redistribute it and/or modify
-it under the terms of the GNU General Public License as published by
-the Free Software Foundation, either version 3 of the License, or
-(at your option) any later version.
-
-DesignSPHysics is distributed in the hope that it will be useful,
-but WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-GNU General Public License for more details.
-
-You should have received a copy of the GNU General Public License
-along with DesignSPHysics.  If not, see <http://www.gnu.org/licenses/>.
-'''
 
 
 def import_xml_file(filename):
@@ -164,13 +143,10 @@ def create_fc_objects(f, path):
         if command.tag == "matrixreset":
             movement = (0.0, 0.0, 0.0)
             rotation = (0.0, 0.0, 0.0, 0.0)
-            pass
         elif command.tag == "setmkfluid":
             mk = ("fluid", command.attrib["mk"])
-            pass
         elif command.tag == "setmkbound":
             mk = ("bound", command.attrib["mk"])
-            pass
         elif command.tag == "setdrawmode":
             drawmode = command.attrib["mode"]
         elif command.tag == "move":
@@ -260,7 +236,6 @@ def create_fc_objects(f, path):
             stl_path = path + "/" + command.attrib["file"]
             Mesh.insert(stl_path, "DSPH_Case")
             # toAddDSPH["STL" + str(elementnum)] = [int(mk[1]), mk[0], drawmode]
-            pass
         else:
             # Command not supported, report and ignore
             utils.warning("The command: " + command.tag + " is not yet supported. Ignoring...")

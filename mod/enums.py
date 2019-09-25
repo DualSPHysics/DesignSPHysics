@@ -6,26 +6,8 @@ This file holds a collection of useful enums
 in class forms, for code organization
 '''
 
-# Copyright (C) 2019
-# EPHYSLAB Environmental Physics Laboratory, Universidade de Vigo
-#
-# This file is part of DesignSPHysics.
-#
-# DesignSPHysics is free software: you can redistribute it and/or modify
-# it under the terms of the GNU General Public License as published by
-# the Free Software Foundation, either version 3 of the License, or
-# (at your option) any later version.
-#
-# DesignSPHysics is distributed in the hope that it will be useful,
-# but WITHOUT ANY WARRANTY; without even the implied warranty of
-# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-# GNU General Public License for more details.
-#
-# You should have received a copy of the GNU General Public License
-# along with DesignSPHysics.  If not, see <http://www.gnu.org/licenses/>.
 
-
-class IrregularSpectrum(object):
+class IrregularSpectrum():
     ''' Types of supported wave spectrums. '''
     JONSWAP = 0
     PIERSON_MOSKOWITZ = 1
@@ -35,7 +17,7 @@ class IrregularSpectrum(object):
         pass
 
 
-class IrregularDiscretization(object):
+class IrregularDiscretization():
     ''' Types of supported spectrum discretization. '''
     REGULAR = 0
     RANDOM = 1
@@ -88,3 +70,13 @@ class FloatingDensityType:
     ''' Density type for floating mks. '''
     MASSBODY = 0
     RHOPBODY = 1
+
+
+class FreeCADObjectType:
+    ''' FreeCAD Types enums wrapping strings. '''
+    BOX = "Part::Box"
+
+
+class FreeCADDisplayMode:
+    ''' FreeCAD DisplayMode Strings. '''
+    WIREFRAME = "Wireframe"
