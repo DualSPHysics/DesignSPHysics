@@ -3,28 +3,6 @@
 '''DesignSPHysics Define Constants.
 
 This file contains a collection of constants meant to use with DesignSPHysics.
-
-'''
-
-
-'''
-Copyright (C) 2019
-EPHYSLAB Environmental Physics Laboratory, Universidade de Vigo
-
-This file is part of DesignSPHysics.
-
-DesignSPHysics is free software: you can redistribute it and/or modify
-it under the terms of the GNU General Public License as published by
-the Free Software Foundation, either version 3 of the License, or
-(at your option) any later version.
-
-DesignSPHysics is distributed in the hope that it will be useful,
-but WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-GNU General Public License for more details.
-
-You should have received a copy of the GNU General Public License
-along with DesignSPHysics.  If not, see <http://www.gnu.org/licenses/>.
 '''
 
 # ------ APP Constants ------
@@ -41,6 +19,17 @@ WIDTH_2D = 0.001
 MAX_PARTICLE_WARNING = 2000000
 HELP_WEBPAGE = "https://github.com/DualSPHysics/DesignSPHysics/wiki"
 DISK_DUMP_FILE_NAME = "designsphysics-{}.log".format(VERSION)
+
+
+# ------ FreeCAD Related Constants -------
+
+SINGLETON_DOCUMENT_NAME = "DSPH_Case"
+DEFAULT_WORKBENCH = "PartWorkbench"
+CASE_LIMITS_OBJ_NAME = "Case_Limits"
+CASE_LIMITS_3D_LABEL = "Case Limits (3D)"
+CASE_LIMITS_DEFAULT_LENGTH = '1000 mm'
+CASE_LIMITS_LINE_COLOR = (1.00, 0.00, 0.00)
+CASE_LIMITS_LINE_WIDTH = 2.00
 
 
 # ------ DEFINE CONSTANTS  ------
@@ -85,7 +74,7 @@ ZINCREMENTY = "Increase of Z with periodic BC in axis Y"
 
 PERIODZ = ""
 XINCREMENTZ = "Increase of X with periodic BC in axis Z"
-YINCEMENTZ = "Increase of Y with periodic BC in axis Z"
+YINCREMENTZ = "Increase of Y with periodic BC in axis Z"
 
 ''' --------- Help Window -------------- '''
 
@@ -95,7 +84,7 @@ HELP_VERLETSTEPS = "Verlet only: Number of steps to apply Euler timestepping (de
 HELP_KERNEL = "Interaction Kernel 1:Cubic Spline, 2:Wendland, 3:Gaussian (default=2)"
 HELP_VISCOTREATMENT = "Viscosity formulation 1:Artificial, 2:Laminar+SPS (default=1)"
 HELP_VISCO = "Viscosity value (apha when VISCOTREATMENT=1 and kinematic viscosity when VISCOTREATMENT=2)."
-HELP_VISCOBOUNDFACROT = "Multiply viscosity value for fluid-boundary interaction (default=1)."
+HELP_VISCOBOUNDFACTOR = "Multiply viscosity value for fluid-boundary interaction (default=1)."
 HELP_DELTASPH = "DeltaSPH value, 0.1 is the typical value, with 0 disabled (default=0)."
 HELP_SHIFTING = "Shifting mode 0:None, 1:Ignore bound, 2:Ignore fixed, 3:Full (default=0)."
 HELP_SHIFTINGCOEF = "Coefficient for shifting computation (default=-2)."
@@ -112,12 +101,12 @@ HELP_PARTSOUTMAX = "%%/100 of fluid particles allowed to be excluded from domain
 HELP_RHOPOUTMIN = "Minimum rhop valid (default=700)."
 HELP_RHOPOUTMAX = "Maximum rhop valid (default=1300)."
 HELP_DOMAINFIXED = "The domain is fixed with the specified values (xmin:ymin:zmin:xmax:ymax:zmax)."
-HELP_YINCEMENTX = ""
+HELP_YINCREMENTX = ""
 HELP_ZINCREMENTX = ""
 HELP_XINCREMENTY = ""
 HELP_ZINCREMENTY = ""
 HELP_XINCREMENTZ = ""
-HELP_YINCEMENTZ = ""
+HELP_YINCREMENTZ = ""
 HELP_POSMINX = ""
 HELP_POSMINY = ""
 HELP_POSMINZ = ""

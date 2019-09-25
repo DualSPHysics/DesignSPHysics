@@ -8,8 +8,52 @@ It allows an user to create DualSPHysics compatible cases, automating a bunch of
 More info in http://design.sphysics.org/
 '''
 
-import FreeCAD
-import FreeCADGui
+
+from mod.dataobjects.damping import Damping
+from mod.dataobjects.relaxation_zone_uniform import RelaxationZoneUniform
+from mod.dataobjects.relaxation_zone_irregular import RelaxationZoneIrregular
+from mod.dataobjects.relaxation_zone_regular import RelaxationZoneRegular
+from mod.dataobjects.relaxation_zone_file import RelaxationZoneFile
+from mod.dataobjects.ml_piston_2d import MLPiston2D
+from mod.dataobjects.ml_piston_1d import MLPiston1D
+from mod.dataobjects.rotation_file_gen import RotationFileGen
+from mod.dataobjects.file_gen import FileGen
+from mod.dataobjects.special_movement import SpecialMovement
+from mod.dataobjects.simulation_object import SimulationObject
+from mod.dataobjects.case import Case
+from mod.enums import ObjectType, ObjectFillMode
+from mod.widgets.object_order_widget import ObjectOrderWidget
+from mod.widgets.faces_dialog import FacesDialog
+from mod.widgets.float_state_dialog import FloatStateDialog
+from mod.widgets.movement_dialog import MovementDialog
+from mod.widgets.initials_dialog import InitialsDialog
+from mod.widgets.run_dialog import RunDialog
+from mod.widgets.acceleration_input_dialog import AccelerationInputDialog
+from mod.widgets.measure_tool_grid_dialog import MeasureToolGridDialog
+from mod.widgets.info_dialog import InfoDialog
+from mod.widgets.relaxation_zone_uniform_config_dialog import RelaxationZoneUniformConfigDialog
+from mod.widgets.relaxation_zone_file_config_dialog import RelaxationZoneFileConfigDialog
+from mod.widgets.relaxation_zone_irregular_config_dialog import RelaxationZoneIrregularConfigDialog
+from mod.widgets.relaxation_zone_regular_config_dialog import RelaxationZoneRegularConfigDialog
+from mod.widgets.ml_piston_2d_config_dialog import MLPiston2DConfigDialog
+from mod.widgets.ml_piston_1d_config_dialog import MLPiston1DConfigDialog
+from mod.widgets.chrono_config_dialog import ChronoConfigDialog
+from mod.widgets.inlet_config_dialog import InletConfigDialog
+from mod.widgets.damping_config_dialog import DampingConfigDialog
+from mod.widgets.execution_parameters_dialog import ExecutionParametersDialog
+from mod.widgets.setup_plugin_dialog import SetupPluginDialog
+from mod.widgets.constants_dialog import ConstantsDialog
+from mod.constants import APP_NAME, PICKLE_PROTOCOL, WIDTH_2D, VERSION
+from mod.executable_tools import refocus_cwd
+from mod.freecad_tools import valid_document_environment, get_fc_object, get_fc_view_object
+from mod.freecad_tools import document_count, prompt_close_all_documents, create_dsph_document, get_fc_main_window, create_dsph_document_from_fcstd
+from mod.utils import is_compatible_version, open_help, import_geo, create_flowtool_boxes
+from mod.stdout_tools import print_license, debug, error, log, warning, dump_to_disk
+from mod.guiutils import widget_state_config,  get_icon, case_summary, h_line_generator, gencase_completed_dialog
+from mod.dialog_tools import ok_cancel_dialog, error_dialog, warning_dialog
+from mod.translation_tools import __
+from mod.xml import XMLExporter
+from mod import xmlimporter
 import Draft
 import glob
 import sys
@@ -22,57 +66,40 @@ import subprocess
 import shutil
 import uuid
 
-sys.path.append(os.path.dirname(os.path.abspath(__file__)))
+import FreeCAD
+import FreeCADGui
 
-from mod import utils, guiutils, xmlimporter
-from mod.xml import XMLExporter
-from mod.utils import __
-from mod.widgets import *
-from mod.dataobjects import *
 from PySide import QtGui, QtCore
 
 
-# Copyright (C) 2019
-# EPHYSLAB Environmental Physics Laboratory, Universidade de Vigo
-# EPHYTECH Environmental Physics Technologies
-#
-# This file is part of DesignSPHysics.
-#
-# DesignSPHysics is free software: you can redistribute it and/or modify
-# it under the terms of the GNU General Public License as published by
-# the Free Software Foundation, either version 3 of the License, or
-# (at your option) any later version.
-#
-# DesignSPHysics is distributed in the hope that it will be useful,
-# but WITHOUT ANY WARRANTY; without even the implied warranty of
-# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-# GNU General Public License for more details.
-#
-# You should have received a copy of the GNU General Public License
-# along with DesignSPHysics.  If not, see <http://www.gnu.org/licenses/>.
+sys.path.append(os.path.dirname(os.path.abspath(__file__)))
+
+# pylint: disable=wrong-import-position
+
+
+data = {}  # TODO: Delete this
 
 __author__ = "Andrés Vieira"
 __copyright__ = "Copyright 2016-2017, DualSHPysics Team"
-__credits__ = ["Andrés Vieira", "Lorena Docasar",
-               "Alejandro Jacobo Cabrera Crespo", "Orlando García Feal"]
+__credits__ = ["Andrés Vieira", "Lorena Docasar", "Alejandro Jacobo Cabrera Crespo", "Orlando García Feal"]
 __license__ = "GPL"
-__version__ = utils.VERSION
+__version__ = VERSION
 __maintainer__ = "Andrés Vieira"
 __email__ = "avieira@uvigo.es"
 __status__ = "Development"
 
 # Print license at macro start
 try:
-    utils.print_license()
+    print_license()
 except EnvironmentError:
-    guiutils.warning_dialog(
+    warning_dialog(
         __("LICENSE file could not be found. Are you sure you didn't delete it?")
     )
 
 # Version check. This script is only compatible with FreeCAD 0.17 or higher
-is_compatible = utils.is_compatible_version()
+is_compatible = is_compatible_version()
 if not is_compatible:
-    guiutils.error_dialog(
+    error_dialog(
         __("This FreeCAD version is not compatible. Please update FreeCAD to version 0.17 or higher.")
     )
     raise EnvironmentError(
@@ -95,13 +122,13 @@ Case.instance().reset()
 
 # The script needs only one document open, called DSPH_Case.
 # This section tries to close all the current documents.
-if utils.document_count() > 0:
-    success = utils.prompt_close_all_documents()
+if document_count() > 0:
+    success = prompt_close_all_documents()
     if not success:
         quit()
 
 # If the script is executed even when a previous DSPH Dock is created it makes sure that it's deleted before.
-previous_dock = fc_main_window.findChild(QtGui.QDockWidget, utils.__("DSPH Widget"))
+previous_dock = fc_main_window.findChild(QtGui.QDockWidget, __("DSPH Widget"))
 if previous_dock:
     previous_dock.setParent(None)
     previous_dock = None
@@ -109,7 +136,7 @@ if previous_dock:
 # Creation of the DSPH Widget.
 # Creates a widget with a series of layouts added, to apply to the DSPH dock at the end.
 dsph_main_dock.setObjectName("DSPH Widget")
-dsph_main_dock.setWindowTitle("{} {}".format(utils.APP_NAME, str(__version__)))
+dsph_main_dock.setWindowTitle("{} {}".format(APP_NAME, str(__version__)))
 main_layout = QtGui.QVBoxLayout()  # Main Widget layout.  Vertical ordering
 
 # Component layouts definition
@@ -140,12 +167,22 @@ widget_state_elements['constants_button'] = constants_button
 # Help button that opens a help URL for DesignSPHysics
 help_button = QtGui.QPushButton("Help")
 help_button.setToolTip(__("Push this button to open a browser with help\non how to use this tool."))
-help_button.clicked.connect(utils.open_help)
+help_button.clicked.connect(open_help)
 
 # Setup window button.
 setup_button = QtGui.QPushButton(__("Setup\nPlugin"))
 setup_button.setToolTip(__("Setup of the simulator executables"))
-setup_button.clicked.connect(lambda: guiutils.def_setup_window())
+
+
+def on_setup_button_pressed():
+    ''' Opens constant definition window on button click. '''
+    setup_window = SetupPluginDialog()
+    # Constant definition window behaviour and general composing
+    setup_window.resize(600, 400)
+    setup_window.exec_()
+
+
+setup_button.clicked.connect(on_setup_button_pressed)
 
 # Execution parameters button.
 execparams_button = QtGui.QPushButton(__("Execution\nParameters"))
@@ -167,7 +204,7 @@ widget_state_elements['execparams_button'] = execparams_button
 
 # Logo. Made from a label. Labels can have image as well as text.
 logo_label = QtGui.QLabel()
-logo_label.setPixmap(guiutils.get_icon(file_name="logo.png", return_only_path=True))
+logo_label.setPixmap(get_icon(file_name="logo.png", return_only_path=True))
 
 
 def on_dp_changed():
@@ -208,12 +245,12 @@ casecontrols_bt_newdoc = QtGui.QToolButton()
 casecontrols_bt_newdoc.setPopupMode(QtGui.QToolButton.MenuButtonPopup)
 casecontrols_bt_newdoc.setToolButtonStyle(QtCore.Qt.ToolButtonTextBesideIcon)
 casecontrols_bt_newdoc.setText("  {}".format(__("New\n  Case")))
-casecontrols_bt_newdoc.setToolTip(utils.__("Creates a new case. \nThe opened documents will be closed."))
-casecontrols_bt_newdoc.setIcon(guiutils.get_icon("new.png"))
+casecontrols_bt_newdoc.setToolTip(__("Creates a new case. \nThe opened documents will be closed."))
+casecontrols_bt_newdoc.setIcon(get_icon("new.png"))
 casecontrols_bt_newdoc.setIconSize(QtCore.QSize(28, 28))
 casecontrols_menu_newdoc = QtGui.QMenu()
-casecontrols_menu_newdoc.addAction(guiutils.get_icon("new.png"), __("New"))
-casecontrols_menu_newdoc.addAction(guiutils.get_icon("new.png"), __("Import FreeCAD Document"))
+casecontrols_menu_newdoc.addAction(get_icon("new.png"), __("New"))
+casecontrols_menu_newdoc.addAction(get_icon("new.png"), __("Import FreeCAD Document"))
 casecontrols_bt_newdoc.setMenu(casecontrols_menu_newdoc)
 casecontrols_menu_newdoc.resize(60, 60)
 
@@ -223,11 +260,11 @@ casecontrols_bt_savedoc.setPopupMode(QtGui.QToolButton.MenuButtonPopup)
 casecontrols_bt_savedoc.setToolButtonStyle(QtCore.Qt.ToolButtonTextBesideIcon)
 casecontrols_bt_savedoc.setText("  {}".format(__("Save\n  Case")))
 casecontrols_bt_savedoc.setToolTip(__("Saves the case."))
-casecontrols_bt_savedoc.setIcon(guiutils.get_icon("save.png"))
+casecontrols_bt_savedoc.setIcon(get_icon("save.png"))
 casecontrols_bt_savedoc.setIconSize(QtCore.QSize(28, 28))
 casecontrols_menu_savemenu = QtGui.QMenu()
-# casecontrols_menu_savemenu.addAction(guiutils.get_icon("save.png"), __("Save and run GenCase"))
-casecontrols_menu_savemenu.addAction(guiutils.get_icon("save.png"), __("Save as..."))
+# casecontrols_menu_savemenu.addAction(get_icon("save.png"), __("Save and run GenCase"))
+casecontrols_menu_savemenu.addAction(get_icon("save.png"), __("Save as..."))
 casecontrols_bt_savedoc.setMenu(casecontrols_menu_savemenu)
 widget_state_elements['casecontrols_bt_savedoc'] = casecontrols_bt_savedoc
 
@@ -236,7 +273,7 @@ casecontrols_bt_loaddoc = QtGui.QToolButton()
 casecontrols_bt_loaddoc.setToolButtonStyle(QtCore.Qt.ToolButtonTextBesideIcon)
 casecontrols_bt_loaddoc.setText("  {}".format(__("Load\n  Case")))
 casecontrols_bt_loaddoc.setToolTip(__("Loads a case from disk. All the current documents\nwill be closed."))
-casecontrols_bt_loaddoc.setIcon(guiutils.get_icon("load.png"))
+casecontrols_bt_loaddoc.setIcon(get_icon("load.png"))
 casecontrols_bt_loaddoc.setIconSize(QtCore.QSize(28, 28))
 
 # Add fillbox button
@@ -280,7 +317,7 @@ rungencase_bt = QtGui.QPushButton(__("Run GenCase"))
 rungencase_bt.setStyleSheet("QPushButton {font-weight: bold; }")
 rungencase_bt.setToolTip(__("This pre-processing tool creates the initial state of the particles (position, velocity "
                             "and density) and defines the different SPH parameters for the simulation."))
-rungencase_bt.setIcon(guiutils.get_icon("run_gencase.png"))
+rungencase_bt.setIcon(get_icon("run_gencase.png"))
 rungencase_bt.setIconSize(QtCore.QSize(12, 12))
 widget_state_elements['rungencase_bt'] = rungencase_bt
 
@@ -290,15 +327,15 @@ def on_new_case(prompt=True):
         if possible and creates a FreeCAD document with Case Limits object. '''
 
     # Closes all documents as there can only be one open.
-    if utils.document_count() > 0:
-        new_case_success = utils.prompt_close_all_documents(prompt)
+    if document_count() > 0:
+        new_case_success = prompt_close_all_documents(prompt)
         if not new_case_success:
             return
 
     # Creates a new document and merges default data to the current data structure.
     Case.instance().reset()
-    utils.create_dsph_document()
-    guiutils.widget_state_config(widget_state_elements, "new case")
+    create_dsph_document()
+    widget_state_config(widget_state_elements, "new case")
     Case.instance().add_object(SimulationObject('Case_Limits', -1, ObjectType.SPECIAL, ObjectFillMode.SPECIAL))
     dp_input.setText(str(Case.instance().dp))
 
@@ -309,17 +346,17 @@ def on_new_case(prompt=True):
 def on_new_from_freecad_document(prompt=True):
     ''' Creates a new case based on an existing FreeCAD document.
     This is specially useful for CAD users that want to use existing geometry for DesignSPHysics. '''
-    file_name, _ = QtGui.QFileDialog().getOpenFileName(guiutils.get_fc_main_window(), "Select document to import", QtCore.QDir.homePath())
+    file_name, _ = QtGui.QFileDialog().getOpenFileName(get_fc_main_window(), "Select document to import", QtCore.QDir.homePath())
 
-    if utils.document_count() > 0:
-        new_case_success = utils.prompt_close_all_documents(prompt)
+    if document_count() > 0:
+        new_case_success = prompt_close_all_documents(prompt)
         if not new_case_success:
             return
 
     # Creates a new document and merges default data to the current data structure.
     Case.instance().reset()
-    utils.create_dsph_document_from_fcstd(file_name)
-    guiutils.widget_state_config(widget_state_elements, "new case")
+    create_dsph_document_from_fcstd(file_name)
+    widget_state_config(widget_state_elements, "new case")
     Case.instance().add_object_to_sim(SimulationObject('Case_Limits', -1, ObjectType.SPECIAL, ObjectFillMode.SPECIAL))
     dp_input.setText(Case.instance().dp)
 
@@ -356,7 +393,7 @@ def on_save_case(save_as=None):
                 if isinstance(movement, SpecialMovement):
                     if isinstance(movement.generator, FileGen) or isinstance(movement.generator, RotationFileGen):
                         filename = movement.generator.filename
-                        utils.debug("Copying {} to {}".format(filename, save_name))
+                        debug("Copying {} to {}".format(filename, save_name))
 
                         # Change directory to de case one, so if file path is already relative it copies it to the
                         # out folder
@@ -369,7 +406,7 @@ def on_save_case(save_as=None):
                             # Probably already copied the file.
                             pass
                         except IOError:
-                            utils.error("Unable to copy {} into {}".format(filename, save_name))
+                            error("Unable to copy {} into {}".format(filename, save_name))
 
                         try:
                             # Copy to project out folder
@@ -380,12 +417,12 @@ def on_save_case(save_as=None):
                             # Probably already copied the file.
                             pass
                         except IOError:
-                            utils.error("Unable to copy {} into {}".format(filename, save_name))
+                            error("Unable to copy {} into {}".format(filename, save_name))
 
         # Copy files from Acceleration input and change paths to be inside the project folder.
         for aid in Case.instance().acceleration_input.acclist:
             filename = aid.datafile
-            utils.debug("Copying {} to {}".format(filename, save_name + "/" + project_name + "_out"))
+            debug("Copying {} to {}".format(filename, save_name + "/" + project_name + "_out"))
 
             # Change directory to de case one, so if file path is already relative it copies it to the
             # out folder
@@ -398,7 +435,7 @@ def on_save_case(save_as=None):
                 # Probably already copied the file.
                 pass
             except IOError:
-                utils.error("Unable to copy {} into {}".format(filename, save_name))
+                error("Unable to copy {} into {}".format(filename, save_name))
 
             try:
                 # Copy to project out folder
@@ -410,13 +447,13 @@ def on_save_case(save_as=None):
                 # Probably already copied the file.
                 pass
             except IOError:
-                utils.error("Unable to copy {} into {}".format(filename, save_name))
+                error("Unable to copy {} into {}".format(filename, save_name))
 
         # Copy files from pistons and change paths to be inside the project folder.
         for _, mkproperties in Case.instance().mkbasedproperties.items():
             if isinstance(mkproperties.mlayerpiston, MLPiston1D):
                 filename = mkproperties.mlayerpiston.filevelx
-                utils.debug("Copying {} to {}".format(filename, save_name + "/" + project_name + "_out"))
+                debug("Copying {} to {}".format(filename, save_name + "/" + project_name + "_out"))
                 # Change directory to de case one, so if file path is already relative it copies it to the
                 # out folder
                 os.chdir(save_name)
@@ -428,7 +465,7 @@ def on_save_case(save_as=None):
                     # Probably already copied the file.
                     pass
                 except IOError:
-                    utils.error("Unable to copy {} into {}".format(filename, save_name))
+                    error("Unable to copy {} into {}".format(filename, save_name))
 
                 try:
                     # Copy to project out folder
@@ -439,13 +476,13 @@ def on_save_case(save_as=None):
                     # Probably already copied the file.
                     pass
                 except IOError:
-                    utils.error("Unable to copy {} into {}".format(filename, save_name))
+                    error("Unable to copy {} into {}".format(filename, save_name))
 
             if isinstance(mkproperties.mlayerpiston, MLPiston2D):
                 veldata = mkproperties.mlayerpiston.veldata
                 for v in veldata:
                     filename = v.filevelx
-                    utils.debug("Copying {} to {}".format(filename, save_name + "/" + project_name + "_out"))
+                    debug("Copying {} to {}".format(filename, save_name + "/" + project_name + "_out"))
                     # Change directory to de case one, so if file path is already relative it copies it to the
                     # out folder
                     os.chdir(save_name)
@@ -457,7 +494,7 @@ def on_save_case(save_as=None):
                         # Probably already copied the file.
                         pass
                     except IOError:
-                        utils.error("Unable to copy {} into {}".format(filename, save_name))
+                        error("Unable to copy {} into {}".format(filename, save_name))
 
                     try:
                         # Copy to project out folder
@@ -468,7 +505,7 @@ def on_save_case(save_as=None):
                         # Probably already copied the file.
                         pass
                     except IOError:
-                        utils.error("Unable to copy {} into {}".format(filename, save_name))
+                        error("Unable to copy {} into {}".format(filename, save_name))
 
         # Copies files needed for RelaxationZones into the project folder and changes data paths to relative ones.
         if isinstance(Case.instance().relaxation_zone, RelaxationZoneFile):
@@ -480,7 +517,7 @@ def on_save_case(save_as=None):
             os.chdir(save_name)
 
             for f in glob.glob("{}*".format(filename)):
-                utils.debug("Copying {} to {}".format(filename, save_name + "/" + project_name + "_out"))
+                debug("Copying {} to {}".format(filename, save_name + "/" + project_name + "_out"))
                 try:
                     # Copy to project root
                     shutil.copy2(f, save_name)
@@ -488,7 +525,7 @@ def on_save_case(save_as=None):
                     # Probably already copied the file.
                     pass
                 except IOError:
-                    utils.error("Unable to copy {} into {}".format(filename, save_name))
+                    error("Unable to copy {} into {}".format(filename, save_name))
 
                 try:
                     # Copy to project out folder
@@ -499,7 +536,7 @@ def on_save_case(save_as=None):
                     # Probably already copied the file.
                     pass
                 except IOError:
-                    utils.error("Unable to copy {} into {}".format(filename, save_name))
+                    error("Unable to copy {} into {}".format(filename, save_name))
 
         # Dumps all the case data to an XML file.
         XMLExporter().save_to_disk(save_name)
@@ -509,14 +546,14 @@ def on_save_case(save_as=None):
         # Save data array on disk. It is saved as a binary file with Pickle.
         try:
             with open(save_name + "/casedata.dsphdata", 'wb') as picklefile:
-                pickle.dump(Case.instance(), picklefile, utils.PICKLE_PROTOCOL)
-        except Exception as e:
+                pickle.dump(Case.instance(), picklefile, PICKLE_PROTOCOL)
+        except Exception:
             traceback.print_exc()
-            guiutils.error_dialog(__("There was a problem saving the DSPH information file (casedata.dsphdata)."))
+            error_dialog(__("There was a problem saving the DSPH information file (casedata.dsphdata)."))
 
-        utils.refocus_cwd()
+        refocus_cwd()
     else:
-        utils.log(__("Saving cancelled."))
+        log(__("Saving cancelled."))
 
 
 def on_save_with_gencase():
@@ -534,7 +571,7 @@ def on_save_with_gencase():
     # Save Case as usual so all the data needed for GenCase is on disk
     on_save_case()
     # Ensure the current working directory is the DesignSPHysics directory
-    utils.refocus_cwd()
+    refocus_cwd()
 
     # Use gencase if possible to generate the case final definition
     Case.instance().info.is_gencase_done = False
@@ -567,18 +604,18 @@ def on_save_with_gencase():
                 total_particles_text = output[output.index("Total particles: "):output.index(" (bound=")]
                 total_particles = int(total_particles_text[total_particles_text.index(": ") + 2:])
                 Case.instance().info.particle_number = total_particles
-                utils.log(__("Total number of particles exported: ") + str(total_particles))
+                log(__("Total number of particles exported: ") + str(total_particles))
                 if total_particles < 300:
-                    utils.warning(__("Are you sure all the parameters are set right? The number of particles is very low ({}). "
-                                     "Lower the DP to increase number of particles").format(str(total_particles)))
+                    warning(__("Are you sure all the parameters are set right? The number of particles is very low ({}). "
+                               "Lower the DP to increase number of particles").format(str(total_particles)))
                 elif total_particles > 200000:
-                    utils.warning(__("Number of particles is pretty high ({}) "
-                                     "and it could take a lot of time to simulate.").format(str(total_particles)))
+                    warning(__("Number of particles is pretty high ({}) "
+                               "and it could take a lot of time to simulate.").format(str(total_particles)))
                 Case.instance().info.is_gencase_done = True
-                guiutils.widget_state_config(widget_state_elements, "gencase done")
+                widget_state_config(widget_state_elements, "gencase done")
                 Case.instance().info.previous_particle_number = int(total_particles)
-                guiutils.gencase_completed_dialog(particle_count=total_particles,
-                                                  detail_text=output.split("================================")[1])
+                gencase_completed_dialog(particle_count=total_particles,
+                                         detail_text=output.split("================================")[1])
             except ValueError:
                 # Not an expected result. GenCase had a not handled error
                 error_in_gen_case = True
@@ -597,9 +634,9 @@ def on_save_with_gencase():
                 gencase_failed_dialog.setIcon(QtGui.QMessageBox.Critical)
                 gencase_out_file.close()
                 gencase_failed_dialog.exec_()
-                utils.warning(__("GenCase Failed."))
+                warning(__("GenCase Failed."))
             except:
-                guiutils.warning_dialog(
+                warning_dialog(
                     "I can't recognize GenCase in that executable.! "
                     "Check that the file corresponds with the appropriate tool and that you have permissions to execute it",
                     detailed_text="If you're working with GNU/Linux, you can give permissions to an executable from the terminal "
@@ -609,7 +646,7 @@ def on_save_with_gencase():
         # Save results again so all the data is updated if something changes.
         on_save_case()
     else:
-        utils.log(__("Saving cancelled."))
+        log(__("Saving cancelled."))
 
     Case.instance().info.needs_to_run_gencase = True
 
@@ -633,9 +670,9 @@ def on_load_button():
     try:
         on_load_case()
     except ImportError:
-        guiutils.error_dialog(__("There was an error loading the case"),
-                              __("The case you are trying to load has some data that DesignSPHysics could not"
-                                 " load.\n\nDid you make the case in a previous version?"))
+        error_dialog(__("There was an error loading the case"),
+                     __("The case you are trying to load has some data that DesignSPHysics could not"
+                        " load.\n\nDid you make the case in a previous version?"))
         on_new_case(prompt=False)
 
 
@@ -652,13 +689,13 @@ def on_load_case():
     # Check if FCStd file is in there.
     load_path_project_folder = "/".join(load_name.split("/")[:-1])
     if not os.path.isfile(load_path_project_folder + "/DSPH_Case.FCStd"):
-        guiutils.error_dialog(__("DSPH_Case.FCStd file not found! Corrupt or moved project. Aborting."))
-        utils.error(__("DSPH_Case.FCStd file not found! Corrupt or moved project. Aborting."))
+        error_dialog(__("DSPH_Case.FCStd file not found! Corrupt or moved project. Aborting."))
+        error(__("DSPH_Case.FCStd file not found! Corrupt or moved project. Aborting."))
         return
 
     # Tries to close all documents
-    if utils.document_count() > 0:
-        load_success = utils.prompt_close_all_documents()
+    if document_count() > 0:
+        load_success = prompt_close_all_documents()
         if not load_success:
             return
 
@@ -675,22 +712,21 @@ def on_load_case():
             try:
                 load_disk_data = pickle.load(load_picklefile)
             except AttributeError:
-                guiutils.error_dialog(__("There was an error trying to load the case. This can be due to the project being "
-                                         "from another version or an error while saving the case."))
+                error_dialog(__("There was an error trying to load the case. This can be due to the project being "
+                                "from another version or an error while saving the case."))
                 on_new_case(prompt=False)
                 return
 
         # Remove exec paths from loaded data if user have already correct ones.
-        _, already_correct = utils.check_executables()
+        already_correct = Case.instance().executable_paths.check_and_filter()
         if already_correct:
-            [load_disk_data.pop(x, None) for x in
-             ['gencase_path', 'dsphysics_path', 'partvtk4_path', 'floatinginfo_path', 'computeforces_path',
-              'measuretool_path', 'isosurface_path', 'boundaryvtk_path']]
+            for x in ['gencase_path', 'dsphysics_path', 'partvtk4_path', 'floatinginfo_path', 'computeforces_path', 'measuretool_path', 'isosurface_path', 'boundaryvtk_path']:
+                load_disk_data.pop(x, None)
 
         # Update data structure with disk loaded one
         data.update(load_disk_data)  # TODO: Update mechanism for new data
     except (EOFError, ValueError):
-        guiutils.error_dialog(
+        error_dialog(
             __("There was an error importing the case  You probably need to set them again."
                "\n\n"
                "This could be caused due to file corruption, "
@@ -703,22 +739,22 @@ def on_load_case():
     Case.instance().name = load_path_project_folder.split("/")[-1]
 
     # Adapt widget state to case info
-    guiutils.widget_state_config(widget_state_elements, "load base")
+    widget_state_config(widget_state_elements, "load base")
     if Case.instance().info.is_gencase_done:
-        guiutils.widget_state_config(widget_state_elements, "gencase done")
+        widget_state_config(widget_state_elements, "gencase done")
     else:
-        guiutils.widget_state_config(widget_state_elements, "gencase not done")
+        widget_state_config(widget_state_elements, "gencase not done")
 
     if Case.instance().info.is_simulation_done:
-        guiutils.widget_state_config(widget_state_elements, "simulation done")
+        widget_state_config(widget_state_elements, "simulation done")
     else:
-        guiutils.widget_state_config(widget_state_elements, "simulation not done")
+        widget_state_config(widget_state_elements, "simulation not done")
 
     # Check executable paths
-    utils.refocus_cwd()
-    data, correct_execs = utils.check_executables()
+    refocus_cwd()
+    correct_execs = Case.instance().executable_paths.check_and_filter()
     if not correct_execs:
-        guiutils.widget_state_config(widget_state_elements, "execs not correct")
+        widget_state_config(widget_state_elements, "execs not correct")
 
     # Update FreeCAD case state
     on_tree_item_selection_change()
@@ -831,7 +867,8 @@ def on_add_stl():
     geo_file_path = QtGui.QLineEdit()
     geo_file_path.setText(file_name)
     geo_file_browse = QtGui.QPushButton(__("Browse"))
-    [geo_file_layout.addWidget(x) for x in [geo_file_label, geo_file_path, geo_file_browse]]
+    for x in [geo_file_label, geo_file_path, geo_file_browse]:
+        geo_file_layout.addWidget(x)
     # END STL File selection
 
     # Scaling factor
@@ -843,22 +880,22 @@ def on_add_stl():
     geo_scaling_y_e = QtGui.QLineEdit("1")
     geo_scaling_z_l = QtGui.QLabel("Z: ")
     geo_scaling_z_e = QtGui.QLineEdit("1")
-    [geo_scaling_layout.addWidget(x) for x in [
-        geo_scaling_label,
-        geo_scaling_x_l,
-        geo_scaling_x_e,
-        geo_scaling_y_l,
-        geo_scaling_y_e,
-        geo_scaling_z_l,
-        geo_scaling_z_e,
-    ]]
+    for x in [geo_scaling_label,
+              geo_scaling_x_l,
+              geo_scaling_x_e,
+              geo_scaling_y_l,
+              geo_scaling_y_e,
+              geo_scaling_z_l,
+              geo_scaling_z_e, ]:
+        geo_scaling_layout.addWidget(x)
     # END Scaling factor
 
     # Import object name
     geo_objname_layout = QtGui.QHBoxLayout()
     geo_objname_label = QtGui.QLabel(__("Import object name: "))
     geo_objname_text = QtGui.QLineEdit("ImportedGEO")
-    [geo_objname_layout.addWidget(x) for x in [geo_objname_label, geo_objname_text]]
+    for x in [geo_objname_label, geo_objname_text]:
+        geo_objname_layout.addWidget(x)
     # End object name
 
     # Autofill
@@ -873,7 +910,8 @@ def on_add_stl():
     # End autofill
 
     # Add component layouts to group layout
-    [geo_group_layout.addLayout(x) for x in [geo_file_layout, geo_scaling_layout, geo_objname_layout, geo_autofil_layout]]
+    for x in [geo_file_layout, geo_scaling_layout, geo_objname_layout, geo_autofil_layout]:
+        geo_group_layout.addLayout(x)
     geo_group_layout.addStretch(1)
     geo_group.setLayout(geo_group_layout)
 
@@ -881,7 +919,7 @@ def on_add_stl():
     geo_button_layout = QtGui.QHBoxLayout()
     geo_button_ok = QtGui.QPushButton(__("Import"))
     geo_button_cancel = QtGui.QPushButton(__("Cancel"))
-    geo_button_cancel.clicked.connect(lambda: geo_dialog.reject())
+    geo_button_cancel.clicked.connect(geo_dialog.reject)
     geo_button_layout.addStretch(1)
     geo_button_layout.addWidget(geo_button_cancel)
     geo_button_layout.addWidget(geo_button_ok)
@@ -896,13 +934,10 @@ def on_add_stl():
     # STL Dialog function definition and connections
     def geo_ok_clicked():
         ''' Defines ok button behaviour'''
-        [geo_scaling_edit.setText(geo_scaling_edit.text().replace(",", ".")) for geo_scaling_edit in [
-            geo_scaling_x_e,
-            geo_scaling_y_e,
-            geo_scaling_z_e
-        ]]
+        for geo_scaling_edit in [geo_scaling_x_e, geo_scaling_y_e, geo_scaling_z_e]:
+            geo_scaling_edit.setText(geo_scaling_edit.text().replace(",", "."))
         try:
-            utils.import_geo(
+            import_geo(
                 filename=str(geo_file_path.text()),
                 scale_x=float(geo_scaling_x_e.text()),
                 scale_y=float(geo_scaling_y_e.text()),
@@ -912,8 +947,8 @@ def on_add_stl():
 
             geo_dialog.accept()
         except ValueError:
-            utils.error(__("There was an error. Are you sure you wrote correct float values in the scaling factor?"))
-            guiutils.error_dialog(__("There was an error. Are you sure you wrote correct float values in the sacaling factor?"))
+            error(__("There was an error. Are you sure you wrote correct float values in the scaling factor?"))
+            error_dialog(__("There was an error. Are you sure you wrote correct float values in the sacaling factor?"))
 
     def geo_dialog_browse():
         ''' Defines the browse button behaviour.'''
@@ -925,7 +960,7 @@ def on_add_stl():
         geo_dialog.raise_()
         geo_dialog.activateWindow()
 
-    geo_button_cancel.clicked.connect(lambda: geo_dialog.reject())
+    geo_button_cancel.clicked.connect(geo_dialog.reject)
     geo_button_ok.clicked.connect(geo_ok_clicked)
     geo_file_browse.clicked.connect(geo_dialog_browse)
 
@@ -936,11 +971,11 @@ def on_import_xml():
     ''' Imports an already created GenCase/DSPH compatible
     file and loads it in the scene. '''
 
-    guiutils.error_dialog(__("This feature is disabled in this version. Sorry for the inconvenience"))
+    error_dialog(__("This feature is disabled in this version. Sorry for the inconvenience"))
 
     return
 
-    # guiutils.warning_dialog(__("This feature is experimental. It's meant to help to build a case importing bits from"
+    # warning_dialog(__("This feature is experimental. It's meant to help to build a case importing bits from"
     #                            "previous, non DesignSPHysics code. This is not intended neither to import all objects "
     #                            "nor its "))
 
@@ -950,8 +985,8 @@ def on_import_xml():
     #     # User pressed cancel.  No path is selected.
     #     return
     # else:
-    #     if utils.get_number_of_documents() > 0:
-    #         if utils.prompt_close_all_documents():
+    #     if get_number_of_documents() > 0:
+    #         if prompt_close_all_documents():
     #             on_new_case()
     #         else:
     #             return
@@ -1010,18 +1045,18 @@ def on_import_xml():
 
     #         # Notify change to refresh UI elements related.
     #         on_tree_item_selection_change()
-    # guiutils.info_dialog(__("Importing successful. Note that some objects may not be automatically added to the case, "
+    # info_dialog(__("Importing successful. Note that some objects may not be automatically added to the case, "
     #                         "and other may not have its properties correctly applied."))
 
 
 def on_summary():
     ''' Handles Case Summary button '''
-    guiutils.case_summary()
+    case_summary(data)
 
 
 def on_2d_toggle():
     ''' Handles Toggle 3D/2D Button. Changes the Case Limits object accordingly. '''
-    if utils.valid_document_environment():
+    if valid_document_environment():
         if Case.instance().mode3d:
             # Change to 2D
 
@@ -1034,20 +1069,20 @@ def on_2d_toggle():
 
             # Ok Button handler
             def on_ok():
-                Case.instance().info.last_3d_width = utils.get_fc_object('Case_Limits').Width.Value
+                Case.instance().info.last_3d_width = get_fc_object('Case_Limits').Width.Value
 
                 try:
-                    utils.get_fc_object('Case_Limits').Placement.Base.y = float(y2_pos_input.text())
+                    get_fc_object('Case_Limits').Placement.Base.y = float(y2_pos_input.text())
                 except ValueError:
-                    guiutils.error_dialog(__("The Y position that was inserted is not valid."))
+                    error_dialog(__("The Y position that was inserted is not valid."))
 
-                utils.get_fc_object('Case_Limits').Width.Value = utils.WIDTH_2D
-                guiutils.get_fc_view_object('Case_Limits').DisplayMode = 'Flat Lines'
-                guiutils.get_fc_view_object('Case_Limits').ShapeColor = (1.00, 0.00, 0.00)
-                guiutils.get_fc_view_object('Case_Limits').Transparency = 90
+                get_fc_object('Case_Limits').Width.Value = WIDTH_2D
+                get_fc_view_object('Case_Limits').DisplayMode = 'Flat Lines'
+                get_fc_view_object('Case_Limits').ShapeColor = (1.00, 0.00, 0.00)
+                get_fc_view_object('Case_Limits').Transparency = 90
                 # Toggle 3D Mode and change name
                 Case.instance().mode3d = not Case.instance().mode3d
-                utils.get_fc_object('Case_Limits').Label = "Case Limits (3D)" if Case.instance().mode3d else "Case Limits (2D)"
+                get_fc_object('Case_Limits').Label = "Case Limits (3D)" if Case.instance().mode3d else "Case Limits (2D)"
                 y_pos_2d_window.accept()
 
             # Cancel Button handler
@@ -1066,7 +1101,7 @@ def on_2d_toggle():
             y_pos_intro_layout = QtGui.QHBoxLayout()
             y_pos_intro_label = QtGui.QLabel(__("New Y position (mm): "))
             y2_pos_input = QtGui.QLineEdit()
-            y2_pos_input.setText(str(utils.get_fc_object('Case_Limits').Placement.Base.y))
+            y2_pos_input.setText(str(get_fc_object('Case_Limits').Placement.Base.y))
             y_pos_intro_layout.addWidget(y_pos_intro_label)
             y_pos_intro_layout.addWidget(y2_pos_input)
 
@@ -1083,17 +1118,17 @@ def on_2d_toggle():
 
             # Try to restore original Width.
             if Case.instance().info.last_3d_width > 0.0:
-                utils.get_fc_object('Case_Limits').Width = Case.instance().info.last_3d_width
+                get_fc_object('Case_Limits').Width = Case.instance().info.last_3d_width
             else:
-                utils.get_fc_object('Case_Limits').Width = utils.get_fc_object('Case_Limits').Length
+                get_fc_object('Case_Limits').Width = get_fc_object('Case_Limits').Length
 
-            guiutils.get_fc_view_object('Case_Limits').DisplayMode = 'Wireframe'
-            guiutils.get_fc_view_object('Case_Limits').ShapeColor = (0.80, 0.80, 0.80)
-            guiutils.get_fc_view_object('Case_Limits').Transparency = 0
+            get_fc_view_object('Case_Limits').DisplayMode = 'Wireframe'
+            get_fc_view_object('Case_Limits').ShapeColor = (0.80, 0.80, 0.80)
+            get_fc_view_object('Case_Limits').Transparency = 0
 
-            utils.get_fc_object('Case_Limits').Label = "Case Limits (3D)" if Case.instance().mode3d else "Case Limits (2D)"
+            get_fc_object('Case_Limits').Label = "Case Limits (3D)" if Case.instance().mode3d else "Case Limits (2D)"
     else:
-        utils.error("Not a valid case environment")
+        error("Not a valid case environment")
 
 
 def on_special_button():
@@ -1147,18 +1182,18 @@ def on_special_button():
         try:
             selection = FreeCADGui.Selection.getSelection()[0]
         except IndexError:
-            guiutils.error_dialog(__("You must select an object"))
+            error_dialog(__("You must select an object"))
             return
 
         # Check if object is in the simulation
         if Case.instance().is_object_in_simulation(selection.Name):
-            guiutils.error_dialog(__("The selected object must be added to the simulation"))
+            error_dialog(__("The selected object must be added to the simulation"))
             return
 
         # Check if it is fluid and warn the user.
         if Case.instance().get_simulation_object(selection.Name).type == ObjectType.FLUID:
-            guiutils.error_dialog(__("You can't apply a piston movement to a fluid.\n"
-                                     "Please select a boundary and try again"))
+            error_dialog(__("You can't apply a piston movement to a fluid.\n"
+                            "Please select a boundary and try again"))
             return
 
         # Get selection mk
@@ -1167,8 +1202,8 @@ def on_special_button():
         # Check that this mk has no other motions applied
         if Case.instance().get_mk_base_properties(selection_mk).has_movements():
             # MK has motions applied. Warn the user and delete them
-            motion_delete_warning = guiutils.ok_cancel_dialog(
-                utils.APP_NAME,
+            motion_delete_warning = ok_cancel_dialog(
+                APP_NAME,
                 __("This mk already has motions applied. "
                    "Setting a Multi-layered piston will delete all of its movement. "
                    "Are you sure?")
@@ -1183,8 +1218,8 @@ def on_special_button():
             # Check that there's no other multilayered piston for this mk
             if selection_mk in data['mlayerpistons'].keys():
                 if not isinstance(data['mlayerpistons'][selection_mk], MLPiston1D):
-                    overwrite_warn = guiutils.ok_cancel_dialog(
-                        utils.APP_NAME,
+                    overwrite_warn = ok_cancel_dialog(
+                        APP_NAME,
                         __("You're about to overwrite a previous coupling movement for this mk. Are you sure?")
                     )
                     if overwrite_warn == QtGui.QMessageBox.Cancel:
@@ -1200,7 +1235,7 @@ def on_special_button():
                 )
 
             if config_dialog.result() == QtGui.QDialog.Accepted:
-                guiutils.warning_dialog(__("All changes have been applied for mk = {}").format(selection_mk))
+                warning_dialog(__("All changes have been applied for mk = {}").format(selection_mk))
 
             if config_dialog.mlpiston1d is None:
                 data['mlayerpistons'].pop(selection_mk, None)
@@ -1211,8 +1246,8 @@ def on_special_button():
             # Check that there's no other multilayered piston for this mk
             if selection_mk in data['mlayerpistons'].keys():
                 if not isinstance(data['mlayerpistons'][selection_mk], MLPiston2D):
-                    overwrite_warn = guiutils.ok_cancel_dialog(
-                        utils.APP_NAME,
+                    overwrite_warn = ok_cancel_dialog(
+                        APP_NAME,
                         __("You're about to overwrite a previous coupling movement for this mk. Are you sure?")
                     )
                     if overwrite_warn == QtGui.QMessageBox.Cancel:
@@ -1229,7 +1264,7 @@ def on_special_button():
                 )
 
             if config_dialog.result() == QtGui.QDialog.Accepted:
-                guiutils.warning_dialog(__("All changes have been applied for mk = {}").format(selection_mk))
+                warning_dialog(__("All changes have been applied for mk = {}").format(selection_mk))
 
             if config_dialog.mlpiston2d is None:
                 data['mlayerpistons'].pop(selection_mk, None)
@@ -1245,7 +1280,7 @@ def on_special_button():
         if action.text() == __("Regular waves"):
             if data['relaxationzone'] is not None:
                 if not isinstance(data['relaxationzone'], RelaxationZoneRegular):
-                    overwrite_warn = guiutils.ok_cancel_dialog(
+                    overwrite_warn = ok_cancel_dialog(
                         __("Relaxation Zone"),
                         __("There's already another type of Relaxation Zone defined. "
                            "Continuing will overwrite it. Are you sure?")
@@ -1262,7 +1297,7 @@ def on_special_button():
         if action.text() == __("Irregular waves"):
             if data['relaxationzone'] is not None:
                 if not isinstance(data['relaxationzone'], RelaxationZoneIrregular):
-                    overwrite_warn = guiutils.ok_cancel_dialog(
+                    overwrite_warn = ok_cancel_dialog(
                         __("Relaxation Zone"),
                         __("There's already another type of Relaxation Zone defined. "
                            "Continuing will overwrite it. Are you sure?")
@@ -1281,7 +1316,7 @@ def on_special_button():
         if action.text() == __("External Input"):
             if data['relaxationzone'] is not None:
                 if not isinstance(data['relaxationzone'], RelaxationZoneFile):
-                    overwrite_warn = guiutils.ok_cancel_dialog(
+                    overwrite_warn = ok_cancel_dialog(
                         __("Relaxation Zone"),
                         __("There's already another type of "
                            "Relaxation Zone defined. "
@@ -1300,7 +1335,7 @@ def on_special_button():
         if action.text() == __("Uniform velocity"):
             if data['relaxationzone'] is not None:
                 if not isinstance(data['relaxationzone'], RelaxationZoneUniform):
-                    overwrite_warn = guiutils.ok_cancel_dialog(
+                    overwrite_warn = ok_cancel_dialog(
                         __("Relaxation Zone"),
                         __("There's already another type of Relaxation Zone "
                            "defined. Continuing will overwrite it. "
@@ -1332,14 +1367,14 @@ def on_special_button():
     sp_relaxationzone_menu.triggered.connect(on_relaxationzone_menu)
     sp_accinput_button.clicked.connect(on_accinput_button)
 
-    [sp_window_layout.addWidget(x) for x in [
-        sp_damping_button,
-        sp_inlet_button,
-        sp_chrono_button,
-        sp_multilayeredmb_button,
-        sp_relaxationzone_button,
-        sp_accinput_button
-    ]]
+    for x in [sp_damping_button,
+              sp_inlet_button,
+              sp_chrono_button,
+              sp_multilayeredmb_button,
+              sp_relaxationzone_button,
+              sp_accinput_button]:
+        sp_window_layout.addWidget(x)
+
     sp_window.setLayout(sp_window_layout)
     sp_window.exec_()
 
@@ -1383,7 +1418,7 @@ def on_ex_simulate():
     It shows the run window and starts a background process
     with dualsphysics running. Updates the window with useful info.'''
 
-    if Case.instance().info.needs_to_run_gencase != True:
+    if not Case.instance().info.needs_to_run_gencase:
         # Warning window about save_case
         run_warning_dialog = QtGui.QMessageBox()
         run_warning_dialog.setWindowTitle(__("Warning!"))
@@ -1395,7 +1430,7 @@ def on_ex_simulate():
     run_dialog = RunDialog()
     run_dialog.run_progbar_bar.setValue(0)
     Case.instance().info.is_simulation_done = False
-    guiutils.widget_state_config(widget_state_elements, "sim start")
+    widget_state_config(widget_state_elements, "sim start")
     run_dialog.run_button_cancel.setText(__("Cancel Simulation"))
     run_dialog.setWindowTitle(__("DualSPHysics Simulation: {}%").format("0"))
     run_dialog.run_group_label_case.setText(__("Case name: ") + Case.instance().name)
@@ -1406,23 +1441,23 @@ def on_ex_simulate():
 
     # Cancel button handler
     def on_cancel():
-        utils.log(__("Stopping simulation"))
+        log(__("Stopping simulation"))
         if Case.instance().info.current_process is not None:
             Case.instance().info.current_process.kill()
         run_dialog.hide()
         run_dialog.run_details.hide()
         Case.instance().info.is_simulation_done = False
-        guiutils.widget_state_config(widget_state_elements, "sim cancel")
+        widget_state_config(widget_state_elements, "sim cancel")
 
     run_dialog.run_button_cancel.clicked.connect(on_cancel)
 
     def on_details():
         ''' Details button handler. Opens and closes the details pane on the execution window.'''
         if run_dialog.run_details.isVisible():
-            utils.debug('Hiding details pane on execution')
+            debug('Hiding details pane on execution')
             run_dialog.run_details.hide()
         else:
-            utils.debug('Showing details pane on execution')
+            debug('Showing details pane on execution')
             run_dialog.run_details.show()
             run_dialog.run_details.move(run_dialog.x() - run_dialog.run_details.width() - 15, run_dialog.y())
 
@@ -1454,15 +1489,15 @@ def on_ex_simulate():
         if exit_code == 0:
             # Simulation went correctly
             Case.instance().info.is_simulation_done = True
-            guiutils.widget_state_config(widget_state_elements, "sim finished")
+            widget_state_config(widget_state_elements, "sim finished")
         else:
             # In case of an error
             if "exception" in str(output).lower():
-                utils.error(__("Exception in execution."))
+                error(__("Exception in execution."))
                 run_dialog.setWindowTitle(__("DualSPHysics Simulation: Error"))
                 run_dialog.run_progbar_bar.setValue(0)
                 run_dialog.hide()
-                guiutils.widget_state_config(widget_state_elements, "sim error")
+                widget_state_config(widget_state_elements, "sim error")
                 execution_error_dialog = QtGui.QMessageBox()
                 execution_error_dialog.setText(__("An error occurred during execution. Make sure that parameters exist and are properly defined. "
                                                   "You can also check your execution device (update the driver of your GPU). "
@@ -1495,7 +1530,7 @@ def on_ex_simulate():
         try:
             with open(Case.instance().path + '/' + Case.instance().name + "_out/Run.out", "r") as run_file:
                 run_file_data = run_file.readlines()
-        except Exception as e:
+        except Exception:
             pass
 
         # Fill details window
@@ -1510,7 +1545,7 @@ def on_ex_simulate():
 
         # Update execution metrics on GUI
         last_part_lines = list(filter(lambda x: "Part_" in x and "stored" not in x and "      " in x, run_file_data))
-        if len(last_part_lines):
+        if last_part_lines:
             current_value = (float(last_part_lines[-1].split("      ")[1]) * float(100)) / float(Case.instance().execution_parameters.timemax)
             run_dialog.run_progbar_bar.setValue(current_value)
             run_dialog.setWindowTitle(__("DualSPHysics Simulation: {}%").format(str(format(current_value, ".2f"))))
@@ -1518,8 +1553,8 @@ def on_ex_simulate():
 
         # Update particles out on GUI
         last_particles_out_lines = list(filter(lambda x: "(total: " in x and "Particles out:" in x, run_file_data))
-        if len(last_particles_out_lines):
-            utils.dump_to_disk("".join(last_particles_out_lines))
+        if last_particles_out_lines:
+            dump_to_disk("".join(last_particles_out_lines))
             totalpartsout = int(last_particles_out_lines[-1].split("(total: ")[1].split(")")[0])
             Case.instance().info.particles_out = totalpartsout
             run_dialog.run_group_label_partsout.setText(__("Total particles out: {}").format(str(Case.instance().info.particles_out)))
@@ -1603,7 +1638,7 @@ ex_button.setStyleSheet("QPushButton {font-weight: bold; }")
 ex_button.setToolTip(__("Starts the case simulation. From the simulation\n"
                         "window you can see the current progress and\n"
                         "useful information."))
-ex_button.setIcon(guiutils.get_icon("run.png"))
+ex_button.setIcon(get_icon("run.png"))
 ex_button.setIconSize(QtCore.QSize(12, 12))
 ex_button.clicked.connect(on_ex_simulate)
 widget_state_elements['ex_button'] = ex_button
@@ -1652,7 +1687,7 @@ export_dialog.setLayout(export_dialog_layout)
 def partvtk_export(export_parameters):
     ''' Export VTK button behaviour.
     Launches a process while disabling the button. '''
-    guiutils.widget_state_config(widget_state_elements, "export start")
+    widget_state_config(widget_state_elements, "export start")
     widget_state_elements['post_proc_partvtk_button'].setText("Exporting...")
 
     # Find total export parts and adjust progress bar
@@ -1666,12 +1701,12 @@ def partvtk_export(export_parameters):
 
     # Cancel button handler
     def on_cancel():
-        utils.log(__("Stopping export"))
+        log(__("Stopping export"))
         if Case.instance().info.current_export_process is not None:
             Case.instance().info.current_export_process.kill()
             widget_state_elements['post_proc_partvtk_button'].setText(
                 __("PartVTK"))
-        guiutils.widget_state_config(widget_state_elements, "export cancel")
+        widget_state_config(widget_state_elements, "export cancel")
         export_dialog.hide()
 
     export_button_cancel.clicked.connect(on_cancel)
@@ -1679,7 +1714,7 @@ def partvtk_export(export_parameters):
     # PartVTK export finish handler
     def on_export_finished(exit_code):
         widget_state_elements['post_proc_partvtk_button'].setText(__("PartVTK"))
-        guiutils.widget_state_config(widget_state_elements, "export finished")
+        widget_state_config(widget_state_elements, "export finished")
 
         export_dialog.hide()
 
@@ -1690,7 +1725,7 @@ def partvtk_export(export_parameters):
                 detailed_text=Case.instance().info.current_output
             )
         else:
-            guiutils.error_dialog(
+            error_dialog(
                 __("There was an error on the post-processing. Show details to view the errors."),
                 detailed_text=Case.instance().info.current_output
             )
@@ -1729,7 +1764,7 @@ def partvtk_export(export_parameters):
         " " + export_parameters['additional_parameters']
     ]
 
-    utils.debug("Going to execute: {} {}".format(Case.instance().executable_paths.partvtk4, " ".join(static_params_exp)))
+    debug("Going to execute: {} {}".format(Case.instance().executable_paths.partvtk4, " ".join(static_params_exp)))
 
     # Start process
     export_process.start(Case.instance().executable_paths.partvtk4, static_params_exp)
@@ -1787,14 +1822,14 @@ def on_partvtk():
     pvtk_types_chk_fixed = QtGui.QCheckBox(__("Fixed"))
     pvtk_types_chk_moving = QtGui.QCheckBox(__("Moving"))
     pvtk_types_chk_floating = QtGui.QCheckBox(__("Floating"))
-    [pvtk_types_groupbox_layout.addWidget(x) for x in [
-        pvtk_types_chk_all,
-        pvtk_types_chk_bound,
-        pvtk_types_chk_fluid,
-        pvtk_types_chk_fixed,
-        pvtk_types_chk_moving,
-        pvtk_types_chk_floating
-    ]]
+    for x in [pvtk_types_chk_all,
+              pvtk_types_chk_bound,
+              pvtk_types_chk_fluid,
+              pvtk_types_chk_fixed,
+              pvtk_types_chk_moving,
+              pvtk_types_chk_floating]:
+        pvtk_types_groupbox_layout.addWidget(x)
+
     pvtk_types_groupbox.setLayout(pvtk_types_groupbox_layout)
 
     pvtk_file_name_label = QtGui.QLabel(__("File name"))
@@ -1854,12 +1889,12 @@ def on_partvtk():
 
         export_parameters['open_paraview'] = pvtk_open_at_end.isChecked()
 
-        if len(pvtk_file_name_text.text()) > 0:
+        if pvtk_file_name_text.text():
             export_parameters['file_name'] = pvtk_file_name_text.text()
         else:
             export_parameters['file_name'] = 'ExportedPart'
 
-        if len(pvtk_parameters_text.text()) > 0:
+        if pvtk_parameters_text.text():
             export_parameters['additional_parameters'] = pvtk_parameters_text.text(
             )
         else:
@@ -1871,13 +1906,12 @@ def on_partvtk():
     def on_pvtk_type_all_change(state):
         ''' 'All' type selection handler '''
         if state == QtCore.Qt.Checked:
-            [chk.setCheckState(QtCore.Qt.Unchecked) for chk in [
-                pvtk_types_chk_bound,
-                pvtk_types_chk_fluid,
-                pvtk_types_chk_fixed,
-                pvtk_types_chk_moving,
-                pvtk_types_chk_floating
-            ]]
+            for chk in [pvtk_types_chk_bound,
+                        pvtk_types_chk_fluid,
+                        pvtk_types_chk_fixed,
+                        pvtk_types_chk_moving,
+                        pvtk_types_chk_floating]:
+                chk.setCheckState(QtCore.Qt.Unchecked)
 
     def on_pvtk_type_bound_change(state):
         ''' 'Bound' type selection handler '''
@@ -1904,7 +1938,7 @@ def on_partvtk():
         if state == QtCore.Qt.Checked:
             pvtk_types_chk_all.setCheckState(QtCore.Qt.Unchecked)
 
-    def on_pvtk_export_format_change(index):
+    def on_pvtk_export_format_change(_):
         ''' Export format combobox handler'''
         if "vtk" in outformat_combobox.currentText().lower() and Case.instance().executable_paths.paraview != "":
             pvtk_open_at_end.setEnabled(True)
@@ -1925,7 +1959,7 @@ def on_partvtk():
 
 def floatinginfo_export(export_parameters):
     ''' FloatingInfo tool export. '''
-    guiutils.widget_state_config(widget_state_elements, "export start")
+    widget_state_config(widget_state_elements, "export start")
     widget_state_elements['post_proc_floatinginfo_button'].setText("Exporting...")
 
     # Find total export parts
@@ -1938,18 +1972,18 @@ def floatinginfo_export(export_parameters):
     export_dialog.show()
 
     def on_cancel():
-        utils.log(__("Stopping export"))
+        log(__("Stopping export"))
         if Case.instance().info.current_export_process is not None:
             Case.instance().info.current_export_process.kill()
             widget_state_elements['post_proc_floatinginfo_button'].setText(__("FloatingInfo"))
-        guiutils.widget_state_config(widget_state_elements, "export cancel")
+        widget_state_config(widget_state_elements, "export cancel")
         export_dialog.hide()
 
     export_button_cancel.clicked.connect(on_cancel)
 
     def on_export_finished(exit_code):
         widget_state_elements['post_proc_floatinginfo_button'].setText(__("FloatingInfo"))
-        guiutils.widget_state_config(widget_state_elements, "export finished")
+        widget_state_config(widget_state_elements, "export finished")
         export_dialog.hide()
         if exit_code == 0:
             # Exported correctly
@@ -1957,7 +1991,7 @@ def floatinginfo_export(export_parameters):
                 info_text=__("FloatingInfo finished successfully"),
                 detailed_text=Case.instance().info.current_output)
         else:
-            guiutils.error_dialog(
+            error_dialog(
                 __("There was an error on the post-processing. Press the details button to see the error"),
                 detailed_text=Case.instance().info.current_output
             )
@@ -1973,7 +2007,7 @@ def floatinginfo_export(export_parameters):
         export_parameters['filename'], export_parameters['additional_parameters']
     ]
 
-    if len(export_parameters['onlyprocess']) > 0:
+    if export_parameters['onlyprocess']:
         static_params_exp.append('-onlymk:' + export_parameters['onlyprocess'])
 
     export_process.start(Case.instance().executable_paths.floatinginfo, static_params_exp)
@@ -2058,7 +2092,7 @@ def on_floatinginfo():
 
 def computeforces_export(export_parameters):
     ''' ComputeForces tool export. '''
-    guiutils.widget_state_config(widget_state_elements, "export start")
+    widget_state_config(widget_state_elements, "export start")
     widget_state_elements['post_proc_computeforces_button'].setText("Exporting...")
 
     # Find total export parts
@@ -2071,18 +2105,18 @@ def computeforces_export(export_parameters):
     export_dialog.show()
 
     def on_cancel():
-        utils.log(__("Stopping export"))
+        log(__("Stopping export"))
         if Case.instance().info.current_export_process is not None:
             Case.instance().info.current_export_process.kill()
             widget_state_elements['post_proc_computeforces_button'].setText(__("ComputeForces"))
-        guiutils.widget_state_config(widget_state_elements, "export cancel")
+        widget_state_config(widget_state_elements, "export cancel")
         export_dialog.hide()
 
     export_button_cancel.clicked.connect(on_cancel)
 
     def on_export_finished(exit_code):
         widget_state_elements['post_proc_computeforces_button'].setText(__("ComputeForces"))
-        guiutils.widget_state_config(widget_state_elements, "export finished")
+        widget_state_config(widget_state_elements, "export finished")
         export_dialog.hide()
         if exit_code == 0:
             # Exported correctly
@@ -2091,7 +2125,7 @@ def computeforces_export(export_parameters):
                 detailed_text=Case.instance().info.current_output
             )
         else:
-            guiutils.error_dialog(
+            error_dialog(
                 __("There was an error on the post-processing. Press the details button to see the error"),
                 detailed_text=Case.instance().info.current_output
             )
@@ -2117,7 +2151,7 @@ def computeforces_export(export_parameters):
         export_parameters['filename'], export_parameters['additional_parameters']
     ]
 
-    if len(export_parameters['onlyprocess']) > 0:
+    if export_parameters['onlyprocess']:
         static_params_exp.append(export_parameters['onlyprocess_tag'] + export_parameters['onlyprocess'])
 
     export_process.start(Case.instance().executable_paths.computeforces, static_params_exp)
@@ -2236,7 +2270,7 @@ def on_computeforces():
 
 def measuretool_export(export_parameters):
     ''' MeasureTool tool export. '''
-    guiutils.widget_state_config(widget_state_elements, "export start")
+    widget_state_config(widget_state_elements, "export start")
     widget_state_elements['post_proc_measuretool_button'].setText("Exporting...")
 
     # Find total export parts
@@ -2249,18 +2283,18 @@ def measuretool_export(export_parameters):
     export_dialog.show()
 
     def on_cancel():
-        utils.log(__("Stopping export"))
+        log(__("Stopping export"))
         if Case.instance().info.current_export_process is not None:
             Case.instance().info.current_export_process.kill()
             widget_state_elements['post_proc_measuretool_button'].setText(__("MeasureTool"))
-        guiutils.widget_state_config(widget_state_elements, "export cancel")
+        widget_state_config(widget_state_elements, "export cancel")
         export_dialog.hide()
 
     export_button_cancel.clicked.connect(on_cancel)
 
     def on_export_finished(exit_code):
         widget_state_elements['post_proc_measuretool_button'].setText(__("MeasureTool"))
-        guiutils.widget_state_config(widget_state_elements, "export finished")
+        widget_state_config(widget_state_elements, "export finished")
         export_dialog.hide()
         if exit_code == 0:
             # Exported correctly
@@ -2269,7 +2303,7 @@ def measuretool_export(export_parameters):
                 detailed_text=Case.instance().info.current_output
             )
         else:
-            guiutils.error_dialog(
+            error_dialog(
                 __("There was an error on the post-processing. Press the details button to see the error"),
                 detailed_text=Case.instance().info.current_output
             )
@@ -2366,18 +2400,18 @@ def on_measuretool():
     mtool_types_chk_ace = QtGui.QCheckBox(__("Acceleration"))
     mtool_types_chk_vor = QtGui.QCheckBox(__("Vorticity"))
     mtool_types_chk_kcorr = QtGui.QCheckBox(__("KCorr"))
-    [mtool_types_groupbox_layout.addWidget(x) for x in [
-        mtool_types_chk_all,
-        mtool_types_chk_vel,
-        mtool_types_chk_rhop,
-        mtool_types_chk_press,
-        mtool_types_chk_mass,
-        mtool_types_chk_vol,
-        mtool_types_chk_idp,
-        mtool_types_chk_ace,
-        mtool_types_chk_vor,
-        mtool_types_chk_kcorr
-    ]]
+    for x in [mtool_types_chk_all,
+              mtool_types_chk_vel,
+              mtool_types_chk_rhop,
+              mtool_types_chk_press,
+              mtool_types_chk_mass,
+              mtool_types_chk_vol,
+              mtool_types_chk_idp,
+              mtool_types_chk_ace,
+              mtool_types_chk_vor,
+              mtool_types_chk_kcorr]:
+        mtool_types_groupbox_layout.addWidget(x)
+
     mtool_types_groupbox.setLayout(mtool_types_groupbox_layout)
 
     mtool_calculate_elevation = QtGui.QCheckBox(__("Calculate water elevation"))
@@ -2451,12 +2485,12 @@ def on_measuretool():
 
         export_parameters['calculate_water_elevation'] = mtool_calculate_elevation.isChecked()
 
-        if len(mtool_file_name_text.text()) > 0:
+        if mtool_file_name_text.text():
             export_parameters['filename'] = mtool_file_name_text.text()
         else:
             export_parameters['filename'] = 'MeasurePart'
 
-        if len(mtool_parameters_text.text()) > 0:
+        if mtool_parameters_text.text():
             export_parameters['additional_parameters'] = mtool_parameters_text.text()
         else:
             export_parameters['additional_parameters'] = ''
@@ -2467,17 +2501,16 @@ def on_measuretool():
     def on_mtool_measure_all_change(state):
         ''' 'All' checkbox behaviour'''
         if state == QtCore.Qt.Checked:
-            [chk.setCheckState(QtCore.Qt.Unchecked) for chk in [
-                mtool_types_chk_vel,
-                mtool_types_chk_rhop,
-                mtool_types_chk_press,
-                mtool_types_chk_mass,
-                mtool_types_chk_vol,
-                mtool_types_chk_idp,
-                mtool_types_chk_ace,
-                mtool_types_chk_vor,
-                mtool_types_chk_kcorr
-            ]]
+            for chk in [mtool_types_chk_vel,
+                        mtool_types_chk_rhop,
+                        mtool_types_chk_press,
+                        mtool_types_chk_mass,
+                        mtool_types_chk_vol,
+                        mtool_types_chk_idp,
+                        mtool_types_chk_ace,
+                        mtool_types_chk_vor,
+                        mtool_types_chk_kcorr]:
+                chk.setCheckState(QtCore.Qt.Unchecked)
 
     def on_mtool_measure_single_change(state):
         ''' Behaviour for all checkboxes except 'All' '''
@@ -2565,7 +2598,7 @@ def on_measuretool():
 def isosurface_export(export_parameters):
     ''' Export IsoSurface button behaviour.
     Launches a process while disabling the button. '''
-    guiutils.widget_state_config(widget_state_elements, "export start")
+    widget_state_config(widget_state_elements, "export start")
     widget_state_elements['post_proc_isosurface_button'].setText("Exporting...")
 
     # Find total export parts and adjust progress bar
@@ -2579,11 +2612,11 @@ def isosurface_export(export_parameters):
 
     # Cancel button handler
     def on_cancel():
-        utils.log(__("Stopping export"))
+        log(__("Stopping export"))
         if Case.instance().info.current_export_process is not None:
             Case.instance().info.current_export_process.kill()
             widget_state_elements['post_proc_isosurface_button'].setText(__("IsoSurface"))
-        guiutils.widget_state_config(widget_state_elements, "export cancel")
+        widget_state_config(widget_state_elements, "export cancel")
         export_dialog.hide()
 
     export_button_cancel.clicked.connect(on_cancel)
@@ -2591,7 +2624,7 @@ def isosurface_export(export_parameters):
     # IsoSurface export finish handler
     def on_export_finished(exit_code):
         widget_state_elements['post_proc_isosurface_button'].setText(__("IsoSurface"))
-        guiutils.widget_state_config(widget_state_elements, "export finished")
+        widget_state_config(widget_state_elements, "export finished")
 
         export_dialog.hide()
 
@@ -2601,7 +2634,7 @@ def isosurface_export(export_parameters):
                 info_text=__("IsoSurface finished successfully."),
                 detailed_text=Case.instance().info.current_output)
         else:
-            guiutils.error_dialog(
+            error_dialog(
                 __("There was an error on the post-processing."),
                 detailed_text=Case.instance().info.current_output
             )
@@ -2708,12 +2741,12 @@ def on_isosurface():
         else:
             export_parameters['surface_or_slice'] = '-saveslice'
 
-        if len(isosfc_file_name_text.text()) > 0:
+        if isosfc_file_name_text.text():
             export_parameters['file_name'] = isosfc_file_name_text.text()
         else:
             export_parameters['file_name'] = 'IsoFile'
 
-        if len(isosfc_parameters_text.text()) > 0:
+        if isosfc_parameters_text.text():
             export_parameters['additional_parameters'] = isosfc_parameters_text.text()
         else:
             export_parameters['additional_parameters'] = ''
@@ -2731,7 +2764,7 @@ def on_isosurface():
 def flowtool_export(export_parameters):
     ''' Export FlowTool button behaviour.
     Launches a process while disabling the button. '''
-    guiutils.widget_state_config(widget_state_elements, "export start")
+    widget_state_config(widget_state_elements, "export start")
     widget_state_elements['post_proc_flowtool_button'].setText("Exporting...")
 
     # Find total export parts and adjust progress bar
@@ -2745,11 +2778,11 @@ def flowtool_export(export_parameters):
 
     # Cancel button handler
     def on_cancel():
-        utils.log(__("Stopping export"))
+        log(__("Stopping export"))
         if Case.instance().info.current_export_process is not None:
             Case.instance().info.current_export_process.kill()
             widget_state_elements['post_proc_flowtool_button'].setText(__("FlowTool"))
-        guiutils.widget_state_config(widget_state_elements, "export cancel")
+        widget_state_config(widget_state_elements, "export cancel")
         export_dialog.hide()
 
     export_button_cancel.clicked.connect(on_cancel)
@@ -2757,7 +2790,7 @@ def flowtool_export(export_parameters):
     # FlowTool export finish handler
     def on_export_finished(exit_code):
         widget_state_elements['post_proc_flowtool_button'].setText(__("FlowTool"))
-        guiutils.widget_state_config(widget_state_elements, "export finished")
+        widget_state_config(widget_state_elements, "export finished")
         export_dialog.hide()
 
         if exit_code == 0:
@@ -2766,7 +2799,7 @@ def flowtool_export(export_parameters):
                 info_text=__("FlowTool finished successfully."),
                 detailed_text=Case.instance().info.current_output)
         else:
-            guiutils.error_dialog(
+            error_dialog(
                 __("There was an error on the post-processing."),
                 detailed_text=Case.instance().info.current_output
             )
@@ -2881,7 +2914,7 @@ def on_flowtool():
 
         # This should not happen but if no box is found with reference id, it spawns an error.
         if target_box is None:
-            guiutils.error_dialog("There was an error opening the box to edit")
+            error_dialog("There was an error opening the box to edit")
             return
 
         box_edit_name_layout = QtGui.QHBoxLayout()
@@ -2897,7 +2930,7 @@ def on_flowtool():
 
         # Reference image
         box_edit_image = QtGui.QLabel()
-        box_edit_image.setPixmap(guiutils.get_icon("flowtool_template.jpg", return_only_path=True))
+        box_edit_image.setPixmap(get_icon("flowtool_template.jpg", return_only_path=True))
         box_edit_image.setAlignment(QtCore.Qt.AlignCenter)
 
         # Point coords inputs
@@ -3107,22 +3140,22 @@ def on_flowtool():
         ''' FlowTool export button behaviour.'''
         export_parameters = dict()
 
-        if len(fltool_csv_file_name_text.text()) > 0:
+        if fltool_csv_file_name_text.text():
             export_parameters['csv_name'] = fltool_csv_file_name_text.text()
         else:
             export_parameters['csv_name'] = '_ResultFlow'
 
-        if len(fltool_vtk_file_name_text.text()) > 0:
+        if fltool_vtk_file_name_text.text():
             export_parameters['vtk_name'] = fltool_vtk_file_name_text.text()
         else:
             export_parameters['vtk_name'] = 'Boxes'
 
-        if len(fltool_parameters_text.text()) > 0:
+        if fltool_parameters_text.text():
             export_parameters['additional_parameters'] = fltool_parameters_text.text()
         else:
             export_parameters['additional_parameters'] = ''
 
-        utils.create_flowtool_boxes(Case.instance().path + '/' + 'fileboxes.txt', data['flowtool_boxes'])
+        create_flowtool_boxes(Case.instance().path + '/' + 'fileboxes.txt', data['flowtool_boxes'])
 
         flowtool_export(export_parameters)
         flowtool_tool_dialog.accept()
@@ -3138,7 +3171,7 @@ def on_flowtool():
 def on_boundaryvtk():
     ''' Opens a dialog with BoundaryVTK exporting options '''
     # TODO: This should be implemented as a custom class like BoundaryVTKDialog(QtGui.QDialog)
-    guiutils.warning_dialog("Not implemented yet")
+    warning_dialog("Not implemented yet")
     return
 
 
@@ -3226,21 +3259,21 @@ constantsandsetup_layout.addWidget(setup_button)
 intro_layout.addLayout(constantsandsetup_layout)
 
 main_layout.addLayout(logo_layout)
-main_layout.addWidget(guiutils.h_line_generator())
+main_layout.addWidget(h_line_generator())
 main_layout.addLayout(intro_layout)
-main_layout.addWidget(guiutils.h_line_generator())
+main_layout.addWidget(h_line_generator())
 main_layout.addLayout(dp_layout)
-main_layout.addWidget(guiutils.h_line_generator())
+main_layout.addWidget(h_line_generator())
 main_layout.addLayout(cc_layout)
-main_layout.addWidget(guiutils.h_line_generator())
+main_layout.addWidget(h_line_generator())
 main_layout.addLayout(ex_layout)
-main_layout.addWidget(guiutils.h_line_generator())
+main_layout.addWidget(h_line_generator())
 main_layout.addLayout(export_layout)
-main_layout.addWidget(guiutils.h_line_generator())
+main_layout.addWidget(h_line_generator())
 main_layout.addLayout(objectlist_layout)
 
 # Default disabled widgets
-guiutils.widget_state_config(widget_state_elements, "no case")
+widget_state_config(widget_state_elements, "no case")
 
 # You can't apply layouts to a QDockWidget,
 # so creating a standard widget, applying the layouts,
@@ -3377,8 +3410,8 @@ def objtype_change(index):
             # Can't change attributes
             pass
         # Remove floating properties if it is changed to fluid
-        if mk_properties.float_property != None:
-            mk_properties.float_property
+        if mk_properties.float_property is not None:
+            mk_properties.float_property = None
 
         # Remove motion properties if it is changed to fluid
         if mk_properties.has_movements():
@@ -3400,7 +3433,6 @@ def fillmode_change(index):
     selection = FreeCADGui.Selection.getSelection()[0]
     selectiongui = FreeCADGui.getDocument("DSPH_Case").getObject(selection.Name)
     simulation_object = Case.instance().get_simulation_object(selection.Name)
-    mk_properties = Case.instance().get_mk_base_properties(simulation_object.obj_mk)
 
     # Update simulation object fill mode
     simulation_object.fillmode = [ObjectFillMode.FULL, ObjectFillMode.SOLID, ObjectFillMode.FACE, ObjectFillMode.WIRE][index]
@@ -3528,7 +3560,7 @@ def add_object_to_sim(name=None):
     for each in selection:
         if each.Name == "Case_Limits" or "_internal_" in each.Name:
             continue
-        if len(each.InList) > 0:
+        if each.InList:
             continue
         if not Case.instance().is_object_in_simulation(each.Name):
             if "fillbox" in each.Name.lower():
@@ -3554,7 +3586,7 @@ def remove_object_from_sim():
 def on_damping_config():
     ''' Configures the damping configuration for the selected obejct '''
     selection = FreeCADGui.Selection.getSelection()
-    guiutils.damping_config_window(selection[0].Name)
+    DampingConfigDialog(selection[0].Name)
 
 
 # Connects buttons to its functions
@@ -3620,7 +3652,7 @@ def on_tree_item_selection_change():
 
     addtodsph_button.setEnabled(True)
 
-    if len(selection) > 0:
+    if selection:
         if len(selection) > 1:
             # Multiple objects selected
             addtodsph_button.setText(__("Add all possible objects to DSPH Simulation"))
@@ -3628,7 +3660,6 @@ def on_tree_item_selection_change():
             addtodsph_button.show()
             removefromdsph_button.hide()
             damping_config_button.hide()
-            pass
         else:
             # One object selected
             if selection[0].Name == "Case_Limits" or "_internal_" in selection[0].Name:
@@ -3819,7 +3850,7 @@ def selection_monitor():
     while True:
         # ensure everything is fine when objects are not selected
         try:
-            if len(FreeCADGui.Selection.getSelection()) == 0:
+            if not FreeCADGui.Selection.getSelection():
                 object_property_table.hide()
                 addtodsph_button.hide()
                 removefromdsph_button.hide()
@@ -3834,17 +3865,17 @@ def selection_monitor():
                     for subelem in o.OutList:
                         if subelem.Placement.Rotation.Angle != 0.0:
                             subelem.Placement.Rotation.Angle = 0.0
-                            utils.error(__("Can't change rotation!"))
+                            error(__("Can't change rotation!"))
                 if "case_limits" in o.Name.lower():
                     if o.Placement.Rotation.Angle != 0.0:
                         o.Placement.Rotation.Angle = 0.0
-                        utils.error(__("Can't change rotation!"))
-                    if not Case.instance().mode3d and o.Width.Value != utils.WIDTH_2D:
-                        o.Width.Value = utils.WIDTH_2D
-                        utils.error(__("Can't change width if the case is in 2D Mode!"))
+                        error(__("Can't change rotation!"))
+                    if not Case.instance().mode3d and o.Width.Value != WIDTH_2D:
+                        o.Width.Value = WIDTH_2D
+                        error(__("Can't change width if the case is in 2D Mode!"))
 
             # Prevent some view properties of Case Limits to be changed
-            case_limits_obj = guiutils.get_fc_view_object("Case_Limits")
+            case_limits_obj = get_fc_view_object("Case_Limits")
             if case_limits_obj is not None:
                 if case_limits_obj.DisplayMode != "Wireframe":
                     case_limits_obj.DisplayMode = "Wireframe"
@@ -3859,7 +3890,7 @@ def selection_monitor():
 
         except (NameError, AttributeError):
             # DSPH Case not opened, disable things
-            guiutils.widget_state_config(widget_state_elements, "no case")
+            widget_state_config(widget_state_elements, "no case")
             time.sleep(2.0)
             continue
         time.sleep(0.5)
@@ -3870,4 +3901,4 @@ monitor_thread = threading.Thread(target=selection_monitor)
 monitor_thread.start()
 
 FreeCADGui.activateWorkbench("PartWorkbench")
-utils.log(__("Loading data is done."))
+log(__("Loading data is done."))

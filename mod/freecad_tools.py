@@ -1,0 +1,100 @@
+#!/usr/bin/env python3.7
+# -*- coding: utf-8 -*-
+
+''' FreeCAD related tools. '''
+
+from tempfile import gettempdir
+from shutil import copyfile
+
+import FreeCAD
+import FreeCADGui
+
+from PySide import QtGui
+
+from mod.stdout_tools import log
+from mod.constants import APP_NAME, SINGLETON_DOCUMENT_NAME, DEFAULT_WORKBENCH, CASE_LIMITS_OBJ_NAME, CASE_LIMITS_3D_LABEL
+from mod.constants import CASE_LIMITS_LINE_COLOR, CASE_LIMITS_LINE_WIDTH, CASE_LIMITS_DEFAULT_LENGTH
+from mod.enums import FreeCADObjectType, FreeCADDisplayMode
+from mod.dialog_tools import ok_cancel_dialog
+from mod.translation_tools import __
+
+
+def prepare_dsph_case():
+    ''' Creates a few objects and setups a new case for DesignSPHysics. '''
+    FreeCAD.setActiveDocument(SINGLETON_DOCUMENT_NAME)
+    FreeCAD.ActiveDocument = FreeCAD.getDocument(SINGLETON_DOCUMENT_NAME)
+    FreeCADGui.ActiveDocument = FreeCADGui.getDocument(SINGLETON_DOCUMENT_NAME)
+    FreeCADGui.activateWorkbench(DEFAULT_WORKBENCH)
+    FreeCADGui.activeDocument().activeView().viewAxonometric()
+    FreeCAD.ActiveDocument.addObject(FreeCADObjectType.BOX, CASE_LIMITS_OBJ_NAME)
+    FreeCAD.ActiveDocument.getObject(CASE_LIMITS_OBJ_NAME).Label = CASE_LIMITS_3D_LABEL
+    FreeCAD.ActiveDocument.getObject(CASE_LIMITS_OBJ_NAME).Length = CASE_LIMITS_DEFAULT_LENGTH
+    FreeCAD.ActiveDocument.getObject(CASE_LIMITS_OBJ_NAME).Width = CASE_LIMITS_DEFAULT_LENGTH
+    FreeCAD.ActiveDocument.getObject(CASE_LIMITS_OBJ_NAME).Height = CASE_LIMITS_DEFAULT_LENGTH
+    FreeCADGui.ActiveDocument.getObject(CASE_LIMITS_OBJ_NAME).DisplayMode = FreeCADDisplayMode.WIREFRAME
+    FreeCADGui.ActiveDocument.getObject(CASE_LIMITS_OBJ_NAME).LineColor = CASE_LIMITS_LINE_COLOR
+    FreeCADGui.ActiveDocument.getObject(CASE_LIMITS_OBJ_NAME).LineWidth = CASE_LIMITS_LINE_WIDTH
+    FreeCADGui.ActiveDocument.getObject(CASE_LIMITS_OBJ_NAME).Selectable = False
+    FreeCAD.ActiveDocument.recompute()
+    FreeCADGui.SendMsgToActiveView("ViewFit")
+
+
+def create_dsph_document():
+    ''' Creates a new DSPH compatible document in FreeCAD.
+        It includes the case limits and a compatible name. '''
+    FreeCAD.newDocument(SINGLETON_DOCUMENT_NAME)
+    prepare_dsph_case()
+
+
+def create_dsph_document_from_fcstd(document_path):
+    ''' Creates a new DSPH compatible document in FreeCAD.
+        It includes the case limits and a compatible name. '''
+    temp_document_path = gettempdir() + "/" + "DSPH_Case.fcstd"
+    copyfile(document_path, temp_document_path)
+    FreeCAD.open(temp_document_path)
+    prepare_dsph_case()
+
+
+def document_count() -> int:
+    ''' Returns an integer representing the number of current opened documents in FreeCAD. '''
+    return len(FreeCAD.listDocuments().keys())
+
+
+def document_open(document_name: str) -> bool:
+    ''' Returns wether the specified document name is opened within freecad. '''
+    return document_name.lower() in list(FreeCAD.listDocuments().keys())[0].lower()
+
+
+def valid_document_environment() -> bool:
+    ''' Returns a boolean if a correct document environment is found.
+    A correct document environment is defined if only a DSPH_Case document is currently opened in FreeCAD. '''
+    return document_count() == 1 and document_open('DSPH_Case')
+
+
+def prompt_close_all_documents(prompt: bool = True) -> bool:
+    ''' Shows a dialog to close all the current documents.
+        If accepted, close all the current documents and return True, else returns False. '''
+    if prompt:
+        user_selection = ok_cancel_dialog(APP_NAME, "All documents will be closed")
+    if not prompt or user_selection == QtGui.QMessageBox.Ok:
+        # Close all current documents.
+        log(__("Closing all current documents"))
+        for doc in FreeCAD.listDocuments().keys():
+            FreeCAD.closeDocument(doc)
+        return True
+    return False
+
+
+def get_fc_main_window():
+    ''' Returns FreeCAD main window. '''
+    return FreeCADGui.getMainWindow()
+
+
+def get_fc_object(internal_name):
+    ''' Returns a FreeCAD internal object by a name. '''
+    return FreeCAD.getDocument(SINGLETON_DOCUMENT_NAME).getObject(internal_name)
+
+
+def get_fc_view_object(internal_name):
+    ''' Returns a FreeCADGui View provider object by a name. '''
+    return FreeCADGui.getDocument(SINGLETON_DOCUMENT_NAME).getObject(internal_name)
