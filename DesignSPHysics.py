@@ -21,7 +21,7 @@ from mod.dataobjects.file_gen import FileGen
 from mod.dataobjects.special_movement import SpecialMovement
 from mod.dataobjects.simulation_object import SimulationObject
 from mod.dataobjects.case import Case
-from mod.enums import ObjectType, ObjectFillMode
+from mod.enums import ObjectType, ObjectFillMode, FreeCADDisplayMode
 from mod.widgets.object_order_widget import ObjectOrderWidget
 from mod.widgets.faces_dialog import FacesDialog
 from mod.widgets.float_state_dialog import FloatStateDialog
@@ -43,13 +43,19 @@ from mod.widgets.damping_config_dialog import DampingConfigDialog
 from mod.widgets.execution_parameters_dialog import ExecutionParametersDialog
 from mod.widgets.setup_plugin_dialog import SetupPluginDialog
 from mod.widgets.constants_dialog import ConstantsDialog
-from mod.constants import APP_NAME, PICKLE_PROTOCOL, WIDTH_2D, VERSION
+from mod.widgets.case_summary import CaseSummary
+from mod.widgets.gencase_completed_dialog import GencaseCompletedDialog
+from mod.widgets.mode_2d_config_dialog import Mode2DConfigDialog
+from mod.widgets.run_additional_parameters_dialog import RunAdditionalParametersDialog
+from mod.widgets.add_geo_dialog import AddGEODialog
+from mod.widgets.special_options_selector_dialog import SpecialOptionsSelectorDialog
+from mod.constants import APP_NAME, PICKLE_PROTOCOL, WIDTH_2D, VERSION, CASE_LIMITS_OBJ_NAME
 from mod.executable_tools import refocus_cwd
 from mod.freecad_tools import valid_document_environment, get_fc_object, get_fc_view_object
 from mod.freecad_tools import document_count, prompt_close_all_documents, create_dsph_document, get_fc_main_window, create_dsph_document_from_fcstd
 from mod.utils import is_compatible_version, open_help, import_geo, create_flowtool_boxes
 from mod.stdout_tools import print_license, debug, error, log, warning, dump_to_disk
-from mod.guiutils import widget_state_config,  get_icon, case_summary, h_line_generator, gencase_completed_dialog
+from mod.guiutils import widget_state_config,  get_icon, h_line_generator
 from mod.dialog_tools import ok_cancel_dialog, error_dialog, warning_dialog
 from mod.translation_tools import __
 from mod.xml import XMLExporter
@@ -92,19 +98,13 @@ __status__ = "Development"
 try:
     print_license()
 except EnvironmentError:
-    warning_dialog(
-        __("LICENSE file could not be found. Are you sure you didn't delete it?")
-    )
+    warning_dialog(__("LICENSE file could not be found. Are you sure you didn't delete it?"))
 
 # Version check. This script is only compatible with FreeCAD 0.17 or higher
 is_compatible = is_compatible_version()
 if not is_compatible:
-    error_dialog(
-        __("This FreeCAD version is not compatible. Please update FreeCAD to version 0.17 or higher.")
-    )
-    raise EnvironmentError(
-        __("This FreeCAD version is not compatible. Please update FreeCAD to version 0.17 or higher.")
-    )
+    error_dialog(__("This FreeCAD version is not compatible. Please update FreeCAD to version 0.17 or higher."))
+    raise EnvironmentError(__("This FreeCAD version is not compatible. Please update FreeCAD to version 0.17 or higher."))
 
 # Used to store widgets that will be disabled/enabled, so they are centralized
 widget_state_elements = dict()
@@ -336,7 +336,7 @@ def on_new_case(prompt=True):
     Case.instance().reset()
     create_dsph_document()
     widget_state_config(widget_state_elements, "new case")
-    Case.instance().add_object(SimulationObject('Case_Limits', -1, ObjectType.SPECIAL, ObjectFillMode.SPECIAL))
+    Case.instance().add_object(SimulationObject(CASE_LIMITS_OBJ_NAME, -1, ObjectType.SPECIAL, ObjectFillMode.SPECIAL))
     dp_input.setText(str(Case.instance().dp))
 
     # Forces call to item selection change function so all changes are taken into account
@@ -357,7 +357,7 @@ def on_new_from_freecad_document(prompt=True):
     Case.instance().reset()
     create_dsph_document_from_fcstd(file_name)
     widget_state_config(widget_state_elements, "new case")
-    Case.instance().add_object_to_sim(SimulationObject('Case_Limits', -1, ObjectType.SPECIAL, ObjectFillMode.SPECIAL))
+    Case.instance().add_object_to_sim(SimulationObject(CASE_LIMITS_OBJ_NAME, -1, ObjectType.SPECIAL, ObjectFillMode.SPECIAL))
     dp_input.setText(Case.instance().dp)
 
     # Forces call to item selection change function so all changes are taken into account
@@ -614,8 +614,8 @@ def on_save_with_gencase():
                 Case.instance().info.is_gencase_done = True
                 widget_state_config(widget_state_elements, "gencase done")
                 Case.instance().info.previous_particle_number = int(total_particles)
-                gencase_completed_dialog(particle_count=total_particles,
-                                         detail_text=output.split("================================")[1])
+                gencase_completed_dialog = GencaseCompletedDialog(particle_count=total_particles, detail_text=output.split("================================")[1])
+                gencase_completed_dialog.show()
             except ValueError:
                 # Not an expected result. GenCase had a not handled error
                 error_in_gen_case = True
@@ -761,10 +761,9 @@ def on_load_case():
 
 
 def on_add_fillbox():
-    ''' Add fillbox group. It consists
-    in a group with 2 objects inside: a point and a box.
-    The point represents the fill seed and the box sets
-    the bounds for the filling'''
+    ''' Add fillbox group. It consists in a group with 2 objects inside: a point and a box.
+    The point represents the fill seed and the box sets the bounds for the filling. '''
+
     fillbox_gp = FreeCAD.getDocument("DSPH_Case").addObject("App::DocumentObjectGroup", "FillBox")
     fillbox_point = FreeCAD.ActiveDocument.addObject("Part::Sphere", "FillPoint")
     fillbox_limits = FreeCAD.ActiveDocument.addObject("Part::Box", "FillLimit")
@@ -782,189 +781,16 @@ def on_add_fillbox():
     FreeCADGui.SendMsgToActiveView("ViewFit")
 
 
-def on_add_damping_zone():
-    ''' Adds a damping zone into the case. It consist on a solid line that rempresents the damping vector
-    and a dashed line representing the overlimit. It can be adjusted in the damping property window
-    or changing the lines itselves.'''
-    damping_group = FreeCAD.ActiveDocument.addObject("App::DocumentObjectGroup", "DampingZone")
+def on_add_geo():
+    ''' Add STL file. Opens a file opener and allows the user to set parameters for the import process '''
 
-    # Limits line
-    points = [FreeCAD.Vector(0, 0, 0), FreeCAD.Vector(1000, 1000, 1000)]
-    limits = Draft.makeWire(points, closed=False, face=False, support=None)
-    Draft.autogroup(limits)
-    limits.Label = "Limits"
-    limitsv = FreeCADGui.ActiveDocument.getObject(limits.Name)
-    limitsv.ShapeColor = (0.32, 1.00, 0.00)
-    limitsv.LineColor = (0.32, 1.00, 0.00)
-    limitsv.PointColor = (0.32, 1.00, 0.00)
-    limitsv.EndArrow = True
-    limitsv.ArrowSize = "10 mm"
-    limitsv.ArrowType = "Dot"
+    file_name = QtGui.QFileDialog().getOpenFileName(fc_main_window, __("Select GEO to import"), QtCore.QDir.homePath(), "STL Files (*.stl);;PLY Files (*.ply);;VTK Files (*.vtk)")
 
-    # Overlimit line
-    points = [FreeCAD.Vector(*limits.End), FreeCAD.Vector(1580, 1577.35, 1577.35)]
-    overlimit = Draft.makeWire(points, closed=False, face=False, support=None)
-    Draft.autogroup(overlimit)
-    overlimit.Label = "Overlimit"
-    overlimitv = FreeCADGui.ActiveDocument.getObject(overlimit.Name)
-    overlimitv.DrawStyle = "Dotted"
-    overlimitv.ShapeColor = (0.32, 1.00, 0.00)
-    overlimitv.LineColor = (0.32, 1.00, 0.00)
-    overlimitv.PointColor = (0.32, 1.00, 0.00)
-    overlimitv.EndArrow = True
-    overlimitv.ArrowSize = "10 mm"
-    overlimitv.ArrowType = "Dot"
-
-    # Add the two lines to the group
-    damping_group.addObject(limits)
-    damping_group.addObject(overlimit)
-
-    FreeCAD.ActiveDocument.recompute()
-    FreeCADGui.SendMsgToActiveView("ViewFit")
-
-    # Save damping in the main data structure.
-    Case.instance().get_simulation_object(damping_group.Name).damping = Damping()
-    # Opens damping configuration window to tweak the added damping zone.
-    DampingConfigDialog(damping_group.Name)
-
-
-def on_add_inlet():
-    # Opens Inlet/Outlet configuration window to configurate the inlet/outlet options.
-    InletConfigDialog()
-
-
-def on_add_chrono():
-    # Opens chrono configuration window to configurate the chrono options.
-    ChronoConfigDialog()
-
-
-def on_add_stl():
-    ''' Add STL file. Opens a file opener and allows
-    the user to set parameters for the import process '''
-
-    # TODO: Low priority: This Dialog should be implemented and designed as a class like AddSTLDialog(QtGui.QDialog)
-    filedialog = QtGui.QFileDialog()
-
-    # noinspection PyArgumentList
-    file_name, _ = filedialog.getOpenFileName(fc_main_window, __("Select GEO to import"), QtCore.QDir.homePath(),
-                                              "STL Files (*.stl);;PLY Files (*.ply);;VTK Files (*.vtk)")
-
-    if len(file_name) <= 1:
-        # User didn't select any files
+    if not file_name:
         return
 
-    # Defines import stl dialog
-    geo_dialog = QtGui.QDialog()
-    geo_dialog.setModal(True)
-    geo_dialog.setWindowTitle(__("Import GEO"))
-    geo_dialog_layout = QtGui.QVBoxLayout()
-    geo_group = QtGui.QGroupBox(__("Import GEO options"))
-    geo_group_layout = QtGui.QVBoxLayout()
-
-    # STL File selection
-    geo_file_layout = QtGui.QHBoxLayout()
-    geo_file_label = QtGui.QLabel(__("GEO File: "))
-    geo_file_path = QtGui.QLineEdit()
-    geo_file_path.setText(file_name)
-    geo_file_browse = QtGui.QPushButton(__("Browse"))
-    for x in [geo_file_label, geo_file_path, geo_file_browse]:
-        geo_file_layout.addWidget(x)
-    # END STL File selection
-
-    # Scaling factor
-    geo_scaling_layout = QtGui.QHBoxLayout()
-    geo_scaling_label = QtGui.QLabel(__("Scaling factor: "))
-    geo_scaling_x_l = QtGui.QLabel("X: ")
-    geo_scaling_x_e = QtGui.QLineEdit("1")
-    geo_scaling_y_l = QtGui.QLabel("Y: ")
-    geo_scaling_y_e = QtGui.QLineEdit("1")
-    geo_scaling_z_l = QtGui.QLabel("Z: ")
-    geo_scaling_z_e = QtGui.QLineEdit("1")
-    for x in [geo_scaling_label,
-              geo_scaling_x_l,
-              geo_scaling_x_e,
-              geo_scaling_y_l,
-              geo_scaling_y_e,
-              geo_scaling_z_l,
-              geo_scaling_z_e, ]:
-        geo_scaling_layout.addWidget(x)
-    # END Scaling factor
-
-    # Import object name
-    geo_objname_layout = QtGui.QHBoxLayout()
-    geo_objname_label = QtGui.QLabel(__("Import object name: "))
-    geo_objname_text = QtGui.QLineEdit("ImportedGEO")
-    for x in [geo_objname_label, geo_objname_text]:
-        geo_objname_layout.addWidget(x)
-    # End object name
-
-    # Autofill
-    geo_autofil_layout = QtGui.QHBoxLayout()
-    geo_autofill_chck = QtGui.QCheckBox("Autofill")
-    geo_autofil_layout.addWidget(geo_autofill_chck)
-
-    if geo_autofill_chck.isChecked():
-        geo_autofill_chck.setCheckState(QtCore.Qt.Checked)
-    else:
-        geo_autofill_chck.setCheckState(QtCore.Qt.Unchecked)
-    # End autofill
-
-    # Add component layouts to group layout
-    for x in [geo_file_layout, geo_scaling_layout, geo_objname_layout, geo_autofil_layout]:
-        geo_group_layout.addLayout(x)
-    geo_group_layout.addStretch(1)
-    geo_group.setLayout(geo_group_layout)
-
-    # Create button layout
-    geo_button_layout = QtGui.QHBoxLayout()
-    geo_button_ok = QtGui.QPushButton(__("Import"))
-    geo_button_cancel = QtGui.QPushButton(__("Cancel"))
-    geo_button_cancel.clicked.connect(geo_dialog.reject)
-    geo_button_layout.addStretch(1)
-    geo_button_layout.addWidget(geo_button_cancel)
-    geo_button_layout.addWidget(geo_button_ok)
-
-    # Compose main window layout
-    geo_dialog_layout.addWidget(geo_group)
-    geo_dialog_layout.addStretch(1)
-    geo_dialog_layout.addLayout(geo_button_layout)
-
-    geo_dialog.setLayout(geo_dialog_layout)
-
-    # STL Dialog function definition and connections
-    def geo_ok_clicked():
-        ''' Defines ok button behaviour'''
-        for geo_scaling_edit in [geo_scaling_x_e, geo_scaling_y_e, geo_scaling_z_e]:
-            geo_scaling_edit.setText(geo_scaling_edit.text().replace(",", "."))
-        try:
-            import_geo(
-                filename=str(geo_file_path.text()),
-                scale_x=float(geo_scaling_x_e.text()),
-                scale_y=float(geo_scaling_y_e.text()),
-                scale_z=float(geo_scaling_z_e.text()),
-                name=str(geo_objname_text.text()),
-                autofill=geo_autofill_chck.isChecked())
-
-            geo_dialog.accept()
-        except ValueError:
-            error(__("There was an error. Are you sure you wrote correct float values in the scaling factor?"))
-            error_dialog(__("There was an error. Are you sure you wrote correct float values in the sacaling factor?"))
-
-    def geo_dialog_browse():
-        ''' Defines the browse button behaviour.'''
-        # noinspection PyArgumentList
-        file_name_temp, _ = filedialog.getOpenFileName(fc_main_window, __("Select GEO to import"),
-                                                       QtCore.QDir.homePath(), "STL Files (*.stl);;PLY Files "
-                                                                               "(*.ply);;VTK Files (*.vtk)")
-        geo_file_path.setText(file_name_temp)
-        geo_dialog.raise_()
-        geo_dialog.activateWindow()
-
-    geo_button_cancel.clicked.connect(geo_dialog.reject)
-    geo_button_ok.clicked.connect(geo_ok_clicked)
-    geo_file_browse.clicked.connect(geo_dialog_browse)
-
-    geo_dialog.exec_()
+    add_geo_dialog = AddGEODialog(file_name)
+    add_geo_dialog.exec_()
 
 
 def on_import_xml():
@@ -999,7 +825,7 @@ def on_import_xml():
     #     limits_point_min = config['limits_min']
     #     limits_point_max = config['limits_max']
     #     # noinspection PyArgumentList
-    #     FreeCAD.ActiveDocument.getObject('Case_Limits').Placement = FreeCAD.Placement(
+    #     FreeCAD.ActiveDocument.getObject(CASE_LIMITS_OBJ_NAME).Placement = FreeCAD.Placement(
     #         FreeCAD.Vector(limits_point_min[0] * 1000, limits_point_min[1] * 1000, limits_point_min[2] * 1000),
     #         FreeCAD.Rotation(FreeCAD.Vector(0, 0, 1), 0))
     #     FreeCAD.ActiveDocument.getObject("Case_Limits").Length = str(limits_point_max[0] - limits_point_min[0]) + ' m'
@@ -1051,7 +877,8 @@ def on_import_xml():
 
 def on_summary():
     ''' Handles Case Summary button '''
-    case_summary(data)
+    case_summary_dialog = CaseSummary()
+    case_summary_dialog.exec_()
 
 
 def on_2d_toggle():
@@ -1060,73 +887,26 @@ def on_2d_toggle():
         if Case.instance().mode3d:
             # Change to 2D
 
-            # TODO: Low-priority: This dialog should be implemented as a class like 2DModeConfig(QtGui.QDialog)
-            y_pos_2d_window = QtGui.QDialog()
-            y_pos_2d_window.setWindowTitle(__("Set Y position"))
+            Mode2DConfigDialog().exec_()
 
-            ok_button = QtGui.QPushButton(__("Ok"))
-            cancel_button = QtGui.QPushButton(__("Cancel"))
-
-            # Ok Button handler
-            def on_ok():
-                Case.instance().info.last_3d_width = get_fc_object('Case_Limits').Width.Value
-
-                try:
-                    get_fc_object('Case_Limits').Placement.Base.y = float(y2_pos_input.text())
-                except ValueError:
-                    error_dialog(__("The Y position that was inserted is not valid."))
-
-                get_fc_object('Case_Limits').Width.Value = WIDTH_2D
-                get_fc_view_object('Case_Limits').DisplayMode = 'Flat Lines'
-                get_fc_view_object('Case_Limits').ShapeColor = (1.00, 0.00, 0.00)
-                get_fc_view_object('Case_Limits').Transparency = 90
-                # Toggle 3D Mode and change name
-                Case.instance().mode3d = not Case.instance().mode3d
-                get_fc_object('Case_Limits').Label = "Case Limits (3D)" if Case.instance().mode3d else "Case Limits (2D)"
-                y_pos_2d_window.accept()
-
-            # Cancel Button handler
-            def on_cancel():
-                y_pos_2d_window.reject()
-
-            ok_button.clicked.connect(on_ok)
-            cancel_button.clicked.connect(on_cancel)
-
-            # Button layout definition
-            y2d_button_layout = QtGui.QHBoxLayout()
-            y2d_button_layout.addStretch(1)
-            y2d_button_layout.addWidget(ok_button)
-            y2d_button_layout.addWidget(cancel_button)
-
-            y_pos_intro_layout = QtGui.QHBoxLayout()
-            y_pos_intro_label = QtGui.QLabel(__("New Y position (mm): "))
-            y2_pos_input = QtGui.QLineEdit()
-            y2_pos_input.setText(str(get_fc_object('Case_Limits').Placement.Base.y))
-            y_pos_intro_layout.addWidget(y_pos_intro_label)
-            y_pos_intro_layout.addWidget(y2_pos_input)
-
-            y_pos_2d_layout = QtGui.QVBoxLayout()
-            y_pos_2d_layout.addLayout(y_pos_intro_layout)
-            y_pos_2d_layout.addStretch(1)
-            y_pos_2d_layout.addLayout(y2d_button_layout)
-
-            y_pos_2d_window.setLayout(y_pos_2d_layout)
-            y_pos_2d_window.exec_()
+            # Toggle 3D Mode and change name
+            Case.instance().mode3d = not Case.instance().mode3d
+            get_fc_object(CASE_LIMITS_OBJ_NAME).Label = "Case Limits (3D)" if Case.instance().mode3d else "Case Limits (2D)"
         else:
             # Toggle 3D Mode and change name
             Case.instance().mode3d = not Case.instance().mode3d
 
             # Try to restore original Width.
             if Case.instance().info.last_3d_width > 0.0:
-                get_fc_object('Case_Limits').Width = Case.instance().info.last_3d_width
+                get_fc_object(CASE_LIMITS_OBJ_NAME).Width = Case.instance().info.last_3d_width
             else:
-                get_fc_object('Case_Limits').Width = get_fc_object('Case_Limits').Length
+                get_fc_object(CASE_LIMITS_OBJ_NAME).Width = get_fc_object(CASE_LIMITS_OBJ_NAME).Length
 
-            get_fc_view_object('Case_Limits').DisplayMode = 'Wireframe'
-            get_fc_view_object('Case_Limits').ShapeColor = (0.80, 0.80, 0.80)
-            get_fc_view_object('Case_Limits').Transparency = 0
+            get_fc_view_object(CASE_LIMITS_OBJ_NAME).DisplayMode = FreeCADDisplayMode.WIREFRAME
+            get_fc_view_object(CASE_LIMITS_OBJ_NAME).ShapeColor = (0.80, 0.80, 0.80)
+            get_fc_view_object(CASE_LIMITS_OBJ_NAME).Transparency = 0
 
-            get_fc_object('Case_Limits').Label = "Case Limits (3D)" if Case.instance().mode3d else "Case Limits (2D)"
+            get_fc_object(CASE_LIMITS_OBJ_NAME).Label = "Case Limits (3D)" if Case.instance().mode3d else "Case Limits (2D)"
     else:
         error("Not a valid case environment")
 
@@ -1134,249 +914,7 @@ def on_2d_toggle():
 def on_special_button():
     ''' Spawns a dialog with special options. This is only a selector '''
 
-    # TODO: Low-priority: This should be implemented in a class like SpecialOptionsSelector(QtGui.QDialog)
-    sp_window = QtGui.QDialog()
-    sp_window.setWindowTitle(__("Special"))
-    sp_window.setMinimumWidth(200)
-    sp_window_layout = QtGui.QVBoxLayout()
-
-    sp_damping_button = QtGui.QPushButton(__("Damping"))
-    sp_inlet_button = QtGui.QPushButton(__("Inlet/Outlet"))
-    # sp_inlet_button.setEnabled(False)
-    sp_chrono_button = QtGui.QPushButton(__("Coupling CHRONO"))
-    # sp_chrono_button.setEnabled(False)
-    sp_multilayeredmb_button = QtGui.QPushButton(__("Multi-layered Piston"))
-    sp_multilayeredmb_menu = QtGui.QMenu()
-    sp_multilayeredmb_menu.addAction(__("1 Dimension"))
-    sp_multilayeredmb_menu.addAction(__("2 Dimensions"))
-    sp_multilayeredmb_button.setMenu(sp_multilayeredmb_menu)
-
-    sp_relaxationzone_button = QtGui.QPushButton(__("Relaxation Zone"))
-    sp_relaxationzone_menu = QtGui.QMenu()
-    sp_relaxationzone_menu.addAction(__("Regular waves"))
-    sp_relaxationzone_menu.addAction(__("Irregular waves"))
-    sp_relaxationzone_menu.addAction(__("External Input"))
-    sp_relaxationzone_menu.addAction(__("Uniform velocity"))
-    sp_relaxationzone_button.setMenu(sp_relaxationzone_menu)
-
-    sp_accinput_button = QtGui.QPushButton(__("Acceleration Inputs"))
-
-    def on_damping_option():
-        ''' Defines damping button behaviour'''
-        on_add_damping_zone()
-        sp_window.accept()
-
-    def on_inlet_option():
-        ''' Defines Inlet/Outlet behaviour '''
-        on_add_inlet()
-        sp_window.accept()
-
-    def on_chrono_option():
-        ''' Defines Coupling CHRONO behaviour'''
-        on_add_chrono()
-        sp_window.accept()
-
-    def on_multilayeredmb_menu(action):
-        ''' Defines MLPiston menu behaviour'''
-        # Get currently selected object
-        try:
-            selection = FreeCADGui.Selection.getSelection()[0]
-        except IndexError:
-            error_dialog(__("You must select an object"))
-            return
-
-        # Check if object is in the simulation
-        if Case.instance().is_object_in_simulation(selection.Name):
-            error_dialog(__("The selected object must be added to the simulation"))
-            return
-
-        # Check if it is fluid and warn the user.
-        if Case.instance().get_simulation_object(selection.Name).type == ObjectType.FLUID:
-            error_dialog(__("You can't apply a piston movement to a fluid.\n"
-                            "Please select a boundary and try again"))
-            return
-
-        # Get selection mk
-        selection_mk = Case.instance().get_simulation_object(selection.Name).obj_mk
-
-        # Check that this mk has no other motions applied
-        if Case.instance().get_mk_base_properties(selection_mk).has_movements():
-            # MK has motions applied. Warn the user and delete them
-            motion_delete_warning = ok_cancel_dialog(
-                APP_NAME,
-                __("This mk already has motions applied. "
-                   "Setting a Multi-layered piston will delete all of its movement. "
-                   "Are you sure?")
-            )
-            if motion_delete_warning == QtGui.QMessageBox.Cancel:
-                return
-            else:
-                Case.instance().get_mk_base_properties(selection_mk).remove_all_movements()
-
-        # 1D or 2D piston
-        if __("1 Dimension") in action.text():
-            # Check that there's no other multilayered piston for this mk
-            if selection_mk in data['mlayerpistons'].keys():
-                if not isinstance(data['mlayerpistons'][selection_mk], MLPiston1D):
-                    overwrite_warn = ok_cancel_dialog(
-                        APP_NAME,
-                        __("You're about to overwrite a previous coupling movement for this mk. Are you sure?")
-                    )
-                    if overwrite_warn == QtGui.QMessageBox.Cancel:
-                        return
-
-            if selection_mk in data['mlayerpistons'].keys() and isinstance(data['mlayerpistons'][selection_mk], MLPiston1D):
-                config_dialog = MLPiston1DConfigDialog(
-                    selection_mk, data['mlayerpistons'][selection_mk]
-                )
-            else:
-                config_dialog = MLPiston1DConfigDialog(
-                    selection_mk, None
-                )
-
-            if config_dialog.result() == QtGui.QDialog.Accepted:
-                warning_dialog(__("All changes have been applied for mk = {}").format(selection_mk))
-
-            if config_dialog.mlpiston1d is None:
-                data['mlayerpistons'].pop(selection_mk, None)
-            else:
-                data['mlayerpistons'][selection_mk] = config_dialog.mlpiston1d
-
-        if __("2 Dimensions") in action.text():
-            # Check that there's no other multilayered piston for this mk
-            if selection_mk in data['mlayerpistons'].keys():
-                if not isinstance(data['mlayerpistons'][selection_mk], MLPiston2D):
-                    overwrite_warn = ok_cancel_dialog(
-                        APP_NAME,
-                        __("You're about to overwrite a previous coupling movement for this mk. Are you sure?")
-                    )
-                    if overwrite_warn == QtGui.QMessageBox.Cancel:
-                        return
-
-            if selection_mk in data['mlayerpistons'].keys() and isinstance(data['mlayerpistons'][selection_mk],
-                                                                           MLPiston2D):
-                config_dialog = MLPiston2DConfigDialog(
-                    selection_mk, data['mlayerpistons'][selection_mk]
-                )
-            else:
-                config_dialog = MLPiston2DConfigDialog(
-                    selection_mk, None
-                )
-
-            if config_dialog.result() == QtGui.QDialog.Accepted:
-                warning_dialog(__("All changes have been applied for mk = {}").format(selection_mk))
-
-            if config_dialog.mlpiston2d is None:
-                data['mlayerpistons'].pop(selection_mk, None)
-            else:
-                data['mlayerpistons'][selection_mk] = config_dialog.mlpiston2d
-
-        sp_window.accept()
-
-    def on_relaxationzone_menu(action):
-        ''' Defines Relaxation Zone menu behaviour.'''
-
-        # Check which type of relaxationzone it is
-        if action.text() == __("Regular waves"):
-            if data['relaxationzone'] is not None:
-                if not isinstance(data['relaxationzone'], RelaxationZoneRegular):
-                    overwrite_warn = ok_cancel_dialog(
-                        __("Relaxation Zone"),
-                        __("There's already another type of Relaxation Zone defined. "
-                           "Continuing will overwrite it. Are you sure?")
-                    )
-                    if overwrite_warn == QtGui.QMessageBox.Cancel:
-                        return
-                    else:
-                        data['relaxationzone'] = RelaxationZoneRegular()
-
-            config_dialog = RelaxationZoneRegularConfigDialog(data['relaxationzone'])
-
-            # Set the relaxation zone. Can be an object or be None
-            data['relaxationzone'] = config_dialog.relaxationzone
-        if action.text() == __("Irregular waves"):
-            if data['relaxationzone'] is not None:
-                if not isinstance(data['relaxationzone'], RelaxationZoneIrregular):
-                    overwrite_warn = ok_cancel_dialog(
-                        __("Relaxation Zone"),
-                        __("There's already another type of Relaxation Zone defined. "
-                           "Continuing will overwrite it. Are you sure?")
-                    )
-                    if overwrite_warn == QtGui.QMessageBox.Cancel:
-                        return
-                    else:
-                        data['relaxationzone'] = RelaxationZoneIrregular()
-
-            config_dialog = RelaxationZoneIrregularConfigDialog(
-                data['relaxationzone']
-            )
-
-            # Set the relaxation zone. Can be an object or be None
-            data['relaxationzone'] = config_dialog.relaxationzone
-        if action.text() == __("External Input"):
-            if data['relaxationzone'] is not None:
-                if not isinstance(data['relaxationzone'], RelaxationZoneFile):
-                    overwrite_warn = ok_cancel_dialog(
-                        __("Relaxation Zone"),
-                        __("There's already another type of "
-                           "Relaxation Zone defined. "
-                           "Continuing will overwrite it. Are you sure?")
-                    )
-                    if overwrite_warn == QtGui.QMessageBox.Cancel:
-                        return
-                    else:
-                        data['relaxationzone'] = RelaxationZoneFile()
-
-            config_dialog = RelaxationZoneFileConfigDialog(data['relaxationzone'])
-
-            # Set the relaxation zone. Can be an object or be None
-            data['relaxationzone'] = config_dialog.relaxationzone
-
-        if action.text() == __("Uniform velocity"):
-            if data['relaxationzone'] is not None:
-                if not isinstance(data['relaxationzone'], RelaxationZoneUniform):
-                    overwrite_warn = ok_cancel_dialog(
-                        __("Relaxation Zone"),
-                        __("There's already another type of Relaxation Zone "
-                           "defined. Continuing will overwrite it. "
-                           "Are you sure?")
-                    )
-                    if overwrite_warn == QtGui.QMessageBox.Cancel:
-                        return
-                    else:
-                        data['relaxationzone'] = RelaxationZoneUniform()
-
-            config_dialog = RelaxationZoneUniformConfigDialog(data['relaxationzone'])
-
-            # Set the relaxation zone. Can be an object or be None
-            data['relaxationzone'] = config_dialog.relaxationzone
-
-        sp_window.accept()
-
-    def on_accinput_button():
-        ''' Acceleration input button behaviour.'''
-        accinput_dialog = AccelerationInputDialog(data['accinput'])
-        result = accinput_dialog.exec_()
-        if result == QtGui.QDialog.Accepted:
-            data['accinput'] = accinput_dialog.get_result()
-
-    sp_damping_button.clicked.connect(on_damping_option)
-    sp_inlet_button.clicked.connect(on_inlet_option)
-    sp_chrono_button.clicked.connect(on_chrono_option)
-    sp_multilayeredmb_menu.triggered.connect(on_multilayeredmb_menu)
-    sp_relaxationzone_menu.triggered.connect(on_relaxationzone_menu)
-    sp_accinput_button.clicked.connect(on_accinput_button)
-
-    for x in [sp_damping_button,
-              sp_inlet_button,
-              sp_chrono_button,
-              sp_multilayeredmb_button,
-              sp_relaxationzone_button,
-              sp_accinput_button]:
-        sp_window_layout.addWidget(x)
-
-    sp_window.setLayout(sp_window_layout)
-    sp_window.exec_()
+    SpecialOptionsSelectorDialog().exec_()
 
 
 # Connect case control buttons to respective handlers
@@ -1387,7 +925,7 @@ casecontrols_menu_newdoc.triggered.connect(on_newdoc_menu)
 casecontrols_menu_savemenu.triggered.connect(on_save_menu)
 casecontrols_bt_loaddoc.clicked.connect(on_load_button)
 casecontrols_bt_addfillbox.clicked.connect(on_add_fillbox)
-casecontrols_bt_addgeo.clicked.connect(on_add_stl)
+casecontrols_bt_addgeo.clicked.connect(on_add_geo)
 casecontrols_bt_importxml.clicked.connect(on_import_xml)
 summary_bt.clicked.connect(on_summary)
 toggle3dbutton.clicked.connect(on_2d_toggle)
@@ -1580,45 +1118,7 @@ def on_ex_simulate():
 
 def on_additional_parameters():
     ''' Handles additional parameters button for execution '''
-    # TODO: This should be a custom implementation in a class like AdditionalParametersDialog(QtGui.QDialog)
-    additional_parameters_window = QtGui.QDialog()
-    additional_parameters_window.setWindowTitle(__("Additional parameters"))
-
-    ok_button = QtGui.QPushButton(__("Ok"))
-    cancel_button = QtGui.QPushButton(__("Cancel"))
-
-    def on_ok():
-        ''' OK Button handler.'''
-        Case.instance().info.run_additional_parameters = export_params.text()
-        additional_parameters_window.accept()
-
-    def on_cancel():
-        ''' Cancel button handler.'''
-        additional_parameters_window.reject()
-
-    ok_button.clicked.connect(on_ok)
-    cancel_button.clicked.connect(on_cancel)
-
-    # Button layout definition
-    eo_button_layout = QtGui.QHBoxLayout()
-    eo_button_layout.addStretch(1)
-    eo_button_layout.addWidget(ok_button)
-    eo_button_layout.addWidget(cancel_button)
-
-    paramintro_layout = QtGui.QHBoxLayout()
-    paramintro_label = QtGui.QLabel(__("Additional Parameters: "))
-    export_params = QtGui.QLineEdit()
-    export_params.setText(Case.instance().info.run_additional_parameters)
-    paramintro_layout.addWidget(paramintro_label)
-    paramintro_layout.addWidget(export_params)
-
-    additional_parameters_layout = QtGui.QVBoxLayout()
-    additional_parameters_layout.addLayout(paramintro_layout)
-    additional_parameters_layout.addStretch(1)
-    additional_parameters_layout.addLayout(eo_button_layout)
-
-    additional_parameters_window.setLayout(additional_parameters_layout)
-    additional_parameters_window.exec_()
+    RunAdditionalParametersDialog().exec_()
 
 
 # Execution section scaffolding
@@ -3166,15 +2666,6 @@ def on_flowtool():
     refresh_boxlist()
     flowtool_tool_dialog.exec_()
 
-
-# TODO: Implement BoundaryVTK post-processing tool
-def on_boundaryvtk():
-    ''' Opens a dialog with BoundaryVTK exporting options '''
-    # TODO: This should be implemented as a custom class like BoundaryVTKDialog(QtGui.QDialog)
-    warning_dialog("Not implemented yet")
-    return
-
-
 # Post processing section scaffolding
 export_layout = QtGui.QVBoxLayout()
 export_label = QtGui.QLabel("<b>" + __("Post-processing") + "</b>")
@@ -3188,7 +2679,6 @@ post_proc_computeforces_button = QtGui.QPushButton(__("ComputeForces"))
 post_proc_isosurface_button = QtGui.QPushButton(__("IsoSurface"))
 post_proc_floatinginfo_button = QtGui.QPushButton(__("FloatingInfo"))
 post_proc_measuretool_button = QtGui.QPushButton(__("MeasureTool"))
-post_proc_boundaryvtk_button = QtGui.QPushButton(__("BoundaryVTK"))
 post_proc_flowtool_button = QtGui.QPushButton(__("FlowTool"))
 
 post_proc_partvtk_button.setToolTip(__("Opens the PartVTK tool."))
@@ -3196,7 +2686,6 @@ post_proc_computeforces_button.setToolTip(__("Opens the ComputeForces tool."))
 post_proc_floatinginfo_button.setToolTip(__("Opens the FloatingInfo tool."))
 post_proc_measuretool_button.setToolTip(__("Opens the MeasureTool tool."))
 post_proc_isosurface_button.setToolTip(__("Opens the IsoSurface tool."))
-post_proc_boundaryvtk_button.setToolTip(__("Opens the BoundaryVTK tool."))
 post_proc_flowtool_button.setToolTip(__("Opens the FlowTool tool."))
 
 widget_state_elements['post_proc_partvtk_button'] = post_proc_partvtk_button
@@ -3204,7 +2693,6 @@ widget_state_elements['post_proc_computeforces_button'] = post_proc_computeforce
 widget_state_elements['post_proc_floatinginfo_button'] = post_proc_floatinginfo_button
 widget_state_elements['post_proc_measuretool_button'] = post_proc_measuretool_button
 widget_state_elements['post_proc_isosurface_button'] = post_proc_isosurface_button
-widget_state_elements['post_proc_boundaryvtk_button'] = post_proc_boundaryvtk_button
 widget_state_elements['post_proc_flowtool_button'] = post_proc_flowtool_button
 
 post_proc_partvtk_button.clicked.connect(on_partvtk)
@@ -3212,7 +2700,6 @@ post_proc_computeforces_button.clicked.connect(on_computeforces)
 post_proc_floatinginfo_button.clicked.connect(on_floatinginfo)
 post_proc_measuretool_button.clicked.connect(on_measuretool)
 post_proc_isosurface_button.clicked.connect(on_isosurface)
-post_proc_boundaryvtk_button.clicked.connect(on_boundaryvtk)
 post_proc_flowtool_button.clicked.connect(on_flowtool)
 
 export_layout.addWidget(export_label)
@@ -3221,8 +2708,6 @@ export_first_row_layout.addWidget(post_proc_computeforces_button)
 export_first_row_layout.addWidget(post_proc_isosurface_button)
 export_second_row_layout.addWidget(post_proc_floatinginfo_button)
 export_second_row_layout.addWidget(post_proc_measuretool_button)
-# TODO: Enable this when boundaryvtk is implemented
-# export_second_row_layout.addWidget(post_proc_boundaryvtk_button)
 export_second_row_layout.addWidget(post_proc_flowtool_button)
 export_layout.addLayout(export_first_row_layout)
 export_layout.addLayout(export_second_row_layout)

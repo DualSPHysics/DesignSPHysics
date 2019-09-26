@@ -80,3 +80,9 @@ class FreeCADObjectType:
 class FreeCADDisplayMode:
     ''' FreeCAD DisplayMode Strings. '''
     WIREFRAME = "Wireframe"
+    FLAT_LINES = "Flat Lines"
+
+
+class Template:
+    ''' Text templates stored in disk. '''
+    CASE_SUMMARY = "case_summary_template.html"

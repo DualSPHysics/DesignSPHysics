@@ -8,6 +8,7 @@ from shutil import copyfile
 
 import FreeCAD
 import FreeCADGui
+import Draft
 
 from PySide import QtGui
 
@@ -37,6 +38,47 @@ def prepare_dsph_case():
     FreeCADGui.ActiveDocument.getObject(CASE_LIMITS_OBJ_NAME).Selectable = False
     FreeCAD.ActiveDocument.recompute()
     FreeCADGui.SendMsgToActiveView("ViewFit")
+
+
+def setup_damping_environment() -> str:
+    ''' Setups a damping group with its properties within FreeCAD. '''
+    damping_group = FreeCAD.ActiveDocument.addObject("App::DocumentObjectGroup", "DampingZone")
+
+    # Limits line
+    points = [FreeCAD.Vector(0, 0, 0), FreeCAD.Vector(1000, 1000, 1000)]
+    limits = Draft.makeWire(points, closed=False, face=False, support=None)
+    Draft.autogroup(limits)
+    limits.Label = "Limits"
+    limitsv = FreeCADGui.ActiveDocument.getObject(limits.Name)
+    limitsv.ShapeColor = (0.32, 1.00, 0.00)
+    limitsv.LineColor = (0.32, 1.00, 0.00)
+    limitsv.PointColor = (0.32, 1.00, 0.00)
+    limitsv.EndArrow = True
+    limitsv.ArrowSize = "10 mm"
+    limitsv.ArrowType = "Dot"
+
+    # Overlimit line
+    points = [FreeCAD.Vector(*limits.End), FreeCAD.Vector(1580, 1577.35, 1577.35)]
+    overlimit = Draft.makeWire(points, closed=False, face=False, support=None)
+    Draft.autogroup(overlimit)
+    overlimit.Label = "Overlimit"
+    overlimitv = FreeCADGui.ActiveDocument.getObject(overlimit.Name)
+    overlimitv.DrawStyle = "Dotted"
+    overlimitv.ShapeColor = (0.32, 1.00, 0.00)
+    overlimitv.LineColor = (0.32, 1.00, 0.00)
+    overlimitv.PointColor = (0.32, 1.00, 0.00)
+    overlimitv.EndArrow = True
+    overlimitv.ArrowSize = "10 mm"
+    overlimitv.ArrowType = "Dot"
+
+    # Add the two lines to the group
+    damping_group.addObject(limits)
+    damping_group.addObject(overlimit)
+
+    FreeCAD.ActiveDocument.recompute()
+    FreeCADGui.SendMsgToActiveView("ViewFit")
+
+    return damping_group.Name
 
 
 def create_dsph_document():
