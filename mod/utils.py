@@ -32,6 +32,9 @@ from mod.translation_tools import __
 from mod import guiutils
 from mod.constants import FREECAD_MIN_VERSION, APP_NAME
 from mod.constants import VERSION, PICKLE_PROTOCOL, DIVIDER, HELP_WEBPAGE
+
+from mod.widgets.damping_config_dialog import DampingConfigDialog
+
 from mod.dataobjects.float_property import FloatProperty
 from mod.dataobjects.initials_property import InitialsProperty
 from mod.dataobjects.domain_fixed_parameter import DomainFixedParameter
@@ -59,20 +62,18 @@ from mod.dataobjects.relaxation_zone_regular import RelaxationZoneRegular
 from mod.dataobjects.relaxation_zone_irregular import RelaxationZoneIrregular
 from mod.dataobjects.relaxation_zone_uniform import RelaxationZoneUniform
 from mod.dataobjects.relaxation_zone_file import RelaxationZoneFile
-
-# ------ END CONSTANTS DEFINITION ------
+from mod.dataobjects.damping import Damping
+from mod.dataobjects.case import Case
 
 
 def is_compatible_version():
-    ''' Checks if the current FreeCAD version is suitable
-        for this macro. '''
+    ''' Checks if the current FreeCAD version is suitable for this macro. '''
 
     version_num = FreeCAD.Version()[0] + FreeCAD.Version()[1]
     if float(version_num) < float(FREECAD_MIN_VERSION):
-        guiutils.warning_dialog("This version of FreeCAD is not supported!. Install version 0.17 or higher.")
+        guiutils.warning_dialog("This version of FreeCAD is not supported!. Install version 0.18 or higher.")
         return False
-    else:
-        return True
+    return True
 
 
 def float_list_to_float_property(floating_mks):

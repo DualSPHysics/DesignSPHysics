@@ -12,6 +12,7 @@ import FreeCAD
 
 from mod.constants import APP_NAME, DIVIDER, LINE_END
 from mod.enums import FloatingDensityType
+from mod.template_tools import obj_to_dict
 
 from mod.dataobjects.case import Case
 
@@ -37,24 +38,6 @@ class XMLExporter():
 
     def __init__(self):
         self.mod_folder = os.path.dirname(os.path.realpath(__file__))
-
-    def obj_to_dict(self, obj, classkey=None):
-        ''' Converts an object to dictionary recursively. '''
-        if isinstance(obj, dict):
-            data = {}
-            for (k, v) in obj.items():
-                data[k] = self.obj_to_dict(v, classkey)
-            return data
-        if hasattr(obj, "_ast"):
-            return self.obj_to_dict(obj._ast())  # pylint: disable=protected-access
-        if hasattr(obj, "__iter__") and not isinstance(obj, str):
-            return [self.obj_to_dict(v, classkey) for v in obj]
-        if hasattr(obj, "__dict__"):
-            data = {key: self.obj_to_dict(value, classkey) for key, value in obj.__dict__.items() if not callable(value) and not key.startswith('_')}
-            if classkey is not None and hasattr(obj, "__class__"):
-                data[classkey] = obj.__class__.__name__
-            return data
-        return obj
 
     def get_template_text(self, template_path) -> str:
         ''' Returns the text for a given template. '''
@@ -148,7 +131,7 @@ class XMLExporter():
 
     def get_adapted_case_data(self) -> dict:
         ''' Adapts the case data to a dictionary used to format the resulting XML '''
-        data: dict = self.obj_to_dict(Case.instance())
+        data: dict = obj_to_dict(Case.instance())
         data = self.transform_bools_to_strs(data)
 
         data['definition_template'] = self.get_definition_template(data)
