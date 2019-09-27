@@ -62,7 +62,7 @@ def widget_state_config(widgets, config):
         widgets['post_proc_measuretool_button'].setEnabled(False)
         widgets['post_proc_isosurface_button'].setEnabled(False)
         widgets['post_proc_flowtool_button'].setEnabled(False)
-        widgets["objectlist_table"].setEnabled(False)
+        widgets["object_list_table_widget"].setEnabled(False)
         widgets["dp_input"].setEnabled(False)
         widgets["summary_bt"].setEnabled(False)
         widgets["toggle3dbutton"].setEnabled(False)
@@ -87,6 +87,7 @@ def widget_state_config(widgets, config):
         widgets["summary_bt"].setEnabled(True)
         widgets["toggle3dbutton"].setEnabled(True)
         widgets["dampingbutton"].setEnabled(True)
+        widgets["object_list_table_widget"].setEnabled(True)
     elif config == "gencase done":
         widgets["ex_selector_combo"].setEnabled(True)
         widgets["ex_button"].setEnabled(True)
@@ -183,4 +184,3 @@ def widget_state_config(widgets, config):
         widgets['post_proc_measuretool_button'].setEnabled(True)
         widgets['post_proc_isosurface_button'].setEnabled(True)
         widgets['post_proc_flowtool_button'].setEnabled(True)
-
