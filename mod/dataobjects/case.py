@@ -3,7 +3,7 @@
 ''' DesignSPHysics main data structure. '''
 
 from mod.constants import VERSION
-from mod.enums import ObjectType
+from mod.enums import ObjectType, FreeCADObjectType
 from mod.dataobjects.constants import Constants
 from mod.dataobjects.execution_parameters import ExecutionParameters
 from mod.dataobjects.periodicity import Periodicity
@@ -21,7 +21,7 @@ class Case():
     etcetera. Used as a way to store information and transform it for
     multiple needs '''
     __instance: 'Case' = None
-    SUPPORTED_TYPES = ["Part::Box", "Part::Sphere", "Part::Cylinder"]
+    SUPPORTED_TYPES = [FreeCADObjectType.BOX, FreeCADObjectType.SPHERE, "Part::Cylinder"]
 
     def __init__(self, reset=False):
         ''' Virtually private constructor. '''

@@ -30,10 +30,9 @@ from mod.stdout_tools import log, warning, error
 from mod.translation_tools import __
 
 from mod import guiutils
+from mod.enums import FreeCADObjectType
 from mod.constants import FREECAD_MIN_VERSION, APP_NAME
 from mod.constants import VERSION, PICKLE_PROTOCOL, DIVIDER, HELP_WEBPAGE
-
-from mod.widgets.damping_config_dialog import DampingConfigDialog
 
 from mod.dataobjects.float_property import FloatProperty
 from mod.dataobjects.initials_property import InitialsProperty
@@ -62,8 +61,6 @@ from mod.dataobjects.relaxation_zone_regular import RelaxationZoneRegular
 from mod.dataobjects.relaxation_zone_irregular import RelaxationZoneIrregular
 from mod.dataobjects.relaxation_zone_uniform import RelaxationZoneUniform
 from mod.dataobjects.relaxation_zone_file import RelaxationZoneFile
-from mod.dataobjects.damping import Damping
-from mod.dataobjects.case import Case
 
 
 def is_compatible_version():
@@ -354,7 +351,7 @@ def get_default_data():
     temp_data['measuretool_points'] = list()
     temp_data['measuretool_grid'] = list()
     temp_data['current_output'] = ""
-    temp_data['supported_types'] = ["Part::Box", "Part::Sphere", "Part::Cylinder"]
+    temp_data['supported_types'] = [FreeCADObjectType.BOX, FreeCADObjectType.SPHERE, "Part::Cylinder"]
 
     # Try to load saved paths. This way the user does not need
     # to introduce the software paths every time
@@ -430,7 +427,7 @@ def dump_to_xml(data, save_name):
         to disk. Generates a GenCase compatible XML. '''
     # Saves all the data in XML format.
     log("Saving data in " + data["project_path"] + ".")
-    FreeCAD.getDocument("DSPH_Case").saveAs(save_name + "/DSPH_Case.FCStd")
+    FreeCAD.ActiveDocument.saveAs(save_name + "/DSPH_Case.FCStd")
     FreeCADGui.SendMsgToActiveView("Save")
     f = open(save_name + "/" + save_name.split('/')[-1] + "_Def.xml", 'w', encoding='utf-8')
     f.write('<?xml version="1.0" encoding="UTF-8" ?>\n')
@@ -507,7 +504,7 @@ def dump_to_xml(data, save_name):
     for key in data["export_order"]:
         name = key
         valuelist = data["simobjects"][name]
-        o = FreeCAD.getDocument("DSPH_Case").getObject(name)
+        o = FreeCAD.ActiveDocument.getObject(name)
         # Ignores case limits
         if name != "Case_Limits":
             # Sets MKfluid or bound depending on object properties and resets
@@ -520,7 +517,7 @@ def dump_to_xml(data, save_name):
             # Exports supported objects in a xml parametric mode.
             # If special objects are found, exported in an specific manner (p.e FillBox)
             # The rest of the things are exported in STL format.
-            if o.TypeId == "Part::Box":
+            if o.TypeId == FreeCADObjectType.BOX:
                 if math.degrees(o.Placement.Rotation.Angle) != 0:
                     if (abs(o.Placement.Base.x) + abs(o.Placement.Base.y) + abs(o.Placement.Base.z)) != 0:
                         f.write(
@@ -561,7 +558,7 @@ def dump_to_xml(data, save_name):
                 f.write('\t\t\t\t\t</drawbox>\n')
                 if math.degrees(o.Placement.Rotation.Angle) != 0:
                     f.write('\t\t\t\t\t<matrixreset />\n')
-            elif o.TypeId == "Part::Sphere":
+            elif o.TypeId == FreeCADObjectType.SPHERE:
                 if (abs(o.Placement.Base.x) + abs(o.Placement.Base.y) + abs(o.Placement.Base.z)) != 0:
                     f.write(
                         '\t\t\t\t\t<move x="' +
@@ -602,7 +599,7 @@ def dump_to_xml(data, save_name):
                 f.write('\t\t\t\t\t</drawcylinder>\n')
             else:
                 # Watch if it is a fillbox group
-                if o.TypeId == "App::DocumentObjectGroup" and "fillbox" in o.Name.lower():
+                if o.TypeId == FreeCADObjectType.FOLDER and "fillbox" in o.Name.lower():
                     filllimits = None
                     fillpoint = None
                     for element in o.OutList:

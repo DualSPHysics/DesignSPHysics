@@ -8,14 +8,8 @@ operations in DesignSPHysics.
 '''
 
 import os
-import subprocess
 
-from PySide import QtGui, QtCore
-
-import mod.utils
-import mod.constants
-from mod.dialog_tools import error_dialog
-
+from PySide import QtGui
 
 def h_line_generator():
     ''' Generates an horizontal line that can be used as a separator.'''

@@ -11,6 +11,7 @@ from PySide import QtCore, QtGui
 
 from mod.translation_tools import __
 from mod.enums import ObjectType, ObjectFillMode
+from mod.constants import PROP_WIDGET_INTERNAL_NAME
 
 from mod.widgets.damping_config_dialog import DampingConfigDialog
 from mod.widgets.initials_dialog import InitialsDialog
@@ -35,7 +36,7 @@ class PropertiesDockWidget(QtGui.QDockWidget):
     def __init__(self):
         super().__init__()
 
-        self.setObjectName("DSPH_Properties")
+        self.setObjectName(PROP_WIDGET_INTERNAL_NAME)
         self.setWindowTitle(__("DSPH Object Properties"))
 
         # Scaffolding widget, only useful to apply to the properties_dock widget
@@ -201,7 +202,7 @@ class PropertiesDockWidget(QtGui.QDockWidget):
     def on_objtype_change(self, index):
         ''' Defines what happens when type of object is changed '''
         selection = FreeCADGui.Selection.getSelection()[0]
-        selectiongui = FreeCADGui.getDocument("DSPH_Case").getObject(selection.Name)
+        selectiongui = FreeCADGui.getDocumentSINGLETON_DOCUMENT_NAME.getObject(selection.Name)
         simulation_object = Case.instance().get_simulation_object(selection.Name)
         mk_properties = Case.instance().get_mk_base_properties(simulation_object.obj_mk)
 
@@ -248,7 +249,7 @@ class PropertiesDockWidget(QtGui.QDockWidget):
     def on_fillmode_change(self, index):
         ''' Defines what happens when fill mode is changed '''
         selection = FreeCADGui.Selection.getSelection()[0]
-        selectiongui = FreeCADGui.getDocument("DSPH_Case").getObject(selection.Name)
+        selectiongui = FreeCADGui.ActiveDocument.getObject(selection.Name)
         simulation_object = Case.instance().get_simulation_object(selection.Name)
         object_prop_item_text = self.objtype_prop.itemText(self.objtype_prop.currentIndex()).lower()
 

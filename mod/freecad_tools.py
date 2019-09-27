@@ -23,8 +23,8 @@ from mod.translation_tools import __
 def prepare_dsph_case():
     ''' Creates a few objects and setups a new case for DesignSPHysics. '''
     FreeCAD.setActiveDocument(SINGLETON_DOCUMENT_NAME)
-    FreeCAD.ActiveDocument = FreeCAD.getDocument(SINGLETON_DOCUMENT_NAME)
-    FreeCADGui.ActiveDocument = FreeCADGui.getDocument(SINGLETON_DOCUMENT_NAME)
+    FreeCAD.ActiveDocument = FreeCAD.ActiveDocument
+    FreeCADGui.ActiveDocument = FreeCADGui.ActiveDocument
     FreeCADGui.activateWorkbench(DEFAULT_WORKBENCH)
     FreeCADGui.activeDocument().activeView().viewAxonometric()
     FreeCAD.ActiveDocument.addObject(FreeCADObjectType.BOX, CASE_LIMITS_OBJ_NAME)
@@ -42,7 +42,7 @@ def prepare_dsph_case():
 
 def setup_damping_environment() -> str:
     ''' Setups a damping group with its properties within FreeCAD. '''
-    damping_group = FreeCAD.ActiveDocument.addObject("App::DocumentObjectGroup", "DampingZone")
+    damping_group = FreeCAD.ActiveDocument.addObject(FreeCADObjectType.FOLDER, "DampingZone")
 
     # Limits line
     points = [FreeCAD.Vector(0, 0, 0), FreeCAD.Vector(1000, 1000, 1000)]
@@ -110,7 +110,7 @@ def document_open(document_name: str) -> bool:
 def valid_document_environment() -> bool:
     ''' Returns a boolean if a correct document environment is found.
     A correct document environment is defined if only a DSPH_Case document is currently opened in FreeCAD. '''
-    return document_count() == 1 and document_open('DSPH_Case')
+    return document_count() == 1 and document_open(SINGLETON_DOCUMENT_NAME)
 
 
 def prompt_close_all_documents(prompt: bool = True) -> bool:
@@ -134,9 +134,9 @@ def get_fc_main_window():
 
 def get_fc_object(internal_name):
     ''' Returns a FreeCAD internal object by a name. '''
-    return FreeCAD.getDocument(SINGLETON_DOCUMENT_NAME).getObject(internal_name)
+    return FreeCAD.ActiveDocument.getObject(internal_name)
 
 
 def get_fc_view_object(internal_name):
     ''' Returns a FreeCADGui View provider object by a name. '''
-    return FreeCADGui.getDocument(SINGLETON_DOCUMENT_NAME).getObject(internal_name)
+    return FreeCADGui.ActiveDocument.getObject(internal_name)
