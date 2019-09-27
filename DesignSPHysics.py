@@ -33,6 +33,7 @@ from mod.widgets.add_geo_dialog import AddGEODialog
 from mod.widgets.special_options_selector_dialog import SpecialOptionsSelectorDialog
 from mod.widgets.properties_dock_widget import PropertiesDockWidget
 from mod.widgets.export_progress_dialog import ExportProgressDialog
+from mod.widgets.object_list_table_widget import ObjectListTableWidget
 from mod.constants import APP_NAME, PICKLE_PROTOCOL, WIDTH_2D, VERSION, CASE_LIMITS_OBJ_NAME
 from mod.executable_tools import refocus_cwd
 from mod.freecad_tools import valid_document_environment, get_fc_object, get_fc_view_object
@@ -2671,19 +2672,12 @@ export_layout.addLayout(export_first_row_layout)
 export_layout.addLayout(export_second_row_layout)
 
 # Object list table scaffolding
-# TODO: This should be implemented as a custom class like ObjectListTable(QtGui.QWidget) or something like that.
-objectlist_layout = QtGui.QVBoxLayout()
-objectlist_label = QtGui.QLabel("<b>" + __("Object order") + "</b>")
-objectlist_label.setWordWrap(True)
-objectlist_table = QtGui.QTableWidget(0, 1)
-objectlist_table.setObjectName("DSPH Objects")
-objectlist_table.verticalHeader().setVisible(False)
-objectlist_table.horizontalHeader().setVisible(False)
-objectlist_table.horizontalHeader().setResizeMode(0, QtGui.QHeaderView.Stretch)
-widget_state_elements['objectlist_table'] = objectlist_table
-Case.instance().info.objectlist_table = objectlist_table
-objectlist_layout.addWidget(objectlist_label)
-objectlist_layout.addWidget(objectlist_table)
+object_list_table_widget = ObjectListTableWidget()
+widget_state_elements['object_list_table_widget'] = object_list_table_widget
+Case.instance().info.objectlist_table = object_list_table_widget
+
+# called before objectlist_table
+
 
 # ++++++++++++ Main Layout construction ++++++++++++
 logo_layout.addStretch(0.5)
@@ -2713,7 +2707,7 @@ main_layout.addLayout(ex_layout)
 main_layout.addWidget(h_line_generator())
 main_layout.addLayout(export_layout)
 main_layout.addWidget(h_line_generator())
-main_layout.addLayout(objectlist_layout)
+main_layout.addWidget(object_list_table_widget)
 
 # Default disabled widgets
 widget_state_config(widget_state_elements, "no case")
@@ -2937,10 +2931,10 @@ def on_tree_item_selection_change():
         properties_widget.set_damping_button_visibility(False)
 
     # Update dsph objects list
-    objectlist_table.clear()
-    objectlist_table.setEnabled(True)
+    object_list_table_widget.clear_table_contents()
+    object_list_table_widget.set_table_enabled(True)
 
-    objectlist_table.setRowCount(Case.instance().number_of_objects_in_simulation())
+    object_list_table_widget.set_table_row_count(Case.instance().number_of_objects_in_simulation())
     current_row = 0
     objects_with_parent = list()
     for object_name in Case.instance().get_all_simulation_object_names():
@@ -2968,7 +2962,7 @@ def on_tree_item_selection_change():
         if current_row is Case.instance().number_of_objects_in_simulation() - 1:
             target_widget.disable_down()
 
-        objectlist_table.setCellWidget(current_row, 0, target_widget)
+        object_list_table_widget.set_table_cell_widget(current_row, 0, target_widget)
 
         current_row += 1
     for object_name in objects_with_parent:
