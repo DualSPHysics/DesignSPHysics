@@ -17,6 +17,8 @@ import Mesh
 
 from mod import utils
 from mod import xmltodict
+from mod.enums import FreeCADObjectType
+from mod.constants import SINGLETON_DOCUMENT_NAME
 
 
 def import_xml_file(filename):
@@ -169,7 +171,7 @@ def create_fc_objects(f, path):
                     utils.warning(
                         "Modifier unknown (" + subcommand.tag + ") for the command: " + command.tag + ". Ignoring...")
             # Box creation in FreeCAD
-            FreeCAD.ActiveDocument.addObject("Part::Box", "Box" + str(elementnum))
+            FreeCAD.ActiveDocument.addObject(FreeCADObjectType.BOX, "Box" + str(elementnum))
             FreeCAD.ActiveDocument.ActiveObject.Label = "Box" + str(elementnum)
             # noinspection PyArgumentList
             FreeCAD.ActiveDocument.getObject("Box" + str(elementnum)).Placement = FreeCAD.Placement(
@@ -220,7 +222,7 @@ def create_fc_objects(f, path):
                     point = [float(subcommand.attrib["x"]), float(subcommand.attrib["y"]),
                              float(subcommand.attrib["z"])]
             # Sphere creation in FreeCAD
-            FreeCAD.ActiveDocument.addObject("Part::Sphere", "Sphere" + str(elementnum))
+            FreeCAD.ActiveDocument.addObject(FreeCADObjectType.SPHERE, "Sphere" + str(elementnum))
             FreeCAD.ActiveDocument.ActiveObject.Label = "Sphere" + str(elementnum)
             # noinspection PyArgumentList
             FreeCAD.ActiveDocument.getObject("Sphere" + str(elementnum)).Placement = FreeCAD.Placement(
@@ -234,7 +236,7 @@ def create_fc_objects(f, path):
         elif command.tag == "drawfilestl":
             # Imports the stl file as good as it can
             stl_path = path + "/" + command.attrib["file"]
-            Mesh.insert(stl_path, "DSPH_Case")
+            Mesh.insert(stl_path, SINGLETON_DOCUMENT_NAME)
             # toAddDSPH["STL" + str(elementnum)] = [int(mk[1]), mk[0], drawmode]
         else:
             # Command not supported, report and ignore

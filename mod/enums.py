@@ -75,6 +75,9 @@ class FloatingDensityType:
 class FreeCADObjectType:
     ''' FreeCAD Types enums wrapping strings. '''
     BOX = "Part::Box"
+    FOLDER = "App::DocumentObjectGroup"
+    SPHERE = "Part::Sphere"
+    CUSTOM_MESH = "Mesh::Feature"
 
 
 class FreeCADDisplayMode:

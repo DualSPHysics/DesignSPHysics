@@ -88,7 +88,7 @@ class ChronoConfigDialog(QtGui.QDialog):
         # Create the necessary spaces in the list
         self.count = 0
         for key in self.data['simobjects'].keys():
-            self.context_object = FreeCAD.getDocument("DSPH_Case").getObject(key)
+            self.context_object = FreeCAD.ActiveDocument.getObject(key)
             if self.data['simobjects'][self.context_object.Name][1] != "Fluid" and \
                     self.context_object.Name != "Case_Limits":
                 self.count += 1
@@ -101,7 +101,7 @@ class ChronoConfigDialog(QtGui.QDialog):
 
         # Select the objects that are going to be listed
         for key, _ in self.data['simobjects'].items():
-            self.context_object = FreeCAD.getDocument("DSPH_Case").getObject(key)
+            self.context_object = FreeCAD.ActiveDocument.getObject(key)
             if self.context_object.InList != list():
                 self.objects_with_parent.append(self.context_object.Name)
                 continue
@@ -459,6 +459,7 @@ class ChronoConfigDialog(QtGui.QDialog):
         self.refresh_link_pointline()
 
     def on_cancel(self):
+        ''' Defines cancel button behaviour. '''
         self.reject()
 
     def update_to_save(self):

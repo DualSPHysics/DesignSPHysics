@@ -17,7 +17,7 @@ from mod.dataobjects.file_gen import FileGen
 from mod.dataobjects.special_movement import SpecialMovement
 from mod.dataobjects.simulation_object import SimulationObject
 from mod.dataobjects.case import Case
-from mod.enums import ObjectType, ObjectFillMode, FreeCADDisplayMode
+from mod.enums import ObjectType, ObjectFillMode, FreeCADDisplayMode, FreeCADObjectType
 from mod.widgets.object_order_widget import ObjectOrderWidget
 from mod.widgets.run_dialog import RunDialog
 from mod.widgets.measure_tool_grid_dialog import MeasureToolGridDialog
@@ -34,7 +34,9 @@ from mod.widgets.special_options_selector_dialog import SpecialOptionsSelectorDi
 from mod.widgets.properties_dock_widget import PropertiesDockWidget
 from mod.widgets.export_progress_dialog import ExportProgressDialog
 from mod.widgets.object_list_table_widget import ObjectListTableWidget
-from mod.constants import APP_NAME, PICKLE_PROTOCOL, WIDTH_2D, VERSION, CASE_LIMITS_OBJ_NAME
+from mod.constants import APP_NAME, PICKLE_PROTOCOL, WIDTH_2D, VERSION, CASE_LIMITS_OBJ_NAME, MAIN_WIDGET_INTERNAL_NAME
+from mod.constants import FILLBOX_DEFAULT_LENGTH, FILLBOX_DEFAULT_RADIUS, CASE_LIMITS_2D_LABEL, CASE_LIMITS_3D_LABEL, PROP_WIDGET_INTERNAL_NAME
+from mod.constants import DEFAULT_WORKBENCH
 from mod.executable_tools import refocus_cwd
 from mod.freecad_tools import valid_document_environment, get_fc_object, get_fc_view_object
 from mod.freecad_tools import document_count, prompt_close_all_documents, create_dsph_document, get_fc_main_window, create_dsph_document_from_fcstd
@@ -107,14 +109,14 @@ if document_count() > 0:
         quit()
 
 # If the script is executed even when a previous DSPH Dock is created it makes sure that it's deleted before.
-previous_dock = fc_main_window.findChild(QtGui.QDockWidget, __("DSPH Widget"))
+previous_dock = fc_main_window.findChild(QtGui.QDockWidget, MAIN_WIDGET_INTERNAL_NAME)
 if previous_dock:
     previous_dock.setParent(None)
     previous_dock = None
 
 # Creation of the DSPH Widget.
 # Creates a widget with a series of layouts added, to apply to the DSPH dock at the end.
-dsph_main_dock.setObjectName("DSPH Widget")
+dsph_main_dock.setObjectName(MAIN_WIDGET_INTERNAL_NAME)
 dsph_main_dock.setWindowTitle("{} {}".format(APP_NAME, str(__version__)))
 main_layout = QtGui.QVBoxLayout()  # Main Widget layout.  Vertical ordering
 
@@ -187,8 +189,7 @@ logo_label.setPixmap(get_icon(file_name="logo.png", return_only_path=True))
 
 
 def on_dp_changed():
-    ''' DP Introduction.
-    Changes the dp at the moment the user changes the text. '''
+    ''' DP Introduction. Changes the dp at the moment the user changes the text. '''
     Case.instance().dp = float(dp_input.text())
 
 
@@ -743,15 +744,15 @@ def on_add_fillbox():
     ''' Add fillbox group. It consists in a group with 2 objects inside: a point and a box.
     The point represents the fill seed and the box sets the bounds for the filling. '''
 
-    fillbox_gp = FreeCAD.getDocument("DSPH_Case").addObject("App::DocumentObjectGroup", "FillBox")
-    fillbox_point = FreeCAD.ActiveDocument.addObject("Part::Sphere", "FillPoint")
-    fillbox_limits = FreeCAD.ActiveDocument.addObject("Part::Box", "FillLimit")
-    fillbox_limits.Length = '1000 mm'
-    fillbox_limits.Width = '1000 mm'
-    fillbox_limits.Height = '1000 mm'
-    fillbox_limits.ViewObject.DisplayMode = "Wireframe"
+    fillbox_gp = FreeCAD.ActiveDocument.addObject(FreeCADObjectType.FOLDER, "FillBox")
+    fillbox_point = FreeCAD.ActiveDocument.addObject(FreeCADObjectType.SPHERE, "FillPoint")
+    fillbox_limits = FreeCAD.ActiveDocument.addObject(FreeCADObjectType.BOX, "FillLimit")
+    fillbox_limits.Length = FILLBOX_DEFAULT_LENGTH
+    fillbox_limits.Width = FILLBOX_DEFAULT_LENGTH
+    fillbox_limits.Height = FILLBOX_DEFAULT_LENGTH
+    fillbox_limits.ViewObject.DisplayMode = FreeCADDisplayMode.WIREFRAME
     fillbox_limits.ViewObject.LineColor = (0.00, 0.78, 1.00)
-    fillbox_point.Radius.Value = 10
+    fillbox_point.Radius.Value = FILLBOX_DEFAULT_RADIUS
     fillbox_point.Placement.Base = FreeCAD.Vector(500, 500, 500)
     fillbox_point.ViewObject.ShapeColor = (0.00, 0.00, 0.00)
     fillbox_gp.addObject(fillbox_limits)
@@ -772,88 +773,6 @@ def on_add_geo():
     add_geo_dialog.exec_()
 
 
-def on_import_xml():
-    ''' Imports an already created GenCase/DSPH compatible
-    file and loads it in the scene. '''
-
-    error_dialog(__("This feature is disabled in this version. Sorry for the inconvenience"))
-
-    return
-
-    # warning_dialog(__("This feature is experimental. It's meant to help to build a case importing bits from"
-    #                            "previous, non DesignSPHysics code. This is not intended neither to import all objects "
-    #                            "nor its "))
-
-    # noinspection PyArgumentList
-    # import_name, _ = QtGui.QFileDialog.getOpenFileName(dsph_main_dock, __("Import XML"), QtCore.QDir.homePath(), "XML Files (*.xml)")
-    # if import_name == "":
-    #     # User pressed cancel.  No path is selected.
-    #     return
-    # else:
-    #     if get_number_of_documents() > 0:
-    #         if prompt_close_all_documents():
-    #             on_new_case()
-    #         else:
-    #             return
-    #     else:
-    #         on_new_case()
-    #     config, objects = xmlimporter.import_xml_file(import_name)
-
-    #     # Set Config
-    #     dp_input.setText(str(config['dp']))
-    #     limits_point_min = config['limits_min']
-    #     limits_point_max = config['limits_max']
-    #     # noinspection PyArgumentList
-    #     FreeCAD.ActiveDocument.getObject(CASE_LIMITS_OBJ_NAME).Placement = FreeCAD.Placement(
-    #         FreeCAD.Vector(limits_point_min[0] * 1000, limits_point_min[1] * 1000, limits_point_min[2] * 1000),
-    #         FreeCAD.Rotation(FreeCAD.Vector(0, 0, 1), 0))
-    #     FreeCAD.ActiveDocument.getObject("Case_Limits").Length = str(limits_point_max[0] - limits_point_min[0]) + ' m'
-    #     FreeCAD.ActiveDocument.getObject("Case_Limits").Width = str(limits_point_max[1] - limits_point_min[1]) + ' m'
-    #     FreeCAD.ActiveDocument.getObject("Case_Limits").Height = str(limits_point_max[2] - limits_point_min[2]) + ' m'
-
-    #     # Merges and updates current data with the imported one.
-    #     # data.update(config)
-
-    #     # Add results to DSPH objects
-    #     for key, value in objects.items():
-    #         add_object_to_sim(key)
-    #         # data['simobjects'][key] = value
-
-    #         # Change visual properties based on fill mode and type
-    #         target_object = FreeCADGui.ActiveDocument.getObject(key)
-    #         if "bound" in value[1]:
-    #             if "full" in value[2]:
-    #                 target_object.ShapeColor = (0.80, 0.80, 0.80)
-    #                 target_object.Transparency = 0
-    #             elif "solid" in value[2]:
-    #                 target_object.ShapeColor = (0.80, 0.80, 0.80)
-    #                 target_object.Transparency = 0
-    #             elif "face" in value[2]:
-    #                 target_object.ShapeColor = (0.80, 0.80, 0.80)
-    #                 target_object.Transparency = 80
-    #             elif "wire" in value[2]:
-    #                 target_object.ShapeColor = (0.80, 0.80, 0.80)
-    #                 target_object.Transparency = 85
-    #         if "fluid" in value[1]:
-    #             if "full" in value[2]:
-    #                 target_object.ShapeColor = (0.00, 0.45, 1.00)
-    #                 target_object.Transparency = 30
-    #             elif "solid" in value[2]:
-    #                 target_object.ShapeColor = (0.00, 0.45, 1.00)
-    #                 target_object.Transparency = 30
-    #             elif "face" in value[2]:
-    #                 target_object.ShapeColor = (0.00, 0.45, 1.00)
-    #                 target_object.Transparency = 80
-    #             elif "wire" in value[2]:
-    #                 target_object.ShapeColor = (0.00, 0.45, 1.00)
-    #                 target_object.Transparency = 85
-
-    #         # Notify change to refresh UI elements related.
-    #         on_tree_item_selection_change()
-    # info_dialog(__("Importing successful. Note that some objects may not be automatically added to the case, "
-    #                         "and other may not have its properties correctly applied."))
-
-
 def on_summary():
     ''' Handles Case Summary button '''
     case_summary_dialog = CaseSummary()
@@ -870,7 +789,7 @@ def on_2d_toggle():
 
             # Toggle 3D Mode and change name
             Case.instance().mode3d = not Case.instance().mode3d
-            get_fc_object(CASE_LIMITS_OBJ_NAME).Label = "Case Limits (3D)" if Case.instance().mode3d else "Case Limits (2D)"
+            get_fc_object(CASE_LIMITS_OBJ_NAME).Label = CASE_LIMITS_3D_LABEL if Case.instance().mode3d else CASE_LIMITS_2D_LABEL
         else:
             # Toggle 3D Mode and change name
             Case.instance().mode3d = not Case.instance().mode3d
@@ -885,7 +804,7 @@ def on_2d_toggle():
             get_fc_view_object(CASE_LIMITS_OBJ_NAME).ShapeColor = (0.80, 0.80, 0.80)
             get_fc_view_object(CASE_LIMITS_OBJ_NAME).Transparency = 0
 
-            get_fc_object(CASE_LIMITS_OBJ_NAME).Label = "Case Limits (3D)" if Case.instance().mode3d else "Case Limits (2D)"
+            get_fc_object(CASE_LIMITS_OBJ_NAME).Label = CASE_LIMITS_3D_LABEL if Case.instance().mode3d else CASE_LIMITS_2D_LABEL
     else:
         error("Not a valid case environment")
 
@@ -905,7 +824,6 @@ casecontrols_menu_savemenu.triggered.connect(on_save_menu)
 casecontrols_bt_loaddoc.clicked.connect(on_load_button)
 casecontrols_bt_addfillbox.clicked.connect(on_add_fillbox)
 casecontrols_bt_addgeo.clicked.connect(on_add_geo)
-casecontrols_bt_importxml.clicked.connect(on_import_xml)
 summary_bt.clicked.connect(on_summary)
 toggle3dbutton.clicked.connect(on_2d_toggle)
 casecontrols_bt_special.clicked.connect(on_special_button)
@@ -939,8 +857,7 @@ def on_ex_simulate():
         # Warning window about save_case
         run_warning_dialog = QtGui.QMessageBox()
         run_warning_dialog.setWindowTitle(__("Warning!"))
-        run_warning_dialog.setText(__("It is necessary that you run Run GenCase again, otherwise, maybe the results "
-                                      "obtained may not be as expected..."))
+        run_warning_dialog.setText(__("It is necessary that you run Run GenCase again, otherwise, maybe the results obtained may not be as expected..."))
         run_warning_dialog.setIcon(QtGui.QMessageBox.Warning)
         run_warning_dialog.exec_()
 
@@ -959,7 +876,7 @@ def on_ex_simulate():
     # Cancel button handler
     def on_cancel():
         log(__("Stopping simulation"))
-        if Case.instance().info.current_process is not None:
+        if Case.instance().info.current_process:
             Case.instance().info.current_process.kill()
         run_dialog.hide()
         run_dialog.run_details.hide()
@@ -1033,16 +950,16 @@ def on_ex_simulate():
         '/' + Case.instance().name + "_out/",
         "-svres", "-" + str(ex_selector_combo.currentText()).lower()
     ]
-    if len(Case.instance().info.run_additional_parameters) < 2:
-        additional_params_ex = list()
-    else:
+
+    additional_params_ex = list()
+    if Case.instance().info.run_additional_parameters:
         additional_params_ex = Case.instance().info.run_additional_parameters.split(" ")
+
     final_params_ex = static_params_exe + additional_params_ex
     Case.instance().info.current_process.start(Case.instance().executable_paths.dsphysics, final_params_ex)
 
     def on_fs_change():
-        ''' Executed each time the filesystem changes. This updates the percentage of the simulation and its
-        details.'''
+        ''' Executed each time the filesystem changes. This updates the percentage of the simulation and its details.'''
         run_file_data = ''
         try:
             with open(Case.instance().path + '/' + Case.instance().name + "_out/Run.out", "r") as run_file:
@@ -2725,7 +2642,7 @@ fc_main_window.addDockWidget(QtCore.Qt.RightDockWidgetArea, dsph_main_dock)
 # This is the dock widget that by default appears at the bottom-right corner.
 # ----------------------------
 # Tries to find and close previous instances of the widget.
-previous_dock = fc_main_window.findChild(QtGui.QDockWidget, "DSPH_Properties")
+previous_dock = fc_main_window.findChild(QtGui.QDockWidget, PROP_WIDGET_INTERNAL_NAME)
 if previous_dock:
     previous_dock.setParent(None)
     previous_dock = None
@@ -2787,7 +2704,7 @@ def on_tree_item_selection_change():
 
     selection = FreeCADGui.Selection.getSelection()
     object_names = list()
-    for each in FreeCAD.getDocument("DSPH_Case").Objects:
+    for each in FreeCAD.ActiveDocument.Objects:
         object_names.append(each.Name)
 
     # Detect object deletion
@@ -2846,7 +2763,7 @@ def on_tree_item_selection_change():
                         properties_widget.set_mkgroup_range(ObjectType.BOUND)
                         properties_widget.set_mkgroup_text("&nbsp;&nbsp;&nbsp;" + __("MKBound") + " <a href='http://design.sphysics.org/wiki/doku.php?id=concepts'>?</a>")
                 elif "part" in selection[0].TypeId.lower() or "mesh" in selection[0].TypeId.lower() or (
-                        selection[0].TypeId == "App::DocumentObjectGroup" and "fillbox" in selection[0].Name.lower()):
+                        selection[0].TypeId == FreeCADObjectType.FOLDER and "fillbox" in selection[0].Name.lower()):
                     # Is an object that will be exported to STL
                     to_change.setEnabled(True)
                     if sim_object.type is ObjectType.FLUID:
@@ -2886,7 +2803,7 @@ def on_tree_item_selection_change():
 
                 # float state config
                 to_change = properties_widget.get_cell_widget(3, 1)
-                if selection[0].TypeId in Case.SUPPORTED_TYPES or (selection[0].TypeId == "App::DocumentObjectGroup"
+                if selection[0].TypeId in Case.SUPPORTED_TYPES or (selection[0].TypeId == FreeCADObjectType.FOLDER
                                                                    and "fillbox" in selection[0].Name.lower()):
                     if sim_object.type is ObjectType.FLUID:
                         to_change.setEnabled(False)
@@ -2902,8 +2819,8 @@ def on_tree_item_selection_change():
 
                 # motion restrictions
                 to_change = properties_widget.get_cell_widget(5, 1)
-                if selection[0].TypeId in Case.SUPPORTED_TYPES or "Mesh::Feature" in str(selection[0].TypeId) or \
-                        (selection[0].TypeId == "App::DocumentObjectGroup" and "fillbox" in selection[0].Name.lower()):
+                if selection[0].TypeId in Case.SUPPORTED_TYPES or FreeCADObjectType.CUSTOM_MESH in str(selection[0].TypeId) or \
+                        (selection[0].TypeId == FreeCADObjectType.FOLDER and "fillbox" in selection[0].Name.lower()):
                     if sim_object.type is ObjectType.FLUID:
                         to_change.setEnabled(False)
                     else:
@@ -2938,7 +2855,7 @@ def on_tree_item_selection_change():
     current_row = 0
     objects_with_parent = list()
     for object_name in Case.instance().get_all_simulation_object_names():
-        context_object = FreeCAD.getDocument("DSPH_Case").getObject(object_name)
+        context_object = FreeCAD.ActiveDocument.getObject(object_name)
         if not context_object:
             Case.instance().remove_object(object_name)
             continue
@@ -2999,13 +2916,13 @@ def selection_monitor():
             pass
         try:
             # watch fillbox rotations and prevent them
-            for o in FreeCAD.getDocument("DSPH_Case").Objects:
-                if o.TypeId == "App::DocumentObjectGroup" and "fillbox" in o.Name.lower():
+            for o in FreeCAD.ActiveDocument.Objects:
+                if o.TypeId == FreeCADObjectType.FOLDER and "fillbox" in o.Name.lower():
                     for subelem in o.OutList:
                         if subelem.Placement.Rotation.Angle != 0.0:
                             subelem.Placement.Rotation.Angle = 0.0
                             error(__("Can't change rotation!"))
-                if "case_limits" in o.Name.lower():
+                if o.Name == CASE_LIMITS_OBJ_NAME:
                     if o.Placement.Rotation.Angle != 0.0:
                         o.Placement.Rotation.Angle = 0.0
                         error(__("Can't change rotation!"))
@@ -3014,10 +2931,10 @@ def selection_monitor():
                         error(__("Can't change width if the case is in 2D Mode!"))
 
             # Prevent some view properties of Case Limits to be changed
-            case_limits_obj = get_fc_view_object("Case_Limits")
+            case_limits_obj = get_fc_view_object(CASE_LIMITS_OBJ_NAME)
             if case_limits_obj is not None:
-                if case_limits_obj.DisplayMode != "Wireframe":
-                    case_limits_obj.DisplayMode = "Wireframe"
+                if case_limits_obj.DisplayMode != FreeCADDisplayMode.WIREFRAME:
+                    case_limits_obj.DisplayMode = FreeCADDisplayMode.WIREFRAME
                 if case_limits_obj.LineColor != (1.00, 0.00, 0.00):
                     case_limits_obj.LineColor = (1.00, 0.00, 0.00)
                 if case_limits_obj.Selectable:
@@ -3039,5 +2956,5 @@ def selection_monitor():
 monitor_thread = threading.Thread(target=selection_monitor)
 monitor_thread.start()
 
-FreeCADGui.activateWorkbench("PartWorkbench")
+FreeCADGui.activateWorkbench(DEFAULT_WORKBENCH)
 log(__("Loading data is done."))
