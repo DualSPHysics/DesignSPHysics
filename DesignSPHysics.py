@@ -9,10 +9,6 @@ More info in http://design.sphysics.org/
 '''
 
 
-from mod.dataobjects.damping import Damping
-from mod.dataobjects.relaxation_zone_uniform import RelaxationZoneUniform
-from mod.dataobjects.relaxation_zone_irregular import RelaxationZoneIrregular
-from mod.dataobjects.relaxation_zone_regular import RelaxationZoneRegular
 from mod.dataobjects.relaxation_zone_file import RelaxationZoneFile
 from mod.dataobjects.ml_piston_2d import MLPiston2D
 from mod.dataobjects.ml_piston_1d import MLPiston1D
@@ -23,23 +19,9 @@ from mod.dataobjects.simulation_object import SimulationObject
 from mod.dataobjects.case import Case
 from mod.enums import ObjectType, ObjectFillMode, FreeCADDisplayMode
 from mod.widgets.object_order_widget import ObjectOrderWidget
-from mod.widgets.faces_dialog import FacesDialog
-from mod.widgets.float_state_dialog import FloatStateDialog
-from mod.widgets.movement_dialog import MovementDialog
-from mod.widgets.initials_dialog import InitialsDialog
 from mod.widgets.run_dialog import RunDialog
-from mod.widgets.acceleration_input_dialog import AccelerationInputDialog
 from mod.widgets.measure_tool_grid_dialog import MeasureToolGridDialog
 from mod.widgets.info_dialog import InfoDialog
-from mod.widgets.relaxation_zone_uniform_config_dialog import RelaxationZoneUniformConfigDialog
-from mod.widgets.relaxation_zone_file_config_dialog import RelaxationZoneFileConfigDialog
-from mod.widgets.relaxation_zone_irregular_config_dialog import RelaxationZoneIrregularConfigDialog
-from mod.widgets.relaxation_zone_regular_config_dialog import RelaxationZoneRegularConfigDialog
-from mod.widgets.ml_piston_2d_config_dialog import MLPiston2DConfigDialog
-from mod.widgets.ml_piston_1d_config_dialog import MLPiston1DConfigDialog
-from mod.widgets.chrono_config_dialog import ChronoConfigDialog
-from mod.widgets.inlet_config_dialog import InletConfigDialog
-from mod.widgets.damping_config_dialog import DampingConfigDialog
 from mod.widgets.execution_parameters_dialog import ExecutionParametersDialog
 from mod.widgets.setup_plugin_dialog import SetupPluginDialog
 from mod.widgets.constants_dialog import ConstantsDialog
@@ -50,18 +32,17 @@ from mod.widgets.run_additional_parameters_dialog import RunAdditionalParameters
 from mod.widgets.add_geo_dialog import AddGEODialog
 from mod.widgets.special_options_selector_dialog import SpecialOptionsSelectorDialog
 from mod.widgets.properties_dock_widget import PropertiesDockWidget
+from mod.widgets.export_progress_dialog import ExportProgressDialog
 from mod.constants import APP_NAME, PICKLE_PROTOCOL, WIDTH_2D, VERSION, CASE_LIMITS_OBJ_NAME
 from mod.executable_tools import refocus_cwd
 from mod.freecad_tools import valid_document_environment, get_fc_object, get_fc_view_object
 from mod.freecad_tools import document_count, prompt_close_all_documents, create_dsph_document, get_fc_main_window, create_dsph_document_from_fcstd
-from mod.utils import is_compatible_version, open_help, import_geo, create_flowtool_boxes
+from mod.utils import is_compatible_version, open_help, create_flowtool_boxes
 from mod.stdout_tools import print_license, debug, error, log, warning, dump_to_disk
 from mod.guiutils import widget_state_config,  get_icon, h_line_generator
-from mod.dialog_tools import ok_cancel_dialog, error_dialog, warning_dialog
+from mod.dialog_tools import error_dialog, warning_dialog
 from mod.translation_tools import __
 from mod.xml import XMLExporter
-from mod import xmlimporter
-import Draft
 import glob
 import sys
 import os
@@ -78,11 +59,7 @@ import FreeCADGui
 
 from PySide import QtGui, QtCore
 
-
 sys.path.append(os.path.dirname(os.path.abspath(__file__)))
-
-# pylint: disable=wrong-import-position
-
 
 data = {}  # TODO: Delete this
 
@@ -1161,28 +1138,7 @@ ex_layout.addLayout(ex_button_layout)
 
 # Defines export window dialog.
 # This dialog is used in each <tool>_export function as a generic progress information
-# TODO: This should be a custom implementation on a class like ExporProgressDialog(QtGui.QDialog)
-export_dialog = QtGui.QDialog()
-
-export_dialog.setModal(False)
-export_dialog.setWindowTitle(__("Exporting: {}%").format("0"))
-export_dialog_layout = QtGui.QVBoxLayout()
-
-export_progbar_layout = QtGui.QHBoxLayout()
-export_progbar_bar = QtGui.QProgressBar()
-export_progbar_bar.setRange(0, 100)
-export_progbar_bar.setTextVisible(False)
-export_progbar_layout.addWidget(export_progbar_bar)
-
-export_button_layout = QtGui.QHBoxLayout()
-export_button_cancel = QtGui.QPushButton(__("Cancel Exporting"))
-export_button_layout.addStretch(1)
-export_button_layout.addWidget(export_button_cancel)
-
-export_dialog_layout.addLayout(export_progbar_layout)
-export_dialog_layout.addLayout(export_button_layout)
-
-export_dialog.setLayout(export_dialog_layout)
+export_dialog = ExportProgressDialog()
 
 
 def partvtk_export(export_parameters):
@@ -1195,8 +1151,8 @@ def partvtk_export(export_parameters):
     partfiles = glob.glob(Case.instance().path + '/' + Case.instance().name + "_out/" + "Part_*.bi4")
     for filename in partfiles:
         Case.instance().info.exported_parts = max(int(filename.split("Part_")[1].split(".bi4")[0]), Case.instance().info.exported_parts)
-    export_progbar_bar.setRange(0, Case.instance().info.exported_parts)
-    export_progbar_bar.setValue(0)
+    export_dialog.set_range(0, Case.instance().info.exported_parts)
+    export_dialog.set_value(0)
 
     export_dialog.show()
 
@@ -1210,7 +1166,7 @@ def partvtk_export(export_parameters):
         widget_state_config(widget_state_elements, "export cancel")
         export_dialog.hide()
 
-    export_button_cancel.clicked.connect(on_cancel)
+    export_dialog.on_cancel.connect(on_cancel)
 
     # PartVTK export finish handler
     def on_export_finished(exit_code):
@@ -1286,8 +1242,8 @@ def partvtk_export(export_parameters):
             elif export_parameters['save_mode'] == 2:
                 current_part = int(current_part.split(".asc")[0])
         except IndexError:
-            current_part = export_progbar_bar.value()
-        export_progbar_bar.setValue(current_part)
+            current_part = export_dialog.get_value()
+        export_dialog.set_value(current_part)
         export_dialog.setWindowTitle(__("Exporting: ") + str(current_part) + "/" + str(Case.instance().info.exported_parts))
 
     Case.instance().info.current_export_process.readyReadStandardOutput.connect(on_stdout_ready)
@@ -1467,8 +1423,8 @@ def floatinginfo_export(export_parameters):
     partfiles = glob.glob(Case.instance().path + '/' + Case.instance().name + "_out/" + "Part_*.bi4")
     for filename in partfiles:
         Case.instance().info.exported_parts = max(int(filename.split("Part_")[1].split(".bi4")[0]), Case.instance().info.exported_parts)
-    export_progbar_bar.setRange(0, Case.instance().info.exported_parts)
-    export_progbar_bar.setValue(0)
+    export_dialog.set_range(0, Case.instance().info.exported_parts)
+    export_dialog.set_value(0)
 
     export_dialog.show()
 
@@ -1480,7 +1436,7 @@ def floatinginfo_export(export_parameters):
         widget_state_config(widget_state_elements, "export cancel")
         export_dialog.hide()
 
-    export_button_cancel.clicked.connect(on_cancel)
+    export_dialog.on_cancel.connect(on_cancel)
 
     def on_export_finished(exit_code):
         widget_state_elements['post_proc_floatinginfo_button'].setText(__("FloatingInfo"))
@@ -1521,8 +1477,8 @@ def floatinginfo_export(export_parameters):
         try:
             current_part = current_output.split("Part_")[1].split("  ")[0]
         except IndexError:
-            current_part = export_progbar_bar.value()
-        export_progbar_bar.setValue(int(current_part))
+            current_part = export_dialog.get_value()
+        export_dialog.set_value(int(current_part))
         export_dialog.setWindowTitle(__("Exporting: ") + str(current_part) + "/" + str(Case.instance().info.exported_parts))
 
     Case.instance().info.current_export_process.readyReadStandardOutput.connect(on_stdout_ready)
@@ -1600,8 +1556,8 @@ def computeforces_export(export_parameters):
     partfiles = glob.glob(Case.instance().path + '/' + Case.instance().name + "_out/" + "Part_*.bi4")
     for filename in partfiles:
         Case.instance().info.exported_parts = max(int(filename.split("Part_")[1].split(".bi4")[0]), Case.instance().info.exported_parts)
-    export_progbar_bar.setRange(0, Case.instance().info.exported_parts)
-    export_progbar_bar.setValue(0)
+    export_dialog.set_range(0, Case.instance().info.exported_parts)
+    export_dialog.set_value(0)
 
     export_dialog.show()
 
@@ -1613,7 +1569,7 @@ def computeforces_export(export_parameters):
         widget_state_config(widget_state_elements, "export cancel")
         export_dialog.hide()
 
-    export_button_cancel.clicked.connect(on_cancel)
+    export_dialog.on_cancel.connect(on_cancel)
 
     def on_export_finished(exit_code):
         widget_state_elements['post_proc_computeforces_button'].setText(__("ComputeForces"))
@@ -1665,8 +1621,8 @@ def computeforces_export(export_parameters):
         try:
             current_part = current_output.split("Part_")[1].split(".bi4")[0]
         except IndexError:
-            current_part = export_progbar_bar.value()
-        export_progbar_bar.setValue(int(current_part))
+            current_part = export_dialog.get_value()
+        export_dialog.set_value(int(current_part))
         export_dialog.setWindowTitle(__("Exporting: ") + str(current_part) + "/" + str(Case.instance().info.exported_parts))
 
     Case.instance().info.current_export_process.readyReadStandardOutput.connect(
@@ -1778,8 +1734,8 @@ def measuretool_export(export_parameters):
     partfiles = glob.glob(Case.instance().path + '/' + Case.instance().name + "_out/" + "Part_*.bi4")
     for filename in partfiles:
         Case.instance().info.exported_parts = max(int(filename.split("Part_")[1].split(".bi4")[0]), Case.instance().info.exported_parts)
-    export_progbar_bar.setRange(0, Case.instance().info.exported_parts)
-    export_progbar_bar.setValue(0)
+    export_dialog.set_range(0, Case.instance().info.exported_parts)
+    export_dialog.set_value(0)
 
     export_dialog.show()
 
@@ -1791,7 +1747,7 @@ def measuretool_export(export_parameters):
         widget_state_config(widget_state_elements, "export cancel")
         export_dialog.hide()
 
-    export_button_cancel.clicked.connect(on_cancel)
+    export_dialog.on_cancel.connect(on_cancel)
 
     def on_export_finished(exit_code):
         widget_state_elements['post_proc_measuretool_button'].setText(__("MeasureTool"))
@@ -1859,8 +1815,8 @@ def measuretool_export(export_parameters):
         try:
             current_part = current_output.split("/Part_")[1].split(".bi4")[0]
         except IndexError:
-            current_part = export_progbar_bar.value()
-        export_progbar_bar.setValue(int(current_part))
+            current_part = export_dialog.get_value()
+        export_dialog.set_value(int(current_part))
         export_dialog.setWindowTitle(__("Exporting: ") + str(current_part) + "/" + str(Case.instance().info.exported_parts))
 
     Case.instance().info.current_export_process.readyReadStandardOutput.connect(on_stdout_ready)
@@ -2106,8 +2062,8 @@ def isosurface_export(export_parameters):
     partfiles = glob.glob(Case.instance().path + '/' + Case.instance().name + "_out/" + "Part_*.bi4")
     for filename in partfiles:
         Case.instance().info.exported_parts = max(int(filename.split("Part_")[1].split(".bi4")[0]), Case.instance().info.exported_parts)
-    export_progbar_bar.setRange(0, Case.instance().info.exported_parts)
-    export_progbar_bar.setValue(0)
+    export_dialog.set_range(0, Case.instance().info.exported_parts)
+    export_dialog.set_value(0)
 
     export_dialog.show()
 
@@ -2120,7 +2076,7 @@ def isosurface_export(export_parameters):
         widget_state_config(widget_state_elements, "export cancel")
         export_dialog.hide()
 
-    export_button_cancel.clicked.connect(on_cancel)
+    export_dialog.on_cancel.connect(on_cancel)
 
     # IsoSurface export finish handler
     def on_export_finished(exit_code):
@@ -2174,8 +2130,8 @@ def isosurface_export(export_parameters):
             current_part = current_output.split("{}_".format(export_parameters['file_name']))[1]
             current_part = int(current_part.split(".vtk")[0])
         except IndexError:
-            current_part = export_progbar_bar.value()
-        export_progbar_bar.setValue(current_part)
+            current_part = export_dialog.get_value()
+        export_dialog.set_value(current_part)
         export_dialog.setWindowTitle(__("Exporting: ") + str(current_part) + "/" + str(Case.instance().info.exported_parts))
 
     Case.instance().info.current_export_process.readyReadStandardOutput.connect(on_stdout_ready)
@@ -2272,8 +2228,8 @@ def flowtool_export(export_parameters):
     partfiles = glob.glob(Case.instance().path + '/' + Case.instance().name + "_out/" + "Part_*.bi4")
     for filename in partfiles:
         Case.instance().info.exported_parts = max(int(filename.split("Part_")[1].split(".bi4")[0]), Case.instance().info.exported_parts)
-    export_progbar_bar.setRange(0, Case.instance().info.exported_parts)
-    export_progbar_bar.setValue(0)
+    export_dialog.set_range(0, Case.instance().info.exported_parts)
+    export_dialog.set_value(0)
 
     export_dialog.show()
 
@@ -2286,7 +2242,7 @@ def flowtool_export(export_parameters):
         widget_state_config(widget_state_elements, "export cancel")
         export_dialog.hide()
 
-    export_button_cancel.clicked.connect(on_cancel)
+    export_dialog.on_cancel.connect(on_cancel)
 
     # FlowTool export finish handler
     def on_export_finished(exit_code):
@@ -2334,8 +2290,8 @@ def flowtool_export(export_parameters):
             current_part = current_output.split("{}_".format(export_parameters['vtk_name']))[1]
             current_part = int(current_part.split(".vtk")[0])
         except IndexError:
-            current_part = export_progbar_bar.value()
-        export_progbar_bar.setValue(current_part)
+            current_part = export_dialog.get_value()
+        export_dialog.set_value(current_part)
         export_dialog.setWindowTitle(__("Exporting: ") + str(current_part) + "/" + str(Case.instance().info.exported_parts))
 
     Case.instance().info.current_export_process.readyReadStandardOutput.connect(on_stdout_ready)
@@ -2781,7 +2737,6 @@ if previous_dock:
     previous_dock = None
 
 # Creation of the widget and scaffolding
-# TODO: This should be implemented as a custom class like PropertiesDock(QtGui.QDockWidget)
 properties_widget = PropertiesDockWidget()
 
 # Dock the widget to the left side of screen
@@ -3033,6 +2988,8 @@ for item in trees:
 properties_widget.need_refresh.connect(on_tree_item_selection_change)
 
 # Watch if no object is selected and prevent fillbox rotations
+
+
 def selection_monitor():
     time.sleep(2.0)
     while True:
