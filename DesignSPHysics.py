@@ -49,6 +49,7 @@ from mod.widgets.mode_2d_config_dialog import Mode2DConfigDialog
 from mod.widgets.run_additional_parameters_dialog import RunAdditionalParametersDialog
 from mod.widgets.add_geo_dialog import AddGEODialog
 from mod.widgets.special_options_selector_dialog import SpecialOptionsSelectorDialog
+from mod.widgets.properties_dock_widget import PropertiesDockWidget
 from mod.constants import APP_NAME, PICKLE_PROTOCOL, WIDTH_2D, VERSION, CASE_LIMITS_OBJ_NAME
 from mod.executable_tools import refocus_cwd
 from mod.freecad_tools import valid_document_environment, get_fc_object, get_fc_view_object
@@ -2666,6 +2667,7 @@ def on_flowtool():
     refresh_boxlist()
     flowtool_tool_dialog.exec_()
 
+
 # Post processing section scaffolding
 export_layout = QtGui.QVBoxLayout()
 export_label = QtGui.QLabel("<b>" + __("Post-processing") + "</b>")
@@ -2779,305 +2781,12 @@ if previous_dock:
     previous_dock = None
 
 # Creation of the widget and scaffolding
-# TODO: This should be implemented as a custom class like DesignSPHysicsPropertiesDock(QtGui.QDockWidget)
-properties_widget = QtGui.QDockWidget()
-properties_widget.setObjectName("DSPH_Properties")
-properties_widget.setWindowTitle(__("DSPH Object Properties"))
-
-# Scaffolding widget, only useful to apply to the properties_dock widget
-properties_scaff_widget = QtGui.QWidget()
-property_widget_layout = QtGui.QVBoxLayout()
-
-# Property table
-object_property_table = QtGui.QTableWidget(7, 2)
-object_property_table.setMinimumHeight(220)
-object_property_table.setHorizontalHeaderLabels([__("Property Name"), __("Value")])
-object_property_table.verticalHeader().setVisible(False)
-object_property_table.horizontalHeader().setResizeMode(QtGui.QHeaderView.Stretch)
-
-# Add an object to DSPH. Only appears when an object is not part of the simulation
-addtodsph_button = QtGui.QPushButton(__("Add to DSPH Simulation"))
-addtodsph_button.setToolTip(__("Adds the current selection to\nthe case. Objects not included will not be exported."))
-
-# Same as above, this time with remove
-removefromdsph_button = QtGui.QPushButton(__("Remove from DSPH Simulation"))
-removefromdsph_button.setToolTip(__("Removes the current selection from the case.\n"
-                                    "Objects not included in the case will not be exported."))
-
-# Damping configuration button
-damping_config_button = QtGui.QPushButton(__("Damping configuration"))
-damping_config_button.setToolTip(__("Opens the damping configuration for the selected object"))
-
-property_widget_layout.addWidget(object_property_table)
-property_widget_layout.addWidget(addtodsph_button)
-property_widget_layout.addWidget(removefromdsph_button)
-property_widget_layout.addWidget(damping_config_button)
-
-properties_scaff_widget.setLayout(property_widget_layout)
-
-properties_widget.setWidget(properties_scaff_widget)
-
-# Different labels to add to the property table
-mkgroup_label = QtGui.QLabel("   {}".format(__("MKGroup")))
-mkgroup_label.setOpenExternalLinks(True)
-mkgroup_label.setToolTip(__("Establishes the object group."))
-objtype_label = QtGui.QLabel("   {}".format(__("Type of object")))
-objtype_label.setToolTip(__("Establishes the object type: Fluid or bound"))
-fillmode_label = QtGui.QLabel("   {}".format(__("Fill mode")))
-fillmode_label.setToolTip(__("Sets fill mode.\nFull: generates internal volume and external mesh."
-                             "\nSolid: generates only internal volume."
-                             "\nFace: generates only external mesh."
-                             "\nWire: generates only external mesh polygon edges."))
-floatstate_label = QtGui.QLabel("   {}".format(__("Float state")))
-floatstate_label.setToolTip(__("Sets floating state for this object MK."))
-initials_label = QtGui.QLabel("   {}".format(__("Initials")))
-initials_label.setToolTip(__("Sets initials options for this object"))
-material_label = QtGui.QLabel("   {}".format(__("Material")))
-material_label.setToolTip(__("Sets material for this object"))
-motion_label = QtGui.QLabel("   {}".format(__("Motion")))
-motion_label.setToolTip(__("Sets motion for this object"))
-simplewall_label = QtGui.QLabel("   {}".format(__("Faces")))
-simplewall_label.setToolTip(__("Adds faces"))
-
-mkgroup_label.setAlignment(QtCore.Qt.AlignLeft)
-material_label.setAlignment(QtCore.Qt.AlignLeft)
-objtype_label.setAlignment(QtCore.Qt.AlignLeft)
-fillmode_label.setAlignment(QtCore.Qt.AlignLeft)
-floatstate_label.setAlignment(QtCore.Qt.AlignLeft)
-initials_label.setAlignment(QtCore.Qt.AlignLeft)
-motion_label.setAlignment(QtCore.Qt.AlignLeft)
-
-object_property_table.setCellWidget(0, 0, objtype_label)
-object_property_table.setCellWidget(1, 0, mkgroup_label)
-object_property_table.setCellWidget(2, 0, fillmode_label)
-object_property_table.setCellWidget(3, 0, floatstate_label)
-object_property_table.setCellWidget(4, 0, initials_label)
-object_property_table.setCellWidget(5, 0, motion_label)
-object_property_table.setCellWidget(6, 0, simplewall_label)
-
-
-def mkgroup_change(value):
-    ''' Defines what happens when MKGroup is changed. '''
-    selection = FreeCADGui.Selection.getSelection()[0]
-    Case.instance().get_simulation_object(selection.Name).obj_mk = value
-
-
-def objtype_change(index):
-    ''' Defines what happens when type of object is changed '''
-    selection = FreeCADGui.Selection.getSelection()[0]
-    selectiongui = FreeCADGui.getDocument("DSPH_Case").getObject(selection.Name)
-    simulation_object = Case.instance().get_simulation_object(selection.Name)
-    mk_properties = Case.instance().get_mk_base_properties(simulation_object.obj_mk)
-
-    if objtype_prop.itemText(index).lower() == "bound":
-        mkgroup_prop.setRange(0, 240)
-        if simulation_object.type != ObjectType.BOUND:
-            mkgroup_prop.setValue(int(Case.instance().get_first_mk_not_used(ObjectType.BOUND)))
-        try:
-            selectiongui.ShapeColor = (0.80, 0.80, 0.80)
-            selectiongui.Transparency = 0
-        except AttributeError:
-            # Can't change attributes
-            pass
-        floatstate_prop.setEnabled(True)
-        initials_prop.setEnabled(False)
-        mkgroup_label.setText(
-            "&nbsp;&nbsp;&nbsp;" + __("MKBound") + " <a href='http://design.sphysics.org/wiki/doku.php?id=concepts'>?</a>"
-        )
-    elif objtype_prop.itemText(index).lower() == "fluid":
-        mkgroup_prop.setRange(0, 10)
-        if simulation_object.type != ObjectType.FLUID:
-            mkgroup_prop.setValue(int(Case.instance().get_first_mk_not_used(ObjectType.FLUID)))
-        try:
-            selectiongui.ShapeColor = (0.00, 0.45, 1.00)
-            selectiongui.Transparency = 30
-        except AttributeError:
-            # Can't change attributes
-            pass
-        # Remove floating properties if it is changed to fluid
-        if mk_properties.float_property is not None:
-            mk_properties.float_property = None
-
-        # Remove motion properties if it is changed to fluid
-        if mk_properties.has_movements():
-            mk_properties.remove_all_movements()
-
-        floatstate_prop.setEnabled(False)
-        initials_prop.setEnabled(True)
-        mkgroup_label.setText(
-            "&nbsp;&nbsp;&nbsp;" + __("MKFluid") + " <a href='http://design.sphysics.org/wiki/doku.php?id=concepts'>?</a>"
-        )
-
-    # Update simulation object type
-    simulation_object.type = ObjectType.FLUID if index == 0 else ObjectType.BOUND
-    on_tree_item_selection_change()
-
-
-def fillmode_change(index):
-    ''' Defines what happens when fill mode is changed '''
-    selection = FreeCADGui.Selection.getSelection()[0]
-    selectiongui = FreeCADGui.getDocument("DSPH_Case").getObject(selection.Name)
-    simulation_object = Case.instance().get_simulation_object(selection.Name)
-
-    # Update simulation object fill mode
-    simulation_object.fillmode = [ObjectFillMode.FULL, ObjectFillMode.SOLID, ObjectFillMode.FACE, ObjectFillMode.WIRE][index]
-
-    if simulation_object.fillmode == ObjectFillMode.FULL:
-        if objtype_prop.itemText(objtype_prop.currentIndex()).lower() == "fluid":
-            try:
-                selectiongui.Transparency = 30
-            except AttributeError:
-                # Cannot change transparency. Just ignore
-                pass
-        elif objtype_prop.itemText(objtype_prop.currentIndex()).lower() == "bound":
-            try:
-                selectiongui.Transparency = 0
-            except AttributeError:
-                # Cannot change transparency. Just ignore
-                pass
-        wall_prop.setEnabled(False)
-        update_faces_property(selection)
-    elif simulation_object.fillmode == ObjectFillMode.SOLID:
-        if objtype_prop.itemText(objtype_prop.currentIndex()).lower() == "fluid":
-            try:
-                selectiongui.Transparency = 30
-            except AttributeError:
-                # Cannot change transparency (fillbox?). Just ignore
-                pass
-        elif objtype_prop.itemText(objtype_prop.currentIndex()).lower() == "bound":
-            try:
-                selectiongui.Transparency = 0
-            except AttributeError:
-                # Cannot change transparency (fillbox?). Just ignore
-                pass
-        wall_prop.setEnabled(False)
-        update_faces_property(selection)
-    elif simulation_object.fillmode == ObjectFillMode.FACE:
-        try:
-            selectiongui.Transparency = 80
-        except AttributeError:
-            # Cannot change transparency. Just ignore
-            pass
-        wall_prop.setEnabled(True)
-        update_faces_property(selection)
-    elif simulation_object.fillmode == ObjectFillMode.WIRE:
-        try:
-            selectiongui.Transparency = 85
-        except AttributeError:
-            # Cannot change transparency. Just ignore
-            pass
-        wall_prop.setEnabled(False)
-        update_faces_property(selection)
-
-
-def initials_change():
-    InitialsDialog()
-
-
-def motion_change():
-    MovementDialog()
-
-
-def floatstate_change():
-    FloatStateDialog()
-
-
-def faces_change():
-    FacesDialog(FreeCADGui.Selection.getSelection()[0].Name)
-
-
-def update_faces_property(selection):
-    ''' Deletes information about faces if the new fill mode does not support it. '''
-    if wall_prop.isEnabled():
-        return
-
-    sim_object = Case.instance().get_simulation_object(selection.Name)
-    sim_object.clean_faces()
-
-
-# Property change widgets
-mkgroup_prop = QtGui.QSpinBox()
-objtype_prop = QtGui.QComboBox()
-fillmode_prop = QtGui.QComboBox()
-floatstate_prop = QtGui.QPushButton(__("Configure"))
-initials_prop = QtGui.QPushButton(__("Configure"))
-motion_prop = QtGui.QPushButton(__("Configure"))
-wall_prop = QtGui.QPushButton(__("Configure"))
-wall_prop.setEnabled(False)
-mkgroup_prop.setRange(0, 240)
-objtype_prop.insertItems(0, ['Fluid', 'Bound'])
-fillmode_prop.insertItems(1, ['Full', 'Solid', 'Face', 'Wire'])
-mkgroup_prop.valueChanged.connect(mkgroup_change)
-objtype_prop.currentIndexChanged.connect(objtype_change)
-fillmode_prop.currentIndexChanged.connect(fillmode_change)
-floatstate_prop.clicked.connect(floatstate_change)
-initials_prop.clicked.connect(initials_change)
-motion_prop.clicked.connect(motion_change)
-wall_prop.clicked.connect(faces_change)
-object_property_table.setCellWidget(0, 1, objtype_prop)
-object_property_table.setCellWidget(1, 1, mkgroup_prop)
-object_property_table.setCellWidget(2, 1, fillmode_prop)
-object_property_table.setCellWidget(3, 1, floatstate_prop)
-object_property_table.setCellWidget(4, 1, initials_prop)
-object_property_table.setCellWidget(5, 1, motion_prop)
-object_property_table.setCellWidget(6, 1, wall_prop)
-
+# TODO: This should be implemented as a custom class like PropertiesDock(QtGui.QDockWidget)
+properties_widget = PropertiesDockWidget()
 
 # Dock the widget to the left side of screen
 fc_main_window.addDockWidget(QtCore.Qt.LeftDockWidgetArea, properties_widget)
 
-# By default all is hidden in the widget
-object_property_table.hide()
-addtodsph_button.hide()
-removefromdsph_button.hide()
-damping_config_button.hide()
-
-
-def add_object_to_sim(name=None):
-    ''' Defines what happens when "Add object to sim" button is presseed.
-    Takes the selection of FreeCAD and watches what type of thing it is adding '''
-    if (name is None) or (name is False):
-        selection = FreeCADGui.Selection.getSelection()
-    else:
-        selection = list()
-        selection.append(FreeCAD.ActiveDocument.getObject(name))
-
-    for each in selection:
-        if each.Name == "Case_Limits" or "_internal_" in each.Name:
-            continue
-        if each.InList:
-            continue
-        if not Case.instance().is_object_in_simulation(each.Name):
-            if "fillbox" in each.Name.lower():
-                mktoput = Case.instance().get_first_mk_not_used(ObjectType.FLUID)
-                Case.instance().add_object(SimulationObject(each.Name, mktoput, ObjectType.FLUID, ObjectFillMode.SOLID))
-            else:
-                mktoput = Case.instance().get_first_mk_not_used(ObjectType.BOUND)
-                Case.instance().add_object(SimulationObject(each.Name, mktoput, ObjectType.BOUND, ObjectFillMode.FULL))
-    on_tree_item_selection_change()
-
-
-def remove_object_from_sim():
-    ''' Defines what happens when removing objects from
-    the simulation '''
-    selection = FreeCADGui.Selection.getSelection()
-    for each in selection:
-        if each.Name == "Case_Limits":
-            continue
-        Case.instance().remove_object(each.Name)
-    on_tree_item_selection_change()
-
-
-def on_damping_config():
-    ''' Configures the damping configuration for the selected obejct '''
-    selection = FreeCADGui.Selection.getSelection()
-    DampingConfigDialog(selection[0].Name)
-
-
-# Connects buttons to its functions
-addtodsph_button.clicked.connect(add_object_to_sim)
-removefromdsph_button.clicked.connect(remove_object_from_sim)
-damping_config_button.clicked.connect(on_damping_config)
 
 # Find treewidgets of freecad.
 trees = list()
@@ -3125,6 +2834,8 @@ def on_down_objectorder(index):
 
 
 def on_tree_item_selection_change():
+    ''' Refreshes relevant parts of DesignsPHysics under an important change event. '''
+
     selection = FreeCADGui.Selection.getSelection()
     object_names = list()
     for each in FreeCAD.getDocument("DSPH_Case").Objects:
@@ -3135,83 +2846,75 @@ def on_tree_item_selection_change():
         if sim_object_name not in object_names:
             Case.instance().remove_object(sim_object_name)
 
-    addtodsph_button.setEnabled(True)
+    properties_widget.set_add_button_enabled(True)
 
     if selection:
         if len(selection) > 1:
             # Multiple objects selected
-            addtodsph_button.setText(__("Add all possible objects to DSPH Simulation"))
-            object_property_table.hide()
-            addtodsph_button.show()
-            removefromdsph_button.hide()
-            damping_config_button.hide()
+            properties_widget.set_add_button_text(__("Add all possible objects to DSPH Simulation"))
+            properties_widget.set_property_table_visibility(False)
+            properties_widget.set_add_button_visibility(True)
+            properties_widget.set_remove_button_visibility(False)
+            properties_widget.set_damping_button_visibility(False)
         else:
             # One object selected
             if selection[0].Name == "Case_Limits" or "_internal_" in selection[0].Name:
-                object_property_table.hide()
-                addtodsph_button.hide()
-                removefromdsph_button.hide()
-                damping_config_button.hide()
+                properties_widget.set_property_table_visibility(False)
+                properties_widget.set_add_button_visibility(False)
+                properties_widget.set_remove_button_visibility(False)
+                properties_widget.set_damping_button_visibility(False)
             elif "dampingzone" in selection[0].Name.lower() and selection[0].Name in data['damping'].keys():
-                object_property_table.hide()
-                addtodsph_button.hide()
-                removefromdsph_button.hide()
-                damping_config_button.show()
+                properties_widget.set_property_table_visibility(False)
+                properties_widget.set_add_button_visibility(False)
+                properties_widget.set_remove_button_visibility(False)
+                properties_widget.set_damping_button_visibility(True)
             elif Case.instance().is_object_in_simulation(selection[0].Name):
                 # Show properties on table
-                object_property_table.show()
-                addtodsph_button.hide()
-                removefromdsph_button.show()
-                damping_config_button.hide()
+                properties_widget.set_property_table_visibility(True)
+                properties_widget.set_add_button_visibility(False)
+                properties_widget.set_remove_button_visibility(True)
+                properties_widget.set_damping_button_visibility(False)
 
                 # Reference to the object inside the simulation
                 sim_object = Case.instance().get_simulation_object(selection[0].Name)
 
                 # MK config
-                mkgroup_prop.setRange(0, 240)
-                to_change = object_property_table.cellWidget(1, 1)
+                properties_widget.set_mkgroup_range(ObjectType.BOUND)
+                to_change = properties_widget.get_cell_widget(1, 1)
                 to_change.setValue(sim_object.obj_mk)
 
                 # type config
-                to_change = object_property_table.cellWidget(0, 1)
+                to_change = properties_widget.get_cell_widget(0, 1)
                 if selection[0].TypeId in Case.SUPPORTED_TYPES:
                     # Supported object
                     to_change.setEnabled(True)
                     if sim_object.type is ObjectType.FLUID:
                         to_change.setCurrentIndex(0)
-                        mkgroup_prop.setRange(0, 10)
-                        mkgroup_label.setText(
-                            "&nbsp;&nbsp;&nbsp;" + __("MKFluid") + " <a href='http://design.sphysics.org/wiki/doku.php?id=concepts'>?</a>"
-                        )
+                        properties_widget.set_mkgroup_range(ObjectType.FLUID)
+                        properties_widget.set_mkgroup_text("&nbsp;&nbsp;&nbsp;" + __("MKFluid") + " <a href='http://design.sphysics.org/wiki/doku.php?id=concepts'>?</a>")
                     elif sim_object.type is ObjectType.BOUND:
                         to_change.setCurrentIndex(1)
-                        mkgroup_prop.setRange(0, 240)
-                        mkgroup_label.setText(
-                            "&nbsp;&nbsp;&nbsp;" + __("MKBound") + " <a href='http://design.sphysics.org/wiki/doku.php?id=concepts'>?</a>"
-                        )
+                        properties_widget.set_mkgroup_range(ObjectType.BOUND)
+                        properties_widget.set_mkgroup_text("&nbsp;&nbsp;&nbsp;" + __("MKBound") + " <a href='http://design.sphysics.org/wiki/doku.php?id=concepts'>?</a>")
                 elif "part" in selection[0].TypeId.lower() or "mesh" in selection[0].TypeId.lower() or (
                         selection[0].TypeId == "App::DocumentObjectGroup" and "fillbox" in selection[0].Name.lower()):
                     # Is an object that will be exported to STL
                     to_change.setEnabled(True)
                     if sim_object.type is ObjectType.FLUID:
                         to_change.setCurrentIndex(0)
-                        mkgroup_prop.setRange(0, 10)
-                        mkgroup_label.setText(
-                            "&nbsp;&nbsp;&nbsp;" + __("MKFluid") + " <a href='http://design.sphysics.org/wiki/doku.php?id=concepts'>?</a>"
-                        )
+                        properties_widget.set_mkgroup_range(ObjectType.FLUID)
+                        properties_widget.set_mkgroup_text("&nbsp;&nbsp;&nbsp;" + __("MKFluid") + " <a href='http://design.sphysics.org/wiki/doku.php?id=concepts'>?</a>")
                     elif sim_object.type is ObjectType.BOUND:
                         to_change.setCurrentIndex(1)
-                        mkgroup_prop.setRange(0, 240)
-                        mkgroup_label.setText(
-                            "&nbsp;&nbsp;&nbsp;" + __("MKBound") + " <a href='http://design.sphysics.org/wiki/doku.php?id=concepts'>?</a>"
-                        )
+                        properties_widget.set_mkgroup_range(ObjectType.BOUND)
+                        properties_widget.set_mkgroup_text("&nbsp;&nbsp;&nbsp;" + __("MKBound") + " <a href='http://design.sphysics.org/wiki/doku.php?id=concepts'>?</a>")
                 else:
                     # Everything else
                     to_change.setCurrentIndex(1)
                     to_change.setEnabled(False)
 
                 # fill mode config
-                to_change = object_property_table.cellWidget(2, 1)
+                to_change = properties_widget.get_cell_widget(2, 1)
                 if selection[0].TypeId in Case.SUPPORTED_TYPES:
                     # Object is a supported type. Fill with its type and enable selector.
                     to_change.setEnabled(True)
@@ -3233,7 +2936,7 @@ def on_tree_item_selection_change():
                     to_change.setEnabled(False)
 
                 # float state config
-                to_change = object_property_table.cellWidget(3, 1)
+                to_change = properties_widget.get_cell_widget(3, 1)
                 if selection[0].TypeId in Case.SUPPORTED_TYPES or (selection[0].TypeId == "App::DocumentObjectGroup"
                                                                    and "fillbox" in selection[0].Name.lower()):
                     if sim_object.type is ObjectType.FLUID:
@@ -3242,14 +2945,14 @@ def on_tree_item_selection_change():
                         to_change.setEnabled(True)
 
                 # initials restrictions
-                to_change = object_property_table.cellWidget(4, 1)
+                to_change = properties_widget.get_cell_widget(4, 1)
                 if sim_object.type is ObjectType.FLUID:
                     to_change.setEnabled(True)
                 else:
                     to_change.setEnabled(False)
 
                 # motion restrictions
-                to_change = object_property_table.cellWidget(5, 1)
+                to_change = properties_widget.get_cell_widget(5, 1)
                 if selection[0].TypeId in Case.SUPPORTED_TYPES or "Mesh::Feature" in str(selection[0].TypeId) or \
                         (selection[0].TypeId == "App::DocumentObjectGroup" and "fillbox" in selection[0].Name.lower()):
                     if sim_object.type is ObjectType.FLUID:
@@ -3260,23 +2963,23 @@ def on_tree_item_selection_change():
             else:
                 if selection[0].InList == list():
                     # Show button to add to simulation
-                    addtodsph_button.setText(__("Add to DSPH Simulation"))
-                    object_property_table.hide()
-                    addtodsph_button.show()
-                    removefromdsph_button.hide()
-                    damping_config_button.hide()
+                    properties_widget.set_add_button_text(__("Add to DSPH Simulation"))
+                    properties_widget.set_property_table_visibility(False)
+                    properties_widget.set_add_button_visibility(True)
+                    properties_widget.set_remove_button_visibility(False)
+                    properties_widget.set_damping_button_visibility(False)
                 else:
-                    addtodsph_button.setText(__("Can't add this object to the simulation"))
-                    object_property_table.hide()
-                    addtodsph_button.show()
-                    addtodsph_button.setEnabled(False)
-                    removefromdsph_button.hide()
-                    damping_config_button.hide()
+                    properties_widget.set_add_button_text(__("Can't add this object to the simulation"))
+                    properties_widget.set_property_table_visibility(False)
+                    properties_widget.set_add_button_visibility(True)
+                    properties_widget.set_add_button_enabled(False)
+                    properties_widget.set_remove_button_visibility(False)
+                    properties_widget.set_damping_button_visibility(False)
     else:
-        object_property_table.hide()
-        addtodsph_button.hide()
-        removefromdsph_button.hide()
-        damping_config_button.hide()
+        properties_widget.set_property_table_visibility(False)
+        properties_widget.set_add_button_visibility(False)
+        properties_widget.set_remove_button_visibility(False)
+        properties_widget.set_damping_button_visibility(False)
 
     # Update dsph objects list
     objectlist_table.clear()
@@ -3319,8 +3022,7 @@ def on_tree_item_selection_change():
         except ValueError:
             # Not in list, probably because now is part of a compound object
             pass
-    properties_scaff_widget.adjustSize()
-    properties_widget.adjustSize()
+    properties_widget.fit_size()
 
 
 # Subscribe the trees to the item selection change function. This helps FreeCAD notify DesignSPHysics for the
@@ -3328,6 +3030,7 @@ def on_tree_item_selection_change():
 for item in trees:
     item.itemSelectionChanged.connect(on_tree_item_selection_change)
 
+properties_widget.need_refresh.connect(on_tree_item_selection_change)
 
 # Watch if no object is selected and prevent fillbox rotations
 def selection_monitor():
@@ -3336,10 +3039,10 @@ def selection_monitor():
         # ensure everything is fine when objects are not selected
         try:
             if not FreeCADGui.Selection.getSelection():
-                object_property_table.hide()
-                addtodsph_button.hide()
-                removefromdsph_button.hide()
-                damping_config_button.hide()
+                properties_widget.set_property_table_visibility(False)
+                properties_widget.set_add_button_visibility(False)
+                properties_widget.set_remove_button_visibility(False)
+                properties_widget.set_damping_button_visibility(False)
         except AttributeError:
             # No object is selected so the selection has no length. Ignore it
             pass
