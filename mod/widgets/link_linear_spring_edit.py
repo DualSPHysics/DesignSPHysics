@@ -188,6 +188,6 @@ class LinkLinearspringEdit(QtGui.QDialog):
         else:
             link_linearspring_error_dialog = QtGui.QMessageBox()
             link_linearspring_error_dialog.setWindowTitle(__("Error!"))
-            link_linearspring_error_dialog.setText(__("bodies are necesary!"))
+            link_linearspring_error_dialog.setText(__("bodies are necessary!"))
             link_linearspring_error_dialog.setIcon(QtGui.QMessageBox.Critical)
             link_linearspring_error_dialog.exec_()

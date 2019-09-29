@@ -9,7 +9,7 @@ Check the [Official Webpage](http://design.sphysics.org) for downloads and more 
 ![Screenshot](http://design.sphysics.org/img/github-shot-31072018.png)
 
 ## Description
-DesignSPHysics enables the user to create cases with solids and fluids and exports it to a DualSPHysics compatbile format. In addition, it does the hard work for the user, generating the case automatically, simulating, and post-processing, all inside FreeCAD.
+DesignSPHysics enables the user to create cases with solids and fluids and exports it to a DualSPHysics compatible format. In addition, it does the hard work for the user, generating the case automatically, simulating, and post-processing, all inside FreeCAD.
 
 It includes support for pre-processing with GenCase, simulation with DualSPHysics and post-processign with several tools of the DualSPHysics package.
 
@@ -31,7 +31,7 @@ By default, for example, in Windows, it is located in `%appdata%/FreeCAD/Mod` or
 
 Next open the folder and copy the file `DesignSPHysics.FCMacro` into the FreeCAD macro directory (`%appdata%/FreeCAD/Macro` on Windows; `~/.FreeCAD/Macro` on GNU/Linux).
 
-### Installing a develompent build
+### Installing a development build
 Clone this repository and rename the folder to 'DesignSPHysics'. Then copy the folder to the Mod folder of the FreeCAD installation directory. 
 
 By default, for example, in Windows, it is located in `%appdata%/FreeCAD/Mod` or in Linux in `~/.FreeCAD/Mod`

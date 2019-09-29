@@ -192,7 +192,7 @@ class PropertiesDockWidget(QtGui.QDockWidget):
         self.need_refresh.emit()
 
     def on_damping_config(self):
-        ''' Configures the damping configuration for the selected obejct '''
+        ''' Configures the damping configuration for the selected object '''
         DampingConfigDialog(FreeCADGui.Selection.getSelection()[0].Name)
 
     def on_mkgroup_change(self, value):
@@ -341,7 +341,7 @@ class PropertiesDockWidget(QtGui.QDockWidget):
         self.mkgroup_label.setText(text)
 
     def get_cell_widget(self, row: int, column: int) -> QtGui.QWidget:
-        ''' Retrieves the appropiate QWidget for the row and column specified from the table. '''
+        ''' Retrieves the appropriate QWidget for the row and column specified from the table. '''
         return self.object_property_table.cellWidget(row, column)
 
     def fit_size(self) -> None:

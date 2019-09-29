@@ -7,11 +7,11 @@ class DomainFixedParameter():
     ''' Fixed Domain for a DSPH case.
 
     Attributes:
-        xmin = Minimun X coordinate for the fixed domain
+        xmin = Minimum X coordinate for the fixed domain
         xmax = Maximum X coordinate for the fixed domain
-        ymin = Minimun Y coordinate for the fixed domain
+        ymin = Minimum Y coordinate for the fixed domain
         ymax = Maximum Y coordinate for the fixed domain
-        zmin = Minimun Z coordinate for the fixed domain
+        zmin = Minimum Z coordinate for the fixed domain
         zmax = Maximum Z coordinate for the fixed domain
     '''
 

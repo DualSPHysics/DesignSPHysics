@@ -1,6 +1,6 @@
 #!/usr/bin/env python3.7
 # -*- coding: utf-8 -*-
-''' DesignSPHysics VelData atribute data. '''
+''' DesignSPHysics VelData attribute data. '''
 
 
 class MLPiston2DVeldata():

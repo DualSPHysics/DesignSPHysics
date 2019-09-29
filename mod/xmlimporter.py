@@ -181,7 +181,7 @@ def create_fc_objects(f, path):
             FreeCAD.ActiveDocument.getObject("Box" + str(elementnum)).Length = str(size[0]) + ' m'
             FreeCAD.ActiveDocument.getObject("Box" + str(elementnum)).Width = str(size[1]) + ' m'
             FreeCAD.ActiveDocument.getObject("Box" + str(elementnum)).Height = str(size[2]) + ' m'
-            # Suscribe Box for creation in DSPH Objects
+            # Subscribe Box for creation in DSPH Objects
             # Structure: [name] = [mknumber, type, fill]
             to_add_dsph["Box" + str(elementnum)] = [int(mk[1]), mk[0], drawmode]
         elif command.tag == "drawcylinder":
@@ -211,7 +211,7 @@ def create_fc_objects(f, path):
                 FreeCAD.Rotation(FreeCAD.Vector(rotation[1], rotation[2], rotation[3]), rotation[0]))
             FreeCAD.ActiveDocument.getObject("Cylinder" + str(elementnum)).Radius = str(radius) + ' m'
             FreeCAD.ActiveDocument.getObject("Cylinder" + str(elementnum)).Height = (top_point[2] - point[2]) * 1000
-            # Suscribe Cylinder for creation in DSPH Objects
+            # Subscribe Cylinder for creation in DSPH Objects
             # Structure: [name] = [mknumber, type, fill]
             to_add_dsph["Cylinder" + str(elementnum)] = [int(mk[1]), mk[0], drawmode]
         elif command.tag == "drawsphere":
@@ -230,7 +230,7 @@ def create_fc_objects(f, path):
                                (point[2] + movement[2]) * 1000),
                 FreeCAD.Rotation(FreeCAD.Vector(rotation[1], rotation[2], rotation[3]), rotation[0]))
             FreeCAD.ActiveDocument.getObject("Sphere" + str(elementnum)).Radius = str(radius) + ' m'
-            # Suscribe Sphere for creation in DSPH Objects
+            # Subscribe Sphere for creation in DSPH Objects
             # Structure: [name] = [mknumber, type, fill]
             to_add_dsph["Sphere" + str(elementnum)] = [int(mk[1]), mk[0], drawmode]
         elif command.tag == "drawfilestl":
