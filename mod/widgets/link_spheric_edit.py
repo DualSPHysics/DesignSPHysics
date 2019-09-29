@@ -141,6 +141,6 @@ class LinkSphericEdit(QtGui.QDialog):
         else:
             link_spheric_error_dialog = QtGui.QMessageBox()
             link_spheric_error_dialog.setWindowTitle(__("Error!"))
-            link_spheric_error_dialog.setText(__("body 1 is necesary!"))
+            link_spheric_error_dialog.setText(__("body 1 is necessary!"))
             link_spheric_error_dialog.setIcon(QtGui.QMessageBox.Critical)
             link_spheric_error_dialog.exec_()

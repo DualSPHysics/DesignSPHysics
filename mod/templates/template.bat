@@ -31,7 +31,7 @@ if not "%ERRORLEVEL%" == "0" goto fail
 if not "%ERRORLEVEL%" == "0" goto fail
 
 :success
-echo "------- Execution complete. If results were not the exepected ones check for errors. Make sure your case has a correct DP specification. -------"
+echo "------- Execution complete. If results were not the expected ones check for errors. Make sure your case has a correct DP specification. -------"
 goto end
 
 :fail

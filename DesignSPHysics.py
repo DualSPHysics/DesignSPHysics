@@ -93,7 +93,7 @@ widget_state_elements = dict()
 # Establishing references for the different elements that the script will use later.
 fc_main_window = FreeCADGui.getMainWindow()  # FreeCAD main window
 
-# TODO: Big Change: This should definetly be a custom class like DesignSPHysicsDock(QtGui.QDockWidget)
+# TODO: Big Change: This should definitely be a custom class like DesignSPHysicsDock(QtGui.QDockWidget)
 dsph_main_dock = QtGui.QDockWidget()  # DSPH main dock
 # Scaffolding widget, only useful to apply to the dsph_dock widget
 dsph_main_dock_scaff_widget = QtGui.QWidget()

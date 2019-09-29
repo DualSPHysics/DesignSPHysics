@@ -132,7 +132,7 @@ class FloatStateDialog(QtGui.QDialog):
         self.floating_omegaini_layout.addWidget(self.floating_omegaini_auto)
 
         self.floating_translation_layout = QtGui.QHBoxLayout()
-        self.floating_translation_label = QtGui.QLabel(__("Traslation restriction: "))
+        self.floating_translation_label = QtGui.QLabel(__("Translation restriction: "))
         self.floating_translation_label.setToolTip(__("Use 0 for translation restriction in the movement (default=(1,1,1))"))
         self.floating_translation_label_x = QtGui.QLabel("X")
         self.floating_translation_input_x = QtGui.QComboBox()

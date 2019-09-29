@@ -292,7 +292,7 @@ class ExecutionParametersDialog(QtGui.QDialog):
         self.dtini_layout.addWidget(self.dtini_label2)
         self.on_dtiniauto_check()
 
-        # Minimium time step
+        # Minimum time step
         self.dtminauto_layout = QtGui.QHBoxLayout()
         self.dtminauto_chk = QtGui.QCheckBox("Minimum time step: ")
         if Case.instance().execution_parameters.dtmin_auto:
@@ -303,7 +303,7 @@ class ExecutionParametersDialog(QtGui.QDialog):
         self.dtminauto_chk.toggled.connect(self.on_dtminauto_check)
         self.dtminauto_layout.addWidget(self.dtminauto_chk)
         self.dtmin_layout = QtGui.QHBoxLayout()
-        self.dtmin_label = QtGui.QLabel("Minimium time step: ")
+        self.dtmin_label = QtGui.QLabel("Minimum time step: ")
         self.dtmin_input = FocusableLineEdit()
         self.dtmin_input.setHelpText(__(HELP_DTMIN))
         self.dtmin_input.setMaxLength(10)

@@ -8,7 +8,7 @@ from mod.translation_tools import __
 
 
 class ExportProgressDialog(QtGui.QDialog):
-    ''' Export Progres Dialog. '''
+    ''' Export Progress Dialog. '''
 
     on_cancel = QtCore.Signal()
 

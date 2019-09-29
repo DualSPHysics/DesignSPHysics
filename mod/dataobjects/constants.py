@@ -1,6 +1,6 @@
 #!/usr/bin/env python3.7
 # -*- coding: utf-8 -*-
-''' DesignSPHysics case constans dataobject '''
+''' DesignSPHysics case constants dataobject '''
 
 class Constants():
     ''' DualSPHysics case constants definition dataobject. '''

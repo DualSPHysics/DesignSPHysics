@@ -9,7 +9,7 @@ class AccRectMotion(BaseMotion):
 
         Attributes:
             velocity: Velocity vector that defines the movement
-            acceleration: Acceleration vector that defines the aceleration
+            acceleration: Acceleration vector that defines the acceleration
         '''
 
     def __init__(self, duration=1, velocity=None, acceleration=None, parent_movement=None):
