@@ -719,5 +719,6 @@
     "Rotation restriction: ": "Rotation restriction: ",
     "Use 0 for rotation restriction in the movement (default=(1,1,1))": "Use 0 for rotation restriction in the movement (default=(1,1,1))",
     "Material: ": "Material: ",
-    "Closing all current documents": "Closing all current documents"
+    "Closing all current documents": "Closing all current documents",
+    "New Damping Zone": "New Damping Zone"
 }

@@ -7,7 +7,7 @@ from PySide import QtGui
 from mod.translation_tools import __
 
 
-class ObjectListTableWidget(QtGui.QWidget):
+class DockObjectListTableWidget(QtGui.QWidget):
     ''' Object List Table Widget. '''
 
     def __init__(self):

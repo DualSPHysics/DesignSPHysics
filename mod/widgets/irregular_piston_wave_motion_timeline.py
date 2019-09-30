@@ -28,7 +28,6 @@ class IrregularPistonWaveMotionTimeline(QtGui.QWidget):
                             "motion widget in the timeline without a motion object")
         super(IrregularPistonWaveMotionTimeline, self).__init__()
 
-        self.setContentsMargins(0, 0, 0, 0)
         self.main_layout = QtGui.QVBoxLayout()
         self.main_layout.setContentsMargins(10, 10, 10, 10)
         self.parent_movement = irreg_wave_gen.parent_movement

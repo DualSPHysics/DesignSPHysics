@@ -12,7 +12,6 @@ class ChronoObjectCheckOptions(QtGui.QWidget):
 
     def __init__(self, key, object_name="No name", object_mk=-1, mktype="bound", is_floating=""):
         super(ChronoObjectCheckOptions, self).__init__()
-        self.setContentsMargins(0, 0, 0, 0)
 
         self.key = key
         self.object_name = object_name

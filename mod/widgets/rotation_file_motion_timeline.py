@@ -26,7 +26,7 @@ class RotationFileMotionTimeline(QtGui.QWidget):
 
         # Needed for copying movement file to root of the case.
         self.project_folder_path = project_folder_path
-        self.setContentsMargins(0, 0, 0, 0)
+        
         self.main_layout = QtGui.QVBoxLayout()
         self.main_layout.setContentsMargins(10, 10, 10, 10)
         self.parent_movement = rot_file_gen.parent_movement

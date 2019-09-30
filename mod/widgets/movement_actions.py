@@ -22,10 +22,9 @@ class MovementActions(QtGui.QWidget):
         self.loop_checkbox = QtGui.QCheckBox(__("Loop"))
         self.loop_checkbox.setChecked(loop_checked)
         self.loop_checkbox.stateChanged.connect(self.on_loop)
-        self.delete_button = QtGui.QPushButton(
-            get_icon("trash.png"), None)
+        self.delete_button = QtGui.QPushButton(get_icon("trash.png"), None)
         self.delete_button.clicked.connect(self.on_delete)
-        self.setContentsMargins(0, 0, 0, 0)
+        
         main_layout = QtGui.QHBoxLayout()
         main_layout.setContentsMargins(10, 0, 10, 0)
         main_layout.addWidget(self.use_checkbox)

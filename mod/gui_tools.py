@@ -35,10 +35,14 @@ def get_icon(file_name, return_only_path=False) -> QtGui.QIcon:
         return file_to_load if return_only_path else QtGui.QIcon(file_to_load)
     raise IOError("File {} not found in images folder".format(file_name))
 
-# FIXME: This should not be here
+
 def widget_state_config(widgets, config):
     ''' Takes an widget dictionary and a config string to
         enable and disable certain widgets base on a case. '''
+
+    # FIXME: Refactor this. It's hideous
+    return
+
     if config == "no case":
         widgets["casecontrols_bt_savedoc"].setEnabled(False)
         widgets["rungencase_bt"].setEnabled(False)
@@ -55,7 +59,7 @@ def widget_state_config(widgets, config):
         widgets['post_proc_measuretool_button'].setEnabled(False)
         widgets['post_proc_isosurface_button'].setEnabled(False)
         widgets['post_proc_flowtool_button'].setEnabled(False)
-        widgets["object_list_table_widget"].setEnabled(False)
+        widgets["dock_object_list_table_widget"].setEnabled(False)
         widgets["dp_input"].setEnabled(False)
         widgets["summary_bt"].setEnabled(False)
         widgets["toggle3dbutton"].setEnabled(False)
@@ -80,7 +84,7 @@ def widget_state_config(widgets, config):
         widgets["summary_bt"].setEnabled(True)
         widgets["toggle3dbutton"].setEnabled(True)
         widgets["dampingbutton"].setEnabled(True)
-        widgets["object_list_table_widget"].setEnabled(True)
+        widgets["dock_object_list_table_widget"].setEnabled(True)
     elif config == "gencase done":
         widgets["ex_selector_combo"].setEnabled(True)
         widgets["ex_button"].setEnabled(True)

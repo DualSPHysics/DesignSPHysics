@@ -21,12 +21,12 @@ class WaveMovementActions(QtGui.QWidget):
         self.use_checkbox.stateChanged.connect(self.on_use)
         self.delete_button = QtGui.QPushButton(get_icon("trash.png"), None)
         self.delete_button.clicked.connect(self.on_delete)
-        self.setContentsMargins(0, 0, 0, 0)
-        main_layout = QtGui.QHBoxLayout()
-        main_layout.setContentsMargins(10, 0, 10, 0)
-        main_layout.addWidget(self.use_checkbox)
-        main_layout.addWidget(self.delete_button)
-        self.setLayout(main_layout)
+        
+        self.main_layout = QtGui.QHBoxLayout()
+        self.main_layout.setContentsMargins(10, 0, 10, 0)
+        self.main_layout.addWidget(self.use_checkbox)
+        self.main_layout.addWidget(self.delete_button)
+        self.setLayout(self.main_layout)
 
     def on_delete(self):
         self.delete.emit(self.index)

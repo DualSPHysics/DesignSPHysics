@@ -17,19 +17,17 @@ class ObjectOrderWidget(QtGui.QWidget):
     def __init__(self, index=999, object_name="No name", object_mk=-1, mktype="bound",
                  up_disabled=False, down_disabled=False):
         super(ObjectOrderWidget, self).__init__()
-        self.setContentsMargins(0, 0, 0, 0)
+        
         self.index = index
         self.object_name = object_name
+        
         self.main_layout = QtGui.QHBoxLayout()
         self.main_layout.setContentsMargins(10, 0, 10, 0)
-        self.mk_label = QtGui.QLabel(
-            "<b>{}{}</b>".format(mktype[0].upper(), str(object_mk)))
+        self.mk_label = QtGui.QLabel("<b>{}{}</b>".format(mktype[0].upper(), str(object_mk)))
         self.name_label = QtGui.QLabel(str(object_name))
-        self.up_button = QtGui.QPushButton(
-            get_icon("up_arrow.png"), None)
+        self.up_button = QtGui.QPushButton(get_icon("up_arrow.png"), None)
         self.up_button.clicked.connect(self.on_up)
-        self.down_button = QtGui.QPushButton(
-            get_icon("down_arrow.png"), None)
+        self.down_button = QtGui.QPushButton(get_icon("down_arrow.png"), None)
         self.down_button.clicked.connect(self.on_down)
 
         self.main_layout.addWidget(self.mk_label)

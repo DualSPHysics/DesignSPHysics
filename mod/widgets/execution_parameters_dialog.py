@@ -670,7 +670,9 @@ class ExecutionParametersDialog(QtGui.QDialog):
         self.execparams_window_layout.addLayout(self.ep_helpText_layout)
         self.execparams_window_layout.addLayout(self.ep_button_layout)
         self.setLayout(self.execparams_window_layout)
-        # END Main layout definition and composition.
+
+        self.resize(800, 600)
+        self.exec_()
 
     def on_help_focus(self, help_text):
         self.help_window.setText(help_text)
@@ -917,4 +919,3 @@ class ExecutionParametersDialog(QtGui.QDialog):
     def on_cancel(self):
         log("Execution Parameters not changed")
         self.reject()
-

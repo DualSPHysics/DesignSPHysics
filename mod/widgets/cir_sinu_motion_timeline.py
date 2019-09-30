@@ -28,7 +28,6 @@ class CirSinuMotionTimeline(QtGui.QWidget):
         super(CirSinuMotionTimeline, self).__init__()
 
         self.index = index
-        self.setContentsMargins(0, 0, 0, 0)
         self.main_layout = QtGui.QHBoxLayout()
         self.main_layout.setContentsMargins(10, 0, 10, 0)
 

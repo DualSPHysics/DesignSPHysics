@@ -407,7 +407,9 @@ class ConstantsDialog(QtGui.QDialog):
         self.constants_window_layout.addLayout(self.cw_button_layout)
         self.setLayout(self.constants_window_layout)
         self.setMaximumHeight(550)
-        # END Main layout definition and composition.
+
+        self.resize(600, 400)
+        self.exec_()
 
     # Controls if user selected auto HSWL or not enabling/disablen HSWL custom
     def on_hswlauto_check(self):

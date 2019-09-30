@@ -182,6 +182,7 @@ class SetupPluginDialog(QtGui.QDialog):
         # END Main layout definition and composition.
 
         self.resize(600, 400)
+        self.exec_()
 
     def on_ok(self):
         Case.instance().executable_paths.gencase = self.gencasepath_input.text()

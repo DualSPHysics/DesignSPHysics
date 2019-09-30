@@ -24,7 +24,6 @@ class RegularFlapWaveMotionTimeline(QtGui.QWidget):
                             "motion widget in the timeline without a motion object")
         super(RegularFlapWaveMotionTimeline, self).__init__()
 
-        self.setContentsMargins(0, 0, 0, 0)
         self.main_layout = QtGui.QVBoxLayout()
         self.main_layout.setContentsMargins(10, 10, 10, 10)
         self.parent_movement = reg_wave_gen.parent_movement
