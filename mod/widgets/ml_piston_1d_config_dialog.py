@@ -5,7 +5,7 @@
 from PySide import QtCore, QtGui
 
 from mod.translation_tools import __
-from mod.guiutils import h_line_generator
+from mod.gui_tools import h_line_generator
 
 from mod.dataobjects.ml_piston_1d import MLPiston1D
 

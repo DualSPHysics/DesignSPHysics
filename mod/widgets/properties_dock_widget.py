@@ -202,7 +202,7 @@ class PropertiesDockWidget(QtGui.QDockWidget):
     def on_objtype_change(self, index):
         ''' Defines what happens when type of object is changed '''
         selection = FreeCADGui.Selection.getSelection()[0]
-        selectiongui = FreeCADGui.getDocumentSINGLETON_DOCUMENT_NAME.getObject(selection.Name)
+        selectiongui = FreeCADGui.ActiveDocument.getObject(selection.Name)
         simulation_object = Case.instance().get_simulation_object(selection.Name)
         mk_properties = Case.instance().get_mk_base_properties(simulation_object.obj_mk)
 

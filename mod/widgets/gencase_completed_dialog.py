@@ -7,7 +7,7 @@ import subprocess
 from PySide import QtCore, QtGui
 
 from mod.translation_tools import __
-from mod.guiutils import error_dialog
+from mod.dialog_tools import error_dialog
 
 from mod.dataobjects.case import Case
 

@@ -718,5 +718,6 @@
     "Use 0 for translation restriction in the movement (default=(1,1,1))": "Use 0 for translation restriction in the movement (default=(1,1,1))",
     "Rotation restriction: ": "Rotation restriction: ",
     "Use 0 for rotation restriction in the movement (default=(1,1,1))": "Use 0 for rotation restriction in the movement (default=(1,1,1))",
-    "Material: ": "Material: "
+    "Material: ": "Material: ",
+    "Closing all current documents": "Closing all current documents"
 }

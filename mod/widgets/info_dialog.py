@@ -4,7 +4,7 @@
 
 from PySide import QtCore, QtGui
 
-from mod.guiutils import h_line_generator
+from mod.gui_tools import h_line_generator
 
 from mod.widgets.info_dialog_details import InfoDialogDetails
 

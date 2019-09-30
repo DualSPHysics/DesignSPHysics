@@ -77,6 +77,7 @@ class FreeCADObjectType:
     BOX = "Part::Box"
     FOLDER = "App::DocumentObjectGroup"
     SPHERE = "Part::Sphere"
+    CYLINDER = "Part::Cylinder"
     CUSTOM_MESH = "Mesh::Feature"
 
 

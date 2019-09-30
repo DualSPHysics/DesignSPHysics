@@ -5,7 +5,7 @@
 from PySide import QtCore, QtGui
 
 from mod.translation_tools import __
-from mod.guiutils import h_line_generator
+from mod.gui_tools import h_line_generator
 from mod.stdout_tools import debug
 
 from mod.dataobjects.rotation_file_gen import RotationFileGen

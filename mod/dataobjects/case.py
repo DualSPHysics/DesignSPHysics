@@ -21,7 +21,7 @@ class Case():
     etcetera. Used as a way to store information and transform it for
     multiple needs '''
     __instance: 'Case' = None
-    SUPPORTED_TYPES = [FreeCADObjectType.BOX, FreeCADObjectType.SPHERE, "Part::Cylinder"]
+    SUPPORTED_TYPES = [FreeCADObjectType.BOX, FreeCADObjectType.SPHERE, FreeCADObjectType.CYLINDER]
 
     def __init__(self, reset=False):
         ''' Virtually private constructor. '''

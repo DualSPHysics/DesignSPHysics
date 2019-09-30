@@ -11,7 +11,8 @@ import os
 
 from PySide import QtGui
 
-def h_line_generator():
+
+def h_line_generator() -> QtGui.QFrame:
     ''' Generates an horizontal line that can be used as a separator.'''
     to_ret = QtGui.QFrame()
     to_ret.setFrameShape(QtGui.QFrame.HLine)
@@ -19,7 +20,7 @@ def h_line_generator():
     return to_ret
 
 
-def v_line_generator():
+def v_line_generator() -> QtGui.QFrame:
     ''' Generates a vertical line that can be used as a separator'''
     to_ret = QtGui.QFrame()
     to_ret.setFrameShape(QtGui.QFrame.VLine)
@@ -27,16 +28,14 @@ def v_line_generator():
     return to_ret
 
 
-def get_icon(file_name, return_only_path=False):
-    ''' Returns a QIcon to use with DesignSPHysics.
-    Retrieves a file with filename (like image.png) from the images folder. '''
+def get_icon(file_name, return_only_path=False) -> QtGui.QIcon:
+    ''' Returns a QIcon to use with DesignSPHysics. Retrieves a file with filename (like image.png) from the images folder. '''
     file_to_load = os.path.dirname(os.path.abspath(__file__)) + "/../images/{}".format(file_name)
     if os.path.isfile(file_to_load):
         return file_to_load if return_only_path else QtGui.QIcon(file_to_load)
-    else:
-        raise IOError("File {} not found in images folder".format(file_name))
+    raise IOError("File {} not found in images folder".format(file_name))
 
-
+# FIXME: This should not be here
 def widget_state_config(widgets, config):
     ''' Takes an widget dictionary and a config string to
         enable and disable certain widgets base on a case. '''

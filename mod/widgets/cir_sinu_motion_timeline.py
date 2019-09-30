@@ -5,7 +5,7 @@
 from PySide import QtCore, QtGui
 
 from mod.translation_tools import __
-from mod.guiutils import get_icon
+from mod.gui_tools import get_icon
 from mod.stdout_tools import debug
 
 from mod.dataobjects.cir_sinu_motion import CirSinuMotion

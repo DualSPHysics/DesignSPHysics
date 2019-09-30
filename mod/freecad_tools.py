@@ -14,10 +14,18 @@ from PySide import QtGui
 
 from mod.stdout_tools import log
 from mod.constants import APP_NAME, SINGLETON_DOCUMENT_NAME, DEFAULT_WORKBENCH, CASE_LIMITS_OBJ_NAME, CASE_LIMITS_3D_LABEL
-from mod.constants import CASE_LIMITS_LINE_COLOR, CASE_LIMITS_LINE_WIDTH, CASE_LIMITS_DEFAULT_LENGTH
+from mod.constants import CASE_LIMITS_LINE_COLOR, CASE_LIMITS_LINE_WIDTH, CASE_LIMITS_DEFAULT_LENGTH, FREECAD_MIN_VERSION
 from mod.enums import FreeCADObjectType, FreeCADDisplayMode
 from mod.dialog_tools import ok_cancel_dialog
 from mod.translation_tools import __
+
+
+def is_compatible_version():
+    ''' Checks if the current FreeCAD version is suitable for this macro. '''
+    version_num = FreeCAD.Version()[0] + FreeCAD.Version()[1]
+    if float(version_num) < float(FREECAD_MIN_VERSION):
+        return False
+    return True
 
 
 def prepare_dsph_case():

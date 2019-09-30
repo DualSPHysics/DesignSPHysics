@@ -6,7 +6,7 @@ from PySide import QtCore, QtGui
 
 from mod.utils import import_geo
 from mod.translation_tools import __
-from mod.guiutils import error_dialog
+from mod.dialog_tools import error_dialog
 from mod.freecad_tools import get_fc_main_window
 
 

@@ -202,7 +202,7 @@ def create_fc_objects(f, path):
                     points_found += 1
 
             # Cylinder creation in FreeCAD
-            FreeCAD.ActiveDocument.addObject("Part::Cylinder", "Cylinder" + str(elementnum))
+            FreeCAD.ActiveDocument.addObject(FreeCADObjectType.CYLINDER, "Cylinder" + str(elementnum))
             FreeCAD.ActiveDocument.ActiveObject.Label = "Cylinder" + str(elementnum)
             # noinspection PyArgumentList
             FreeCAD.ActiveDocument.getObject("Cylinder" + str(elementnum)).Placement = FreeCAD.Placement(

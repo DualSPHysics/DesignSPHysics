@@ -13,7 +13,6 @@ meant to use with FreeCAD.
 import math
 import os
 import pickle
-import webbrowser
 import json
 
 from sys import platform
@@ -29,14 +28,10 @@ from mod.freecad_tools import get_fc_object
 from mod.stdout_tools import log, warning, error
 from mod.translation_tools import __
 
-from mod import guiutils
 from mod.enums import FreeCADObjectType
-from mod.constants import FREECAD_MIN_VERSION, APP_NAME
-from mod.constants import VERSION, PICKLE_PROTOCOL, DIVIDER, HELP_WEBPAGE
+from mod.constants import APP_NAME
+from mod.constants import VERSION, PICKLE_PROTOCOL, DIVIDER
 
-from mod.dataobjects.float_property import FloatProperty
-from mod.dataobjects.initials_property import InitialsProperty
-from mod.dataobjects.domain_fixed_parameter import DomainFixedParameter
 from mod.dataobjects.acceleration_input import AccelerationInput
 from mod.dataobjects.movement import Movement
 from mod.dataobjects.rect_motion import RectMotion
@@ -63,242 +58,12 @@ from mod.dataobjects.relaxation_zone_uniform import RelaxationZoneUniform
 from mod.dataobjects.relaxation_zone_file import RelaxationZoneFile
 
 
-def is_compatible_version():
-    ''' Checks if the current FreeCAD version is suitable for this macro. '''
-
-    version_num = FreeCAD.Version()[0] + FreeCAD.Version()[1]
-    if float(version_num) < float(FREECAD_MIN_VERSION):
-        guiutils.warning_dialog("This version of FreeCAD is not supported!. Install version 0.18 or higher.")
-        return False
-    return True
-
-
-def float_list_to_float_property(floating_mks):
-    ''' Transforms a float lists from an old case format to the new  '''
-    to_ret = dict()
-    for key, value in floating_mks.items():
-        if isinstance(value, list):
-            # Is in old mode. Change to OOP
-            fp = FloatProperty(
-                mk=float(key),
-                mass_density_type=int(value[0][0]),
-                mass_density_value=float(value[0][1])
-            )
-            if not value[1][0]:  # Gravity center is not auto
-                fp.gravity_center = value[1][1:]
-            if not value[2][0]:  # Inertia is not auto
-                fp.inertia = value[2][1:]
-            if not value[3][0]:  # Initial linear velocity is not auto
-                fp.initial_linear_velocity = value[3][1:]
-            if not value[4][0]:  # Initial angular velocity is not auto
-                fp.initial_angular_velocity = value[4][1:]
-
-            to_ret[key] = fp
-
-        # Adds the new element (empty) if not exists
-        elif isinstance(value, object):
-            try:
-                translation = value.translation_restriction
-            except AttributeError:
-                translation = list()
-
-            try:
-                rotation = value.rotation_restriction
-            except AttributeError:
-                rotation = list()
-
-            try:
-                material = value.material
-            except AttributeError:
-                material = ""
-
-            fp = FloatProperty(
-                mk=float(key),
-                mass_density_type=value.mass_density_type,
-                mass_density_value=value.mass_density_value,
-                gravity_center=value.gravity_center,
-                inertia=value.inertia,
-                initial_linear_velocity=value.initial_linear_velocity,
-                initial_angular_velocity=value.initial_angular_velocity,
-                translation_restriction=translation,
-                rotation_restriction=rotation,
-                material=material
-            )
-
-            to_ret[key] = fp
-
-        else:
-            # Is in OOP mode, appending
-            to_ret[key] = value
-
-    return to_ret
-
-
-def initials_list_to_initials_property(initials_mks):
-    ''' Transforms initials lists to properties from old cases. '''
-    to_ret = dict()
-    for key, value in initials_mks.items():
-        if isinstance(value, list):
-            # Is in old mode. Change to OOP
-            ip = InitialsProperty(mk=int(key), force=value)
-            to_ret[key] = ip
-        else:
-            # Is in OOP mode, appending
-            to_ret[key] = value
-    return to_ret
-
-
-def get_maximum_particles(dp):
-    ''' Gets the maximum number of particles that can be in the Case Limits with the given DP '''
-    to_ret = get_fc_object('Case_Limits').Width.Value / (dp * 1000)
-    to_ret *= get_fc_object('Case_Limits').Height.Value / (dp * 1000)
-    to_ret *= get_fc_object('Case_Limits').Length.Value / (dp * 1000)
-
-    return int(to_ret)
-
-
+# FIXME: Implement this in the new structure and delete this. This only remains here as documentation on how it works right now
 def get_default_data():
-    ''' Sets default data at start of the macro.
-        Returns data and temp_data dict with default values.
-        If there is data saved on disk, tries to load it. '''
+    ''' A stub method to provide documentation for a refactor. '''
 
-    # TODO: Big change. These should be data objects, not dict()
     data = dict()
     temp_data = dict()
-
-    # Data relative to constant definition
-    # TODO: These should be aggregated into an object like CaseConstants()
-    data['lattice_bound'] = 1
-    data['lattice_fluid'] = 1
-    data['gravity'] = [0, 0, -9.81]
-    data['rhop0'] = 1000
-    data['hswl'] = 0
-    data['hswl_auto'] = True
-    data['gamma'] = 7
-    data['speedsystem'] = 0
-    data['speedsystem_auto'] = True
-    data['coefsound'] = 20
-    data['speedsound'] = 0
-    data['speedsound_auto'] = True
-    data['coefh'] = 1
-    data['cflnumber'] = 0.2
-    data['h'] = 0
-    data['h_auto'] = True
-    data['b'] = 0
-    data['b_auto'] = True
-    data['massbound'] = 0
-    data['massbound_auto'] = True
-    data['massfluid'] = 0
-    data['massfluid_auto'] = True
-
-    # TODO: This should be aggregated into an object like CaseGeometryDefinition()
-    data['dp'] = 0.01
-
-    # Data relative to execution parameters
-    # TODO: These should be aggregated into an object like CaseExecutionParameters()
-    data['posdouble'] = 0
-    data['stepalgorithm'] = 1
-    data['verletsteps'] = 40
-    data['kernel'] = 2
-    data['viscotreatment'] = 1
-    data['visco'] = 0.01
-    data['viscoboundfactor'] = 1
-    data['deltasph'] = 0
-    data['deltasph_en'] = 0
-    data['shifting'] = 0
-    data['shiftcoef'] = -2
-    data['shifttfs'] = 0
-    data['rigidalgorithm'] = 1
-    data['ftpause'] = 0.0
-    data['coefdtmin'] = 0.05
-    data['dtini'] = 0.0001
-    data['dtini_auto'] = True
-    data['dtmin'] = 0.00001
-    data['dtmin_auto'] = True
-    data['dtfixed'] = "DtFixed.dat"
-    data['dtallparticles'] = 0
-    data['timemax'] = 1.5
-    data['timeout'] = 0.01
-    data['incz'] = 0
-    data['partsoutmax'] = 1
-    data['rhopoutmin'] = 700
-    data['rhopoutmax'] = 1300
-    data['domainfixed'] = DomainFixedParameter(False, 0, 0, 0, 0, 0, 0)
-
-    # Damping object dictionary: {'ObjectName': DampingObject}
-    data['damping'] = dict()
-
-    # Periodicity data [enabled, x_inc, y_inc, z_inc]
-    data['period_x'] = [False, 0.0, 0.0, 0.0]
-    data['period_y'] = [False, 0.0, 0.0, 0.0]
-    data['period_z'] = [False, 0.0, 0.0, 0.0]
-
-    # Simulation domain [0=default, x_value, 0=default, y_value, 0=default, z_value]
-    data['simdomain_chk'] = False
-    data['posmin'] = [0, 0.0, 0, 0.0, 0, 0.0]
-    data['posminxml'] = ['', '', '']
-    data['posmax'] = [0, 0.0, 0, 0.0, 0, 0.0]
-    data['posmaxxml'] = ['', '', '']
-
-    # Stores paths to executables
-    # TODO: These should be aggregated into an object like ExecutablePaths()
-    data['gencase_path'] = ""
-    data['dsphysics_path'] = ""
-    data['partvtk4_path'] = ""
-    data['floatinginfo_path'] = ""
-    data['computeforces_path'] = ""
-    data['measuretool_path'] = ""
-    data['isosurface_path'] = ""
-    data['boundaryvtk_path'] = ""
-    data['flowtool_path'] = ""
-    data['paraview_path'] = ""
-
-    # Case mode
-    data['3dmode'] = True
-
-    # Stores project path and name for future script needs
-    data['project_path'] = ""
-    data['project_name'] = ""
-    data['total_particles'] = -1
-    data['total_particles_out'] = 0
-    data['additional_parameters'] = ""
-    data['export_options'] = ""
-    data['mkboundused'] = []
-    data['mkfluidused'] = []
-
-    # Dictionary that defines floatings.
-    # Structure: {mk: FloatProperty}
-    data['floating_mks'] = dict()
-
-    # Dictionary that defines initials.
-    # Keys are mks enabled (ONLY FLUIDS) and values are a list containing: {'mkfluid': [x, y, z]}
-    data['initials_mks'] = dict()
-
-    # Control data for enabling features
-    data['gencase_done'] = False
-    data['simulation_done'] = False
-
-    # Last generated number of particles
-    data['last_number_particles'] = -1
-
-    # Simulation objects with its parameters (Without order).
-    # The format is: {'key': ['mk', 'type', 'fill']}
-    data['simobjects'] = dict()
-
-    # Keys of simobjects (Ordered).
-    data['export_order'] = []
-
-    # Global movement list.
-    # It stores all the movements created in this case.
-    data['global_movements'] = list()
-
-    # Global property list.
-    # It stores all the properties created in this case.
-    data['global_properties'] = list()
-
-    # Object movement mapping.
-    # Dictionary with a list of movements attached. {'mkgroup': [movement1, movement2, ...]}
-    data['motion_mks'] = dict()
 
     # Post-processing info
     # FlowTool Boxes: [ [id, "name", x1, x2,..., x8], ... ]
@@ -340,18 +105,6 @@ def get_default_data():
 
     # Acceleration Input
     data['accinput'] = AccelerationInput()
-
-    # Temporal data dict to control execution features.
-    temp_data['current_process'] = None
-    temp_data['stored_selection'] = []
-    temp_data['current_info_dialog'] = None
-    temp_data['widget_saver'] = None
-    temp_data['export_numparts'] = ""
-    temp_data['total_export_parts'] = -1
-    temp_data['measuretool_points'] = list()
-    temp_data['measuretool_grid'] = list()
-    temp_data['current_output'] = ""
-    temp_data['supported_types'] = [FreeCADObjectType.BOX, FreeCADObjectType.SPHERE, "Part::Cylinder"]
 
     # Try to load saved paths. This way the user does not need
     # to introduce the software paths every time
@@ -404,23 +157,12 @@ def get_default_config_file():
     with open('{}/../default-config.json'.format(current_script_folder)) as data_file:
         loaded_data = json.load(data_file)
 
-    if "win" in get_os():
+    if "win" in platform:
         to_ret = loaded_data["windows"]
-    elif "linux" in get_os():
+    elif "linux" in platform:
         to_ret = loaded_data["linux"]
 
     return to_ret
-
-
-def open_help():
-    ''' Opens a web browser with this software help. '''
-    webbrowser.open(HELP_WEBPAGE)
-
-
-def get_os():
-    ''' Returns the current operating system '''
-    return platform
-
 
 def dump_to_xml(data, save_name):
     ''' Saves all of the data in the opened case
@@ -577,7 +319,7 @@ def dump_to_xml(data, save_name):
                 f.write('\t\t\t\t\t<drawsphere radius="' + str(o.Radius.Value / DIVIDER) + '"  objname="{}">\n'.format(o.Label))
                 f.write('\t\t\t\t\t\t<point x="0" y="0" z="0" />\n')
                 f.write('\t\t\t\t\t</drawsphere>\n')
-            elif o.TypeId == "Part::Cylinder":
+            elif o.TypeId == FreeCADObjectType.CYLINDER:
                 if (abs(o.Placement.Base.x) + abs(o.Placement.Base.y) + abs(o.Placement.Base.z)) != 0:
                     f.write(
                         '\t\t\t\t\t<move x="' +
@@ -1617,7 +1359,7 @@ def dump_to_xml(data, save_name):
                 '\t\t\t\t\t<coefdt value="{}" comment="Multiplies by dt value in the calculation (using 0 is not applied) (default=1000)" />\n'.format(
                     rzobject.coefdt))
             f.write(
-                '\t\t\t\t\t<function psi="{}" beta="{}" comment="Coefficients in funtion for velocity (def. psi=0.9, beta=1)" />\n'.format(
+                '\t\t\t\t\t<function psi="{}" beta="{}" comment="Coefficients in function for velocity (def. psi=0.9, beta=1)" />\n'.format(
                     rzobject.function_psi, rzobject.function_beta))
             f.write(
                 '\t\t\t\t\t<driftcorrection value="{}" comment="Coefficient of drift correction applied in velocity X. 0:Disabled, 1:Full correction (def=0)" />\n'.format(
@@ -1650,7 +1392,7 @@ def dump_to_xml(data, save_name):
                 '\t\t\t\t\t<coefdt value="{}" comment="Multiplies by dt value in the calculation (using 0 is not applied) (default=1000)" />\n'.format(
                     rzobject.coefdt))
             f.write(
-                '\t\t\t\t\t<function psi="{}" beta="{}" comment="Coefficients in funtion for velocity (def. psi=0.9, beta=1)" />\n'.format(
+                '\t\t\t\t\t<function psi="{}" beta="{}" comment="Coefficients in function for velocity (def. psi=0.9, beta=1)" />\n'.format(
                     rzobject.function_psi, rzobject.function_beta))
             f.write(
                 '\t\t\t\t\t<driftcorrection value="{}" comment="Coefficient of drift correction applied in velocity X. 0:Disabled, 1:Full correction (def=0)" />\n'.format(
@@ -1715,7 +1457,7 @@ def dump_to_xml(data, save_name):
                 '\t\t\t\t\t<coefdt value="{}" comment="Multiplies by dt value in the calculation (using 0 is not applied) (default=1000)" />\n'.format(
                     rzobject.coefdt))
             f.write(
-                '\t\t\t\t\t<function psi="{}" beta="{}" comment="Coefficients in funtion for velocity (def. psi=0.9, beta=1)" />\n'.format(
+                '\t\t\t\t\t<function psi="{}" beta="{}" comment="Coefficients in function for velocity (def. psi=0.9, beta=1)" />\n'.format(
                     rzobject.function_psi, rzobject.function_beta))
             f.write(
                 '\t\t\t\t\t<driftcorrection value="{}" comment="Coefficient of drift correction applied in velocity X. 0:Disabled, 1:Full correction (def=0)" />\n'.format(
@@ -1742,7 +1484,7 @@ def dump_to_xml(data, save_name):
                     f.write('\t\t\t\t\t\t<timevalue time="{}" v="{}" />\n'.format(str(tv[0]), str(tv[1])))
                 f.write('\t\t\t\t\t</velocitytimes>\n')
             f.write('\t\t\t\t\t<coefdt value="{}" comment="Multiplies by dt value in the calculation (using 0 is not applied) (default=1000)" />\n'.format(str(rzobject.coefdt)))
-            f.write('\t\t\t\t\t<function psi="{}" beta="{}" comment="Coefficients in funtion for velocity (def. psi=0.9, beta=1)" />\n'.format(str(rzobject.function_psi), str(rzobject.function_beta)))
+            f.write('\t\t\t\t\t<function psi="{}" beta="{}" comment="Coefficients in function for velocity (def. psi=0.9, beta=1)" />\n'.format(str(rzobject.function_psi), str(rzobject.function_beta)))
             f.write('\t\t\t\t</rzwaves_uniform>\n')
         f.write('\t\t\t</relaxationzones>\n')
 
@@ -1849,7 +1591,7 @@ def dump_to_xml(data, save_name):
                 data['domainfixed'].zmax))
     if data['simdomain_chk']:
         f.write(
-            '\t\t\t<simulationdomain comment="Defines domain of simulation (default=Uses minimun and maximum position of the generated particles)" >\n'
+            '\t\t\t<simulationdomain comment="Defines domain of simulation (default=Uses minimum and maximum position of the generated particles)" >\n'
         )
         f.write(
             '\t\t\t\t<posmin x="{}" y="{}" z="{}" comment="e.g.: x=0.5, y=default-1, z=default-10%" />\n'.format(
@@ -1869,12 +1611,6 @@ def dump_to_xml(data, save_name):
     f.write('\t</execution>\n')
     f.write('</case>\n')
     f.close()
-
-
-def get_number_of_documents():
-    ''' Returns the number of documents currently
-    opened in FreeCAD. '''
-    return len(FreeCAD.listDocuments())
 
 
 def import_geo(filename=None, scale_x=1, scale_y=1, scale_z=1, name=None, autofill=False, data=None):

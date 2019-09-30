@@ -6,7 +6,7 @@ from PySide import QtCore, QtGui
 
 from mod.translation_tools import __
 from mod.stdout_tools import debug
-from mod.guiutils import get_icon
+from mod.gui_tools import get_icon
 
 from mod.dataobjects.rot_motion import RotMotion
 

@@ -7,7 +7,7 @@ import FreeCADGui
 from PySide import QtCore, QtGui
 
 from mod.translation_tools import __
-from mod.guiutils import get_icon
+from mod.gui_tools import get_icon
 from mod.dialog_tools import info_dialog
 
 from mod.dataobjects.movement import Movement

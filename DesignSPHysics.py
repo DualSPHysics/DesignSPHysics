@@ -34,15 +34,15 @@ from mod.widgets.special_options_selector_dialog import SpecialOptionsSelectorDi
 from mod.widgets.properties_dock_widget import PropertiesDockWidget
 from mod.widgets.export_progress_dialog import ExportProgressDialog
 from mod.widgets.object_list_table_widget import ObjectListTableWidget
-from mod.constants import APP_NAME, PICKLE_PROTOCOL, WIDTH_2D, VERSION, CASE_LIMITS_OBJ_NAME, MAIN_WIDGET_INTERNAL_NAME
+from mod.constants import APP_NAME, PICKLE_PROTOCOL, WIDTH_2D, VERSION, CASE_LIMITS_OBJ_NAME, MAIN_WIDGET_INTERNAL_NAME, HELP_WEBPAGE
 from mod.constants import FILLBOX_DEFAULT_LENGTH, FILLBOX_DEFAULT_RADIUS, CASE_LIMITS_2D_LABEL, CASE_LIMITS_3D_LABEL, PROP_WIDGET_INTERNAL_NAME
 from mod.constants import DEFAULT_WORKBENCH
 from mod.executable_tools import refocus_cwd
-from mod.freecad_tools import valid_document_environment, get_fc_object, get_fc_view_object
+from mod.freecad_tools import valid_document_environment, get_fc_object, get_fc_view_object, is_compatible_version
 from mod.freecad_tools import document_count, prompt_close_all_documents, create_dsph_document, get_fc_main_window, create_dsph_document_from_fcstd
-from mod.utils import is_compatible_version, open_help, create_flowtool_boxes
+from mod.utils import create_flowtool_boxes
 from mod.stdout_tools import print_license, debug, error, log, warning, dump_to_disk
-from mod.guiutils import widget_state_config,  get_icon, h_line_generator
+from mod.gui_tools import widget_state_config,  get_icon, h_line_generator
 from mod.dialog_tools import error_dialog, warning_dialog
 from mod.translation_tools import __
 from mod.xml import XMLExporter
@@ -56,6 +56,7 @@ import traceback
 import subprocess
 import shutil
 import uuid
+import webbrowser
 
 import FreeCAD
 import FreeCADGui
@@ -148,7 +149,7 @@ widget_state_elements['constants_button'] = constants_button
 # Help button that opens a help URL for DesignSPHysics
 help_button = QtGui.QPushButton("Help")
 help_button.setToolTip(__("Push this button to open a browser with help\non how to use this tool."))
-help_button.clicked.connect(open_help)
+help_button.clicked.connect(lambda: webbrowser.open(HELP_WEBPAGE))
 
 # Setup window button.
 setup_button = QtGui.QPushButton(__("Setup\nPlugin"))
@@ -158,8 +159,6 @@ setup_button.setToolTip(__("Setup of the simulator executables"))
 def on_setup_button_pressed():
     ''' Opens constant definition window on button click. '''
     setup_window = SetupPluginDialog()
-    # Constant definition window behaviour and general composing
-    setup_window.resize(600, 400)
     setup_window.exec_()
 
 

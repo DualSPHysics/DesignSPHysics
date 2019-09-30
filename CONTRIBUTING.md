@@ -33,7 +33,7 @@ This is a brief description on how the project files are structure and what each
     - `dataobjects.py`: Contains data classes to structure different DualSPHysics properties, parameters and configurations
     - `enums.py`: Contains enums to manage property data with names.
     - `utils.py`: Contains helper functions for all of the DesignSPHysics utilities.
-    - `guiutils.py`: Similar to `utils.py` but containing only utilities related with user interface operations.
+    - `gui_tools.py`: Similar to `utils.py` but containing only utilities related with user interface operations.
     - `xmlimporter.py`: Code related with importing existing DualSPHysics cases to DesignSPHysics (uses lib `xmltodict.py`)
 - `images`: Images and icons used in the user interface
 - `dualsphysics/bin`: DualSPHysics executables.

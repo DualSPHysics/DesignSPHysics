@@ -7,7 +7,7 @@ import glob
 from PySide import QtCore, QtGui
 
 from mod.translation_tools import __
-from mod.guiutils import h_line_generator
+from mod.gui_tools import h_line_generator
 from mod.dialog_tools import error_dialog
 
 from mod.dataobjects.ml_piston_2d import MLPiston2D
