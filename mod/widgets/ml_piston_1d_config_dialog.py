@@ -11,6 +11,8 @@ from mod.dataobjects.ml_piston_1d import MLPiston1D
 
 
 class MLPiston1DConfigDialog(QtGui.QDialog):
+    ''' DesignSPHysics MLPiston1D Configuration Dialog. '''
+
     def __init__(self, mk=None, mlpiston1d=None):
         super(MLPiston1DConfigDialog, self).__init__()
         self.mk = mk

@@ -74,6 +74,7 @@ class MeasureToolGridDialog(QtGui.QDialog):
 
         self.setLayout(self.measuregrid_tool_layout)
         self.resize(1250, 400)
+        self.setModal(False)
         self.exec_()
 
     def on_mgrid_change(self, _, column):
