@@ -18,7 +18,7 @@ from mod.dataobjects.case import Case
 
 
 class ConstantsDialog(QtGui.QDialog):
-    ''' A window to define and configure the constans of the case for later execution
+    ''' A window to define and configure the constants of the case for later execution
         in the DualSPHysics simulator. '''
     def __init__(self):
         super(ConstantsDialog, self).__init__()
@@ -119,7 +119,7 @@ class ConstantsDialog(QtGui.QDialog):
         self.rhop0_layout.addWidget(self.rhop0_input)
         self.rhop0_layout.addWidget(self.rhop0_label2)
 
-        # Maximum still water lavel to calc.  spdofsound using coefsound: layout and
+        # Maximum still water level to calc.  spdofsound using coefsound: layout and
         # components
         self.hswlauto_layout = QtGui.QHBoxLayout()
         self.hswlauto_chk = QtGui.QCheckBox("Auto HSWL ")

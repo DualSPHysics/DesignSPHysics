@@ -103,7 +103,7 @@ def document_count() -> int:
 
 
 def document_open(document_name: str) -> bool:
-    ''' Returns wether the specified document name is opened within freecad. '''
+    ''' Returns whether the specified document name is opened within freecad. '''
     return document_name.lower() in list(FreeCAD.listDocuments().keys())[0].lower()
 
 

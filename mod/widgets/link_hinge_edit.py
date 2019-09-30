@@ -157,6 +157,6 @@ class LinkHingeEdit(QtGui.QDialog):
         else:
             link_hinge_error_dialog = QtGui.QMessageBox()
             link_hinge_error_dialog.setWindowTitle(__("Error!"))
-            link_hinge_error_dialog.setText(__("bodies are necesary!"))
+            link_hinge_error_dialog.setText(__("bodies are necessary!"))
             link_hinge_error_dialog.setIcon(QtGui.QMessageBox.Critical)
             link_hinge_error_dialog.exec_()

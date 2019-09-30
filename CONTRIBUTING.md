@@ -4,7 +4,7 @@ DesignSPHysics is currently under development and not ready for consumer use. It
 This document was updated at 31 of July, 2018. It is probable that the project has been modified since then and this document does not contain correct information.
 
 # How to contribute
-Theres 2 main ways to contribute: Opening issues and contributing to the code. Below you can find information about the 2.
+There's 2 main ways to contribute: Opening issues and contributing to the code. Below you can find information about the 2.
 
 ## Opening issues
 You can open issues in [this github repository](https://github.com/DualSPHysics/DesignSPHysics) to report errors or suggest new features or how to improve them. Keep in mind that there are a lot of things left to do and probably most of the missing features are coming eventually. The most useful feedback right now is error reporting and fixing.
@@ -12,7 +12,7 @@ You can open issues in [this github repository](https://github.com/DualSPHysics/
 ## Contributing to the code
 To contribute to the project please check the following section (Project Structure) as it contains a brief description about how the project is structure and where to find the related code for each UI element.
 
-To submit code please make your changes onto the `develop` branch and open a pull request. The current mantainer of the code will check it as soon as possible to merge the change onto the branch.
+To submit code please make your changes onto the `develop` branch and open a pull request. The current maintainer of the code will check it as soon as possible to merge the change onto the branch.
 
 # Project structure
 ## Branches
@@ -49,7 +49,7 @@ For example, when the "Load Case" button is pressed, the function binded to it g
 
 To implement a new UI component with a feature just create, for example, a button and a function to execute when pressed.
 
-The main data structure is a Python Dictionary with different data attached to its keys. To see a reference to the strucutre, check the `get_default_data()` function in `mod.utils`.
+The main data structure is a Python Dictionary with different data attached to its keys. To see a reference to the structure, check the `get_default_data()` function in `mod.utils`.
 
 # Need more help?
 If you need help on how to contribute please contact one of the following people
