@@ -81,7 +81,7 @@ if previous_dock:
     previous_dock.setParent(None)
     previous_dock = None
 
-dsph_main_dock = DesignSPHysicsDock(__version__)  # DSPH main dock
+dsph_main_dock = DesignSPHysicsDock()  # DSPH main dock
 
 # Defines export window dialog.
 # This dialog is used in each <tool>_export function as a generic progress information
