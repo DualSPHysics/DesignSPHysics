@@ -23,7 +23,7 @@ class DockPostProcessingWidget(QtGui.QWidget):
 
     def __init__(self):
         super().__init__()
-        
+
         # Post processing section scaffolding
         self.main_layout = QtGui.QVBoxLayout()
         self.main_layout.setContentsMargins(0, 0, 0, 0)

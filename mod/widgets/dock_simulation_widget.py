@@ -70,7 +70,7 @@ class DockSimulationWidget(QtGui.QWidget):
         self.setLayout(self.main_layout)
 
     def on_ex_simulate(self):
-        ''' Defines what happens on simulation button press. 
+        ''' Defines what happens on simulation button press.
             It shows the run window and starts a background process with dualsphysics running. Updates the window with useful info.'''
 
         if not Case.instance().info.needs_to_run_gencase:

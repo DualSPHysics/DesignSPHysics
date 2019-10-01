@@ -5,6 +5,7 @@
 from PySide import QtGui, QtCore
 
 from mod.translation_tools import __
+from mod.post_processing_tools import partvtk_export
 
 from mod.dataobjects.case import Case
 

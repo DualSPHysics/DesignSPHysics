@@ -5,10 +5,10 @@
 from PySide import QtGui, QtCore
 
 from mod.translation_tools import __
+from mod.post_processing_tools import measuretool_export
 
 from mod.widgets.measuretool_grid_dialog import MeasureToolGridDialog
 from mod.widgets.measuretool_points_dialog import MeasureToolPointsDialog
-
 
 class MeasureToolDialog(QtGui.QDialog):
     ''' DesignSPHysics ComputeForces Config and Execution Dialog. '''

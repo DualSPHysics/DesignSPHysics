@@ -5,7 +5,7 @@
 from PySide import QtGui
 
 from mod.translation_tools import __
-
+from mod.post_processing_tools import floatinginfo_export
 
 class FloatingInfoDialog(QtGui.QDialog):
     ''' FloatingInfo configuration and execution Dialog. '''

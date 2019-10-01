@@ -5,6 +5,7 @@
 from PySide import QtGui
 
 from mod.translation_tools import __
+from mod.post_processing_tools import isosurface_export
 
 from mod.dataobjects.case import Case
 
@@ -87,5 +88,5 @@ class IsoSurfaceDialog(QtGui.QDialog):
 
         export_parameters['open_paraview'] = self.isosfc_open_at_end.isChecked()
 
-        self.isosurface_export(export_parameters)
+        isosurface_export(export_parameters)
         self.accept()

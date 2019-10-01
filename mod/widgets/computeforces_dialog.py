@@ -5,7 +5,7 @@
 from PySide import QtGui
 
 from mod.translation_tools import __
-
+from mod.post_processing_tools import computeforces_export
 
 class ComputeForcesDialog(QtGui.QDialog):
     ''' DesignSPHysics ComputeForces Config and Execution Dialog. '''

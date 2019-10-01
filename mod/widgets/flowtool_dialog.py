@@ -8,6 +8,7 @@ from PySide import QtGui
 
 from mod.translation_tools import __
 from mod.utils import create_flowtool_boxes
+from mod.post_processing_tools import flowtool_export
 
 from mod.dataobjects.case import Case
 
