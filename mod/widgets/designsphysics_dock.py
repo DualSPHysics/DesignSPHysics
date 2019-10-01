@@ -8,6 +8,8 @@ from mod.gui_tools import h_line_generator, widget_state_config
 
 from mod.constants import MAIN_WIDGET_INTERNAL_NAME, APP_NAME, VERSION
 
+from mod.dataobjects.case import Case
+
 from mod.widgets.dock_logo_widget import DockLogoWidget
 from mod.widgets.dock_configuration_widget import DockConfigurationWidget
 from mod.widgets.dock_dp_widget import DockDPWidget
@@ -57,3 +59,14 @@ class DesignSPHysicsDock(QtGui.QDockWidget):
 
         self.root_widget.setLayout(self.main_layout)
         self.setWidget(self.root_widget)
+
+        # Signal handling
+        self.pre_proccessing_widget.update_dp.connect(self.on_signal_update_dp)
+
+    def on_signal_update_dp(self):
+        ''' Defines the behaviour on DP update request. '''
+        self.dp_widget.dp_input.setText(str(Case.instance().dp))
+
+    def refresh_object_list(self):
+        ''' Refreshes the objects shown in the object list widget. '''
+        self.dock_object_list_table_widget.refresh()

@@ -41,10 +41,8 @@ def dump_to_disk(text):
 def print_license():
     ''' Prints this software license. '''
     licpath = "{}{}".format(path.abspath(__file__).split("mod")[0], "LICENSE")
-    if path.isfile(licpath):
+    if path.isfile(licpath) and VERBOSE:
         with open(licpath) as licfile:
-            if VERBOSE:
-                print(licfile.read())
+            print(licfile.read())
     else:
-        raise EnvironmentError(
-            "LICENSE file could not be found. Are you sure you didn't delete it?")
+        raise EnvironmentError("LICENSE file could not be found.")

@@ -4,7 +4,14 @@
 
 from PySide import QtGui
 
+from mod.freecad_tools import get_fc_object
 from mod.translation_tools import __
+
+from mod.constants import CASE_LIMITS_OBJ_NAME
+
+from mod.dataobjects.case import Case
+
+from mod.widgets.object_order_widget import ObjectOrderWidget
 
 
 class DockObjectListTableWidget(QtGui.QWidget):
@@ -45,3 +52,23 @@ class DockObjectListTableWidget(QtGui.QWidget):
     def set_table_cell_widget(self, row: int, column: int, widget: QtGui.QWidget):
         ''' Sets the widget for the specified row and column in the table within the widget. '''
         self.objectlist_table.setCellWidget(row, column, widget)
+
+    def refresh(self) -> None:
+        ''' Deletes everything and refreshes contents with the current simulation objects. '''
+        self.clear_table_contents()
+        num_objects_in_simulation: int = Case.instance().number_of_objects_in_simulation()
+        self.set_table_row_count(num_objects_in_simulation)
+
+        current_row = 0
+        for sim_object in Case.instance().objects:
+            if sim_object.name == CASE_LIMITS_OBJ_NAME:
+                continue
+            target_widget = ObjectOrderWidget(index=current_row, object_mk=sim_object.obj_mk, mktype=sim_object.type, object_name=get_fc_object(sim_object.name).Label, parent=self)
+
+            if current_row == 0:
+                target_widget.disable_up()
+            if current_row == num_objects_in_simulation - 1:
+                target_widget.disable_down()
+
+            self.set_table_cell_widget(current_row, 0, target_widget)
+            current_row += 1

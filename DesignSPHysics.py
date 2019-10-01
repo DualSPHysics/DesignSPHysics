@@ -17,18 +17,17 @@ import FreeCADGui
 from PySide import QtGui, QtCore
 
 from mod.translation_tools import __
-from mod.freecad_tools import get_fc_view_object, is_compatible_version, document_count, prompt_close_all_documents
+from mod.freecad_tools import get_fc_view_object, check_compatibility, document_count, prompt_close_all_documents, get_fc_main_window
+from mod.freecad_tools import delete_existing_docks
 from mod.stdout_tools import print_license, error, log
 from mod.gui_tools import widget_state_config
-from mod.dialog_tools import error_dialog, warning_dialog
 
 from mod.enums import ObjectType, ObjectFillMode, FreeCADDisplayMode, FreeCADObjectType
-from mod.constants import WIDTH_2D, VERSION, CASE_LIMITS_OBJ_NAME, MAIN_WIDGET_INTERNAL_NAME, PROP_WIDGET_INTERNAL_NAME, DEFAULT_WORKBENCH
+from mod.constants import WIDTH_2D, VERSION, CASE_LIMITS_OBJ_NAME, DEFAULT_WORKBENCH
 
 from mod.dataobjects.case import Case
 
 from mod.widgets.designsphysics_dock import DesignSPHysicsDock
-from mod.widgets.object_order_widget import ObjectOrderWidget
 from mod.widgets.properties_dock_widget import PropertiesDockWidget
 
 
@@ -43,108 +42,35 @@ __maintainer__ = "Andrés Vieira"
 __email__ = "avieira@uvigo.es"
 __status__ = "Development"
 
-# Print license at macro start
-try:
-    print_license()
-except EnvironmentError:
-    warning_dialog(__("LICENSE file could not be found. Are you sure you didn't delete it?"))
-
-# Version check. This script is only compatible with FreeCAD 0.17 or higher
-is_compatible = is_compatible_version()
-if not is_compatible:
-    error_dialog(__("This FreeCAD version is not compatible. Please update FreeCAD to version 0.17 or higher."))
-    raise EnvironmentError(__("This FreeCAD version is not compatible. Please update FreeCAD to version 0.17 or higher."))
-
 # Used to store widgets that will be disabled/enabled, so they are centralized
+# FIXME: This should not be managed this way
 widget_state_elements = dict()
 
-# Establishing references for the different elements that the script will use later.
-fc_main_window = FreeCADGui.getMainWindow()  # FreeCAD main window
+print_license()
+check_compatibility()
 
-# Resets data structure to default values
-Case.instance().reset()
-
-# The script needs only one document open, called DSPH_Case.
-# This section tries to close all the current documents.
 if document_count() > 0:
     success = prompt_close_all_documents()
     if not success:
         quit()
 
-# If the script is executed even when a previous DSPH Dock is created it makes sure that it's deleted before.
-previous_dock = fc_main_window.findChild(QtGui.QDockWidget, MAIN_WIDGET_INTERNAL_NAME)
-if previous_dock:
-    previous_dock.setParent(None)
-    previous_dock = None
+# Tries to delete docks created by a previous execution of DesignSPHysics
+delete_existing_docks()
 
-dsph_main_dock = DesignSPHysicsDock()  # DSPH main dock
+Case.instance().reset()
 
-# And docking it at right side of screen
-fc_main_window.addDockWidget(QtCore.Qt.RightDockWidgetArea, dsph_main_dock)
-
-# DSPH OBJECT PROPERTIES DOCK RELATED CODE
-# This is the dock widget that by default appears at the bottom-right corner.
-# ----------------------------
-# Tries to find and close previous instances of the widget.
-previous_dock = fc_main_window.findChild(QtGui.QDockWidget, PROP_WIDGET_INTERNAL_NAME)
-if previous_dock:
-    previous_dock.setParent(None)
-    previous_dock = None
-
-# Creation of the widget and scaffolding
+dsph_main_dock = DesignSPHysicsDock()
 properties_widget = PropertiesDockWidget()
 
-# Dock the widget to the left side of screen
-fc_main_window.addDockWidget(QtCore.Qt.LeftDockWidgetArea, properties_widget)
+get_fc_main_window().addDockWidget(QtCore.Qt.RightDockWidgetArea, dsph_main_dock)
+get_fc_main_window().addDockWidget(QtCore.Qt.LeftDockWidgetArea, properties_widget)
 
 
 # Find treewidgets of freecad.
 trees = list()
-for item in fc_main_window.findChildren(QtGui.QTreeWidget):
+for item in get_fc_main_window().findChildren(QtGui.QTreeWidget):
     if item.objectName() != "DSPH Objects":
         trees.append(item)
-
-
-def on_up_objectorder(index):
-    ''' Defines behaviour on pressing the button to order an DSPH object up in the hirearchy. '''
-
-    new_order = list()
-
-    # order up
-    curr_elem = data['export_order'][index]
-    prev_elem = data['export_order'][index - 1]
-
-    data['export_order'].remove(curr_elem)
-
-    for element in data['export_order']:
-        if element == prev_elem:
-            new_order.append(curr_elem)
-        new_order.append(element)
-
-    data['export_order'] = new_order
-
-    on_tree_item_selection_change()
-
-
-def on_down_objectorder(index):
-    ''' Defines behaviour on pressing the button to order an DSPH object up in the hirearchy. '''
-
-    new_order = list()
-
-    # order down
-    curr_elem = data['export_order'][index]
-    next_elem = data['export_order'][index + 1]
-
-    data['export_order'].remove(curr_elem)
-
-    for element in data['export_order']:
-        new_order.append(element)
-        if element == next_elem:
-            new_order.append(curr_elem)
-
-    data['export_order'] = new_order
-
-    on_tree_item_selection_change()
 
 
 def on_tree_item_selection_change():
@@ -154,11 +80,6 @@ def on_tree_item_selection_change():
     object_names = list()
     for each in FreeCAD.ActiveDocument.Objects:
         object_names.append(each.Name)
-
-    # Detect object deletion
-    for sim_object_name in Case.instance().get_all_simulation_object_names():
-        if sim_object_name not in object_names:
-            Case.instance().remove_object(sim_object_name)
 
     properties_widget.set_add_button_enabled(True)
 
@@ -295,47 +216,11 @@ def on_tree_item_selection_change():
         properties_widget.set_remove_button_visibility(False)
         properties_widget.set_damping_button_visibility(False)
 
+    # Delete invalid or already deleted (in FreeCAD) objects
+    Case.instance().delete_invalid_objects()
+
     # Update dsph objects list
-    dsph_main_dock.dock_object_list_table_widget.clear_table_contents()
-    dsph_main_dock.dock_object_list_table_widget.set_table_enabled(True)
-
-    dsph_main_dock.dock_object_list_table_widget.set_table_row_count(Case.instance().number_of_objects_in_simulation())
-    current_row = 0
-    objects_with_parent = list()
-    for object_name in Case.instance().get_all_simulation_object_names():
-        context_object = FreeCAD.ActiveDocument.getObject(object_name)
-        if not context_object:
-            Case.instance().remove_object(object_name)
-            continue
-        if context_object.InList != list():
-            objects_with_parent.append(context_object.Name)
-            continue
-        if context_object.Name == "Case_Limits":
-            continue
-        target_widget = ObjectOrderWidget(
-            index=current_row,
-            object_mk=Case.instance().get_simulation_object(context_object.Name).obj_mk,
-            mktype=Case.instance().get_simulation_object(context_object.Name).type,
-            object_name=context_object.Label
-        )
-
-        target_widget.up.connect(on_up_objectorder)
-        target_widget.down.connect(on_down_objectorder)
-
-        if current_row is 0:
-            target_widget.disable_up()
-        if current_row is Case.instance().number_of_objects_in_simulation() - 1:
-            target_widget.disable_down()
-
-        dsph_main_dock.dock_object_list_table_widget.set_table_cell_widget(current_row, 0, target_widget)
-
-        current_row += 1
-    for object_name in objects_with_parent:
-        try:
-            Case.instance().remove_object(object_name)
-        except ValueError:
-            # Not in list, probably because now is part of a compound object
-            pass
+    dsph_main_dock.refresh_object_list()
     properties_widget.fit_size()
 
 
@@ -345,8 +230,6 @@ for item in trees:
     item.itemSelectionChanged.connect(on_tree_item_selection_change)
 
 properties_widget.need_refresh.connect(on_tree_item_selection_change)
-
-# Watch if no object is selected and prevent fillbox rotations
 
 
 def selection_monitor():

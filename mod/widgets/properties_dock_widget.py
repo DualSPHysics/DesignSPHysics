@@ -197,7 +197,7 @@ class PropertiesDockWidget(QtGui.QDockWidget):
 
     def on_mkgroup_change(self, value):
         ''' Defines what happens when MKGroup is changed. '''
-        Case.instance().get_simulation_object(FreeCADGui.Selection.getSelection().Name).obj_mk = value
+        Case.instance().get_simulation_object(FreeCADGui.Selection.getSelection()[0].Name).obj_mk = value
 
     def on_objtype_change(self, index):
         ''' Defines what happens when type of object is changed '''

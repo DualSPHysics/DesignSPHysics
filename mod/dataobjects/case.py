@@ -2,8 +2,12 @@
 # -*- coding: utf-8 -*-
 ''' DesignSPHysics main data structure. '''
 
+from mod.stdout_tools import debug
+from mod.freecad_tools import get_fc_object
+
 from mod.constants import VERSION
 from mod.enums import ObjectType, FreeCADObjectType
+
 from mod.dataobjects.constants import Constants
 from mod.dataobjects.execution_parameters import ExecutionParameters
 from mod.dataobjects.periodicity import Periodicity
@@ -18,16 +22,15 @@ from mod.dataobjects.mk_based_properties import MKBasedProperties
 
 class Case():
     ''' Main data structure for the data inside a case properties, objects
-    etcetera. Used as a way to store information and transform it for
-    multiple needs '''
+    etcetera. Used as a way to store information and transform it for multiple needs '''
     __instance: 'Case' = None
     SUPPORTED_TYPES = [FreeCADObjectType.BOX, FreeCADObjectType.SPHERE, FreeCADObjectType.CYLINDER]
 
     def __init__(self, reset=False):
         ''' Virtually private constructor. '''
         if Case.__instance is not None and not reset:
-            raise Exception(
-                'Case class is a singleton and should not be initialized twice')
+            raise Exception('Case class is a singleton and should not be initialized twice')
+        super()
         Case.__instance = self
         self.version: str = VERSION
         self.name: str = ''
@@ -118,3 +121,23 @@ class Case():
     def reset_simulation_domain(self) -> None:
         ''' Restores the Simulation Domain to the default one. '''
         self.domain = SimulationDomain()
+
+    def shift_object_up_in_order(self, index) -> None:
+        ''' Moves an object up in the order. '''
+        corrected_index = index + 1
+        if 2 <= corrected_index < len(self.objects):
+            debug("Object has right condition to shift up")
+            self.objects.insert(corrected_index - 1, self.objects.pop(corrected_index))
+
+    def shift_object_down_in_order(self, index) -> None:
+        ''' Moves an object up in the order. '''
+        corrected_index = index + 1
+        if 1 <= corrected_index < len(self.objects) - 1:
+            self.objects.insert(corrected_index + 1, self.objects.pop(corrected_index))
+
+    def delete_invalid_objects(self) -> None:
+        ''' Deletes invalid objects from the simulation. '''
+        for object_name in self.get_all_simulation_object_names():
+            fc_object = get_fc_object(object_name)
+            if not fc_object or fc_object.InList:
+                self.remove_object(object_name)

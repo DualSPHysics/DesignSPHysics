@@ -7,20 +7,20 @@ from PySide import QtCore, QtGui
 from mod.translation_tools import __
 from mod.gui_tools import get_icon
 
+from mod.dataobjects.case import Case
+
 
 class ObjectOrderWidget(QtGui.QWidget):
     ''' A widget representing the object order. '''
 
-    up = QtCore.Signal(int)  # Passes element index
-    down = QtCore.Signal(int)  # Passes element index
-
     def __init__(self, index=999, object_name="No name", object_mk=-1, mktype="bound",
-                 up_disabled=False, down_disabled=False):
+                 up_disabled=False, down_disabled=False, parent=None):
         super(ObjectOrderWidget, self).__init__()
-        
+
         self.index = index
         self.object_name = object_name
-        
+        self.parent = parent
+
         self.main_layout = QtGui.QHBoxLayout()
         self.main_layout.setContentsMargins(10, 0, 10, 0)
         self.mk_label = QtGui.QLabel("<b>{}{}</b>".format(mktype[0].upper(), str(object_mk)))
@@ -45,13 +45,21 @@ class ObjectOrderWidget(QtGui.QWidget):
                         "{}".format(object_mk, mktype.lower().title(), object_name, __("Press up or down to reorder.")))
 
     def disable_up(self):
+        ''' Disables the up button. '''
         self.up_button.setEnabled(False)
 
     def disable_down(self):
+        ''' Disables the down button. '''
         self.down_button.setEnabled(False)
 
     def on_up(self):
-        self.up.emit(self.index)
+        ''' Defines the behaviour on up buttton press. '''
+        Case.instance().shift_object_up_in_order(self.index)
+        if self.parent:
+            self.parent.refresh()
 
     def on_down(self):
-        self.down.emit(self.index)
+        ''' Defines the behaviour on down button press. '''
+        Case.instance().shift_object_down_in_order(self.index)
+        if self.parent:
+            self.parent.refresh()

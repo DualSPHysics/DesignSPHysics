@@ -51,6 +51,8 @@ def on_tree_item_selection_change():
 class DockPreProcessingWidget(QtGui.QWidget):
     '''DesignSPHysics Dock Pre Processing Widget '''
 
+    update_dp = QtCore.Signal()
+
     def __init__(self):
         super().__init__()
 
@@ -183,7 +185,8 @@ class DockPreProcessingWidget(QtGui.QWidget):
         create_dsph_document()
         widget_state_config(widget_state_elements, "new case")
         Case.instance().add_object(SimulationObject(CASE_LIMITS_OBJ_NAME, -1, ObjectType.SPECIAL, ObjectFillMode.SPECIAL))
-        self.dp_input.setText(str(Case.instance().dp))
+        
+        self.update_dp.emit()
 
         # Forces call to item selection change function so all changes are taken into account
         # FIXME: this should not be here

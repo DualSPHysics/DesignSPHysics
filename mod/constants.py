@@ -9,8 +9,8 @@ This file contains a collection of constants meant to use with DesignSPHysics.
 
 FREECAD_MIN_VERSION = "018"
 APP_NAME = "DesignSPHysics"
-DEBUGGING = False
-VERBOSE = False
+DEBUGGING = True
+VERBOSE = True
 DIVIDER = 1000
 LINE_END = '\n'
 PICKLE_PROTOCOL = 1  # Binary mode

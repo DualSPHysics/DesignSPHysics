@@ -15,9 +15,27 @@ from PySide import QtGui
 from mod.stdout_tools import log
 from mod.constants import APP_NAME, SINGLETON_DOCUMENT_NAME, DEFAULT_WORKBENCH, CASE_LIMITS_OBJ_NAME, CASE_LIMITS_3D_LABEL
 from mod.constants import CASE_LIMITS_LINE_COLOR, CASE_LIMITS_LINE_WIDTH, CASE_LIMITS_DEFAULT_LENGTH, FREECAD_MIN_VERSION
+from mod.constants import MAIN_WIDGET_INTERNAL_NAME, PROP_WIDGET_INTERNAL_NAME
 from mod.enums import FreeCADObjectType, FreeCADDisplayMode
-from mod.dialog_tools import ok_cancel_dialog
+from mod.dialog_tools import ok_cancel_dialog, error_dialog
 from mod.translation_tools import __
+
+
+def delete_existing_docks():
+    ''' Searches for existing docks related to DesignSPHysics destroys them. '''
+    for previous_dock in [get_fc_main_window().findChild(QtGui.QDockWidget, MAIN_WIDGET_INTERNAL_NAME),
+                          get_fc_main_window().findChild(QtGui.QDockWidget, PROP_WIDGET_INTERNAL_NAME)]:
+        if previous_dock:
+            previous_dock.setParent(None)
+            previous_dock = None
+
+
+def check_compatibility():
+    ''' Ensures the current version of FreeCAD is compatible with the macro. Spawns an error dialog and throws exception to halt
+        the execution if its not. '''
+    if not is_compatible_version():
+        error_dialog(__("This FreeCAD version is not compatible. Please update FreeCAD to version {} or higher.").format(FREECAD_MIN_VERSION))
+        raise EnvironmentError(__("This FreeCAD version is not compatible. Please update FreeCAD to version {} or higher.").format(FREECAD_MIN_VERSION))
 
 
 def is_compatible_version():
