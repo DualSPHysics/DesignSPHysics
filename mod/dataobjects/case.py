@@ -6,7 +6,7 @@ from mod.stdout_tools import debug
 from mod.freecad_tools import get_fc_object
 
 from mod.constants import VERSION
-from mod.enums import ObjectType, FreeCADObjectType
+from mod.enums import ObjectType
 
 from mod.dataobjects.constants import Constants
 from mod.dataobjects.execution_parameters import ExecutionParameters
@@ -24,7 +24,6 @@ class Case():
     ''' Main data structure for the data inside a case properties, objects
     etcetera. Used as a way to store information and transform it for multiple needs '''
     __instance: 'Case' = None
-    SUPPORTED_TYPES = [FreeCADObjectType.BOX, FreeCADObjectType.SPHERE, FreeCADObjectType.CYLINDER]
 
     def __init__(self, reset=False):
         ''' Virtually private constructor. '''

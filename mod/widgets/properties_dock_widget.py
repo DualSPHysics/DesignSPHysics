@@ -10,7 +10,7 @@ import FreeCADGui
 from PySide import QtCore, QtGui
 
 from mod.translation_tools import __
-from mod.enums import ObjectType, ObjectFillMode
+from mod.enums import ObjectType, ObjectFillMode, FreeCADObjectType
 from mod.constants import PROP_WIDGET_INTERNAL_NAME
 
 from mod.widgets.damping_config_dialog import DampingConfigDialog
@@ -218,7 +218,7 @@ class PropertiesDockWidget(QtGui.QDockWidget):
                 pass
             self.floatstate_prop.setEnabled(True)
             self.initials_prop.setEnabled(False)
-            self.mkgroup_label.setText("&nbsp;&nbsp;&nbsp;" + __("MKBound") + " <a href='http://design.sphysics.org/wiki/doku.php?id=concepts'>?</a>")
+            self.mkgroup_label.setText("   " + __("MKBound") + " <a href='http://design.sphysics.org/wiki/doku.php?id=concepts'>?</a>")
         elif self.objtype_prop.itemText(index).lower() == "fluid":
             self.mkgroup_prop.setRange(0, 10)
             if simulation_object.type != ObjectType.FLUID:
@@ -239,7 +239,7 @@ class PropertiesDockWidget(QtGui.QDockWidget):
 
             self.floatstate_prop.setEnabled(False)
             self.initials_prop.setEnabled(True)
-            self.mkgroup_label.setText("&nbsp;&nbsp;&nbsp;" + __("MKFluid") + " <a href='http://design.sphysics.org/wiki/doku.php?id=concepts'>?</a>")
+            self.mkgroup_label.setText("   " + __("MKFluid") + " <a href='http://design.sphysics.org/wiki/doku.php?id=concepts'>?</a>")
 
         # Update simulation object type
         simulation_object.type = ObjectType.FLUID if index == 0 else ObjectType.BOUND
@@ -348,3 +348,86 @@ class PropertiesDockWidget(QtGui.QDockWidget):
         ''' Fits the size of the widget to reduce the wasted space on screen. '''
         self.properties_scaff_widget.adjustSize()
         self.adjustSize()
+
+    def configure_to_no_selection(self):
+        ''' Configures the property widget to hide everything. '''
+        self.set_property_table_visibility(False)
+        self.set_add_button_visibility(False)
+        self.set_remove_button_visibility(False)
+        self.set_damping_button_visibility(False)
+
+    def configure_to_add_multiple_selection(self):
+        ''' Configures the property widget to show tools to handle a multiple selection. '''
+        self.set_add_button_text(__("Add all possible objects to DSPH Simulation"))
+        self.set_property_table_visibility(False)
+        self.set_add_button_visibility(True)
+        self.set_remove_button_visibility(False)
+        self.set_damping_button_visibility(False)
+
+    def configure_to_damping_selection(self):
+        ''' Configures the property widget to show tools to handle a selected damping zone. '''
+        self.set_property_table_visibility(False)
+        self.set_add_button_visibility(False)
+        self.set_remove_button_visibility(False)
+        self.set_damping_button_visibility(True)
+
+    def configure_to_regular_selection(self):
+        ''' Configures the property widget to show tools to handle a regular selected object. '''
+        self.set_property_table_visibility(True)
+        self.set_add_button_visibility(False)
+        self.set_remove_button_visibility(True)
+        self.set_damping_button_visibility(False)
+
+    def configure_to_incompatible_object(self):
+        ''' Configures the property widgeet to show a message warning of an incompatible object. '''
+        self.set_add_button_text(__("Can't add this object to the simulation"))
+        self.set_property_table_visibility(False)
+        self.set_add_button_visibility(True)
+        self.set_add_button_enabled(False)
+        self.set_remove_button_visibility(False)
+        self.set_damping_button_visibility(False)
+
+    def configure_to_add_single_selection(self):
+        ''' Configures the property widget to show a button to add the currently selected object. '''
+        self.set_add_button_text(__("Add to DSPH Simulation"))
+        self.set_property_table_visibility(False)
+        self.set_add_button_visibility(True)
+        self.set_remove_button_visibility(False)
+        self.set_damping_button_visibility(False)
+
+    def adapt_to_simulation_object(self, sim_object: SimulationObject, fc_object):
+        ''' Adapts the contents of the property widget to the specifications of the simulation object passed as a parameter. '''
+
+        self.mkgroup_prop.setValue(sim_object.obj_mk)
+
+        # Object Type selector adaptation
+        if sim_object.supports_changing_type():
+            self.objtype_prop.setEnabled(True)
+            self.objtype_prop.setCurrentIndex(0 if sim_object.type is ObjectType.FLUID else 1)
+            self.set_mkgroup_range(sim_object.type)
+            self.set_mkgroup_text("   {} <a href='http://design.sphysics.org/wiki/doku.php?id=concepts'>?</a>".format(__("MKFluid" if sim_object.type is ObjectType.FLUID else "MKBound")))
+        else:
+            # Everything else
+            self.set_mkgroup_range(ObjectType.BOUND)
+            self.objtype_prop.setCurrentIndex(1)
+            self.objtype_prop.setEnabled(False)
+
+        # Object Fillmode selector adaptation
+        self.fillmode_prop.setEnabled(False)
+        if sim_object.supports_changing_fillmode():
+            self.fillmode_prop.setEnabled(True)
+            self.fillmode_prop.setCurrentIndex({ObjectFillMode.FULL: 0, ObjectFillMode.SOLID: 1, ObjectFillMode.FACE: 2, ObjectFillMode.WIRE: 3}[sim_object.fillmode])
+        else:
+            # Object not supported. Put Solid if it's a fillbox or face if not
+            self.fillmode_prop.setCurrentIndex(1 if fc_object.TypeId == FreeCADObjectType.FOLDER else 2)
+
+        # Object Float State button adaptation
+        if sim_object.supports_floating():
+            self.floatstate_prop.setEnabled(sim_object.type is not ObjectType.FLUID)
+
+        # Object Initials button adaptation
+        self.initials_prop.setEnabled(sim_object.type is ObjectType.FLUID)
+
+        # Object Motion button adaptation
+        if sim_object.supports_motion:
+            self.motion_prop.setEnabled(sim_object.type is not ObjectType.FLUID)

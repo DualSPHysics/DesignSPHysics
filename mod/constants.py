@@ -5,6 +5,8 @@
 This file contains a collection of constants meant to use with DesignSPHysics.
 '''
 
+from mod.enums import FreeCADObjectType
+
 # ------ APP Constants ------
 
 FREECAD_MIN_VERSION = "018"
@@ -33,6 +35,8 @@ CASE_LIMITS_LINE_COLOR = (1.00, 0.00, 0.00)
 CASE_LIMITS_LINE_WIDTH = 2.00
 FILLBOX_DEFAULT_LENGTH = '1000 mm'
 FILLBOX_DEFAULT_RADIUS = 10
+
+SUPPORTED_TYPES = [FreeCADObjectType.BOX, FreeCADObjectType.SPHERE, FreeCADObjectType.CYLINDER]
 
 MAIN_WIDGET_INTERNAL_NAME = "DSPH Widget"
 PROP_WIDGET_INTERNAL_NAME = "DSPH_Properties"

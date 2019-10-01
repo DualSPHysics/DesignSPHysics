@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 '''DesignSPHysics Object Order widget'''
 
-from PySide import QtCore, QtGui
+from PySide import QtGui
 
 from mod.translation_tools import __
 from mod.gui_tools import get_icon

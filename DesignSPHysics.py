@@ -17,13 +17,12 @@ import FreeCADGui
 from PySide import QtGui, QtCore
 
 from mod.translation_tools import __
-from mod.freecad_tools import get_fc_view_object, check_compatibility, document_count, prompt_close_all_documents, get_fc_main_window
-from mod.freecad_tools import delete_existing_docks
-from mod.stdout_tools import print_license, error, log
+from mod.freecad_tools import check_compatibility, document_count, prompt_close_all_documents, get_fc_main_window
+from mod.freecad_tools import delete_existing_docks, valid_document_environment, enforce_case_limits_restrictions, enforce_fillbox_restrictions
+from mod.stdout_tools import print_license, log
 from mod.gui_tools import widget_state_config
 
-from mod.enums import ObjectType, ObjectFillMode, FreeCADDisplayMode, FreeCADObjectType
-from mod.constants import WIDTH_2D, VERSION, CASE_LIMITS_OBJ_NAME, DEFAULT_WORKBENCH
+from mod.constants import VERSION, DEFAULT_WORKBENCH
 
 from mod.dataobjects.case import Case
 
@@ -77,144 +76,31 @@ def on_tree_item_selection_change():
     ''' Refreshes relevant parts of DesignsPHysics under an important change event. '''
 
     selection = FreeCADGui.Selection.getSelection()
-    object_names = list()
-    for each in FreeCAD.ActiveDocument.Objects:
-        object_names.append(each.Name)
 
     properties_widget.set_add_button_enabled(True)
 
     if selection:
         if len(selection) > 1:
             # Multiple objects selected
-            properties_widget.set_add_button_text(__("Add all possible objects to DSPH Simulation"))
-            properties_widget.set_property_table_visibility(False)
-            properties_widget.set_add_button_visibility(True)
-            properties_widget.set_remove_button_visibility(False)
-            properties_widget.set_damping_button_visibility(False)
+            properties_widget.configure_to_add_multiple_selection()
         else:
             # One object selected
             if selection[0].Name == "Case_Limits" or "_internal_" in selection[0].Name:
-                properties_widget.set_property_table_visibility(False)
-                properties_widget.set_add_button_visibility(False)
-                properties_widget.set_remove_button_visibility(False)
-                properties_widget.set_damping_button_visibility(False)
+                properties_widget.configure_to_no_selection()
             elif "dampingzone" in selection[0].Name.lower() and selection[0].Name in data['damping'].keys():
-                properties_widget.set_property_table_visibility(False)
-                properties_widget.set_add_button_visibility(False)
-                properties_widget.set_remove_button_visibility(False)
-                properties_widget.set_damping_button_visibility(True)
+                properties_widget.configure_to_damping_selection()
             elif Case.instance().is_object_in_simulation(selection[0].Name):
                 # Show properties on table
-                properties_widget.set_property_table_visibility(True)
-                properties_widget.set_add_button_visibility(False)
-                properties_widget.set_remove_button_visibility(True)
-                properties_widget.set_damping_button_visibility(False)
-
-                # Reference to the object inside the simulation
-                sim_object = Case.instance().get_simulation_object(selection[0].Name)
-
-                # MK config
-                properties_widget.set_mkgroup_range(ObjectType.BOUND)
-                to_change = properties_widget.get_cell_widget(1, 1)
-                to_change.setValue(sim_object.obj_mk)
-
-                # type config
-                to_change = properties_widget.get_cell_widget(0, 1)
-                if selection[0].TypeId in Case.SUPPORTED_TYPES:
-                    # Supported object
-                    to_change.setEnabled(True)
-                    if sim_object.type is ObjectType.FLUID:
-                        to_change.setCurrentIndex(0)
-                        properties_widget.set_mkgroup_range(ObjectType.FLUID)
-                        properties_widget.set_mkgroup_text("&nbsp;&nbsp;&nbsp;" + __("MKFluid") + " <a href='http://design.sphysics.org/wiki/doku.php?id=concepts'>?</a>")
-                    elif sim_object.type is ObjectType.BOUND:
-                        to_change.setCurrentIndex(1)
-                        properties_widget.set_mkgroup_range(ObjectType.BOUND)
-                        properties_widget.set_mkgroup_text("&nbsp;&nbsp;&nbsp;" + __("MKBound") + " <a href='http://design.sphysics.org/wiki/doku.php?id=concepts'>?</a>")
-                elif "part" in selection[0].TypeId.lower() or "mesh" in selection[0].TypeId.lower() or (
-                        selection[0].TypeId == FreeCADObjectType.FOLDER and "fillbox" in selection[0].Name.lower()):
-                    # Is an object that will be exported to STL
-                    to_change.setEnabled(True)
-                    if sim_object.type is ObjectType.FLUID:
-                        to_change.setCurrentIndex(0)
-                        properties_widget.set_mkgroup_range(ObjectType.FLUID)
-                        properties_widget.set_mkgroup_text("&nbsp;&nbsp;&nbsp;" + __("MKFluid") + " <a href='http://design.sphysics.org/wiki/doku.php?id=concepts'>?</a>")
-                    elif sim_object.type is ObjectType.BOUND:
-                        to_change.setCurrentIndex(1)
-                        properties_widget.set_mkgroup_range(ObjectType.BOUND)
-                        properties_widget.set_mkgroup_text("&nbsp;&nbsp;&nbsp;" + __("MKBound") + " <a href='http://design.sphysics.org/wiki/doku.php?id=concepts'>?</a>")
-                else:
-                    # Everything else
-                    to_change.setCurrentIndex(1)
-                    to_change.setEnabled(False)
-
-                # fill mode config
-                to_change = properties_widget.get_cell_widget(2, 1)
-                if selection[0].TypeId in Case.SUPPORTED_TYPES:
-                    # Object is a supported type. Fill with its type and enable selector.
-                    to_change.setEnabled(True)
-                    if sim_object.fillmode is ObjectFillMode.FULL:
-                        to_change.setCurrentIndex(0)
-                    elif sim_object.fillmode is ObjectFillMode.SOLID:
-                        to_change.setCurrentIndex(1)
-                    elif sim_object.fillmode is ObjectFillMode.FACE:
-                        to_change.setCurrentIndex(2)
-                    elif sim_object.fillmode is ObjectFillMode.WIRE:
-                        to_change.setCurrentIndex(3)
-                elif selection[0].TypeId == 'App::DocumentObjectGroup':
-                    # Is a fillbox. Set fill mode to solid and disable
-                    to_change.setCurrentIndex(1)
-                    to_change.setEnabled(False)
-                else:
-                    # Not supported. Probably face
-                    to_change.setCurrentIndex(2)
-                    to_change.setEnabled(False)
-
-                # float state config
-                to_change = properties_widget.get_cell_widget(3, 1)
-                if selection[0].TypeId in Case.SUPPORTED_TYPES or (selection[0].TypeId == FreeCADObjectType.FOLDER
-                                                                   and "fillbox" in selection[0].Name.lower()):
-                    if sim_object.type is ObjectType.FLUID:
-                        to_change.setEnabled(False)
-                    else:
-                        to_change.setEnabled(True)
-
-                # initials restrictions
-                to_change = properties_widget.get_cell_widget(4, 1)
-                if sim_object.type is ObjectType.FLUID:
-                    to_change.setEnabled(True)
-                else:
-                    to_change.setEnabled(False)
-
-                # motion restrictions
-                to_change = properties_widget.get_cell_widget(5, 1)
-                if selection[0].TypeId in Case.SUPPORTED_TYPES or FreeCADObjectType.CUSTOM_MESH in str(selection[0].TypeId) or \
-                        (selection[0].TypeId == FreeCADObjectType.FOLDER and "fillbox" in selection[0].Name.lower()):
-                    if sim_object.type is ObjectType.FLUID:
-                        to_change.setEnabled(False)
-                    else:
-                        to_change.setEnabled(True)
-
+                properties_widget.configure_to_regular_selection()
+                properties_widget.adapt_to_simulation_object(Case.instance().get_simulation_object(selection[0].Name), selection[0])
             else:
-                if selection[0].InList == list():
+                if not selection[0].InList:
                     # Show button to add to simulation
-                    properties_widget.set_add_button_text(__("Add to DSPH Simulation"))
-                    properties_widget.set_property_table_visibility(False)
-                    properties_widget.set_add_button_visibility(True)
-                    properties_widget.set_remove_button_visibility(False)
-                    properties_widget.set_damping_button_visibility(False)
+                    properties_widget.configure_to_add_single_selection()
                 else:
-                    properties_widget.set_add_button_text(__("Can't add this object to the simulation"))
-                    properties_widget.set_property_table_visibility(False)
-                    properties_widget.set_add_button_visibility(True)
-                    properties_widget.set_add_button_enabled(False)
-                    properties_widget.set_remove_button_visibility(False)
-                    properties_widget.set_damping_button_visibility(False)
+                    properties_widget.configure_to_incompatible_object()
     else:
-        properties_widget.set_property_table_visibility(False)
-        properties_widget.set_add_button_visibility(False)
-        properties_widget.set_remove_button_visibility(False)
-        properties_widget.set_damping_button_visibility(False)
+        properties_widget.configure_to_no_selection()
 
     # Delete invalid or already deleted (in FreeCAD) objects
     Case.instance().delete_invalid_objects()
@@ -236,51 +122,22 @@ def selection_monitor():
     ''' Watches and fixes unwanted changes in the current selection. '''
     time.sleep(2.0)
     while True:
-        # ensure everything is fine when objects are not selected
-        try:
-            if not FreeCADGui.Selection.getSelection():
-                properties_widget.set_property_table_visibility(False)
-                properties_widget.set_add_button_visibility(False)
-                properties_widget.set_remove_button_visibility(False)
-                properties_widget.set_damping_button_visibility(False)
-        except AttributeError:
-            # No object is selected so the selection has no length. Ignore it
-            pass
-        try:
-            # watch fillbox rotations and prevent them
-            for o in FreeCAD.ActiveDocument.Objects:
-                if o.TypeId == FreeCADObjectType.FOLDER and "fillbox" in o.Name.lower():
-                    for subelem in o.OutList:
-                        if subelem.Placement.Rotation.Angle != 0.0:
-                            subelem.Placement.Rotation.Angle = 0.0
-                            error(__("Can't change rotation!"))
-                if o.Name == CASE_LIMITS_OBJ_NAME:
-                    if o.Placement.Rotation.Angle != 0.0:
-                        o.Placement.Rotation.Angle = 0.0
-                        error(__("Can't change rotation!"))
-                    if not Case.instance().mode3d and o.Width.Value != WIDTH_2D:
-                        o.Width.Value = WIDTH_2D
-                        error(__("Can't change width if the case is in 2D Mode!"))
-
-            # Prevent some view properties of Case Limits to be changed
-            case_limits_obj = get_fc_view_object(CASE_LIMITS_OBJ_NAME)
-            if case_limits_obj is not None:
-                if case_limits_obj.DisplayMode != FreeCADDisplayMode.WIREFRAME:
-                    case_limits_obj.DisplayMode = FreeCADDisplayMode.WIREFRAME
-                if case_limits_obj.LineColor != (1.00, 0.00, 0.00):
-                    case_limits_obj.LineColor = (1.00, 0.00, 0.00)
-                if case_limits_obj.Selectable:
-                    case_limits_obj.Selectable = False
-
-            for sim_object in Case.instance().get_all_objects_with_damping():
-                damping_group = FreeCAD.ActiveDocument.getObject(sim_object)
-                sim_object.damping.overlimit = damping_group.OutList[1].Length.Value
-
-        except (NameError, AttributeError):
-            # DSPH Case not opened, disable things
+        if not valid_document_environment():
             widget_state_config(widget_state_elements, "no case")
-            time.sleep(2.0)
+            time.sleep(1.0)
             continue
+
+        if not FreeCADGui.Selection.getSelection():
+            properties_widget.configure_to_no_selection()
+
+        enforce_case_limits_restrictions(Case.instance().mode3d)
+        enforce_fillbox_restrictions()
+
+        # Adjust damping properties when freecad related properties change
+        for sim_object in Case.instance().get_all_objects_with_damping():
+            damping_group = FreeCAD.ActiveDocument.getObject(sim_object)
+            sim_object.damping.overlimit = damping_group.OutList[1].Length.Value
+
         time.sleep(0.5)
 
 

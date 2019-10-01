@@ -12,14 +12,13 @@ import Draft
 
 from PySide import QtGui
 
-from mod.stdout_tools import log
+from mod.stdout_tools import log, error, debug
 from mod.constants import APP_NAME, SINGLETON_DOCUMENT_NAME, DEFAULT_WORKBENCH, CASE_LIMITS_OBJ_NAME, CASE_LIMITS_3D_LABEL
 from mod.constants import CASE_LIMITS_LINE_COLOR, CASE_LIMITS_LINE_WIDTH, CASE_LIMITS_DEFAULT_LENGTH, FREECAD_MIN_VERSION
-from mod.constants import MAIN_WIDGET_INTERNAL_NAME, PROP_WIDGET_INTERNAL_NAME
+from mod.constants import MAIN_WIDGET_INTERNAL_NAME, PROP_WIDGET_INTERNAL_NAME, WIDTH_2D
 from mod.enums import FreeCADObjectType, FreeCADDisplayMode
 from mod.dialog_tools import ok_cancel_dialog, error_dialog
 from mod.translation_tools import __
-
 
 def delete_existing_docks():
     ''' Searches for existing docks related to DesignSPHysics destroys them. '''
@@ -166,3 +165,30 @@ def get_fc_object(internal_name):
 def get_fc_view_object(internal_name):
     ''' Returns a FreeCADGui View provider object by a name. '''
     return FreeCADGui.ActiveDocument.getObject(internal_name)
+
+
+def enforce_case_limits_restrictions(mode_3d_enabled: bool = True):
+    ''' Enforces restrictions on the case limit object within FreeCAD, like rotation and width (in 2D mode). '''
+    case_limits_view = get_fc_view_object(CASE_LIMITS_OBJ_NAME)
+    case_limits = get_fc_object(CASE_LIMITS_OBJ_NAME)
+    if case_limits_view.DisplayMode != FreeCADDisplayMode.WIREFRAME:
+        case_limits_view.DisplayMode = FreeCADDisplayMode.WIREFRAME
+    if case_limits_view.LineColor != (1.00, 0.00, 0.00):
+        case_limits_view.LineColor = (1.00, 0.00, 0.00)
+    if case_limits_view.Selectable:
+        case_limits_view.Selectable = False
+    if case_limits.Placement.Rotation.Angle != 0.0:
+        case_limits.Placement.Rotation.Angle = 0.0
+        error(__("Can't change rotation on the Case Limits object."))
+    if not mode_3d_enabled and case_limits.Width.Value != WIDTH_2D:
+        case_limits.Width.Value = WIDTH_2D
+        error(__("Can't change width of the Case Limits object while being in 2D mode."))
+
+
+def enforce_fillbox_restrictions():
+    ''' Enforces restrictions on all fillboxes, resetting their rotations to 0. '''
+    for target in filter(lambda obj: obj.TypeId == FreeCADObjectType.FOLDER and "fillbox" in obj.Name.lower(), FreeCAD.ActiveDocument.Objects):
+        for sub_element in target.OutList:
+            if sub_element.Placement.Rotation.Angle != 0.0:
+                sub_element.Placement.Rotation.Angle = 0.0
+                error(__("Can't change rotation on Fillbox inner objects"))

@@ -720,5 +720,6 @@
     "Use 0 for rotation restriction in the movement (default=(1,1,1))": "Use 0 for rotation restriction in the movement (default=(1,1,1))",
     "Material: ": "Material: ",
     "Closing all current documents": "Closing all current documents",
-    "New Damping Zone": "New Damping Zone"
+    "New Damping Zone": "New Damping Zone",
+    "Can't change rotation on the Case Limits object.": "Can't change rotation on the Case Limits object."
 }
