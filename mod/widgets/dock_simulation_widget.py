@@ -89,6 +89,7 @@ class DockSimulationWidget(QtGui.QWidget):
         run_dialog.run_group_label_part.setText(__("Number of particles: ") + str(Case.instance().info.particle_number))
         run_dialog.run_group_label_partsout.setText(__("Total particles out: ") + "0")
         run_dialog.run_group_label_eta.setText(__("Estimated time to complete simulation: ") + __("Calculating..."))
+        run_dialog.run_group_label_completed.setVisible(False)
 
         # Cancel button handler
         def on_cancel():
@@ -136,6 +137,7 @@ class DockSimulationWidget(QtGui.QWidget):
             run_dialog.setWindowTitle(__("DualSPHysics Simulation: Complete"))
             run_dialog.run_progbar_bar.setValue(100)
             run_dialog.run_button_cancel.setText(__("Close"))
+            run_dialog.run_group_label_completed.setVisible(True)
 
             if exit_code == 0:
                 # Simulation went correctly

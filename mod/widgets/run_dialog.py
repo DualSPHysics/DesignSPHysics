@@ -28,12 +28,15 @@ class RunDialog(QtGui.QDialog):
         self.run_group_label_partsout = QtGui.QLabel(__("Total particles out: "))
         self.run_group_label_eta = QtGui.QLabel(self)
         self.run_group_label_eta.setText(__("Estimated time to complete simulation: {}").format("Calculating..."))
+        self.run_group_label_completed = QtGui.QLabel("<b>{}</b>".format(__("Simulation is complete.")))
+        self.run_group_label_completed.setVisible(False)
 
         self.run_group_layout.addWidget(self.run_group_label_case)
         self.run_group_layout.addWidget(self.run_group_label_proc)
         self.run_group_layout.addWidget(self.run_group_label_part)
         self.run_group_layout.addWidget(self.run_group_label_partsout)
         self.run_group_layout.addWidget(self.run_group_label_eta)
+        self.run_group_layout.addWidget(self.run_group_label_completed)
         self.run_group_layout.addStretch(1)
 
         self.run_group.setLayout(self.run_group_layout)

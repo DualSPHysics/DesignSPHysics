@@ -6,7 +6,7 @@ from PySide import QtGui
 
 from mod.gui_tools import h_line_generator, widget_state_config
 
-from mod.constants import MAIN_WIDGET_INTERNAL_NAME, APP_NAME
+from mod.constants import MAIN_WIDGET_INTERNAL_NAME, APP_NAME, VERSION
 
 from mod.widgets.dock_logo_widget import DockLogoWidget
 from mod.widgets.dock_configuration_widget import DockConfigurationWidget
@@ -23,11 +23,11 @@ widget_state_elements = {}
 class DesignSPHysicsDock(QtGui.QDockWidget):
     ''' Main DesignSPHysics Dock, containing all the tools needed to manage cases. '''
 
-    def __init__(self, version):
+    def __init__(self):
         super().__init__()
 
         self.setObjectName(MAIN_WIDGET_INTERNAL_NAME)
-        self.setWindowTitle("{} {}".format(APP_NAME, str(version)))
+        self.setWindowTitle("{} {}".format(APP_NAME, str(VERSION)))
 
         self.root_widget = QtGui.QWidget()
         self.main_layout = QtGui.QVBoxLayout()
