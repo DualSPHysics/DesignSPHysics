@@ -8,7 +8,6 @@ import subprocess
 from PySide import QtCore
 
 from mod.translation_tools import __
-from mod.gui_tools import widget_state_config
 from mod.stdout_tools import log, debug
 from mod.dialog_tools import error_dialog
 from mod.freecad_tools import get_fc_main_window
@@ -18,15 +17,11 @@ from mod.dataobjects.case import Case
 from mod.widgets.info_dialog import InfoDialog
 from mod.widgets.export_progress_dialog import ExportProgressDialog
 
-# FIXME: Replace this when refactored
-widget_state_elements = {}
-
 
 def partvtk_export(export_parameters):
     ''' Export VTK button behaviour.
     Launches a process while disabling the button. '''
-    widget_state_config(widget_state_elements, "export start")
-    widget_state_elements['post_proc_partvtk_button'].setText("Exporting...")
+    # FIXME: Enable/Disable widgets accordingly when a tool is about to start
 
     export_dialog = ExportProgressDialog()
 
@@ -44,16 +39,16 @@ def partvtk_export(export_parameters):
         log(__("Stopping export"))
         if Case.instance().info.current_export_process is not None:
             Case.instance().info.current_export_process.kill()
-            widget_state_elements['post_proc_partvtk_button'].setText(__("PartVTK"))
-        widget_state_config(widget_state_elements, "export cancel")
+
+        # FIXME: Enable/Disable appropriate widgets when user cancels a tool
         export_dialog.reject()
 
     export_dialog.on_cancel.connect(on_cancel)
 
     # PartVTK export finish handler
     def on_export_finished(exit_code):
-        widget_state_elements['post_proc_partvtk_button'].setText(__("PartVTK"))
-        widget_state_config(widget_state_elements, "export finished")
+
+        # FIXME: Enable/Disable appropriate widgets when a tool finished executing
 
         export_dialog.accept()
 
@@ -133,8 +128,7 @@ def partvtk_export(export_parameters):
 
 def floatinginfo_export(export_parameters):
     ''' FloatingInfo tool export. '''
-    widget_state_config(widget_state_elements, "export start")
-    widget_state_elements['post_proc_floatinginfo_button'].setText("Exporting...")
+    # FIXME: Enable/Disable widgets accordingly when a tool is about to start
 
     export_dialog = ExportProgressDialog()
 
@@ -151,15 +145,15 @@ def floatinginfo_export(export_parameters):
         log(__("Stopping export"))
         if Case.instance().info.current_export_process is not None:
             Case.instance().info.current_export_process.kill()
-            widget_state_elements['post_proc_floatinginfo_button'].setText(__("FloatingInfo"))
-        widget_state_config(widget_state_elements, "export cancel")
+
+        # FIXME: Enable/Disable appropriate widgets when user cancels a tool
         export_dialog.reject()
 
     export_dialog.on_cancel.connect(on_cancel)
 
     def on_export_finished(exit_code):
-        widget_state_elements['post_proc_floatinginfo_button'].setText(__("FloatingInfo"))
-        widget_state_config(widget_state_elements, "export finished")
+
+        # FIXME: Enable/Disable appropriate widgets when a tool finished executing
         export_dialog.accept()
         if exit_code == 0:
             # Exported correctly
@@ -205,8 +199,7 @@ def floatinginfo_export(export_parameters):
 
 def computeforces_export(export_parameters):
     ''' ComputeForces tool export. '''
-    widget_state_config(widget_state_elements, "export start")
-    widget_state_elements['post_proc_computeforces_button'].setText("Exporting...")
+    # FIXME: Enable/Disable widgets accordingly when a tool is about to start
 
     export_dialog = ExportProgressDialog()
 
@@ -223,15 +216,15 @@ def computeforces_export(export_parameters):
         log(__("Stopping export"))
         if Case.instance().info.current_export_process is not None:
             Case.instance().info.current_export_process.kill()
-            widget_state_elements['post_proc_computeforces_button'].setText(__("ComputeForces"))
-        widget_state_config(widget_state_elements, "export cancel")
+
+        # FIXME: Enable/Disable appropriate widgets when user cancels a tool
         export_dialog.reject()
 
     export_dialog.on_cancel.connect(on_cancel)
 
     def on_export_finished(exit_code):
-        widget_state_elements['post_proc_computeforces_button'].setText(__("ComputeForces"))
-        widget_state_config(widget_state_elements, "export finished")
+
+        # FIXME: Enable/Disable appropriate widgets when a tool finished executing
         export_dialog.accept()
         if exit_code == 0:
             # Exported correctly
@@ -289,8 +282,7 @@ def computeforces_export(export_parameters):
 
 def measuretool_export(export_parameters):
     ''' MeasureTool tool export. '''
-    widget_state_config(widget_state_elements, "export start")
-    widget_state_elements['post_proc_measuretool_button'].setText("Exporting...")
+    # FIXME: Enable/Disable widgets accordingly when a tool is about to start
 
     export_dialog = ExportProgressDialog()
 
@@ -307,15 +299,15 @@ def measuretool_export(export_parameters):
         log(__("Stopping export"))
         if Case.instance().info.current_export_process is not None:
             Case.instance().info.current_export_process.kill()
-            widget_state_elements['post_proc_measuretool_button'].setText(__("MeasureTool"))
-        widget_state_config(widget_state_elements, "export cancel")
+
+        # FIXME: Enable/Disable appropriate widgets when user cancels a tool
         export_dialog.reject()
 
     export_dialog.on_cancel.connect(on_cancel)
 
     def on_export_finished(exit_code):
-        widget_state_elements['post_proc_measuretool_button'].setText(__("MeasureTool"))
-        widget_state_config(widget_state_elements, "export finished")
+
+        # FIXME: Enable/Disable appropriate widgets when a tool finished executing
         export_dialog.accept()
         if exit_code == 0:
             # Exported correctly
@@ -389,8 +381,7 @@ def measuretool_export(export_parameters):
 def isosurface_export(export_parameters):
     ''' Export IsoSurface button behaviour.
     Launches a process while disabling the button. '''
-    widget_state_config(widget_state_elements, "export start")
-    widget_state_elements['post_proc_isosurface_button'].setText("Exporting...")
+    # FIXME: Enable/Disable widgets accordingly when a tool is about to start
 
     export_dialog = ExportProgressDialog()
 
@@ -408,16 +399,16 @@ def isosurface_export(export_parameters):
         log(__("Stopping export"))
         if Case.instance().info.current_export_process is not None:
             Case.instance().info.current_export_process.kill()
-            widget_state_elements['post_proc_isosurface_button'].setText(__("IsoSurface"))
-        widget_state_config(widget_state_elements, "export cancel")
+
+        # FIXME: Enable/Disable appropriate widgets when user cancels a tool
         export_dialog.reject()
 
     export_dialog.on_cancel.connect(on_cancel)
 
     # IsoSurface export finish handler
     def on_export_finished(exit_code):
-        widget_state_elements['post_proc_isosurface_button'].setText(__("IsoSurface"))
-        widget_state_config(widget_state_elements, "export finished")
+
+        # FIXME: Enable/Disable appropriate widgets when a tool finished executing
 
         export_dialog.accept()
 
@@ -476,8 +467,7 @@ def isosurface_export(export_parameters):
 def flowtool_export(export_parameters):
     ''' Export FlowTool button behaviour.
     Launches a process while disabling the button. '''
-    widget_state_config(widget_state_elements, "export start")
-    widget_state_elements['post_proc_flowtool_button'].setText("Exporting...")
+    # FIXME: Enable/Disable widgets accordingly when a tool is about to start
 
     export_dialog = ExportProgressDialog()
 
@@ -495,16 +485,16 @@ def flowtool_export(export_parameters):
         log(__("Stopping export"))
         if Case.instance().info.current_export_process is not None:
             Case.instance().info.current_export_process.kill()
-            widget_state_elements['post_proc_flowtool_button'].setText(__("FlowTool"))
-        widget_state_config(widget_state_elements, "export cancel")
+
+        # FIXME: Enable/Disable appropriate widgets when user cancels a tool
         export_dialog.reject()
 
     export_dialog.on_cancel.connect(on_cancel)
 
     # FlowTool export finish handler
     def on_export_finished(exit_code):
-        widget_state_elements['post_proc_flowtool_button'].setText(__("FlowTool"))
-        widget_state_config(widget_state_elements, "export finished")
+
+        # FIXME: Enable/Disable appropriate widgets when a tool finished executing
         export_dialog.accept()
 
         if exit_code == 0:

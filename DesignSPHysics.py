@@ -20,7 +20,6 @@ from mod.translation_tools import __
 from mod.freecad_tools import check_compatibility, document_count, prompt_close_all_documents, get_fc_main_window
 from mod.freecad_tools import delete_existing_docks, valid_document_environment, enforce_case_limits_restrictions, enforce_fillbox_restrictions
 from mod.stdout_tools import print_license, log
-from mod.gui_tools import widget_state_config
 
 from mod.constants import VERSION, DEFAULT_WORKBENCH
 
@@ -41,9 +40,6 @@ __maintainer__ = "Andrés Vieira"
 __email__ = "avieira@uvigo.es"
 __status__ = "Development"
 
-# Used to store widgets that will be disabled/enabled, so they are centralized
-# FIXME: This should not be managed this way
-widget_state_elements = dict()
 
 print_license()
 check_compatibility()
@@ -123,7 +119,7 @@ def selection_monitor():
     time.sleep(2.0)
     while True:
         if not valid_document_environment():
-            widget_state_config(widget_state_elements, "no case")
+            dsph_main_dock.adapt_to_no_case()
             time.sleep(1.0)
             continue
 

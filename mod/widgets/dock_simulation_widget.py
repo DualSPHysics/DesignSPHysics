@@ -7,7 +7,7 @@ import os
 from PySide import QtGui, QtCore
 
 from mod.translation_tools import __
-from mod.gui_tools import get_icon, widget_state_config
+from mod.gui_tools import get_icon
 from mod.stdout_tools import debug, log, error, dump_to_disk
 from mod.dialog_tools import error_dialog, warning_dialog
 
@@ -18,7 +18,6 @@ from mod.widgets.run_additional_parameters_dialog import RunAdditionalParameters
 
 
 # FIXME: Replace this when refactored
-widget_state_elements = {}
 data = {}
 
 
@@ -30,6 +29,7 @@ class DockSimulationWidget(QtGui.QWidget):
 
         # Execution section scaffolding
         self.main_layout = QtGui.QVBoxLayout()
+        self.main_layout.setContentsMargins(0, 0, 0, 0)
         self.title_label = QtGui.QLabel("<b>" + __("Simulation control") + "</b> ")
         self.title_label.setWordWrap(True)
 
@@ -38,7 +38,7 @@ class DockSimulationWidget(QtGui.QWidget):
         self.device_selector.addItem("CPU")
         self.device_selector.addItem("GPU")
 
-        widget_state_elements['ex_selector_combo'] = self.device_selector
+        
 
         # Simulate case button
         self.execute_button = QtGui.QPushButton(__("Run"))
@@ -50,14 +50,14 @@ class DockSimulationWidget(QtGui.QWidget):
         self.execute_button.setIconSize(QtCore.QSize(12, 12))
         self.execute_button.clicked.connect(self.on_ex_simulate)
 
-        widget_state_elements['ex_button'] = self.execute_button
+        
 
         # Additional parameters button
         self.additional_parameters_button = QtGui.QPushButton(__("Additional parameters"))
         self.additional_parameters_button.setToolTip("__(Sets simulation additional parameters for execution.)")
         self.additional_parameters_button.clicked.connect(self.on_additional_parameters)
 
-        widget_state_elements['ex_additional'] = self.additional_parameters_button
+        
 
         self.button_layout = QtGui.QHBoxLayout()
         self.button_layout.addWidget(self.execute_button)
@@ -81,7 +81,7 @@ class DockSimulationWidget(QtGui.QWidget):
         run_dialog = RunDialog()
         run_dialog.run_progbar_bar.setValue(0)
         Case.instance().info.is_simulation_done = False
-        widget_state_config(widget_state_elements, "sim start")
+        # FIXME: When simulation starts we should disable some widgets to prevent the user messing up the execution
         run_dialog.run_button_cancel.setText(__("Cancel Simulation"))
         run_dialog.setWindowTitle(__("DualSPHysics Simulation: {}%").format("0"))
         run_dialog.run_group_label_case.setText(__("Case name: ") + Case.instance().name)
@@ -99,7 +99,7 @@ class DockSimulationWidget(QtGui.QWidget):
             run_dialog.hide()
             run_dialog.run_details.hide()
             Case.instance().info.is_simulation_done = False
-            widget_state_config(widget_state_elements, "sim cancel")
+            # FIXME: Enable/Disable widgets accordingly when we cancel a simulation
 
         run_dialog.run_button_cancel.clicked.connect(on_cancel)
 
@@ -142,7 +142,7 @@ class DockSimulationWidget(QtGui.QWidget):
             if exit_code == 0:
                 # Simulation went correctly
                 Case.instance().info.is_simulation_done = True
-                widget_state_config(widget_state_elements, "sim finished")
+                # FIXME: Enable/Disable appropriate widgets when simulation completes correctly
             else:
                 # In case of an error
                 if "exception" in str(output).lower():
@@ -150,7 +150,8 @@ class DockSimulationWidget(QtGui.QWidget):
                     run_dialog.setWindowTitle(__("DualSPHysics Simulation: Error"))
                     run_dialog.run_progbar_bar.setValue(0)
                     run_dialog.hide()
-                    widget_state_config(widget_state_elements, "sim error")
+                    
+                    #FIXME: Enable/Disable widgets accordingly when a simulation exits with errors.
                     execution_error_dialog = QtGui.QMessageBox()
                     execution_error_dialog.setText(__("An error occurred during execution. Make sure that parameters exist and are properly defined. "
                                                       "You can also check your execution device (update the driver of your GPU). "

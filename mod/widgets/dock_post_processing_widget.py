@@ -14,10 +14,6 @@ from mod.widgets.isosurface_dialog import IsoSurfaceDialog
 from mod.widgets.flowtool_dialog import FlowToolDialog
 
 
-# FIXME: Replace this when refactored
-widget_state_elements = {}
-
-
 class DockPostProcessingWidget(QtGui.QWidget):
     '''DesignSPHysics Dock Post Processing Widget '''
 
@@ -47,13 +43,6 @@ class DockPostProcessingWidget(QtGui.QWidget):
         self.measuretool_button.setToolTip(__("Opens the MeasureTool tool."))
         self.isosurface_button.setToolTip(__("Opens the IsoSurface tool."))
         self.flowtool_button.setToolTip(__("Opens the FlowTool tool."))
-
-        widget_state_elements['post_proc_partvtk_button'] = self.partvtk_button
-        widget_state_elements['post_proc_computeforces_button'] = self.computeforces_button
-        widget_state_elements['post_proc_floatinginfo_button'] = self.floatinginfo_button
-        widget_state_elements['post_proc_measuretool_button'] = self.measuretool_button
-        widget_state_elements['post_proc_isosurface_button'] = self.isosurface_button
-        widget_state_elements['post_proc_flowtool_button'] = self.flowtool_button
 
         self.partvtk_button.clicked.connect(PartVTKDialog)
         self.computeforces_button.clicked.connect(ComputeForcesDialog)

@@ -11,16 +11,12 @@ from mod.widgets.setup_plugin_dialog import SetupPluginDialog
 from mod.widgets.execution_parameters_dialog import ExecutionParametersDialog
 
 
-# FIXME: Replace this when refactored
-widget_state_elements = {}
-
-
 class DockConfigurationWidget(QtGui.QWidget):
     '''DesignSPHysics Dock Configuration Widget. '''
 
     def __init__(self):
         super().__init__()
-        
+
         self.main_layout = QtGui.QVBoxLayout()
         self.main_layout.setContentsMargins(0, 0, 0, 0)
 
@@ -49,9 +45,6 @@ class DockConfigurationWidget(QtGui.QWidget):
 
         self.main_layout.addLayout(self.button_layout)
 
-        widget_state_elements['constants_button'] = self.constants_button
-        widget_state_elements['execparams_button'] = self.execparams_button
-
         self.setLayout(self.main_layout)
 
     def on_constants_button_pressed(self):
@@ -65,3 +58,15 @@ class DockConfigurationWidget(QtGui.QWidget):
     def on_execparams_button_presed(self):
         ''' Opens a dialog to tweak the simulation's execution parameters '''
         ExecutionParametersDialog()
+
+    def adapt_to_no_case(self):
+        ''' Adapts the contents of the widget to an environment with no opened case. '''
+        self.setup_button.setEnabled(True)
+        for x in [self.execparams_button, self.constants_button]:
+            x.setEnabled(False)
+
+    def adapt_to_new_case(self):
+        ''' Adapts the contents of the widget to an environment with a new case created. '''
+        self.setup_button.setEnabled(True)
+        for x in [self.execparams_button, self.constants_button]:
+            x.setEnabled(True)

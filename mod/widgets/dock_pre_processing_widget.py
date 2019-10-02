@@ -14,7 +14,7 @@ import FreeCADGui
 from PySide import QtCore, QtGui
 
 from mod.translation_tools import __
-from mod.gui_tools import get_icon, widget_state_config
+from mod.gui_tools import get_icon
 from mod.stdout_tools import debug, error, log, warning
 from mod.dialog_tools import error_dialog, warning_dialog
 from mod.executable_tools import refocus_cwd
@@ -39,8 +39,7 @@ from mod.dataobjects.ml_piston_1d import MLPiston1D
 from mod.dataobjects.ml_piston_2d import MLPiston2D
 from mod.dataobjects.relaxation_zone_file import RelaxationZoneFile
 
-# FIXME: Replace this when refactored
-widget_state_elements = {}
+# FIXME: Delete this when refactored
 data = {}
 
 
@@ -52,121 +51,110 @@ class DockPreProcessingWidget(QtGui.QWidget):
     '''DesignSPHysics Dock Pre Processing Widget '''
 
     update_dp = QtCore.Signal()
+    case_created = QtCore.Signal()
+    gencase_completed = QtCore.Signal(bool)
+    simulation_completed = QtCore.Signal(bool)
 
     def __init__(self):
         super().__init__()
 
         self.main_layout = QtGui.QVBoxLayout()
         self.main_layout.setContentsMargins(0, 0, 0, 0)
-        self.cclabel_layout = QtGui.QHBoxLayout()
-        self.ccfilebuttons_layout = QtGui.QHBoxLayout()
-        self.ccsecondrow_layout = QtGui.QHBoxLayout()
-        self.ccthirdrow_layout = QtGui.QHBoxLayout()
-        self.ccfourthrow_layout = QtGui.QHBoxLayout()
+
+        self.label_layout = QtGui.QHBoxLayout()
+        self.first_row_layout = QtGui.QHBoxLayout()
+        self.second_row_layout = QtGui.QHBoxLayout()
+        self.third_row_layout = QtGui.QHBoxLayout()
+        self.fourth_row_layout = QtGui.QHBoxLayout()
+
         self.casecontrols_label = QtGui.QLabel("<b>{}</b>".format(__("Pre-processing")))
 
-        self.casecontrols_bt_newdoc = QtGui.QToolButton()
-        self.casecontrols_bt_newdoc.setPopupMode(QtGui.QToolButton.MenuButtonPopup)
-        self.casecontrols_bt_newdoc.setToolButtonStyle(QtCore.Qt.ToolButtonTextBesideIcon)
-        self.casecontrols_bt_newdoc.setText("  {}".format(__("New\n  Case")))
-        self.casecontrols_bt_newdoc.setToolTip(__("Creates a new case. \nThe opened documents will be closed."))
-        self.casecontrols_bt_newdoc.setIcon(get_icon("new.png"))
-        self.casecontrols_bt_newdoc.setIconSize(QtCore.QSize(28, 28))
-        self.casecontrols_menu_newdoc = QtGui.QMenu()
-        self.casecontrols_menu_newdoc.addAction(get_icon("new.png"), __("New"))
-        self.casecontrols_menu_newdoc.addAction(get_icon("new.png"), __("Import FreeCAD Document"))
-        self.casecontrols_bt_newdoc.setMenu(self.casecontrols_menu_newdoc)
-        self.casecontrols_menu_newdoc.resize(60, 60)
+        self.new_case_button = QtGui.QToolButton()
+        self.new_case_button.setPopupMode(QtGui.QToolButton.MenuButtonPopup)
+        self.new_case_button.setToolButtonStyle(QtCore.Qt.ToolButtonTextBesideIcon)
+        self.new_case_button.setText("  {}".format(__("New\n  Case")))
+        self.new_case_button.setToolTip(__("Creates a new case. \nThe opened documents will be closed."))
+        self.new_case_button.setIcon(get_icon("new.png"))
+        self.new_case_button.setIconSize(QtCore.QSize(28, 28))
 
-        self.casecontrols_bt_savedoc = QtGui.QToolButton()
-        self.casecontrols_bt_savedoc.setPopupMode(QtGui.QToolButton.MenuButtonPopup)
-        self.casecontrols_bt_savedoc.setToolButtonStyle(QtCore.Qt.ToolButtonTextBesideIcon)
-        self.casecontrols_bt_savedoc.setText("  {}".format(__("Save\n  Case")))
-        self.casecontrols_bt_savedoc.setToolTip(__("Saves the case."))
-        self.casecontrols_bt_savedoc.setIcon(get_icon("save.png"))
-        self.casecontrols_bt_savedoc.setIconSize(QtCore.QSize(28, 28))
-        self.casecontrols_menu_savemenu = QtGui.QMenu()
-        self.casecontrols_menu_savemenu.addAction(get_icon("save.png"), __("Save as..."))
-        self.casecontrols_bt_savedoc.setMenu(self.casecontrols_menu_savemenu)
+        self.new_case_menu = QtGui.QMenu()
+        self.new_case_menu.addAction(get_icon("new.png"), __("New"))
+        self.new_case_menu.addAction(get_icon("new.png"), __("Import FreeCAD Document"))
 
-        widget_state_elements['casecontrols_bt_savedoc'] = self.casecontrols_bt_savedoc
+        self.new_case_button.setMenu(self.new_case_menu)
+        self.new_case_menu.resize(60, 60)
 
-        self.casecontrols_bt_loaddoc = QtGui.QToolButton()
-        self.casecontrols_bt_loaddoc.setToolButtonStyle(QtCore.Qt.ToolButtonTextBesideIcon)
-        self.casecontrols_bt_loaddoc.setText("  {}".format(__("Load\n  Case")))
-        self.casecontrols_bt_loaddoc.setToolTip(__("Loads a case from disk. All the current documents\nwill be closed."))
-        self.casecontrols_bt_loaddoc.setIcon(get_icon("load.png"))
-        self.casecontrols_bt_loaddoc.setIconSize(QtCore.QSize(28, 28))
+        self.save_button = QtGui.QToolButton()
+        self.save_button.setPopupMode(QtGui.QToolButton.MenuButtonPopup)
+        self.save_button.setToolButtonStyle(QtCore.Qt.ToolButtonTextBesideIcon)
+        self.save_button.setText("  {}".format(__("Save\n  Case")))
+        self.save_button.setToolTip(__("Saves the case."))
+        self.save_button.setIcon(get_icon("save.png"))
+        self.save_button.setIconSize(QtCore.QSize(28, 28))
+        self.save_menu = QtGui.QMenu()
+        self.save_menu.addAction(get_icon("save.png"), __("Save as..."))
+        self.save_button.setMenu(self.save_menu)
 
-        self.casecontrols_bt_addfillbox = QtGui.QPushButton(__("Add fillbox"))
-        self.casecontrols_bt_addfillbox.setToolTip(__("Adds a FillBox. A FillBox is able to fill an empty space\nwithin limits of geometry and a maximum bounding\nbox placed by the user."))
-        self.casecontrols_bt_addfillbox.setEnabled(False)
+        self.load_button = QtGui.QToolButton()
+        self.load_button.setToolButtonStyle(QtCore.Qt.ToolButtonTextBesideIcon)
+        self.load_button.setText("  {}".format(__("Load\n  Case")))
+        self.load_button.setToolTip(__("Loads a case from disk. All the current documents\nwill be closed."))
+        self.load_button.setIcon(get_icon("load.png"))
+        self.load_button.setIconSize(QtCore.QSize(28, 28))
 
-        widget_state_elements['casecontrols_bt_addfillbox'] = self.casecontrols_bt_addfillbox
+        self.add_fillbox_button = QtGui.QPushButton(__("Add fillbox"))
+        self.add_fillbox_button.setToolTip(__("Adds a FillBox. A FillBox is able to fill an empty space\nwithin limits of geometry and a maximum bounding\nbox placed by the user."))
 
-        self.casecontrols_bt_addgeo = QtGui.QPushButton("Import GEO")
-        self.casecontrols_bt_addgeo.setToolTip(__("Imports a GEO object with postprocessing. This way you can set the scale of the imported object."))
-        self.casecontrols_bt_addgeo.setEnabled(False)
+        self.add_geometry_button = QtGui.QPushButton("Import GEO")
+        self.add_geometry_button.setToolTip(__("Imports a GEO object with postprocessing. This way you can set the scale of the imported object."))
 
-        widget_state_elements['casecontrols_bt_addgeo'] = self.casecontrols_bt_addgeo
+        self.import_xml_button = QtGui.QPushButton(__("Import XML"))
+        self.import_xml_button.setToolTip(__("Imports an already created XML case from disk."))
 
-        self.casecontrols_bt_importxml = QtGui.QPushButton(__("Import XML"))
-        self.casecontrols_bt_importxml.setToolTip(__("Imports an already created XML case from disk."))
-        self.casecontrols_bt_importxml.setEnabled(True)
+        self.case_summary_button = QtGui.QPushButton(__("Case summary"))
+        self.case_summary_button.setToolTip(__("Shows a complete case summary with objects, configurations and settings in a brief view."))
 
-        self.summary_bt = QtGui.QPushButton(__("Case summary"))
-        self.summary_bt.setToolTip(__("Shows a complete case summary with objects, configurations and settings in a brief view."))
-        self.summary_bt.setEnabled(False)
+        self.toggle_2d_mode_button = QtGui.QPushButton(__("Change 3D/2D"))
+        self.toggle_2d_mode_button.setToolTip(__("Changes the case mode between 2D and 3D mode, switching the Case Limits between a plane or a cube"))
 
-        widget_state_elements['summary_bt'] = self.summary_bt
+        self.special_button = QtGui.QPushButton(__("Special"))
+        self.special_button.setToolTip(__("Special actions for the case."))
 
-        self.toggle3dbutton = QtGui.QPushButton(__("Change 3D/2D"))
-        self.toggle3dbutton.setToolTip(__("Changes the case mode between 2D and 3D mode, switching the Case Limits between a plane or a cube"))
+        self.gencase_button = QtGui.QPushButton(__("Run GenCase"))
+        self.gencase_button.setStyleSheet("QPushButton {font-weight: bold; }")
+        self.gencase_button.setToolTip(__("This pre-processing tool creates the initial state of the particles (position, velocity and density) and defines the different SPH parameters for the simulation."))
+        self.gencase_button.setIcon(get_icon("run_gencase.png"))
+        self.gencase_button.setIconSize(QtCore.QSize(12, 12))
 
-        widget_state_elements['toggle3dbutton'] = self.toggle3dbutton
+        self.new_case_button.clicked.connect(self.on_new_case)
+        self.save_button.clicked.connect(self.on_save_case)
+        self.gencase_button.clicked.connect(self.on_save_with_gencase)
+        self.new_case_menu.triggered.connect(self.on_newdoc_menu)
+        self.save_menu.triggered.connect(self.on_save_menu)
+        self.load_button.clicked.connect(self.on_load_button)
+        self.add_fillbox_button.clicked.connect(self.on_add_fillbox)
+        self.add_geometry_button.clicked.connect(self.on_add_geo)
+        self.case_summary_button.clicked.connect(CaseSummary)
+        self.toggle_2d_mode_button.clicked.connect(self.on_2d_toggle)
+        self.special_button.clicked.connect(SpecialOptionsSelectorDialog)
 
-        self.casecontrols_bt_special = QtGui.QPushButton(__("Special"))
-        self.casecontrols_bt_special.setToolTip(__("Special actions for the case."))
+        self.label_layout.addWidget(self.casecontrols_label)
+        self.first_row_layout.addWidget(self.new_case_button)
+        self.first_row_layout.addWidget(self.save_button)
+        self.first_row_layout.addWidget(self.load_button)
+        self.second_row_layout.addWidget(self.case_summary_button)
+        self.second_row_layout.addWidget(self.toggle_2d_mode_button)
+        self.third_row_layout.addWidget(self.add_fillbox_button)
+        self.third_row_layout.addWidget(self.add_geometry_button)
+        self.third_row_layout.addWidget(self.import_xml_button)
+        self.fourth_row_layout.addWidget(self.special_button)
+        self.fourth_row_layout.addWidget(self.gencase_button)
 
-        widget_state_elements['dampingbutton'] = self.casecontrols_bt_special
-
-        self.rungencase_bt = QtGui.QPushButton(__("Run GenCase"))
-        self.rungencase_bt.setStyleSheet("QPushButton {font-weight: bold; }")
-        self.rungencase_bt.setToolTip(__("This pre-processing tool creates the initial state of the particles (position, velocity and density) and defines the different SPH parameters for the simulation."))
-        self.rungencase_bt.setIcon(get_icon("run_gencase.png"))
-        self.rungencase_bt.setIconSize(QtCore.QSize(12, 12))
-
-        widget_state_elements['rungencase_bt'] = self.rungencase_bt
-
-        self.casecontrols_bt_newdoc.clicked.connect(self.on_new_case)
-        self.casecontrols_bt_savedoc.clicked.connect(self.on_save_case)
-        self.rungencase_bt.clicked.connect(self.on_save_with_gencase)
-        self.casecontrols_menu_newdoc.triggered.connect(self.on_newdoc_menu)
-        self.casecontrols_menu_savemenu.triggered.connect(self.on_save_menu)
-        self.casecontrols_bt_loaddoc.clicked.connect(self.on_load_button)
-        self.casecontrols_bt_addfillbox.clicked.connect(self.on_add_fillbox)
-        self.casecontrols_bt_addgeo.clicked.connect(self.on_add_geo)
-        self.summary_bt.clicked.connect(CaseSummary)
-        self.toggle3dbutton.clicked.connect(self.on_2d_toggle)
-        self.casecontrols_bt_special.clicked.connect(SpecialOptionsSelectorDialog)
-
-        self.cclabel_layout.addWidget(self.casecontrols_label)
-        self.ccfilebuttons_layout.addWidget(self.casecontrols_bt_newdoc)
-        self.ccfilebuttons_layout.addWidget(self.casecontrols_bt_savedoc)
-        self.ccfilebuttons_layout.addWidget(self.casecontrols_bt_loaddoc)
-        self.ccsecondrow_layout.addWidget(self.summary_bt)
-        self.ccsecondrow_layout.addWidget(self.toggle3dbutton)
-        self.ccthirdrow_layout.addWidget(self.casecontrols_bt_addfillbox)
-        self.ccthirdrow_layout.addWidget(self.casecontrols_bt_addgeo)
-        self.ccthirdrow_layout.addWidget(self.casecontrols_bt_importxml)
-        self.ccfourthrow_layout.addWidget(self.casecontrols_bt_special)
-        self.ccfourthrow_layout.addWidget(self.rungencase_bt)
-
-        self.main_layout.addLayout(self.cclabel_layout)
-        self.main_layout.addLayout(self.ccfilebuttons_layout)
-        self.main_layout.addLayout(self.ccthirdrow_layout)
-        self.main_layout.addLayout(self.ccsecondrow_layout)
-        self.main_layout.addLayout(self.ccfourthrow_layout)
+        self.main_layout.addLayout(self.label_layout)
+        self.main_layout.addLayout(self.first_row_layout)
+        self.main_layout.addLayout(self.third_row_layout)
+        self.main_layout.addLayout(self.second_row_layout)
+        self.main_layout.addLayout(self.fourth_row_layout)
 
         self.setLayout(self.main_layout)
 
@@ -183,9 +171,9 @@ class DockPreProcessingWidget(QtGui.QWidget):
         # Creates a new document and merges default data to the current data structure.
         Case.instance().reset()
         create_dsph_document()
-        widget_state_config(widget_state_elements, "new case")
         Case.instance().add_object(SimulationObject(CASE_LIMITS_OBJ_NAME, -1, ObjectType.SPECIAL, ObjectFillMode.SPECIAL))
-        
+
+        self.case_created.emit()
         self.update_dp.emit()
 
         # Forces call to item selection change function so all changes are taken into account
@@ -205,9 +193,10 @@ class DockPreProcessingWidget(QtGui.QWidget):
         # Creates a new document and merges default data to the current data structure.
         Case.instance().reset()
         create_dsph_document_from_fcstd(file_name)
-        widget_state_config(widget_state_elements, "new case")
         Case.instance().add_object_to_sim(SimulationObject(CASE_LIMITS_OBJ_NAME, -1, ObjectType.SPECIAL, ObjectFillMode.SPECIAL))
-        self.dp_input.setText(Case.instance().dp)
+
+        self.update_dp.emit()
+        self.case_created.emit()
 
         # Forces call to item selection change function so all changes are taken into account
         # FIXME: This should not be here
@@ -455,8 +444,10 @@ class DockPreProcessingWidget(QtGui.QWidget):
                     elif total_particles > 200000:
                         warning(__("Number of particles is pretty high ({}) "
                                    "and it could take a lot of time to simulate.").format(str(total_particles)))
+
                     Case.instance().info.is_gencase_done = True
-                    widget_state_config(widget_state_elements, "gencase done")
+                    self.gencase_completed.emit(True)
+
                     Case.instance().info.previous_particle_number = int(total_particles)
                     gencase_completed_dialog = GencaseCompletedDialog(particle_count=total_particles, detail_text=output.split("================================")[1])
                     gencase_completed_dialog.show()
@@ -576,22 +567,13 @@ class DockPreProcessingWidget(QtGui.QWidget):
         Case.instance().name = load_path_project_folder.split("/")[-1]
 
         # Adapt widget state to case info
-        widget_state_config(widget_state_elements, "load base")
-        if Case.instance().info.is_gencase_done:
-            widget_state_config(widget_state_elements, "gencase done")
-        else:
-            widget_state_config(widget_state_elements, "gencase not done")
-
-        if Case.instance().info.is_simulation_done:
-            widget_state_config(widget_state_elements, "simulation done")
-        else:
-            widget_state_config(widget_state_elements, "simulation not done")
+        self.case_created.emit()
+        self.gencase_completed.emit(Case.instance().info.is_gencase_done)
+        self.simulation_completed.emit(Case.instance().info.is_simulation_done)
 
         # Check executable paths
         refocus_cwd()
         correct_execs = Case.instance().executable_paths.check_and_filter()
-        if not correct_execs:
-            widget_state_config(widget_state_elements, "execs not correct")
 
         # Update FreeCAD case state
         # FIXME: This should not be here
@@ -656,3 +638,15 @@ class DockPreProcessingWidget(QtGui.QWidget):
                 get_fc_object(CASE_LIMITS_OBJ_NAME).Label = CASE_LIMITS_3D_LABEL if Case.instance().mode3d else CASE_LIMITS_2D_LABEL
         else:
             error("Not a valid case environment")
+
+    def adapt_to_no_case(self):
+        ''' Adapts the widget to an environment with no case opened. '''
+        for x in [self.save_button, self.add_fillbox_button, self.add_geometry_button, self.import_xml_button,
+                  self.case_summary_button, self.toggle_2d_mode_button, self.special_button, self.gencase_button]:
+            x.setEnabled(False)
+
+    def adapt_to_new_case(self):
+        ''' Adapts the widget to an environment when a case is opened. '''
+        for x in [self.save_button, self.add_fillbox_button, self.add_geometry_button, self.import_xml_button,
+                  self.case_summary_button, self.toggle_2d_mode_button, self.special_button, self.gencase_button]:
+            x.setEnabled(True)

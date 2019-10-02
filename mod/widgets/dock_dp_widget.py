@@ -8,9 +8,6 @@ from mod.translation_tools import __
 
 from mod.dataobjects.case import Case
 
-# FIXME: Replace this when refactored
-widget_state_elements = {}
-
 
 class DockDPWidget(QtGui.QWidget):
     ''' DesignSPHysics Dock DP Intro widget. '''
@@ -33,8 +30,6 @@ class DockDPWidget(QtGui.QWidget):
         self.dp_input.textChanged.connect(self.on_dp_changed)
 
         self.dp_units_label = QtGui.QLabel(" meters")
-
-        widget_state_elements['dp_input'] = self.dp_input
 
         self.main_layout.addWidget(self.dp_label)
         self.main_layout.addWidget(self.dp_input)
