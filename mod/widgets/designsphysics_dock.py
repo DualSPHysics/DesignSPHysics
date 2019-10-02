@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 '''Main DesignSPHysics Dock Widget '''
 
-from PySide import QtGui
+from PySide import QtGui, QtCore
 
 from mod.gui_tools import h_line_generator
 
@@ -21,6 +21,8 @@ from mod.widgets.dock_object_list_table_widget import DockObjectListTableWidget
 
 class DesignSPHysicsDock(QtGui.QDockWidget):
     ''' Main DesignSPHysics Dock, containing all the tools needed to manage cases. '''
+
+    need_refresh = QtCore.QSignal()
 
     def __init__(self):
         super().__init__()
@@ -60,6 +62,7 @@ class DesignSPHysicsDock(QtGui.QDockWidget):
         self.adapt_to_no_case()
 
         # Signal handling
+        self.pre_proccessing_widget.need_refresh.connect(self.need_refresh.emit)
         self.pre_proccessing_widget.update_dp.connect(self.on_signal_update_dp)
         self.pre_proccessing_widget.case_created.connect(self.adapt_to_new_case)
         self.pre_proccessing_widget.gencase_completed.connect(self.adapt_to_gencase_done)

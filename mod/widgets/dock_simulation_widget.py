@@ -8,17 +8,13 @@ from PySide import QtGui, QtCore
 
 from mod.translation_tools import __
 from mod.gui_tools import get_icon
-from mod.stdout_tools import debug, log, error, dump_to_disk
+from mod.stdout_tools import log, error
 from mod.dialog_tools import error_dialog, warning_dialog
 
 from mod.dataobjects.case import Case
 
 from mod.widgets.run_dialog import RunDialog
 from mod.widgets.run_additional_parameters_dialog import RunAdditionalParametersDialog
-
-
-# FIXME: Replace this when refactored
-data = {}
 
 
 class DockSimulationWidget(QtGui.QWidget):
@@ -71,7 +67,6 @@ class DockSimulationWidget(QtGui.QWidget):
             # Warning window about save_case
             warning_dialog("You should run GenCase again. Otherwise, the obtained results may not be as expected")
 
-        # FIXME: RunDialog has a really weird way of constructing. Change this to be more modular
         run_dialog = RunDialog(Case.instance().name, self.device_selector.currentText(), Case.instance().info.particle_number)
         run_dialog.set_value(0)
         run_dialog.run_update(0, 0, None)
@@ -129,19 +124,16 @@ class DockSimulationWidget(QtGui.QWidget):
 
         Case.instance().info.current_process = process
 
-        # FIXME: This is very ugly
-        static_params_exe = [
-            Case.instance().path + '/' + Case.instance().name + "_out/" +
-            Case.instance().name, Case.instance().path +
-            '/' + Case.instance().name + "_out/",
-            "-svres", "-" + str(self.device_selector.currentText()).lower()
-        ]
+        static_params_exe = [Case.instance().get_out_xml_file_path(),
+                             Case.instance().get_out_folder_path(),
+                             "-{device}".format(device=self.device_selector.currentText().lower()),
+                             "-svres"]
 
-        additional_params_ex = list()
+        additional_parameters = list()
         if Case.instance().info.run_additional_parameters:
-            additional_params_ex = Case.instance().info.run_additional_parameters.split(" ")
+            additional_parameters = Case.instance().info.run_additional_parameters.split(" ")
 
-        final_params_ex = static_params_exe + additional_params_ex
+        final_params_ex = static_params_exe + additional_parameters
         Case.instance().info.current_process.start(Case.instance().executable_paths.dsphysics, final_params_ex)
 
         def on_fs_change():

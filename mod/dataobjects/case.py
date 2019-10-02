@@ -18,6 +18,7 @@ from mod.dataobjects.acceleration_input import AccelerationInput
 from mod.dataobjects.relaxation_zone import RelaxationZone
 from mod.dataobjects.simulation_object import SimulationObject
 from mod.dataobjects.mk_based_properties import MKBasedProperties
+from mod.dataobjects.damping import Damping
 
 
 class Case():
@@ -40,6 +41,7 @@ class Case():
         self.execution_parameters: ExecutionParameters = ExecutionParameters()
         self.objects: list = list()  # [SimulationObject]
         self.mkbasedproperties: dict = dict()  # {mk: MKBasedProperties}
+        self.damping_zones: dict = dict()  # {freecad_object_name: Damping}
         self.periodicity: Periodicity = Periodicity()
         self.domain: SimulationDomain = SimulationDomain()
         self.executable_paths: ExecutablePaths = ExecutablePaths()
@@ -109,9 +111,13 @@ class Case():
             raise RuntimeError('The object that you are trying to remove ({}) is not present in the simulation')
         self.objects = list(filter(lambda obj: obj.name != object_name, self.objects))
 
-    def get_all_objects_with_damping(self):
-        ''' Returns a list of SimulationObject that have damping '''
-        return list(filter(lambda obj: obj.damping is not None, self.objects))
+    def add_damping_group(self, group_name: str) -> None:
+        ''' Adds a new freecad group/folder to a new Damping Zone. '''
+        self.damping_zones[group_name] = Damping()
+
+    def is_damping_bound_to_object(self, freecad_object_name: str) -> bool:
+        ''' Returns whether the object passed has a damping object bound to it or not. '''
+        return freecad_object_name in self.damping_zones.keys()
 
     def was_not_saved(self) -> bool:
         ''' Returns whether this case was or not saved before '''
@@ -140,3 +146,11 @@ class Case():
             fc_object = get_fc_object(object_name)
             if not fc_object or fc_object.InList:
                 self.remove_object(object_name)
+
+    def get_out_xml_file_path(self) -> str:
+        ''' Constructs the path for the out xml file needed to execute DualSPHysics. '''
+        return "{path}/{name}_out/{name}".format(path=self.path, name=self.name)
+
+    def get_out_folder_path(self) -> str:
+        ''' Constructs the path for the output folder of the case. '''
+        return "{path}/{name}_out/".format(path=self.path, name=self.name)

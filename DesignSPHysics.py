@@ -29,8 +29,6 @@ from mod.widgets.designsphysics_dock import DesignSPHysicsDock
 from mod.widgets.properties_dock_widget import PropertiesDockWidget
 
 
-data = {}  # TODO: Delete this
-
 __author__ = "Andrés Vieira"
 __copyright__ = "Copyright 2016-2019, DualSHPysics Team"
 __credits__ = ["Andrés Vieira", "Lorena Docasar", "Alejandro Jacobo Cabrera Crespo", "Orlando García Feal"]
@@ -54,10 +52,10 @@ delete_existing_docks()
 
 Case.instance().reset()
 
-dsph_main_dock = DesignSPHysicsDock()
+dualsphysics_dock = DesignSPHysicsDock()
 properties_widget = PropertiesDockWidget()
 
-get_fc_main_window().addDockWidget(QtCore.Qt.RightDockWidgetArea, dsph_main_dock)
+get_fc_main_window().addDockWidget(QtCore.Qt.RightDockWidgetArea, dualsphysics_dock)
 get_fc_main_window().addDockWidget(QtCore.Qt.LeftDockWidgetArea, properties_widget)
 
 
@@ -83,7 +81,7 @@ def on_tree_item_selection_change():
             # One object selected
             if selection[0].Name == "Case_Limits" or "_internal_" in selection[0].Name:
                 properties_widget.configure_to_no_selection()
-            elif "dampingzone" in selection[0].Name.lower() and selection[0].Name in data['damping'].keys():
+            elif Case.instance().is_damping_bound_to_object(selection[0].Name):
                 properties_widget.configure_to_damping_selection()
             elif Case.instance().is_object_in_simulation(selection[0].Name):
                 # Show properties on table
@@ -102,7 +100,7 @@ def on_tree_item_selection_change():
     Case.instance().delete_invalid_objects()
 
     # Update dsph objects list
-    dsph_main_dock.refresh_object_list()
+    dualsphysics_dock.refresh_object_list()
     properties_widget.fit_size()
 
 
@@ -112,6 +110,7 @@ for item in trees:
     item.itemSelectionChanged.connect(on_tree_item_selection_change)
 
 properties_widget.need_refresh.connect(on_tree_item_selection_change)
+dualsphysics_dock.need_refresh.connect(on_tree_item_selection_change)
 
 
 def selection_monitor():
@@ -119,7 +118,7 @@ def selection_monitor():
     time.sleep(2.0)
     while True:
         if not valid_document_environment():
-            dsph_main_dock.adapt_to_no_case()
+            dualsphysics_dock.adapt_to_no_case()
             time.sleep(1.0)
             continue
 
@@ -130,9 +129,9 @@ def selection_monitor():
         enforce_fillbox_restrictions()
 
         # Adjust damping properties when freecad related properties change
-        for sim_object in Case.instance().get_all_objects_with_damping():
-            damping_group = FreeCAD.ActiveDocument.getObject(sim_object)
-            sim_object.damping.overlimit = damping_group.OutList[1].Length.Value
+        for name, damping_zone in Case.instance().damping_zones.items():
+            damping_group = FreeCAD.ActiveDocument.getObject(name)
+            damping_zone.overlimit = damping_group.OutList[1].Length.Value
 
         time.sleep(0.5)
 

@@ -8,7 +8,6 @@ from mod.enums import ObjectType, ObjectFillMode, FreeCADObjectType
 from mod.constants import SUPPORTED_TYPES
 
 from mod.dataobjects.faces_property import FacesProperty
-from mod.dataobjects.damping import Damping
 
 
 class SimulationObject():
@@ -19,7 +18,6 @@ class SimulationObject():
         self.obj_mk: int = obj_mk
         self.type: ObjectType = obj_type
         self.fillmode: ObjectFillMode = fillmode
-        self.damping: Damping = None
         self.faces_configuration: FacesProperty = None
 
     def clean_faces(self):

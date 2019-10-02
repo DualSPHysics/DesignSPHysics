@@ -12,8 +12,7 @@ class Damping():
 
     def __str__(self):
         to_ret = ""
-        to_ret += "Damping configuration structure ({})\n".format(
-            "enabled" if self.enabled else "disabled")
+        to_ret += "Damping configuration structure ({})\n".format("enabled" if self.enabled else "disabled")
         to_ret += "Overlimit: {}\n".format(self.overlimit)
         to_ret += "Redumax: {}".format(self.redumax)
         return to_ret

@@ -39,17 +39,11 @@ from mod.dataobjects.ml_piston_1d import MLPiston1D
 from mod.dataobjects.ml_piston_2d import MLPiston2D
 from mod.dataobjects.relaxation_zone_file import RelaxationZoneFile
 
-# FIXME: Delete this when refactored
-data = {}
-
-
-def on_tree_item_selection_change():
-    pass
-
 
 class DockPreProcessingWidget(QtGui.QWidget):
     '''DesignSPHysics Dock Pre Processing Widget '''
 
+    need_refresh = QtCore.Signal()
     update_dp = QtCore.Signal()
     case_created = QtCore.Signal()
     gencase_completed = QtCore.Signal(bool)
@@ -175,10 +169,7 @@ class DockPreProcessingWidget(QtGui.QWidget):
 
         self.case_created.emit()
         self.update_dp.emit()
-
-        # Forces call to item selection change function so all changes are taken into account
-        # FIXME: this should not be here
-        on_tree_item_selection_change()
+        self.need_refresh.emit()
 
     def on_new_from_freecad_document(self, prompt=True):
         ''' Creates a new case based on an existing FreeCAD document.
@@ -197,10 +188,7 @@ class DockPreProcessingWidget(QtGui.QWidget):
 
         self.update_dp.emit()
         self.case_created.emit()
-
-        # Forces call to item selection change function so all changes are taken into account
-        # FIXME: This should not be here
-        on_tree_item_selection_change()
+        self.need_refresh.emit()
 
     def on_save_case(self, save_as=None):
         ''' Defines what happens when save case button is clicked.
@@ -503,8 +491,7 @@ class DockPreProcessingWidget(QtGui.QWidget):
             self.on_load_case()
         except ImportError:
             error_dialog(__("There was an error loading the case"),
-                         __("The case you are trying to load has some data that DesignSPHysics could not"
-                            " load.\n\nDid you make the case in a previous version?"))
+                         __("The case you are trying to load has some data that DesignSPHysics could not load.\n\nDid you make the case in a previous version?"))
             self.on_new_case(prompt=False)
 
     def on_load_case(self):
@@ -554,7 +541,8 @@ class DockPreProcessingWidget(QtGui.QWidget):
                     load_disk_data.pop(x, None)
 
             # Update data structure with disk loaded one
-            data.update(load_disk_data)  # TODO: Update mechanism for new data
+            # TODO: Update mechanism for new data
+            # data.update(load_disk_data)
         except (EOFError, ValueError):
             error_dialog(__("There was an error importing the case  You probably need to set them again.\n\n"
                             "This could be caused due to file corruption, "
@@ -570,14 +558,11 @@ class DockPreProcessingWidget(QtGui.QWidget):
         self.case_created.emit()
         self.gencase_completed.emit(Case.instance().info.is_gencase_done)
         self.simulation_completed.emit(Case.instance().info.is_simulation_done)
+        self.need_refresh.emit()
 
         # Check executable paths
         refocus_cwd()
         correct_execs = Case.instance().executable_paths.check_and_filter()
-
-        # Update FreeCAD case state
-        # FIXME: This should not be here
-        on_tree_item_selection_change()
 
     def on_add_fillbox(self):
         ''' Add fillbox group. It consists in a group with 2 objects inside: a point and a box.

@@ -83,7 +83,7 @@ class SpecialOptionsSelectorDialog(QtGui.QDialog):
     def on_damping_option(self):
         ''' Defines damping button behaviour'''
         damping_group_name = setup_damping_environment()
-        Case.instance().get_simulation_object(damping_group_name).damping = Damping()
+        Case.instance().add_damping_group(damping_group_name)
         DampingConfigDialog(damping_group_name)
         self.accept()
 

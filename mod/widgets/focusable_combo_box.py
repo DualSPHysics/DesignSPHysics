@@ -9,7 +9,7 @@ class FocusableComboBox(QtGui.QComboBox):
     focus = QtCore.Signal(str)
     help_text = ""
 
-    def setHelpText(self, help_text):
+    def set_help_text(self, help_text):
         self.help_text = help_text
 
     def focusInEvent(self, *args, **kwargs):
