@@ -721,5 +721,11 @@
     "Material: ": "Material: ",
     "Closing all current documents": "Closing all current documents",
     "New Damping Zone": "New Damping Zone",
-    "Can't change rotation on the Case Limits object.": "Can't change rotation on the Case Limits object."
+    "Can't change rotation on the Case Limits object.": "Can't change rotation on the Case Limits object.",
+    "Select GenCase path": "Select GenCase path",
+    "Can't recognize GenCase in the selected executable.": "Can't recognize GenCase in the selected executable.",
+    "Select {} path": "Select {} path",
+    "Can't recognize {} in the selected executable.": "Can't recognize {} in the selected executable.",
+    "One or more of the specified executables are not correct.": "One or more of the specified executables are not correct.",
+    "Make sure all executable have execution permissions set (specially on GNU/Linux) and try to set the configuration again.": "Make sure all executable have execution permissions set (specially on GNU/Linux) and try to set the configuration again."
 }

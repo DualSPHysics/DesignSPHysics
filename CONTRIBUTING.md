@@ -32,8 +32,8 @@ This is a brief description on how the project files are structure and what each
     - `execution_parameters.py`: Contains data classes to structure execution parameters for DualSPHysics
     - `dataobjects.py`: Contains data classes to structure different DualSPHysics properties, parameters and configurations
     - `enums.py`: Contains enums to manage property data with names.
-    - `utils.py`: Contains helper functions for all of the DesignSPHysics utilities.
-    - `gui_tools.py`: Similar to `utils.py` but containing only utilities related with user interface operations.
+    - `file_tools.py`: Contains helper functions for all of the DesignSPHysics utilities.
+    - `gui_tools.py`: Similar to `file_tools.py` but containing only utilities related with user interface operations.
     - `xmlimporter.py`: Code related with importing existing DualSPHysics cases to DesignSPHysics (uses lib `xmltodict.py`)
 - `images`: Images and icons used in the user interface
 - `dualsphysics/bin`: DualSPHysics executables.
@@ -49,7 +49,7 @@ For example, when the "Load Case" button is pressed, the function binded to it g
 
 To implement a new UI component with a feature just create, for example, a button and a function to execute when pressed.
 
-The main data structure is a Python Dictionary with different data attached to its keys. To see a reference to the structure, check the `get_default_data()` function in `mod.utils`.
+The main data structure is a Python Dictionary with different data attached to its keys. To see a reference to the structure, check the `get_default_data()` function in `mod.file_tools`.
 
 # Need more help?
 If you need help on how to contribute please contact one of the following people

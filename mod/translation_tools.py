@@ -16,13 +16,13 @@ def __(text):
     freecad_locale = FreeCADGui.getLocale().lower().replace(", ", "-").replace(" ", "-")
 
     # Find mod directory
-    utils_dir = path.dirname(path.abspath(__file__))
+    mod_directory = path.dirname(path.abspath(__file__))
 
     # Open translation file and print the matching string, if it's defined.
-    filename = "{utils_dir}/lang/{locale}.json".format(utils_dir=utils_dir, locale=freecad_locale)
+    filename = "{mod_directory}/lang/{locale}.json".format(mod_directory=mod_directory, locale=freecad_locale)
 
     if not path.isfile(filename):
-        filename = "{utils_dir}/lang/{locale}.json".format(utils_dir=utils_dir, locale="english")
+        filename = "{mod_directory}/lang/{locale}.json".format(mod_directory=mod_directory, locale="english")
 
     with open(filename, "rb") as f:
         translation = json.load(f)

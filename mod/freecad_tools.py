@@ -12,13 +12,14 @@ import Draft
 
 from PySide import QtGui
 
-from mod.stdout_tools import log, error, debug
+from mod.stdout_tools import log, error
 from mod.constants import APP_NAME, SINGLETON_DOCUMENT_NAME, DEFAULT_WORKBENCH, CASE_LIMITS_OBJ_NAME, CASE_LIMITS_3D_LABEL
 from mod.constants import CASE_LIMITS_LINE_COLOR, CASE_LIMITS_LINE_WIDTH, CASE_LIMITS_DEFAULT_LENGTH, FREECAD_MIN_VERSION
-from mod.constants import MAIN_WIDGET_INTERNAL_NAME, PROP_WIDGET_INTERNAL_NAME, WIDTH_2D
+from mod.constants import MAIN_WIDGET_INTERNAL_NAME, PROP_WIDGET_INTERNAL_NAME, WIDTH_2D, VERSION
 from mod.enums import FreeCADObjectType, FreeCADDisplayMode
 from mod.dialog_tools import ok_cancel_dialog, error_dialog
 from mod.translation_tools import __
+
 
 def delete_existing_docks():
     ''' Searches for existing docks related to DesignSPHysics destroys them. '''

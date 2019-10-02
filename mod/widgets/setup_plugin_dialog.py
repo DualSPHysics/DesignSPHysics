@@ -2,11 +2,12 @@
 # -*- coding: utf-8 -*-
 '''DesignSPHysics Setup Plugin Dialog '''
 
-from PySide import QtCore, QtGui
+from PySide import QtGui
 
 from mod.translation_tools import __
 from mod.executable_tools import executable_contains_string
-from mod.stdout_tools import error
+from mod.dialog_tools import warning_dialog, error_dialog
+from mod.file_tools import get_designsphysics_path
 
 from mod.dataobjects.case import Case
 
@@ -142,15 +143,15 @@ class SetupPluginDialog(QtGui.QDialog):
 
         self.ok_button.clicked.connect(self.on_ok)
         self.cancel_button.clicked.connect(self.on_cancel)
-        self.gencasepath_browse.clicked.connect(self.on_gencase_browse)
-        self.dsphpath_browse.clicked.connect(self.on_dualsphysics_browse)
-        self.partvtk4path_browse.clicked.connect(self.on_partvtk4_browse)
-        self.computeforces_browse.clicked.connect(self.on_computeforces_browse)
-        self.floatinginfo_browse.clicked.connect(self.on_floatinginfo_browse)
-        self.measuretool_browse.clicked.connect(self.on_measuretool_browse)
-        self.boundaryvtk_browse.clicked.connect(self.on_boundaryvtk_browse)
-        self.flowtool_browse.clicked.connect(self.on_flowtool_browse)
-        self.isosurface_browse.clicked.connect(self.on_isosurface_browse)
+        self.gencasepath_browse.clicked.connect(lambda: self.browse("GenCase", self.gencasepath_input))
+        self.dsphpath_browse.clicked.connect(lambda: self.browse("DualSPHysics", self.dsphpath_input))
+        self.partvtk4path_browse.clicked.connect(lambda: self.browse("PartVTK4", self.partvtk4path_input))
+        self.computeforces_browse.clicked.connect(lambda: self.browse("ComputeForces", self.computeforces_input))
+        self.floatinginfo_browse.clicked.connect(lambda: self.browse("FloatingInfo", self.floatinginfo_input))
+        self.measuretool_browse.clicked.connect(lambda: self.browse("MeasureTool", self.measuretool_input))
+        self.boundaryvtk_browse.clicked.connect(lambda: self.browse("BoundaryVTK", self.boundaryvtk_input))
+        self.flowtool_browse.clicked.connect(lambda: self.browse("FlowTool", self.flowtool_input))
+        self.isosurface_browse.clicked.connect(lambda: self.browse("IsoSurface", self.isosurface_input))
         self.paraview_browse.clicked.connect(self.on_paraview_browse)
 
         # Button layout definition
@@ -195,86 +196,26 @@ class SetupPluginDialog(QtGui.QDialog):
         Case.instance().executable_paths.boundaryvtk = self.boundaryvtk_input.text()
         Case.instance().executable_paths.flowtool = self.flowtool_input.text()
         Case.instance().executable_paths.paraview = self.paraview_input.text()
-        Case.instance().executable_paths.check_and_filter()
-
+        if not Case.instance().executable_paths.check_and_filter():
+            warning_dialog(__("One or more of the specified executables are not correct."),
+                           __("Make sure all executable have execution permissions set (specially on GNU/Linux) and try to set the configuration again."))
         self.accept()
 
     def on_cancel(self):
         self.reject()
 
-    def on_gencase_browse(self):
-        file_name, _ = QtGui.QFileDialog().getOpenFileName(self, __("Select GenCase path"), QtCore.QDir.homePath())
-        if file_name:
-            if executable_contains_string(file_name, "GenCase"):
-                self.gencasepath_input.setText(file_name)
-            else:
-                error(__("Can't recognize GenCase in the selected executable."))
+    def browse(self, app_name, input_prop) -> None:
+        ''' Generic browse method for other to wrap. '''
+        file_name, _ = QtGui.QFileDialog().getOpenFileName(self, __("Select {} path").format(app_name), get_designsphysics_path())
+        if not file_name:
+            return
 
-    def on_dualsphysics_browse(self):
-        file_name, _ = QtGui.QFileDialog().getOpenFileName(self, __("Select DualSPHysics path"), QtCore.QDir.homePath())
-        if file_name:
-            if executable_contains_string(file_name, "DualSPHysics"):
-                self.dsphpath_input.setText(file_name)
-            else:
-                error(__("Can't recognize DualSPHysics in the selected executable."))
-
-    def on_partvtk4_browse(self):
-        file_name, _ = QtGui.QFileDialog().getOpenFileName(self, __("Select PartVTK4 path"), QtCore.QDir.homePath())
-        if file_name:
-            if executable_contains_string(file_name, "PartVTK4"):
-                self.partvtk4path_input.setText(file_name)
-            else:
-                error(__("Can't recognize PartVTK4 in the selected executable."))
-
-    def on_computeforces_browse(self):
-        file_name, _ = QtGui.QFileDialog().getOpenFileName(self, __("Select ComputeForces path"), QtCore.QDir.homePath())
-        if file_name:
-            if executable_contains_string(file_name, "ComputeForces"):
-                self.computeforces_input.setText(file_name)
-            else:
-                error(__("Can't recognize ComputeForces in the selected executable."))
-
-    def on_floatinginfo_browse(self):
-        file_name, _ = QtGui.QFileDialog().getOpenFileName(self, __("Select FloatingInfo path"), QtCore.QDir.homePath())
-        if file_name:
-            if executable_contains_string(file_name, "FloatingInfo"):
-                self.floatinginfo_input.setText(file_name)
-            else:
-                error(__("Can't recognize FloatingInfo in the selected executable."))
-
-    def on_measuretool_browse(self):
-        file_name, _ = QtGui.QFileDialog().getOpenFileName(self, __("Select MeasureTool path"), QtCore.QDir.homePath())
-        if file_name:
-            if executable_contains_string(file_name, "MeasureTool"):
-                self.measuretool_input.setText(file_name)
-            else:
-                error(__("Can't recognize MeasureTool in the selected executable."))
-
-    def on_isosurface_browse(self):
-        file_name, _ = QtGui.QFileDialog().getOpenFileName(self, __("Select IsoSurface path"), QtCore.QDir.homePath())
-        if file_name:
-            if executable_contains_string(file_name, "IsoSurface"):
-                self.isosurface_input.setText(file_name)
-            else:
-                error(__("Can't recognize IsoSurface in the selected executable."))
-
-    def on_boundaryvtk_browse(self):
-        file_name, _ = QtGui.QFileDialog().getOpenFileName(self, __("Select BoundaryVTK path"), QtCore.QDir.homePath())
-        if file_name:
-            if executable_contains_string(file_name, "BoundaryVTK"):
-                self.boundaryvtk_input.setText(file_name)
-            else:
-                error(__("Can't recognize BoundaryVTK in the selected executable."))
-
-    def on_flowtool_browse(self):
-        file_name, _ = QtGui.QFileDialog().getOpenFileName(self, __("Select FlowTool path"), QtCore.QDir.homePath())
-        if file_name:
-            if executable_contains_string(file_name, "FlowTool"):
-                self.flowtool_input.setText(file_name)
-            else:
-                error(__("Can't recognize FlowTool in the selected executable."))
+        if executable_contains_string(file_name, app_name):
+            input_prop.setText(file_name)
+        else:
+            error_dialog(__("Can't recognize {} in the selected executable.").format(app_name))
 
     def on_paraview_browse(self):
-        file_name, _ = QtGui.QFileDialog().getOpenFileName(self, "Select ParaView path", QtCore.QDir.homePath())
+        file_name, _ = QtGui.QFileDialog().getOpenFileName(self, "Select ParaView path", get_designsphysics_path())
         if file_name:
             self.paraview_input.setText(file_name)

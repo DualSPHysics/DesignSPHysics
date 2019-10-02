@@ -15,7 +15,7 @@ import FreeCAD
 import FreeCADGui
 import Mesh
 
-from mod import utils
+from mod import file_tools
 from mod import xmltodict
 from mod.enums import FreeCADObjectType
 from mod.constants import SINGLETON_DOCUMENT_NAME
@@ -168,7 +168,7 @@ def create_fc_objects(f, path):
                 elif subcommand.tag == "size":
                     size = (float(subcommand.attrib["x"]), float(subcommand.attrib["y"]), float(subcommand.attrib["z"]))
                 else:
-                    utils.warning(
+                    file_tools.warning(
                         "Modifier unknown (" + subcommand.tag + ") for the command: " + command.tag + ". Ignoring...")
             # Box creation in FreeCAD
             FreeCAD.ActiveDocument.addObject(FreeCADObjectType.BOX, "Box" + str(elementnum))
@@ -198,7 +198,7 @@ def create_fc_objects(f, path):
                         top_point = [float(subcommand.attrib["x"]), float(subcommand.attrib["y"]),
                                      float(subcommand.attrib["z"])]
                     else:
-                        utils.warning("Found more than two points in a cylinder definition. Ignoring")
+                        file_tools.warning("Found more than two points in a cylinder definition. Ignoring")
                     points_found += 1
 
             # Cylinder creation in FreeCAD
@@ -240,7 +240,7 @@ def create_fc_objects(f, path):
             # toAddDSPH["STL" + str(elementnum)] = [int(mk[1]), mk[0], drawmode]
         else:
             # Command not supported, report and ignore
-            utils.warning("The command: " + command.tag + " is not yet supported. Ignoring...")
+            file_tools.warning("The command: " + command.tag + " is not yet supported. Ignoring...")
 
         elementnum += 1
 

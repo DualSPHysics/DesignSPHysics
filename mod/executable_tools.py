@@ -14,13 +14,14 @@ import FreeCADGui
 def executable_contains_string(executable: str, string: str) -> bool:
     ''' Returns whether the standard output of the executable contains the passed string.
         The string passed as a parameters is not case sensitive. '''
+    refocus_cwd()
     if path.isfile(executable):
         process = QtCore.QProcess(FreeCADGui.getMainWindow())
 
         if platform in ("linux", "linux2"):
             environ["LD_LIBRARY_PATH"] = path.dirname(executable)
 
-        process.start('"{}"'.format(executable))
+        process.start('"{}" -ver'.format(executable))
         process.waitForFinished()
         output = str(process.readAllStandardOutput())
 

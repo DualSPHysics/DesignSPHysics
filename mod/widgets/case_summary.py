@@ -34,7 +34,7 @@ class CaseSummary(QtGui.QDialog):
 
 # def case_summary(orig_data):
 #     ''' Displays a dialog with a summary of the current opened case. '''
-#     if not mod.utils.valid_document_environment():
+#     if not mod.file_tools.valid_document_environment():
 #         return
 
 #     # Data copy to avoid referencing issues
@@ -43,15 +43,15 @@ class CaseSummary(QtGui.QDialog):
 #     # Preprocess data to show in data copy
 #     data['gravity'] = "({}, {}, {})".format(*data['gravity'])
 #     if data['project_name'] == "":
-#         data['project_name'] = "<i>{}</i>".format(mod.utils.__("Not yet saved"))
+#         data['project_name'] = "<i>{}</i>".format(mod.file_tools.__("Not yet saved"))
 
 #     if data['project_path'] == "":
-#         data['project_path'] = "<i>{}</i>".format(mod.utils.__("Not yet saved"))
+#         data['project_path'] = "<i>{}</i>".format(mod.file_tools.__("Not yet saved"))
 
 #     for k in ['gencase_path', 'dsphysics_path', 'partvtk4_path']:
 #         if data[k] == "":
 #             data[k] = "<i>{}</i>".format(
-#                 mod.utils.__("Executable not correctly set"))
+#                 mod.file_tools.__("Executable not correctly set"))
 
 #     data['stepalgorithm'] = {
 #         '1': 'Verlet',
@@ -75,14 +75,14 @@ class CaseSummary(QtGui.QDialog):
 #         for key, value in data['simobjects'].items():
 #             if key.lower() == 'case_limits':
 #                 continue
-#             fc_object = mod.utils.get_fc_object(key)
-#             is_floating = mod.utils.__('Yes') if str(
-#                 value[0]) in data['floating_mks'].keys() else mod.utils.__('No')
-#             is_floating = mod.utils.__('No') if value[
+#             fc_object = mod.file_tools.get_fc_object(key)
+#             is_floating = mod.file_tools.__('Yes') if str(
+#                 value[0]) in data['floating_mks'].keys() else mod.file_tools.__('No')
+#             is_floating = mod.file_tools.__('No') if value[
 #                 1].lower() == "fluid" else is_floating
-#             has_initials = mod.utils.__('Yes') if str(
-#                 value[0]) in data['initials_mks'].keys() else mod.utils.__('No')
-#             has_initials = mod.utils.__('No') if value[
+#             has_initials = mod.file_tools.__('Yes') if str(
+#                 value[0]) in data['initials_mks'].keys() else mod.file_tools.__('No')
+#             has_initials = mod.file_tools.__('No') if value[
 #                 1].lower() == "bound" else has_initials
 #             real_mk = value[0] + 11 if value[
 #                 1].lower() == "bound" else value[0] + 1
@@ -100,7 +100,7 @@ class CaseSummary(QtGui.QDialog):
 #                                                                             initials=has_initials)
 #         data['objects_info'] += "</ul>"
 #     else:
-#         data['objects_info'] += mod.utils.__(
+#         data['objects_info'] += mod.file_tools.__(
 #             "No objects were added to the simulation yet.")
 #     # endregion Formatting objects info
 

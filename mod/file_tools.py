@@ -24,7 +24,6 @@ import Mesh
 import Fem
 from femmesh.femmesh2mesh import femmesh_2_mesh
 
-from mod.freecad_tools import get_fc_object
 from mod.stdout_tools import log, warning, error
 from mod.translation_tools import __
 
@@ -56,6 +55,76 @@ from mod.dataobjects.relaxation_zone_regular import RelaxationZoneRegular
 from mod.dataobjects.relaxation_zone_irregular import RelaxationZoneIrregular
 from mod.dataobjects.relaxation_zone_uniform import RelaxationZoneUniform
 from mod.dataobjects.relaxation_zone_file import RelaxationZoneFile
+
+
+def get_default_config_file():
+    ''' Gets the default-config.json from disk '''
+    current_script_folder = os.path.dirname(os.path.realpath(__file__))
+    with open('{}/../default-config.json'.format(current_script_folder)) as data_file:
+        loaded_data = json.load(data_file)
+
+    if "win" in platform:
+        to_ret = loaded_data["windows"]
+    elif "linux" in platform:
+        to_ret = loaded_data["linux"]
+
+    return to_ret
+
+
+def get_saved_config_file() -> str:
+    ''' Returns the path of the configuration file saved in the FreeCAD user directory. '''
+    return "{datadir}/designsphysics-{version}.data".format(datadir=FreeCAD.getUserAppDataDir(), version=VERSION)
+
+
+def get_designsphysics_path() -> str:
+    ''' Returns the module base path. '''
+    return "{}/../".format(os.path.dirname(os.path.abspath(__file__)))
+
+
+def import_geo(filename=None, scale_x=1, scale_y=1, scale_z=1, name=None, autofill=False, data=None):
+    ''' Opens a GEO file, preprocesses it and saves it
+    int temp files to load with FreeCAD. '''
+    if data is None:
+        raise RuntimeError("Data parameter must be populated")
+
+    file_type = ".{}".format(filename.split(".")[-1]).lower()
+
+    if scale_x <= 0:
+        scale_x = 1
+    if scale_y <= 0:
+        scale_y = 1
+    if scale_z <= 0:
+        scale_z = 1
+
+    # TODO: Adapt to VTL (FEM lib, convert to other format)
+    if file_type == ".vtk":
+        loaded_mesh = Mesh.Mesh(femmesh_2_mesh(Fem.read(filename)))
+    else:
+        loaded_mesh = Mesh.read(filename)
+
+    scale_matrix = FreeCAD.Matrix()
+    scale_matrix.scale(scale_x, scale_y, scale_z)
+    loaded_mesh.transform(scale_matrix)
+    Mesh.show(loaded_mesh, name)
+    FreeCADGui.SendMsgToActiveView("ViewFit")
+
+    data["geo_autofill"][name] = autofill
+
+
+def create_flowtool_boxes(path, boxes):
+    ''' Creates a file with flowtool box information '''
+    with open(path, 'w') as f:
+        for box in boxes:
+            f.write("BOX @{}\n".format(box[1]))
+            f.write("{} {} {}\n".format(*box[2]))
+            f.write("{} {} {}\n".format(*box[3]))
+            f.write("{} {} {}\n".format(*box[4]))
+            f.write("{} {} {}\n".format(*box[5]))
+            f.write("{} {} {}\n".format(*box[6]))
+            f.write("{} {} {}\n".format(*box[7]))
+            f.write("{} {} {}\n".format(*box[8]))
+            f.write("{} {} {}\n".format(*box[9]))
+            f.write("\n")
 
 
 # FIXME: Implement this in the new structure and delete this. This only remains here as documentation on how it works right now
@@ -151,19 +220,7 @@ def get_default_data():
     return data, temp_data
 
 
-def get_default_config_file():
-    ''' Gets the default-config.json from disk '''
-    current_script_folder = os.path.dirname(os.path.realpath(__file__))
-    with open('{}/../default-config.json'.format(current_script_folder)) as data_file:
-        loaded_data = json.load(data_file)
-
-    if "win" in platform:
-        to_ret = loaded_data["windows"]
-    elif "linux" in platform:
-        to_ret = loaded_data["linux"]
-
-    return to_ret
-
+# FIXME: This should not exist. Saving it only as a documentation for the refactor
 def dump_to_xml(data, save_name):
     ''' Saves all of the data in the opened case
         to disk. Generates a GenCase compatible XML. '''
@@ -1611,49 +1668,3 @@ def dump_to_xml(data, save_name):
     f.write('\t</execution>\n')
     f.write('</case>\n')
     f.close()
-
-
-def import_geo(filename=None, scale_x=1, scale_y=1, scale_z=1, name=None, autofill=False, data=None):
-    ''' Opens a GEO file, preprocesses it and saves it
-    int temp files to load with FreeCAD. '''
-    if data is None:
-        raise RuntimeError("Data parameter must be populated")
-
-    file_type = ".{}".format(filename.split(".")[-1]).lower()
-
-    if scale_x <= 0:
-        scale_x = 1
-    if scale_y <= 0:
-        scale_y = 1
-    if scale_z <= 0:
-        scale_z = 1
-
-    # TODO: Adapt to VTL (FEM lib, convert to other format)
-    if file_type == ".vtk":
-        loaded_mesh = Mesh.Mesh(femmesh_2_mesh(Fem.read(filename)))
-    else:
-        loaded_mesh = Mesh.read(filename)
-
-    scale_matrix = FreeCAD.Matrix()
-    scale_matrix.scale(scale_x, scale_y, scale_z)
-    loaded_mesh.transform(scale_matrix)
-    Mesh.show(loaded_mesh, name)
-    FreeCADGui.SendMsgToActiveView("ViewFit")
-
-    data["geo_autofill"][name] = autofill
-
-
-def create_flowtool_boxes(path, boxes):
-    ''' Creates a file with flowtool box information '''
-    with open(path, 'w') as f:
-        for box in boxes:
-            f.write("BOX @{}\n".format(box[1]))
-            f.write("{} {} {}\n".format(*box[2]))
-            f.write("{} {} {}\n".format(*box[3]))
-            f.write("{} {} {}\n".format(*box[4]))
-            f.write("{} {} {}\n".format(*box[5]))
-            f.write("{} {} {}\n".format(*box[6]))
-            f.write("{} {} {}\n".format(*box[7]))
-            f.write("{} {} {}\n".format(*box[8]))
-            f.write("{} {} {}\n".format(*box[9]))
-            f.write("\n")

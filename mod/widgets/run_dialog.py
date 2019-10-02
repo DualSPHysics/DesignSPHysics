@@ -14,7 +14,7 @@ class RunDialog(QtGui.QDialog):
     PARTICLES_OUT_TEMPLATE = __("Total particles out: {}")
     ETA_TEMPLATE = __("Estimated time to complete simulation: {}")
 
-    cancelled = QtCore.QSignal()
+    cancelled = QtCore.Signal()
 
     def __init__(self, case_name: str, processor: str, number_of_particles: int):
         super(RunDialog, self).__init__()

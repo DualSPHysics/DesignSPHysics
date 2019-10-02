@@ -22,7 +22,7 @@ from mod.widgets.dock_object_list_table_widget import DockObjectListTableWidget
 class DesignSPHysicsDock(QtGui.QDockWidget):
     ''' Main DesignSPHysics Dock, containing all the tools needed to manage cases. '''
 
-    need_refresh = QtCore.QSignal()
+    need_refresh = QtCore.Signal()
 
     def __init__(self):
         super().__init__()

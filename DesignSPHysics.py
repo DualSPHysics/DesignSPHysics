@@ -50,8 +50,6 @@ if document_count() > 0:
 # Tries to delete docks created by a previous execution of DesignSPHysics
 delete_existing_docks()
 
-Case.instance().reset()
-
 dualsphysics_dock = DesignSPHysicsDock()
 properties_widget = PropertiesDockWidget()
 
