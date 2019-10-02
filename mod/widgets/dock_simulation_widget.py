@@ -38,8 +38,6 @@ class DockSimulationWidget(QtGui.QWidget):
         self.device_selector.addItem("CPU")
         self.device_selector.addItem("GPU")
 
-        
-
         # Simulate case button
         self.execute_button = QtGui.QPushButton(__("Run"))
         self.execute_button.setStyleSheet("QPushButton {font-weight: bold; }")
@@ -50,14 +48,10 @@ class DockSimulationWidget(QtGui.QWidget):
         self.execute_button.setIconSize(QtCore.QSize(12, 12))
         self.execute_button.clicked.connect(self.on_ex_simulate)
 
-        
-
         # Additional parameters button
         self.additional_parameters_button = QtGui.QPushButton(__("Additional parameters"))
         self.additional_parameters_button.setToolTip("__(Sets simulation additional parameters for execution.)")
         self.additional_parameters_button.clicked.connect(self.on_additional_parameters)
-
-        
 
         self.button_layout = QtGui.QHBoxLayout()
         self.button_layout.addWidget(self.execute_button)
@@ -78,48 +72,26 @@ class DockSimulationWidget(QtGui.QWidget):
             warning_dialog("You should run GenCase again. Otherwise, the obtained results may not be as expected")
 
         # FIXME: RunDialog has a really weird way of constructing. Change this to be more modular
-        run_dialog = RunDialog()
-        run_dialog.run_progbar_bar.setValue(0)
+        run_dialog = RunDialog(Case.instance().name, self.device_selector.currentText(), Case.instance().info.particle_number)
+        run_dialog.set_value(0)
+        run_dialog.run_update(0, 0, None)
+
+        run_fs_watcher = QtCore.QFileSystemWatcher()
+
         Case.instance().info.is_simulation_done = False
         # FIXME: When simulation starts we should disable some widgets to prevent the user messing up the execution
-        run_dialog.run_button_cancel.setText(__("Cancel Simulation"))
-        run_dialog.setWindowTitle(__("DualSPHysics Simulation: {}%").format("0"))
-        run_dialog.run_group_label_case.setText(__("Case name: ") + Case.instance().name)
-        run_dialog.run_group_label_proc.setText(__("Simulation processor: ") + str(self.device_selector.currentText()))
-        run_dialog.run_group_label_part.setText(__("Number of particles: ") + str(Case.instance().info.particle_number))
-        run_dialog.run_group_label_partsout.setText(__("Total particles out: ") + "0")
-        run_dialog.run_group_label_eta.setText(__("Estimated time to complete simulation: ") + __("Calculating..."))
-        run_dialog.run_group_label_completed.setVisible(False)
 
         # Cancel button handler
         def on_cancel():
             log(__("Stopping simulation"))
             if Case.instance().info.current_process:
                 Case.instance().info.current_process.kill()
-            run_dialog.hide()
-            run_dialog.run_details.hide()
+            run_dialog.hide_all()
             Case.instance().info.is_simulation_done = False
             # FIXME: Enable/Disable widgets accordingly when we cancel a simulation
 
-        run_dialog.run_button_cancel.clicked.connect(on_cancel)
-
-        def on_details():
-            ''' Details button handler. Opens and closes the details pane on the execution window.'''
-            if run_dialog.run_details.isVisible():
-                debug('Hiding details pane on execution')
-                run_dialog.run_details.hide()
-            else:
-                debug('Showing details pane on execution')
-                run_dialog.run_details.show()
-                run_dialog.run_details.move(run_dialog.x() - run_dialog.run_details.width() - 15, run_dialog.y())
-
-        # Ensure run button has no connections
-        try:
-            run_dialog.run_button_details.clicked.disconnect()
-        except RuntimeError:
-            pass
-
-        run_dialog.run_button_details.clicked.connect(on_details)
+        run_dialog.cancelled.connect(on_cancel)
+        run_dialog.run_button_details.clicked.connect(run_dialog.toggle_run_details)
 
         # Launch simulation and watch filesystem to monitor simulation
         filelist = [f for f in os.listdir(Case.instance().path + '/' + Case.instance().name + "_out/") if f.startswith("Part")]
@@ -131,13 +103,10 @@ class DockSimulationWidget(QtGui.QWidget):
 
             # Reads output and completes the progress bar
             output = Case.instance().info.current_process.readAllStandardOutput()
-            run_dialog.run_details_text.setText(str(output))
-            run_dialog.run_details_text.moveCursor(QtGui.QTextCursor.End)
-            run_dialog.run_watcher.removePath(Case.instance().path + '/' + Case.instance().name + "_out/")
-            run_dialog.setWindowTitle(__("DualSPHysics Simulation: Complete"))
-            run_dialog.run_progbar_bar.setValue(100)
-            run_dialog.run_button_cancel.setText(__("Close"))
-            run_dialog.run_group_label_completed.setVisible(True)
+            run_dialog.set_detail_text(str(output))
+            run_dialog.run_complete()
+
+            run_fs_watcher.removePath(Case.instance().path + '/' + Case.instance().name + "_out/")
 
             if exit_code == 0:
                 # Simulation went correctly
@@ -147,23 +116,20 @@ class DockSimulationWidget(QtGui.QWidget):
                 # In case of an error
                 if "exception" in str(output).lower():
                     error(__("Exception in execution."))
-                    run_dialog.setWindowTitle(__("DualSPHysics Simulation: Error"))
-                    run_dialog.run_progbar_bar.setValue(0)
                     run_dialog.hide()
-                    
-                    #FIXME: Enable/Disable widgets accordingly when a simulation exits with errors.
-                    execution_error_dialog = QtGui.QMessageBox()
-                    execution_error_dialog.setText(__("An error occurred during execution. Make sure that parameters exist and are properly defined. "
-                                                      "You can also check your execution device (update the driver of your GPU). "
-                                                      "Read the details for more information."))
-                    execution_error_dialog.setDetailedText(str(output).split("================================")[1])
-                    execution_error_dialog.setIcon(QtGui.QMessageBox.Critical)
-                    execution_error_dialog.exec_()
+
+                    # FIXME: Enable/Disable widgets accordingly when a simulation exits with errors.
+                    error_dialog(__("An error occurred during execution. Make sure that parameters exist and are properly defined. "
+                                    "You can also check your execution device (update the driver of your GPU). Read the details for more information."),
+                                 str(output).split("================================")[1])
 
         # Launches a QProcess in background
         process = QtCore.QProcess(run_dialog)
         process.finished.connect(on_dsph_sim_finished)
+
         Case.instance().info.current_process = process
+
+        # FIXME: This is very ugly
         static_params_exe = [
             Case.instance().path + '/' + Case.instance().name + "_out/" +
             Case.instance().name, Case.instance().path +
@@ -188,8 +154,7 @@ class DockSimulationWidget(QtGui.QWidget):
                 pass
 
             # Fill details window
-            run_dialog.run_details_text.setText("".join(run_file_data))
-            run_dialog.run_details_text.moveCursor(QtGui.QTextCursor.End)
+            run_dialog.set_detail_text("".join(run_file_data))
 
             # Set percentage scale based on timemax
             for l in run_file_data:
@@ -197,32 +162,30 @@ class DockSimulationWidget(QtGui.QWidget):
                     if "TimeMax=" in l:
                         Case.instance().execution_parameters.timemax = float(l.split("=")[1])
 
-            # Update execution metrics on GUI
+            # Update execution metrics
             last_part_lines = list(filter(lambda x: "Part_" in x and "stored" not in x and "      " in x, run_file_data))
             if last_part_lines:
                 current_value = (float(last_part_lines[-1].split("      ")[1]) * float(100)) / float(Case.instance().execution_parameters.timemax)
-                run_dialog.run_progbar_bar.setValue(current_value)
-                run_dialog.setWindowTitle(__("DualSPHysics Simulation: {}%").format(str(format(current_value, ".2f"))))
-                run_dialog.run_group_label_eta.setText(__("Estimated time to complete simulation: ") + last_part_lines[-1].split("  ")[-1])
 
-            # Update particles out on GUI
+            # Update particles out
             last_particles_out_lines = list(filter(lambda x: "(total: " in x and "Particles out:" in x, run_file_data))
             if last_particles_out_lines:
-                dump_to_disk("".join(last_particles_out_lines))
                 totalpartsout = int(last_particles_out_lines[-1].split("(total: ")[1].split(")")[0])
                 Case.instance().info.particles_out = totalpartsout
-                run_dialog.run_group_label_partsout.setText(__("Total particles out: {}").format(str(Case.instance().info.particles_out)))
+
+            # Update run dialog
+            run_dialog.run_update(current_value, Case.instance().info.particles_out, str(last_part_lines[-1].split("  ")[-1]))
 
         # Set filesystem watcher to the out directory.
-        run_dialog.run_watcher.addPath(Case.instance().path + '/' + Case.instance().name + "_out/")
-        run_dialog.run_watcher.directoryChanged.connect(on_fs_change)
+        run_fs_watcher.addPath(Case.instance().path + '/' + Case.instance().name + "_out/")
+        run_fs_watcher.directoryChanged.connect(on_fs_change)
 
         Case.instance().info.needs_to_run_gencase = False
 
         # Handle error on simulation start
         if Case.instance().info.current_process.state() == QtCore.QProcess.NotRunning:
             # Probably error happened.
-            run_dialog.run_watcher.removePath(Case.instance().path + '/' + Case.instance().name + "_out/")
+            run_fs_watcher.removePath(Case.instance().path + '/' + Case.instance().name + "_out/")
             Case.instance().info.current_process = None
             error_dialog("Error on simulation start. Check that the DualSPHysics executable is correctly set.")
         else:
