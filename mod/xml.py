@@ -14,9 +14,6 @@ from mod.constants import APP_NAME, DIVIDER, LINE_END
 from mod.enums import FloatingDensityType
 from mod.template_tools import obj_to_dict
 
-from mod.dataobjects.case import Case
-
-
 class XMLExporter():
     ''' Handles XML generation and data transformation to adapt to DualSPHysics
     preprocessing tools '''
@@ -129,9 +126,9 @@ class XMLExporter():
         formatter = {'floatings_each': LINE_END.join(float_properties_xmls) if float_properties_xmls else ""}
         return self.get_template_text(self.FLOATINGS_XML).format(**formatter)
 
-    def get_adapted_case_data(self) -> dict:
+    def get_adapted_case_data(self, case: "Case") -> dict:
         ''' Adapts the case data to a dictionary used to format the resulting XML '''
-        data: dict = obj_to_dict(Case.instance())
+        data: dict = obj_to_dict(case)
         data = self.transform_bools_to_strs(data)
 
         data['definition_template'] = self.get_definition_template(data)
@@ -142,11 +139,11 @@ class XMLExporter():
         data['current_date'] = datetime.now().strftime('%d-%m-%Y %H:%M:%S')
         return data
 
-    def generate(self) -> str:
+    def generate(self, case) -> str:
         ''' Returns the GenCase-compatible XML resulting from the case '''
-        return self.get_template_text(self.BASE_XML).format(**self.get_adapted_case_data())
+        return self.get_template_text(self.BASE_XML).format(**self.get_adapted_case_data(case))
 
-    def save_to_disk(self, path) -> None:
+    def save_to_disk(self, path, case: "Case") -> None:
         ''' Creates a file on disk with the contents of the GenCase generated XML. '''
-        with open("{}/{}{}".format(path, Case.instance().name, self.GENCASE_XML_SUFFIX), 'w', encoding='utf-8') as file:
-            file.write(self.generate())
+        with open("{}/{}{}".format(path, case.name, self.GENCASE_XML_SUFFIX), 'w', encoding='utf-8') as file:
+            file.write(self.generate(case))

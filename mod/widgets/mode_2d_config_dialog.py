@@ -5,19 +5,16 @@
 from PySide import QtGui
 
 from mod.translation_tools import __
-from mod.freecad_tools import get_fc_object, get_fc_view_object
 from mod.dialog_tools import error_dialog
-from mod.constants import WIDTH_2D
-from mod.enums import FreeCADDisplayMode
-
-from mod.dataobjects.case import Case
 
 
 class Mode2DConfigDialog(QtGui.QDialog):
     ''' A dialog to configure features of going into 2D mode. '''
 
-    def __init__(self):
+    def __init__(self, case_limits_y_value: float):
         super().__init__()
+
+        self.stored_y_value = 0.0
 
         self.setWindowTitle(__("Set Y position"))
 
@@ -35,7 +32,7 @@ class Mode2DConfigDialog(QtGui.QDialog):
         self.y_pos_intro_layout = QtGui.QHBoxLayout()
         self.y_pos_intro_label = QtGui.QLabel(__("New Y position (mm): "))
         self.y2_pos_input = QtGui.QLineEdit()
-        self.y2_pos_input.setText(str(get_fc_object('Case_Limits').Placement.Base.y))
+        self.y2_pos_input.setText(str(case_limits_y_value))
         self.y_pos_intro_layout.addWidget(self.y_pos_intro_label)
         self.y_pos_intro_layout.addWidget(self.y2_pos_input)
 
@@ -45,22 +42,14 @@ class Mode2DConfigDialog(QtGui.QDialog):
         self.y_pos_2d_layout.addLayout(self.y2d_button_layout)
 
         self.setLayout(self.y_pos_2d_layout)
-        self.exec_()
+        self.exit_status: QtGui.QDialog.DialogCode = self.exec_()
 
     def on_ok(self):
         ''' Tries to convert the current case to 2D mode while saving the 3D mode data. '''
-        Case.instance().info.last_3d_width = get_fc_object('Case_Limits').Width.Value
-
         try:
-            get_fc_object('Case_Limits').Placement.Base.y = float(self.y2_pos_input.text())
+            self.stored_y_value = float(self.y2_pos_input.text())
         except ValueError:
             error_dialog(__("The Y position that was inserted is not valid."))
-
-        get_fc_object('Case_Limits').Width.Value = WIDTH_2D
-        get_fc_view_object('Case_Limits').DisplayMode = FreeCADDisplayMode.FLATLINES
-        get_fc_view_object('Case_Limits').ShapeColor = (1.00, 0.00, 0.00)
-        get_fc_view_object('Case_Limits').Transparency = 90
-
         self.accept()
 
     def on_cancel(self):

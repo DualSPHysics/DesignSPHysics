@@ -3,7 +3,6 @@
 ''' DesignSPHysics main data structure. '''
 
 from mod.stdout_tools import debug
-from mod.freecad_tools import get_fc_object
 
 from mod.constants import VERSION
 from mod.enums import ObjectType
@@ -139,13 +138,6 @@ class Case():
         corrected_index = index + 1
         if 1 <= corrected_index < len(self.objects) - 1:
             self.objects.insert(corrected_index + 1, self.objects.pop(corrected_index))
-
-    def delete_invalid_objects(self) -> None:
-        ''' Deletes invalid objects from the simulation. '''
-        for object_name in self.get_all_simulation_object_names():
-            fc_object = get_fc_object(object_name)
-            if not fc_object or fc_object.InList:
-                self.remove_object(object_name)
 
     def get_out_xml_file_path(self) -> str:
         ''' Constructs the path for the out xml file needed to execute DualSPHysics. '''

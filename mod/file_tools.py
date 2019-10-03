@@ -11,12 +11,15 @@ meant to use with FreeCAD.
 '''
 
 import math
-import os
 import pickle
 import json
+import shutil
+import glob
 
 from sys import platform
 from datetime import datetime
+from traceback import print_exc
+from os import path, chdir, makedirs, remove
 
 import FreeCAD
 import FreeCADGui
@@ -24,12 +27,17 @@ import Mesh
 import Fem
 from femmesh.femmesh2mesh import femmesh_2_mesh
 
-from mod.stdout_tools import log, warning, error
+from mod.stdout_tools import log, warning, error, debug
 from mod.translation_tools import __
+from mod.xml import XMLExporter
+from mod.dialog_tools import error_dialog
+from mod.executable_tools import refocus_cwd
+from mod.freecad_tools import document_count, prompt_close_all_documents
 
 from mod.enums import FreeCADObjectType
 from mod.constants import APP_NAME
 from mod.constants import VERSION, PICKLE_PROTOCOL, DIVIDER
+
 
 from mod.dataobjects.acceleration_input import AccelerationInput
 from mod.dataobjects.movement import Movement
@@ -57,9 +65,211 @@ from mod.dataobjects.relaxation_zone_uniform import RelaxationZoneUniform
 from mod.dataobjects.relaxation_zone_file import RelaxationZoneFile
 
 
+def load_case(load_path: str) -> "Case":
+    ''' Loads a case from the given folder and returns its Case data. '''
+    refocus_cwd()
+    project_folder_path = path.dirname(load_path)
+    freecad_document_file_path = path.abspath("{}/DSPH_Case.FCStd".format(project_folder_path))
+
+    if not path.isfile(freecad_document_file_path):
+        error_dialog(__("DSPH_Case.FCStd file could not be found. Please check if the project was moved or the file was renamed."))
+        return None
+
+    if document_count() and not prompt_close_all_documents():
+        return None
+
+    FreeCAD.open(project_folder_path + "/DSPH_Case.FCStd")
+
+    with open(load_path, 'rb') as load_picklefile:
+        try:
+            return pickle.load(load_picklefile)
+        except AttributeError:
+            error_dialog(__("There was an error opening the case. Case Data file seems to be corrupted."))
+            return None
+
+
+def save_case(save_name: str, case: "Case") -> None:
+    ''' Saves a case to disk in the given path. '''
+    project_name = save_name.split('/')[-1]
+    case.path = save_name
+    case.name = project_name
+
+    if not path.exists(save_name):
+        makedirs(save_name)
+
+    if not path.exists("{}/{}_out".format(save_name, project_name)):
+        makedirs("{}/{}_out".format(save_name, project_name))
+
+    # Copy files from movements and change its paths to be inside the project.
+    for _, mkproperties in case.mkbasedproperties.items():
+        for movement in mkproperties.movements:
+            if isinstance(movement, SpecialMovement):
+                if isinstance(movement.generator, FileGen) or isinstance(movement.generator, RotationFileGen):
+                    filename = movement.generator.filename
+                    debug("Copying {} to {}".format(filename, save_name))
+
+                    # Change directory to de case one, so if file path is already relative it copies it to the
+                    # out folder
+                    chdir(save_name)
+
+                    try:
+                        # Copy to project root
+                        shutil.copy2(filename, save_name)
+                    except shutil.Error:
+                        # Probably already copied the file.
+                        pass
+                    except IOError:
+                        error("Unable to copy {} into {}".format(filename, save_name))
+
+                    try:
+                        # Copy to project out folder
+                        shutil.copy2(filename, save_name + "/" + project_name + "_out")
+
+                        movement.generator.filename = "{}".format(filename.split("/")[-1])
+                    except shutil.Error:
+                        # Probably already copied the file.
+                        pass
+                    except IOError:
+                        error("Unable to copy {} into {}".format(filename, save_name))
+
+    # Copy files from Acceleration input and change paths to be inside the project folder.
+    for aid in case.acceleration_input.acclist:
+        filename = aid.datafile
+        debug("Copying {} to {}".format(filename, save_name + "/" + project_name + "_out"))
+
+        # Change directory to de case one, so if file path is already relative it copies it to the
+        # out folder
+        chdir(save_name)
+
+        try:
+            # Copy to project root
+            shutil.copy2(filename, save_name)
+        except shutil.Error:
+            # Probably already copied the file.
+            pass
+        except IOError:
+            error("Unable to copy {} into {}".format(filename, save_name))
+
+        try:
+            # Copy to project out folder
+            shutil.copy2(filename, save_name + "/" + project_name + "_out")
+
+            aid.datafile = filename.split("/")[-1]
+
+        except shutil.Error:
+            # Probably already copied the file.
+            pass
+        except IOError:
+            error("Unable to copy {} into {}".format(filename, save_name))
+
+    # Copy files from pistons and change paths to be inside the project folder.
+    for _, mkproperties in case.mkbasedproperties.items():
+        if isinstance(mkproperties.mlayerpiston, MLPiston1D):
+            filename = mkproperties.mlayerpiston.filevelx
+            debug("Copying {} to {}".format(filename, save_name + "/" + project_name + "_out"))
+            # Change directory to de case one, so if file path is already relative it copies it to the
+            # out folder
+            chdir(save_name)
+
+            try:
+                # Copy to project root
+                shutil.copy2(filename, save_name)
+            except shutil.Error:
+                # Probably already copied the file.
+                pass
+            except IOError:
+                error("Unable to copy {} into {}".format(filename, save_name))
+
+            try:
+                # Copy to project out folder
+                shutil.copy2(filename, save_name + "/" + project_name + "_out")
+
+                mkproperties.mlayerpiston.filevelx = filename.split("/")[-1]
+            except shutil.Error:
+                # Probably already copied the file.
+                pass
+            except IOError:
+                error("Unable to copy {} into {}".format(filename, save_name))
+
+        if isinstance(mkproperties.mlayerpiston, MLPiston2D):
+            veldata = mkproperties.mlayerpiston.veldata
+            for v in veldata:
+                filename = v.filevelx
+                debug("Copying {} to {}".format(filename, save_name + "/" + project_name + "_out"))
+                # Change directory to de case one, so if file path is already relative it copies it to the
+                # out folder
+                chdir(save_name)
+
+                try:
+                    # Copy to project root
+                    shutil.copy2(filename, save_name)
+                except shutil.Error:
+                    # Probably already copied the file.
+                    pass
+                except IOError:
+                    error("Unable to copy {} into {}".format(filename, save_name))
+
+                try:
+                    # Copy to project out folder
+                    shutil.copy2(filename, save_name + "/" + project_name + "_out")
+
+                    v.filevelx = filename.split("/")[-1]
+                except shutil.Error:
+                    # Probably already copied the file.
+                    pass
+                except IOError:
+                    error("Unable to copy {} into {}".format(filename, save_name))
+
+    # Copies files needed for RelaxationZones into the project folder and changes data paths to relative ones.
+    if isinstance(case.relaxation_zone, RelaxationZoneFile):
+        # Need to copy the abc_x*_y*.csv file series to the out folder
+        filename = case.relaxation_zone.filesvel
+
+        # Change directory to de case one, so if file path is already relative it copies it to the
+        # out folder
+        chdir(save_name)
+
+        for f in glob.glob("{}*".format(filename)):
+            debug("Copying {} to {}".format(filename, save_name + "/" + project_name + "_out"))
+            try:
+                # Copy to project root
+                shutil.copy2(f, save_name)
+            except shutil.Error:
+                # Probably already copied the file.
+                pass
+            except IOError:
+                error("Unable to copy {} into {}".format(filename, save_name))
+
+            try:
+                # Copy to project out folder
+                shutil.copy2(f, save_name + "/" + project_name + "_out")
+
+                case.relaxation_zone.filesvel = filename.split("/")[-1]
+            except shutil.Error:
+                # Probably already copied the file.
+                pass
+            except IOError:
+                error("Unable to copy {} into {}".format(filename, save_name))
+
+    # Dumps all the case data to an XML file.
+    XMLExporter().save_to_disk(save_name, case)
+
+    case.info.needs_to_run_gencase = False
+
+    # Save data array on disk. It is saved as a binary file with Pickle.
+    try:
+        with open(save_name + "/casedata.dsphdata", 'wb') as picklefile:
+            pickle.dump(case, picklefile, PICKLE_PROTOCOL)
+    except Exception:
+        print_exc()
+        error_dialog(__("There was a problem saving the DSPH information file (casedata.dsphdata)."))
+
+    refocus_cwd()
+
+
 def get_default_config_file():
     ''' Gets the default-config.json from disk '''
-    current_script_folder = os.path.dirname(os.path.realpath(__file__))
+    current_script_folder = path.dirname(path.realpath(__file__))
     with open('{}/../default-config.json'.format(current_script_folder)) as data_file:
         loaded_data = json.load(data_file)
 
@@ -78,7 +288,7 @@ def get_saved_config_file() -> str:
 
 def get_designsphysics_path() -> str:
     ''' Returns the module base path. '''
-    return "{}/../".format(os.path.dirname(os.path.abspath(__file__)))
+    return "{}/../".format(path.dirname(path.abspath(__file__)))
 
 
 def import_geo(filename=None, scale_x=1, scale_y=1, scale_z=1, name=None, autofill=False, data=None):
@@ -177,7 +387,7 @@ def get_default_data():
 
     # Try to load saved paths. This way the user does not need
     # to introduce the software paths every time
-    if os.path.isfile(FreeCAD.getUserAppDataDir() + '/dsph_data-{}.dsphdata'.format(VERSION)):
+    if path.isfile(FreeCAD.getUserAppDataDir() + '/dsph_data-{}.dsphdata'.format(VERSION)):
         try:
             with open(FreeCAD.getUserAppDataDir() + '/dsph_data-{}.dsphdata'.format(VERSION), 'rb') as picklefile:
                 log("Found data file. Loading data from disk.")
@@ -195,7 +405,7 @@ def get_default_data():
 
         except Exception:
             warning(__("The main settings file is corrupted. Deleting..."))
-            os.remove(picklefile.name)
+            remove(picklefile.name)
             data['gencase_path'] = ""
             data['dsphysics_path'] = ""
             data['partvtk4_path'] = ""
@@ -449,9 +659,9 @@ def dump_to_xml(data, save_name):
                     # TODO: Convert to STL or maintain original format?
                     stl_file_path = save_name + "/" + o.Name + ".stl"
                     Mesh.export(__objs__, stl_file_path)
-                    relative_file_path = os.path.relpath(
+                    relative_file_path = path.relpath(
                         stl_file_path,
-                        os.path.dirname(os.path.abspath(stl_file_path))
+                        path.dirname(path.abspath(stl_file_path))
                     )
                     autofill_enabled = str(data["geo_autofill"][o.Name] if o.Name in data["geo_autofill"].keys() else False).lower()
                     f.write('\t\t\t\t\t<drawfilestl file="{}" objname="{}" autofill="{}">\n'.format(relative_file_path, o.Label, autofill_enabled))

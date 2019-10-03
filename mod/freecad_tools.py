@@ -12,13 +12,14 @@ import Draft
 
 from PySide import QtGui
 
+from mod.translation_tools import __
 from mod.stdout_tools import log, error
+from mod.dialog_tools import ok_cancel_dialog, error_dialog
+
 from mod.constants import APP_NAME, SINGLETON_DOCUMENT_NAME, DEFAULT_WORKBENCH, CASE_LIMITS_OBJ_NAME, CASE_LIMITS_3D_LABEL
 from mod.constants import CASE_LIMITS_LINE_COLOR, CASE_LIMITS_LINE_WIDTH, CASE_LIMITS_DEFAULT_LENGTH, FREECAD_MIN_VERSION
-from mod.constants import MAIN_WIDGET_INTERNAL_NAME, PROP_WIDGET_INTERNAL_NAME, WIDTH_2D, VERSION
+from mod.constants import MAIN_WIDGET_INTERNAL_NAME, PROP_WIDGET_INTERNAL_NAME, WIDTH_2D, FILLBOX_DEFAULT_LENGTH, FILLBOX_DEFAULT_RADIUS
 from mod.enums import FreeCADObjectType, FreeCADDisplayMode
-from mod.dialog_tools import ok_cancel_dialog, error_dialog
-from mod.translation_tools import __
 
 
 def delete_existing_docks():
@@ -193,3 +194,28 @@ def enforce_fillbox_restrictions():
             if sub_element.Placement.Rotation.Angle != 0.0:
                 sub_element.Placement.Rotation.Angle = 0.0
                 error(__("Can't change rotation on Fillbox inner objects"))
+
+
+def save_current_freecad_document(project_path: str) -> None:
+    ''' Saves the current freecad document with the common name. '''
+    FreeCAD.ActiveDocument.saveAs("{}/DSPH_Case.FCStd".format(project_path))
+    FreeCADGui.SendMsgToActiveView("Save")
+
+
+def add_fillbox_objects() -> None:
+    ''' Adds the necessary objects for a fillbox and sets its properties. '''
+    fillbox_gp = FreeCAD.ActiveDocument.addObject(FreeCADObjectType.FOLDER, "FillBox")
+    fillbox_point = FreeCAD.ActiveDocument.addObject(FreeCADObjectType.SPHERE, "FillPoint")
+    fillbox_limits = FreeCAD.ActiveDocument.addObject(FreeCADObjectType.BOX, "FillLimit")
+    fillbox_limits.Length = FILLBOX_DEFAULT_LENGTH
+    fillbox_limits.Width = FILLBOX_DEFAULT_LENGTH
+    fillbox_limits.Height = FILLBOX_DEFAULT_LENGTH
+    fillbox_limits.ViewObject.DisplayMode = FreeCADDisplayMode.WIREFRAME
+    fillbox_limits.ViewObject.LineColor = (0.00, 0.78, 1.00)
+    fillbox_point.Radius.Value = FILLBOX_DEFAULT_RADIUS
+    fillbox_point.Placement.Base = FreeCAD.Vector(500, 500, 500)
+    fillbox_point.ViewObject.ShapeColor = (0.00, 0.00, 0.00)
+    fillbox_gp.addObject(fillbox_limits)
+    fillbox_gp.addObject(fillbox_point)
+    FreeCAD.ActiveDocument.recompute()
+    FreeCADGui.SendMsgToActiveView("ViewFit")

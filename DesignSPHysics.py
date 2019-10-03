@@ -17,7 +17,7 @@ import FreeCADGui
 from PySide import QtGui, QtCore
 
 from mod.translation_tools import __
-from mod.freecad_tools import check_compatibility, document_count, prompt_close_all_documents, get_fc_main_window
+from mod.freecad_tools import check_compatibility, document_count, prompt_close_all_documents, get_fc_main_window, get_fc_object
 from mod.freecad_tools import delete_existing_docks, valid_document_environment, enforce_case_limits_restrictions, enforce_fillbox_restrictions
 from mod.stdout_tools import print_license, log
 
@@ -95,7 +95,10 @@ def on_tree_item_selection_change():
         properties_widget.configure_to_no_selection()
 
     # Delete invalid or already deleted (in FreeCAD) objects
-    Case.instance().delete_invalid_objects()
+    for object_name in Case.instance().get_all_simulation_object_names():
+        fc_object = get_fc_object(object_name)
+        if not fc_object or fc_object.InList:
+            Case.instance().remove_object(object_name)
 
     # Update dsph objects list
     dualsphysics_dock.refresh_object_list()
@@ -115,23 +118,27 @@ def selection_monitor():
     ''' Watches and fixes unwanted changes in the current selection. '''
     time.sleep(2.0)
     while True:
-        if not valid_document_environment():
-            dualsphysics_dock.adapt_to_no_case()
+        try:
+            if not valid_document_environment():
+                dualsphysics_dock.adapt_to_no_case()
+                time.sleep(1.0)
+                continue
+
+            if not FreeCADGui.Selection.getSelection():
+                properties_widget.configure_to_no_selection()
+
+            enforce_case_limits_restrictions(Case.instance().mode3d)
+            enforce_fillbox_restrictions()
+
+            # Adjust damping properties when freecad related properties change
+            for name, damping_zone in Case.instance().damping_zones.items():
+                if FreeCAD.ActiveDocument:
+                    damping_group = FreeCAD.ActiveDocument.getObject(name)
+                    damping_zone.overlimit = damping_group.OutList[1].Length.Value
+
+            time.sleep(0.5)
+        except AttributeError:
             time.sleep(1.0)
-            continue
-
-        if not FreeCADGui.Selection.getSelection():
-            properties_widget.configure_to_no_selection()
-
-        enforce_case_limits_restrictions(Case.instance().mode3d)
-        enforce_fillbox_restrictions()
-
-        # Adjust damping properties when freecad related properties change
-        for name, damping_zone in Case.instance().damping_zones.items():
-            damping_group = FreeCAD.ActiveDocument.getObject(name)
-            damping_zone.overlimit = damping_group.OutList[1].Length.Value
-
-        time.sleep(0.5)
 
 
 # Launch a monitor thread that ensures some things are not changed.
