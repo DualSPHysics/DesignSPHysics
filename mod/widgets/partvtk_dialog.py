@@ -13,8 +13,11 @@ from mod.dataobjects.case import Case
 class PartVTKDialog(QtGui.QDialog):
     ''' A PartVTK Configuration and Exeuction Dialog. '''
 
-    def __init__(self):
+    def __init__(self, post_processing_widget):
         super().__init__()
+
+        self.post_processing_widget = post_processing_widget
+
         self.setModal(False)
         self.setWindowTitle(__("PartVTK Tool"))
         self.partvtk_tool_layout = QtGui.QVBoxLayout()
@@ -130,7 +133,7 @@ class PartVTKDialog(QtGui.QDialog):
         else:
             export_parameters['additional_parameters'] = ''
 
-        partvtk_export(export_parameters)
+        partvtk_export(export_parameters, self.post_processing_widget)
         self.accept()
 
     def on_pvtk_type_all_change(self, state):

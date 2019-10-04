@@ -20,8 +20,10 @@ data = {}
 class FlowToolDialog(QtGui.QDialog):
     ''' DesignSPHysics FlowTool Config and Execution Dialog. '''
 
-    def __init__(self):
+    def __init__(self, post_processing_widget):
         super().__init__()
+
+        self.post_processing_widget = post_processing_widget
 
         self.setModal(False)
         self.setWindowTitle(__("FlowTool Tool"))
@@ -160,5 +162,5 @@ class FlowToolDialog(QtGui.QDialog):
 
         create_flowtool_boxes(Case.instance().path + '/' + 'fileboxes.txt', data['flowtool_boxes'])
 
-        flowtool_export(export_parameters)
+        flowtool_export(export_parameters, self.post_processing_widget)
         self.accept()

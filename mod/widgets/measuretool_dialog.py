@@ -13,8 +13,10 @@ from mod.widgets.measuretool_points_dialog import MeasureToolPointsDialog
 class MeasureToolDialog(QtGui.QDialog):
     ''' DesignSPHysics ComputeForces Config and Execution Dialog. '''
 
-    def __init__(self):
+    def __init__(self, post_processing_widget):
         super().__init__()
+
+        self.post_processing_widget = post_processing_widget
 
         self.setModal(False)
         self.setWindowTitle(__("MeasureTool"))
@@ -157,7 +159,7 @@ class MeasureToolDialog(QtGui.QDialog):
         else:
             export_parameters['additional_parameters'] = ''
 
-        measuretool_export(export_parameters)
+        measuretool_export(export_parameters, self.post_processing_widget)
         self.accept()
 
     def on_mtool_measure_all_change(self, state):

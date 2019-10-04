@@ -24,7 +24,7 @@ class DockPostProcessingWidget(QtGui.QWidget):
         self.main_layout = QtGui.QVBoxLayout()
         self.main_layout.setContentsMargins(0, 0, 0, 0)
 
-        self.title_label = QtGui.QLabel("<b>" + __("Post-processing") + "</b>")
+        self.title_label = QtGui.QLabel("<b>{}</b>".format(__("Post-processing")))
         self.title_label.setWordWrap(True)
 
         self.first_row_layout = QtGui.QHBoxLayout()
@@ -44,12 +44,12 @@ class DockPostProcessingWidget(QtGui.QWidget):
         self.isosurface_button.setToolTip(__("Opens the IsoSurface tool."))
         self.flowtool_button.setToolTip(__("Opens the FlowTool tool."))
 
-        self.partvtk_button.clicked.connect(PartVTKDialog)
-        self.computeforces_button.clicked.connect(ComputeForcesDialog)
-        self.floatinginfo_button.clicked.connect(FloatingInfoDialog)
-        self.measuretool_button.clicked.connect(MeasureToolDialog)
-        self.isosurface_button.clicked.connect(IsoSurfaceDialog)
-        self.flowtool_button.clicked.connect(FlowToolDialog)
+        self.partvtk_button.clicked.connect(lambda: PartVTKDialog(self))
+        self.computeforces_button.clicked.connect(lambda: ComputeForcesDialog(self))
+        self.floatinginfo_button.clicked.connect(lambda: FloatingInfoDialog(self))
+        self.measuretool_button.clicked.connect(lambda: MeasureToolDialog(self))
+        self.isosurface_button.clicked.connect(lambda: IsoSurfaceDialog(self))
+        self.flowtool_button.clicked.connect(lambda: FlowToolDialog(self))
 
         self.main_layout.addWidget(self.title_label)
         self.first_row_layout.addWidget(self.partvtk_button)
@@ -63,3 +63,13 @@ class DockPostProcessingWidget(QtGui.QWidget):
         self.main_layout.addLayout(self.second_row_layout)
 
         self.setLayout(self.main_layout)
+
+    def adapt_to_export_start(self) -> None:
+        ''' Adapts the widget to post processing tool start. '''
+        self.setWindowTitle("<b>{} ({})</b>".format(__("Post-processing"), __("Exporting")))
+        self.setEnabled(False)
+
+    def adapt_to_export_finished(self) -> None:
+        ''' Adapts the widget to post processing tool finis. '''
+        self.setEnabled(True)
+        self.setWindowTitle("<b>{}</b>".format(__("Post-processing")))

@@ -208,7 +208,6 @@ class DockPreProcessingWidget(QtGui.QWidget):
             return
 
         try:
-            # FIXME: This is ugly. Refactor this.
             total_particles_text = output[output.index("Total particles: "):output.index(" (bound=")]
             total_particles = int(total_particles_text[total_particles_text.index(": ") + 2:])
             Case.instance().info.particle_number = total_particles

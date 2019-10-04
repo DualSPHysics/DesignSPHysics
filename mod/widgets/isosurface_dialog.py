@@ -13,8 +13,10 @@ from mod.dataobjects.case import Case
 class IsoSurfaceDialog(QtGui.QDialog):
     ''' DesignSPHysics IsoSurface Config and Execution Dialog. '''
 
-    def __init__(self):
+    def __init__(self, post_processing_widget):
         super().__init__()
+
+        self.post_procesing_widget = post_processing_widget
 
         self.setModal(False)
         self.setWindowTitle(__("IsoSurface Tool"))
@@ -88,5 +90,5 @@ class IsoSurfaceDialog(QtGui.QDialog):
 
         export_parameters['open_paraview'] = self.isosfc_open_at_end.isChecked()
 
-        isosurface_export(export_parameters)
+        isosurface_export(export_parameters, self.post_procesing_widget)
         self.accept()

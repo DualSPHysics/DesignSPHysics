@@ -10,8 +10,11 @@ from mod.post_processing_tools import floatinginfo_export
 class FloatingInfoDialog(QtGui.QDialog):
     ''' FloatingInfo configuration and execution Dialog. '''
 
-    def __init__(self):
+    def __init__(self, post_processing_widget):
         super().__init__()
+
+        self.post_processing_widget = post_processing_widget
+
         self.setModal(False)
         self.setWindowTitle(__("FloatingInfo Tool"))
         self.floatinfo_tool_layout = QtGui.QVBoxLayout()
@@ -67,6 +70,6 @@ class FloatingInfoDialog(QtGui.QDialog):
         export_parameters['filename'] = self.finfo_filename_text.text()
         export_parameters['additional_parameters'] = self.finfo_additional_parameters_text.text()
 
-        floatinginfo_export(export_parameters)
+        floatinginfo_export(export_parameters, self.post_processing_widget)
 
         self.accept()

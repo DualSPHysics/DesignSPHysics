@@ -3,6 +3,7 @@
 '''DesignSPHysics Dock Execution Widget '''
 
 import os
+from traceback import print_exc
 
 from PySide import QtGui, QtCore
 
@@ -19,6 +20,10 @@ from mod.widgets.run_additional_parameters_dialog import RunAdditionalParameters
 
 class DockSimulationWidget(QtGui.QWidget):
     '''DesignSPHysics Dock Execution Widget '''
+
+    simulation_complete = QtCore.Signal(bool)
+    simulation_started = QtCore.Signal()
+    simulation_cancelled = QtCore.Signal()
 
     def __init__(self):
         super().__init__()
@@ -74,7 +79,7 @@ class DockSimulationWidget(QtGui.QWidget):
         run_fs_watcher = QtCore.QFileSystemWatcher()
 
         Case.instance().info.is_simulation_done = False
-        # FIXME: When simulation starts we should disable some widgets to prevent the user messing up the execution
+        self.simulation_started.emit()
 
         # Cancel button handler
         def on_cancel():
@@ -83,7 +88,7 @@ class DockSimulationWidget(QtGui.QWidget):
                 Case.instance().info.current_process.kill()
             run_dialog.hide_all()
             Case.instance().info.is_simulation_done = False
-            # FIXME: Enable/Disable widgets accordingly when we cancel a simulation
+            self.simulation_cancelled.emit()
 
         run_dialog.cancelled.connect(on_cancel)
         run_dialog.run_button_details.clicked.connect(run_dialog.toggle_run_details)
@@ -106,14 +111,13 @@ class DockSimulationWidget(QtGui.QWidget):
             if exit_code == 0:
                 # Simulation went correctly
                 Case.instance().info.is_simulation_done = True
-                # FIXME: Enable/Disable appropriate widgets when simulation completes correctly
+                self.simulation_complete.emit(True)
             else:
                 # In case of an error
                 if "exception" in str(output).lower():
                     error(__("Exception in execution."))
                     run_dialog.hide()
-
-                    # FIXME: Enable/Disable widgets accordingly when a simulation exits with errors.
+                    self.simulation_complete.emit(False)
                     error_dialog(__("An error occurred during execution. Make sure that parameters exist and are properly defined. "
                                     "You can also check your execution device (update the driver of your GPU). Read the details for more information."),
                                  str(output).split("================================")[1])
@@ -143,7 +147,7 @@ class DockSimulationWidget(QtGui.QWidget):
                 with open(Case.instance().path + '/' + Case.instance().name + "_out/Run.out", "r") as run_file:
                     run_file_data = run_file.readlines()
             except Exception:
-                pass
+                print_exc()
 
             # Fill details window
             run_dialog.set_detail_text("".join(run_file_data))

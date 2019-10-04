@@ -10,8 +10,10 @@ from mod.post_processing_tools import computeforces_export
 class ComputeForcesDialog(QtGui.QDialog):
     ''' DesignSPHysics ComputeForces Config and Execution Dialog. '''
 
-    def __init__(self):
+    def __init__(self, post_processing_widget):
         super().__init__()
+
+        self.post_processing_widget = post_processing_widget
 
         self.setModal(False)
         self.setWindowTitle(__("ComputeForces Tool"))
@@ -89,7 +91,7 @@ class ComputeForcesDialog(QtGui.QDialog):
         export_parameters['onlyprocess'] = self.cfces_onlyprocess_text.text()
         export_parameters['filename'] = self.cfces_filename_text.text()
         export_parameters['additional_parameters'] = self.cfces_additional_parameters_text.text()
-        computeforces_export(export_parameters)
+        computeforces_export(export_parameters, self.post_processing_widget)
         self.accept()
 
     def on_cfces_onlyprocess_changed(self):

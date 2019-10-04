@@ -67,6 +67,9 @@ class DesignSPHysicsDock(QtGui.QDockWidget):
         self.pre_proccessing_widget.case_created.connect(self.adapt_to_new_case)
         self.pre_proccessing_widget.gencase_completed.connect(self.adapt_to_gencase_done)
         self.pre_proccessing_widget.simulation_completed.connect(self.adapt_to_simulation_done)
+        self.simulation_widget.simulation_complete.connect(self.adapt_to_simulation_done)
+        self.simulation_widget.simulation_started.connect(self.adapt_to_simulation_start)
+        self.simulation_widget.simulation_cancelled.connect(self.adapt_to_simulation_cancel)
 
     def on_signal_update_dp(self):
         ''' Defines the behaviour on DP update request. '''
@@ -101,3 +104,11 @@ class DesignSPHysicsDock(QtGui.QDockWidget):
     def adapt_to_simulation_done(self, state: bool) -> None:
         ''' Adapts the dock to an environment depending on if GenCase was executed. '''
         self.post_processing_widget.setEnabled(state)
+
+    def adapt_to_simulation_start(self):
+        ''' Adapts the dock to an environment in which a simulation has just started. '''
+        self.simulation_widget.setEnabled(False)
+
+    def adapt_to_simulation_cancel(self):
+        ''' Adapts the dock to an environment in which a simulation has been canceled. '''
+        self.simulation_widget.setEnabled(True)
