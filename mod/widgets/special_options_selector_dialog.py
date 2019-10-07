@@ -217,8 +217,8 @@ class SpecialOptionsSelectorDialog(QtGui.QDialog):
 
     def on_accinput_button(self):
         ''' Acceleration input button behaviour.'''
-        accinput_dialog = AccelerationInputDialog(data['accinput'])
+        accinput_dialog = AccelerationInputDialog(Case.instance().acceleration_input)
         result = accinput_dialog.exec_()
 
         if result == QtGui.QDialog.Accepted:
-            data['accinput'] = accinput_dialog.get_result()
+            Case.instance().acceleration_input = accinput_dialog.get_result()

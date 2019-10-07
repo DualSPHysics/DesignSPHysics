@@ -373,9 +373,6 @@ def get_default_data():
     #[reuseids, resizetime, userefilling, determlimit]
     data['inlet_object'] = [0, 0.5, 0, 0]
 
-    # Acceleration Input
-    data['accinput'] = AccelerationInput()
-
     # Try to load saved paths. This way the user does not need
     # to introduce the software paths every time
     if path.isfile(FreeCAD.getUserAppDataDir() + '/dsph_data-{}.dsphdata'.format(VERSION)):
