@@ -18,6 +18,7 @@ class SimulationObject():
         self.obj_mk: int = obj_mk
         self.type: ObjectType = obj_type
         self.fillmode: ObjectFillMode = fillmode
+        self.autofill: bool = None # Only set for imported objects
         self.faces_configuration: FacesProperty = None
 
     def clean_faces(self):

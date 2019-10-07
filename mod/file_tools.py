@@ -298,11 +298,11 @@ def get_designsphysics_path() -> str:
     return "{}/../".format(path.dirname(path.abspath(__file__)))
 
 
-def import_geo(filename=None, scale_x=1, scale_y=1, scale_z=1, name=None, autofill=False, data=None):
+def import_geo(filename=None, scale_x=1, scale_y=1, scale_z=1, name=None, autofill=False, case=None):
     ''' Opens a GEO file, preprocesses it and saves it
     int temp files to load with FreeCAD. '''
-    if data is None:
-        raise RuntimeError("Data parameter must be populated")
+    if case is None:
+        raise RuntimeError("Case parameter must be populated")
 
     file_type = ".{}".format(filename.split(".")[-1]).lower()
 
@@ -325,7 +325,7 @@ def import_geo(filename=None, scale_x=1, scale_y=1, scale_z=1, name=None, autofi
     Mesh.show(loaded_mesh, name)
     FreeCADGui.SendMsgToActiveView("ViewFit")
 
-    data["geo_autofill"][name] = autofill
+    case.get_simulation_object(name).autofill = autofill
 
 
 def create_flowtool_boxes(file_path: str, boxes: list):
@@ -375,10 +375,7 @@ def get_default_data():
 
     # Faces objects
     data['faces'] = dict()
-
-    # GEO autofill. {name: true/false}
-    data['geo_autofill'] = dict()
-
+    
     # MultiLayer Pistons: {mk: MLPistonObject}
     data['mlayerpistons'] = dict()
 
