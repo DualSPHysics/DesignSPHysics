@@ -2,543 +2,350 @@
 # -*- coding: utf-8 -*-
 '''DesignSPHysics Post-Processing tools utilities. '''
 
-import glob
 import subprocess
 
 from PySide import QtCore
 
 from mod.translation_tools import __
-from mod.stdout_tools import log, debug
 from mod.dialog_tools import error_dialog
 from mod.freecad_tools import get_fc_main_window
-
-from mod.dataobjects.case import Case
+from mod.file_tools import get_total_exported_parts_from_disk
 
 from mod.widgets.info_dialog import InfoDialog
 from mod.widgets.export_progress_dialog import ExportProgressDialog
 
 
-def partvtk_export(export_parameters, post_processing_widget) -> None:
-    ''' Export VTK button behaviour.
-    Launches a process while disabling the button. '''
+def partvtk_export(options, case, post_processing_widget) -> None:
+    ''' Export VTK button behaviour. Launches a process while disabling the button. '''
     post_processing_widget.adapt_to_export_start()
 
-    export_dialog = ExportProgressDialog()
+    save_extension: str = {0: "vtk", 1: "csv", 2: "asc"}[options["save_mode"]]
+    save_flag: str = {0: "-savevtk", 1: "-savecsv", 2: "-saveascii"}[options["save_mode"]]
 
-    # Find total export parts and adjust progress bar
-    partfiles = glob.glob(Case.instance().path + '/' + Case.instance().name + "_out/" + "Part_*.bi4")
-    for filename in partfiles:
-        Case.instance().info.exported_parts = max(int(filename.split("Part_")[1].split(".bi4")[0]), Case.instance().info.exported_parts)
-    export_dialog.set_range(0, Case.instance().info.exported_parts)
-    export_dialog.set_value(0)
+    exported_parts: int = get_total_exported_parts_from_disk(case.get_out_folder_path())
 
+    export_dialog = ExportProgressDialog(0, exported_parts)
     export_dialog.show()
+
+    case.info.current_output = ""
+
+    # Build parameters
+    executable_parameters = ["-dirin {}".format(case.get_out_folder_path()),
+                             "{save_flag} {out_path}{file_name}".format(save_flag=save_flag, out_path=case.get_out_folder_path(), file_name=options["file_name"]),
+                             "-onlytype: {save_types} {additional}".format(save_types=options["save_types"], additional=options["additional_parameters"])]
+
+    # Information ready handler.
+    def on_stdout_ready():
+        ''' Updates the export dialog on every stdout available from the process. '''
+        current_output = str(export_process.readAllStandardOutput())
+        case.info.current_output += current_output
+        try:
+            current_part = current_output.split("{}_".format(options['file_name']))[1]
+            current_part = int(current_part.split(save_extension[0]))
+        except IndexError:
+            current_part = export_dialog.get_value()
+        export_dialog.update_data(current_part)
 
     # Cancel button handler
     def on_cancel():
-        log(__("Stopping export"))
-        if Case.instance().info.current_export_process is not None:
-            Case.instance().info.current_export_process.kill()
-
+        ''' Kills the process and cancels the export dialog. '''
+        export_process.kill()
         post_processing_widget.adapt_to_export_finished()
         export_dialog.reject()
-
-    export_dialog.on_cancel.connect(on_cancel)
 
     # PartVTK export finish handler
     def on_export_finished(exit_code):
-
+        ''' Closes and displays info/error about the process. '''
         post_processing_widget.adapt_to_export_finished()
-
         export_dialog.accept()
 
-        if exit_code == 0:
-            # Exported correctly
-            Case.instance().info.current_info_dialog = InfoDialog(
-                info_text=__("PartVTK finished successfully"),
-                detailed_text=Case.instance().info.current_output
-            )
+        if not exit_code:
+            InfoDialog(info_text=__("PartVTK finished successfully"), detailed_text=case.info.current_output)
         else:
-            error_dialog(
-                __("There was an error on the post-processing. Show details to view the errors."),
-                detailed_text=Case.instance().info.current_output
-            )
+            error_dialog(__("There was an error on the post-processing. Show details to view the errors."), detailed_text=case.info.current_output)
 
-        # Bit of code that tries to open ParaView if the option was selected.
-        if export_parameters['open_paraview']:
-            formats = {0: "vtk", 1: "csv", 2: "asc"}
-            subprocess.Popen(
-                [
-                    Case.instance().executable_paths.paraview,
-                    "--data={}\\{}_..{}".format(Case.instance().path + '\\' + Case.instance().name + '_out',
-                                                export_parameters['file_name'], formats[export_parameters['save_mode']])
-                ],
-                stdout=subprocess.PIPE)
+        if options['open_paraview']:
+            subprocess.Popen([case.executable_paths.paraview, "--data={}\\{}_..{}".format(case.info.get_out_folder_path, options['file_name'], save_extension)], stdout=subprocess.PIPE)
 
-    Case.instance().info.current_output = ""
+    export_dialog.on_cancel.connect(on_cancel)
     export_process = QtCore.QProcess(get_fc_main_window())
     export_process.finished.connect(on_export_finished)
-
-    # Set save mode according to the dropdown menu
-    save_mode = '-savevtk '
-    if export_parameters['save_mode'] == 0:
-        save_mode = '-savevtk '
-    elif export_parameters['save_mode'] == 1:
-        save_mode = '-savecsv '
-    elif export_parameters['save_mode'] == 2:
-        save_mode = '-saveascii '
-
-    # Build parameters
-    static_params_exp = [
-        '-dirin ' + Case.instance().path +
-        '/' + Case.instance().name + '_out/',
-        save_mode + Case.instance().path + '/' + Case.instance().name +
-        '_out/' + export_parameters['file_name'],
-        '-onlytype:' + export_parameters['save_types'] +
-        " " + export_parameters['additional_parameters']
-    ]
-
-    debug("Going to execute: {} {}".format(Case.instance().executable_paths.partvtk4, " ".join(static_params_exp)))
-
-    # Start process
-    export_process.start(Case.instance().executable_paths.partvtk4, static_params_exp)
-    Case.instance().info.current_export_process = export_process
-
-    # Information ready handler.
-    def on_stdout_ready():
-        # Update progress bar
-        current_output = str(Case.instance().info.current_export_process.readAllStandardOutput())
-        Case.instance().info.current_output += current_output
-        try:
-            current_part = current_output.split(
-                "{}_".format(export_parameters['file_name']))[1]
-            if export_parameters['save_mode'] == 0:
-                current_part = int(current_part.split(".vtk")[0])
-            elif export_parameters['save_mode'] == 1:
-                current_part = int(current_part.split(".csv")[0])
-            elif export_parameters['save_mode'] == 2:
-                current_part = int(current_part.split(".asc")[0])
-        except IndexError:
-            current_part = export_dialog.get_value()
-        export_dialog.set_value(current_part)
-        export_dialog.setWindowTitle(__("Exporting: ") + str(current_part) + "/" + str(Case.instance().info.exported_parts))
-
-    Case.instance().info.current_export_process.readyReadStandardOutput.connect(on_stdout_ready)
+    export_process.readyReadStandardOutput.connect(on_stdout_ready)
+    export_process.start(case.executable_paths.partvtk4, executable_parameters)
 
 
-def floatinginfo_export(export_parameters, post_processing_widget) -> None:
+def floatinginfo_export(options, case, post_processing_widget) -> None:
     ''' FloatingInfo tool export. '''
     post_processing_widget.adapt_to_export_start()
 
-    export_dialog = ExportProgressDialog()
+    exported_parts: int = get_total_exported_parts_from_disk(case.get_out_folder_path())
 
-    # Find total export parts
-    partfiles = glob.glob(Case.instance().path + '/' + Case.instance().name + "_out/" + "Part_*.bi4")
-    for filename in partfiles:
-        Case.instance().info.exported_parts = max(int(filename.split("Part_")[1].split(".bi4")[0]), Case.instance().info.exported_parts)
-    export_dialog.set_range(0, Case.instance().info.exported_parts)
-    export_dialog.set_value(0)
-
+    export_dialog = ExportProgressDialog(0, exported_parts)
     export_dialog.show()
 
-    def on_cancel():
-        log(__("Stopping export"))
-        if Case.instance().info.current_export_process is not None:
-            Case.instance().info.current_export_process.kill()
+    case.info.current_output = ""
 
+    # Build parameters
+    executable_parameters = ["-dirin {}".format(case.get_out_folder_path()),
+                             "-savedata {out_path}{file_name}".format(out_path=case.get_out_folder_path(), file_name=options["filename"]),
+                             options['additional_parameters']]
+
+    if options['onlyprocess']:
+        executable_parameters .append('-onlymk:' + options['onlyprocess'])
+
+    def on_stdout_ready():
+        ''' Updates the export dialog on every stdout avasilable from the proces. '''
+        current_output = str(export_process.readAllStandardOutput())
+        case.info.current_output += current_output
+        try:
+            current_part = int(current_output.split("Part_")[1].split("  ")[0])
+        except IndexError:
+            current_part = export_dialog.get_value()
+        export_dialog.update_data(current_part)
+
+    def on_cancel():
+        ''' Kills the process and cancels the export dialog. '''
+        export_process.kill()
         post_processing_widget.adapt_to_export_finished()
         export_dialog.reject()
 
-    export_dialog.on_cancel.connect(on_cancel)
-
     def on_export_finished(exit_code):
-
+        ''' Closes and displays info/error about the proces. '''
         post_processing_widget.adapt_to_export_finished()
         export_dialog.accept()
-        if exit_code == 0:
-            # Exported correctly
-            Case.instance().info.current_info_dialog = InfoDialog(
-                info_text=__("FloatingInfo finished successfully"),
-                detailed_text=Case.instance().info.current_output)
-        else:
-            error_dialog(
-                __("There was an error on the post-processing. Press the details button to see the error"),
-                detailed_text=Case.instance().info.current_output
-            )
 
-    Case.instance().info.current_output = ""
+        if not exit_code:
+            case.info.current_info_dialog = InfoDialog(info_text=__("FloatingInfo finished successfully"), detailed_text=case.info.current_output)
+        else:
+            error_dialog(__("There was an error on the post-processing. Show details to view the errors."), detailed_text=case.info.current_output)
+
+    export_dialog.on_cancel.connect(on_cancel)
     export_process = QtCore.QProcess(get_fc_main_window())
     export_process.finished.connect(on_export_finished)
-
-    static_params_exp = [
-        '-dirin ' + Case.instance().path + '/' + Case.instance().name +
-        '_out/', '-savemotion',
-        '-savedata ' + Case.instance().path + '/' + Case.instance().name + '_out/' +
-        export_parameters['filename'], export_parameters['additional_parameters']
-    ]
-
-    if export_parameters['onlyprocess']:
-        static_params_exp.append('-onlymk:' + export_parameters['onlyprocess'])
-
-    export_process.start(Case.instance().executable_paths.floatinginfo, static_params_exp)
-    Case.instance().info.current_export_process = export_process
-
-    def on_stdout_ready():
-        # update progress bar
-        current_output = str(Case.instance().info.current_export_process.readAllStandardOutput())
-        Case.instance().info.current_output += current_output
-        try:
-            current_part = current_output.split("Part_")[1].split("  ")[0]
-        except IndexError:
-            current_part = export_dialog.get_value()
-        export_dialog.set_value(int(current_part))
-        export_dialog.setWindowTitle(__("Exporting: ") + str(current_part) + "/" + str(Case.instance().info.exported_parts))
-
-    Case.instance().info.current_export_process.readyReadStandardOutput.connect(on_stdout_ready)
+    export_process.readyReadStandardOutput.connect(on_stdout_ready)
+    export_process.start(case.executable_paths.floatinginfo, executable_parameters)
 
 
-def computeforces_export(export_parameters, post_processing_widget) -> None:
+def computeforces_export(options, case, post_processing_widget) -> None:
     ''' ComputeForces tool export. '''
     post_processing_widget.adapt_to_export_start()
 
-    export_dialog = ExportProgressDialog()
+    save_flag: str = {0: "-savevtk", 1: "-savecsv", 2: "-saveascii"}[options["save_mode"]]
 
-    # Find total export parts
-    partfiles = glob.glob(Case.instance().path + '/' + Case.instance().name + "_out/" + "Part_*.bi4")
-    for filename in partfiles:
-        Case.instance().info.exported_parts = max(int(filename.split("Part_")[1].split(".bi4")[0]), Case.instance().info.exported_parts)
-    export_dialog.set_range(0, Case.instance().info.exported_parts)
-    export_dialog.set_value(0)
+    exported_parts: int = get_total_exported_parts_from_disk(case.get_out_folder_path())
 
+    export_dialog = ExportProgressDialog(0, exported_parts)
     export_dialog.show()
 
-    def on_cancel():
-        log(__("Stopping export"))
-        if Case.instance().info.current_export_process is not None:
-            Case.instance().info.current_export_process.kill()
+    case.info.current_output = ""
 
+    executable_parameters = ["-dirin {}".format(case.get_out_folder_path()),
+                             "-filexml {out_path}{case_name}.xml".format(out_path=case.get_out_folder_path(), case_name=case.name),
+                             "{save_flag} {out_path}{file_name}".format(save_flag=save_flag, out_path=case.get_out_folder_path(), file_name=options["filename"]),
+                             options['additional_parameters']]
+
+    if options['onlyprocess']:
+        executable_parameters.append("{}{}".format(options['onlyprocess_tag'], options['onlyprocess']))
+
+    def on_stdout_ready():
+        ''' Updates the export dialog on every stdout available from the process. '''
+        current_output = str(case.info.current_export_process.readAllStandardOutput())
+        case.info.current_output += current_output
+        try:
+            current_part = int(current_output.split("Part_")[1].split(".bi4")[0])
+        except IndexError:
+            current_part = export_dialog.get_value()
+        export_dialog.update_data(current_part)
+
+    def on_cancel():
+        ''' Kills the process and cancels the export dialog. '''
+        export_process.kill()
         post_processing_widget.adapt_to_export_finished()
         export_dialog.reject()
 
-    export_dialog.on_cancel.connect(on_cancel)
-
     def on_export_finished(exit_code):
-
+        ''' Closes and displays info/error about the process. '''
         post_processing_widget.adapt_to_export_finished()
         export_dialog.accept()
-        if exit_code == 0:
-            # Exported correctly
-            Case.instance().info.current_info_dialog = InfoDialog(
-                info_text=__("ComputeForces finished successfully."),
-                detailed_text=Case.instance().info.current_output
-            )
-        else:
-            error_dialog(
-                __("There was an error on the post-processing. Press the details button to see the error"),
-                detailed_text=Case.instance().info.current_output
-            )
 
-    Case.instance().info.current_output = ""
+        if not exit_code:
+            InfoDialog(info_text=__("ComputeForces finished successfully"), detailed_text=case.info.current_output)
+        else:
+            error_dialog(__("There was an error on the post-processing. Show details to view the errors."), detailed_text=case.info.current_output)
+
+    export_dialog.on_cancel.connect(on_cancel)
     export_process = QtCore.QProcess(get_fc_main_window())
     export_process.finished.connect(on_export_finished)
-
-    save_mode = '-savevtk '
-    if export_parameters['save_mode'] == 0:
-        save_mode = '-savevtk '
-    elif export_parameters['save_mode'] == 1:
-        save_mode = '-savecsv '
-    elif export_parameters['save_mode'] == 2:
-        save_mode = '-saveascii '
-
-    static_params_exp = [
-        '-dirin ' + Case.instance().path +
-        '/' + Case.instance().name + '_out/',
-        '-filexml ' + Case.instance().path + '/' +
-        Case.instance().name + '_out/' + Case.instance().name + '.xml',
-        save_mode + Case.instance().path + '/' + Case.instance().name + '_out/' +
-        export_parameters['filename'], export_parameters['additional_parameters']
-    ]
-
-    if export_parameters['onlyprocess']:
-        static_params_exp.append(export_parameters['onlyprocess_tag'] + export_parameters['onlyprocess'])
-
-    export_process.start(Case.instance().executable_paths.computeforces, static_params_exp)
-    Case.instance().info.current_export_process = export_process
-
-    def on_stdout_ready():
-        # update progress bar
-        current_output = str(Case.instance().info.current_export_process.readAllStandardOutput())
-        Case.instance().info.current_output += current_output
-        try:
-            current_part = current_output.split("Part_")[1].split(".bi4")[0]
-        except IndexError:
-            current_part = export_dialog.get_value()
-        export_dialog.set_value(int(current_part))
-        export_dialog.setWindowTitle(__("Exporting: ") + str(current_part) + "/" + str(Case.instance().info.exported_parts))
-
-    Case.instance().info.current_export_process.readyReadStandardOutput.connect(
-        on_stdout_ready)
+    export_process.readyReadStandardOutput.connect(on_stdout_ready)
+    export_process.start(case.executable_paths.computeforces, executable_parameters)
 
 
-def measuretool_export(export_parameters, post_processing_widget) -> None:
+def measuretool_export(options, case, post_processing_widget) -> None:
     ''' MeasureTool tool export. '''
     post_processing_widget.adapt_to_export_start()
 
-    export_dialog = ExportProgressDialog()
+    save_flag: str = {0: "-savevtk", 1: "-savecsv", 2: "-saveascii"}[options["save_mode"]]
+    exported_parts: int = get_total_exported_parts_from_disk(case.get_out_folder_path())
 
-    # Find total export parts
-    partfiles = glob.glob(Case.instance().path + '/' + Case.instance().name + "_out/" + "Part_*.bi4")
-    for filename in partfiles:
-        Case.instance().info.exported_parts = max(int(filename.split("Part_")[1].split(".bi4")[0]), Case.instance().info.exported_parts)
-    export_dialog.set_range(0, Case.instance().info.exported_parts)
-    export_dialog.set_value(0)
-
+    export_dialog = ExportProgressDialog(0, exported_parts)
     export_dialog.show()
 
-    def on_cancel():
-        log(__("Stopping export"))
-        if Case.instance().info.current_export_process is not None:
-            Case.instance().info.current_export_process.kill()
-
-        post_processing_widget.adapt_to_export_finished()
-        export_dialog.reject()
-
-    export_dialog.on_cancel.connect(on_cancel)
-
-    def on_export_finished(exit_code):
-
-        post_processing_widget.adapt_to_export_finished()
-        export_dialog.accept()
-        if exit_code == 0:
-            # Exported correctly
-            Case.instance().info.current_info_dialog = InfoDialog(
-                info_text=__("MeasureTool finished successfully."),
-                detailed_text=Case.instance().info.current_output
-            )
-        else:
-            error_dialog(
-                __("There was an error on the post-processing. Press the details button to see the error"),
-                detailed_text=Case.instance().info.current_output
-            )
-
-    Case.instance().info.current_output = ""
-    export_process = QtCore.QProcess(get_fc_main_window())
-    export_process.finished.connect(on_export_finished)
-
-    save_mode = '-savecsv '
-    if export_parameters['save_mode'] == 0:
-        save_mode = '-savevtk '
-    elif export_parameters['save_mode'] == 1:
-        save_mode = '-savecsv '
-    elif export_parameters['save_mode'] == 2:
-        save_mode = '-saveascii '
+    case.info.current_output = ""
 
     # Save points to disk to later use them as parameter
-    if len(Case.instance().info.measuretool_points) > len(Case.instance().info.measuretool_grid):
+    # FIXME: Refactor this. Should be created on file_tools
+    if len(case.info.measuretool_points) > len(case.info.measuretool_grid):
         # Save points
-        with open(Case.instance().path + '/' + 'points.txt', 'w') as f:
+        with open(case.path + '/' + 'points.txt', 'w') as f:
             f.write("POINTS\n")
-            for curr_point in Case.instance().info.measuretool_points:
+            for curr_point in case.info.measuretool_points:
                 f.write("{}  {}  {}\n".format(*curr_point))
     else:
         # Save grid
-        with open(Case.instance().path + '/' + 'points.txt', 'w') as f:
-            for curr_point in Case.instance().info.measuretool_grid:
+        with open(case.path + '/' + 'points.txt', 'w') as f:
+            for curr_point in case.info.measuretool_grid:
                 f.write("POINTSLIST\n")
                 f.write("{}  {}  {}\n{}  {}  {}\n{}  {}  {}\n".format(*curr_point))
 
-    calculate_height = '-height' if export_parameters['calculate_water_elevation'] else ''
-
-    static_params_exp = [
-        '-dirin ' + Case.instance().path +
-        '/' + Case.instance().name + '_out/',
-        '-filexml ' + Case.instance().path + '/' +
-        Case.instance().name + '_out/' + Case.instance().name + '.xml',
-        save_mode + Case.instance().path + '/' +
-        Case.instance().name + '_out/' + export_parameters['filename'],
-        '-points ' + Case.instance().path + '/points.txt', '-vars:' +
-        export_parameters['save_vars'], calculate_height,
-        export_parameters['additional_parameters']
-    ]
-
-    export_process.start(Case.instance().executable_paths.measuretool, static_params_exp)
-    Case.instance().info.current_export_process = export_process
+    executable_parameters = ["-dirin {out_path}".format(out_path=case.get_out_folder_path()),
+                             "-filexml {out_path}{case_name}.xml".format(out_path=case.get_out_folder_path(), case_name=case.name),
+                             "{save_flag} {out_path}{file_name}".format(save_flag=save_flag, out_path=case.get_out_folder_path(), file_name=options["filename"]),
+                             "-points {case_path}/points.txt".format(case_path=case.path),
+                             "-vars:{save_vars}".format(save_vars=options["save_vars"]),
+                             "-height" if options["calculate_water_elevation"] else "",
+                             options["additional_parameters"]]
 
     def on_stdout_ready():
-        # update progress bar
-        current_output = str(Case.instance().info.current_export_process.readAllStandardOutput())
-        Case.instance().info.current_output += current_output
+        ''' Updates the export dialog on every stdout available from the process. '''
+        current_output = str(case.info.current_export_process.readAllStandardOutput())
+        case.info.current_output += current_output
         try:
-            current_part = current_output.split("/Part_")[1].split(".bi4")[0]
+            current_part = int(current_output.split("/Part_")[1].split(".bi4")[0])
         except IndexError:
             current_part = export_dialog.get_value()
-        export_dialog.set_value(int(current_part))
-        export_dialog.setWindowTitle(__("Exporting: ") + str(current_part) + "/" + str(Case.instance().info.exported_parts))
+        export_dialog.update_data(current_part)
 
-    Case.instance().info.current_export_process.readyReadStandardOutput.connect(on_stdout_ready)
-
-
-def isosurface_export(export_parameters, post_processing_widget) -> None:
-    ''' Export IsoSurface button behaviour.
-    Launches a process while disabling the button. '''
-    post_processing_widget.adapt_to_export_start()
-
-    export_dialog = ExportProgressDialog()
-
-    # Find total export parts and adjust progress bar
-    partfiles = glob.glob(Case.instance().path + '/' + Case.instance().name + "_out/" + "Part_*.bi4")
-    for filename in partfiles:
-        Case.instance().info.exported_parts = max(int(filename.split("Part_")[1].split(".bi4")[0]), Case.instance().info.exported_parts)
-    export_dialog.set_range(0, Case.instance().info.exported_parts)
-    export_dialog.set_value(0)
-
-    export_dialog.show()
-
-    # Cancel button handler
     def on_cancel():
-        log(__("Stopping export"))
-        if Case.instance().info.current_export_process is not None:
-            Case.instance().info.current_export_process.kill()
-
+        ''' Kills the process and cancels the export dialog. '''
+        export_process.kill()
         post_processing_widget.adapt_to_export_finished()
         export_dialog.reject()
 
-    export_dialog.on_cancel.connect(on_cancel)
-
-    # IsoSurface export finish handler
     def on_export_finished(exit_code):
-
+        ''' Closes and displays info/error about the process. '''
         post_processing_widget.adapt_to_export_finished()
-
         export_dialog.accept()
 
-        if exit_code == 0:
-            # Exported correctly
-            Case.instance().info.current_info_dialog = InfoDialog(
-                info_text=__("IsoSurface finished successfully."),
-                detailed_text=Case.instance().info.current_output)
+        if not exit_code:
+            InfoDialog(info_text=__("MeasureTool finished successfully."), detailed_text=case.info.current_output)
         else:
-            error_dialog(
-                __("There was an error on the post-processing."),
-                detailed_text=Case.instance().info.current_output
-            )
+            error_dialog(__("There was an error on the post-processing. Show details to view the errors."), detailed_text=case.info.current_output)
 
-        # Bit of code that tries to open ParaView if the option was selected.
-        if export_parameters['open_paraview']:
-            subprocess.Popen(
-                [Case.instance().executable_paths.paraview, "--data={}\\{}_..{}".format(
-                    Case.instance().path + '\\' + Case.instance().name + '_out',
-                    export_parameters['file_name'], "vtk")],
-                stdout=subprocess.PIPE)
-
-    Case.instance().info.current_output = ""
+    export_dialog.on_cancel.connect(on_cancel)
     export_process = QtCore.QProcess(get_fc_main_window())
     export_process.finished.connect(on_export_finished)
+    export_process.readyReadStandardOutput.connect(on_stdout_ready)
+    export_process.start(case.executable_paths.measuretool, executable_parameters)
+
+
+def isosurface_export(options, case, post_processing_widget) -> None:
+    ''' Export IsoSurface button behaviour. Launches a process while disabling the button. '''
+    post_processing_widget.adapt_to_export_start()
+
+    exported_parts: int = get_total_exported_parts_from_disk(case.get_out_folder_path())
+    export_dialog = ExportProgressDialog(0, exported_parts)
+    export_dialog.show()
+
+    case.info.current_output = ""
 
     # Build parameters
-    static_params_exp = [
-        '-dirin ' + Case.instance().path +
-        '/' + Case.instance().name + '_out/',
-        export_parameters["surface_or_slice"] + " " + Case.instance().path + '/' +
-        Case.instance().name + '_out/' + export_parameters['file_name'] +
-        " " + export_parameters['additional_parameters']
-    ]
+    executable_parameters = ["-dirin {out_path}".format(out_path=case.get_out_folder_path()),
+                             "{surface_or_slice} {out_path}{file_name}".format(surface_or_slice=options["surface_or_slice"], out_path=case.get_out_folder_path(), file_name=options["filename"]),
+                             options['additional_parameters']]
 
-    # Start process
-    export_process.start(Case.instance().executable_paths.isosurface, static_params_exp)
-    Case.instance().info.current_export_process = export_process
-
-    # Information ready handler.
     def on_stdout_ready():
-        # Update progress bar
-        current_output = str(Case.instance().info.current_export_process.readAllStandardOutput())
-        Case.instance().info.current_output += current_output
+        ''' Updates the export dialog on every stdout available from the process. '''
+        current_output = str(case.info.current_export_process.readAllStandardOutput())
+        case.info.current_output += current_output
         try:
-            current_part = current_output.split("{}_".format(export_parameters['file_name']))[1]
+            current_part = current_output.split("{}_".format(options['file_name']))[1]
             current_part = int(current_part.split(".vtk")[0])
         except IndexError:
             current_part = export_dialog.get_value()
-        export_dialog.set_value(current_part)
-        export_dialog.setWindowTitle(__("Exporting: ") + str(current_part) + "/" + str(Case.instance().info.exported_parts))
+        export_dialog.update_data(current_part)
 
-    Case.instance().info.current_export_process.readyReadStandardOutput.connect(on_stdout_ready)
-
-
-def flowtool_export(export_parameters, post_processing_widget) -> None:
-    ''' Export FlowTool button behaviour.
-    Launches a process while disabling the button. '''
-    post_processing_widget.adapt_to_export_start()
-
-    export_dialog = ExportProgressDialog()
-
-    # Find total export parts and adjust progress bar
-    partfiles = glob.glob(Case.instance().path + '/' + Case.instance().name + "_out/" + "Part_*.bi4")
-    for filename in partfiles:
-        Case.instance().info.exported_parts = max(int(filename.split("Part_")[1].split(".bi4")[0]), Case.instance().info.exported_parts)
-    export_dialog.set_range(0, Case.instance().info.exported_parts)
-    export_dialog.set_value(0)
-
-    export_dialog.show()
-
-    # Cancel button handler
     def on_cancel():
-        log(__("Stopping export"))
-        if Case.instance().info.current_export_process is not None:
-            Case.instance().info.current_export_process.kill()
-
+        ''' Kills the process and cancels the export dialog. '''
+        export_process.kill()
         post_processing_widget.adapt_to_export_finished()
         export_dialog.reject()
 
-    export_dialog.on_cancel.connect(on_cancel)
-
-    # FlowTool export finish handler
     def on_export_finished(exit_code):
-
+        ''' Closes and displays info/error about the process. '''
         post_processing_widget.adapt_to_export_finished()
         export_dialog.accept()
 
-        if exit_code == 0:
-            # Exported correctly
-            Case.instance().info.current_info_dialog = InfoDialog(
-                info_text=__("FlowTool finished successfully."),
-                detailed_text=Case.instance().info.current_output)
+        if not exit_code:
+            InfoDialog(info_text=__("IsoSurface finished successfully"), detailed_text=case.info.current_output)
         else:
-            error_dialog(
-                __("There was an error on the post-processing."),
-                detailed_text=Case.instance().info.current_output
-            )
+            error_dialog(__("There was an error on the post-processing. Show details to view the errors."), detailed_text=case.info.current_output)
 
-    Case.instance().info.current_output = ""
+        # FIXME: Refactor this to be in executable_tools
+        if options['open_paraview']:
+            subprocess.Popen([case.executable_paths.paraview, "--data={}\\{}_..{}".format(case.path + '\\' + case.name + '_out', options['file_name'], "vtk")], stdout=subprocess.PIPE)
+
+    export_dialog.on_cancel.connect(on_cancel)
     export_process = QtCore.QProcess(get_fc_main_window())
     export_process.finished.connect(on_export_finished)
+    export_process.readyReadStandardOutput.connect(on_stdout_ready)
+    export_process.start(case.executable_paths.isosurface, executable_parameters)
 
-    # Build parameters
-    static_params_exp = [
-        '-dirin ' + Case.instance().path +
-        '/' + Case.instance().name + '_out/',
-        '-fileboxes ' + Case.instance().path + '/' + 'fileboxes.txt',
-        '-savecsv ' + Case.instance().path + '/' + Case.instance().name +
-        '_out/' + '{}.csv'.format(export_parameters['csv_name']),
-        '-savevtk ' + Case.instance().path + '/' + Case.instance().name + '_out/' + '{}.vtk'.format(
-            export_parameters['vtk_name']) +
-        " " + export_parameters['additional_parameters']
-    ]
 
-    # Start process
-    export_process.start(Case.instance().executable_paths.flowtool, static_params_exp)
-    Case.instance().info.current_export_process = export_process
+def flowtool_export(options, case, post_processing_widget) -> None:
+    ''' Export FlowTool button behaviour. Launches a process while disabling the button. '''
+    post_processing_widget.adapt_to_export_start()
 
-    # Information ready handler.
+    exported_parts: int = get_total_exported_parts_from_disk(case.get_out_folder_path())
+    export_dialog = ExportProgressDialog(0, exported_parts)
+    export_dialog.show()
+
+    case.info.current_output = ""
+
+    executable_parameters = ["-dirin {}".format(case.get_out_folder_path()),
+                             "-fileboxes {case_path}/fileboxes.txt".format(case_path=case.path),
+                             "-savecsv {out_path}{file_name}.csv".format(out_path=case.get_out_folder_path(), file_name=options["csv_name"]),
+                             "-savevtk {out_path}{file_name}.vtk".format(out_path=case.get_out_folder_path(), file_name=options["vtk_name"]),
+                             options['additional_parameters']]
+
     def on_stdout_ready():
-        # Update progress bar
-        current_output = str(Case.instance().info.current_export_process.readAllStandardOutput())
-        Case.instance().info.current_output += current_output
+        ''' Updates the export dialog on every stdout available from the process. '''
+        current_output = str(case.info.current_export_process.readAllStandardOutput())
+        case.info.current_output += current_output
         try:
-            current_part = current_output.split("{}_".format(export_parameters['vtk_name']))[1]
+            current_part = current_output.split("{}_".format(options['vtk_name']))[1]
             current_part = int(current_part.split(".vtk")[0])
         except IndexError:
             current_part = export_dialog.get_value()
-        export_dialog.set_value(current_part)
-        export_dialog.setWindowTitle(__("Exporting: ") + str(current_part) + "/" + str(Case.instance().info.exported_parts))
+        export_dialog.update_data(current_part)
 
-    Case.instance().info.current_export_process.readyReadStandardOutput.connect(on_stdout_ready)
+    def on_cancel():
+        ''' Kills the process and cancels the export dialog. '''
+        export_process.kill()
+        post_processing_widget.adapt_to_export_finished()
+        export_dialog.reject()
+
+    def on_export_finished(exit_code):
+        ''' Closes and displays info/error about the process. '''
+        post_processing_widget.adapt_to_export_finished()
+        export_dialog.accept()
+
+        if not exit_code:
+            InfoDialog(info_text=__("FlowTool finished successfully"), detailed_text=case.info.current_output)
+        else:
+            error_dialog(__("There was an error on the post-processing. Show details to view the errors."), detailed_text=case.info.current_output)
+
+    export_dialog.on_cancel.connect(on_cancel)
+    export_process = QtCore.QProcess(get_fc_main_window())
+    export_process.finished.connect(on_export_finished)
+    export_process.readyReadStandardOutput.connect(on_stdout_ready)
+    export_process.start(case.executable_paths.flowtool, executable_parameters)

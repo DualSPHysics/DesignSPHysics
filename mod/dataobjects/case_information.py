@@ -18,7 +18,6 @@ class CaseInformation():
         self.run_additional_parameters: str = ''
         self.needs_to_run_gencase: bool = True
         self.current_process: QtCore.QProcess = None
-        self.current_export_process: QtCore.QProcess = None
         self.current_info_dialog: QtGui.QDialog = None
         self.current_output: str = ""
         self.measuretool_points: list = []

@@ -12,8 +12,14 @@ class ExportProgressDialog(QtGui.QDialog):
 
     on_cancel = QtCore.Signal()
 
-    def __init__(self):
+    def __init__(self, minimum: int, maximum: int):
         super().__init__()
+
+        self.minimum = minimum
+        self.maximum = maximum
+
+        self.set_range(self.minimum, self.maximum)
+        self.set_value(self.minimum)
 
         self.setModal(False)
         self.setWindowTitle(__("Exporting: {}%").format("0"))
@@ -48,3 +54,8 @@ class ExportProgressDialog(QtGui.QDialog):
     def get_value(self) -> int:
         ''' Returns the current progress bar value. '''
         return self.export_progbar_bar.value()
+
+    def update_data(self, current) -> None:
+        ''' Updates the dialog with new data. '''
+        self.set_value(current)
+        self.setWindowTitle("{export_text} {current}/{total}").format(export_text=__("Exporting:"), current=current, total=self.maximum)

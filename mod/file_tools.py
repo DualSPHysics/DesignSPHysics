@@ -14,11 +14,12 @@ import math
 import pickle
 import json
 import shutil
-import glob
+import re
 
 from sys import platform
 from datetime import datetime
 from traceback import print_exc
+from glob import glob
 from os import path, chdir, makedirs, remove
 
 import FreeCAD
@@ -63,6 +64,11 @@ from mod.dataobjects.relaxation_zone_regular import RelaxationZoneRegular
 from mod.dataobjects.relaxation_zone_irregular import RelaxationZoneIrregular
 from mod.dataobjects.relaxation_zone_uniform import RelaxationZoneUniform
 from mod.dataobjects.relaxation_zone_file import RelaxationZoneFile
+
+
+def get_total_exported_parts_from_disk(out_folder_path) -> int:
+    ''' Gets the integer for the part with largest number on the out folder. '''
+    return int(re.search("Part_(.*).bi4", glob("{}/Part_*.bi4".format(out_folder_path))).group(1))
 
 
 def load_case(load_path: str) -> "Case":
@@ -229,7 +235,7 @@ def save_case(save_name: str, case: "Case") -> None:
         # out folder
         chdir(save_name)
 
-        for f in glob.glob("{}*".format(filename)):
+        for f in glob("{}*".format(filename)):
             debug("Copying {} to {}".format(filename, save_name + "/" + project_name + "_out"))
             try:
                 # Copy to project root
