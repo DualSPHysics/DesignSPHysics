@@ -373,9 +373,6 @@ def get_default_data():
     #[reuseids, resizetime, userefilling, determlimit]
     data['inlet_object'] = [0, 0.5, 0, 0]
 
-    # Relaxation zones for the case. Can only set one. None means no RZ is set
-    data['relaxationzone'] = None
-
     # Acceleration Input
     data['accinput'] = AccelerationInput()
 
