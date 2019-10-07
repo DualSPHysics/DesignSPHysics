@@ -373,12 +373,6 @@ def get_default_data():
     #[reuseids, resizetime, userefilling, determlimit]
     data['inlet_object'] = [0, 0.5, 0, 0]
 
-    # Faces objects
-    data['faces'] = dict()
-    
-    # MultiLayer Pistons: {mk: MLPistonObject}
-    data['mlayerpistons'] = dict()
-
     # Relaxation zones for the case. Can only set one. None means no RZ is set
     data['relaxationzone'] = None
 

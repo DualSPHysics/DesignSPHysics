@@ -24,6 +24,7 @@ from mod.widgets.inlet_config_dialog import InletConfigDialog
 from mod.widgets.chrono_config_dialog import ChronoConfigDialog
 
 from mod.dataobjects.case import Case
+from mod.dataobjects.mk_based_properties import MKBasedProperties
 from mod.dataobjects.ml_piston_1d import MLPiston1D
 from mod.dataobjects.ml_piston_2d import MLPiston2D
 from mod.dataobjects.relaxation_zone_regular import RelaxationZoneRegular
@@ -117,60 +118,40 @@ class SpecialOptionsSelectorDialog(QtGui.QDialog):
             return
 
         # Get selection mk
-        selection_mk = Case.instance().get_simulation_object(selection.Name).obj_mk
+        selection_mk: int = Case.instance().get_simulation_object(selection.Name).obj_mk
+        mk_properties: MKBasedProperties = Case.instance().get_mk_base_properties(selection_mk)
 
         # Check that this mk has no other motions applied
-        if Case.instance().get_mk_base_properties(selection_mk).has_movements():
+        if mk_properties.has_movements():
             # MK has motions applied. Warn the user and delete them
-            motion_delete_warning = ok_cancel_dialog(APP_NAME, __("This mk already has motions applied. Setting a Multi-layered piston will delete all of its movement. Are you sure?")
-                                                     )
+            motion_delete_warning = ok_cancel_dialog(APP_NAME, __("This mk already has motions applied. Setting a Multi-layered piston will delete all of its movement. Are you sure?"))
             if motion_delete_warning == QtGui.QMessageBox.Cancel:
                 return
-            else:
-                Case.instance().get_mk_base_properties(selection_mk).remove_all_movements()
+            mk_properties.remove_all_movements()
 
         # 1D or 2D piston
         if __("1 Dimension") in action.text():
-            # Check that there's no other multilayered piston for this mk
-            if selection_mk in data['mlayerpistons'].keys():
-                if not isinstance(data['mlayerpistons'][selection_mk], MLPiston1D):
-                    overwrite_warn = ok_cancel_dialog(APP_NAME, __("You're about to overwrite a previous coupling movement for this mk. Are you sure?"))
-                    if overwrite_warn == QtGui.QMessageBox.Cancel:
-                        return
+            if mk_properties.mlayerpiston and not isinstance(mk_properties.mlayerpiston, MLPiston1D):
+                overwrite_warn = ok_cancel_dialog(APP_NAME, __("You're about to overwrite a previous coupling movement for this mk. Are you sure?"))
+                if overwrite_warn == QtGui.QMessageBox.Cancel:
+                    return
 
-            if selection_mk in data['mlayerpistons'].keys() and isinstance(data['mlayerpistons'][selection_mk], MLPiston1D):
-                config_dialog = MLPiston1DConfigDialog(selection_mk, data['mlayerpistons'][selection_mk])
-            else:
-                config_dialog = MLPiston1DConfigDialog(selection_mk, None)
-
+            config_dialog = MLPiston1DConfigDialog(selection_mk, mk_properties.mlayerpiston)
             if config_dialog.result() == QtGui.QDialog.Accepted:
                 warning_dialog(__("All changes have been applied for mk = {}").format(selection_mk))
-
-            if config_dialog.mlpiston1d is None:
-                data['mlayerpistons'].pop(selection_mk, None)
-            else:
-                data['mlayerpistons'][selection_mk] = config_dialog.mlpiston1d
+            mk_properties.mlayerpiston = config_dialog.mlpiston1d
 
         if __("2 Dimensions") in action.text():
             # Check that there's no other multilayered piston for this mk
-            if selection_mk in data['mlayerpistons'].keys():
-                if not isinstance(data['mlayerpistons'][selection_mk], MLPiston2D):
-                    overwrite_warn = ok_cancel_dialog(APP_NAME, __("You're about to overwrite a previous coupling movement for this mk. Are you sure?"))
-                    if overwrite_warn == QtGui.QMessageBox.Cancel:
-                        return
+            if mk_properties.mlayerpiston and not isinstance(mk_properties.mlayerpiston, MLPiston2D):
+                overwrite_warn = ok_cancel_dialog(APP_NAME, __("You're about to overwrite a previous coupling movement for this mk. Are you sure?"))
+                if overwrite_warn == QtGui.QMessageBox.Cancel:
+                    return
 
-            if selection_mk in data['mlayerpistons'].keys() and isinstance(data['mlayerpistons'][selection_mk], MLPiston2D):
-                config_dialog = MLPiston2DConfigDialog(selection_mk, data['mlayerpistons'][selection_mk])
-            else:
-                config_dialog = MLPiston2DConfigDialog(selection_mk, None)
-
+            config_dialog = MLPiston2DConfigDialog(selection_mk, mk_properties.mlayerpiston)
             if config_dialog.result() == QtGui.QDialog.Accepted:
                 warning_dialog(__("All changes have been applied for mk = {}").format(selection_mk))
-
-            if config_dialog.mlpiston2d is None:
-                data['mlayerpistons'].pop(selection_mk, None)
-            else:
-                data['mlayerpistons'][selection_mk] = config_dialog.mlpiston2d
+            mk_properties.mlayerpiston = config_dialog.mlpiston2d
 
         self.accept()
 
