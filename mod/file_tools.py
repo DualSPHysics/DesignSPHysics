@@ -40,6 +40,7 @@ from mod.constants import APP_NAME
 from mod.constants import VERSION, PICKLE_PROTOCOL, DIVIDER
 
 
+from mod.dataobjects.flow_tool_box import FlowToolBox
 from mod.dataobjects.acceleration_input import AccelerationInput
 from mod.dataobjects.movement import Movement
 from mod.dataobjects.rect_motion import RectMotion
@@ -327,19 +328,20 @@ def import_geo(filename=None, scale_x=1, scale_y=1, scale_z=1, name=None, autofi
     data["geo_autofill"][name] = autofill
 
 
-def create_flowtool_boxes(path, boxes):
+def create_flowtool_boxes(file_path: str, boxes: list):
     ''' Creates a file with flowtool box information '''
-    with open(path, 'w') as f:
+    with open(file_path, 'w') as f:
+        box: FlowToolBox = None
         for box in boxes:
-            f.write("BOX @{}\n".format(box[1]))
-            f.write("{} {} {}\n".format(*box[2]))
-            f.write("{} {} {}\n".format(*box[3]))
-            f.write("{} {} {}\n".format(*box[4]))
-            f.write("{} {} {}\n".format(*box[5]))
-            f.write("{} {} {}\n".format(*box[6]))
-            f.write("{} {} {}\n".format(*box[7]))
-            f.write("{} {} {}\n".format(*box[8]))
-            f.write("{} {} {}\n".format(*box[9]))
+            f.write("BOX @{}\n".format(box.name))
+            f.write("{} {} {}\n".format(*box.point1))
+            f.write("{} {} {}\n".format(*box.point2))
+            f.write("{} {} {}\n".format(*box.point3))
+            f.write("{} {} {}\n".format(*box.point4))
+            f.write("{} {} {}\n".format(*box.point5))
+            f.write("{} {} {}\n".format(*box.point6))
+            f.write("{} {} {}\n".format(*box.point7))
+            f.write("{} {} {}\n".format(*box.point8))
             f.write("\n")
 
 
@@ -349,11 +351,6 @@ def get_default_data():
 
     data = dict()
     temp_data = dict()
-
-    # Post-processing info
-    # FlowTool Boxes: [ [id, "name", x1, x2,..., x8], ... ]
-    # id is an UUID
-    data['flowtool_boxes'] = list()
 
     # CHRONO objects
     data['chrono_objects'] = list()

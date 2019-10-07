@@ -41,6 +41,7 @@ class Case():
         self.objects: list = list()  # [SimulationObject]
         self.mkbasedproperties: dict = dict()  # {mk: MKBasedProperties}
         self.damping_zones: dict = dict()  # {freecad_object_name: Damping}
+        self.flowtool_boxes: list() # [FlowToolBox]
         self.periodicity: Periodicity = Periodicity()
         self.domain: SimulationDomain = SimulationDomain()
         self.executable_paths: ExecutablePaths = ExecutablePaths()

@@ -8,8 +8,8 @@ from mod.translation_tools import __
 from mod.dialog_tools import error_dialog
 from mod.gui_tools import get_icon
 
-# FIXME: Replace data occurrences for new Case structure
-data = {}
+from mod.dataobjects.case import Case
+from mod.dataobjects.flow_tool_box import FlowToolBox
 
 
 class FlowToolBoxEditDialog(QtGui.QDialog):
@@ -25,8 +25,8 @@ class FlowToolBoxEditDialog(QtGui.QDialog):
         # Find the box for which the button was pressed
         target_box = None
 
-        for box in data['flowtool_boxes']:
-            if box[0] == self.box_id:
+        for box in Case.instance().flowtool_boxes:
+            if box.id == self.box_id:
                 target_box = box
 
         # This should not happen but if no box is found with reference id, it spawns an error.
@@ -36,7 +36,7 @@ class FlowToolBoxEditDialog(QtGui.QDialog):
 
         self.box_edit_name_layout = QtGui.QHBoxLayout()
         self.box_edit_name_label = QtGui.QLabel(__("Box Name"))
-        self.box_edit_name_input = QtGui.QLineEdit(str(target_box[1]))
+        self.box_edit_name_input = QtGui.QLineEdit(target_box.name)
         self.box_edit_name_layout.addWidget(self.box_edit_name_label)
         self.box_edit_name_layout.addWidget(self.box_edit_name_input)
 
@@ -55,9 +55,9 @@ class FlowToolBoxEditDialog(QtGui.QDialog):
 
         self.box_edit_point_a_layout = QtGui.QHBoxLayout()
         self.box_edit_point_a_label = QtGui.QLabel(__("Point A (X, Y, Z)"))
-        self.box_edit_point_a_x = QtGui.QLineEdit(str(target_box[2][0]))
-        self.box_edit_point_a_y = QtGui.QLineEdit(str(target_box[2][1]))
-        self.box_edit_point_a_z = QtGui.QLineEdit(str(target_box[2][2]))
+        self.box_edit_point_a_x = QtGui.QLineEdit(str(target_box.point1[0]))
+        self.box_edit_point_a_y = QtGui.QLineEdit(str(target_box.point1[1]))
+        self.box_edit_point_a_z = QtGui.QLineEdit(str(target_box.point1[2]))
         self.box_edit_point_a_layout.addWidget(self.box_edit_point_a_label)
         self.box_edit_point_a_layout.addWidget(self.box_edit_point_a_x)
         self.box_edit_point_a_layout.addWidget(self.box_edit_point_a_y)
@@ -65,9 +65,9 @@ class FlowToolBoxEditDialog(QtGui.QDialog):
 
         self.box_edit_point_b_layout = QtGui.QHBoxLayout()
         self.box_edit_point_b_label = QtGui.QLabel(__("Point B (X, Y, Z)"))
-        self.box_edit_point_b_x = QtGui.QLineEdit(str(target_box[3][0]))
-        self.box_edit_point_b_y = QtGui.QLineEdit(str(target_box[3][1]))
-        self.box_edit_point_b_z = QtGui.QLineEdit(str(target_box[3][2]))
+        self.box_edit_point_b_x = QtGui.QLineEdit(str(target_box.point2[0]))
+        self.box_edit_point_b_y = QtGui.QLineEdit(str(target_box.point2[1]))
+        self.box_edit_point_b_z = QtGui.QLineEdit(str(target_box.point2[2]))
         self.box_edit_point_b_layout.addWidget(self.box_edit_point_b_label)
         self.box_edit_point_b_layout.addWidget(self.box_edit_point_b_x)
         self.box_edit_point_b_layout.addWidget(self.box_edit_point_b_y)
@@ -75,9 +75,9 @@ class FlowToolBoxEditDialog(QtGui.QDialog):
 
         self.box_edit_point_c_layout = QtGui.QHBoxLayout()
         self.box_edit_point_c_label = QtGui.QLabel(__("Point C (X, Y, Z)"))
-        self.box_edit_point_c_x = QtGui.QLineEdit(str(target_box[4][0]))
-        self.box_edit_point_c_y = QtGui.QLineEdit(str(target_box[4][1]))
-        self.box_edit_point_c_z = QtGui.QLineEdit(str(target_box[4][2]))
+        self.box_edit_point_c_x = QtGui.QLineEdit(str(target_box.point3[0]))
+        self.box_edit_point_c_y = QtGui.QLineEdit(str(target_box.point3[1]))
+        self.box_edit_point_c_z = QtGui.QLineEdit(str(target_box.point3[2]))
         self.box_edit_point_c_layout.addWidget(self.box_edit_point_c_label)
         self.box_edit_point_c_layout.addWidget(self.box_edit_point_c_x)
         self.box_edit_point_c_layout.addWidget(self.box_edit_point_c_y)
@@ -85,9 +85,9 @@ class FlowToolBoxEditDialog(QtGui.QDialog):
 
         self.box_edit_point_d_layout = QtGui.QHBoxLayout()
         self.box_edit_point_d_label = QtGui.QLabel(__("Point D (X, Y, Z)"))
-        self.box_edit_point_d_x = QtGui.QLineEdit(str(target_box[5][0]))
-        self.box_edit_point_d_y = QtGui.QLineEdit(str(target_box[5][1]))
-        self.box_edit_point_d_z = QtGui.QLineEdit(str(target_box[5][2]))
+        self.box_edit_point_d_x = QtGui.QLineEdit(str(target_box.point4[0]))
+        self.box_edit_point_d_y = QtGui.QLineEdit(str(target_box.point4[1]))
+        self.box_edit_point_d_z = QtGui.QLineEdit(str(target_box.point4[2]))
         self.box_edit_point_d_layout.addWidget(self.box_edit_point_d_label)
         self.box_edit_point_d_layout.addWidget(self.box_edit_point_d_x)
         self.box_edit_point_d_layout.addWidget(self.box_edit_point_d_y)
@@ -95,9 +95,9 @@ class FlowToolBoxEditDialog(QtGui.QDialog):
 
         self.box_edit_point_e_layout = QtGui.QHBoxLayout()
         self.box_edit_point_e_label = QtGui.QLabel(__("Point E (X, Y, Z)"))
-        self.box_edit_point_e_x = QtGui.QLineEdit(str(target_box[6][0]))
-        self.box_edit_point_e_y = QtGui.QLineEdit(str(target_box[6][1]))
-        self.box_edit_point_e_z = QtGui.QLineEdit(str(target_box[6][2]))
+        self.box_edit_point_e_x = QtGui.QLineEdit(str(target_box.point5[0]))
+        self.box_edit_point_e_y = QtGui.QLineEdit(str(target_box.point5[1]))
+        self.box_edit_point_e_z = QtGui.QLineEdit(str(target_box.point5[2]))
         self.box_edit_point_e_layout.addWidget(self.box_edit_point_e_label)
         self.box_edit_point_e_layout.addWidget(self.box_edit_point_e_x)
         self.box_edit_point_e_layout.addWidget(self.box_edit_point_e_y)
@@ -105,9 +105,9 @@ class FlowToolBoxEditDialog(QtGui.QDialog):
 
         self.box_edit_point_f_layout = QtGui.QHBoxLayout()
         self.box_edit_point_f_label = QtGui.QLabel(__("Point F (X, Y, Z)"))
-        self.box_edit_point_f_x = QtGui.QLineEdit(str(target_box[7][0]))
-        self.box_edit_point_f_y = QtGui.QLineEdit(str(target_box[7][1]))
-        self.box_edit_point_f_z = QtGui.QLineEdit(str(target_box[7][2]))
+        self.box_edit_point_f_x = QtGui.QLineEdit(str(target_box.point6[0]))
+        self.box_edit_point_f_y = QtGui.QLineEdit(str(target_box.point6[1]))
+        self.box_edit_point_f_z = QtGui.QLineEdit(str(target_box.point6[2]))
         self.box_edit_point_f_layout.addWidget(self.box_edit_point_f_label)
         self.box_edit_point_f_layout.addWidget(self.box_edit_point_f_x)
         self.box_edit_point_f_layout.addWidget(self.box_edit_point_f_y)
@@ -115,9 +115,9 @@ class FlowToolBoxEditDialog(QtGui.QDialog):
 
         self.box_edit_point_g_layout = QtGui.QHBoxLayout()
         self.box_edit_point_g_label = QtGui.QLabel(__("Point G (X, Y, Z)"))
-        self.box_edit_point_g_x = QtGui.QLineEdit(str(target_box[8][0]))
-        self.box_edit_point_g_y = QtGui.QLineEdit(str(target_box[8][1]))
-        self.box_edit_point_g_z = QtGui.QLineEdit(str(target_box[8][2]))
+        self.box_edit_point_g_x = QtGui.QLineEdit(str(target_box.point7[0]))
+        self.box_edit_point_g_y = QtGui.QLineEdit(str(target_box.point7[1]))
+        self.box_edit_point_g_z = QtGui.QLineEdit(str(target_box.point7[2]))
         self.box_edit_point_g_layout.addWidget(self.box_edit_point_g_label)
         self.box_edit_point_g_layout.addWidget(self.box_edit_point_g_x)
         self.box_edit_point_g_layout.addWidget(self.box_edit_point_g_y)
@@ -125,9 +125,9 @@ class FlowToolBoxEditDialog(QtGui.QDialog):
 
         self.box_edit_point_h_layout = QtGui.QHBoxLayout()
         self.box_edit_point_h_label = QtGui.QLabel(__("Point H (X, Y, Z)"))
-        self.box_edit_point_h_x = QtGui.QLineEdit(str(self.target_box[9][0]))
-        self.box_edit_point_h_y = QtGui.QLineEdit(str(self.target_box[9][1]))
-        self.box_edit_point_h_z = QtGui.QLineEdit(str(self.target_box[9][2]))
+        self.box_edit_point_h_x = QtGui.QLineEdit(str(self.target_box.point8[0]))
+        self.box_edit_point_h_y = QtGui.QLineEdit(str(self.target_box.point8[1]))
+        self.box_edit_point_h_z = QtGui.QLineEdit(str(self.target_box.point8[2]))
         self.box_edit_point_h_layout.addWidget(self.box_edit_point_h_label)
         self.box_edit_point_h_layout.addWidget(self.box_edit_point_h_x)
         self.box_edit_point_h_layout.addWidget(self.box_edit_point_h_y)
@@ -167,37 +167,22 @@ class FlowToolBoxEditDialog(QtGui.QDialog):
 
     def on_ok(self):
         ''' FlowTool box edit ok behaviour.'''
-        box_to_edit_index = -1
+        box_to_edit: FlowToolBox = None
 
-        for box_index, box_value in enumerate(data['flowtool_boxes']):
-            if box_value[0] == self.box_id:
-                box_to_edit_index = box_index
+        for box in Case.instance().flowtool_boxes:
+            if box.id == self.box_id:
+                box_to_edit = box
+                break
 
-        data['flowtool_boxes'][box_to_edit_index][1] = str(self.box_edit_name_input.text())
-        data['flowtool_boxes'][box_to_edit_index][2] = [float(self.box_edit_point_a_x.text()),
-                                                        float(self.box_edit_point_a_y.text()),
-                                                        float(self.box_edit_point_a_z.text())]
-        data['flowtool_boxes'][box_to_edit_index][3] = [float(self.box_edit_point_b_x.text()),
-                                                        float(self.box_edit_point_b_y.text()),
-                                                        float(self.box_edit_point_b_z.text())]
-        data['flowtool_boxes'][box_to_edit_index][4] = [float(self.box_edit_point_c_x.text()),
-                                                        float(self.box_edit_point_c_y.text()),
-                                                        float(self.box_edit_point_c_z.text())]
-        data['flowtool_boxes'][box_to_edit_index][5] = [float(self.box_edit_point_d_x.text()),
-                                                        float(self.box_edit_point_d_y.text()),
-                                                        float(self.box_edit_point_d_z.text())]
-        data['flowtool_boxes'][box_to_edit_index][6] = [float(self.box_edit_point_e_x.text()),
-                                                        float(self.box_edit_point_e_y.text()),
-                                                        float(self.box_edit_point_e_z.text())]
-        data['flowtool_boxes'][box_to_edit_index][7] = [float(self.box_edit_point_f_x.text()),
-                                                        float(self.box_edit_point_f_y.text()),
-                                                        float(self.box_edit_point_f_z.text())]
-        data['flowtool_boxes'][box_to_edit_index][8] = [float(self.box_edit_point_g_x.text()),
-                                                        float(self.box_edit_point_g_y.text()),
-                                                        float(self.box_edit_point_g_z.text())]
-        data['flowtool_boxes'][box_to_edit_index][9] = [float(self.box_edit_point_h_x.text()),
-                                                        float(self.box_edit_point_h_y.text()),
-                                                        float(self.box_edit_point_h_z.text())]
+        box_to_edit.name = str(self.box_edit_name_input.text())
+        box_to_edit.point1 = [float(self.box_edit_point_a_x.text()), float(self.box_edit_point_a_y.text()), float(self.box_edit_point_a_z.text())]
+        box_to_edit.point2 = [float(self.box_edit_point_b_x.text()), float(self.box_edit_point_b_y.text()), float(self.box_edit_point_b_z.text())]
+        box_to_edit.point3 = [float(self.box_edit_point_c_x.text()), float(self.box_edit_point_c_y.text()), float(self.box_edit_point_c_z.text())]
+        box_to_edit.point4 = [float(self.box_edit_point_d_x.text()), float(self.box_edit_point_d_y.text()), float(self.box_edit_point_d_z.text())]
+        box_to_edit.point5 = [float(self.box_edit_point_e_x.text()), float(self.box_edit_point_e_y.text()), float(self.box_edit_point_e_z.text())]
+        box_to_edit.point6 = [float(self.box_edit_point_f_x.text()), float(self.box_edit_point_f_y.text()), float(self.box_edit_point_f_z.text())]
+        box_to_edit.point7 = [float(self.box_edit_point_g_x.text()), float(self.box_edit_point_g_y.text()), float(self.box_edit_point_g_z.text())]
+        box_to_edit.point8 = [float(self.box_edit_point_h_x.text()), float(self.box_edit_point_h_y.text()), float(self.box_edit_point_h_z.text())]
         self.accept()
 
     def on_cancel(self):

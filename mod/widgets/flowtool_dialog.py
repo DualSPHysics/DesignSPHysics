@@ -2,8 +2,6 @@
 # -*- coding: utf-8 -*-
 '''DesignSPHysics FlowTool Config and Execution Dialog.'''
 
-from uuid import uuid4
-
 from PySide import QtGui
 
 from mod.translation_tools import __
@@ -11,11 +9,9 @@ from mod.file_tools import create_flowtool_boxes
 from mod.post_processing_tools import flowtool_export
 
 from mod.dataobjects.case import Case
+from mod.dataobjects.flow_tool_box import FlowToolBox
 
 from mod.widgets.flowtool_box_edit_dialog import FlowToolBoxEditDialog
-
-# FIXME: Change all data references for new refactore Case structure
-data = {}
 
 class FlowToolDialog(QtGui.QDialog):
     ''' DesignSPHysics FlowTool Config and Execution Dialog. '''
@@ -94,12 +90,12 @@ class FlowToolDialog(QtGui.QDialog):
         ''' Box delete button behaviour. Tries to find the box for which the button was pressed and deletes it.'''
         box_to_remove = None
 
-        for box in data['flowtool_boxes']:
-            if box[0] == box_id:
+        for box in Case.instance().flowtool_boxes:
+            if box.id == box_id:
                 box_to_remove = box
 
         if box_to_remove is not None:
-            data['flowtool_boxes'].remove(box_to_remove)
+            Case.instance().flowtool_boxes.remove(box_to_remove)
             self.refresh_boxlist()
 
     def refresh_boxlist(self):
@@ -108,33 +104,22 @@ class FlowToolDialog(QtGui.QDialog):
             target = self.fltool_boxlist_layout.takeAt(0)
             target.setParent(None)
 
-        for box in data['flowtool_boxes']:
+        for box in Case.instance().flowtool_boxes:
             to_add_layout = QtGui.QHBoxLayout()
-            to_add_label = QtGui.QLabel(str(box[1]))
+            to_add_label = QtGui.QLabel(str(box.name))
             to_add_layout.addWidget(to_add_label)
             to_add_layout.addStretch(1)
             to_add_editbutton = QtGui.QPushButton("Edit")
             to_add_deletebutton = QtGui.QPushButton("Delete")
             to_add_layout.addWidget(to_add_editbutton)
             to_add_layout.addWidget(to_add_deletebutton)
-            to_add_editbutton.clicked.connect(lambda b=box[0]: self.box_edit(b))
-            to_add_deletebutton.clicked.connect(lambda b=box[0]: self.box_delete(b))
+            to_add_editbutton.clicked.connect(lambda b=box.id: self.box_edit(b))
+            to_add_deletebutton.clicked.connect(lambda b=box.id: self.box_delete(b))
             self.fltool_boxlist_layout.addLayout(to_add_layout)
 
     def on_fltool_addbox(self):
         ''' Adds a box to the data structure.'''
-        data['flowtool_boxes'].append([
-            str(uuid4()),
-            'BOX',
-            [0.0, 0.0, 0.0],
-            [0.0, 0.0, 0.0],
-            [0.0, 0.0, 0.0],
-            [0.0, 0.0, 0.0],
-            [0.0, 0.0, 0.0],
-            [0.0, 0.0, 0.0],
-            [0.0, 0.0, 0.0],
-            [0.0, 0.0, 0.0]
-        ])
+        Case.instance().flowtool_boxes.append(FlowToolBox())
         self.refresh_boxlist()
 
     def on_fltool_cancel(self):
@@ -160,7 +145,7 @@ class FlowToolDialog(QtGui.QDialog):
         else:
             export_parameters['additional_parameters'] = ''
 
-        create_flowtool_boxes(Case.instance().path + '/' + 'fileboxes.txt', data['flowtool_boxes'])
+        create_flowtool_boxes(Case.instance().path + '/' + 'fileboxes.txt', Case.instance().flowtool_boxes)
 
-        flowtool_export(export_parameters, self.post_processing_widget)
+        flowtool_export(export_parameters, Case.instance(), self.post_processing_widget)
         self.accept()
