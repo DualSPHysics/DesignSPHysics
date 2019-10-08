@@ -9,9 +9,10 @@ from PySide import QtCore, QtGui
 from mod.translation_tools import __
 from mod.dialog_tools import info_dialog
 
+from mod.dataobjects.case import Case
 from mod.dataobjects.float_property import FloatProperty
 
-# FIXME: Use new refactored Case data structure
+
 class FloatStateDialog(QtGui.QDialog):
     ''' Defines a window with floating  '''
 
@@ -22,7 +23,7 @@ class FloatStateDialog(QtGui.QDialog):
         self.ok_button = QtGui.QPushButton(__("Ok"))
         self.cancel_button = QtGui.QPushButton(__("Cancel"))
 
-        self.target_mk = int(self.data['simobjects'][FreeCADGui.Selection.getSelection()[0].Name][0])
+        self.target_mk = Case.instance().get_simulation_object(FreeCADGui.Selection.getSelection()[0].Name).obj_mk
 
         self.ok_button.clicked.connect(self.on_ok)
         self.cancel_button.clicked.connect(self.on_cancel)
@@ -187,7 +188,6 @@ class FloatStateDialog(QtGui.QDialog):
 
         self.floating_material_layout = QtGui.QHBoxLayout()
         self.floating_material_label = QtGui.QLabel(__("Material: "))
-        # self.floating_material_label.setToolTip(__(""))
         self.floating_material_line_edit = QtGui.QLineEdit()
         self.floating_material_auto = QtGui.QCheckBox("Auto ")
         self.floating_material_auto.toggled.connect(self.on_material_auto)
@@ -219,103 +219,81 @@ class FloatStateDialog(QtGui.QDialog):
 
         self.setLayout(self.floatings_window_layout)
 
-        if str(self.target_mk) in self.data['floating_mks'].keys():
+        float_property: FloatProperty = Case.instance().get_mk_based_properties(self.target_mk).float_property
+        if float_property:
             self.is_floating_selector.setCurrentIndex(0)
             self.on_floating_change(0)
             self.floating_props_group.setEnabled(True)
-            self.floating_props_massrhop_selector.setCurrentIndex(self.data['floating_mks'][str(self.target_mk)].mass_density_type)
-            self.floating_props_massrhop_input.setText(str(self.data['floating_mks'][str(self.target_mk)].mass_density_value))
-            if not self.data['floating_mks'][str(self.target_mk)].gravity_center:
+            self.floating_props_massrhop_selector.setCurrentIndex(float_property.mass_density_type)
+            self.floating_props_massrhop_input.setText(str(float_property.mass_density_value))
+            if not float_property.gravity_center:
                 self.floating_center_input_x.setText("0")
                 self.floating_center_input_y.setText("0")
                 self.floating_center_input_z.setText("0")
             else:
-                self.floating_center_input_x.setText(str(self.data['floating_mks'][str(self.target_mk)].gravity_center[0]))
-                self.floating_center_input_y.setText(str(self.data['floating_mks'][str(self.target_mk)].gravity_center[1]))
-                self.floating_center_input_z.setText(str(self.data['floating_mks'][str(self.target_mk)].gravity_center[2]))
+                self.floating_center_input_x.setText(str(float_property.gravity_center[0]))
+                self.floating_center_input_y.setText(str(float_property.gravity_center[1]))
+                self.floating_center_input_z.setText(str(float_property.gravity_center[2]))
 
-            if not self.data['floating_mks'][str(self.target_mk)].inertia:
+            if not float_property.inertia:
                 self.floating_inertia_input_x.setText("0")
                 self.floating_inertia_input_y.setText("0")
                 self.floating_inertia_input_z.setText("0")
             else:
-                self.floating_inertia_input_x.setText(str(self.data['floating_mks'][str(self.target_mk)].inertia[0]))
-                self.floating_inertia_input_y.setText(str(self.data['floating_mks'][str(self.target_mk)].inertia[1]))
-                self.floating_inertia_input_z.setText(str(self.data['floating_mks'][str(self.target_mk)].inertia[2]))
+                self.floating_inertia_input_x.setText(str(float_property.inertia[0]))
+                self.floating_inertia_input_y.setText(str(float_property.inertia[1]))
+                self.floating_inertia_input_z.setText(str(float_property.inertia[2]))
 
-            if not self.data['floating_mks'][str(self.target_mk)].initial_linear_velocity:
+            if not float_property.initial_linear_velocity:
                 self.floating_velini_input_x.setText("0")
                 self.floating_velini_input_y.setText("0")
                 self.floating_velini_input_z.setText("0")
             else:
                 self.floating_velini_input_x.setText(
-                    str(self.data['floating_mks'][str(self.target_mk)].initial_linear_velocity[0]))
-                self.floating_velini_input_y.setText(str(self.data['floating_mks'][str(self.target_mk)].initial_linear_velocity[1]))
-                self.floating_velini_input_z.setText(str(self.data['floating_mks'][str(self.target_mk)].initial_linear_velocity[2]))
+                    str(float_property.initial_linear_velocity[0]))
+                self.floating_velini_input_y.setText(str(float_property.initial_linear_velocity[1]))
+                self.floating_velini_input_z.setText(str(float_property.initial_linear_velocity[2]))
 
-            if not self.data['floating_mks'][str(self.target_mk)].initial_angular_velocity:
+            if not float_property.initial_angular_velocity:
                 self.floating_omegaini_input_x.setText("0")
                 self.floating_omegaini_input_y.setText("0")
                 self.floating_omegaini_input_z.setText("0")
             else:
                 self.floating_omegaini_input_x.setText(
-                    str(self.data['floating_mks'][str(self.target_mk)].initial_angular_velocity[0]))
-                self.floating_omegaini_input_y.setText(str(self.data['floating_mks'][str(self.target_mk)].initial_angular_velocity[1]))
-                self.floating_omegaini_input_z.setText(str(self.data['floating_mks'][str(self.target_mk)].initial_angular_velocity[2]))
+                    str(float_property.initial_angular_velocity[0]))
+                self.floating_omegaini_input_y.setText(str(float_property.initial_angular_velocity[1]))
+                self.floating_omegaini_input_z.setText(str(float_property.initial_angular_velocity[2]))
 
-            if not self.data['floating_mks'][str(self.target_mk)].translation_restriction:
+            if not float_property.translation_restriction:
                 self.floating_translation_input_x.setCurrentIndex(1)
                 self.floating_translation_input_y.setCurrentIndex(1)
                 self.floating_translation_input_z.setCurrentIndex(1)
             else:
-                self.floating_translation_input_x.setCurrentIndex(
-                    self.data['floating_mks'][str(self.target_mk)].translation_restriction[0])
-                self.floating_translation_input_y.setCurrentIndex(
-                    self.data['floating_mks'][str(self.target_mk)].translation_restriction[1])
-                self.floating_translation_input_z.setCurrentIndex(
-                    self.data['floating_mks'][str(self.target_mk)].translation_restriction[2])
+                self.floating_translation_input_x.setCurrentIndex(float_property.translation_restriction[0])
+                self.floating_translation_input_y.setCurrentIndex(float_property.translation_restriction[1])
+                self.floating_translation_input_z.setCurrentIndex(float_property.translation_restriction[2])
 
-            if not self.data['floating_mks'][str(self.target_mk)].rotation_restriction:
+            if not float_property.rotation_restriction:
                 self.floating_rotation_input_x.setCurrentIndex(1)
                 self.floating_rotation_input_y.setCurrentIndex(1)
                 self.floating_rotation_input_z.setCurrentIndex(1)
             else:
-                self.floating_rotation_input_x.setCurrentIndex(
-                    self.data['floating_mks'][str(self.target_mk)].rotation_restriction[0])
-                self.floating_rotation_input_y.setCurrentIndex(
-                    self.data['floating_mks'][str(self.target_mk)].rotation_restriction[1])
-                self.floating_rotation_input_z.setCurrentIndex(
-                    self.data['floating_mks'][str(self.target_mk)].rotation_restriction[2])
+                self.floating_rotation_input_x.setCurrentIndex(float_property.rotation_restriction[0])
+                self.floating_rotation_input_y.setCurrentIndex(float_property.rotation_restriction[1])
+                self.floating_rotation_input_z.setCurrentIndex(float_property.rotation_restriction[2])
 
-            if not self.data['floating_mks'][str(self.target_mk)].material:
+            if not float_property.material:
                 self.floating_material_line_edit.setText("")
             else:
-                self.floating_material_line_edit.setText(self.data['floating_mks'][str(self.target_mk)].material)
+                self.floating_material_line_edit.setText(float_property.material)
 
-            self.floating_center_auto.setCheckState(
-                QtCore.Qt.Checked if not self.data['floating_mks'][str(self.target_mk)].gravity_center else QtCore.Qt.Unchecked
-            )
-            self.floating_inertia_auto.setCheckState(
-                QtCore.Qt.Checked if not self.data['floating_mks'][str(self.target_mk)].inertia else QtCore.Qt.Unchecked
-            )
-            self.floating_velini_auto.setCheckState(
-                QtCore.Qt.Checked if not self.data['floating_mks'][str(self.target_mk)].initial_linear_velocity else QtCore.Qt.Unchecked
-            )
-            self.floating_omegaini_auto.setCheckState(
-                QtCore.Qt.Checked if not self.data['floating_mks'][str(self.target_mk)].initial_angular_velocity else QtCore.Qt.Unchecked
-            )
-            self.floating_translation_auto.setCheckState(
-                QtCore.Qt.Checked if not self.data['floating_mks'][str(
-                    self.target_mk)].translation_restriction else QtCore.Qt.Unchecked
-            )
-            self.floating_rotation_auto.setCheckState(
-                QtCore.Qt.Checked if not self.data['floating_mks'][str(
-                    self.target_mk)].rotation_restriction else QtCore.Qt.Unchecked
-            )
-            self.floating_material_auto.setCheckState(
-                QtCore.Qt.Checked if not self.data['floating_mks'][str(self.target_mk)].material else
-                QtCore.Qt.Unchecked
-            )
+            self.floating_center_auto.setCheckState(QtCore.Qt.Checked if not float_property.gravity_center else QtCore.Qt.Unchecked)
+            self.floating_inertia_auto.setCheckState(QtCore.Qt.Checked if not float_property.inertia else QtCore.Qt.Unchecked)
+            self.floating_velini_auto.setCheckState(QtCore.Qt.Checked if not float_property.initial_linear_velocity else QtCore.Qt.Unchecked)
+            self.floating_omegaini_auto.setCheckState(QtCore.Qt.Checked if not float_property.initial_angular_velocity else QtCore.Qt.Unchecked)
+            self.floating_translation_auto.setCheckState(QtCore.Qt.Checked if not float_property.translation_restriction else QtCore.Qt.Unchecked)
+            self.floating_rotation_auto.setCheckState(QtCore.Qt.Checked if not float_property.rotation_restriction else QtCore.Qt.Unchecked)
+            self.floating_material_auto.setCheckState(QtCore.Qt.Checked if not float_property.material else QtCore.Qt.Unchecked)
         else:
             self.is_floating_selector.setCurrentIndex(1)
             self.on_floating_change(1)
@@ -354,16 +332,12 @@ class FloatStateDialog(QtGui.QDialog):
         self.exec_()
 
     def on_ok(self):
-        info_dialog(
-            __("This will apply the floating properties to all objects with mkbound = ") + str(self.target_mk))
+        info_dialog(__("This will apply the floating properties to all objects with mkbound = ") + str(self.target_mk))
         if self.is_floating_selector.currentIndex() == 1:
-            # Floating false
-            if str(self.target_mk) in self.data['floating_mks'].keys():
-                self.data['floating_mks'].pop(str(self.target_mk), None)
+            # Remove Floating
+            Case.instance().get_mk_based_properties(self.target_mk).float_property = None
         else:
             # Floating true
-            # Structure: 'mk': [massrhop, center, inertia, velini, omegaini]
-            # Structure: 'mk': FloatProperty
             fp = FloatProperty()  # FloatProperty to be inserted
             fp.mk = self.target_mk
             fp.mass_density_type = self.floating_props_massrhop_selector.currentIndex()
@@ -372,72 +346,44 @@ class FloatStateDialog(QtGui.QDialog):
             if self.floating_center_auto.isChecked():
                 fp.gravity_center = list()
             else:
-                fp.gravity_center = [
-                    float(self.floating_center_input_x.text()),
-                    float(self.floating_center_input_y.text()),
-                    float(self.floating_center_input_z.text())
-                ]
+                fp.gravity_center = [float(self.floating_center_input_x.text()), float(self.floating_center_input_y.text()), float(self.floating_center_input_z.text())]
 
             if self.floating_center_auto.isChecked():
                 fp.gravity_center = list()
             else:
-                fp.gravity_center = [
-                    float(self.floating_center_input_x.text()),
-                    float(self.floating_center_input_y.text()),
-                    float(self.floating_center_input_z.text())
-                ]
+                fp.gravity_center = [float(self.floating_center_input_x.text()), float(self.floating_center_input_y.text()), float(self.floating_center_input_z.text())]
 
             if self.floating_inertia_auto.isChecked():
                 fp.inertia = list()
             else:
-                fp.inertia = [
-                    float(self.floating_inertia_input_x.text()),
-                    float(self.floating_inertia_input_y.text()),
-                    float(self.floating_inertia_input_z.text())
-                ]
+                fp.inertia = [float(self.floating_inertia_input_x.text()), float(self.floating_inertia_input_y.text()), float(self.floating_inertia_input_z.text())]
 
             if self.floating_velini_auto.isChecked():
                 fp.initial_linear_velocity = list()
             else:
-                fp.initial_linear_velocity = [
-                    float(self.floating_velini_input_x.text()),
-                    float(self.floating_velini_input_y.text()),
-                    float(self.floating_velini_input_z.text())
-                ]
+                fp.initial_linear_velocity = [float(self.floating_velini_input_x.text()), float(self.floating_velini_input_y.text()), float(self.floating_velini_input_z.text())]
 
             if self.floating_omegaini_auto.isChecked():
                 fp.initial_angular_velocity = list()
             else:
-                fp.initial_angular_velocity = [
-                    float(self.floating_omegaini_input_x.text()),
-                    float(self.floating_omegaini_input_y.text()),
-                    float(self.floating_omegaini_input_z.text())
-                ]
+                fp.initial_angular_velocity = [float(self.floating_omegaini_input_x.text()), float(self.floating_omegaini_input_y.text()), float(self.floating_omegaini_input_z.text())]
 
             if self.floating_translation_auto.isChecked():
                 fp.translation_restriction = list()
             else:
-                fp.translation_restriction = [
-                    int(self.floating_translation_input_x.currentIndex()),
-                    int(self.floating_translation_input_y.currentIndex()),
-                    int(self.floating_translation_input_z.currentIndex())
-                ]
+                fp.translation_restriction = [int(self.floating_translation_input_x.currentIndex()), int(self.floating_translation_input_y.currentIndex()), int(self.floating_translation_input_z.currentIndex())]
 
             if self.floating_rotation_auto.isChecked():
                 fp.rotation_restriction = list()
             else:
-                fp.rotation_restriction = [
-                    int(self.floating_rotation_input_x.currentIndex()),
-                    int(self.floating_rotation_input_y.currentIndex()),
-                    int(self.floating_rotation_input_z.currentIndex())
-                ]
+                fp.rotation_restriction = [int(self.floating_rotation_input_x.currentIndex()), int(self.floating_rotation_input_y.currentIndex()), int(self.floating_rotation_input_z.currentIndex())]
 
             if self.floating_material_auto.isChecked():
                 fp.material = ""
             else:
                 fp.material = str(self.floating_material_line_edit.text())
 
-            self.data['floating_mks'][str(self.target_mk)] = fp
+            Case.instance().get_mk_based_properties(self.target_mk).float_property = fp
 
         self.accept()
 
