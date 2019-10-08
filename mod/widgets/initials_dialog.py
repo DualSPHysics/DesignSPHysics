@@ -9,9 +9,10 @@ from PySide import QtGui
 from mod.translation_tools import __
 from mod.dialog_tools import info_dialog
 
+from mod.dataobjects.case import Case
 from mod.dataobjects.initials_property import InitialsProperty
 
-# FIXME: Use new refactored Case structure instead of old data
+
 class InitialsDialog(QtGui.QDialog):
     ''' Defines a window with initials  '''
 
@@ -21,7 +22,7 @@ class InitialsDialog(QtGui.QDialog):
         self.setWindowTitle(__("Initials configuration"))
         self.ok_button = QtGui.QPushButton(__("Ok"))
         self.cancel_button = QtGui.QPushButton(__("Cancel"))
-        self.target_mk = int(self.data['simobjects'][FreeCADGui.Selection.getSelection()[0].Name][0])
+        self.target_mk = Case.instance().get_simulation_object(FreeCADGui.Selection.getSelection()[0].Name).obj_mk
 
         self.ok_button.clicked.connect(self.on_ok)
         self.cancel_button.clicked.connect(self.on_cancel)
@@ -74,13 +75,14 @@ class InitialsDialog(QtGui.QDialog):
 
         self.setLayout(self.initials_window_layout)
 
-        if str(self.target_mk) in self.data['initials_mks'].keys():
+        initials_object = Case.instance().get_mk_based_properties(self.target_mk).initials
+        if initials_object:
             self.has_initials_selector.setCurrentIndex(0)
             self.on_initials_change(0)
             self.initials_props_group.setEnabled(True)
-            self.initials_vector_input_x.setText(str(self.data['initials_mks'][str(self.target_mk)].force[0]))
-            self.initials_vector_input_y.setText(str(self.data['initials_mks'][str(self.target_mk)].force[1]))
-            self.initials_vector_input_z.setText(str(self.data['initials_mks'][str(self.target_mk)].force[2]))
+            self.initials_vector_input_x.setText(str(initials_object.force[0]))
+            self.initials_vector_input_y.setText(str(initials_object.force[1]))
+            self.initials_vector_input_z.setText(str(initials_object.force[2]))
         else:
             self.has_initials_selector.setCurrentIndex(1)
             self.on_initials_change(1)
@@ -97,18 +99,12 @@ class InitialsDialog(QtGui.QDialog):
         info_dialog(__("This will apply the initials properties to all objects with mkfluid = ") + str(self.target_mk))
         if self.has_initials_selector.currentIndex() == 1:
             # Initials false
-            if str(self.target_mk) in self.data['initials_mks'].keys():
-                self.data['initials_mks'].pop(str(self.target_mk), None)
+            Case.instance().get_mk_based_properties(self.target_mk).initials = None
         else:
             # Initials true
             # Structure: InitialsProperty Object
-            self.data['initials_mks'][str(self.target_mk)] = InitialsProperty(
-                mk=self.target_mk,
-                force=[
-                    float(self.initials_vector_input_x.text()),
-                    float(self.initials_vector_input_y.text()),
-                    float(self.initials_vector_input_z.text())
-                ])
+            force_vector: list = [float(self.initials_vector_input_x.text()), float(self.initials_vector_input_y.text()), float(self.initials_vector_input_z.text())]
+            Case.instance().get_mk_based_properties(self.target_mk).initials = InitialsProperty(mk=self.target_mk, force=force_vector)
         self.accept()
 
     # Cancel button handler
