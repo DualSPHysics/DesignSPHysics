@@ -12,7 +12,7 @@ class MKBasedProperties():
 
     def __init__(self, mk=None):
         self.mk: int = mk
-        self.movements: list = []  # [Movement]
+        self.movements: list = list()  # [Movement]
         self.float_property: FloatProperty = None
         self.initials: InitialsProperty = None
         self.mlayerpiston: MLPiston = None

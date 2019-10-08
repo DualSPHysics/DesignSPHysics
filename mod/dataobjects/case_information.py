@@ -24,3 +24,4 @@ class CaseInformation():
         self.measuretool_grid: list = []
         self.objectlist_table: QtGui.QTableWidget = None
         self.last_3d_width: float = -1.0
+        self.global_movements: list = list() # [Movement]
