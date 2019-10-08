@@ -254,9 +254,7 @@ class DockPreProcessingWidget(QtGui.QWidget):
             return
 
         try:
-            # TODO: Update mechanism for new data
-            # data.update(disk_data)
-            debug("Implement me. Load {}".format(str(disk_data)))
+            Case.update_from_disk(disk_data)
         except (EOFError, ValueError):
             error_dialog(__("There was an error importing the case  You probably need to set them again.\n\n"
                             "This could be caused due to file corruption, caused by operating system based line endings or ends-of-file, or other related aspects."))

@@ -60,6 +60,11 @@ class Case():
             Case()
         return Case.__instance
 
+    @staticmethod
+    def update_from_disk(disk_data: Case) -> None:
+        ''' Updates the current instance for the one passed as parameter. '''
+        Case.__instance = disk_data
+
     def get_first_mk_not_used(self, object_type: ObjectType):
         ''' Checks simulation objects to find the first not used MK group number. '''
         mkset = set(map(lambda x: x.obj_mk, filter(lambda y: y.type == object_type, self.objects)))
