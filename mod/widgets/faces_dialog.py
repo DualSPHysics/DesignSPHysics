@@ -8,9 +8,10 @@ from PySide import QtCore, QtGui
 
 from mod.translation_tools import __
 
+from mod.dataobjects.case import Case
+from mod.dataobjects.simulation_object import SimulationObject
 from mod.dataobjects.faces_property import FacesProperty
 
-# FIXME: Change Data references for the new refactored Case
 
 class FacesDialog(QtGui.QDialog):
     ''' Defines a window with faces  '''
@@ -23,8 +24,7 @@ class FacesDialog(QtGui.QDialog):
         self.cancel_button = QtGui.QPushButton(__("Cancel"))
         self.main_faces_layout = QtGui.QVBoxLayout()
 
-        self.target_mk = int(self.data['simobjects'][selection_name][0])
-        self.name = selection_name
+        self.target_object: SimulationObject = Case.instance().get_simulation_object(selection_name)
 
         self.button_layout = QtGui.QHBoxLayout()
         self.button_layout.addWidget(self.ok_button)
@@ -39,57 +39,22 @@ class FacesDialog(QtGui.QDialog):
         self.all_faces.toggled.connect(self.on_faces_checkbox)
 
         self.front_face = QtGui.QCheckBox(__("Front face"))
-
         self.back_face = QtGui.QCheckBox(__("Back face"))
-
         self.top_face = QtGui.QCheckBox(__("Top face"))
-
         self.bottom_face = QtGui.QCheckBox(__("Bottom face"))
-
         self.left_face = QtGui.QCheckBox(__("Left face"))
-
         self.right_face = QtGui.QCheckBox(__("Right face"))
 
-        try:
-            if (str(self.target_mk), self.name) in self.data['faces'].keys():
-                if self.data['faces'][str(self.target_mk), self.name].all_faces:
-                    self.all_faces.setCheckState(QtCore.Qt.Checked)
-                else:
-                    self.all_faces.setCheckState(QtCore.Qt.Unchecked)
-                self.all_faces.toggled.connect(self.on_faces_checkbox)
-
-                if self.data['faces'][str(self.target_mk), self.name].front_face:
-                    self.front_face.setCheckState(QtCore.Qt.Checked)
-                else:
-                    self.front_face.setCheckState(QtCore.Qt.Unchecked)
-
-                if self.data['faces'][str(self.target_mk), self.name].back_face:
-                    self.back_face.setCheckState(QtCore.Qt.Checked)
-                else:
-                    self.back_face.setCheckState(QtCore.Qt.Unchecked)
-
-                if self.data['faces'][str(self.target_mk), self.name].top_face:
-                    self.top_face.setCheckState(QtCore.Qt.Checked)
-                else:
-                    self.top_face.setCheckState(QtCore.Qt.Unchecked)
-
-                if self.data['faces'][str(self.target_mk), self.name].bottom_face:
-                    self.bottom_face.setCheckState(QtCore.Qt.Checked)
-                else:
-                    self.bottom_face.setCheckState(QtCore.Qt.Unchecked)
-
-                if self.data['faces'][str(self.target_mk), self.name].left_face:
-                    self.left_face.setCheckState(QtCore.Qt.Checked)
-                else:
-                    self.left_face.setCheckState(QtCore.Qt.Unchecked)
-
-                if self.data['faces'][str(self.target_mk), self.name].right_face:
-                    self.right_face.setCheckState(QtCore.Qt.Checked)
-                else:
-                    self.right_face.setCheckState(QtCore.Qt.Unchecked)
-        except:
-            print_exc()
-            self.all_faces.setCheckState(QtCore.Qt.Checked)
+        if self.target_object.faces_configuration:
+            self.all_faces.setCheckState(QtCore.Qt.Checked if self.target_object.faces_configuration.all_faces else QtCore.Qt.Unchecked)
+            self.front_face.setCheckState(QtCore.Qt.Checked if self.target_object.faces_configuration.front_face else QtCore.Qt.Unchecked)
+            self.back_face.setCheckState(QtCore.Qt.Checked if self.target_object.faces_configuration.back_face else QtCore.Qt.Unchecked)
+            self.top_face.setCheckState(QtCore.Qt.Checked if self.target_object.faces_configuration.top_face else QtCore.Qt.Unchecked)
+            self.bottom_face.setCheckState(QtCore.Qt.Checked if self.target_object.faces_configuration.bottom_face else QtCore.Qt.Unchecked)
+            self.left_face.setCheckState(QtCore.Qt.Checked if self.target_object.faces_configuration.left_face else QtCore.Qt.Unchecked)
+            self.right_face.setCheckState(QtCore.Qt.Checked if self.target_object.faces_configuration.right_face else QtCore.Qt.Unchecked)
+        
+        self.all_faces.toggled.connect(self.on_faces_checkbox)
 
         self.faces_layout.addWidget(self.all_faces)
         self.faces_layout.addWidget(self.front_face)
@@ -111,7 +76,7 @@ class FacesDialog(QtGui.QDialog):
     def on_ok(self):
 
         fp = FacesProperty()
-        fp.mk = self.target_mk
+        fp.mk = self.target_object.mk
 
         if self.all_faces.isChecked():
             fp.all_faces = True
@@ -176,7 +141,7 @@ class FacesDialog(QtGui.QDialog):
             else:
                 fp.right_face = False
 
-        self.data['faces'][str(self.target_mk), self.name] = fp
+        self.target_object.faces_configuration = fp
 
         self.accept()
 

@@ -343,32 +343,6 @@ def create_flowtool_boxes(file_path: str, boxes: list):
             f.write("{} {} {}\n".format(*box.point8))
             f.write("\n")
 
-
-# FIXME: Implement this in the new structure and delete this. This only remains here as documentation on how it works right now
-def get_default_data():
-    ''' A stub method to provide documentation for a refactor. '''
-
-    data = dict()
-    temp_data = dict()
-
-    # CHRONO objects
-    data['chrono_objects'] = list()
-    data['link_spheric'] = list()
-    data['link_linearspring'] = list()
-    data['link_hinge'] = list()
-    data['link_pointline'] = list()
-    data['csv_intervals_check'] = False
-    data['scale_scheme_check'] = False
-    data['collisiondp_check'] = False
-    data['csv_intervals'] = 0.0
-    data['scale_scheme'] = 0.0
-    data['collisiondp'] = 0.0
-    data['modelnormal_check'] = 0
-    data['modelnormal_print'] = "original"
-
-    return data, temp_data
-
-
 # FIXME: This should not exist. Saving it only as a documentation for the refactor
 def dump_to_xml(data, save_name):
     ''' Saves all of the data in the opened case
