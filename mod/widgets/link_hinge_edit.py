@@ -7,8 +7,9 @@ from PySide import QtGui
 from mod.translation_tools import __
 from mod.dialog_tools import error_dialog
 
+from mod.dataobjects.case import Case
 
-# FIXME: Change data references to new refactored Case data
+
 class LinkHingeEdit(QtGui.QDialog):
     ''' Defines Link hinge window dialog '''
 
@@ -24,8 +25,8 @@ class LinkHingeEdit(QtGui.QDialog):
         # Find the link hinge for which the button was pressed
         target_link_hinge = None
 
-        for link_hinge in self.data['link_hinge']:
-            if link_hinge[0] == self.link_hinge_id:
+        for link_hinge in Case.instance().chrono.link_hinge:
+            if link_hinge.id == self.link_hinge_id:
                 target_link_hinge = link_hinge
 
         # This should not happen but if no link hinge is found with reference id, it spawns an error.
@@ -37,15 +38,15 @@ class LinkHingeEdit(QtGui.QDialog):
         self.body_layout = QtGui.QHBoxLayout()
         self.body_one_label = QtGui.QLabel(__("Body 1: "))
         self.body_one_line_edit = QtGui.QComboBox()
-        self.body_one_line_edit.insertItems(0, [str(target_link_hinge[1])])
+        self.body_one_line_edit.insertItems(0, [str(target_link_hinge.idbody1)])
         for body in self.temp_data:
-            if body.object_check.isChecked() and body.object_name != str(target_link_hinge[1]):
+            if body.object_check.isChecked() and body.object_name != str(target_link_hinge.idbody1):
                 self.body_one_line_edit.insertItems(0, [body.object_name])
         self.body_two_label = QtGui.QLabel(__("Body 2: "))
         self.body_two_line_edit = QtGui.QComboBox()
-        self.body_two_line_edit.insertItems(0, [str(target_link_hinge[2])])
+        self.body_two_line_edit.insertItems(0, [str(target_link_hinge.idbody2)])
         for body in self.temp_data:
-            if body.object_check.isChecked() and body.object_name != str(target_link_hinge[2]):
+            if body.object_check.isChecked() and body.object_name != str(target_link_hinge.idbody2):
                 self.body_two_line_edit.insertItems(0, [body.object_name])
         self.body_to_body_label = QtGui.QLabel(__("to"))
 
@@ -62,11 +63,11 @@ class LinkHingeEdit(QtGui.QDialog):
         self.rotpoints_layout = QtGui.QHBoxLayout()
         self.rotpoints_label = QtGui.QLabel(__("Points for rotation: "))
         self.rotpoints_x_label = QtGui.QLabel(__("X"))
-        self.rotpoints_x_line_edit = QtGui.QLineEdit(str(target_link_hinge[3][0]))
+        self.rotpoints_x_line_edit = QtGui.QLineEdit(str(target_link_hinge.rotpoint[0]))
         self.rotpoints_y_label = QtGui.QLabel(__("Y"))
-        self.rotpoints_y_line_edit = QtGui.QLineEdit(str(target_link_hinge[3][1]))
+        self.rotpoints_y_line_edit = QtGui.QLineEdit(str(target_link_hinge.rotpoint[1]))
         self.rotpoints_z_label = QtGui.QLabel(__("Z"))
-        self.rotpoints_z_line_edit = QtGui.QLineEdit(str(target_link_hinge[3][2]))
+        self.rotpoints_z_line_edit = QtGui.QLineEdit(str(target_link_hinge.rotpoint[2]))
 
         self.rotpoints_layout.addWidget(self.rotpoints_label)
         self.rotpoints_layout.addWidget(self.rotpoints_x_label)
@@ -82,11 +83,11 @@ class LinkHingeEdit(QtGui.QDialog):
         self.rotvector_layout = QtGui.QHBoxLayout()
         self.rotvector_label = QtGui.QLabel(__("Vector direction: "))
         self.rotvector_x_label = QtGui.QLabel(__("X"))
-        self.rotvector_x_line_edit = QtGui.QLineEdit(str(target_link_hinge[4][0]))
+        self.rotvector_x_line_edit = QtGui.QLineEdit(str(target_link_hinge.rotvector[0]))
         self.rotvector_y_label = QtGui.QLabel(__("Y"))
-        self.rotvector_y_line_edit = QtGui.QLineEdit(str(target_link_hinge[4][1]))
+        self.rotvector_y_line_edit = QtGui.QLineEdit(str(target_link_hinge.rotvector[1]))
         self.rotvector_z_label = QtGui.QLabel(__("Z"))
-        self.rotvector_z_line_edit = QtGui.QLineEdit(str(target_link_hinge[4][2]))
+        self.rotvector_z_line_edit = QtGui.QLineEdit(str(target_link_hinge.rotvector[2]))
 
         self.rotvector_layout.addWidget(self.rotvector_label)
         self.rotvector_layout.addWidget(self.rotvector_x_label)
@@ -102,9 +103,9 @@ class LinkHingeEdit(QtGui.QDialog):
         self.torsion_stiffness_layout = QtGui.QHBoxLayout()
         self.torsion_damping_layout = QtGui.QHBoxLayout()
         self.stiffness_label = QtGui.QLabel(__("Stiffness: "))
-        self.stiffness_line_edit = QtGui.QLineEdit(str(target_link_hinge[5]))
+        self.stiffness_line_edit = QtGui.QLineEdit(str(target_link_hinge.stiffness))
         self.damping_label = QtGui.QLabel(__("Damping: "))
-        self.damping_line_edit = QtGui.QLineEdit(str(target_link_hinge[6]))
+        self.damping_line_edit = QtGui.QLineEdit(str(target_link_hinge.damping))
 
         self.torsion_stiffness_layout.addWidget(self.stiffness_label)
         self.torsion_stiffness_layout.addWidget(self.stiffness_line_edit)
@@ -138,21 +139,21 @@ class LinkHingeEdit(QtGui.QDialog):
     def on_save(self):
         ''' Link hinge save button behaviour'''
         count = -1
-        for link_hinge_value in self.data['link_hinge']:
+        for link_hinge_value in Case.instance().chrono.link_hinge:
             count += 1
-            if link_hinge_value[0] == self.link_hinge_id:
-                self.data['link_hinge'][count][1] = str(self.body_one_line_edit.currentText())
-                self.data['link_hinge'][count][2] = str(self.body_two_line_edit.currentText())
-                self.data['link_hinge'][count][3] = [float(self.rotpoints_x_line_edit.text()),
-                                                     float(self.rotpoints_y_line_edit.text()),
-                                                     float(self.rotpoints_z_line_edit.text())]
-                self.data['link_hinge'][count][4] = [float(self.rotvector_x_line_edit.text()),
-                                                     float(self.rotvector_y_line_edit.text()),
-                                                     float(self.rotvector_z_line_edit.text())]
-                self.data['link_hinge'][count][5] = float(self.stiffness_line_edit.text())
-                self.data['link_hinge'][count][6] = float(self.damping_line_edit.text())
+            if link_hinge_value.id == self.link_hinge_id:
+                Case.instance().chrono.link_hinge[count].idbody1 = str(self.body_one_line_edit.currentText())
+                Case.instance().chrono.link_hinge[count].idbody2 = str(self.body_two_line_edit.currentText())
+                Case.instance().chrono.link_hinge[count].rotpoint = [float(self.rotpoints_x_line_edit.text()),
+                                                               float(self.rotpoints_y_line_edit.text()),
+                                                               float(self.rotpoints_z_line_edit.text())]
+                Case.instance().chrono.link_hinge[count].rotvector = [float(self.rotvector_x_line_edit.text()),
+                                                               float(self.rotvector_y_line_edit.text()),
+                                                               float(self.rotvector_z_line_edit.text())]
+                Case.instance().chrono.link_hinge[count].stiffness = float(self.stiffness_line_edit.text())
+                Case.instance().chrono.link_hinge[count].damping = float(self.damping_line_edit.text())
 
-        if self.data['link_hinge'][count][1] != "" and self.data['link_hinge'][count][2] != "":
+        if Case.instance().chrono.link_hinge[count].idbody1 and Case.instance().chrono.link_hinge[count].idbody2:
             LinkHingeEdit.accept(self)
         else:
             link_hinge_error_dialog = QtGui.QMessageBox()

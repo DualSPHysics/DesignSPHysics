@@ -6,7 +6,9 @@ from PySide import QtGui
 from mod.translation_tools import __
 from mod.dialog_tools import error_dialog
 
-# FIXME: Change data references for refactored Case data
+from mod.dataobjects.case import Case
+
+
 class LinkPointlineEdit(QtGui.QDialog):
     ''' Defines Link pontline window dialog '''
 
@@ -22,8 +24,8 @@ class LinkPointlineEdit(QtGui.QDialog):
         # Find the link pointline for which the button was pressed
         target_link_pointline = None
 
-        for link_pointline in self.data['link_pointline']:
-            if link_pointline[0] == self.link_pointline_id:
+        for link_pointline in Case.instance().chrono.link_pointline:
+            if link_pointline.id == self.link_pointline_id:
                 target_link_pointline = link_pointline
 
         # This should not happen but if no link pointline is found with reference id, it spawns an error.
@@ -35,13 +37,13 @@ class LinkPointlineEdit(QtGui.QDialog):
         self.body_layout = QtGui.QHBoxLayout()
         self.body_one_label = QtGui.QLabel(__("Body 1: "))
         self.body_one_line_edit = QtGui.QComboBox()
-        if str(target_link_pointline[1]) != '':
-            self.body_one_line_edit.insertItems(0, ['', str(target_link_pointline[1])])
+        if str(target_link_pointline.idbody1) != '':
+            self.body_one_line_edit.insertItems(0, ['', str(target_link_pointline.idbody1)])
             self.body_one_line_edit.setCurrentIndex(1)
         else:
-            self.body_one_line_edit.insertItems(0, [str(target_link_pointline[1])])
+            self.body_one_line_edit.insertItems(0, [str(target_link_pointline.idbody1)])
         for body in self.temp_data:
-            if body.object_check.isChecked() and body.object_name != str(target_link_pointline[1]):
+            if body.object_check.isChecked() and body.object_name != str(target_link_pointline.idbody1):
                 self.body_one_line_edit.insertItems(0, [body.object_name])
         self.body_layout.addWidget(self.body_one_label)
         self.body_layout.addWidget(self.body_one_line_edit)
@@ -53,11 +55,11 @@ class LinkPointlineEdit(QtGui.QDialog):
         self.sliding_vector_layout = QtGui.QHBoxLayout()
         self.sliding_vector_label = QtGui.QLabel(__("Sliding Vector: "))
         self.sliding_vector_x_label = QtGui.QLabel(__("X"))
-        self.sliding_vector_x_line_edit = QtGui.QLineEdit(str(target_link_pointline[2][0]))
+        self.sliding_vector_x_line_edit = QtGui.QLineEdit(str(target_link_pointline.slidingvector[0]))
         self.sliding_vector_y_label = QtGui.QLabel(__("Y"))
-        self.sliding_vector_y_line_edit = QtGui.QLineEdit(str(target_link_pointline[2][1]))
+        self.sliding_vector_y_line_edit = QtGui.QLineEdit(str(target_link_pointline.slidingvector[1]))
         self.sliding_vector_z_label = QtGui.QLabel(__("Z"))
-        self.sliding_vector_z_line_edit = QtGui.QLineEdit(str(target_link_pointline[2][2]))
+        self.sliding_vector_z_line_edit = QtGui.QLineEdit(str(target_link_pointline.slidingvector[2]))
 
         self.sliding_vector_layout.addWidget(self.sliding_vector_label)
         self.sliding_vector_layout.addWidget(self.sliding_vector_x_label)
@@ -73,11 +75,11 @@ class LinkPointlineEdit(QtGui.QDialog):
         self.rotpoint_layout = QtGui.QHBoxLayout()
         self.rotpoint_label = QtGui.QLabel(__("Point for rotation: "))
         self.rotpoint_x_label = QtGui.QLabel(__("X"))
-        self.rotpoint_x_line_edit = QtGui.QLineEdit(str(target_link_pointline[3][0]))
+        self.rotpoint_x_line_edit = QtGui.QLineEdit(str(target_link_pointline.rotpoint[0]))
         self.rotpoint_y_label = QtGui.QLabel(__("Y"))
-        self.rotpoint_y_line_edit = QtGui.QLineEdit(str(target_link_pointline[3][1]))
+        self.rotpoint_y_line_edit = QtGui.QLineEdit(str(target_link_pointline.rotpoint[1]))
         self.rotpoint_z_label = QtGui.QLabel(__("Z"))
-        self.rotpoint_z_line_edit = QtGui.QLineEdit(str(target_link_pointline[3][2]))
+        self.rotpoint_z_line_edit = QtGui.QLineEdit(str(target_link_pointline.rotpoint[2]))
 
         self.rotpoint_layout.addWidget(self.rotpoint_label)
         self.rotpoint_layout.addWidget(self.rotpoint_x_label)
@@ -93,11 +95,11 @@ class LinkPointlineEdit(QtGui.QDialog):
         self.rotvector_layout = QtGui.QHBoxLayout()
         self.rotvector_label = QtGui.QLabel(__("Vector direction: "))
         self.rotvector_x_label = QtGui.QLabel(__("X"))
-        self.rotvector_x_line_edit = QtGui.QLineEdit(str(target_link_pointline[4][0]))
+        self.rotvector_x_line_edit = QtGui.QLineEdit(str(target_link_pointline.rotvector[0]))
         self.rotvector_y_label = QtGui.QLabel(__("Y"))
-        self.rotvector_y_line_edit = QtGui.QLineEdit(str(target_link_pointline[4][1]))
+        self.rotvector_y_line_edit = QtGui.QLineEdit(str(target_link_pointline.rotvector[1]))
         self.rotvector_z_label = QtGui.QLabel(__("Z"))
-        self.rotvector_z_line_edit = QtGui.QLineEdit(str(target_link_pointline[4][2]))
+        self.rotvector_z_line_edit = QtGui.QLineEdit(str(target_link_pointline.rotvector[2]))
 
         self.rotvector_layout.addWidget(self.rotvector_label)
         self.rotvector_layout.addWidget(self.rotvector_x_label)
@@ -113,11 +115,11 @@ class LinkPointlineEdit(QtGui.QDialog):
         self.rotvector2_layout = QtGui.QHBoxLayout()
         self.rotvector2_label = QtGui.QLabel(__("Second vector: "))
         self.rotvector2_x_label = QtGui.QLabel(__("X"))
-        self.rotvector2_x_line_edit = QtGui.QLineEdit(str(target_link_pointline[5][0]))
+        self.rotvector2_x_line_edit = QtGui.QLineEdit(str(target_link_pointline.rotvector2[0]))
         self.rotvector2_y_label = QtGui.QLabel(__("Y"))
-        self.rotvector2_y_line_edit = QtGui.QLineEdit(str(target_link_pointline[5][1]))
+        self.rotvector2_y_line_edit = QtGui.QLineEdit(str(target_link_pointline.rotvector2[1]))
         self.rotvector2_z_label = QtGui.QLabel(__("Z"))
-        self.rotvector2_z_line_edit = QtGui.QLineEdit(str(target_link_pointline[5][2]))
+        self.rotvector2_z_line_edit = QtGui.QLineEdit(str(target_link_pointline.rotvector2[2]))
 
         self.rotvector2_layout.addWidget(self.rotvector2_label)
         self.rotvector2_layout.addWidget(self.rotvector2_x_label)
@@ -133,9 +135,9 @@ class LinkPointlineEdit(QtGui.QDialog):
         self.torsion_stiffness_layout = QtGui.QHBoxLayout()
         self.torsion_damping_layout = QtGui.QHBoxLayout()
         self.stiffness_label = QtGui.QLabel(__("Stiffness"))
-        self.stiffness_line_edit = QtGui.QLineEdit(str(target_link_pointline[6]))
+        self.stiffness_line_edit = QtGui.QLineEdit(str(target_link_pointline.stiffness))
         self.damping_label = QtGui.QLabel(__("Damping"))
-        self.damping_line_edit = QtGui.QLineEdit(str(target_link_pointline[7]))
+        self.damping_line_edit = QtGui.QLineEdit(str(target_link_pointline.damping))
 
         self.torsion_stiffness_layout.addWidget(self.stiffness_label)
         self.torsion_stiffness_layout.addWidget(self.stiffness_line_edit)
@@ -169,26 +171,26 @@ class LinkPointlineEdit(QtGui.QDialog):
     def on_save(self):
         ''' Link pointline save button behaviour'''
         count = -1
-        for link_pointline_value in self.data['link_pointline']:
+        for link_pointline_value in Case.instance().chrono.link_pointline:
             count += 1
-            if link_pointline_value[0] == self.link_pointline_id:
-                self.data['link_pointline'][count][1] = str(self.body_one_line_edit.currentText())
-                self.data['link_pointline'][count][2] = [float(self.sliding_vector_x_line_edit.text()),
-                                                         float(self.sliding_vector_y_line_edit.text()),
-                                                         float(self.sliding_vector_z_line_edit.text())]
-                self.data['link_pointline'][count][3] = [float(self.rotpoint_x_line_edit.text()),
-                                                         float(self.rotpoint_y_line_edit.text()),
-                                                         float(self.rotpoint_z_line_edit.text())]
-                self.data['link_pointline'][count][4] = [float(self.rotvector_x_line_edit.text()),
-                                                         float(self.rotvector_y_line_edit.text()),
-                                                         float(self.rotvector_z_line_edit.text())]
-                self.data['link_pointline'][count][5] = [float(self.rotvector2_x_line_edit.text()),
-                                                         float(self.rotvector2_y_line_edit.text()),
-                                                         float(self.rotvector2_z_line_edit.text())]
-                self.data['link_pointline'][count][6] = float(self.stiffness_line_edit.text())
-                self.data['link_pointline'][count][7] = float(self.damping_line_edit.text())
+            if link_pointline_value.id == self.link_pointline_id:
+                Case.instance().chrono.link_pointline[count].idbody1 = str(self.body_one_line_edit.currentText())
+                Case.instance().chrono.link_pointline[count].slidingvector = [float(self.sliding_vector_x_line_edit.text()),
+                                                                              float(self.sliding_vector_y_line_edit.text()),
+                                                                              float(self.sliding_vector_z_line_edit.text())]
+                Case.instance().chrono.link_pointline[count].rotpoint = [float(self.rotpoint_x_line_edit.text()),
+                                                                         float(self.rotpoint_y_line_edit.text()),
+                                                                         float(self.rotpoint_z_line_edit.text())]
+                Case.instance().chrono.link_pointline[count].rotvector = [float(self.rotvector_x_line_edit.text()),
+                                                                          float(self.rotvector_y_line_edit.text()),
+                                                                          float(self.rotvector_z_line_edit.text())]
+                Case.instance().chrono.link_pointline[count].rotvector2 = [float(self.rotvector2_x_line_edit.text()),
+                                                                           float(self.rotvector2_y_line_edit.text()),
+                                                                           float(self.rotvector2_z_line_edit.text())]
+                Case.instance().chrono.link_pointline[count].stiffness = float(self.stiffness_line_edit.text())
+                Case.instance().chrono.link_pointline[count].damping = float(self.damping_line_edit.text())
 
-        if self.data['link_pointline'][count][1] != "":
+        if Case.instance().chrono.link_pointline[count].idbody1:
             LinkPointlineEdit.accept(self)
         else:
             link_pointline_error_dialog = QtGui.QMessageBox()

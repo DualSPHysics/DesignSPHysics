@@ -7,7 +7,9 @@ from PySide import QtGui
 from mod.translation_tools import __
 from mod.dialog_tools import error_dialog
 
-# FIXME: Change data references for refactored Case data
+from mod.dataobjects.case import Case
+
+
 class LinkSphericEdit(QtGui.QDialog):
     ''' Defines Link spheric window dialog '''
 
@@ -23,8 +25,8 @@ class LinkSphericEdit(QtGui.QDialog):
         # Find the link spheric for which the button was pressed
         target_link_spheric = None
 
-        for link_spheric in self.data['link_spheric']:
-            if link_spheric[0] == self.link_spheric_id:
+        for link_spheric in Case.instance().chrono.link_spheric:
+            if link_spheric.id == self.link_spheric_id:
                 target_link_spheric = link_spheric
 
         # This should not happen but if no link spheric is found with reference id, it spawns an error.
@@ -36,23 +38,23 @@ class LinkSphericEdit(QtGui.QDialog):
         self.body_layout = QtGui.QHBoxLayout()
         self.body_one_label = QtGui.QLabel(__("Body 1: "))
         self.body_one_line_edit = QtGui.QComboBox()
-        if str(target_link_spheric[1]) != '':
-            self.body_one_line_edit.insertItems(0, ['', str(target_link_spheric[1])])
+        if str(target_link_spheric.idbody1) != '':
+            self.body_one_line_edit.insertItems(0, ['', str(target_link_spheric.idbody1)])
             self.body_one_line_edit.setCurrentIndex(1)
         else:
-            self.body_one_line_edit.insertItems(0, [str(target_link_spheric[1])])
+            self.body_one_line_edit.insertItems(0, [str(target_link_spheric.idbody1)])
         for body in self.temp_data:
-            if body.object_check.isChecked() and body.object_name != str(target_link_spheric[1]):
+            if body.object_check.isChecked() and body.object_name != str(target_link_spheric.idbody1):
                 self.body_one_line_edit.insertItems(0, [body.object_name])
         self.body_two_label = QtGui.QLabel(__("Body 2: "))
         self.body_two_line_edit = QtGui.QComboBox()
-        if str(target_link_spheric[2]) != '':
-            self.body_two_line_edit.insertItems(0, ['', str(target_link_spheric[2])])
+        if str(target_link_spheric.idbody2) != '':
+            self.body_two_line_edit.insertItems(0, ['', str(target_link_spheric.idbody2)])
             self.body_two_line_edit.setCurrentIndex(1)
         else:
-            self.body_two_line_edit.insertItems(0, [str(target_link_spheric[2])])
+            self.body_two_line_edit.insertItems(0, [str(target_link_spheric.idbody2)])
         for body in self.temp_data:
-            if body.object_check.isChecked() and body.object_name != str(target_link_spheric[2]):
+            if body.object_check.isChecked() and body.object_name != str(target_link_spheric.idbody2):
                 self.body_two_line_edit.insertItems(0, [body.object_name])
         self.body_to_body_label = QtGui.QLabel(__("to"))
 
@@ -69,11 +71,11 @@ class LinkSphericEdit(QtGui.QDialog):
         self.points_layout = QtGui.QHBoxLayout()
         self.points_label = QtGui.QLabel(__("Points: "))
         self.point_x_label = QtGui.QLabel(__("X"))
-        self.point_x_line_edit = QtGui.QLineEdit(str(target_link_spheric[3][0]))
+        self.point_x_line_edit = QtGui.QLineEdit(str(target_link_spheric.rotpoint[0]))
         self.point_y_label = QtGui.QLabel(__("Y"))
-        self.point_y_line_edit = QtGui.QLineEdit(str(target_link_spheric[3][1]))
+        self.point_y_line_edit = QtGui.QLineEdit(str(target_link_spheric.rotpoint[1]))
         self.point_z_label = QtGui.QLabel(__("Z"))
-        self.point_z_line_edit = QtGui.QLineEdit(str(target_link_spheric[3][2]))
+        self.point_z_line_edit = QtGui.QLineEdit(str(target_link_spheric.rotpoint[2]))
 
         self.points_layout.addWidget(self.points_label)
         self.points_layout.addWidget(self.point_x_label)
@@ -89,9 +91,9 @@ class LinkSphericEdit(QtGui.QDialog):
         self.torsion_stiffness_layout = QtGui.QHBoxLayout()
         self.torsion_damping_layout = QtGui.QHBoxLayout()
         self.stiffness_label = QtGui.QLabel(__("Stiffness"))
-        self.stiffness_line_edit = QtGui.QLineEdit(str(target_link_spheric[4]))
+        self.stiffness_line_edit = QtGui.QLineEdit(str(target_link_spheric.stiffness))
         self.damping_label = QtGui.QLabel(__("Damping"))
-        self.damping_line_edit = QtGui.QLineEdit(str(target_link_spheric[5]))
+        self.damping_line_edit = QtGui.QLineEdit(str(target_link_spheric.damping))
 
         self.torsion_stiffness_layout.addWidget(self.stiffness_label)
         self.torsion_stiffness_layout.addWidget(self.stiffness_line_edit)
@@ -125,18 +127,18 @@ class LinkSphericEdit(QtGui.QDialog):
     def on_save(self):
         ''' Link Spheric save button behaviour'''
         count = -1
-        for link_spheric_value in self.data['link_spheric']:
+        for link_spheric_value in Case.instance().chrono.link_spheric:
             count += 1
             if link_spheric_value[0] == self.link_spheric_id:
-                self.data['link_spheric'][count][1] = str(self.body_one_line_edit.currentText())
-                self.data['link_spheric'][count][2] = str(self.body_two_line_edit.currentText())
-                self.data['link_spheric'][count][3] = [float(self.point_x_line_edit.text()),
-                                                       float(self.point_y_line_edit.text()),
-                                                       float(self.point_z_line_edit.text())]
-                self.data['link_spheric'][count][4] = float(self.stiffness_line_edit.text())
-                self.data['link_spheric'][count][5] = float(self.damping_line_edit.text())
+                Case.instance().chrono.link_spheric[count].idbody1 = str(self.body_one_line_edit.currentText())
+                Case.instance().chrono.link_spheric[count].idbody2 = str(self.body_two_line_edit.currentText())
+                Case.instance().chrono.link_spheric[count].rotpoint = [float(self.point_x_line_edit.text()),
+                                                                       float(self.point_y_line_edit.text()),
+                                                                       float(self.point_z_line_edit.text())]
+                Case.instance().chrono.link_spheric[count].stiffness = float(self.stiffness_line_edit.text())
+                Case.instance().chrono.link_spheric[count].damping = float(self.damping_line_edit.text())
 
-        if self.data['link_spheric'][count][1] != "":
+        if Case.instance().chrono.link_spheric[count].idbody1:
             LinkSphericEdit.accept(self)
         else:
             link_spheric_error_dialog = QtGui.QMessageBox()

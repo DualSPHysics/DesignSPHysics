@@ -7,7 +7,9 @@ from PySide import QtGui
 from mod.translation_tools import __
 from mod.dialog_tools import error_dialog
 
-# FIXME: Change data references for new refactored Case data
+from mod.dataobjects.case import Case
+
+
 class LinkLinearspringEdit(QtGui.QDialog):
     ''' Defines Link linearspring window dialog '''
 
@@ -23,8 +25,8 @@ class LinkLinearspringEdit(QtGui.QDialog):
         # Find the link linearspring for which the button was pressed
         target_link_linearspring = None
 
-        for link_linearspring in self.data['link_linearspring']:
-            if link_linearspring[0] == self.link_linearspring_id:
+        for link_linearspring in Case.instance().chrono.link_linearspring:
+            if link_linearspring.id == self.link_linearspring_id:
                 target_link_linearspring = link_linearspring
 
         # This should not happen but if no link linearspring is found with reference id, it spawns an error.
@@ -36,15 +38,15 @@ class LinkLinearspringEdit(QtGui.QDialog):
         self.body_layout = QtGui.QHBoxLayout()
         self.body_one_label = QtGui.QLabel(__("Body 1: "))
         self.body_one_line_edit = QtGui.QComboBox()
-        self.body_one_line_edit.insertItems(0, [str(target_link_linearspring[1])])
+        self.body_one_line_edit.insertItems(0, [str(target_link_linearspring.idbody1)])
         for body in self.temp_data:
-            if body.object_check.isChecked() and body.object_name != str(target_link_linearspring[1]):
+            if body.object_check.isChecked() and body.object_name != str(target_link_linearspring.idbody1):
                 self.body_one_line_edit.insertItems(0, [body.object_name])
         self.body_two_label = QtGui.QLabel(__("Body 2: "))
         self.body_two_line_edit = QtGui.QComboBox()
-        self.body_two_line_edit.insertItems(0, [str(target_link_linearspring[2])])
+        self.body_two_line_edit.insertItems(0, [str(target_link_linearspring.idbody2)])
         for body in self.temp_data:
-            if body.object_check.isChecked() and body.object_name != str(target_link_linearspring[2]):
+            if body.object_check.isChecked() and body.object_name != str(target_link_linearspring.idbody2):
                 self.body_two_line_edit.insertItems(0, [body.object_name])
         self.body_to_body_label = QtGui.QLabel(__("to"))
 
@@ -61,11 +63,11 @@ class LinkLinearspringEdit(QtGui.QDialog):
         self.points_b1_layout = QtGui.QHBoxLayout()
         self.points_b1_label = QtGui.QLabel(__("Points in body 1: "))
         self.point_b1_x_label = QtGui.QLabel(__("X"))
-        self.point_b1_x_line_edit = QtGui.QLineEdit(str(target_link_linearspring[3][0]))
+        self.point_b1_x_line_edit = QtGui.QLineEdit(str(target_link_linearspring.point_fb1[0]))
         self.point_b1_y_label = QtGui.QLabel(__("Y"))
-        self.point_b1_y_line_edit = QtGui.QLineEdit(str(target_link_linearspring[3][1]))
+        self.point_b1_y_line_edit = QtGui.QLineEdit(str(target_link_linearspring.point_fb1[1]))
         self.point_b1_z_label = QtGui.QLabel(__("Z"))
-        self.point_b1_z_line_edit = QtGui.QLineEdit(str(target_link_linearspring[3][2]))
+        self.point_b1_z_line_edit = QtGui.QLineEdit(str(target_link_linearspring.point_fb1[2]))
 
         self.points_b1_layout.addWidget(self.points_b1_label)
         self.points_b1_layout.addWidget(self.point_b1_x_label)
@@ -81,11 +83,11 @@ class LinkLinearspringEdit(QtGui.QDialog):
         self.points_b2_layout = QtGui.QHBoxLayout()
         self.points_b2_label = QtGui.QLabel(__("Points in body 2: "))
         self.point_b2_x_label = QtGui.QLabel(__("X"))
-        self.point_b2_x_line_edit = QtGui.QLineEdit(str(target_link_linearspring[4][0]))
+        self.point_b2_x_line_edit = QtGui.QLineEdit(str(target_link_linearspring.point_fb2[0]))
         self.point_b2_y_label = QtGui.QLabel(__("Y"))
-        self.point_b2_y_line_edit = QtGui.QLineEdit(str(target_link_linearspring[4][1]))
+        self.point_b2_y_line_edit = QtGui.QLineEdit(str(target_link_linearspring.point_fb2[1]))
         self.point_b2_z_label = QtGui.QLabel(__("Z"))
-        self.point_b2_z_line_edit = QtGui.QLineEdit(str(target_link_linearspring[4][2]))
+        self.point_b2_z_line_edit = QtGui.QLineEdit(str(target_link_linearspring.point_fb2[2]))
 
         self.points_b2_layout.addWidget(self.points_b2_label)
         self.points_b2_layout.addWidget(self.point_b2_x_label)
@@ -101,9 +103,9 @@ class LinkLinearspringEdit(QtGui.QDialog):
         self.torsion_stiffness_layout = QtGui.QHBoxLayout()
         self.torsion_damping_layout = QtGui.QHBoxLayout()
         self.stiffness_label = QtGui.QLabel(__("Stiffness: "))
-        self.stiffness_line_edit = QtGui.QLineEdit(str(target_link_linearspring[5]))
+        self.stiffness_line_edit = QtGui.QLineEdit(str(target_link_linearspring.stiffness))
         self.damping_label = QtGui.QLabel(__("Damping: "))
-        self.damping_line_edit = QtGui.QLineEdit(str(target_link_linearspring[6]))
+        self.damping_line_edit = QtGui.QLineEdit(str(target_link_linearspring.damping))
 
         self.torsion_stiffness_layout.addWidget(self.stiffness_label)
         self.torsion_stiffness_layout.addWidget(self.stiffness_line_edit)
@@ -116,7 +118,7 @@ class LinkLinearspringEdit(QtGui.QDialog):
         # Spring equilibrium length
         self.rest_layout = QtGui.QHBoxLayout()
         self.rest_label = QtGui.QLabel(__("Rest length: "))
-        self.rest_line_edit = QtGui.QLineEdit(str(target_link_linearspring[7]))
+        self.rest_line_edit = QtGui.QLineEdit(str(target_link_linearspring.rest_length))
 
         self.rest_layout.addWidget(self.rest_label)
         self.rest_layout.addWidget(self.rest_line_edit)
@@ -126,11 +128,11 @@ class LinkLinearspringEdit(QtGui.QDialog):
         # vtk
         self.vtk_layout = QtGui.QHBoxLayout()
         self.vtk_nside_label = QtGui.QLabel(__("Number of sections: "))
-        self.vtk_nside_line_edit = QtGui.QLineEdit(str(target_link_linearspring[8][0]))
+        self.vtk_nside_line_edit = QtGui.QLineEdit(str(target_link_linearspring.number_of_sections))
         self.vtk_radius_label = QtGui.QLabel(__("Spring radius: "))
-        self.vtk_radius_line_edit = QtGui.QLineEdit(str(target_link_linearspring[8][1]))
+        self.vtk_radius_line_edit = QtGui.QLineEdit(str(target_link_linearspring.sprint_radius))
         self.vtk_length_label = QtGui.QLabel(__("Length for revolution: "))
-        self.vtk_length_line_edit = QtGui.QLineEdit(str(target_link_linearspring[8][2]))
+        self.vtk_length_line_edit = QtGui.QLineEdit(str(target_link_linearspring.revolution_length))
 
         self.vtk_layout.addWidget(self.vtk_nside_label)
         self.vtk_layout.addWidget(self.vtk_nside_line_edit)
@@ -165,25 +167,25 @@ class LinkLinearspringEdit(QtGui.QDialog):
     def on_save(self):
         ''' Link linearspring save button behaviour'''
         count = -1
-        for link_linearspring_value in self.data['link_linearspring']:
+        for link_linearspring_value in Case.instance().chrono.link_linearspring:
             count += 1
             if link_linearspring_value[0] == self.link_linearspring_id:
-                self.data['link_linearspring'][count][1] = str(self.body_one_line_edit.currentText())
-                self.data['link_linearspring'][count][2] = str(self.body_two_line_edit.currentText())
-                self.data['link_linearspring'][count][3] = [float(self.point_b1_x_line_edit.text()),
-                                                            float(self.point_b1_y_line_edit.text()),
-                                                            float(self.point_b1_z_line_edit.text())]
-                self.data['link_linearspring'][count][4] = [float(self.point_b2_x_line_edit.text()),
-                                                            float(self.point_b2_y_line_edit.text()),
-                                                            float(self.point_b2_z_line_edit.text())]
-                self.data['link_linearspring'][count][5] = float(self.stiffness_line_edit.text())
-                self.data['link_linearspring'][count][6] = float(self.damping_line_edit.text())
-                self.data['link_linearspring'][count][7] = float(self.rest_line_edit.text())
-                self.data['link_linearspring'][count][8] = [float(self.vtk_nside_line_edit.text()),
-                                                            float(self.vtk_radius_line_edit.text()),
-                                                            float(self.vtk_length_line_edit.text())]
+                Case.instance().chrono.link_linearspring[count].idbody1 = str(self.body_one_line_edit.currentText())
+                Case.instance().chrono.link_linearspring[count].idbody2 = str(self.body_two_line_edit.currentText())
+                Case.instance().chrono.link_linearspring[count].point_fb1 = [float(self.point_b1_x_line_edit.text()),
+                                                                             float(self.point_b1_y_line_edit.text()),
+                                                                             float(self.point_b1_z_line_edit.text())]
+                Case.instance().chrono.link_linearspring[count].point_fb2 = [float(self.point_b2_x_line_edit.text()),
+                                                                             float(self.point_b2_y_line_edit.text()),
+                                                                             float(self.point_b2_z_line_edit.text())]
+                Case.instance().chrono.link_linearspring[count].stiffness = float(self.stiffness_line_edit.text())
+                Case.instance().chrono.link_linearspring[count].damping = float(self.damping_line_edit.text())
+                Case.instance().chrono.link_linearspring[count].rest_length = float(self.rest_line_edit.text())
+                Case.instance().chrono.link_linearspring[count].number_of_sections = float(self.vtk_nside_line_edit.text())
+                Case.instance().chrono.link_linearspring[count].spring_radius = float(self.vtk_radius_line_edit.text())
+                Case.instance().chrono.link_linearspring[count].revolution_length = float(self.vtk_length_line_edit.text())
 
-        if self.data['link_linearspring'][count][1] != "" and self.data['link_linearspring'][count][2] != "":
+        if Case.instance().chrono.link_linearspring[count].idbody1 and Case.instance().chrono.link_linearspring[count].idbody2:
             LinkLinearspringEdit.accept(self)
         else:
             link_linearspring_error_dialog = QtGui.QMessageBox()
