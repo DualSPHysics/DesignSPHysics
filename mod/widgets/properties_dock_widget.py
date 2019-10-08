@@ -204,7 +204,7 @@ class PropertiesDockWidget(QtGui.QDockWidget):
         selection = FreeCADGui.Selection.getSelection()[0]
         selectiongui = FreeCADGui.ActiveDocument.getObject(selection.Name)
         simulation_object = Case.instance().get_simulation_object(selection.Name)
-        mk_properties = Case.instance().get_mk_base_properties(simulation_object.obj_mk)
+        mk_properties = Case.instance().get_mk_based_properties(simulation_object.obj_mk)
 
         if self.objtype_prop.itemText(index).lower() == "bound":
             self.mkgroup_prop.setRange(0, 240)

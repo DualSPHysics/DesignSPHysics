@@ -8,6 +8,7 @@ from mod.constants import VERSION
 from mod.enums import ObjectType
 
 from mod.dataobjects.inlet_outlet_config import InletOutletConfig
+from mod.dataobjects.chrono_config import ChronoConfig
 from mod.dataobjects.constants import Constants
 from mod.dataobjects.execution_parameters import ExecutionParameters
 from mod.dataobjects.periodicity import Periodicity
@@ -42,7 +43,7 @@ class Case():
         self.objects: list = list()  # [SimulationObject]
         self.mkbasedproperties: dict = dict()  # {mk: MKBasedProperties}
         self.damping_zones: dict = dict()  # {freecad_object_name: Damping}
-        self.flowtool_boxes: list = list() # [FlowToolBox]
+        self.flowtool_boxes: list = list()  # [FlowToolBox]
         self.periodicity: Periodicity = Periodicity()
         self.domain: SimulationDomain = SimulationDomain()
         self.executable_paths: ExecutablePaths = ExecutablePaths()
@@ -50,6 +51,7 @@ class Case():
         self.acceleration_input: AccelerationInput = AccelerationInput()
         self.relaxation_zone: RelaxationZone = None
         self.inlet_outlet: InletOutletConfig = InletOutletConfig()
+        self.chrono: ChronoConfig = ChronoConfig()
 
     @staticmethod
     def instance() -> 'Case':
@@ -76,11 +78,19 @@ class Case():
         Raises an exception if the selected object is not added to the simulation. '''
         return next(filter(lambda obj: obj.name == name, self.objects), None)
 
-    def number_of_objects_in_simulation(self):
+    def get_all_fluid_objects(self) -> list:
+        ''' Returns all the fluid objects in the simulation. '''
+        return list(filter(lambda obj: obj.type == ObjectType.FLUID, self.objects))
+
+    def get_all_bound_objects(self) -> list:
+        ''' Returns all the bound objects in the simulation. '''
+        return list(filter(lambda obj: obj.type == ObjectType.BOUND, self.objects))
+
+    def number_of_objects_in_simulation(self) -> int:
         ''' Return the total number of objects in the simulation '''
         return len(list(filter(lambda obj: obj.type != ObjectType.SPECIAL, self.objects)))
 
-    def get_mk_base_properties(self, mknumber: int) -> MKBasedProperties:
+    def get_mk_based_properties(self, mknumber: int) -> MKBasedProperties:
         ''' Returns the properties set for a given MK number '''
         if mknumber not in self.mkbasedproperties.keys():
             raise RuntimeError('MK has no properties applied! This should not happen.')

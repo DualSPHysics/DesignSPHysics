@@ -118,7 +118,7 @@ class SpecialOptionsSelectorDialog(QtGui.QDialog):
 
         # Get selection mk
         selection_mk: int = Case.instance().get_simulation_object(selection.Name).obj_mk
-        mk_properties: MKBasedProperties = Case.instance().get_mk_base_properties(selection_mk)
+        mk_properties: MKBasedProperties = Case.instance().get_mk_based_properties(selection_mk)
 
         # Check that this mk has no other motions applied
         if mk_properties.has_movements():

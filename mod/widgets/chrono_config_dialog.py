@@ -4,11 +4,18 @@
 
 import uuid
 
-import FreeCAD
 from PySide import QtCore, QtGui
 
 from mod.translation_tools import __
 from mod.stdout_tools import debug
+from mod.enums import ChronoModelNormalType
+
+from mod.dataobjects.case import Case
+from mod.dataobjects.chrono_object import ChronoObject
+from mod.dataobjects.chrono_link_hinge import ChronoLinkHinge
+from mod.dataobjects.chrono_link_linear_spring import ChronoLinkLinearSpring
+from mod.dataobjects.chrono_link_point_line import ChronoLinkPointLine
+from mod.dataobjects.chrono_link_spheric import ChronoLinkSpheric
 
 from mod.widgets.chrono_object_check_options import ChronoObjectCheckOptions
 from mod.widgets.link_hinge_edit import LinkHingeEdit
@@ -33,13 +40,10 @@ class ChronoConfigDialog(QtGui.QDialog):
         # Option for saves CSV with data exchange for each time interval
         self.csv_option_layout = QtGui.QHBoxLayout()
         self.csv_intervals_checkbox = QtGui.QCheckBox()
-        if self.data['csv_intervals_check']:
-            self.csv_intervals_checkbox.setCheckState(QtCore.Qt.Checked)
-        else:
-            self.csv_intervals_checkbox.setCheckState(QtCore.Qt.Unchecked)
+        self.csv_intervals_checkbox.setCheckState(QtCore.Qt.Checked if Case.instance().chrono.csv_intervals.enabled else QtCore.Qt.Unchecked)
         self.csv_intervals_checkbox.toggled.connect(self.on_csv_intervals_check)
         self.csv_intervals_option = QtGui.QLabel(__("CSV intervals:"))
-        self.csv_intervals_line_edit = QtGui.QLineEdit(str(self.data['csv_intervals']))
+        self.csv_intervals_line_edit = QtGui.QLineEdit(str(Case.instance().chrono.csv_intervals.value))
         self.csv_option_layout.addWidget(self.csv_intervals_checkbox)
         self.csv_option_layout.addWidget(self.csv_intervals_option)
         self.csv_option_layout.addWidget(self.csv_intervals_line_edit)
@@ -47,13 +51,10 @@ class ChronoConfigDialog(QtGui.QDialog):
         # Option for define scale used to create the initial scheme of Chrono objects
         self.scale_scheme_option_layout = QtGui.QHBoxLayout()
         self.scale_scheme_checkbox = QtGui.QCheckBox()
-        if self.data['scale_scheme_check']:
-            self.scale_scheme_checkbox.setCheckState(QtCore.Qt.Checked)
-        else:
-            self.scale_scheme_checkbox.setCheckState(QtCore.Qt.Unchecked)
+        self.scale_scheme_checkbox.setCheckState(QtCore.Qt.Checked if Case.instance().chrono.scale_scheme.enabled else QtCore.Qt.Unchecked)
         self.scale_scheme_checkbox.toggled.connect(self.on_scale_scheme_checkbox)
         self.scale_scheme_option = QtGui.QLabel(__("Scale for scheme:"))
-        self.scale_scheme_line_edit = QtGui.QLineEdit(str(self.data['scale_scheme']))
+        self.scale_scheme_line_edit = QtGui.QLineEdit(str(Case.instance().chrono.scale_scheme.value))
         self.scale_scheme_option_layout.addWidget(self.scale_scheme_checkbox)
         self.scale_scheme_option_layout.addWidget(self.scale_scheme_option)
         self.scale_scheme_option_layout.addWidget(self.scale_scheme_line_edit)
@@ -61,13 +62,13 @@ class ChronoConfigDialog(QtGui.QDialog):
         # Option for allow collision overlap according Dp
         self.collisiondp_option_layout = QtGui.QHBoxLayout()
         self.collisiondp_checkbox = QtGui.QCheckBox()
-        if self.data['collisiondp_check']:
+        if Case.instance().chrono.collisiondp.enabled:
             self.collisiondp_checkbox.setCheckState(QtCore.Qt.Checked)
         else:
             self.collisiondp_checkbox.setCheckState(QtCore.Qt.Unchecked)
         self.collisiondp_checkbox.toggled.connect(self.on_collisiondp_checkbox)
         self.collisiondp_option = QtGui.QLabel(__("Collision Dp:"))
-        self.collisiondp_line_edit = QtGui.QLineEdit(str(self.data['collisiondp']))
+        self.collisiondp_line_edit = QtGui.QLineEdit(str(Case.instance().chrono.collisiondp.value))
         self.collisiondp_option_layout.addWidget(self.collisiondp_checkbox)
         self.collisiondp_option_layout.addWidget(self.collisiondp_option)
         self.collisiondp_option_layout.addWidget(self.collisiondp_line_edit)
@@ -87,56 +88,35 @@ class ChronoConfigDialog(QtGui.QDialog):
 
         # Create the necessary spaces in the list
         self.count = 0
-        for key in self.data['simobjects'].keys():
-            self.context_object = FreeCAD.ActiveDocument.getObject(key)
-            if self.data['simobjects'][self.context_object.Name][1] != "Fluid" and \
-                    self.context_object.Name != "Case_Limits":
-                self.count += 1
-        self.objectlist_table.setRowCount(self.count)
+        self.objectlist_table.setRowCount(len(Case.instance().get_all_bound_objects()))
         self.current_row = 0
         self.objects_with_parent = list()
         self.is_floating = ""
-        # FIXME: This seems a quick way to not destroy objects from memory. Study and clean
-        self.temp_data = list()
+        self.chrono_object_options_widgets = list()
 
         # Select the objects that are going to be listed
-        for key, _ in self.data['simobjects'].items():
-            self.context_object = FreeCAD.ActiveDocument.getObject(key)
-            if self.context_object.InList != list():
-                self.objects_with_parent.append(self.context_object.Name)
-                continue
-            if self.context_object.Name == "Case_Limits":
-                continue
-            if self.data['simobjects'][self.context_object.Name][1] == "Fluid":
-                continue
-
-            # FIXME: Adapt to new refactored data
-            # self.is_floating = "bodyfloating" if str(value[0]) in data['floating_mks'].keys() else "bodyfixed"
+        for sim_object in Case.instance().get_all_bound_objects():
+            self.is_floating = "bodyfloating" if Case.instance().get_mk_based_properties(sim_object.mk).float_property else "bodyfixed"
 
             # Collects the information of the object
             self.target_widget = ChronoObjectCheckOptions(
-                key=key,
-                object_mk=self.data['simobjects'][self.context_object.Name][0],
-                mktype=self.data['simobjects'][self.context_object.Name][1],
+                key=sim_object.name,
+                object_mk=sim_object.mk,
+                mktype=sim_object.type,
                 object_name=self.context_object.Label,
                 is_floating=self.is_floating
             )
 
-            # Actualices the state of list options
-            # FIXME: Adapt to new refactored data
-            # if len(self.data['chrono_objects']) > 0:
-            #     for elem in self.data['chrono_objects']:
-            #         if elem[0] == str(key) and elem[3] == 1:
-            #             self.target_widget.object_check.setCheckState(QtCore.Qt.Checked)
-            #             self.target_widget.geometry_check.setCheckState(QtCore.Qt.Checked)
-            #             self.target_widget.modelnormal_input.setCurrentIndex(int(elem[4]))
-            #         elif elem[0] == str(key) and elem[3] == 0:
-            #             self.target_widget.object_check.setCheckState(QtCore.Qt.Checked)
-            #             self.target_widget.geometry_check.setCheckState(QtCore.Qt.Unchecked)
-            #             self.target_widget.modelnormal_input.setCurrentIndex(int(elem[4]))
+            # Updates the state of list options
+            if Case.instance().chrono.objects:
+                for elem in Case.instance().chrono.objects:
+                    if elem.id == sim_object.name:
+                        self.target_widget.object_check.setCheckState(QtCore.Qt.Checked if elem.modelnormal_enabled else QtCore.Qt.Unchecked)
+                        self.target_widget.geometry_check.setCheckState(QtCore.Qt.Checked if elem.modelnormal_enabled else QtCore.Qt.Unchecked)
+                        self.target_widget.modelnormal_input.setCurrentIndex({ChronoModelNormalType.ORIGINAL: 0, ChronoModelNormalType.INVERT: 1, ChronoModelNormalType.TWOFACE: 2}[elem.modelnormal_type])
 
             # Saves the information about object for being process later
-            self.temp_data.append(self.target_widget)
+            self.chrono_object_options_widgets.append(self.target_widget)
 
             # Shows the object in table
             self.objectlist_table.setCellWidget(self.current_row, 0, self.target_widget)
@@ -287,7 +267,7 @@ class ChronoConfigDialog(QtGui.QDialog):
             target = self.link_hinge_layout2.takeAt(0)
             target.setParent(None)
 
-        for linkhinge in self.data['link_hinge']:
+        for linkhinge in Case.instance().chrono.link_hinge:
             count += 1
             to_add_layout = QtGui.QHBoxLayout()
             to_add_label = QtGui.QLabel("Link hinge" + str(count))
@@ -297,8 +277,8 @@ class ChronoConfigDialog(QtGui.QDialog):
             to_add_deletebutton = QtGui.QPushButton("Delete")
             to_add_layout.addWidget(to_add_editbutton)
             to_add_layout.addWidget(to_add_deletebutton)
-            to_add_editbutton.clicked.connect(lambda lh=linkhinge[0]: self.link_hinge_edit(lh))
-            to_add_deletebutton.clicked.connect(lambda lh=linkhinge[0]: self.link_hinge_delete(lh))
+            to_add_editbutton.clicked.connect(lambda lh=linkhinge.id: self.link_hinge_edit(lh))
+            to_add_deletebutton.clicked.connect(lambda lh=linkhinge.id: self.link_hinge_delete(lh))
             self.link_hinge_layout2.addLayout(to_add_layout)
 
     def refresh_link_linearspring(self):
@@ -308,7 +288,7 @@ class ChronoConfigDialog(QtGui.QDialog):
             target = self.link_linearspring_layout2.takeAt(0)
             target.setParent(None)
 
-        for linkLinearspring in self.data['link_linearspring']:
+        for linkLinearspring in Case.instance().chrono.link_linearspring:
             count += 1
             to_add_layout = QtGui.QHBoxLayout()
             to_add_label = QtGui.QLabel("Link linearspring" + str(count))
@@ -318,8 +298,8 @@ class ChronoConfigDialog(QtGui.QDialog):
             to_add_deletebutton = QtGui.QPushButton("Delete")
             to_add_layout.addWidget(to_add_editbutton)
             to_add_layout.addWidget(to_add_deletebutton)
-            to_add_editbutton.clicked.connect(lambda ll=linkLinearspring[0]: self.link_linearspring_edit(ll))
-            to_add_deletebutton.clicked.connect(lambda ll=linkLinearspring[0]: self.link_linearspring_delete(ll))
+            to_add_editbutton.clicked.connect(lambda ll=linkLinearspring.id: self.link_linearspring_edit(ll))
+            to_add_deletebutton.clicked.connect(lambda ll=linkLinearspring.id: self.link_linearspring_delete(ll))
             self.link_linearspring_layout2.addLayout(to_add_layout)
 
     def refresh_link_spheric(self):
@@ -329,7 +309,7 @@ class ChronoConfigDialog(QtGui.QDialog):
             target = self.link_spheric_layout2.takeAt(0)
             target.setParent(None)
 
-        for linkSpheric in self.data['link_spheric']:
+        for linkSpheric in Case.instance().chrono.link_spheric:
             count += 1
             to_add_layout = QtGui.QHBoxLayout()
             to_add_label = QtGui.QLabel("Link spheric" + str(count))
@@ -339,8 +319,8 @@ class ChronoConfigDialog(QtGui.QDialog):
             to_add_deletebutton = QtGui.QPushButton("Delete")
             to_add_layout.addWidget(to_add_editbutton)
             to_add_layout.addWidget(to_add_deletebutton)
-            to_add_editbutton.clicked.connect(lambda ls=linkSpheric[0]: self.link_spheric_edit(ls))
-            to_add_deletebutton.clicked.connect(lambda ls=linkSpheric[0]: self.link_spheric_delete(ls))
+            to_add_editbutton.clicked.connect(lambda ls=linkSpheric.id: self.link_spheric_edit(ls))
+            to_add_deletebutton.clicked.connect(lambda ls=linkSpheric.id: self.link_spheric_delete(ls))
             self.link_spheric_layout2.addLayout(to_add_layout)
 
     def refresh_link_pointline(self):
@@ -350,7 +330,7 @@ class ChronoConfigDialog(QtGui.QDialog):
             target = self.link_pointline_layout2.takeAt(0)
             target.setParent(None)
 
-        for linkPointline in self.data['link_pointline']:
+        for linkPointline in Case.instance().chrono.link_pointline:
             count += 1
             to_add_layout = QtGui.QHBoxLayout()
             to_add_label = QtGui.QLabel("Link pointline" + str(count))
@@ -360,102 +340,92 @@ class ChronoConfigDialog(QtGui.QDialog):
             to_add_deletebutton = QtGui.QPushButton("Delete")
             to_add_layout.addWidget(to_add_editbutton)
             to_add_layout.addWidget(to_add_deletebutton)
-            to_add_editbutton.clicked.connect(lambda lp=linkPointline[0]: self.link_pointline_edit(lp))
-            to_add_deletebutton.clicked.connect(lambda lp=linkPointline[0]: self.link_pointline_delete(lp))
+            to_add_editbutton.clicked.connect(lambda lp=linkPointline.id: self.link_pointline_edit(lp))
+            to_add_deletebutton.clicked.connect(lambda lp=linkPointline.id: self.link_pointline_delete(lp))
             self.link_pointline_layout2.addLayout(to_add_layout)
 
     def on_link_hinge_add(self):
         ''' Adds Link hinge option at list '''
-        # data['link_hinge'] = [element id, body 1, body 2, rotpoint[x,y,z], rotvector[x,y,z], stiffness, damping]
         uid_temp = uuid.uuid4()
-        self.data['link_hinge'].append([
-            str(uid_temp), '', '', [0, 0, 0], [0, 0, 0], 0, 0])
+        Case.instance().chrono.link_hinge.append(ChronoLinkHinge())
         self.link_hinge_edit(str(uid_temp))
 
     def link_hinge_delete(self, link_hinge_id):
         ''' Delete a link hinge element '''
         link_hinge_to_remove = None
-        for lh in self.data['link_hinge']:
-            if lh[0] == link_hinge_id:
+        for lh in Case.instance().chrono.link_hinge:
+            if lh.id == link_hinge_id:
                 link_hinge_to_remove = lh
         if link_hinge_to_remove is not None:
-            self.data['link_hinge'].remove(link_hinge_to_remove)
+            Case.instance().chrono.link_hinge.remove(link_hinge_to_remove)
             self.refresh_link_hinge()
 
     def link_hinge_edit(self, link_hinge_id):
         ''' Edit a link hinge element '''
-        LinkHingeEdit(self.data, self.temp_data, link_hinge_id)
+        LinkHingeEdit(Case.instance(), self.chrono_object_options_widgets, link_hinge_id)
         self.refresh_link_hinge()
 
     def on_link_linearspring_add(self):
         ''' Adds Link linearspring option at list '''
         uid_temp = uuid.uuid4()
-        # data['link_linearspring'] = [element id, body 1, body 2, point_fb1[x,y,z], point_fb2[x,y,z], stiffness,
-        # damping, rest_length, savevtk[nside, radius, length]]
-        self.data['link_linearspring'].append([
-            str(uid_temp), '', '', [0, 0, 0], [0, 0, 0], 0, 0, 0, [0, 0, 0]])
+        Case.instance().chrono.link_linearspring.append(ChronoLinkLinearSpring())
         self.link_linearspring_edit(str(uid_temp))
 
     def link_linearspring_delete(self, link_linearspring_id):
         ''' Delete a link linearspring element '''
         link_linearspring_to_remove = None
-        for ll in self.data['link_linearspring']:
-            if ll[0] == link_linearspring_id:
+        for ll in Case.instance().chrono.link_linearspring:
+            if ll.id == link_linearspring_id:
                 link_linearspring_to_remove = ll
         if link_linearspring_to_remove is not None:
-            self.data['link_linearspring'].remove(link_linearspring_to_remove)
+            Case.instance().chrono.link_linearspring.remove(link_linearspring_to_remove)
             self.refresh_link_linearspring()
 
     def link_linearspring_edit(self, link_linearspring_id):
         ''' Edit a link linearspring element '''
-        LinkLinearspringEdit(self.data, self.temp_data, link_linearspring_id)
+        LinkLinearspringEdit(Case.instance(), self.chrono_object_options_widgets, link_linearspring_id)
         self.refresh_link_linearspring()
 
     def on_link_spheric_add(self):
         ''' Adds Link spheric option at list '''
         uid_temp = uuid.uuid4()
-        # data['link_spheric'] = [element id, body 1, body 2, rotpoint[x,y,z], stiffness, damping]
-        self.data['link_spheric'].append([
-            str(uid_temp), '', '', [0, 0, 0], 0, 0])
+        Case.instance().chrono.link_spheric.append(ChronoLinkSpheric())
         self.link_spheric_edit(str(uid_temp))
 
     def link_spheric_delete(self, link_spheric_id):
         ''' Delete a link spheric element '''
         link_spheric_to_remove = None
-        for ls in self.data['link_spheric']:
-            if ls[0] == link_spheric_id:
+        for ls in Case.instance().chrono.link_spheric:
+            if ls.id == link_spheric_id:
                 link_spheric_to_remove = ls
         if link_spheric_to_remove is not None:
-            self.data['link_spheric'].remove(link_spheric_to_remove)
+            Case.instance().chrono.link_spheric.remove(link_spheric_to_remove)
             self.refresh_link_spheric()
 
     def link_spheric_edit(self, link_spheric_id):
         ''' Edit a link spheric element '''
-        LinkSphericEdit(self.data, self.temp_data, link_spheric_id)
+        LinkSphericEdit(Case.instance(), self.chrono_object_options_widgets, link_spheric_id)
         self.refresh_link_spheric()
 
     def on_link_pointline_add(self):
         ''' Adds Link pointline option at list '''
         uid_temp = uuid.uuid4()
-        # data['link_pointline'] = [element id, body 1, slidingvector[x,y,z], rotpoint[x,y,z], rotvector[x,y,z],
-        # rotvector2[x,y,z], stiffness, damping]
-        self.data['link_pointline'].append([
-            str(uid_temp), '', [0, 0, 0], [0, 0, 0], [0, 0, 0], [0, 0, 0], 0, 0])
+        Case.instance().chrono.link_pointline.append(ChronoLinkPointLine())
         self.link_pointline_edit(str(uid_temp))
 
     def link_pointline_delete(self, link_pointline_id):
         ''' Delete a link pointline element '''
         link_pointline_to_remove = None
-        for lp in self.data['link_pointline']:
-            if lp[0] == link_pointline_id:
+        for lp in Case.instance().chrono.link_pointline:
+            if lp.id == link_pointline_id:
                 link_pointline_to_remove = lp
         if link_pointline_to_remove is not None:
-            self.data['link_pointline'].remove(link_pointline_to_remove)
+            Case.instance().chrono.link_pointline.remove(link_pointline_to_remove)
             self.refresh_link_pointline()
 
     def link_pointline_edit(self, link_pointline_id):
         ''' Edit a link pointline element '''
-        LinkPointlineEdit(self.data, self.temp_data, link_pointline_id)
+        LinkPointlineEdit(Case.instance(), self.chrono_object_options_widgets, link_pointline_id)
         self.refresh_link_pointline()
 
     def on_cancel(self):
@@ -466,54 +436,57 @@ class ChronoConfigDialog(QtGui.QDialog):
         ''' Check all the conditions before save '''
 
         # Clean the chrono object list
-        self.data['chrono_objects'] = list()
+        Case.instance().chrono.objects = list()
 
         # Checks the chrono objects and options for save
-        for elem in self.temp_data:
-            if elem.object_check.isChecked() and elem.geometry_check.isChecked():
-                self.data['chrono_objects'].append([elem.key, elem.object_name, elem.object_mk, 1,
-                                                    elem.modelnormal_input.currentIndex(), elem.is_floating])
-            elif elem.object_check.isChecked():
-                self.data['chrono_objects'].append([elem.key, elem.object_name, elem.object_mk, 0, 0, elem.is_floating])
+        for elem in self.chrono_object_options_widgets:
+            chrono_object = ChronoObject()
+            chrono_object.id = elem.key
+            chrono_object.name = elem.object_name
+            chrono_object.mkbound = elem.object_mk
+            chrono_object.modelnormal_enabled = elem.geometry_check.isChecked()
+            chrono_object.modelnormal_type = {0: ChronoModelNormalType.ORIGINAL, 1: ChronoModelNormalType.INVERT, 2: ChronoModelNormalType.TWOFACE}[elem.modelnormal_input.currentIndex()]
+            chrono_object.floating_type = elem.is_floating
+            Case.instance().chrono.objects.append(chrono_object)
 
         # Checks the csv interval option for save
         if self.csv_intervals_checkbox.isChecked():
-            self.data['csv_intervals_check'] = True
+            Case.instance().chrono.csv_intervals.enabled = True
             try:
-                self.data['csv_intervals'] = float(self.csv_intervals_line_edit.text())
+                Case.instance().chrono.csv_intervals.value = float(self.csv_intervals_line_edit.text())
             except ValueError:
-                self.data['csv_intervals_check'] = False
-                self.data['csv_intervals'] = ""
+                Case.instance().chrono.csv_intervals.enabled = False
+                Case.instance().chrono.csv_intervals.value = ""
                 debug("Introduced an invalid value for a float number.")
         else:
-            self.data['csv_intervals_check'] = False
-            self.data['csv_intervals'] = ""
+            Case.instance().chrono.csv_intervals.enabled = False
+            Case.instance().chrono.csv_intervals.value = ""
 
         # Checks the scale scheme option for save
         if self.scale_scheme_checkbox.isChecked():
-            self.data['scale_scheme_check'] = True
+            Case.instance().chrono.scale_scheme.enabled = True
             try:
-                self.data['scale_scheme'] = float(self.scale_scheme_line_edit.text())
+                Case.instance().chrono.scale_scheme.value = float(self.scale_scheme_line_edit.text())
             except ValueError:
-                self.data['scale_scheme_check'] = False
-                self.data['scale_scheme'] = ""
+                Case.instance().chrono.scale_scheme.enabled = False
+                Case.instance().chrono.scale_scheme.value = ""
                 debug("Introduced an invalid value for a float number.")
         else:
-            self.data['scale_scheme_check'] = False
-            self.data['scale_scheme'] = ""
+            Case.instance().chrono.scale_scheme.enabled = False
+            Case.instance().chrono.scale_scheme.value = ""
 
         # Checks the collisiondp option for save
         if self.collisiondp_checkbox.isChecked():
-            self.data['collisiondp_check'] = True
+            Case.instance().chrono.collisiondp.enabled = True
             try:
-                self.data['collisiondp'] = float(self.collisiondp_line_edit.text())
+                Case.instance().chrono.collisiondp.value = float(self.collisiondp_line_edit.text())
             except ValueError:
-                self.data['collisiondp_check'] = False
-                self.data['collisiondp'] = ""
+                Case.instance().chrono.collisiondp.enabled = False
+                Case.instance().chrono.collisiondp.value = ""
                 debug("Introduced an invalid value for a float number.")
         else:
-            self.data['collisiondp_check'] = False
-            self.data['collisiondp'] = ""
+            Case.instance().chrono.collisiondp.enabled = False
+            Case.instance().chrono.collisiondp.value = ""
 
     def on_ok(self):
         ''' Save data '''

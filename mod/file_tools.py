@@ -20,7 +20,7 @@ from sys import platform
 from datetime import datetime
 from traceback import print_exc
 from glob import glob
-from os import path, chdir, makedirs, remove
+from os import path, chdir, makedirs
 
 import FreeCAD
 import FreeCADGui
@@ -28,7 +28,7 @@ import Mesh
 import Fem
 from femmesh.femmesh2mesh import femmesh_2_mesh
 
-from mod.stdout_tools import log, warning, error, debug
+from mod.stdout_tools import log, error, debug
 from mod.translation_tools import __
 from mod.xml import XMLExporter
 from mod.dialog_tools import error_dialog
@@ -41,7 +41,6 @@ from mod.constants import VERSION, PICKLE_PROTOCOL, DIVIDER
 
 
 from mod.dataobjects.flow_tool_box import FlowToolBox
-from mod.dataobjects.acceleration_input import AccelerationInput
 from mod.dataobjects.movement import Movement
 from mod.dataobjects.rect_motion import RectMotion
 from mod.dataobjects.wait_motion import WaitMotion

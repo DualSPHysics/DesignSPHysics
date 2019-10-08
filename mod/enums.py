@@ -134,3 +134,16 @@ class InletOutletElevationType:
     FIXED = "fixed"
     VARIABLE = "variable"
     AUTOMATIC = "automatic"
+
+
+class ChronoModelNormalType:
+    ''' Chrono ModelNormal types. '''
+    ORIGINAL = "original"
+    INVERT = "invert"
+    TWOFACE = "twoface"
+
+
+class ChronoFloatingType:
+    ''' Chrono Floating types. '''
+    BODYFLOATING = "bodyfloating"
+    BODYFIXED = "bodyfixed"
