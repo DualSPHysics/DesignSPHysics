@@ -90,3 +90,47 @@ class FreeCADDisplayMode:
 class Template:
     ''' Text templates stored in disk. '''
     CASE_SUMMARY = "case_summary_template.html"
+
+
+class InletOutletDetermLimit:
+    ''' Inlet/Oulet DetermLimit Value. '''
+    ZEROTH_ORDER = "1e+3"
+    FIRST_ORDER = "1e-3"
+
+
+class InletOutletZoneType:
+    ''' Inlet/Oulet Zone Type. '''
+    ZONE_2D = "zone2d"
+    ZONE_3D = "zone3d"
+
+
+class InletOutletDirection:
+    ''' Inlet/Outlet Zone Direction. '''
+    LEFT = "left"
+    RIGHT = "right"
+    FRONT = "front"
+    BACK = "back"
+    TOP = "top"
+    BOTTOM = "bottom"
+
+
+class InletOutletVelocityType:
+    ''' Inlet/Outlet Velocity Type '''
+    FIXED = "fixed"
+    VARIABLE = "variable"
+    EXTRAPOLATED = "extrapolated"
+    INTERPOLATED = "interpolated"
+
+
+class InletOutletDensityType:
+    ''' Inlet/Outlet Density Type. '''
+    FIXED = "fixed"
+    HYDROSTATIC = "hydrostatic"
+    EXTRAPOLATED = "extrapolated"
+
+
+class InletOutletElevationType:
+    ''' Inlet/Outler Elevation Type. '''
+    FIXED = "fixed"
+    VARIABLE = "variable"
+    AUTOMATIC = "automatic"

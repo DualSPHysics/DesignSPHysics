@@ -11,8 +11,10 @@ from mod.translation_tools import __
 
 from mod.widgets.inlet_zone_edit import InletZoneEdit
 
+from mod.dataobjects.case import Case
+from mod.dataobjects.inlet_outlet_config import InletOutletConfig
+from mod.dataobjects.inlet_outlet_zone import InletOutletZone
 
-# FIXME: Use new Case data structure instead of old data
 class InletConfigDialog(QtGui.QDialog):
     ''' Defines the Inlet/Outlet dialog window.
        Modifies data dictionary passed as parameter. '''
@@ -37,7 +39,7 @@ class InletConfigDialog(QtGui.QDialog):
         self.reuseids_combobox.insertItems(0, [__("False"), __("True")])
 
         try:
-            if str(self.data['inlet_object'][0]) == "False":
+            if not Case.instance().inlet_outlet.reuseids:
                 self.reuseids_combobox.setCurrentIndex(0)
             else:
                 self.reuseids_combobox.setCurrentIndex(1)
@@ -53,7 +55,7 @@ class InletConfigDialog(QtGui.QDialog):
         self.resizetime_layout = QtGui.QHBoxLayout()
         self.resizetime_option = QtGui.QLabel(__("Resizetime: "))
         try:
-            self.resizetime_line_edit = QtGui.QLineEdit(str(self.data['inlet_object'][1]))
+            self.resizetime_line_edit = QtGui.QLineEdit(str(Case.instance().inlet_outlet.resizetime))
         except:
             print_exc()
             self.resizetime_line_edit = QtGui.QLineEdit("0.5")
@@ -69,7 +71,7 @@ class InletConfigDialog(QtGui.QDialog):
         self.refilling_combobox.insertItems(0, [__("False"), __("True")])
 
         try:
-            if str(self.data['inlet_object'][2]) == "False":
+            if str(Case.instance().inlet_outlet.userefilling) == "False":
                 self.refilling_combobox.setCurrentIndex(0)
             else:
                 self.refilling_combobox.setCurrentIndex(1)
@@ -88,7 +90,7 @@ class InletConfigDialog(QtGui.QDialog):
         self.determlimit_combobox.insertItems(0, [__("1e+3"), __("1e-3")])
 
         try:
-            if str(self.data['inlet_object'][3]) == "1e+3":
+            if str(Case.instance().inlet_outlet.determlimit) == "1e+3":
                 self.determlimit_combobox.setCurrentIndex(0)
             else:
                 self.determlimit_combobox.setCurrentIndex(1)
@@ -167,8 +169,7 @@ class InletConfigDialog(QtGui.QDialog):
     def on_add_zone(self):
         ''' Adds Inlet/Outlet zone '''
         uid_temp = uuid.uuid4()
-        self.data['inlet_zone'].append([
-            str(uid_temp), 0, 0, [0, 0, 0], [0, 0], [0, 0], [0, 0, 0]])
+        Case.instance().inlet_outlet.zones.append(InletOutletZone())
         self.zone_edit(str(uid_temp))
 
     def refresh_zones(self):
@@ -178,7 +179,7 @@ class InletConfigDialog(QtGui.QDialog):
             target = self.zones_layout_list.takeAt(0)
             target.setParent(None)
 
-        for inletObject in self.data['inlet_zone']:
+        for inletObject in Case.instance().inlet_outlet.zones:
             count += 1
             to_add_layout = QtGui.QHBoxLayout()
             to_add_layout2 = QtGui.QHBoxLayout()
@@ -191,19 +192,19 @@ class InletConfigDialog(QtGui.QDialog):
             to_add_deletebutton = QtGui.QPushButton("Delete")
             to_add_layout.addWidget(to_add_editbutton)
             to_add_layout.addWidget(to_add_deletebutton)
-            to_add_editbutton.clicked.connect(lambda io=inletObject[0]: self.zone_edit(io))
+            to_add_editbutton.clicked.connect(lambda io=inletObject.id: self.zone_edit(io))
             to_add_deletebutton.clicked.connect(lambda io=inletObject: self.zone_delete(io))
             self.zones_layout_list.addLayout(to_add_layout2)
             self.zones_layout_list.addLayout(to_add_layout)
 
     def zone_delete(self, io):
         ''' Delete one zone from the list '''
-        self.data['inlet_zone'].remove(io)
+        Case.instance().inlet_outlet.zones.remove(io)
         self.refresh_zones()
 
     def zone_edit(self, io):
         ''' Calls a window for edit zones '''
-        InletZoneEdit(self.data, io)
+        InletZoneEdit(io)
         self.refresh_zones()
 
     def on_cancel(self):
@@ -213,11 +214,11 @@ class InletConfigDialog(QtGui.QDialog):
     def on_ok(self):
         ''' Save data '''
 
-        if not self.data['inlet_object']:
-            self.data['inlet_object'] = [0, 0.5, 0, 0]
+        if not Case.instance().inlet_outlet:
+            Case.instance().inlet_outlet = InletOutletConfig
 
-        self.data['inlet_object'][0] = self.reuseids_combobox.currentText()
-        self.data['inlet_object'][1] = self.resizetime_line_edit.text()
-        self.data['inlet_object'][2] = self.refilling_combobox.currentText()
-        self.data['inlet_object'][3] = self.determlimit_combobox.currentText()
+        Case.instance().inlet_outlet.reuseids = self.reuseids_combobox.currentText()
+        Case.instance().inlet_outlet.resizetime = self.resizetime_line_edit.text()
+        Case.instance().inlet_outlet.userefilling = self.refilling_combobox.currentText()
+        Case.instance().inlet_outlet.determlimit = self.determlimit_combobox.currentText()
         InletConfigDialog.accept(self)

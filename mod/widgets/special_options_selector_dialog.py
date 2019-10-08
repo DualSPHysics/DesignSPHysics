@@ -31,7 +31,6 @@ from mod.dataobjects.relaxation_zone_regular import RelaxationZoneRegular
 from mod.dataobjects.relaxation_zone_irregular import RelaxationZoneIrregular
 from mod.dataobjects.relaxation_zone_file import RelaxationZoneFile
 from mod.dataobjects.relaxation_zone_uniform import RelaxationZoneUniform
-from mod.dataobjects.damping import Damping
 
 
 class SpecialOptionsSelectorDialog(QtGui.QDialog):

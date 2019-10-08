@@ -367,54 +367,6 @@ def get_default_data():
     data['modelnormal_check'] = 0
     data['modelnormal_print'] = "original"
 
-    # INLET/OUTLET objects
-    # [id, convertfluid, layers, [zone2/3D, mk, direction], [velocity, value], [density, value], [elevation,zbottom, zsurf]]
-    data['inlet_zone'] = list()
-    #[reuseids, resizetime, userefilling, determlimit]
-    data['inlet_object'] = [0, 0.5, 0, 0]
-
-    # Try to load saved paths. This way the user does not need
-    # to introduce the software paths every time
-    if path.isfile(FreeCAD.getUserAppDataDir() + '/dsph_data-{}.dsphdata'.format(VERSION)):
-        try:
-            with open(FreeCAD.getUserAppDataDir() + '/dsph_data-{}.dsphdata'.format(VERSION), 'rb') as picklefile:
-                log("Found data file. Loading data from disk.")
-                disk_data = pickle.load(picklefile)
-                data['gencase_path'] = disk_data['gencase_path']
-                data['dsphysics_path'] = disk_data['dsphysics_path']
-                data['partvtk4_path'] = disk_data['partvtk4_path']
-                data['computeforces_path'] = disk_data['computeforces_path']
-                data['floatinginfo_path'] = disk_data['floatinginfo_path']
-                data['measuretool_path'] = disk_data['measuretool_path']
-                data['isosurface_path'] = disk_data['isosurface_path']
-                data['boundaryvtk_path'] = disk_data['boundaryvtk_path']
-                data['flowtool_path'] = disk_data['flowtool_path']
-                data['paraview_path'] = disk_data['paraview_path']
-
-        except Exception:
-            warning(__("The main settings file is corrupted. Deleting..."))
-            remove(picklefile.name)
-            data['gencase_path'] = ""
-            data['dsphysics_path'] = ""
-            data['partvtk4_path'] = ""
-            data['computeforces_path'] = ""
-            data['floatinginfo_path'] = ""
-            data['measuretool_path'] = ""
-            data['isosurface_path'] = ""
-            data['boundaryvtk_path'] = ""
-            data['flowtool_path'] = ""
-            data['paraview_path'] = ""
-            data.update(get_default_config_file())
-
-        # data, _ = check_executables(data)
-        with open(FreeCAD.getUserAppDataDir() + '/dsph_data-{}.dsphdata'.format(VERSION), 'wb') as picklefile:
-            pickle.dump(data, picklefile, PICKLE_PROTOCOL)
-    else:
-        # Settings file not created. Merging with default one inf default-config.json
-        data["project_path"] = ""
-        data["project_name"] = ""
-        data.update(get_default_config_file())
-
     return data, temp_data
 
 
