@@ -7,6 +7,8 @@ from PySide import QtGui, QtCore
 from mod.translation_tools import __
 from mod.post_processing_tools import measuretool_export
 
+from mod.dataobjects.case import Case
+
 from mod.widgets.measuretool_grid_dialog import MeasureToolGridDialog
 from mod.widgets.measuretool_points_dialog import MeasureToolPointsDialog
 
@@ -159,7 +161,7 @@ class MeasureToolDialog(QtGui.QDialog):
         else:
             export_parameters['additional_parameters'] = ''
 
-        measuretool_export(export_parameters, self.post_processing_widget)
+        measuretool_export(export_parameters, Case.instance(), self.post_processing_widget)
         self.accept()
 
     def on_mtool_measure_all_change(self, state):

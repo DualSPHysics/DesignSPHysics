@@ -7,8 +7,9 @@ from PySide import QtCore, QtGui
 from mod.translation_tools import __
 from mod.stdout_tools import debug
 
+from mod.dataobjects.case import Case
 
-# FIXME: Change data references for refactored Case data
+
 class MeasureToolGridDialog(QtGui.QDialog):
     ''' Defines grid point button behaviour.'''
 
@@ -38,7 +39,7 @@ class MeasureToolGridDialog(QtGui.QDialog):
             "FinalZ"
         ])
 
-        for i, grid in enumerate(self.temp_data['measuretool_grid']):
+        for i, grid in enumerate(Case.instance().info.measuretool_grid):
             for j in range(0, self.mgrid_table.columnCount()):
                 self.mgrid_table.setItem(i, j, QtGui.QTableWidgetItem(str(grid[j])))
                 if j > 8:
@@ -46,7 +47,7 @@ class MeasureToolGridDialog(QtGui.QDialog):
                     self.mgrid_table.item(i, j).setBackground(QtGui.QColor(210, 255, 255))
                     self.mgrid_table.item(i, j).setFlags(QtCore.Qt.ItemIsSelectable | QtCore.Qt.ItemIsEnabled)
 
-        if self.temp_data['measuretool_grid'] == list():
+        if Case.instance().info.measuretool_grid == list():
             for self.mgrid_row in range(0, self.mgrid_table.rowCount()):
                 self.mgrid_table.setItem(self.mgrid_row, 9, QtGui.QTableWidgetItem(""))
                 self.mgrid_table.setItem(self.mgrid_row, 10, QtGui.QTableWidgetItem(""))
@@ -142,7 +143,7 @@ class MeasureToolGridDialog(QtGui.QDialog):
 
     def on_mgrid_accept(self):
         ''' MeasureTool point grid accept button behaviour.'''
-        self.temp_data['measuretool_grid'] = list()
+        Case.instance().info.measuretool_grid = list()
         for self.mgrid_row in range(0, self.mgrid_table.rowCount()):
             try:
                 self.current_grid = [
@@ -159,13 +160,12 @@ class MeasureToolGridDialog(QtGui.QDialog):
                     float(self.mgrid_table.item(self.mgrid_row, 10).text()),
                     float(self.mgrid_table.item(self.mgrid_row, 11).text())
                 ]
-                self.temp_data['measuretool_grid'].append(self.current_grid)
+                Case.instance().info.measuretool_grid.append(self.current_grid)
             except (ValueError, AttributeError):
                 pass
 
         # Deletes the list of points (not compatible together)
-        self.temp_data['measuretool_points'] = list()
-        #self.temp_data['measuretool_grid'] = list()
+        Case.instance().info.measuretool_points = list()
         self.accept()
 
     def on_mgrid_cancel(self):
