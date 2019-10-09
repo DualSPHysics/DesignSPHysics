@@ -4,6 +4,7 @@
 
 from mod.dataobjects.motion.base_motion import BaseMotion
 
+
 class CirSinuMotion(BaseMotion):
     """ DualSPHysics sinusoidal circular motion.
 
@@ -16,26 +17,13 @@ class CirSinuMotion(BaseMotion):
             phase: Phase
         """
 
-    def __init__(self, reference=None, duration=1, axis1=None, axis2=None, freq=None, ampl=None, phase=None,
-                 parent_movement=None):
-        if reference is None:
-            reference = [0, 0, 0]
-        if axis1 is None:
-            axis1 = [0, 0, 0]
-        if axis2 is None:
-            axis2 = [0, 0, 0]
-        if freq is None:
-            freq = 0
-        if ampl is None:
-            ampl = 0
-        if phase is None:
-            phase = 0
+    def __init__(self, reference=None, duration=1, axis1=None, axis2=None, freq=0, ampl=0, phase=0, parent_movement=None):
         BaseMotion.__init__(self, duration)
         self.type = "Sinusoidal Circular Motion"
         self.parent_movement = parent_movement
-        self.reference = reference
-        self.axis1 = axis1
-        self.axis2 = axis2
+        self.reference = reference or [0, 0, 0]
+        self.axis1 = axis1 or [0, 0, 0]
+        self.axis2 = axis2 or [0, 0, 0]
         self.freq = freq
         self.ampl = ampl
         self.phase = phase
@@ -48,4 +36,5 @@ class CirSinuMotion(BaseMotion):
             self.phase,
             self.reference,
             self.axis1,
-            self.axis2)
+            self.axis2
+        )

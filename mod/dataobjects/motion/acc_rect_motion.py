@@ -4,6 +4,7 @@
 
 from mod.dataobjects.motion.base_motion import BaseMotion
 
+
 class AccRectMotion(BaseMotion):
     """ DualSPHysics accelerated rectilinear motion.
 
@@ -13,15 +14,11 @@ class AccRectMotion(BaseMotion):
         """
 
     def __init__(self, duration=1, velocity=None, acceleration=None, parent_movement=None):
-        if velocity is None:
-            velocity = [0, 0, 0]
-        if acceleration is None:
-            acceleration = [0, 0, 0]
         BaseMotion.__init__(self, duration)
         self.type = "Accelerated Rectilinear motion"
         self.parent_movement = parent_movement
-        self.velocity = velocity
-        self.acceleration = acceleration
+        self.velocity = velocity or [0, 0, 0]
+        self.acceleration = acceleration or [0, 0, 0]
 
     def __str__(self):
         return "AccRectMotion [Duration: {} ; Velocity: {} ; Acceleration: {}]" \

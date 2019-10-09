@@ -55,5 +55,5 @@ class IrregularFlapWaveGen(WaveGen):
         self.saveseriewaves_timemax = saveseriewaves_timemax
         self.saveseriewaves_xpos = saveseriewaves_xpos
         self.variable_draft = variable_draft
-        self.flapaxis0 = [0, -1, 0] if flapaxis0 is None else flapaxis0
-        self.flapaxis1 = [0, 1, 0] if flapaxis1 is None else flapaxis1
+        self.flapaxis0 = flapaxis0 or [0, -1, 0]
+        self.flapaxis1 = flapaxis1 or [0, 1, 0]

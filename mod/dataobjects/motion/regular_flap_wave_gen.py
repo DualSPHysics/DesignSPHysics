@@ -18,17 +18,16 @@ class RegularFlapWaveGen(WaveGen):
     """
 
     def __init__(self, parent_movement=None, wave_order=2, start=0, duration=0, depth=0, wave_height=0.5,
-                 wave_period=1, phase=0, ramp=0, disksave_periods=24,
-                 disksave_periodsteps=20, disksave_xpos=2, disksave_zpos=-0.15, variable_draft=0.0, flapaxis0=None,
-                 flapaxis1=None):
+                 wave_period=1, phase=0, ramp=0, disksave_periods=24, disksave_periodsteps=20, disksave_xpos=2,
+                 disksave_zpos=-0.15, variable_draft=0.0, flapaxis0=None, flapaxis1=None):
         super(RegularFlapWaveGen, self).__init__(parent_movement, wave_order,
                                                  start, duration, depth, wave_height, wave_period)
         self.type = "Regular Flap Wave Generator"
         self.phase = phase
         self.ramp = ramp
         self.variable_draft = variable_draft
-        self.flapaxis0 = [0, -1, 0] if flapaxis0 is None else flapaxis0
-        self.flapaxis1 = [0, 1, 0] if flapaxis1 is None else flapaxis1
+        self.flapaxis0 = flapaxis0 or [0, -1, 0]
+        self.flapaxis1 = flapaxis1 or [0, 1, 0]
         self.disksave_periods = disksave_periods
         self.disksave_periodsteps = disksave_periodsteps
         self.disksave_xpos = disksave_xpos

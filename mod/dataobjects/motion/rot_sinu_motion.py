@@ -16,22 +16,12 @@ class RotSinuMotion(BaseMotion):
             phase: Phase
         """
 
-    def __init__(self, duration=1, axis1=None, axis2=None, freq=None, ampl=None, phase=None, parent_movement=None):
-        if axis1 is None:
-            axis1 = [0, 0, 0]
-        if axis2 is None:
-            axis2 = [0, 0, 0]
-        if freq is None:
-            freq = 0
-        if ampl is None:
-            ampl = 0
-        if phase is None:
-            phase = 0
+    def __init__(self, duration=1, axis1=None, axis2=None, freq=0, ampl=0, phase=0, parent_movement=None):
         BaseMotion.__init__(self, duration)
         self.type = "Sinusoidal Rotational Motion"
         self.parent_movement = parent_movement
-        self.axis1 = axis1
-        self.axis2 = axis2
+        self.axis1 = axis1 or [0, 0, 0]
+        self.axis2 = axis2 or [0, 0, 0]
         self.freq = freq
         self.ampl = ampl
         self.phase = phase
@@ -43,4 +33,5 @@ class RotSinuMotion(BaseMotion):
             self.ampl,
             self.phase,
             self.axis1,
-            self.axis2)
+            self.axis2
+        )

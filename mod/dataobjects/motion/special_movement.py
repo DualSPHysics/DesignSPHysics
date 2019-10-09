@@ -17,8 +17,6 @@ class SpecialMovement():
     def __init__(self, name="New Movement", generator=None):
         self.name = name
         self.type = "Wave Movement"
-        if not generator:
-            generator = None
         self.generator = generator
 
     def set_wavegen(self, generator):

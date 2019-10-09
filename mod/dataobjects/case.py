@@ -27,6 +27,8 @@ class Case():
     etcetera. Used as a way to store information and transform it for multiple needs """
     __instance: "Case" = None
 
+    DEFAULT_DP: float = 0.01
+
     def __init__(self, reset=False):
         """ Virtually private constructor. """
         if Case.__instance is not None and not reset:
@@ -36,7 +38,7 @@ class Case():
         self.version: str = VERSION
         self.name: str = ""
         self.path: str = ""
-        self.dp: float = 0.01
+        self.dp: float = self.DEFAULT_DP
         self.mode3d: bool = True
         self.constants: Constants = Constants()
         self.execution_parameters: ExecutionParameters = ExecutionParameters()

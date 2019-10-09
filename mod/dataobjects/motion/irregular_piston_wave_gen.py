@@ -53,5 +53,5 @@ class IrregularPistonWaveGen(WaveGen):
         self.saveseriewaves_timemin = saveseriewaves_timemin
         self.saveseriewaves_timemax = saveseriewaves_timemax
         self.saveseriewaves_xpos = saveseriewaves_xpos
-        self.piston_dir = [1, 0, 0] if piston_dir is None else piston_dir
+        self.piston_dir = piston_dir or [1, 0, 0]
         self.awas = AWAS() if awas is None else awas

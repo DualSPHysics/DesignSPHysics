@@ -18,8 +18,7 @@ class FileGen(WaveGen):
         fieldz: Column with Z-position
     """
 
-    def __init__(self, parent_movement=None, duration=0, filename="", fields=0, fieldtime=0, fieldx=0, fieldy=0,
-                 fieldz=0):
+    def __init__(self, parent_movement=None, duration=0, filename="", fields=0, fieldtime=0, fieldx=0, fieldy=0, fieldz=0):
         super(FileGen, self).__init__(parent_movement)
         self.duration = duration
         self.name = "File Wave Generator"
