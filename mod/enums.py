@@ -170,3 +170,10 @@ class MotionType:
     IRREGULAR_FLAP_WAVE_GENERATOR = "Irregular Flap Wave Generator"
     FILE_WAVE_GENERATOR = "File Wave Generator"
     FILE_ROTATIONAL_WAVE_GENERATOR = "Rotational File Wave Generator"
+
+
+class HelpURL:
+    """ DesignSPHysics help URLS. """
+    WIKI_HOME = "https://github.com/DualSPHysics/DesignSPHysics/wiki"
+    MOTION_HELP = "https://github.com/DualSPHysics/DesignSPHysics/wiki/Feature-Reference#configure-object-motion"
+    BASIC_CONCEPTS = "https://github.com/DualSPHysics/DesignSPHysics/wiki/Concepts-and-Clarifications"

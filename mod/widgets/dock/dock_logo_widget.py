@@ -9,7 +9,7 @@ from PySide import QtGui
 from mod.gui_tools import get_icon
 from mod.translation_tools import __
 
-from mod.constants import HELP_WEBPAGE
+from mod.enums import HelpURL
 
 
 class DockLogoWidget(QtGui.QWidget):
@@ -27,7 +27,7 @@ class DockLogoWidget(QtGui.QWidget):
 
         self.help_button = QtGui.QPushButton("Help")
         self.help_button.setToolTip(__("Push this button to open a browser with help\non how to use this tool."))
-        self.help_button.clicked.connect(lambda: webbrowser.open(HELP_WEBPAGE))
+        self.help_button.clicked.connect(lambda: webbrowser.open(HelpURL.WIKI_HOME))
 
         self.main_layout.addStretch(0.5)
         self.main_layout.addWidget(self.logo_label)

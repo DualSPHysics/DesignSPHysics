@@ -10,7 +10,7 @@ import FreeCADGui
 from PySide import QtCore, QtGui
 
 from mod.translation_tools import __
-from mod.enums import ObjectType, ObjectFillMode, FreeCADObjectType
+from mod.enums import ObjectType, ObjectFillMode, FreeCADObjectType, HelpURL
 from mod.constants import PROP_WIDGET_INTERNAL_NAME
 
 from mod.widgets.damping_config_dialog import DampingConfigDialog
@@ -218,7 +218,7 @@ class PropertiesDockWidget(QtGui.QDockWidget):
                 pass
             self.floatstate_prop.setEnabled(True)
             self.initials_prop.setEnabled(False)
-            self.mkgroup_label.setText("   " + __("MKBound") + " <a href='http://design.sphysics.org/wiki/doku.php?id=concepts'>?</a>")
+            self.mkgroup_label.setText("   {} <a href='{}'>?</a>".format(__("MKBound"), HelpURL.BASIC_CONCEPTS))
         elif self.objtype_prop.itemText(index).lower() == "fluid":
             self.mkgroup_prop.setRange(0, 10)
             if simulation_object.type != ObjectType.FLUID:
@@ -239,7 +239,7 @@ class PropertiesDockWidget(QtGui.QDockWidget):
 
             self.floatstate_prop.setEnabled(False)
             self.initials_prop.setEnabled(True)
-            self.mkgroup_label.setText("   " + __("MKFluid") + " <a href='http://design.sphysics.org/wiki/doku.php?id=concepts'>?</a>")
+            self.mkgroup_label.setText("   {} <a href='{}'>?</a>".format(__("MKFluid"), HelpURL.BASIC_CONCEPTS))
 
         # Update simulation object type
         simulation_object.type = ObjectType.FLUID if index == 0 else ObjectType.BOUND
@@ -405,7 +405,7 @@ class PropertiesDockWidget(QtGui.QDockWidget):
             self.objtype_prop.setEnabled(True)
             self.objtype_prop.setCurrentIndex(0 if sim_object.type is ObjectType.FLUID else 1)
             self.set_mkgroup_range(sim_object.type)
-            self.set_mkgroup_text("   {} <a href='http://design.sphysics.org/wiki/doku.php?id=concepts'>?</a>".format(__("MKFluid" if sim_object.type is ObjectType.FLUID else "MKBound")))
+            self.set_mkgroup_text("   {} <a href='{}'>?</a>".format(__("MKFluid" if sim_object.type is ObjectType.FLUID else "MKBound"), HelpURL.BASIC_CONCEPTS))
         else:
             # Everything else
             self.set_mkgroup_range(ObjectType.BOUND)

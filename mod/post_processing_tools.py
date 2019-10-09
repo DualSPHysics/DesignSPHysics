@@ -276,7 +276,6 @@ def isosurface_export(options, case, post_processing_widget) -> None:
         else:
             error_dialog(__("There was an error on the post-processing. Show details to view the errors."), detailed_text=case.info.current_output)
 
-        # FIXME: Refactor this to be in executable_tools
         if options["open_paraview"]:
             subprocess.Popen([case.executable_paths.paraview, "--data={}\\{}_..{}".format(case.path + "\\" + case.name + "_out", options["file_name"], "vtk")], stdout=subprocess.PIPE)
 

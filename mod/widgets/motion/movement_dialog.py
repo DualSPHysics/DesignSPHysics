@@ -9,6 +9,7 @@ from PySide import QtCore, QtGui
 from mod.translation_tools import __
 from mod.gui_tools import get_icon
 from mod.dialog_tools import info_dialog
+from mod.enums import HelpURL
 
 from mod.dataobjects.case import Case
 from mod.dataobjects.motion.movement import Movement
@@ -96,9 +97,7 @@ class MovementDialog(QtGui.QDialog):
 
         ##############################################################################
 
-        self.has_motion_helplabel = QtGui.QLabel(
-            "<a href='http://design.sphysics.org/wiki/doku.php?id=featreference#configure_object_motion'>{}</a>".format(
-                __("Movement Help")))
+        self.has_motion_helplabel = QtGui.QLabel("<a href='{}'>{}</a>".format(HelpURL.MOTION_HELP, __("Movement Help")))
         self.has_motion_helplabel.setTextFormat(QtCore.Qt.RichText)
         self.has_motion_helplabel.setTextInteractionFlags(
             QtCore.Qt.TextBrowserInteraction)
