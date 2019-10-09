@@ -9,7 +9,7 @@ from PySide import QtCore
 from mod.translation_tools import __
 from mod.dialog_tools import error_dialog, info_dialog
 from mod.freecad_tools import get_fc_main_window
-from mod.file_tools import get_total_exported_parts_from_disk
+from mod.file_tools import get_total_exported_parts_from_disk, save_measuretool_info
 
 from mod.widgets.postprocessing.export_progress_dialog import ExportProgressDialog
 
@@ -191,20 +191,7 @@ def measuretool_export(options, case, post_processing_widget) -> None:
 
     case.info.current_output = ""
 
-    # Save points to disk to later use them as parameter
-    # FIXME: Refactor this. Should be created on file_tools
-    if len(case.info.measuretool_points) > len(case.info.measuretool_grid):
-        # Save points
-        with open(case.path + "/" + "points.txt", "w") as f:
-            f.write("POINTS\n")
-            for curr_point in case.info.measuretool_points:
-                f.write("{}  {}  {}\n".format(*curr_point))
-    else:
-        # Save grid
-        with open(case.path + "/" + "points.txt", "w") as f:
-            for curr_point in case.info.measuretool_grid:
-                f.write("POINTSLIST\n")
-                f.write("{}  {}  {}\n{}  {}  {}\n{}  {}  {}\n".format(*curr_point))
+    save_measuretool_info(case.path, case.info.measuretool_points, case.info.measuretool_grid)
 
     executable_parameters = ["-dirin {out_path}".format(out_path=case.get_out_folder_path()),
                              "-filexml {out_path}{case_name}.xml".format(out_path=case.get_out_folder_path(), case_name=case.name),

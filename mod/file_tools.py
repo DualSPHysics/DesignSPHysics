@@ -321,6 +321,23 @@ def create_flowtool_boxes(file_path: str, boxes: list):
             f.write("{} {} {}\n".format(*box.point8))
             f.write("\n")
 
+
+def save_measuretool_info(case_path: str, points: list, grid: list) -> None:
+    """ Creates a file with measuretool points/grid information.
+        One of the parameters must be an empty list while the other must contain data. """
+    if points:
+        with open("{}/points.txt".format(case_path), "w") as f:
+            f.write("POINTS\n")
+            for curr_point in points:
+                f.write("{}  {}  {}\n".format(*curr_point))
+    elif grid:
+        with open("{}/points.txt".format(case_path), "w") as f:
+            for curr_point in grid:
+                f.write("POINTSLIST\n")
+                f.write("{}  {}  {}\n{}  {}  {}\n{}  {}  {}\n".format(*curr_point))
+    else:
+        raise RuntimeError("Attempting to save measuretool info with no points or grid setup.")
+
 # FIXME: This should not exist. Saving it only as a documentation for the refactor
 # def dump_to_xml(data, save_name):
 #     """ Saves all of the data in the opened case
