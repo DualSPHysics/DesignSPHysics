@@ -1,12 +1,12 @@
 #!/usr/bin/env python3.7
 # -*- coding: utf-8 -*-
-''' DesignSPHysics Inlet/Outlet elevation info. '''
+""" DesignSPHysics Inlet/Outlet elevation info. """
 
 from mod.enums import InletOutletElevationType
 
 
 class InletOutletElevationInfo():
-    ''' Stores Inlet/Outlet elevation information and parameters. '''
+    """ Stores Inlet/Outlet elevation information and parameters. """
 
     def __init__(self):
         super().__init__()

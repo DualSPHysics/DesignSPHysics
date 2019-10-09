@@ -1,6 +1,6 @@
 #!/usr/bin/env python3.7
 # -*- coding: utf-8 -*-
-'''DesignSPHysics Initials Dialog '''
+"""DesignSPHysics Initials Dialog """
 
 import FreeCADGui
 
@@ -14,7 +14,7 @@ from mod.dataobjects.initials_property import InitialsProperty
 
 
 class InitialsDialog(QtGui.QDialog):
-    ''' Defines a window with initials  '''
+    """ Defines a window with initials  """
 
     def __init__(self):
         super(InitialsDialog, self).__init__()
@@ -31,7 +31,7 @@ class InitialsDialog(QtGui.QDialog):
         self.has_initials_label = QtGui.QLabel(__("Set initials: "))
         self.has_initials_label.setToolTip(__("Sets the current initial movement vector."))
         self.has_initials_selector = QtGui.QComboBox()
-        self.has_initials_selector.insertItems(0, ['True', 'False'])
+        self.has_initials_selector.insertItems(0, ["True", "False"])
         self.has_initials_selector.currentIndexChanged.connect(self.on_initials_change)
         self.has_initials_targetlabel = QtGui.QLabel(__("Target MKFluid: ") + str(self.target_mk))
         self.has_initials_layout.addWidget(self.has_initials_label)

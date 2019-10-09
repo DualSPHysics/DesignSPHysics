@@ -1,13 +1,13 @@
 #!/usr/bin/env python3.7
 # -*- coding: utf-8 -*-
-''' DesignSPHysics Execution parameters data. '''
+""" DesignSPHysics Execution parameters data. """
 
 
 from mod.dataobjects.domain_fixed_parameter import DomainFixedParameter
 
 
 class ExecutionParameters():
-    ''' Execution parameters for the case '''
+    """ Execution parameters for the case """
 
     def __init__(self):
         self.posdouble: int = 0
@@ -30,7 +30,7 @@ class ExecutionParameters():
         self.dtmin: float = 0.00001
         self.dtmin_auto: bool = True
         self.dtallparticles: int = 0
-        self.dtfixed: str = 'DtFixed.dat'
+        self.dtfixed: str = "DtFixed.dat"
         self.timemax: float = 1.5
         self.timeout: float = 0.01
         self.partsoutmax: int = 1

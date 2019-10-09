@@ -1,6 +1,6 @@
 #!/usr/bin/env python3.7
 # -*- coding: utf-8 -*-
-'''DesignSPHysics ComputeForces Config and Execution Dialog.'''
+"""DesignSPHysics ComputeForces Config and Execution Dialog."""
 
 from PySide import QtGui, QtCore
 
@@ -13,7 +13,7 @@ from mod.widgets.postprocessing.measuretool_grid_dialog import MeasureToolGridDi
 from mod.widgets.postprocessing.measuretool_points_dialog import MeasureToolPointsDialog
 
 class MeasureToolDialog(QtGui.QDialog):
-    ''' DesignSPHysics ComputeForces Config and Execution Dialog. '''
+    """ DesignSPHysics ComputeForces Config and Execution Dialog. """
 
     def __init__(self, post_processing_widget):
         super().__init__()
@@ -74,7 +74,7 @@ class MeasureToolDialog(QtGui.QDialog):
 
         self.mtool_file_name_label = QtGui.QLabel(__("File name"))
         self.mtool_file_name_text = QtGui.QLineEdit()
-        self.mtool_file_name_text.setText('MeasurePart')
+        self.mtool_file_name_text.setText("MeasurePart")
         self.mtool_filename_layout.addWidget(self.mtool_file_name_label)
         self.mtool_filename_layout.addWidget(self.mtool_file_name_text)
 
@@ -116,56 +116,56 @@ class MeasureToolDialog(QtGui.QDialog):
         self.exec_()
 
     def on_mtool_cancel(self):
-        ''' Cancel button behaviour.'''
+        """ Cancel button behaviour."""
         self.reject()
 
     def on_mtool_export(self):
-        ''' Export button behaviour.'''
+        """ Export button behaviour."""
         export_parameters = dict()
-        export_parameters['save_mode'] = self.outformat_combobox.currentIndex()
-        export_parameters['save_vars'] = '-all'
+        export_parameters["save_mode"] = self.outformat_combobox.currentIndex()
+        export_parameters["save_vars"] = "-all"
         if self.mtool_types_chk_all.isChecked():
-            export_parameters['save_vars'] = '+all'
+            export_parameters["save_vars"] = "+all"
         else:
             if self.mtool_types_chk_vel.isChecked():
-                export_parameters['save_vars'] += ',+vel'
+                export_parameters["save_vars"] += ",+vel"
             if self.mtool_types_chk_rhop.isChecked():
-                export_parameters['save_vars'] += ',+rhop'
+                export_parameters["save_vars"] += ",+rhop"
             if self.mtool_types_chk_press.isChecked():
-                export_parameters['save_vars'] += ',+press'
+                export_parameters["save_vars"] += ",+press"
             if self.mtool_types_chk_mass.isChecked():
-                export_parameters['save_vars'] += ',+mass'
+                export_parameters["save_vars"] += ",+mass"
             if self.mtool_types_chk_vol.isChecked():
-                export_parameters['save_vars'] += ',+vol'
+                export_parameters["save_vars"] += ",+vol"
             if self.mtool_types_chk_idp.isChecked():
-                export_parameters['save_vars'] += ',+idp'
+                export_parameters["save_vars"] += ",+idp"
             if self.mtool_types_chk_ace.isChecked():
-                export_parameters['save_vars'] += ',+ace'
+                export_parameters["save_vars"] += ",+ace"
             if self.mtool_types_chk_vor.isChecked():
-                export_parameters['save_vars'] += ',+vor'
+                export_parameters["save_vars"] += ",+vor"
             if self.mtool_types_chk_kcorr.isChecked():
-                export_parameters['save_vars'] += ',+kcorr'
+                export_parameters["save_vars"] += ",+kcorr"
 
-        if export_parameters['save_vars'] == '-all':
-            export_parameters['save_vars'] = '+all'
+        if export_parameters["save_vars"] == "-all":
+            export_parameters["save_vars"] = "+all"
 
-        export_parameters['calculate_water_elevation'] = self.mtool_calculate_elevation.isChecked()
+        export_parameters["calculate_water_elevation"] = self.mtool_calculate_elevation.isChecked()
 
         if self.mtool_file_name_text.text():
-            export_parameters['filename'] = self.mtool_file_name_text.text()
+            export_parameters["filename"] = self.mtool_file_name_text.text()
         else:
-            export_parameters['filename'] = 'MeasurePart'
+            export_parameters["filename"] = "MeasurePart"
 
         if self.mtool_parameters_text.text():
-            export_parameters['additional_parameters'] = self.mtool_parameters_text.text()
+            export_parameters["additional_parameters"] = self.mtool_parameters_text.text()
         else:
-            export_parameters['additional_parameters'] = ''
+            export_parameters["additional_parameters"] = ""
 
         measuretool_export(export_parameters, Case.instance(), self.post_processing_widget)
         self.accept()
 
     def on_mtool_measure_all_change(self, state):
-        ''' 'All' checkbox behaviour'''
+        """ "All" checkbox behaviour"""
         if state == QtCore.Qt.Checked:
             for chk in [self.mtool_types_chk_vel,
                         self.mtool_types_chk_rhop,
@@ -179,14 +179,14 @@ class MeasureToolDialog(QtGui.QDialog):
                 chk.setCheckState(QtCore.Qt.Unchecked)
 
     def on_mtool_measure_single_change(self, state):
-        ''' Behaviour for all checkboxes except 'All' '''
+        """ Behaviour for all checkboxes except "All" """
         if state == QtCore.Qt.Checked:
             self.mtool_types_chk_all.setCheckState(QtCore.Qt.Unchecked)
 
     def on_mtool_set_points(self):
-        ''' Point list button behaviour.'''
+        """ Point list button behaviour."""
         MeasureToolPointsDialog()
 
     def on_mtool_set_grid(self):
-        ''' Spawns a Grid configuration dialog for MeasureTool. '''
+        """ Spawns a Grid configuration dialog for MeasureTool. """
         MeasureToolGridDialog()

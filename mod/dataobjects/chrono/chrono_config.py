@@ -1,6 +1,6 @@
 #!/usr/bin/env python3.7
 # -*- coding: utf-8 -*-
-''' DesignSPHysics Chrono Configuration Data. '''
+""" DesignSPHysics Chrono Configuration Data. """
 
 from mod.dataobjects.chrono.chrono_csv_intervals import ChronoCSVIntervals
 from mod.dataobjects.chrono.chrono_scale_scheme import ChronoScaleScheme
@@ -8,7 +8,7 @@ from mod.dataobjects.chrono.chrono_collision_dp import ChronoCollisionDP
 
 
 class ChronoConfig:
-    ''' Dataobject to store Chrono related configuration and utilities. '''
+    """ Dataobject to store Chrono related configuration and utilities. """
 
     def __init__(self):
         super().__init__()

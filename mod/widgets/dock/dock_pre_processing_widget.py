@@ -1,6 +1,6 @@
 #!/usr/bin/env python3.7
 # -*- coding: utf-8 -*-
-'''DesignSPHysics Dock Pre Processing Widget '''
+"""DesignSPHysics Dock Pre Processing Widget """
 
 from os import path
 from traceback import print_exc
@@ -9,7 +9,7 @@ from PySide import QtCore, QtGui
 
 from mod.translation_tools import __
 from mod.gui_tools import get_icon
-from mod.stdout_tools import error, debug
+from mod.stdout_tools import error
 from mod.dialog_tools import error_dialog, warning_dialog
 from mod.executable_tools import refocus_cwd
 from mod.file_tools import save_case, load_case
@@ -30,7 +30,7 @@ from mod.dataobjects.simulation_object import SimulationObject
 
 
 class DockPreProcessingWidget(QtGui.QWidget):
-    '''DesignSPHysics Dock Pre Processing Widget '''
+    """DesignSPHysics Dock Pre Processing Widget """
 
     need_refresh = QtCore.Signal()
     update_dp = QtCore.Signal()
@@ -142,8 +142,8 @@ class DockPreProcessingWidget(QtGui.QWidget):
         self.setLayout(self.main_layout)
 
     def on_new_case(self, prompt=True):
-        ''' Defines what happens when new case is clicked. Closes all documents
-            if possible and creates a FreeCAD document with Case Limits object. '''
+        """ Defines what happens when new case is clicked. Closes all documents
+            if possible and creates a FreeCAD document with Case Limits object. """
         if document_count() and not prompt_close_all_documents(prompt):
             return
 
@@ -156,8 +156,8 @@ class DockPreProcessingWidget(QtGui.QWidget):
         self.need_refresh.emit()
 
     def on_new_from_freecad_document(self, prompt=True):
-        ''' Creates a new case based on an existing FreeCAD document.
-        This is specially useful for CAD users that want to use existing geometry for DesignSPHysics. '''
+        """ Creates a new case based on an existing FreeCAD document.
+        This is specially useful for CAD users that want to use existing geometry for DesignSPHysics. """
         file_name, _ = QtGui.QFileDialog().getOpenFileName(get_fc_main_window(), "Select document to import", QtCore.QDir.homePath())
         if file_name and document_count() and not prompt_close_all_documents(prompt):
             return
@@ -171,8 +171,8 @@ class DockPreProcessingWidget(QtGui.QWidget):
         self.need_refresh.emit()
 
     def on_save_case(self, save_as=None):
-        ''' Defines what happens when save case button is clicked.
-        Saves a freecad scene definition, and a dump of dsph data for the case.'''
+        """ Defines what happens when save case button is clicked.
+        Saves a freecad scene definition, and a dump of dsph data for the case."""
         if Case.instance().was_not_saved() or save_as:
             save_name, _ = QtGui.QFileDialog.getSaveFileName(self, __("Save Case"), QtCore.QDir.homePath())
         else:
@@ -185,7 +185,7 @@ class DockPreProcessingWidget(QtGui.QWidget):
         save_current_freecad_document(Case.instance().path)
 
     def on_execute_gencase(self):
-        ''' Saves data into disk and uses GenCase to generate the case files.'''
+        """ Saves data into disk and uses GenCase to generate the case files."""
         self.on_save_case()
         if not Case.instance().executable_paths.gencase:
             warning_dialog(__("GenCase executable is not set."))
@@ -197,7 +197,7 @@ class DockPreProcessingWidget(QtGui.QWidget):
         process.setWorkingDirectory(Case.instance().path)
         process.start(gencase_full_path, ["{path}/{name}_Def".format(path=Case.instance().path, name=Case.instance().name),
                                           "{path}/{name}_out/{name}".format(path=Case.instance().path, name=Case.instance().name),
-                                          '-save:+all'])
+                                          "-save:+all"])
         process.waitForFinished()
 
         output = str(process.readAllStandardOutput()).replace("\\n", "\n").split("================================")[1]
@@ -220,19 +220,19 @@ class DockPreProcessingWidget(QtGui.QWidget):
             Case.instance().info.is_gencase_done = False
 
     def on_newdoc_menu(self, action):
-        ''' Handles the new document button and its dropdown items. '''
+        """ Handles the new document button and its dropdown items. """
         if __("New") in action.text():
             self.on_new_case()
         if __("Import FreeCAD Document") in action.text():
             self.on_new_from_freecad_document()
 
     def on_save_menu(self, action):
-        ''' Handles the save button and its dropdown items. '''
+        """ Handles the save button and its dropdown items. """
         if __("Save as...") in action.text():
             self.on_save_case(save_as=True)
 
     def on_load_button(self):
-        ''' Defines load case button behaviour. This is made so errors can be detected and handled. '''
+        """ Defines load case button behaviour. This is made so errors can be detected and handled. """
         try:
             self.on_load_case()
         except ImportError:
@@ -241,8 +241,8 @@ class DockPreProcessingWidget(QtGui.QWidget):
             self.on_new_case(prompt=False)
 
     def on_load_case(self):
-        '''Defines loading case mechanism. Load points to a dsphdata custom file, that stores all the relevant info.
-           If FCStd file is not found the project is considered corrupt.'''
+        """Defines loading case mechanism. Load points to a dsphdata custom file, that stores all the relevant info.
+           If FCStd file is not found the project is considered corrupt."""
 
         load_path, _ = QtGui.QFileDialog.getOpenFileName(self, __("Load Case"), QtCore.QDir.homePath(), "casedata.dsphdata")
 
@@ -272,19 +272,19 @@ class DockPreProcessingWidget(QtGui.QWidget):
         Case.instance().executable_paths.check_and_filter()
 
     def on_add_fillbox(self):
-        ''' Add fillbox group. It consists in a group with 2 objects inside: a point and a box.
-        The point represents the fill seed and the box sets the bounds for the filling. '''
+        """ Add fillbox group. It consists in a group with 2 objects inside: a point and a box.
+        The point represents the fill seed and the box sets the bounds for the filling. """
         add_fillbox_objects()
 
     def on_add_geo(self):
-        ''' Add STL file. Opens a file opener and allows the user to set parameters for the import process '''
+        """ Add STL file. Opens a file opener and allows the user to set parameters for the import process """
         file_name = QtGui.QFileDialog().getOpenFileName(get_fc_main_window(), __("Select GEO to import"), QtCore.QDir.homePath(), "STL Files (*.stl);;PLY Files (*.ply);;VTK Files (*.vtk)")
         if not file_name:
             return
         AddGEODialog(file_name)
 
     def on_2d_toggle(self):
-        ''' Handles Toggle 3D/2D Button. Changes the Case Limits object accordingly. '''
+        """ Handles Toggle 3D/2D Button. Changes the Case Limits object accordingly. """
         if not valid_document_environment():
             error("Not a valid case environment")
             return
@@ -307,13 +307,13 @@ class DockPreProcessingWidget(QtGui.QWidget):
             fc_object.Label = CASE_LIMITS_3D_LABEL
 
     def adapt_to_no_case(self):
-        ''' Adapts the widget to an environment with no case opened. '''
+        """ Adapts the widget to an environment with no case opened. """
         for x in [self.save_button, self.add_fillbox_button, self.add_geometry_button, self.import_xml_button,
                   self.case_summary_button, self.toggle_2d_mode_button, self.special_button, self.gencase_button]:
             x.setEnabled(False)
 
     def adapt_to_new_case(self):
-        ''' Adapts the widget to an environment when a case is opened. '''
+        """ Adapts the widget to an environment when a case is opened. """
         for x in [self.save_button, self.add_fillbox_button, self.add_geometry_button, self.import_xml_button,
                   self.case_summary_button, self.toggle_2d_mode_button, self.special_button, self.gencase_button]:
             x.setEnabled(True)

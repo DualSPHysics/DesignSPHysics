@@ -1,12 +1,12 @@
 #!/usr/bin/env python3.7
 # -*- coding: utf-8 -*-
-'''
+"""
 Initializes a complete interface with DualSPHysics suite related operations.
 
 It allows an user to create DualSPHysics compatible cases, automating a bunch of things needed to use them.
 
 More info in http://design.sphysics.org/
-'''
+"""
 
 import time
 import threading
@@ -65,7 +65,7 @@ for item in get_fc_main_window().findChildren(QtGui.QTreeWidget):
 
 
 def on_tree_item_selection_change():
-    ''' Refreshes relevant parts of DesignsPHysics under an important change event. '''
+    """ Refreshes relevant parts of DesignsPHysics under an important change event. """
 
     selection = FreeCADGui.Selection.getSelection()
 
@@ -115,7 +115,7 @@ dualsphysics_dock.need_refresh.connect(on_tree_item_selection_change)
 
 
 def selection_monitor():
-    ''' Watches and fixes unwanted changes in the current selection. '''
+    """ Watches and fixes unwanted changes in the current selection. """
     time.sleep(2.0)
     while True:
         try:

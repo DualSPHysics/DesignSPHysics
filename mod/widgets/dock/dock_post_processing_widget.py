@@ -1,6 +1,6 @@
 #!/usr/bin/env python3.7
 # -*- coding: utf-8 -*-
-'''DesignSPHysics Dock Post Processing Widget '''
+"""DesignSPHysics Dock Post Processing Widget """
 
 from PySide import QtGui
 
@@ -15,7 +15,7 @@ from mod.widgets.postprocessing.flowtool_dialog import FlowToolDialog
 
 
 class DockPostProcessingWidget(QtGui.QWidget):
-    '''DesignSPHysics Dock Post Processing Widget '''
+    """DesignSPHysics Dock Post Processing Widget """
 
     def __init__(self):
         super().__init__()
@@ -65,11 +65,11 @@ class DockPostProcessingWidget(QtGui.QWidget):
         self.setLayout(self.main_layout)
 
     def adapt_to_export_start(self) -> None:
-        ''' Adapts the widget to post processing tool start. '''
+        """ Adapts the widget to post processing tool start. """
         self.setWindowTitle("<b>{} ({})</b>".format(__("Post-processing"), __("Exporting")))
         self.setEnabled(False)
 
     def adapt_to_export_finished(self) -> None:
-        ''' Adapts the widget to post processing tool finis. '''
+        """ Adapts the widget to post processing tool finis. """
         self.setEnabled(True)
         self.setWindowTitle("<b>{}</b>".format(__("Post-processing")))

@@ -1,6 +1,6 @@
 #!/usr/bin/env python3.7
 # -*- coding: utf-8 -*-
-'''DesignSPHysics Link Hinge Edit Dialog '''
+"""DesignSPHysics Link Hinge Edit Dialog """
 
 from PySide import QtGui
 
@@ -11,7 +11,7 @@ from mod.dataobjects.case import Case
 
 
 class LinkHingeEdit(QtGui.QDialog):
-    ''' Defines Link hinge window dialog '''
+    """ Defines Link hinge window dialog """
 
     def __init__(self, link_hinge_id):
         super(LinkHingeEdit, self).__init__()
@@ -133,11 +133,11 @@ class LinkHingeEdit(QtGui.QDialog):
         self.exec_()
 
     def on_cancel(self):
-        ''' Link hinge edit cancel button behaviour.'''
+        """ Link hinge edit cancel button behaviour."""
         self.reject()
 
     def on_save(self):
-        ''' Link hinge save button behaviour'''
+        """ Link hinge save button behaviour"""
         count = -1
         for link_hinge_value in Case.instance().chrono.link_hinge:
             count += 1

@@ -1,6 +1,6 @@
 #!/usr/bin/env python3.7
 # -*- coding: utf-8 -*-
-'''DesignSPHysics Rectilinear Motion Timeline Widget '''
+"""DesignSPHysics Rectilinear Motion Timeline Widget """
 
 from PySide import QtCore, QtGui
 
@@ -12,7 +12,7 @@ from mod.dataobjects.motion.rect_motion import RectMotion
 
 
 class RectilinearMotionTimeline(QtGui.QWidget):
-    ''' A Rectilinear motion graphical representation for a table-based timeline '''
+    """ A Rectilinear motion graphical representation for a table-based timeline """
 
     changed = QtCore.Signal(int, RectMotion)
     deleted = QtCore.Signal(int, RectMotion)

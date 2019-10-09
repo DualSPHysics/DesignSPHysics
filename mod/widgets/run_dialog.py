@@ -1,6 +1,6 @@
 #!/usr/bin/env python3.7
 # -*- coding: utf-8 -*-
-'''DesignSPHysics Run Dialog'''
+"""DesignSPHysics Run Dialog"""
 
 from PySide import QtCore, QtGui
 
@@ -8,7 +8,7 @@ from mod.translation_tools import __
 
 
 class RunDialog(QtGui.QDialog):
-    ''' Defines run window dialog '''
+    """ Defines run window dialog """
 
     WINDOW_TITLE_TEMPLATE = __("DualSPHysics Simulation: {}%")
     PARTICLES_OUT_TEMPLATE = __("Total particles out: {}")
@@ -85,16 +85,16 @@ class RunDialog(QtGui.QDialog):
         self.run_details.setLayout(self.run_details_layout)
 
     def hide_all(self) -> None:
-        ''' Hides both the run details and this dialog. '''
+        """ Hides both the run details and this dialog. """
         self.run_details.hide()
         self.hide()
 
     def set_value(self, value: int) -> None:
-        ''' Sets the value for the run dialog progress bar. '''
+        """ Sets the value for the run dialog progress bar. """
         self.run_progbar_bar.setvalue(value)
 
     def run_update(self, percentage: float, particles_out: int, estimated_time: str) -> None:
-        ''' Updates the run dialog with information about the execution. '''
+        """ Updates the run dialog with information about the execution. """
         self.setWindowTitle(self.WINDOW_TITLE_TEMPLATE.format(percentage))
         self.set_value(percentage)
         self.run_group_label_partsout.setText(self.PARTICLES_OUT_TEMPLATE.format(str(particles_out)))
@@ -102,18 +102,18 @@ class RunDialog(QtGui.QDialog):
             self.run_group_label_eta.setText(self.ETA_TEMPLATE.format(estimated_time))
 
     def run_complete(self) -> None:
-        ''' Modifies the dialog accordingly with a complete simulation. '''
+        """ Modifies the dialog accordingly with a complete simulation. """
         self.setWindowTitle(__("DualSPHysics Simulation: Complete"))
         self.run_progbar_bar.setValue(100)
         self.run_button_cancel.setText(__("Close"))
         self.run_group_label_completed.setVisible(True)
 
     def toggle_run_details(self) -> None:
-        ''' Toggles the run details dialog panel. '''
+        """ Toggles the run details dialog panel. """
         self.run_details.setHidden(not self.run_details.isVisible())
         self.run_details.move(self.x() - self.run_details.width() - 15, self.y())
 
     def set_detail_text(self, details: str) -> None:
-        ''' Sets the details text contents and scrolls it to the bottom. '''
+        """ Sets the details text contents and scrolls it to the bottom. """
         self.run_details_text.setText(details)
         self.run_details_text.moveCursor(QtGui.QTextCursor.End)

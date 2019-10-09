@@ -1,6 +1,6 @@
 #!/usr/bin/env python3.7
 # -*- coding: utf-8 -*-
-'''DesignSPHysics MLPiston2D Configuration Dialog '''
+"""DesignSPHysics MLPiston2D Configuration Dialog """
 
 import glob
 

@@ -1,10 +1,10 @@
 #!/usr/bin/env python3.7
 # -*- coding: utf-8 -*-
-''' DesignSPHysics chrono collision dp configuration. '''
+""" DesignSPHysics chrono collision dp configuration. """
 
 
 class ChronoCollisionDP:
-    ''' Chrono collision DP configuration. '''
+    """ Chrono collision DP configuration. """
 
     def __init__(self):
         super().__init__()

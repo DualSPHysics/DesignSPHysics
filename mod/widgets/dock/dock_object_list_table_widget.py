@@ -1,6 +1,6 @@
 #!/usr/bin/env python3.7
 # -*- coding: utf-8 -*-
-'''DesignSPHysics Object List Table Widget.'''
+"""DesignSPHysics Object List Table Widget."""
 
 from PySide import QtGui
 
@@ -15,7 +15,7 @@ from mod.widgets.object_order_widget import ObjectOrderWidget
 
 
 class DockObjectListTableWidget(QtGui.QWidget):
-    ''' Object List Table Widget. '''
+    """ Object List Table Widget. """
 
     def __init__(self):
         super().__init__()
@@ -38,23 +38,23 @@ class DockObjectListTableWidget(QtGui.QWidget):
         self.setLayout(self.objectlist_layout)
 
     def clear_table_contents(self) -> None:
-        ''' Clears the contents of the table within the widget. '''
+        """ Clears the contents of the table within the widget. """
         self.objectlist_table.clear()
 
     def set_table_enabled(self, enabled: bool) -> None:
-        ''' Sets the enabled state for the table within the widget. '''
+        """ Sets the enabled state for the table within the widget. """
         self.objectlist_table.setEnabled(enabled)
 
     def set_table_row_count(self, count: int) -> None:
-        ''' Sets the number of rows for the table within the widget. '''
+        """ Sets the number of rows for the table within the widget. """
         self.objectlist_table.setRowCount(count)
 
     def set_table_cell_widget(self, row: int, column: int, widget: QtGui.QWidget):
-        ''' Sets the widget for the specified row and column in the table within the widget. '''
+        """ Sets the widget for the specified row and column in the table within the widget. """
         self.objectlist_table.setCellWidget(row, column, widget)
 
     def refresh(self) -> None:
-        ''' Deletes everything and refreshes contents with the current simulation objects. '''
+        """ Deletes everything and refreshes contents with the current simulation objects. """
         self.clear_table_contents()
         num_objects_in_simulation: int = Case.instance().number_of_objects_in_simulation()
         self.set_table_row_count(num_objects_in_simulation)

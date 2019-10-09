@@ -1,6 +1,6 @@
 #!/usr/bin/env python3.7
 # -*- coding: utf-8 -*-
-'''DesignSPHysics Focusable ComboBox implementation.'''
+"""DesignSPHysics Focusable ComboBox implementation."""
 
 from PySide import QtCore, QtGui
 

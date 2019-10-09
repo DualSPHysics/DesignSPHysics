@@ -1,6 +1,6 @@
 #!/usr/bin/env python3.7
 # -*- coding: utf-8 -*-
-''' DesignSPHysics Special Options Selection Dialog. '''
+""" DesignSPHysics Special Options Selection Dialog. """
 
 import FreeCADGui
 
@@ -34,7 +34,7 @@ from mod.dataobjects.relaxation_zone_uniform import RelaxationZoneUniform
 
 
 class SpecialOptionsSelectorDialog(QtGui.QDialog):
-    ''' A dialog with different buttons to access special DesignSPHysics options for a case. '''
+    """ A dialog with different buttons to access special DesignSPHysics options for a case. """
 
     def __init__(self):
         super().__init__()
@@ -81,24 +81,24 @@ class SpecialOptionsSelectorDialog(QtGui.QDialog):
         self.exec_()
 
     def on_damping_option(self):
-        ''' Defines damping button behaviour'''
+        """ Defines damping button behaviour"""
         damping_group_name = setup_damping_environment()
         Case.instance().add_damping_group(damping_group_name)
         DampingConfigDialog(damping_group_name)
         self.accept()
 
     def on_inlet_option(self):
-        ''' Defines Inlet/Outlet behaviour '''
+        """ Defines Inlet/Outlet behaviour """
         InletConfigDialog()
         self.accept()
 
     def on_chrono_option(self):
-        ''' Defines Coupling CHRONO behaviour'''
+        """ Defines Coupling CHRONO behaviour"""
         ChronoConfigDialog()
         self.accept()
 
     def on_multilayeredmb_menu(self, action):
-        ''' Defines MLPiston menu behaviour'''
+        """ Defines MLPiston menu behaviour"""
         # Get currently selected object
         try:
             selection = FreeCADGui.Selection.getSelection()[0]
@@ -155,7 +155,7 @@ class SpecialOptionsSelectorDialog(QtGui.QDialog):
         self.accept()
 
     def on_relaxationzone_menu(self, action):
-        ''' Defines Relaxation Zone menu behaviour.'''
+        """ Defines Relaxation Zone menu behaviour."""
 
         # Check which type of relaxationzone it is
         if action.text() == __("Regular waves"):
@@ -215,7 +215,7 @@ class SpecialOptionsSelectorDialog(QtGui.QDialog):
         self.accept()
 
     def on_accinput_button(self):
-        ''' Acceleration input button behaviour.'''
+        """ Acceleration input button behaviour."""
         accinput_dialog = AccelerationInputDialog(Case.instance().acceleration_input)
         result = accinput_dialog.exec_()
 

@@ -1,6 +1,6 @@
 #!/usr/bin/env python3.7
 # -*- coding: utf-8 -*-
-'''DesignSPHysics Constants Configuration Dialog.'''
+"""DesignSPHysics Constants Configuration Dialog."""
 
 
 from PySide import QtCore, QtGui
@@ -18,8 +18,9 @@ from mod.dataobjects.case import Case
 
 
 class ConstantsDialog(QtGui.QDialog):
-    ''' A window to define and configure the constants of the case for later execution
-        in the DualSPHysics simulator. '''
+    """ A window to define and configure the constants of the case for later execution
+        in the DualSPHysics simulator. """
+
     def __init__(self):
         super(ConstantsDialog, self).__init__()
 
@@ -34,7 +35,7 @@ class ConstantsDialog(QtGui.QDialog):
         self.lattice_layout = QtGui.QHBoxLayout()
         self.lattice_label = QtGui.QLabel("Lattice for Boundaries: ")
         self.lattice_input = QtGui.QComboBox()
-        self.lattice_input.insertItems(0, ['Lattice 1', 'Lattice 2'])
+        self.lattice_input.insertItems(0, ["Lattice 1", "Lattice 2"])
         self.lattice_input.setCurrentIndex(Case.instance().constants.lattice_bound - 1)
 
         self.lattice_layout.addWidget(self.lattice_label)
@@ -45,7 +46,7 @@ class ConstantsDialog(QtGui.QDialog):
         self.lattice2_layout = QtGui.QHBoxLayout()
         self.lattice2_label = QtGui.QLabel("Lattice for Fluids: ")
         self.lattice2_input = QtGui.QComboBox()
-        self.lattice2_input.insertItems(0, ['Lattice 1', 'Lattice 2'])
+        self.lattice2_input.insertItems(0, ["Lattice 1", "Lattice 2"])
         self.lattice2_input.setCurrentIndex(Case.instance().constants.lattice_fluid - 1)
 
         self.lattice2_layout.addWidget(self.lattice2_label)
@@ -89,8 +90,7 @@ class ConstantsDialog(QtGui.QDialog):
         self.gravityz_input.setText(str(Case.instance().constants.gravity[2]))
         self.gravityz_input.setValidator(self.gravityz_validator)
 
-        self.gravity_label2 = QtGui.QLabel(
-            "m/s<span style='vertical-align:super'>2</span>")
+        self.gravity_label2 = QtGui.QLabel("m/s<span style='vertical-align:super'>2</span>")
 
         self.gravity_layout.addWidget(self.gravity_label)
         self.gravity_layout.addWidget(self.gravityx_input)  # For X
@@ -112,8 +112,7 @@ class ConstantsDialog(QtGui.QDialog):
         self.rhop0_validator = QtGui.QIntValidator(0, 10000, self.rhop0_input)
         self.rhop0_input.setText(str(Case.instance().constants.rhop0))
         self.rhop0_input.setValidator(self.rhop0_validator)
-        self.rhop0_label2 = QtGui.QLabel(
-            "kg/m<span style='vertical-align:super'>3<span>")
+        self.rhop0_label2 = QtGui.QLabel("kg/m<span style='vertical-align:super'>3<span>")
 
         self.rhop0_layout.addWidget(self.rhop0_label)
         self.rhop0_layout.addWidget(self.rhop0_input)

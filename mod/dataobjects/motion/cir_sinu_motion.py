@@ -1,11 +1,11 @@
 #!/usr/bin/env python3.7
 # -*- coding: utf-8 -*-
-''' DesignSPHysics Circular Sinusoidal motion data. '''
+""" DesignSPHysics Circular Sinusoidal motion data. """
 
 from mod.dataobjects.motion.base_motion import BaseMotion
 
 class CirSinuMotion(BaseMotion):
-    ''' DualSPHysics sinusoidal circular motion.
+    """ DualSPHysics sinusoidal circular motion.
 
         Attributes:
             reference: Point of the object that rotates with the axis
@@ -14,7 +14,7 @@ class CirSinuMotion(BaseMotion):
             freq: Frequency
             ampl: Amplitude
             phase: Phase
-        '''
+        """
 
     def __init__(self, reference=None, duration=1, axis1=None, axis2=None, freq=None, ampl=None, phase=None,
                  parent_movement=None):

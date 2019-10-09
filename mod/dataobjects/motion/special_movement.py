@@ -1,18 +1,18 @@
 #!/usr/bin/env python3.7
 # -*- coding: utf-8 -*-
-''' DesignSPHysics Special Movement data. '''
+""" DesignSPHysics Special Movement data. """
 
 from mod.dataobjects.motion.wave_gen import WaveGen
 
 
 class SpecialMovement():
-    ''' DualSPHysics compatible special movement.
+    """ DualSPHysics compatible special movement.
         It includes regular/irregular wave generators and file movements
 
         Attributes:
             name: Name for this motion given by the user
             generator: Generator assigned
-        '''
+        """
 
     def __init__(self, name="New Movement", generator=None):
         self.name = name
@@ -22,7 +22,7 @@ class SpecialMovement():
         self.generator = generator
 
     def set_wavegen(self, generator):
-        ''' Sets the wave generator for the special movement '''
+        """ Sets the wave generator for the special movement """
         if isinstance(generator, WaveGen):
             generator.parent_movement = self
             self.generator = generator

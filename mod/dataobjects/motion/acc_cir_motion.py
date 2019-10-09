@@ -1,11 +1,11 @@
 #!/usr/bin/env python3.7
 # -*- coding: utf-8 -*-
-''' DesignSPHysics Accelerated Circular Motion Data '''
+""" DesignSPHysics Accelerated Circular Motion Data """
 
 from mod.dataobjects.motion.base_motion import BaseMotion
 
 class AccCirMotion(BaseMotion):
-    ''' DualSPHysics circular motion.
+    """ DualSPHysics circular motion.
 
         Attributes:
             ang_vel: Angular velocity of the movement
@@ -13,7 +13,7 @@ class AccCirMotion(BaseMotion):
             reference: Point of the object that rotates with the axis
             axis1: Starting point of the vector that defines the rotation axis
             axis2: Finishing point of the vector that defines the rotation axis
-        '''
+        """
 
     def __init__(self, duration=1, ang_vel=None, ang_acc=None, reference=None, axis1=None, axis2=None,
                  parent_movement=None):

@@ -1,6 +1,6 @@
 #!/usr/bin/env python3.7
 # -*- coding: utf-8 -*-
-'''DesignSPHysics Rotational Motion Timeline Widget '''
+"""DesignSPHysics Rotational Motion Timeline Widget """
 
 from PySide import QtCore, QtGui
 
@@ -12,7 +12,7 @@ from mod.dataobjects.motion.rot_motion import RotMotion
 
 
 class RotationalMotionTimeline(QtGui.QWidget):
-    ''' A Rotational motion graphical representation for a table-based timeline '''
+    """ A Rotational motion graphical representation for a table-based timeline """
 
     changed = QtCore.Signal(int, RotMotion)
     deleted = QtCore.Signal(int, RotMotion)

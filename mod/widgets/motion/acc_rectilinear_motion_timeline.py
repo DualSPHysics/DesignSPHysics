@@ -1,6 +1,6 @@
 #!/usr/bin/env python3.7
 # -*- coding: utf-8 -*-
-'''DesignSPHysics Accelerated Rectilinear Motion widget'''
+"""DesignSPHysics Accelerated Rectilinear Motion widget"""
 
 from PySide import QtCore, QtGui
 
@@ -11,7 +11,7 @@ from mod.stdout_tools import debug
 from mod.dataobjects.motion.acc_rect_motion import AccRectMotion
 
 class AccRectilinearMotionTimeline(QtGui.QWidget):
-    ''' An accelerated rectilinear motion graphical representation for a table-based timeline '''
+    """ An accelerated rectilinear motion graphical representation for a table-based timeline """
 
     changed = QtCore.Signal(int, AccRectMotion)
     deleted = QtCore.Signal(int, AccRectMotion)

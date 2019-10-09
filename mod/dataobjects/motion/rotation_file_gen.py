@@ -1,12 +1,12 @@
 #!/usr/bin/env python3.7
 # -*- coding: utf-8 -*-
-''' DesignSPHysics Rotation-File based motion data '''
+""" DesignSPHysics Rotation-File based motion data """
 
 from mod.dataobjects.motion.wave_gen import WaveGen
 
 
 class RotationFileGen(WaveGen):
-    ''' Rotation File Generator. Loads rotation movements from file
+    """ Rotation File Generator. Loads rotation movements from file
 
     Attributes:
         duration: Duration in seconds
@@ -14,7 +14,7 @@ class RotationFileGen(WaveGen):
         filename: File path to use
         axisp1: Point 1 of the axis
         axisp2: Point 2 of the axis
-    '''
+    """
 
     def __init__(self, parent_movement=None, duration=0, filename="", anglesunits="degrees", axisp1=None, axisp2=None):
         super(RotationFileGen, self).__init__(parent_movement)

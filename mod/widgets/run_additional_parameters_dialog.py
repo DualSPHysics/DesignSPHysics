@@ -1,6 +1,6 @@
 #!/usr/bin/env python3.7
 # -*- coding: utf-8 -*-
-'''DesignSPHysics Additional Parameters Dialog for running configuration. '''
+"""DesignSPHysics Additional Parameters Dialog for running configuration. """
 
 from PySide import QtGui
 
@@ -11,7 +11,7 @@ from mod.dataobjects.case import Case
 
 
 class RunAdditionalParametersDialog(QtGui.QDialog):
-    ''' A Dialog to introduce text parameters used as additional configuration for running a case simulation. '''
+    """ A Dialog to introduce text parameters used as additional configuration for running a case simulation. """
 
     def __init__(self):
         super().__init__()
@@ -47,10 +47,10 @@ class RunAdditionalParametersDialog(QtGui.QDialog):
         self.additional_parameters_window.exec_()
 
     def on_ok(self):
-        ''' OK Button handler.'''
+        """ OK Button handler."""
         Case.instance().info.run_additional_parameters = self.export_params.text()
         self.additional_parameters_window.accept()
 
     def on_cancel(self):
-        ''' Cancel button handler.'''
+        """ Cancel button handler."""
         self.additional_parameters_window.reject()

@@ -1,6 +1,6 @@
 #!/usr/bin/env python3.7
 # -*- coding: utf-8 -*-
-'''DesignSPHysics Regular Piston Wave Motion Timeline Widget '''
+"""DesignSPHysics Regular Piston Wave Motion Timeline Widget """
 
 from PySide import QtCore, QtGui
 
@@ -16,7 +16,7 @@ from mod.dataobjects.awas import AWAS
 
 
 class RegularPistonWaveMotionTimeline(QtGui.QWidget):
-    ''' A Regular Wave motion graphical representation for a table-based timeline '''
+    """ A Regular Wave motion graphical representation for a table-based timeline """
 
     changed = QtCore.Signal(int, RegularPistonWaveGen)
 

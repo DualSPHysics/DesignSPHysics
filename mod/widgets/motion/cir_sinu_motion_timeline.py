@@ -1,6 +1,6 @@
 #!/usr/bin/env python3.7
 # -*- coding: utf-8 -*-
-'''DesignSPHysics Sinusoidal Circular Motion widget.'''
+"""DesignSPHysics Sinusoidal Circular Motion widget."""
 
 from PySide import QtCore, QtGui
 
@@ -11,7 +11,7 @@ from mod.stdout_tools import debug
 from mod.dataobjects.motion.cir_sinu_motion import CirSinuMotion
 
 class CirSinuMotionTimeline(QtGui.QWidget):
-    ''' A sinusoidal circular motion graphical representation for a table-based timeline '''
+    """ A sinusoidal circular motion graphical representation for a table-based timeline """
 
     changed = QtCore.Signal(int, CirSinuMotion)
     deleted = QtCore.Signal(int, CirSinuMotion)

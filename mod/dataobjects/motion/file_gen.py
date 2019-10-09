@@ -1,12 +1,12 @@
 #!/usr/bin/env python3.7
 # -*- coding: utf-8 -*-
-''' DesignSPHysics File Generator data. '''
+""" DesignSPHysics File Generator data. """
 
 from mod.dataobjects.motion.wave_gen import WaveGen
 
 
 class FileGen(WaveGen):
-    ''' File Generator. Loads movements from file
+    """ File Generator. Loads movements from file
 
     Attributes:
         duration: Duration in seconds
@@ -16,7 +16,7 @@ class FileGen(WaveGen):
         fieldx: Column with X-position
         fieldy: Column with Y-position
         fieldz: Column with Z-position
-    '''
+    """
 
     def __init__(self, parent_movement=None, duration=0, filename="", fields=0, fieldtime=0, fieldx=0, fieldy=0,
                  fieldz=0):

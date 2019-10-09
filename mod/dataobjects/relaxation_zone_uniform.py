@@ -1,13 +1,13 @@
 #!/usr/bin/env python3.7
 # -*- coding: utf-8 -*-
-''' DesignSPHysics Uniform Relaxation Zone data '''
+""" DesignSPHysics Uniform Relaxation Zone data """
 
 
 from mod.dataobjects.relaxation_zone import RelaxationZone
 
 
 class RelaxationZoneUniform(RelaxationZone):
-    ''' Relaxation zone for uniform velocity wave generation '''
+    """ Relaxation zone for uniform velocity wave generation """
 
     def __init__(self, start=0, duration=0, domainbox_point=None, domainbox_size=None, domainbox_direction=None,
                  domainbox_rotateaxis_angle=0, domainbox_rotateaxis_point1=None, domainbox_rotateaxis_point2=None,

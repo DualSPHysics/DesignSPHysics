@@ -1,13 +1,13 @@
 #!/usr/bin/env python3.7
 # -*- coding: utf-8 -*-
-''' DesignSPHysics Regular Flap wave generator data. '''
+""" DesignSPHysics Regular Flap wave generator data. """
 
 
 from mod.dataobjects.motion.wave_gen import WaveGen
 
 
 class RegularFlapWaveGen(WaveGen):
-    ''' Flap Regular Wave Generator.
+    """ Flap Regular Wave Generator.
 
     Attributes:
         phase: Initial wave phase in function of PI
@@ -15,7 +15,7 @@ class RegularFlapWaveGen(WaveGen):
         variable_draft: Position of the wavemaker hinge
         flapaxis0: Point 0 of axis rotation
         flapaxis1: Point 1 of axis rotation
-    '''
+    """
 
     def __init__(self, parent_movement=None, wave_order=2, start=0, duration=0, depth=0, wave_height=0.5,
                  wave_period=1, phase=0, ramp=0, disksave_periods=24,

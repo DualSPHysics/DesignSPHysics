@@ -1,6 +1,6 @@
 #!/usr/bin/env python3.7
 # -*- coding: utf-8 -*-
-''' DesignSPHysics Irregular Flap Wave Gen data '''
+""" DesignSPHysics Irregular Flap Wave Gen data """
 
 from random import randint
 
@@ -9,7 +9,7 @@ from mod.dataobjects.motion.wave_gen import WaveGen
 
 
 class IrregularFlapWaveGen(WaveGen):
-    ''' Flap Irregular Wave Generator.
+    """ Flap Irregular Wave Generator.
 
     Attributes:
         spectrum: Spectrum type selected for the generation
@@ -22,7 +22,7 @@ class IrregularFlapWaveGen(WaveGen):
         variable_draft: Position of the wavemaker hinge
         flapaxis0: Point 0 of axis rotation
         flapaxis1: Point 1 of axis rotation
-    '''
+    """
 
     def __init__(self, parent_movement=None, wave_order=1, start=0, duration=0, depth=0, wave_height=0.5,
                  wave_period=1, spectrum=IrregularSpectrum.JONSWAP,

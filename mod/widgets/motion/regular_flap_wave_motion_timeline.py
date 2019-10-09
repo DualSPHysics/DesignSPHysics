@@ -1,6 +1,6 @@
 #!/usr/bin/env python3.7
 # -*- coding: utf-8 -*-
-'''DesignSPHysics Regular Flap Wave Motion Timeline Widget '''
+"""DesignSPHysics Regular Flap Wave Motion Timeline Widget """
 
 from PySide import QtCore, QtGui
 
@@ -12,7 +12,7 @@ from mod.dataobjects.motion.regular_flap_wave_gen import RegularFlapWaveGen
 
 
 class RegularFlapWaveMotionTimeline(QtGui.QWidget):
-    ''' A Regular Flap Wave motion graphical representation for a table-based timeline '''
+    """ A Regular Flap Wave motion graphical representation for a table-based timeline """
     changed = QtCore.Signal(int, RegularFlapWaveGen)
 
     def __init__(self, reg_wave_gen):

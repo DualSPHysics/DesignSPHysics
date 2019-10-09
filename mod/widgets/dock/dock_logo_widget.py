@@ -1,6 +1,6 @@
 #!/usr/bin/env python3.7
 # -*- coding: utf-8 -*-
-'''DesignSPHysics Dock Logo/Help Widget. '''
+"""DesignSPHysics Dock Logo/Help Widget. """
 
 import webbrowser
 
@@ -13,7 +13,7 @@ from mod.constants import HELP_WEBPAGE
 
 
 class DockLogoWidget(QtGui.QWidget):
-    '''DesignSPHysics Dock Logo/Help Widget. '''
+    """DesignSPHysics Dock Logo/Help Widget. """
 
     def __init__(self):
         super().__init__()

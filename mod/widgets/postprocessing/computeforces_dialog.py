@@ -1,14 +1,16 @@
 #!/usr/bin/env python3.7
 # -*- coding: utf-8 -*-
-'''DesignSPHysics ComputeForces Config and Execution Dialog.'''
+"""DesignSPHysics ComputeForces Config and Execution Dialog."""
 
 from PySide import QtGui
 
 from mod.translation_tools import __
 from mod.post_processing_tools import computeforces_export
 
+from mod.dataobjects.case import Case
+
 class ComputeForcesDialog(QtGui.QDialog):
-    ''' DesignSPHysics ComputeForces Config and Execution Dialog. '''
+    """ DesignSPHysics ComputeForces Config and Execution Dialog. """
 
     def __init__(self, post_processing_widget):
         super().__init__()
@@ -73,29 +75,29 @@ class ComputeForcesDialog(QtGui.QDialog):
         self.exec_()
 
     def on_cfces_cancel(self):
-        ''' Cancel button behaviour.'''
+        """ Cancel button behaviour."""
         self.reject()
 
     def on_cfces_export(self):
-        ''' Export button behaviour.'''
+        """ Export button behaviour."""
         export_parameters = dict()
-        export_parameters['save_mode'] = self.outformat_combobox.currentIndex()
+        export_parameters["save_mode"] = self.outformat_combobox.currentIndex()
 
         if "mk" in self.cfces_onlyprocess_selector.currentText().lower():
-            export_parameters['onlyprocess_tag'] = "-onlymk:"
+            export_parameters["onlyprocess_tag"] = "-onlymk:"
         elif "id" in self.cfces_onlyprocess_selector.currentText().lower():
-            export_parameters['onlyprocess_tag'] = "-onlyid:"
+            export_parameters["onlyprocess_tag"] = "-onlyid:"
         elif "position" in self.cfces_onlyprocess_selector.currentText().lower():
-            export_parameters['onlyprocess_tag'] = "-onlypos:"
+            export_parameters["onlyprocess_tag"] = "-onlypos:"
 
-        export_parameters['onlyprocess'] = self.cfces_onlyprocess_text.text()
-        export_parameters['filename'] = self.cfces_filename_text.text()
-        export_parameters['additional_parameters'] = self.cfces_additional_parameters_text.text()
-        computeforces_export(export_parameters, self.post_processing_widget)
+        export_parameters["onlyprocess"] = self.cfces_onlyprocess_text.text()
+        export_parameters["filename"] = self.cfces_filename_text.text()
+        export_parameters["additional_parameters"] = self.cfces_additional_parameters_text.text()
+        computeforces_export(export_parameters, Case.instance(), self.post_processing_widget)
         self.accept()
 
     def on_cfces_onlyprocess_changed(self):
-        ''' Defines behaviour on target property to process change. '''
+        """ Defines behaviour on target property to process change. """
         if "mk" in self.cfces_onlyprocess_selector.currentText().lower():
             self.cfces_onlyprocess_text.setText("")
             self.cfces_onlyprocess_text.setPlaceholderText("1,2,3 or 1-30")

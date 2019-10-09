@@ -1,9 +1,9 @@
 #!/usr/bin/env python3.7
 # -*- coding: utf-8 -*-
-''' DesignSPHysics Damping data. '''
+""" DesignSPHysics Damping data. """
 
 class Damping():
-    ''' DualSPHysics damping settings '''
+    """ DualSPHysics damping settings """
 
     def __init__(self, enabled=True, overlimit=1, redumax=10):
         self.enabled = enabled

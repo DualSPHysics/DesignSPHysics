@@ -1,12 +1,12 @@
 #!/usr/bin/env python3.7
 # -*- coding: utf-8 -*-
-''' DesignSPHysics Rotational Sinusoidal Motion data. '''
+""" DesignSPHysics Rotational Sinusoidal Motion data. """
 
 from mod.dataobjects.motion.base_motion import BaseMotion
 
 
 class RotSinuMotion(BaseMotion):
-    ''' DualSPHysics sinusoidal rotational motion.
+    """ DualSPHysics sinusoidal rotational motion.
 
         Attributes:
             axis1: Starting point of the vector that defines the rotation axis
@@ -14,7 +14,7 @@ class RotSinuMotion(BaseMotion):
             freq: Frequency
             ampl: Amplitude
             phase: Phase
-        '''
+        """
 
     def __init__(self, duration=1, axis1=None, axis2=None, freq=None, ampl=None, phase=None, parent_movement=None):
         if axis1 is None:

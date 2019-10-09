@@ -1,6 +1,6 @@
 #!/usr/bin/env python3.7
 # -*- coding: utf-8 -*-
-'''DesignSPHysics Add STL Dialog. '''
+"""DesignSPHysics Add STL Dialog. """
 
 from PySide import QtCore, QtGui
 
@@ -11,7 +11,7 @@ from mod.freecad_tools import get_fc_main_window
 
 
 class AddGEODialog(QtGui.QDialog):
-    ''' A dialog that shows option to import a geometry passed as parameter '''
+    """ A dialog that shows option to import a geometry passed as parameter """
 
     IS_DIALOG_MODAL: bool = True
 
@@ -104,7 +104,7 @@ class AddGEODialog(QtGui.QDialog):
         self.exec_()
 
     def geo_ok_clicked(self):
-        ''' Defines ok button behaviour'''
+        """ Defines ok button behaviour"""
         for geo_scaling_edit in [self.geo_scaling_x_e, self.geo_scaling_y_e, self.geo_scaling_z_e]:
             geo_scaling_edit.setText(geo_scaling_edit.text().replace(",", "."))
         try:
@@ -120,7 +120,7 @@ class AddGEODialog(QtGui.QDialog):
             error_dialog(__("There was an error. Are you sure you wrote correct float values in the sacaling factor?"))
 
     def geo_dialog_browse(self):
-        ''' Defines the browse button behaviour.'''
+        """ Defines the browse button behaviour."""
         file_name_temp, _ = QtGui.QFileDialog().getOpenFileName(get_fc_main_window(), __("Select GEO to import"), QtCore.QDir.homePath(), "STL Files (*.stl);;PLY Files (*.ply);;VTK Files (*.vtk)")
         self.geo_file_path.setText(file_name_temp)
         self.raise_()

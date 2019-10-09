@@ -1,20 +1,20 @@
 #!/usr/bin/env python3.7
 # -*- coding: utf-8 -*-
-''' DesignSPHysics Accelerated Rotational Motion data '''
+""" DesignSPHysics Accelerated Rotational Motion data """
 
 
 from mod.dataobjects.motion.base_motion import BaseMotion
 
 
 class AccRotMotion(BaseMotion):
-    ''' DualSPHysics rotational motion.
+    """ DualSPHysics rotational motion.
 
         Attributes:
             ang_vel: Angular velocity of the movement
             ang_acc: Angular acceleration of the movement
             axis1: Starting point of the vector that defines the rotation axis
             axis2: Finishing point of the vector that defines the rotation axis
-        '''
+        """
 
     def __init__(self, duration=1, ang_vel=None, ang_acc=None, axis1=None, axis2=None, parent_movement=None):
         if axis1 is None:

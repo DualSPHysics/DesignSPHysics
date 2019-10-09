@@ -1,12 +1,12 @@
 #!/usr/bin/env python3.7
 # -*- coding: utf-8 -*-
-''' DesignSPHysics Simulation domain data. '''
+""" DesignSPHysics Simulation domain data. """
 
 from mod.dataobjects.sd_position_property import SDPositionProperty
 
 
 class SimulationDomain():
-    ''' Case domain data information '''
+    """ Case domain data information """
 
     def __init__(self):
         self.enabled: bool = False

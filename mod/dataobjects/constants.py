@@ -1,9 +1,9 @@
 #!/usr/bin/env python3.7
 # -*- coding: utf-8 -*-
-''' DesignSPHysics case constants dataobject '''
+""" DesignSPHysics case constants dataobject """
 
 class Constants():
-    ''' DualSPHysics case constants definition dataobject. '''
+    """ DualSPHysics case constants definition dataobject. """
 
     def __init__(self):
         self.lattice_bound: int = 1

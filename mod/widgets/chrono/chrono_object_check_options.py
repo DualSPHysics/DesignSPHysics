@@ -1,6 +1,6 @@
 #!/usr/bin/env python3.7
 # -*- coding: utf-8 -*-
-'''DesignSPHysics Chrono Object Check Options widget.'''
+"""DesignSPHysics Chrono Object Check Options widget."""
 
 from PySide import QtGui
 
@@ -8,7 +8,7 @@ from mod.translation_tools import __
 
 
 class ChronoObjectCheckOptions(QtGui.QWidget):
-    ''' Widget shows check options for an object '''
+    """ Widget shows check options for an object """
 
     def __init__(self, key, object_name="No name", object_mk=-1, mktype="bound", is_floating=""):
         super(ChronoObjectCheckOptions, self).__init__()
@@ -25,7 +25,7 @@ class ChronoObjectCheckOptions(QtGui.QWidget):
         self.object_check = QtGui.QCheckBox()
         self.geometry_check = QtGui.QCheckBox(__("Geometry"))
         self.modelnormal_input = QtGui.QComboBox()
-        self.modelnormal_input.insertItems(0, ['Original', 'Invert', 'Two face'])
+        self.modelnormal_input.insertItems(0, ["Original", "Invert", "Two face"])
 
         self.main_layout.addWidget(self.object_check)
         self.main_layout.addWidget(self.mk_label)

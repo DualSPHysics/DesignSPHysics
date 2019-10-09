@@ -1,6 +1,6 @@
 #!/usr/bin/env python3.7
 # -*- coding: utf-8 -*-
-'''DesignSPHysics ComputeForces Points configuration Dialog.'''
+"""DesignSPHysics ComputeForces Points configuration Dialog."""
 
 from PySide import QtGui
 
@@ -10,7 +10,7 @@ from mod.dataobjects.case import Case
 
 
 class MeasureToolPointsDialog(QtGui.QDialog):
-    ''' DesignSPHysics ComputeForces Points configuration Dialog. '''
+    """ DesignSPHysics ComputeForces Points configuration Dialog. """
 
     def __init__(self):
         super().__init__()
@@ -30,7 +30,7 @@ class MeasureToolPointsDialog(QtGui.QDialog):
             mpoints_table.setItem(i, 2, QtGui.QTableWidgetItem(str(point[2])))
 
         def on_mpoints_accept():
-            ''' MeasureTool points dialog accept button behaviour. '''
+            """ MeasureTool points dialog accept button behaviour. """
             Case.instance().info.measuretool_points = list()
             for mtool_row in range(0, mpoints_table.rowCount()):
                 try:
@@ -48,7 +48,7 @@ class MeasureToolPointsDialog(QtGui.QDialog):
             measurepoints_tool_dialog.accept()
 
         def on_mpoints_cancel():
-            ''' MeasureTool points dialog cancel button behaviour. '''
+            """ MeasureTool points dialog cancel button behaviour. """
             measurepoints_tool_dialog.reject()
 
         mpoints_bt_layout = QtGui.QHBoxLayout()

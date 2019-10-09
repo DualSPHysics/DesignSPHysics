@@ -1,12 +1,12 @@
 #!/usr/bin/env python3.7
 # -*- coding: utf-8 -*-
-''' DesignSPHysics Chrono Link Hinge. '''
+""" DesignSPHysics Chrono Link Hinge. """
 
 from uuid import UUID, uuid4
 
 
 class ChronoLinkHinge:
-    ''' Chrono Link Hinge. '''
+    """ Chrono Link Hinge. """
 
     def __init__(self):
         super().__init__()

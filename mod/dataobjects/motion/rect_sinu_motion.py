@@ -1,18 +1,18 @@
 #!/usr/bin/env python3.7
 # -*- coding: utf-8 -*-
-''' DesignSPHysics Sinusoidal Rectilinar Motion data. '''
+""" DesignSPHysics Sinusoidal Rectilinar Motion data. """
 
 from mod.dataobjects.motion.base_motion import BaseMotion
 
 
 class RectSinuMotion(BaseMotion):
-    ''' DualSPHysics sinusoidal rectilinear motion.
+    """ DualSPHysics sinusoidal rectilinear motion.
 
         Attributes:
             freq: Frequency (vector)
             ampl: Amplitude (vector)
             phase: Phase (vector)
-        '''
+        """
 
     def __init__(self, duration=1, freq=None, ampl=None, phase=None, parent_movement=None):
         if freq is None:

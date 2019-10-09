@@ -1,6 +1,6 @@
 #!/usr/bin/env python3.7
 # -*- coding: utf-8 -*-
-''' DesignSPHysics Irregular Piston Wave gen data '''
+""" DesignSPHysics Irregular Piston Wave gen data """
 
 from random import randint
 
@@ -10,7 +10,7 @@ from mod.dataobjects.awas import AWAS
 
 
 class IrregularPistonWaveGen(WaveGen):
-    ''' Piston Regular Wave Generator.
+    """ Piston Regular Wave Generator.
 
     Attributes:
         spectrum: Spectrum type selected for the generation
@@ -21,7 +21,7 @@ class IrregularPistonWaveGen(WaveGen):
         serieini: Initial time in irregular wave serie
         ramptime: Time of ramp
         piston_dir: Movement direction (def [1,0,0])
-    '''
+    """
 
     def __init__(self, parent_movement=None, wave_order=1, start=0, duration=0, depth=0, wave_height=0.5,
                  wave_period=1, spectrum=IrregularSpectrum.JONSWAP,

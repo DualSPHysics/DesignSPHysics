@@ -1,10 +1,10 @@
 #!/usr/bin/env python3.7
 # -*- coding: utf-8 -*-
-''' DesignSPHysics Chrono CSV Intervals configuration. '''
+""" DesignSPHysics Chrono CSV Intervals configuration. """
 
 
 class ChronoCSVIntervals:
-    ''' Chrono CSV Intervals configuration. '''
+    """ Chrono CSV Intervals configuration. """
 
     def __init__(self):
         super().__init__()

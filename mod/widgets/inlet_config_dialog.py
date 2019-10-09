@@ -1,6 +1,6 @@
 #!/usr/bin/env python3.7
 # -*- coding: utf-8 -*-
-'''DesignSPHysics Inlet/Oulet Configuration Dialog '''
+"""DesignSPHysics Inlet/Oulet Configuration Dialog """
 
 import uuid
 from traceback import print_exc
@@ -16,8 +16,8 @@ from mod.dataobjects.inletoutlet.inlet_outlet_config import InletOutletConfig
 from mod.dataobjects.inletoutlet.inlet_outlet_zone import InletOutletZone
 
 class InletConfigDialog(QtGui.QDialog):
-    ''' Defines the Inlet/Outlet dialog window.
-       Modifies data dictionary passed as parameter. '''
+    """ Defines the Inlet/Outlet dialog window.
+       Modifies data dictionary passed as parameter. """
 
     def __init__(self):
         super(InletConfigDialog, self).__init__()
@@ -167,13 +167,13 @@ class InletConfigDialog(QtGui.QDialog):
         self.exec_()
 
     def on_add_zone(self):
-        ''' Adds Inlet/Outlet zone '''
+        """ Adds Inlet/Outlet zone """
         uid_temp = uuid.uuid4()
         Case.instance().inlet_outlet.zones.append(InletOutletZone())
         self.zone_edit(str(uid_temp))
 
     def refresh_zones(self):
-        ''' Refreshes the zones list '''
+        """ Refreshes the zones list """
         count = 0
         while self.zones_layout_list.count() > 0:
             target = self.zones_layout_list.takeAt(0)
@@ -198,21 +198,21 @@ class InletConfigDialog(QtGui.QDialog):
             self.zones_layout_list.addLayout(to_add_layout)
 
     def zone_delete(self, io):
-        ''' Delete one zone from the list '''
+        """ Delete one zone from the list """
         Case.instance().inlet_outlet.zones.remove(io)
         self.refresh_zones()
 
     def zone_edit(self, io):
-        ''' Calls a window for edit zones '''
+        """ Calls a window for edit zones """
         InletZoneEdit(io)
         self.refresh_zones()
 
     def on_cancel(self):
-        ''' Cancels the dialog not saving anything. '''
+        """ Cancels the dialog not saving anything. """
         self.reject()
 
     def on_ok(self):
-        ''' Save data '''
+        """ Save data """
 
         if not Case.instance().inlet_outlet:
             Case.instance().inlet_outlet = InletOutletConfig

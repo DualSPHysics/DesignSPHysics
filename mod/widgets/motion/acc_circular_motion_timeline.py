@@ -1,6 +1,6 @@
 #!/usr/bin/env python3.7
 # -*- coding: utf-8 -*-
-'''DesignSPHysics Accelerated Circular Motion Timeline widget'''
+"""DesignSPHysics Accelerated Circular Motion Timeline widget"""
 
 from PySide import QtGui, QtCore
 
@@ -12,7 +12,7 @@ from mod.dataobjects.motion.acc_cir_motion import AccCirMotion
 
 
 class AccCircularMotionTimeline(QtGui.QWidget):
-    ''' An accelerated circular motion graphical representation for a table-based timeline '''
+    """ An accelerated circular motion graphical representation for a table-based timeline """
 
     changed = QtCore.Signal(int, AccCirMotion)
     deleted = QtCore.Signal(int, AccCirMotion)
@@ -118,7 +118,7 @@ class AccCircularMotionTimeline(QtGui.QWidget):
         self._init_connections()
 
     def fill_values(self, acc_cir_motion):
-        ''' Fills the widget values with the current data. '''
+        """ Fills the widget values with the current data. """
         self.x1_input.setText(str(acc_cir_motion.axis1[0]))
         self.y1_input.setText(str(acc_cir_motion.axis1[1]))
         self.z1_input.setText(str(acc_cir_motion.axis1[2]))
@@ -133,7 +133,7 @@ class AccCircularMotionTimeline(QtGui.QWidget):
         self.time_input.setText(str(acc_cir_motion.duration))
 
     def _init_connections(self):
-        ''' Setups widget connections with the different functions. '''
+        """ Setups widget connections with the different functions. """
         self.x1_input.textChanged.connect(self.on_change)
         self.y1_input.textChanged.connect(self.on_change)
         self.z1_input.textChanged.connect(self.on_change)
@@ -151,7 +151,7 @@ class AccCircularMotionTimeline(QtGui.QWidget):
         self.order_down_button.clicked.connect(self.on_order_down)
 
     def disable_order_up_button(self):
-        ''' Disables the up button to reorder the widget. '''
+        """ Disables the up button to reorder the widget. """
         self.order_up_button.setEnabled(False)
 
     def disable_order_down_button(self):

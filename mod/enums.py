@@ -1,14 +1,14 @@
 #!/usr/bin/env python3.7
 # -*- coding: utf-8 -*-
-'''DesignSPHysics Property enums.
+"""DesignSPHysics Property enums.
 
 This file holds a collection of useful enums
 in class forms, for code organization
-'''
+"""
 
 
 class IrregularSpectrum():
-    ''' Types of supported wave spectrums. '''
+    """ Types of supported wave spectrums. """
     JONSWAP = 0
     PIERSON_MOSKOWITZ = 1
 
@@ -18,7 +18,7 @@ class IrregularSpectrum():
 
 
 class IrregularDiscretization():
-    ''' Types of supported spectrum discretization. '''
+    """ Types of supported spectrum discretization. """
     REGULAR = 0
     RANDOM = 1
     STRETCHED = 2
@@ -30,20 +30,20 @@ class IrregularDiscretization():
 
 
 class AWASWaveOrder():
-    ''' Wave order to calculate elevation '''
+    """ Wave order to calculate elevation """
     FIRST_ORDER = 1
     SECOND_ORDER = 2
 
 
 class AWASSaveMethod:
-    ''' Saving method for AWAS CSV '''
+    """ Saving method for AWAS CSV """
     BY_PART = 1
     MORE_INFO = 2
     BY_STEP = 3
 
 
 class SDPositionPropertyType:
-    ''' Simulation domain property type. '''
+    """ Simulation domain property type. """
     DEFAULT = 0
     VALUE = 1
     DEFAULT_VALUE = 2
@@ -51,14 +51,14 @@ class SDPositionPropertyType:
 
 
 class ObjectType:
-    ''' Simulation domain property type. '''
+    """ Simulation domain property type. """
     BOUND = "bound"
     FLUID = "fluid"
     SPECIAL = "mkspecial"
 
 
 class ObjectFillMode:
-    ''' Simulation domain property type. '''
+    """ Simulation domain property type. """
     FULL = "full"
     SOLID = "solid"
     FACE = "face"
@@ -67,13 +67,13 @@ class ObjectFillMode:
 
 
 class FloatingDensityType:
-    ''' Density type for floating mks. '''
+    """ Density type for floating mks. """
     MASSBODY = 0
     RHOPBODY = 1
 
 
 class FreeCADObjectType:
-    ''' FreeCAD Types enums wrapping strings. '''
+    """ FreeCAD Types enums wrapping strings. """
     BOX = "Part::Box"
     FOLDER = "App::DocumentObjectGroup"
     SPHERE = "Part::Sphere"
@@ -82,30 +82,30 @@ class FreeCADObjectType:
 
 
 class FreeCADDisplayMode:
-    ''' FreeCAD DisplayMode Strings. '''
+    """ FreeCAD DisplayMode Strings. """
     WIREFRAME = "Wireframe"
     FLAT_LINES = "Flat Lines"
 
 
 class Template:
-    ''' Text templates stored in disk. '''
+    """ Text templates stored in disk. """
     CASE_SUMMARY = "case_summary_template.html"
 
 
 class InletOutletDetermLimit:
-    ''' Inlet/Oulet DetermLimit Value. '''
+    """ Inlet/Oulet DetermLimit Value. """
     ZEROTH_ORDER = "1e+3"
     FIRST_ORDER = "1e-3"
 
 
 class InletOutletZoneType:
-    ''' Inlet/Oulet Zone Type. '''
+    """ Inlet/Oulet Zone Type. """
     ZONE_2D = "zone2d"
     ZONE_3D = "zone3d"
 
 
 class InletOutletDirection:
-    ''' Inlet/Outlet Zone Direction. '''
+    """ Inlet/Outlet Zone Direction. """
     LEFT = "left"
     RIGHT = "right"
     FRONT = "front"
@@ -115,7 +115,7 @@ class InletOutletDirection:
 
 
 class InletOutletVelocityType:
-    ''' Inlet/Outlet Velocity Type '''
+    """ Inlet/Outlet Velocity Type """
     FIXED = "fixed"
     VARIABLE = "variable"
     EXTRAPOLATED = "extrapolated"
@@ -123,27 +123,27 @@ class InletOutletVelocityType:
 
 
 class InletOutletDensityType:
-    ''' Inlet/Outlet Density Type. '''
+    """ Inlet/Outlet Density Type. """
     FIXED = "fixed"
     HYDROSTATIC = "hydrostatic"
     EXTRAPOLATED = "extrapolated"
 
 
 class InletOutletElevationType:
-    ''' Inlet/Outler Elevation Type. '''
+    """ Inlet/Outler Elevation Type. """
     FIXED = "fixed"
     VARIABLE = "variable"
     AUTOMATIC = "automatic"
 
 
 class ChronoModelNormalType:
-    ''' Chrono ModelNormal types. '''
+    """ Chrono ModelNormal types. """
     ORIGINAL = "original"
     INVERT = "invert"
     TWOFACE = "twoface"
 
 
 class ChronoFloatingType:
-    ''' Chrono Floating types. '''
+    """ Chrono Floating types. """
     BODYFLOATING = "bodyfloating"
     BODYFIXED = "bodyfixed"

@@ -1,13 +1,13 @@
 #!/usr/bin/env python3.7
 # -*- coding: utf-8 -*-
-''' DesignSPHysics AWAS Configuration data '''
+""" DesignSPHysics AWAS Configuration data """
 
 from mod.enums import AWASWaveOrder, AWASSaveMethod
 from mod.dataobjects.awas_correction import AWASCorrection
 
 
 class AWAS():
-    ''' AWAS configuration.
+    """ AWAS configuration.
 
     Attributes:
         startawas: Time to start AWAS correction
@@ -22,7 +22,7 @@ class AWAS():
         savedata: Saves CSV with information
         limitace: Factor to limit maximum value of acceleration, with 0 disabled
         correction: Drift correction configuration
-    '''
+    """
 
     def __init__(self, enabled=False, startawas=0, swl=0, elevation=AWASWaveOrder.SECOND_ORDER,
                  gaugex=0, gaugey=0, gaugezmin=0, gaugezmax=0, gaugedp=0, coefmasslimit=0,

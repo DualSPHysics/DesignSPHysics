@@ -1,6 +1,6 @@
 #!/usr/bin/env python3.7
 # -*- coding: utf-8 -*-
-'''DesignSPHysics Dock Configuration Widget. '''
+"""DesignSPHysics Dock Configuration Widget. """
 
 from PySide import QtGui
 
@@ -12,7 +12,7 @@ from mod.widgets.execution_parameters_dialog import ExecutionParametersDialog
 
 
 class DockConfigurationWidget(QtGui.QWidget):
-    '''DesignSPHysics Dock Configuration Widget. '''
+    """DesignSPHysics Dock Configuration Widget. """
 
     def __init__(self):
         super().__init__()
@@ -48,25 +48,25 @@ class DockConfigurationWidget(QtGui.QWidget):
         self.setLayout(self.main_layout)
 
     def on_constants_button_pressed(self):
-        ''' Opens constant definition window on button click. '''
+        """ Opens constant definition window on button click. """
         ConstantsDialog()
 
     def on_setup_button_pressed(self):
-        ''' Opens constant definition window on button click. '''
+        """ Opens constant definition window on button click. """
         SetupPluginDialog()
 
     def on_execparams_button_presed(self):
-        ''' Opens a dialog to tweak the simulation's execution parameters '''
+        """ Opens a dialog to tweak the simulation's execution parameters """
         ExecutionParametersDialog()
 
     def adapt_to_no_case(self):
-        ''' Adapts the contents of the widget to an environment with no opened case. '''
+        """ Adapts the contents of the widget to an environment with no opened case. """
         self.setup_button.setEnabled(True)
         for x in [self.execparams_button, self.constants_button]:
             x.setEnabled(False)
 
     def adapt_to_new_case(self):
-        ''' Adapts the contents of the widget to an environment with a new case created. '''
+        """ Adapts the contents of the widget to an environment with a new case created. """
         self.setup_button.setEnabled(True)
         for x in [self.execparams_button, self.constants_button]:
             x.setEnabled(True)

@@ -1,8 +1,6 @@
 #!/usr/bin/env python3.7
 # -*- coding: utf-8 -*-
-'''DesignSPHysics Faces Configuration Dialog'''
-
-from traceback import print_exc
+"""DesignSPHysics Faces Configuration Dialog"""
 
 from PySide import QtCore, QtGui
 
@@ -14,7 +12,7 @@ from mod.dataobjects.faces_property import FacesProperty
 
 
 class FacesDialog(QtGui.QDialog):
-    ''' Defines a window with faces  '''
+    """ Defines a window with faces  """
 
     def __init__(self, selection_name):
         super(FacesDialog, self).__init__()
@@ -86,58 +84,58 @@ class FacesDialog(QtGui.QDialog):
             fp.bottom_face = False
             fp.left_face = False
             fp.right_face = False
-            fp.face_print = 'all'
+            fp.face_print = "all"
         else:
             fp.all_faces = False
 
             if self.front_face.isChecked():
                 fp.front_face = True
-                fp.face_print = 'front'
+                fp.face_print = "front"
             else:
                 fp.front_face = False
 
             if self.back_face.isChecked():
                 fp.back_face = True
-                if fp.face_print != '':
-                    fp.face_print += ' | back'
+                if fp.face_print != "":
+                    fp.face_print += " | back"
                 else:
-                    fp.face_print = 'back'
+                    fp.face_print = "back"
             else:
                 fp.back_face = False
 
             if self.top_face.isChecked():
                 fp.top_face = True
-                if fp.face_print != '':
-                    fp.face_print += ' | top'
+                if fp.face_print != "":
+                    fp.face_print += " | top"
                 else:
-                    fp.face_print = 'top'
+                    fp.face_print = "top"
             else:
                 fp.top_face = False
 
             if self.bottom_face.isChecked():
                 fp.bottom_face = True
-                if fp.face_print != '':
-                    fp.face_print += ' | bottom'
+                if fp.face_print != "":
+                    fp.face_print += " | bottom"
                 else:
-                    fp.face_print = 'bottom'
+                    fp.face_print = "bottom"
             else:
                 fp.bottom_face = False
 
             if self.left_face.isChecked():
                 fp.left_face = True
-                if fp.face_print != '':
-                    fp.face_print += ' | left'
+                if fp.face_print != "":
+                    fp.face_print += " | left"
                 else:
-                    fp.face_print = 'left'
+                    fp.face_print = "left"
             else:
                 fp.left_face = False
 
             if self.right_face.isChecked():
                 fp.right_face = True
-                if fp.face_print != '':
-                    fp.face_print += ' | right'
+                if fp.face_print != "":
+                    fp.face_print += " | right"
                 else:
-                    fp.face_print = 'right'
+                    fp.face_print = "right"
             else:
                 fp.right_face = False
 
@@ -149,7 +147,7 @@ class FacesDialog(QtGui.QDialog):
         self.reject()
 
     def on_faces_checkbox(self):
-        ''' Checks the faces state '''
+        """ Checks the faces state """
         if self.all_faces.isChecked():
             self.front_face.setEnabled(False)
             self.back_face.setEnabled(False)

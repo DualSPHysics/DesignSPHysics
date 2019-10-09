@@ -1,6 +1,6 @@
 #!/usr/bin/env python3.7
 # -*- coding: utf-8 -*-
-'''DesignSPHysics Irregular Piston Wave Motion Timeline Widget'''
+"""DesignSPHysics Irregular Piston Wave Motion Timeline Widget"""
 
 from PySide import QtCore, QtGui
 
@@ -16,7 +16,7 @@ from mod.dataobjects.awas_correction import AWASCorrection
 
 
 class IrregularPistonWaveMotionTimeline(QtGui.QWidget):
-    ''' An Irregular Wave motion graphical representation for a table-based timeline '''
+    """ An Irregular Wave motion graphical representation for a table-based timeline """
     changed = QtCore.Signal(int, IrregularPistonWaveGen)
 
     def __init__(self, irreg_wave_gen):

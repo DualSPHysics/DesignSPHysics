@@ -1,6 +1,6 @@
 #!/usr/bin/env python3.7
 # -*- coding: utf-8 -*-
-'''DesignSPHysics Object Order widget'''
+"""DesignSPHysics Object Order widget"""
 
 from PySide import QtGui
 
@@ -11,7 +11,7 @@ from mod.dataobjects.case import Case
 
 
 class ObjectOrderWidget(QtGui.QWidget):
-    ''' A widget representing the object order. '''
+    """ A widget representing the object order. """
 
     def __init__(self, index=999, object_name="No name", object_mk=-1, mktype="bound",
                  up_disabled=False, down_disabled=False, parent=None):
@@ -45,21 +45,21 @@ class ObjectOrderWidget(QtGui.QWidget):
                         "{}".format(object_mk, mktype.lower().title(), object_name, __("Press up or down to reorder.")))
 
     def disable_up(self):
-        ''' Disables the up button. '''
+        """ Disables the up button. """
         self.up_button.setEnabled(False)
 
     def disable_down(self):
-        ''' Disables the down button. '''
+        """ Disables the down button. """
         self.down_button.setEnabled(False)
 
     def on_up(self):
-        ''' Defines the behaviour on up buttton press. '''
+        """ Defines the behaviour on up buttton press. """
         Case.instance().shift_object_up_in_order(self.index)
         if self.parent:
             self.parent.refresh()
 
     def on_down(self):
-        ''' Defines the behaviour on down button press. '''
+        """ Defines the behaviour on down button press. """
         Case.instance().shift_object_down_in_order(self.index)
         if self.parent:
             self.parent.refresh()

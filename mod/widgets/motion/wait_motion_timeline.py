@@ -1,6 +1,6 @@
 #!/usr/bin/env python3.7
 # -*- coding: utf-8 -*-
-'''DesignSPHysics Wait Motion Timeline Widget '''
+"""DesignSPHysics Wait Motion Timeline Widget """
 
 from PySide import QtCore, QtGui
 
@@ -12,7 +12,7 @@ from mod.dataobjects.motion.wait_motion import WaitMotion
 
 
 class WaitMotionTimeline(QtGui.QWidget):
-    ''' A wait motion graphical representation for a table-based timeline '''
+    """ A wait motion graphical representation for a table-based timeline """
 
     changed = QtCore.Signal(int, WaitMotion)
     deleted = QtCore.Signal(int, WaitMotion)

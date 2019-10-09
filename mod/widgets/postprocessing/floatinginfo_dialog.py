@@ -1,14 +1,16 @@
 #!/usr/bin/env python3.7
 # -*- coding: utf-8 -*-
-'''DesignSPHysics FloatingInfo configuration and execution Dialog.'''
+"""DesignSPHysics FloatingInfo configuration and execution Dialog."""
 
 from PySide import QtGui
 
 from mod.translation_tools import __
 from mod.post_processing_tools import floatinginfo_export
 
+from mod.dataobjects.case import Case
+
 class FloatingInfoDialog(QtGui.QDialog):
-    ''' FloatingInfo configuration and execution Dialog. '''
+    """ FloatingInfo configuration and execution Dialog. """
 
     def __init__(self, post_processing_widget):
         super().__init__()
@@ -60,16 +62,16 @@ class FloatingInfoDialog(QtGui.QDialog):
         self.exec_()
 
     def on_finfo_cancel(self):
-        ''' Cancel button behaviour.'''
+        """ Cancel button behaviour."""
         self.reject()
 
     def on_finfo_export(self):
-        ''' Export button behaviour.'''
+        """ Export button behaviour."""
         export_parameters = dict()
-        export_parameters['onlyprocess'] = self.finfo_onlyprocess_text.text()
-        export_parameters['filename'] = self.finfo_filename_text.text()
-        export_parameters['additional_parameters'] = self.finfo_additional_parameters_text.text()
+        export_parameters["onlyprocess"] = self.finfo_onlyprocess_text.text()
+        export_parameters["filename"] = self.finfo_filename_text.text()
+        export_parameters["additional_parameters"] = self.finfo_additional_parameters_text.text()
 
-        floatinginfo_export(export_parameters, self.post_processing_widget)
+        floatinginfo_export(export_parameters, Case.instance(), self.post_processing_widget)
 
         self.accept()

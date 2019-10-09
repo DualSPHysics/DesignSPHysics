@@ -1,6 +1,6 @@
 #!/usr/bin/env python3.7
 # -*- coding: utf-8 -*-
-'''DesignSPHysics Setup Plugin Dialog '''
+"""DesignSPHysics Setup Plugin Dialog """
 
 from PySide import QtGui
 
@@ -205,7 +205,7 @@ class SetupPluginDialog(QtGui.QDialog):
         self.reject()
 
     def browse(self, app_name, input_prop) -> None:
-        ''' Generic browse method for other to wrap. '''
+        """ Generic browse method for other to wrap. """
         file_name, _ = QtGui.QFileDialog().getOpenFileName(self, __("Select {} path").format(app_name), get_designsphysics_path())
         if not file_name:
             return

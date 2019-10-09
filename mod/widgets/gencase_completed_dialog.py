@@ -1,6 +1,6 @@
 #!/usr/bin/env python3.7
 # -*- coding: utf-8 -*-
-''' DesignSPHysics GenCase Completed Dialog. '''
+""" DesignSPHysics GenCase Completed Dialog. """
 
 import subprocess
 
@@ -13,8 +13,8 @@ from mod.dataobjects.case import Case
 
 
 class GencaseCompletedDialog(QtGui.QDialog):
-    ''' Gencase Save Dialog with different options, like open the results
-        with paraview, show details, or dismiss. '''
+    """ Gencase Save Dialog with different options, like open the results
+        with paraview, show details, or dismiss. """
 
     DETAILS_MIN_WIDTH: int = 650
     DIALOG_IS_MODAL: bool = False
@@ -83,12 +83,12 @@ class GencaseCompletedDialog(QtGui.QDialog):
         self.setLayout(self.main_layout)
 
     def on_ok(self):
-        ''' Hides the detail panel and closes the window. '''
+        """ Hides the detail panel and closes the window. """
         self.detail_text_dialog.hide()
         self.accept()
 
     def on_view_details(self):
-        ''' Toggles the visibility of the detail pane. '''
+        """ Toggles the visibility of the detail pane. """
         if self.detail_text_dialog.isVisible():
             self.detail_text_dialog.hide()
         else:
@@ -96,9 +96,9 @@ class GencaseCompletedDialog(QtGui.QDialog):
             self.detail_text_dialog.move(self.x() - self.detail_text_dialog.width() - 15, self.y() - abs(self.height() - self.detail_text_dialog.height()) / 2)
 
     def on_open_paraview_menu(self, action):
-        ''' Tries to open Paraview with the selected option. '''
+        """ Tries to open Paraview with the selected option. """
         try:
-            subprocess.Popen([Case.instance().executable_paths.paraview, "--data={}\\{}".format(Case.instance().path + '\\' + Case.instance().name + '_out', action.text())], stdout=subprocess.PIPE)
+            subprocess.Popen([Case.instance().executable_paths.paraview, "--data={}\\{}".format(Case.instance().path + "\\" + Case.instance().name + "_out", action.text())], stdout=subprocess.PIPE)
             self.detail_text_dialog.hide()
             self.accept()
         except:

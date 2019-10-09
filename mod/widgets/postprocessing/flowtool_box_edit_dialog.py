@@ -1,6 +1,6 @@
 #!/usr/bin/env python3.7
 # -*- coding: utf-8 -*-
-'''DesignSPHysics FlowTool Box Edit Dialog.'''
+"""DesignSPHysics FlowTool Box Edit Dialog."""
 
 from PySide import QtGui, QtCore
 
@@ -13,7 +13,7 @@ from mod.dataobjects.flow_tool_box import FlowToolBox
 
 
 class FlowToolBoxEditDialog(QtGui.QDialog):
-    ''' DesignSPHysics FlowTool Box Edit Dialog. '''
+    """ DesignSPHysics FlowTool Box Edit Dialog. """
 
     def __init__(self, box_id):
         super().__init__()
@@ -166,7 +166,7 @@ class FlowToolBoxEditDialog(QtGui.QDialog):
         self.exec_()
 
     def on_ok(self):
-        ''' FlowTool box edit ok behaviour.'''
+        """ FlowTool box edit ok behaviour."""
         box_to_edit: FlowToolBox = None
 
         for box in Case.instance().flowtool_boxes:
@@ -186,5 +186,5 @@ class FlowToolBoxEditDialog(QtGui.QDialog):
         self.accept()
 
     def on_cancel(self):
-        ''' FlowTool box edit cancel button behaviour.'''
+        """ FlowTool box edit cancel button behaviour."""
         self.reject()

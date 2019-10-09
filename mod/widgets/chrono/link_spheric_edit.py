@@ -1,6 +1,6 @@
 #!/usr/bin/env python3.7
 # -*- coding: utf-8 -*-
-'''DesignSPHysics LinkSphere Edit Widget '''
+"""DesignSPHysics LinkSphere Edit Widget """
 
 from PySide import QtGui
 
@@ -11,7 +11,7 @@ from mod.dataobjects.case import Case
 
 
 class LinkSphericEdit(QtGui.QDialog):
-    ''' Defines Link spheric window dialog '''
+    """ Defines Link spheric window dialog """
 
     def __init__(self, link_spheric_id):
         super(LinkSphericEdit, self).__init__()
@@ -38,8 +38,8 @@ class LinkSphericEdit(QtGui.QDialog):
         self.body_layout = QtGui.QHBoxLayout()
         self.body_one_label = QtGui.QLabel(__("Body 1: "))
         self.body_one_line_edit = QtGui.QComboBox()
-        if str(target_link_spheric.idbody1) != '':
-            self.body_one_line_edit.insertItems(0, ['', str(target_link_spheric.idbody1)])
+        if str(target_link_spheric.idbody1) != "":
+            self.body_one_line_edit.insertItems(0, ["", str(target_link_spheric.idbody1)])
             self.body_one_line_edit.setCurrentIndex(1)
         else:
             self.body_one_line_edit.insertItems(0, [str(target_link_spheric.idbody1)])
@@ -48,8 +48,8 @@ class LinkSphericEdit(QtGui.QDialog):
                 self.body_one_line_edit.insertItems(0, [body.object_name])
         self.body_two_label = QtGui.QLabel(__("Body 2: "))
         self.body_two_line_edit = QtGui.QComboBox()
-        if str(target_link_spheric.idbody2) != '':
-            self.body_two_line_edit.insertItems(0, ['', str(target_link_spheric.idbody2)])
+        if str(target_link_spheric.idbody2) != "":
+            self.body_two_line_edit.insertItems(0, ["", str(target_link_spheric.idbody2)])
             self.body_two_line_edit.setCurrentIndex(1)
         else:
             self.body_two_line_edit.insertItems(0, [str(target_link_spheric.idbody2)])
@@ -121,11 +121,11 @@ class LinkSphericEdit(QtGui.QDialog):
         self.exec_()
 
     def on_cancel(self):
-        ''' Link Spheric edit cancel button behaviour.'''
+        """ Link Spheric edit cancel button behaviour."""
         self.reject()
 
     def on_save(self):
-        ''' Link Spheric save button behaviour'''
+        """ Link Spheric save button behaviour"""
         count = -1
         for link_spheric_value in Case.instance().chrono.link_spheric:
             count += 1

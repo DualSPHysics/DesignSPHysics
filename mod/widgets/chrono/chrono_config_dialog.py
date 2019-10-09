@@ -1,6 +1,6 @@
 #!/usr/bin/env python3.7
 # -*- coding: utf-8 -*-
-'''DesignSPHysics Chrono configuration dialog.'''
+"""DesignSPHysics Chrono configuration dialog."""
 
 import uuid
 
@@ -24,8 +24,8 @@ from mod.widgets.chrono.link_spheric_edit import LinkSphericEdit
 from mod.widgets.chrono.link_point_line_edit import LinkPointlineEdit
 
 class ChronoConfigDialog(QtGui.QDialog):
-    ''' Defines the Chrono dialog window.
-    Modifies data dictionary passed as parameter. '''
+    """ Defines the Chrono dialog window.
+    Modifies data dictionary passed as parameter. """
 
     def __init__(self):
         super(ChronoConfigDialog, self).__init__()
@@ -239,28 +239,28 @@ class ChronoConfigDialog(QtGui.QDialog):
         self.exec_()
 
     def on_collisiondp_checkbox(self):
-        ''' Checks the collisiondp state '''
+        """ Checks the collisiondp state """
         if self.collisiondp_checkbox.isChecked():
             self.collisiondp_line_edit.setEnabled(True)
         else:
             self.collisiondp_line_edit.setEnabled(False)
 
     def on_scale_scheme_checkbox(self):
-        ''' Checks the scale scheme state '''
+        """ Checks the scale scheme state """
         if self.scale_scheme_checkbox.isChecked():
             self.scale_scheme_line_edit.setEnabled(True)
         else:
             self.scale_scheme_line_edit.setEnabled(False)
 
     def on_csv_intervals_check(self):
-        ''' Checks the csv intervals state '''
+        """ Checks the csv intervals state """
         if self.csv_intervals_checkbox.isChecked():
             self.csv_intervals_line_edit.setEnabled(True)
         else:
             self.csv_intervals_line_edit.setEnabled(False)
 
     def refresh_link_hinge(self):
-        ''' Refreshes the link hinge list '''
+        """ Refreshes the link hinge list """
         count = 0
         while self.link_hinge_layout2.count() > 0:
             target = self.link_hinge_layout2.takeAt(0)
@@ -281,7 +281,7 @@ class ChronoConfigDialog(QtGui.QDialog):
             self.link_hinge_layout2.addLayout(to_add_layout)
 
     def refresh_link_linearspring(self):
-        ''' Refreshes the link linearspring list '''
+        """ Refreshes the link linearspring list """
         count = 0
         while self.link_linearspring_layout2.count() > 0:
             target = self.link_linearspring_layout2.takeAt(0)
@@ -302,7 +302,7 @@ class ChronoConfigDialog(QtGui.QDialog):
             self.link_linearspring_layout2.addLayout(to_add_layout)
 
     def refresh_link_spheric(self):
-        ''' Refreshes the link spheric list '''
+        """ Refreshes the link spheric list """
         count = 0
         while self.link_spheric_layout2.count() > 0:
             target = self.link_spheric_layout2.takeAt(0)
@@ -323,7 +323,7 @@ class ChronoConfigDialog(QtGui.QDialog):
             self.link_spheric_layout2.addLayout(to_add_layout)
 
     def refresh_link_pointline(self):
-        ''' Refreshes the link pointline list '''
+        """ Refreshes the link pointline list """
         count = 0
         while self.link_pointline_layout2.count() > 0:
             target = self.link_pointline_layout2.takeAt(0)
@@ -344,13 +344,13 @@ class ChronoConfigDialog(QtGui.QDialog):
             self.link_pointline_layout2.addLayout(to_add_layout)
 
     def on_link_hinge_add(self):
-        ''' Adds Link hinge option at list '''
+        """ Adds Link hinge option at list """
         uid_temp = uuid.uuid4()
         Case.instance().chrono.link_hinge.append(ChronoLinkHinge())
         self.link_hinge_edit(str(uid_temp))
 
     def link_hinge_delete(self, link_hinge_id):
-        ''' Delete a link hinge element '''
+        """ Delete a link hinge element """
         link_hinge_to_remove = None
         for lh in Case.instance().chrono.link_hinge:
             if lh.id == link_hinge_id:
@@ -360,18 +360,18 @@ class ChronoConfigDialog(QtGui.QDialog):
             self.refresh_link_hinge()
 
     def link_hinge_edit(self, link_hinge_id):
-        ''' Edit a link hinge element '''
+        """ Edit a link hinge element """
         LinkHingeEdit(Case.instance(), self.chrono_object_options_widgets, link_hinge_id)
         self.refresh_link_hinge()
 
     def on_link_linearspring_add(self):
-        ''' Adds Link linearspring option at list '''
+        """ Adds Link linearspring option at list """
         uid_temp = uuid.uuid4()
         Case.instance().chrono.link_linearspring.append(ChronoLinkLinearSpring())
         self.link_linearspring_edit(str(uid_temp))
 
     def link_linearspring_delete(self, link_linearspring_id):
-        ''' Delete a link linearspring element '''
+        """ Delete a link linearspring element """
         link_linearspring_to_remove = None
         for ll in Case.instance().chrono.link_linearspring:
             if ll.id == link_linearspring_id:
@@ -381,18 +381,18 @@ class ChronoConfigDialog(QtGui.QDialog):
             self.refresh_link_linearspring()
 
     def link_linearspring_edit(self, link_linearspring_id):
-        ''' Edit a link linearspring element '''
+        """ Edit a link linearspring element """
         LinkLinearspringEdit(Case.instance(), self.chrono_object_options_widgets, link_linearspring_id)
         self.refresh_link_linearspring()
 
     def on_link_spheric_add(self):
-        ''' Adds Link spheric option at list '''
+        """ Adds Link spheric option at list """
         uid_temp = uuid.uuid4()
         Case.instance().chrono.link_spheric.append(ChronoLinkSpheric())
         self.link_spheric_edit(str(uid_temp))
 
     def link_spheric_delete(self, link_spheric_id):
-        ''' Delete a link spheric element '''
+        """ Delete a link spheric element """
         link_spheric_to_remove = None
         for ls in Case.instance().chrono.link_spheric:
             if ls.id == link_spheric_id:
@@ -402,18 +402,18 @@ class ChronoConfigDialog(QtGui.QDialog):
             self.refresh_link_spheric()
 
     def link_spheric_edit(self, link_spheric_id):
-        ''' Edit a link spheric element '''
+        """ Edit a link spheric element """
         LinkSphericEdit(Case.instance(), self.chrono_object_options_widgets, link_spheric_id)
         self.refresh_link_spheric()
 
     def on_link_pointline_add(self):
-        ''' Adds Link pointline option at list '''
+        """ Adds Link pointline option at list """
         uid_temp = uuid.uuid4()
         Case.instance().chrono.link_pointline.append(ChronoLinkPointLine())
         self.link_pointline_edit(str(uid_temp))
 
     def link_pointline_delete(self, link_pointline_id):
-        ''' Delete a link pointline element '''
+        """ Delete a link pointline element """
         link_pointline_to_remove = None
         for lp in Case.instance().chrono.link_pointline:
             if lp.id == link_pointline_id:
@@ -423,16 +423,16 @@ class ChronoConfigDialog(QtGui.QDialog):
             self.refresh_link_pointline()
 
     def link_pointline_edit(self, link_pointline_id):
-        ''' Edit a link pointline element '''
+        """ Edit a link pointline element """
         LinkPointlineEdit(Case.instance(), self.chrono_object_options_widgets, link_pointline_id)
         self.refresh_link_pointline()
 
     def on_cancel(self):
-        ''' Defines cancel button behaviour. '''
+        """ Defines cancel button behaviour. """
         self.reject()
 
     def update_to_save(self):
-        ''' Check all the conditions before save '''
+        """ Check all the conditions before save """
 
         # Clean the chrono object list
         Case.instance().chrono.objects = list()
@@ -488,7 +488,7 @@ class ChronoConfigDialog(QtGui.QDialog):
             Case.instance().chrono.collisiondp.value = ""
 
     def on_ok(self):
-        ''' Save data '''
+        """ Save data """
         self.update_to_save()
 
         ChronoConfigDialog.accept(self)

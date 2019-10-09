@@ -1,6 +1,6 @@
 #!/usr/bin/env python3.7
 # -*- coding: utf-8 -*-
-'''DesignSPHysics FlowTool Config and Execution Dialog.'''
+"""DesignSPHysics FlowTool Config and Execution Dialog."""
 
 from PySide import QtGui
 
@@ -14,7 +14,7 @@ from mod.dataobjects.flow_tool_box import FlowToolBox
 from mod.widgets.postprocessing.flowtool_box_edit_dialog import FlowToolBoxEditDialog
 
 class FlowToolDialog(QtGui.QDialog):
-    ''' DesignSPHysics FlowTool Config and Execution Dialog. '''
+    """ DesignSPHysics FlowTool Config and Execution Dialog. """
 
     def __init__(self, post_processing_widget):
         super().__init__()
@@ -46,13 +46,13 @@ class FlowToolDialog(QtGui.QDialog):
 
         self.fltool_csv_file_name_label = QtGui.QLabel(__("CSV file name"))
         self.fltool_csv_file_name_text = QtGui.QLineEdit()
-        self.fltool_csv_file_name_text.setText('_ResultFlow')
+        self.fltool_csv_file_name_text.setText("_ResultFlow")
         self.fltool_csvname_layout.addWidget(self.fltool_csv_file_name_label)
         self.fltool_csvname_layout.addWidget(self.fltool_csv_file_name_text)
 
         self.fltool_vtk_file_name_label = QtGui.QLabel(__("VTK file name"))
         self.fltool_vtk_file_name_text = QtGui.QLineEdit()
-        self.fltool_vtk_file_name_text.setText('Boxes')
+        self.fltool_vtk_file_name_text.setText("Boxes")
         self.fltool_vtkname_layout.addWidget(self.fltool_vtk_file_name_label)
         self.fltool_vtkname_layout.addWidget(self.fltool_vtk_file_name_text)
 
@@ -82,12 +82,12 @@ class FlowToolDialog(QtGui.QDialog):
         self.exec_()
 
     def box_edit(self, box_id):
-        ''' Box edit button behaviour. Opens a dialog to edit the selected FlowTool Box'''
+        """ Box edit button behaviour. Opens a dialog to edit the selected FlowTool Box"""
         FlowToolBoxEditDialog(box_id)
         self.refresh_boxlist()
 
     def box_delete(self, box_id):
-        ''' Box delete button behaviour. Tries to find the box for which the button was pressed and deletes it.'''
+        """ Box delete button behaviour. Tries to find the box for which the button was pressed and deletes it."""
         box_to_remove = None
 
         for box in Case.instance().flowtool_boxes:
@@ -99,7 +99,7 @@ class FlowToolDialog(QtGui.QDialog):
             self.refresh_boxlist()
 
     def refresh_boxlist(self):
-        ''' Refreshes the FlowTool box list.'''
+        """ Refreshes the FlowTool box list."""
         while self.fltool_boxlist_layout.count() > 0:
             target = self.fltool_boxlist_layout.takeAt(0)
             target.setParent(None)
@@ -118,34 +118,34 @@ class FlowToolDialog(QtGui.QDialog):
             self.fltool_boxlist_layout.addLayout(to_add_layout)
 
     def on_fltool_addbox(self):
-        ''' Adds a box to the data structure.'''
+        """ Adds a box to the data structure."""
         Case.instance().flowtool_boxes.append(FlowToolBox())
         self.refresh_boxlist()
 
     def on_fltool_cancel(self):
-        ''' FlowTool cancel button behaviour.'''
+        """ FlowTool cancel button behaviour."""
         self.reject()
 
     def on_fltool_export(self):
-        ''' FlowTool export button behaviour.'''
+        """ FlowTool export button behaviour."""
         export_parameters = dict()
 
         if self.fltool_csv_file_name_text.text():
-            export_parameters['csv_name'] = self.fltool_csv_file_name_text.text()
+            export_parameters["csv_name"] = self.fltool_csv_file_name_text.text()
         else:
-            export_parameters['csv_name'] = '_ResultFlow'
+            export_parameters["csv_name"] = "_ResultFlow"
 
         if self.fltool_vtk_file_name_text.text():
-            export_parameters['vtk_name'] = self.fltool_vtk_file_name_text.text()
+            export_parameters["vtk_name"] = self.fltool_vtk_file_name_text.text()
         else:
-            export_parameters['vtk_name'] = 'Boxes'
+            export_parameters["vtk_name"] = "Boxes"
 
         if self.fltool_parameters_text.text():
-            export_parameters['additional_parameters'] = self.fltool_parameters_text.text()
+            export_parameters["additional_parameters"] = self.fltool_parameters_text.text()
         else:
-            export_parameters['additional_parameters'] = ''
+            export_parameters["additional_parameters"] = ""
 
-        create_flowtool_boxes(Case.instance().path + '/' + 'fileboxes.txt', Case.instance().flowtool_boxes)
+        create_flowtool_boxes(Case.instance().path + "/" + "fileboxes.txt", Case.instance().flowtool_boxes)
 
         flowtool_export(export_parameters, Case.instance(), self.post_processing_widget)
         self.accept()

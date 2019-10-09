@@ -1,16 +1,16 @@
 #!/usr/bin/env python3.7
 # -*- coding: utf-8 -*-
-''' DesignSPHysics Rectilinear motion data. '''
+""" DesignSPHysics Rectilinear motion data. """
 
 from mod.dataobjects.motion.base_motion import BaseMotion
 
 
 class RectMotion(BaseMotion):
-    ''' DualSPHysics rectilinear motion.
+    """ DualSPHysics rectilinear motion.
 
         Attributes:
             velocity: Velocity vector that defines the movement
-        '''
+        """
 
     def __init__(self, duration=1, velocity=None, parent_movement=None):
         if velocity is None:

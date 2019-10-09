@@ -1,6 +1,6 @@
 #!/usr/bin/env python3.7
 # -*- coding: utf-8 -*-
-''' DesignSPHysics Relaxation Zone Irregular data '''
+""" DesignSPHysics Relaxation Zone Irregular data """
 
 from random import randint
 
@@ -9,7 +9,7 @@ from mod.dataobjects.relaxation_zone import RelaxationZone
 
 
 class RelaxationZoneIrregular(RelaxationZone):
-    ''' Relaxation zone for irregular wave generation '''
+    """ Relaxation zone for irregular wave generation """
 
     def __init__(self, start=0, duration=0, peakcoef=3.3, spectrum=IrregularSpectrum.JONSWAP,
                  discretization=IrregularDiscretization.REGULAR, waveorder=1, waveheight=1,

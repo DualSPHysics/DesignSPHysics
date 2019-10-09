@@ -1,12 +1,12 @@
 #!/usr/bin/env python3.7
 # -*- coding: utf-8 -*-
-'''DesignSPHysics XML Importer.
+"""DesignSPHysics XML Importer.
 
 This script contains functionality useful for
 unpacking an XML file from disk and process it as
 a dictionary.
 
-'''
+"""
 
 import json
 import xml.etree.ElementTree as ElementTree
@@ -22,12 +22,12 @@ from mod.constants import SINGLETON_DOCUMENT_NAME
 
 
 def import_xml_file(filename):
-    ''' Returns data dictionary with values found
+    """ Returns data dictionary with values found
         in a GenCase/DSPH compatible XML file and a
-       list of objects to add to simulation '''
+       list of objects to add to simulation """
 
     with open(filename, "rb") as target_file:
-        target_xml = target_file.read().replace('\n', '')
+        target_xml = target_file.read().replace("\n", "")
 
     # Path to xml folder
     path = "/".join(filename.split("/")[0:-1])
@@ -46,81 +46,81 @@ def import_xml_file(filename):
 
 
 def filter_data(raw):
-    ''' Filters a raw json representing an XML file to
-        a compatible data dictionary. '''
+    """ Filters a raw json representing an XML file to
+        a compatible data dictionary. """
 
     fil = dict()
 
     # Case constants related code
-    fil['lattice_bound'] = int(raw['case']['casedef']['constantsdef']['lattice']['@bound'])
-    fil['lattice_fluid'] = int(raw['case']['casedef']['constantsdef']['lattice']['@fluid'])
-    fil['gravity'] = [float(raw['case']['casedef']['constantsdef']['gravity']['@x']),
-                      float(raw['case']['casedef']['constantsdef']['gravity']['@y']),
-                      float(raw['case']['casedef']['constantsdef']['gravity']['@z'])]
-    fil['rhop0'] = float(raw['case']['casedef']['constantsdef']['rhop0']['@value'])
-    fil['hswl'] = float(raw['case']['casedef']['constantsdef']['hswl']['@value'])
-    fil['hswl_auto'] = raw['case']['casedef']['constantsdef']['hswl']['@auto'].lower() == "true"
-    fil['gamma'] = float(raw['case']['casedef']['constantsdef']['gamma']['@value'])
-    fil['speedsystem'] = float(raw['case']['casedef']['constantsdef']['speedsystem']['@value'])
-    fil['speedsystem_auto'] = raw['case']['casedef']['constantsdef']['speedsystem']['@auto'].lower() == "true"
-    fil['coefsound'] = float(raw['case']['casedef']['constantsdef']['coefsound']['@value'])
-    fil['speedsound'] = float(raw['case']['casedef']['constantsdef']['speedsound']['@value'])
-    fil['speedsound_auto'] = raw['case']['casedef']['constantsdef']['speedsound']['@auto'].lower() == "true"
-    fil['coefh'] = float(raw['case']['casedef']['constantsdef']['coefh']['@value'])
-    fil['cflnumber'] = float(raw['case']['casedef']['constantsdef']['cflnumber']['@value'])
-    fil['h'] = float(raw['case']['casedef']['constantsdef']['h']['@value'])
-    fil['h_auto'] = raw['case']['casedef']['constantsdef']['h']['@auto'].lower() == "true"
-    fil['b'] = float(raw['case']['casedef']['constantsdef']['b']['@value'])
-    fil['b_auto'] = raw['case']['casedef']['constantsdef']['b']['@auto'].lower() == "true"
-    fil['massbound'] = float(raw['case']['casedef']['constantsdef']['massbound']['@value'])
-    fil['massbound_auto'] = raw['case']['casedef']['constantsdef']['massbound']['@auto'].lower() == "true"
-    fil['massfluid'] = float(raw['case']['casedef']['constantsdef']['massfluid']['@value'])
-    fil['massfluid_auto'] = raw['case']['casedef']['constantsdef']['massbound']['@auto'].lower() == "true"
+    fil["lattice_bound"] = int(raw["case"]["casedef"]["constantsdef"]["lattice"]["@bound"])
+    fil["lattice_fluid"] = int(raw["case"]["casedef"]["constantsdef"]["lattice"]["@fluid"])
+    fil["gravity"] = [float(raw["case"]["casedef"]["constantsdef"]["gravity"]["@x"]),
+                      float(raw["case"]["casedef"]["constantsdef"]["gravity"]["@y"]),
+                      float(raw["case"]["casedef"]["constantsdef"]["gravity"]["@z"])]
+    fil["rhop0"] = float(raw["case"]["casedef"]["constantsdef"]["rhop0"]["@value"])
+    fil["hswl"] = float(raw["case"]["casedef"]["constantsdef"]["hswl"]["@value"])
+    fil["hswl_auto"] = raw["case"]["casedef"]["constantsdef"]["hswl"]["@auto"].lower() == "true"
+    fil["gamma"] = float(raw["case"]["casedef"]["constantsdef"]["gamma"]["@value"])
+    fil["speedsystem"] = float(raw["case"]["casedef"]["constantsdef"]["speedsystem"]["@value"])
+    fil["speedsystem_auto"] = raw["case"]["casedef"]["constantsdef"]["speedsystem"]["@auto"].lower() == "true"
+    fil["coefsound"] = float(raw["case"]["casedef"]["constantsdef"]["coefsound"]["@value"])
+    fil["speedsound"] = float(raw["case"]["casedef"]["constantsdef"]["speedsound"]["@value"])
+    fil["speedsound_auto"] = raw["case"]["casedef"]["constantsdef"]["speedsound"]["@auto"].lower() == "true"
+    fil["coefh"] = float(raw["case"]["casedef"]["constantsdef"]["coefh"]["@value"])
+    fil["cflnumber"] = float(raw["case"]["casedef"]["constantsdef"]["cflnumber"]["@value"])
+    fil["h"] = float(raw["case"]["casedef"]["constantsdef"]["h"]["@value"])
+    fil["h_auto"] = raw["case"]["casedef"]["constantsdef"]["h"]["@auto"].lower() == "true"
+    fil["b"] = float(raw["case"]["casedef"]["constantsdef"]["b"]["@value"])
+    fil["b_auto"] = raw["case"]["casedef"]["constantsdef"]["b"]["@auto"].lower() == "true"
+    fil["massbound"] = float(raw["case"]["casedef"]["constantsdef"]["massbound"]["@value"])
+    fil["massbound_auto"] = raw["case"]["casedef"]["constantsdef"]["massbound"]["@auto"].lower() == "true"
+    fil["massfluid"] = float(raw["case"]["casedef"]["constantsdef"]["massfluid"]["@value"])
+    fil["massfluid_auto"] = raw["case"]["casedef"]["constantsdef"]["massbound"]["@auto"].lower() == "true"
 
     # Getting dp
-    fil['dp'] = float(raw['case']['casedef']['geometry']['definition']['@dp'])
+    fil["dp"] = float(raw["case"]["casedef"]["geometry"]["definition"]["@dp"])
 
     # Getting case limits
-    fil['limits_min'] = [float(raw['case']['casedef']['geometry']['definition']['pointmin']['@x']),
-                         float(raw['case']['casedef']['geometry']['definition']['pointmin']['@y']),
-                         float(raw['case']['casedef']['geometry']['definition']['pointmin']['@z'])]
-    fil['limits_max'] = [float(raw['case']['casedef']['geometry']['definition']['pointmax']['@x']),
-                         float(raw['case']['casedef']['geometry']['definition']['pointmax']['@y']),
-                         float(raw['case']['casedef']['geometry']['definition']['pointmax']['@z'])]
+    fil["limits_min"] = [float(raw["case"]["casedef"]["geometry"]["definition"]["pointmin"]["@x"]),
+                         float(raw["case"]["casedef"]["geometry"]["definition"]["pointmin"]["@y"]),
+                         float(raw["case"]["casedef"]["geometry"]["definition"]["pointmin"]["@z"])]
+    fil["limits_max"] = [float(raw["case"]["casedef"]["geometry"]["definition"]["pointmax"]["@x"]),
+                         float(raw["case"]["casedef"]["geometry"]["definition"]["pointmax"]["@y"]),
+                         float(raw["case"]["casedef"]["geometry"]["definition"]["pointmax"]["@z"])]
 
     # Execution parameters related code
-    execution_parameters = raw['case']['execution']['parameters']['parameter']
+    execution_parameters = raw["case"]["execution"]["parameters"]["parameter"]
     for parameter in execution_parameters:
-        if '#' in parameter['@key']:
-            fil[parameter['@key'].replace('#', '').lower()] = float(parameter['@value'])
-            fil[parameter['@key'].replace('#', '').lower() + "_auto"] = True
+        if "#" in parameter["@key"]:
+            fil[parameter["@key"].replace("#", "").lower()] = float(parameter["@value"])
+            fil[parameter["@key"].replace("#", "").lower() + "_auto"] = True
         else:
-            fil[parameter['@key'].lower()] = float(parameter['@value'])
+            fil[parameter["@key"].lower()] = float(parameter["@value"])
 
     # Finding used mkfluids and mkbounds
-    fil['mkboundused'] = []
-    fil['mkfluidused'] = []
+    fil["mkboundused"] = []
+    fil["mkfluidused"] = []
     try:
-        mkbounds = raw['case']['casedef']['geometry']['commands']['mainlist']['setmkbound']
+        mkbounds = raw["case"]["casedef"]["geometry"]["commands"]["mainlist"]["setmkbound"]
         if isinstance(mkbounds, dict):
             # Only one mkfluid statement
-            fil['mkboundused'].append(int(mkbounds['@mk']))
+            fil["mkboundused"].append(int(mkbounds["@mk"]))
         else:
             # Multiple mkfluids
             for setmkbound in mkbounds:
-                fil['mkboundused'].append(int(setmkbound['@mk']))
+                fil["mkboundused"].append(int(setmkbound["@mk"]))
     except KeyError:
         # No mkbounds found
         pass
     try:
-        mkfluids = raw['case']['casedef']['geometry']['commands']['mainlist']['setmkfluid']
+        mkfluids = raw["case"]["casedef"]["geometry"]["commands"]["mainlist"]["setmkfluid"]
         if isinstance(mkfluids, dict):
             # Only one mkfluid statement
-            fil['mkfluidused'].append(int(mkfluids['@mk']))
+            fil["mkfluidused"].append(int(mkfluids["@mk"]))
         else:
             # Multiple mkfluids
             for setmkfluid in mkfluids:
-                fil['mkfluidused'].append(int(setmkfluid['@mk']))
+                fil["mkfluidused"].append(int(setmkfluid["@mk"]))
     except KeyError:
         # No mkfluids found
         pass
@@ -129,9 +129,9 @@ def filter_data(raw):
 
 
 def create_fc_objects(f, path):
-    ''' Creates supported objects on scene. Iterates over
+    """ Creates supported objects on scene. Iterates over
         <mainlist> items and tries to recreate the commands in
-        the current opened scene. '''
+        the current opened scene. """
     movement = (0.0, 0.0, 0.0)
     rotation = (0.0, 0.0, 0.0, 0.0)
     mk = ("void", "0")
@@ -178,9 +178,9 @@ def create_fc_objects(f, path):
                 FreeCAD.Vector((point[0] + movement[0]) * 1000, (point[1] + movement[1]) * 1000,
                                (point[2] + movement[2]) * 1000),
                 FreeCAD.Rotation(FreeCAD.Vector(rotation[1], rotation[2], rotation[3]), rotation[0]))
-            FreeCAD.ActiveDocument.getObject("Box" + str(elementnum)).Length = str(size[0]) + ' m'
-            FreeCAD.ActiveDocument.getObject("Box" + str(elementnum)).Width = str(size[1]) + ' m'
-            FreeCAD.ActiveDocument.getObject("Box" + str(elementnum)).Height = str(size[2]) + ' m'
+            FreeCAD.ActiveDocument.getObject("Box" + str(elementnum)).Length = str(size[0]) + " m"
+            FreeCAD.ActiveDocument.getObject("Box" + str(elementnum)).Width = str(size[1]) + " m"
+            FreeCAD.ActiveDocument.getObject("Box" + str(elementnum)).Height = str(size[2]) + " m"
             # Subscribe Box for creation in DSPH Objects
             # Structure: [name] = [mknumber, type, fill]
             to_add_dsph["Box" + str(elementnum)] = [int(mk[1]), mk[0], drawmode]
@@ -209,7 +209,7 @@ def create_fc_objects(f, path):
                 FreeCAD.Vector((point[0] + movement[0]) * 1000, (point[1] + movement[1]) * 1000,
                                (point[2] + movement[2]) * 1000),
                 FreeCAD.Rotation(FreeCAD.Vector(rotation[1], rotation[2], rotation[3]), rotation[0]))
-            FreeCAD.ActiveDocument.getObject("Cylinder" + str(elementnum)).Radius = str(radius) + ' m'
+            FreeCAD.ActiveDocument.getObject("Cylinder" + str(elementnum)).Radius = str(radius) + " m"
             FreeCAD.ActiveDocument.getObject("Cylinder" + str(elementnum)).Height = (top_point[2] - point[2]) * 1000
             # Subscribe Cylinder for creation in DSPH Objects
             # Structure: [name] = [mknumber, type, fill]
@@ -229,7 +229,7 @@ def create_fc_objects(f, path):
                 FreeCAD.Vector((point[0] + movement[0]) * 1000, (point[1] + movement[1]) * 1000,
                                (point[2] + movement[2]) * 1000),
                 FreeCAD.Rotation(FreeCAD.Vector(rotation[1], rotation[2], rotation[3]), rotation[0]))
-            FreeCAD.ActiveDocument.getObject("Sphere" + str(elementnum)).Radius = str(radius) + ' m'
+            FreeCAD.ActiveDocument.getObject("Sphere" + str(elementnum)).Radius = str(radius) + " m"
             # Subscribe Sphere for creation in DSPH Objects
             # Structure: [name] = [mknumber, type, fill]
             to_add_dsph["Sphere" + str(elementnum)] = [int(mk[1]), mk[0], drawmode]

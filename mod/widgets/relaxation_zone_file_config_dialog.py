@@ -1,6 +1,6 @@
 #!/usr/bin/env python3.7
 # -*- coding: utf-8 -*-
-'''DesignSPHysics Relaxation Zone File config Dialog'''
+"""DesignSPHysics Relaxation Zone File config Dialog"""
 
 from PySide import QtCore, QtGui
 

@@ -1,12 +1,12 @@
 #!/usr/bin/env python3.7
 # -*- coding: utf-8 -*-
-''' DesignSPHysics Chrono link pointline. '''
+""" DesignSPHysics Chrono link pointline. """
 
 from uuid import UUID, uuid4
 
 
 class ChronoLinkPointLine:
-    ''' Chrono Link PointLine. '''
+    """ Chrono Link PointLine. """
 
     def __init__(self):
         super().__init__()

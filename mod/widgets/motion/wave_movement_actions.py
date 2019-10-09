@@ -1,6 +1,6 @@
 #!/usr/bin/env python3.7
 # -*- coding: utf-8 -*-
-'''DesignSPHysics Wave Movement Actions Widget. '''
+"""DesignSPHysics Wave Movement Actions Widget. """
 
 from PySide import QtCore, QtGui
 
@@ -9,7 +9,7 @@ from mod.gui_tools import get_icon
 
 
 class WaveMovementActions(QtGui.QWidget):
-    ''' A set of wave movement actions (use and delete) with its custom signals'''
+    """ A set of wave movement actions (use and delete) with its custom signals"""
     delete = QtCore.Signal(int)
     use = QtCore.Signal(int, bool)
 

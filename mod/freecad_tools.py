@@ -1,7 +1,7 @@
 #!/usr/bin/env python3.7
 # -*- coding: utf-8 -*-
 
-''' FreeCAD related tools. '''
+""" FreeCAD related tools. """
 
 from tempfile import gettempdir
 from shutil import copyfile
@@ -23,7 +23,7 @@ from mod.enums import FreeCADObjectType, FreeCADDisplayMode
 
 
 def delete_existing_docks():
-    ''' Searches for existing docks related to DesignSPHysics destroys them. '''
+    """ Searches for existing docks related to DesignSPHysics destroys them. """
     for previous_dock in [get_fc_main_window().findChild(QtGui.QDockWidget, MAIN_WIDGET_INTERNAL_NAME),
                           get_fc_main_window().findChild(QtGui.QDockWidget, PROP_WIDGET_INTERNAL_NAME)]:
         if previous_dock:
@@ -32,15 +32,15 @@ def delete_existing_docks():
 
 
 def check_compatibility():
-    ''' Ensures the current version of FreeCAD is compatible with the macro. Spawns an error dialog and throws exception to halt
-        the execution if its not. '''
+    """ Ensures the current version of FreeCAD is compatible with the macro. Spawns an error dialog and throws exception to halt
+        the execution if its not. """
     if not is_compatible_version():
         error_dialog(__("This FreeCAD version is not compatible. Please update FreeCAD to version {} or higher.").format(FREECAD_MIN_VERSION))
         raise EnvironmentError(__("This FreeCAD version is not compatible. Please update FreeCAD to version {} or higher.").format(FREECAD_MIN_VERSION))
 
 
 def is_compatible_version():
-    ''' Checks if the current FreeCAD version is suitable for this macro. '''
+    """ Checks if the current FreeCAD version is suitable for this macro. """
     version_num = FreeCAD.Version()[0] + FreeCAD.Version()[1]
     if float(version_num) < float(FREECAD_MIN_VERSION):
         return False
@@ -48,7 +48,7 @@ def is_compatible_version():
 
 
 def prepare_dsph_case():
-    ''' Creates a few objects and setups a new case for DesignSPHysics. '''
+    """ Creates a few objects and setups a new case for DesignSPHysics. """
     FreeCAD.setActiveDocument(SINGLETON_DOCUMENT_NAME)
     FreeCAD.ActiveDocument = FreeCAD.ActiveDocument
     FreeCADGui.ActiveDocument = FreeCADGui.ActiveDocument
@@ -68,7 +68,7 @@ def prepare_dsph_case():
 
 
 def setup_damping_environment() -> str:
-    ''' Setups a damping group with its properties within FreeCAD. '''
+    """ Setups a damping group with its properties within FreeCAD. """
     damping_group = FreeCAD.ActiveDocument.addObject(FreeCADObjectType.FOLDER, "DampingZone")
 
     # Limits line
@@ -109,15 +109,15 @@ def setup_damping_environment() -> str:
 
 
 def create_dsph_document():
-    ''' Creates a new DSPH compatible document in FreeCAD.
-        It includes the case limits and a compatible name. '''
+    """ Creates a new DSPH compatible document in FreeCAD.
+        It includes the case limits and a compatible name. """
     FreeCAD.newDocument(SINGLETON_DOCUMENT_NAME)
     prepare_dsph_case()
 
 
 def create_dsph_document_from_fcstd(document_path):
-    ''' Creates a new DSPH compatible document in FreeCAD.
-        It includes the case limits and a compatible name. '''
+    """ Creates a new DSPH compatible document in FreeCAD.
+        It includes the case limits and a compatible name. """
     temp_document_path = gettempdir() + "/" + "DSPH_Case.fcstd"
     copyfile(document_path, temp_document_path)
     FreeCAD.open(temp_document_path)
@@ -125,24 +125,24 @@ def create_dsph_document_from_fcstd(document_path):
 
 
 def document_count() -> int:
-    ''' Returns an integer representing the number of current opened documents in FreeCAD. '''
+    """ Returns an integer representing the number of current opened documents in FreeCAD. """
     return len(FreeCAD.listDocuments().keys())
 
 
 def document_open(document_name: str) -> bool:
-    ''' Returns whether the specified document name is opened within freecad. '''
+    """ Returns whether the specified document name is opened within freecad. """
     return document_name.lower() in list(FreeCAD.listDocuments().keys())[0].lower()
 
 
 def valid_document_environment() -> bool:
-    ''' Returns a boolean if a correct document environment is found.
-    A correct document environment is defined if only a DSPH_Case document is currently opened in FreeCAD. '''
+    """ Returns a boolean if a correct document environment is found.
+    A correct document environment is defined if only a DSPH_Case document is currently opened in FreeCAD. """
     return document_count() == 1 and document_open(SINGLETON_DOCUMENT_NAME)
 
 
 def prompt_close_all_documents(prompt: bool = True) -> bool:
-    ''' Shows a dialog to close all the current documents.
-        If accepted, close all the current documents and return True, else returns False. '''
+    """ Shows a dialog to close all the current documents.
+        If accepted, close all the current documents and return True, else returns False. """
     if prompt:
         user_selection = ok_cancel_dialog(APP_NAME, "All documents will be closed")
     if not prompt or user_selection == QtGui.QMessageBox.Ok:
@@ -155,22 +155,22 @@ def prompt_close_all_documents(prompt: bool = True) -> bool:
 
 
 def get_fc_main_window():
-    ''' Returns FreeCAD main window. '''
+    """ Returns FreeCAD main window. """
     return FreeCADGui.getMainWindow()
 
 
 def get_fc_object(internal_name):
-    ''' Returns a FreeCAD internal object by a name. '''
+    """ Returns a FreeCAD internal object by a name. """
     return FreeCAD.ActiveDocument.getObject(internal_name)
 
 
 def get_fc_view_object(internal_name):
-    ''' Returns a FreeCADGui View provider object by a name. '''
+    """ Returns a FreeCADGui View provider object by a name. """
     return FreeCADGui.ActiveDocument.getObject(internal_name)
 
 
 def enforce_case_limits_restrictions(mode_3d_enabled: bool = True):
-    ''' Enforces restrictions on the case limit object within FreeCAD, like rotation and width (in 2D mode). '''
+    """ Enforces restrictions on the case limit object within FreeCAD, like rotation and width (in 2D mode). """
     case_limits_view = get_fc_view_object(CASE_LIMITS_OBJ_NAME)
     case_limits = get_fc_object(CASE_LIMITS_OBJ_NAME)
     if case_limits_view.DisplayMode != FreeCADDisplayMode.WIREFRAME:
@@ -188,7 +188,7 @@ def enforce_case_limits_restrictions(mode_3d_enabled: bool = True):
 
 
 def enforce_fillbox_restrictions():
-    ''' Enforces restrictions on all fillboxes, resetting their rotations to 0. '''
+    """ Enforces restrictions on all fillboxes, resetting their rotations to 0. """
     for target in filter(lambda obj: obj.TypeId == FreeCADObjectType.FOLDER and "fillbox" in obj.Name.lower(), FreeCAD.ActiveDocument.Objects):
         for sub_element in target.OutList:
             if sub_element.Placement.Rotation.Angle != 0.0:
@@ -197,13 +197,13 @@ def enforce_fillbox_restrictions():
 
 
 def save_current_freecad_document(project_path: str) -> None:
-    ''' Saves the current freecad document with the common name. '''
+    """ Saves the current freecad document with the common name. """
     FreeCAD.ActiveDocument.saveAs("{}/DSPH_Case.FCStd".format(project_path))
     FreeCADGui.SendMsgToActiveView("Save")
 
 
 def add_fillbox_objects() -> None:
-    ''' Adds the necessary objects for a fillbox and sets its properties. '''
+    """ Adds the necessary objects for a fillbox and sets its properties. """
     fillbox_gp = FreeCAD.ActiveDocument.addObject(FreeCADObjectType.FOLDER, "FillBox")
     fillbox_point = FreeCAD.ActiveDocument.addObject(FreeCADObjectType.SPHERE, "FillPoint")
     fillbox_limits = FreeCAD.ActiveDocument.addObject(FreeCADObjectType.BOX, "FillLimit")

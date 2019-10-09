@@ -1,7 +1,7 @@
 #!/usr/bin/env python3.7
 # -*- coding: utf-8 -*-
 
-''' Translation related tools. '''
+""" Translation related tools. """
 
 from os import path
 import json
@@ -10,8 +10,8 @@ import FreeCADGui
 
 
 def __(text):
-    ''' Translation helper. Takes a string and tries to return its translation to the current FreeCAD locale.
-    If the translation is missing or the file does not exists, return default english string. '''
+    """ Translation helper. Takes a string and tries to return its translation to the current FreeCAD locale.
+    If the translation is missing or the file does not exists, return default english string. """
     # Get FreeCAD current language
     freecad_locale = FreeCADGui.getLocale().lower().replace(", ", "-").replace(" ", "-")
 

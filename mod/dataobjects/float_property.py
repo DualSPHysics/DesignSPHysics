@@ -1,13 +1,13 @@
 #!/usr/bin/env python3.7
 # -*- coding: utf-8 -*-
-''' DesignSPHysics Float Property dat. '''
+""" DesignSPHysics Float Property dat. """
 
 
 from mod.enums import FloatingDensityType
 
 
 class FloatProperty():
-    ''' Float property of an DSPH object.
+    """ Float property of an DSPH object.
 
     Attributes:
         mk: Mk to witch this FloatProperty is binded.
@@ -18,7 +18,7 @@ class FloatProperty():
         initial_linear_velocity: Coords in [x, y, z] format. None for auto.
         initial_angular_velocity: Coords in [x, y, z] format. None for auto.
         rotation_restriction: Coords in [x,y,z] format. None for auto.
-    '''
+    """
 
     def __init__(self, mk=-1, mass_density_type=FloatingDensityType.MASSBODY, mass_density_value=100,
                  gravity_center=None, inertia=None, initial_linear_velocity=None,

@@ -1,11 +1,11 @@
 #!/usr/bin/env python3.7
 # -*- coding: utf-8 -*-
-''' DesignSPHysics Regular Relaxation Zone data. '''
+""" DesignSPHysics Regular Relaxation Zone data. """
 
 from mod.dataobjects.relaxation_zone import RelaxationZone
 
 class RelaxationZoneRegular(RelaxationZone):
-    ''' Relaxation zone for regular wave generation '''
+    """ Relaxation zone for regular wave generation """
 
     def __init__(self, start=0, duration=0, waveorder=1, waveheight=1, waveperiod=2, depth=1, swl=1, center=None,
                  width=0.5, phase=0, ramp=0,

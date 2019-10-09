@@ -1,6 +1,6 @@
 #!/usr/bin/env python3.7
 # -*- coding: utf-8 -*-
-''' DesignSPHysics main data structure. '''
+""" DesignSPHysics main data structure. """
 
 from mod.stdout_tools import debug
 
@@ -23,19 +23,19 @@ from mod.dataobjects.damping import Damping
 
 
 class Case():
-    ''' Main data structure for the data inside a case properties, objects
-    etcetera. Used as a way to store information and transform it for multiple needs '''
-    __instance: 'Case' = None
+    """ Main data structure for the data inside a case properties, objects
+    etcetera. Used as a way to store information and transform it for multiple needs """
+    __instance: "Case" = None
 
     def __init__(self, reset=False):
-        ''' Virtually private constructor. '''
+        """ Virtually private constructor. """
         if Case.__instance is not None and not reset:
-            raise Exception('Case class is a singleton and should not be initialized twice')
+            raise Exception("Case class is a singleton and should not be initialized twice")
         super()
         Case.__instance = self
         self.version: str = VERSION
-        self.name: str = ''
-        self.path: str = ''
+        self.name: str = ""
+        self.path: str = ""
         self.dp: float = 0.01
         self.mode3d: bool = True
         self.constants: Constants = Constants()
@@ -54,19 +54,19 @@ class Case():
         self.chrono: ChronoConfig = ChronoConfig()
 
     @staticmethod
-    def instance() -> 'Case':
-        ''' Static access method. '''
+    def instance() -> "Case":
+        """ Static access method. """
         if Case.__instance is None:
             Case()
         return Case.__instance
 
     @staticmethod
     def update_from_disk(disk_data: Case) -> None:
-        ''' Updates the current instance for the one passed as parameter. '''
+        """ Updates the current instance for the one passed as parameter. """
         Case.__instance = disk_data
 
     def get_first_mk_not_used(self, object_type: ObjectType):
-        ''' Checks simulation objects to find the first not used MK group number. '''
+        """ Checks simulation objects to find the first not used MK group number. """
         mkset = set(map(lambda x: x.obj_mk, filter(lambda y: y.type == object_type, self.objects)))
         limit = {ObjectType.FLUID: 10, ObjectType.BOUND: 240}[object_type]
         for i in range(0, limit):
@@ -75,92 +75,92 @@ class Case():
         return 0
 
     def get_all_simulation_object_names(self):
-        ''' Returns a list with all the internal names used by the objects in the simulation. '''
+        """ Returns a list with all the internal names used by the objects in the simulation. """
         return list(map(lambda obj: obj.name, self.objects))
 
     def get_simulation_object(self, name) -> SimulationObject:
-        ''' Returns a simulation object from its internal name.
-        Raises an exception if the selected object is not added to the simulation. '''
+        """ Returns a simulation object from its internal name.
+        Raises an exception if the selected object is not added to the simulation. """
         return next(filter(lambda obj: obj.name == name, self.objects), None)
 
     def get_all_fluid_objects(self) -> list:
-        ''' Returns all the fluid objects in the simulation. '''
+        """ Returns all the fluid objects in the simulation. """
         return list(filter(lambda obj: obj.type == ObjectType.FLUID, self.objects))
 
     def get_all_bound_objects(self) -> list:
-        ''' Returns all the bound objects in the simulation. '''
+        """ Returns all the bound objects in the simulation. """
         return list(filter(lambda obj: obj.type == ObjectType.BOUND, self.objects))
 
     def number_of_objects_in_simulation(self) -> int:
-        ''' Return the total number of objects in the simulation '''
+        """ Return the total number of objects in the simulation """
         return len(list(filter(lambda obj: obj.type != ObjectType.SPECIAL, self.objects)))
 
     def get_mk_based_properties(self, mknumber: int) -> MKBasedProperties:
-        ''' Returns the properties set for a given MK number '''
+        """ Returns the properties set for a given MK number """
         if mknumber not in self.mkbasedproperties.keys():
-            raise RuntimeError('MK has no properties applied! This should not happen.')
+            raise RuntimeError("MK has no properties applied! This should not happen.")
         return self.mkbasedproperties[mknumber]
 
     def has_mk_properties(self, mk) -> bool:
-        ''' Returns whether a given mk has properties applier or not. '''
+        """ Returns whether a given mk has properties applier or not. """
         return mk in self.mkbasedproperties.keys()
 
     def is_object_in_simulation(self, name) -> bool:
-        ''' Returns whether an object is contained in the current case for simulating or not. '''
+        """ Returns whether an object is contained in the current case for simulating or not. """
         return name in self.get_all_simulation_object_names()
 
     def reset(self):
-        ''' Recreates the object from scratch. '''
+        """ Recreates the object from scratch. """
         self.__init__(reset=True)
 
     def add_object(self, simobject: SimulationObject):
-        ''' Adds an object to the current case '''
+        """ Adds an object to the current case """
         if simobject.name in self.get_all_simulation_object_names():
-            raise RuntimeError('Object with the name: {} is already added to the case'.format(simobject.name))
+            raise RuntimeError("Object with the name: {} is already added to the case".format(simobject.name))
         self.objects.append(simobject)
         if not self.has_mk_properties(simobject.obj_mk):
             self.mkbasedproperties[simobject.obj_mk] = MKBasedProperties(mk=simobject.obj_mk)
 
     def remove_object(self, object_name: str) -> SimulationObject:
-        ''' Tries to remove the given object name from the simulation.
-        If no element is found an error is raised. '''
+        """ Tries to remove the given object name from the simulation.
+        If no element is found an error is raised. """
         if object_name not in self.get_all_simulation_object_names():
-            raise RuntimeError('The object that you are trying to remove ({}) is not present in the simulation')
+            raise RuntimeError("The object that you are trying to remove ({}) is not present in the simulation")
         self.objects = list(filter(lambda obj: obj.name != object_name, self.objects))
 
     def add_damping_group(self, group_name: str) -> None:
-        ''' Adds a new freecad group/folder to a new Damping Zone. '''
+        """ Adds a new freecad group/folder to a new Damping Zone. """
         self.damping_zones[group_name] = Damping()
 
     def is_damping_bound_to_object(self, freecad_object_name: str) -> bool:
-        ''' Returns whether the object passed has a damping object bound to it or not. '''
+        """ Returns whether the object passed has a damping object bound to it or not. """
         return freecad_object_name in self.damping_zones.keys()
 
     def was_not_saved(self) -> bool:
-        ''' Returns whether this case was or not saved before '''
-        return self.path == '' and self.name == ''
+        """ Returns whether this case was or not saved before """
+        return self.path == "" and self.name == ""
 
     def reset_simulation_domain(self) -> None:
-        ''' Restores the Simulation Domain to the default one. '''
+        """ Restores the Simulation Domain to the default one. """
         self.domain = SimulationDomain()
 
     def shift_object_up_in_order(self, index) -> None:
-        ''' Moves an object up in the order. '''
+        """ Moves an object up in the order. """
         corrected_index = index + 1
         if 2 <= corrected_index < len(self.objects):
             debug("Object has right condition to shift up")
             self.objects.insert(corrected_index - 1, self.objects.pop(corrected_index))
 
     def shift_object_down_in_order(self, index) -> None:
-        ''' Moves an object up in the order. '''
+        """ Moves an object up in the order. """
         corrected_index = index + 1
         if 1 <= corrected_index < len(self.objects) - 1:
             self.objects.insert(corrected_index + 1, self.objects.pop(corrected_index))
 
     def get_out_xml_file_path(self) -> str:
-        ''' Constructs the path for the out xml file needed to execute DualSPHysics. '''
+        """ Constructs the path for the out xml file needed to execute DualSPHysics. """
         return "{path}/{name}_out/{name}".format(path=self.path, name=self.name)
 
     def get_out_folder_path(self) -> str:
-        ''' Constructs the path for the output folder of the case. '''
+        """ Constructs the path for the output folder of the case. """
         return "{path}/{name}_out/".format(path=self.path, name=self.name)

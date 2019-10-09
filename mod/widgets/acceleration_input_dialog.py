@@ -1,6 +1,6 @@
 #!/usr/bin/env python3.7
 # -*- coding: utf-8 -*-
-'''DesignSPHysics Acceleration Input Dialog.'''
+"""DesignSPHysics Acceleration Input Dialog."""
 
 from PySide import QtCore, QtGui
 
@@ -10,10 +10,10 @@ from mod.dataobjects.acceleration_input_data import AccelerationInputData
 
 
 class AccelerationInputDialog(QtGui.QDialog):
-    ''' A Dialog which shows the contents of the case AccelerationInput object.
+    """ A Dialog which shows the contents of the case AccelerationInput object.
     Shows a list with the AccelerationInputData objects defined for the case and
     its details when clicked.
-    Returns: AccelerationInput object'''
+    Returns: AccelerationInput object"""
 
     def __init__(self, accinput):
         super(AccelerationInputDialog, self).__init__()
@@ -110,7 +110,7 @@ class AccelerationInputDialog(QtGui.QDialog):
         self.init_connections()
 
     def get_result(self):
-        ''' Returns the AccelerationInput object '''
+        """ Returns the AccelerationInput object """
         return self.accinput
 
     def fill_data(self):

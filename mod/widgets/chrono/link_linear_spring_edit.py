@@ -1,6 +1,6 @@
 #!/usr/bin/env python3.7
 # -*- coding: utf-8 -*-
-'''DesignSPHysics LinkLinearSprint Edit Dialog '''
+"""DesignSPHysics LinkLinearSprint Edit Dialog """
 
 from PySide import QtGui
 
@@ -11,7 +11,7 @@ from mod.dataobjects.case import Case
 
 
 class LinkLinearspringEdit(QtGui.QDialog):
-    ''' Defines Link linearspring window dialog '''
+    """ Defines Link linearspring window dialog """
 
     def __init__(self, link_linearspring_id):
         super(LinkLinearspringEdit, self).__init__()
@@ -161,11 +161,11 @@ class LinkLinearspringEdit(QtGui.QDialog):
         self.exec_()
 
     def on_cancel(self):
-        ''' Link linearspring edit cancel button behaviour.'''
+        """ Link linearspring edit cancel button behaviour."""
         self.reject()
 
     def on_save(self):
-        ''' Link linearspring save button behaviour'''
+        """ Link linearspring save button behaviour"""
         count = -1
         for link_linearspring_value in Case.instance().chrono.link_linearspring:
             count += 1

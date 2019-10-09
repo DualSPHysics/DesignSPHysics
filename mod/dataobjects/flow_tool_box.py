@@ -1,12 +1,12 @@
 #!/usr/bin/env python3.7
 # -*- coding: utf-8 -*-
-''' DesignSPHysics Flow Tool Box. '''
+""" DesignSPHysics Flow Tool Box. """
 
 from uuid import UUID, uuid4
 
 
 class FlowToolBox():
-    ''' A structure representing a box used by FlowTool to measure data. '''
+    """ A structure representing a box used by FlowTool to measure data. """
 
     DEFAULT_NAME: str = "BOX"
 

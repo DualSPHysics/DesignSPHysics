@@ -1,6 +1,6 @@
 #!/usr/bin/env python3.7
 # -*- coding: utf-8 -*-
-'''DesignSPHysics '''
+"""DesignSPHysics """
 
 from PySide import QtCore, QtGui
 
@@ -12,7 +12,7 @@ from mod.dataobjects.motion.rotation_file_gen import RotationFileGen
 
 
 class RotationFileMotionTimeline(QtGui.QWidget):
-    ''' A rotation file motion graphical representation for a table-based timeline '''
+    """ A rotation file motion graphical representation for a table-based timeline """
     changed = QtCore.Signal(int, RotationFileGen)
 
     def __init__(self, rot_file_gen, project_folder_path):

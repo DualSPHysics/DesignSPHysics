@@ -1,13 +1,13 @@
 #!/usr/bin/env python3.7
 # -*- coding: utf-8 -*-
-'''DesignSPHysics Dialog Tools.
+"""DesignSPHysics Dialog Tools.
 
-Contains general use standard dialogs. '''
+Contains general use standard dialogs. """
 
 from PySide import QtGui
 
 def warning_dialog(warn_text, detailed_text=None):
-    '''Spawns a warning dialog with the text and details passed.'''
+    """Spawns a warning dialog with the text and details passed."""
 
     warning_messagebox = QtGui.QMessageBox()
     warning_messagebox.setText(str(warn_text))
@@ -18,7 +18,7 @@ def warning_dialog(warn_text, detailed_text=None):
 
 
 def error_dialog(error_text, detailed_text=None):
-    '''Spawns an error dialog with the text and details passed.'''
+    """Spawns an error dialog with the text and details passed."""
 
     error_messagebox = QtGui.QMessageBox()
     error_messagebox.setText(error_text)
@@ -29,7 +29,7 @@ def error_dialog(error_text, detailed_text=None):
 
 
 def info_dialog(info_text, detailed_text=None):
-    '''Spawns an info dialog with the text and details passed.'''
+    """Spawns an info dialog with the text and details passed."""
 
     info_messagebox = QtGui.QMessageBox()
     info_messagebox.setText(info_text)
@@ -40,7 +40,7 @@ def info_dialog(info_text, detailed_text=None):
 
 
 def ok_cancel_dialog(title, text):
-    '''Spawns an okay/cancel dialog with the title and text passed'''
+    """Spawns an okay/cancel dialog with the title and text passed"""
 
     open_confirm_dialog = QtGui.QMessageBox()
     open_confirm_dialog.setWindowTitle(title)

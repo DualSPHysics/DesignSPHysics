@@ -1,6 +1,6 @@
 #!/usr/bin/env python3.7
 # -*- coding: utf-8 -*-
-'''DesignSPHysics IsoSurface Config and Execution Dialog.'''
+"""DesignSPHysics IsoSurface Config and Execution Dialog."""
 
 from PySide import QtGui
 
@@ -11,7 +11,7 @@ from mod.dataobjects.case import Case
 
 
 class IsoSurfaceDialog(QtGui.QDialog):
-    ''' DesignSPHysics IsoSurface Config and Execution Dialog. '''
+    """ DesignSPHysics IsoSurface Config and Execution Dialog. """
 
     def __init__(self, post_processing_widget):
         super().__init__()
@@ -35,7 +35,7 @@ class IsoSurfaceDialog(QtGui.QDialog):
 
         self.isosfc_file_name_label = QtGui.QLabel(__("File name"))
         self.isosfc_file_name_text = QtGui.QLineEdit()
-        self.isosfc_file_name_text.setText('FileIso')
+        self.isosfc_file_name_text.setText("FileIso")
         self.isosfc_filename_layout.addWidget(self.isosfc_file_name_label)
         self.isosfc_filename_layout.addWidget(self.isosfc_file_name_text)
 
@@ -66,29 +66,29 @@ class IsoSurfaceDialog(QtGui.QDialog):
         self.exec_()
 
     def on_isosfc_cancel(self):
-        ''' IsoSurface dialog cancel button behaviour.'''
+        """ IsoSurface dialog cancel button behaviour."""
         self.reject()
 
     def on_isosfc_export(self):
-        ''' IsoSurface dialog export button behaviour.'''
+        """ IsoSurface dialog export button behaviour."""
         export_parameters = dict()
 
         if "surface" in self.isosfc_selector.currentText().lower():
-            export_parameters['surface_or_slice'] = '-saveiso'
+            export_parameters["surface_or_slice"] = "-saveiso"
         else:
-            export_parameters['surface_or_slice'] = '-saveslice'
+            export_parameters["surface_or_slice"] = "-saveslice"
 
         if self.isosfc_file_name_text.text():
-            export_parameters['file_name'] = self.isosfc_file_name_text.text()
+            export_parameters["file_name"] = self.isosfc_file_name_text.text()
         else:
-            export_parameters['file_name'] = 'IsoFile'
+            export_parameters["file_name"] = "IsoFile"
 
         if self.isosfc_parameters_text.text():
-            export_parameters['additional_parameters'] = self.isosfc_parameters_text.text()
+            export_parameters["additional_parameters"] = self.isosfc_parameters_text.text()
         else:
-            export_parameters['additional_parameters'] = ''
+            export_parameters["additional_parameters"] = ""
 
-        export_parameters['open_paraview'] = self.isosfc_open_at_end.isChecked()
+        export_parameters["open_paraview"] = self.isosfc_open_at_end.isChecked()
 
-        isosurface_export(export_parameters, self.post_procesing_widget)
+        isosurface_export(export_parameters, Case.instance(), self.post_procesing_widget)
         self.accept()

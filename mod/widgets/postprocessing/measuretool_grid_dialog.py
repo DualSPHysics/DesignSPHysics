@@ -1,6 +1,6 @@
 #!/usr/bin/env python3.7
 # -*- coding: utf-8 -*-
-'''DesignSPHysics MeasureTool Grid Dialog '''
+"""DesignSPHysics MeasureTool Grid Dialog """
 
 from PySide import QtCore, QtGui
 
@@ -11,7 +11,7 @@ from mod.dataobjects.case import Case
 
 
 class MeasureToolGridDialog(QtGui.QDialog):
-    ''' Defines grid point button behaviour.'''
+    """ Defines grid point button behaviour."""
 
     def __init__(self):
         super(MeasureToolGridDialog, self).__init__()
@@ -79,7 +79,7 @@ class MeasureToolGridDialog(QtGui.QDialog):
         self.exec_()
 
     def on_mgrid_change(self, _, column):
-        ''' Defines what happens when a field changes on the table'''
+        """ Defines what happens when a field changes on the table"""
         if column > 8:
             return
         for self.mgrid_row in range(0, self.mgrid_table.rowCount()):
@@ -142,7 +142,7 @@ class MeasureToolGridDialog(QtGui.QDialog):
                 pass
 
     def on_mgrid_accept(self):
-        ''' MeasureTool point grid accept button behaviour.'''
+        """ MeasureTool point grid accept button behaviour."""
         Case.instance().info.measuretool_grid = list()
         for self.mgrid_row in range(0, self.mgrid_table.rowCount()):
             try:
@@ -169,5 +169,5 @@ class MeasureToolGridDialog(QtGui.QDialog):
         self.accept()
 
     def on_mgrid_cancel(self):
-        ''' MeasureTool point grid cancel button behaviour'''
+        """ MeasureTool point grid cancel button behaviour"""
         self.reject()

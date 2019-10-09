@@ -1,6 +1,6 @@
 #!/usr/bin/env python3.7
 # -*- coding: utf-8 -*-
-'''DesignSPHysics PartVTK Config and Execution Dialog.'''
+"""DesignSPHysics PartVTK Config and Execution Dialog."""
 
 from PySide import QtGui, QtCore
 
@@ -11,7 +11,7 @@ from mod.dataobjects.case import Case
 
 
 class PartVTKDialog(QtGui.QDialog):
-    ''' A PartVTK Configuration and Exeuction Dialog. '''
+    """ A PartVTK Configuration and Exeuction Dialog. """
 
     def __init__(self, post_processing_widget):
         super().__init__()
@@ -56,7 +56,7 @@ class PartVTKDialog(QtGui.QDialog):
 
         self.pvtk_file_name_label = QtGui.QLabel(__("File name"))
         self.pvtk_file_name_text = QtGui.QLineEdit()
-        self.pvtk_file_name_text.setText('ExportPart')
+        self.pvtk_file_name_text.setText("ExportPart")
         self.pvtk_filename_layout.addWidget(self.pvtk_file_name_label)
         self.pvtk_filename_layout.addWidget(self.pvtk_file_name_text)
 
@@ -95,49 +95,49 @@ class PartVTKDialog(QtGui.QDialog):
         self.exec_()
 
     def on_pvtk_cancel(self):
-        ''' Cancel button behaviour '''
+        """ Cancel button behaviour """
         self.reject()
 
     def on_pvtk_export(self):
-        ''' Export button behaviour '''
+        """ Export button behaviour """
         export_parameters = dict()
-        export_parameters['save_mode'] = self.outformat_combobox.currentIndex()
-        export_parameters['save_types'] = '-all'
+        export_parameters["save_mode"] = self.outformat_combobox.currentIndex()
+        export_parameters["save_types"] = "-all"
 
         if self.pvtk_types_chk_all.isChecked():
-            export_parameters['save_types'] = '+all'
+            export_parameters["save_types"] = "+all"
         else:
             if self.pvtk_types_chk_bound.isChecked():
-                export_parameters['save_types'] += ',+bound'
+                export_parameters["save_types"] += ",+bound"
             if self.pvtk_types_chk_fluid.isChecked():
-                export_parameters['save_types'] += ',+fluid'
+                export_parameters["save_types"] += ",+fluid"
             if self.pvtk_types_chk_fixed.isChecked():
-                export_parameters['save_types'] += ',+fixed'
+                export_parameters["save_types"] += ",+fixed"
             if self.pvtk_types_chk_moving.isChecked():
-                export_parameters['save_types'] += ',+moving'
+                export_parameters["save_types"] += ",+moving"
             if self.pvtk_types_chk_floating.isChecked():
-                export_parameters['save_types'] += ',+floating'
+                export_parameters["save_types"] += ",+floating"
 
-        if export_parameters['save_types'] == '-all':
-            export_parameters['save_types'] = '+all'
+        if export_parameters["save_types"] == "-all":
+            export_parameters["save_types"] = "+all"
 
-        export_parameters['open_paraview'] = self.pvtk_open_at_end.isChecked()
+        export_parameters["open_paraview"] = self.pvtk_open_at_end.isChecked()
 
         if self.pvtk_file_name_text.text():
-            export_parameters['file_name'] = self.pvtk_file_name_text.text()
+            export_parameters["file_name"] = self.pvtk_file_name_text.text()
         else:
-            export_parameters['file_name'] = 'ExportedPart'
+            export_parameters["file_name"] = "ExportedPart"
 
         if self.pvtk_parameters_text.text():
-            export_parameters['additional_parameters'] = self.pvtk_parameters_text.text()
+            export_parameters["additional_parameters"] = self.pvtk_parameters_text.text()
         else:
-            export_parameters['additional_parameters'] = ''
+            export_parameters["additional_parameters"] = ""
 
-        partvtk_export(export_parameters, self.post_processing_widget)
+        partvtk_export(export_parameters, Case.instance(), self.post_processing_widget)
         self.accept()
 
     def on_pvtk_type_all_change(self, state):
-        ''' 'All' type selection handler '''
+        """ "All" type selection handler """
         if state == QtCore.Qt.Checked:
             for chk in [self.pvtk_types_chk_bound,
                         self.pvtk_types_chk_fluid,
@@ -147,32 +147,32 @@ class PartVTKDialog(QtGui.QDialog):
                 chk.setCheckState(QtCore.Qt.Unchecked)
 
     def on_pvtk_type_bound_change(self, state):
-        ''' 'Bound' type selection handler '''
+        """ "Bound" type selection handler """
         if state == QtCore.Qt.Checked:
             self.pvtk_types_chk_all.setCheckState(QtCore.Qt.Unchecked)
 
     def on_pvtk_type_fluid_change(self, state):
-        ''' 'Fluid' type selection handler '''
+        """ "Fluid" type selection handler """
         if state == QtCore.Qt.Checked:
             self.pvtk_types_chk_all.setCheckState(QtCore.Qt.Unchecked)
 
     def on_pvtk_type_fixed_change(self, state):
-        ''' 'Fixed' type selection handler '''
+        """ "Fixed" type selection handler """
         if state == QtCore.Qt.Checked:
             self.pvtk_types_chk_all.setCheckState(QtCore.Qt.Unchecked)
 
     def on_pvtk_type_moving_change(self, state):
-        ''' 'Moving' type selection handler '''
+        """ "Moving" type selection handler """
         if state == QtCore.Qt.Checked:
             self.pvtk_types_chk_all.setCheckState(QtCore.Qt.Unchecked)
 
     def on_pvtk_type_floating_change(self, state):
-        ''' 'Floating' type selection handler '''
+        """ "Floating" type selection handler """
         if state == QtCore.Qt.Checked:
             self.pvtk_types_chk_all.setCheckState(QtCore.Qt.Unchecked)
 
     def on_pvtk_export_format_change(self, _):
-        ''' Export format combobox handler'''
+        """ Export format combobox handler"""
         if "vtk" in self.outformat_combobox.currentText().lower() and Case.instance().executable_paths.paraview != "":
             self.pvtk_open_at_end.setEnabled(True)
         else:

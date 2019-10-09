@@ -1,6 +1,6 @@
 #!/usr/bin/env python3.7
 # -*- coding: utf-8 -*-
-''' DesignSPHysics Inlet/Outlet zone. '''
+""" DesignSPHysics Inlet/Outlet zone. """
 
 from uuid import UUID, uuid4
 
@@ -10,7 +10,7 @@ from mod.dataobjects.inletoutlet.inlet_outlet_density_info import InletOutletDen
 from mod.dataobjects.inletoutlet.inlet_outlet_elevation_info import InletOutletElevationInfo
 
 class InletOutletZone:
-    ''' Inlet/Outlet Zone definition. '''
+    """ Inlet/Outlet Zone definition. """
 
     def __init__(self):
         super().__init__()

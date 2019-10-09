@@ -1,6 +1,6 @@
 #!/usr/bin/env python3.7
 # -*- coding: utf-8 -*-
-'''DesignSPHysics File Based Motion Timeline Widget. '''
+"""DesignSPHysics File Based Motion Timeline Widget. """
 
 from PySide import QtCore, QtGui
 
@@ -12,7 +12,7 @@ from mod.dataobjects.motion.file_gen import FileGen
 
 
 class FileMotionTimeline(QtGui.QWidget):
-    ''' A File motion graphical representation for a table-based timeline '''
+    """ A File motion graphical representation for a table-based timeline """
     changed = QtCore.Signal(int, FileGen)
 
     def __init__(self, file_wave_gen, project_folder_path):

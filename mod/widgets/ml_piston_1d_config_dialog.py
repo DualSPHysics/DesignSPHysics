@@ -1,6 +1,6 @@
 #!/usr/bin/env python3.7
 # -*- coding: utf-8 -*-
-'''DesignSPHysics MLPiston1D Configuration Dialog. '''
+"""DesignSPHysics MLPiston1D Configuration Dialog. """
 
 from PySide import QtCore, QtGui
 
@@ -11,7 +11,7 @@ from mod.dataobjects.ml_piston_1d import MLPiston1D
 
 
 class MLPiston1DConfigDialog(QtGui.QDialog):
-    ''' DesignSPHysics MLPiston1D Configuration Dialog. '''
+    """ DesignSPHysics MLPiston1D Configuration Dialog. """
 
     def __init__(self, mk=None, mlpiston1d=None):
         super(MLPiston1DConfigDialog, self).__init__()

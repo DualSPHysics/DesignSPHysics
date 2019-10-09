@@ -1,6 +1,6 @@
 #!/usr/bin/env python3.7
 # -*- coding: utf-8 -*-
-'''DesignSPHysics Float State configuration dialog. '''
+"""DesignSPHysics Float State configuration dialog. """
 
 import FreeCADGui
 
@@ -14,7 +14,7 @@ from mod.dataobjects.float_property import FloatProperty
 
 
 class FloatStateDialog(QtGui.QDialog):
-    ''' Defines a window with floating  '''
+    """ Defines a window with floating  """
 
     def __init__(self):
         super(FloatStateDialog, self).__init__()
@@ -45,7 +45,7 @@ class FloatStateDialog(QtGui.QDialog):
         self.floating_props_massrhop_label = QtGui.QLabel(__("Mass/Density: "))
         self.floating_props_massrhop_label.setToolTip(__("Selects an mass/density calculation method and its value."))
         self.floating_props_massrhop_selector = QtGui.QComboBox()
-        self.floating_props_massrhop_selector.insertItems(0, ['massbody (kg)', 'rhopbody (kg/m^3)'])
+        self.floating_props_massrhop_selector.insertItems(0, ["massbody (kg)", "rhopbody (kg/m^3)"])
         self.floating_props_massrhop_input = QtGui.QLineEdit()
         self.floating_props_massrhop_selector.currentIndexChanged.connect(self.on_massrhop_change)
         self.floating_props_massrhop_layout.addWidget(self.floating_props_massrhop_label)
@@ -137,13 +137,13 @@ class FloatStateDialog(QtGui.QDialog):
         self.floating_translation_label.setToolTip(__("Use 0 for translation restriction in the movement (default=(1,1,1))"))
         self.floating_translation_label_x = QtGui.QLabel("X")
         self.floating_translation_input_x = QtGui.QComboBox()
-        self.floating_translation_input_x.insertItems(1, ['0', '1'])
+        self.floating_translation_input_x.insertItems(1, ["0", "1"])
         self.floating_translation_label_y = QtGui.QLabel("Y")
         self.floating_translation_input_y = QtGui.QComboBox()
-        self.floating_translation_input_y.insertItems(1, ['0', '1'])
+        self.floating_translation_input_y.insertItems(1, ["0", "1"])
         self.floating_translation_label_z = QtGui.QLabel("Z")
         self.floating_translation_input_z = QtGui.QComboBox()
-        self.floating_translation_input_z.insertItems(1, ['0', '1'])
+        self.floating_translation_input_z.insertItems(1, ["0", "1"])
         self.floating_translation_auto = QtGui.QCheckBox("Auto ")
         self.floating_translation_auto.toggled.connect(self.on_translation_auto)
         self.floating_translation_layout.addWidget(self.floating_translation_label)
@@ -164,13 +164,13 @@ class FloatStateDialog(QtGui.QDialog):
         self.floating_rotation_label.setToolTip(__("Use 0 for rotation restriction in the movement (default=(1,1,1))"))
         self.floating_rotation_label_x = QtGui.QLabel("X")
         self.floating_rotation_input_x = QtGui.QComboBox()
-        self.floating_rotation_input_x.insertItems(1, ['0', '1'])
+        self.floating_rotation_input_x.insertItems(1, ["0", "1"])
         self.floating_rotation_label_y = QtGui.QLabel("Y")
         self.floating_rotation_input_y = QtGui.QComboBox()
-        self.floating_rotation_input_y.insertItems(1, ['0', '1'])
+        self.floating_rotation_input_y.insertItems(1, ["0", "1"])
         self.floating_rotation_label_z = QtGui.QLabel("Z")
         self.floating_rotation_input_z = QtGui.QComboBox()
-        self.floating_rotation_input_z.insertItems(1, ['0', '1'])
+        self.floating_rotation_input_z.insertItems(1, ["0", "1"])
         self.floating_rotation_auto = QtGui.QCheckBox("Auto ")
         self.floating_rotation_auto.toggled.connect(self.on_rotation_auto)
         self.floating_rotation_layout.addWidget(self.floating_rotation_label)

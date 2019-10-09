@@ -1,6 +1,6 @@
 #!/usr/bin/env python3.7
 # -*- coding: utf-8 -*-
-'''DesignSPHysics Dock DP Intro Widget '''
+"""DesignSPHysics Dock DP Intro Widget """
 
 from PySide import QtGui
 
@@ -10,7 +10,7 @@ from mod.dataobjects.case import Case
 
 
 class DockDPWidget(QtGui.QWidget):
-    ''' DesignSPHysics Dock DP Intro widget. '''
+    """ DesignSPHysics Dock DP Intro widget. """
 
     def __init__(self):
         super().__init__()
@@ -38,5 +38,5 @@ class DockDPWidget(QtGui.QWidget):
         self.setLayout(self.main_layout)
 
     def on_dp_changed(self):
-        ''' DP Introduction. Changes the dp at the moment the user changes the text. '''
+        """ DP Introduction. Changes the dp at the moment the user changes the text. """
         Case.instance().dp = float(self.dp_input.text())

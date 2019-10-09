@@ -1,6 +1,6 @@
 #!/usr/bin/env python3.7
 # -*- coding: utf-8 -*-
-'''DesignSPHysics Rectilinear Sinusoidal Motion Timeline '''
+"""DesignSPHysics Rectilinear Sinusoidal Motion Timeline """
 
 from PySide import QtCore, QtGui
 
@@ -12,7 +12,7 @@ from mod.dataobjects.motion.rect_sinu_motion import RectSinuMotion
 
 
 class RectSinuMotionTimeline(QtGui.QWidget):
-    ''' A sinusoidal rectilinear motion graphical representation for a table-based timeline '''
+    """ A sinusoidal rectilinear motion graphical representation for a table-based timeline """
 
     changed = QtCore.Signal(int, RectSinuMotion)
     deleted = QtCore.Signal(int, RectSinuMotion)

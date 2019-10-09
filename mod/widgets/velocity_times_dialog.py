@@ -1,6 +1,6 @@
 #!/usr/bin/env python3.7
 # -*- coding: utf-8 -*-
-'''DesignSPHysics Velocity Times Dialog '''
+"""DesignSPHysics Velocity Times Dialog """
 
 from traceback import print_exc
 
@@ -10,7 +10,7 @@ from mod.translation_tools import __
 
 
 class VelocityTimesDialog(QtGui.QDialog):
-    ''' Dialog with a table to create velocity times. '''
+    """ Dialog with a table to create velocity times. """
 
     def __init__(self, relaxationzone):
         super(VelocityTimesDialog, self).__init__()

@@ -1,6 +1,6 @@
 #!/usr/bin/env python3.7
 # -*- coding: utf-8 -*-
-'''DesignSPHysics Inlet Zone Configuration Dialog.'''
+"""DesignSPHysics Inlet Zone Configuration Dialog."""
 
 from PySide import QtCore, QtGui
 
@@ -9,7 +9,7 @@ from mod.translation_tools import __
 from mod.dataobjects.case import Case
 
 class InletZoneEdit(QtGui.QDialog):
-    ''' Defines Inlet/Outlet window dialog '''
+    """ Defines Inlet/Outlet window dialog """
 
     def __init__(self, inlet_object_id):
         super(InletZoneEdit, self).__init__()
@@ -233,21 +233,21 @@ class InletZoneEdit(QtGui.QDialog):
         self.exec_()
 
     def on_imposerhop_change(self):
-        ''' Checks for imposerhop changes '''
+        """ Checks for imposerhop changes """
         if self.imposerhop_combobox.currentIndex() == 0:
             self.imposerhop_value_line_edit.setEnabled(True)
         else:
             self.imposerhop_value_line_edit.setEnabled(False)
 
     def on_imposevelocity_change(self):
-        ''' Checks for imposevelocity changes '''
+        """ Checks for imposevelocity changes """
         if self.imposevelocity_combobox.currentIndex() == 0:
             self.imposevelocity_velocity_line_edit.setEnabled(True)
         else:
             self.imposevelocity_velocity_line_edit.setEnabled(False)
 
     def on_imposezsurf_change(self):
-        ''' Checks for imposezsurf changes '''
+        """ Checks for imposezsurf changes """
         if self.imposezsurf_combobox.currentIndex() == 0 or self.imposezsurf_combobox.currentIndex() == 2:
             self.imposezsurf_fixed_zbottom.setEnabled(True)
             self.imposezsurf_fixed_zsurf.setEnabled(True)
@@ -256,7 +256,7 @@ class InletZoneEdit(QtGui.QDialog):
             self.imposezsurf_fixed_zsurf.setEnabled(False)
 
     def on_zone_check(self):
-        ''' Checks for 2D or 3D options '''
+        """ Checks for 2D or 3D options """
         if self.zone2d_option.isChecked() or self.zone3d_option.isChecked():
             self.zone2d3d_mk_line_edit.setEnabled(True)
             self.zone2d3d_combobox.setEnabled(True)
@@ -283,11 +283,11 @@ class InletZoneEdit(QtGui.QDialog):
                 self.zone2d_option.setEnabled(True)
 
     def on_cancel(self):
-        ''' Cancels the dialog not saving anything. '''
+        """ Cancels the dialog not saving anything. """
         self.reject()
 
     def on_ok(self):
-        ''' Save data '''
+        """ Save data """
         count = -1
 
         for inlet_zone in Case.instance().inlet_outlet.zones:

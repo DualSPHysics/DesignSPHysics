@@ -1,14 +1,14 @@
 #!/usr/bin/env python3.7
 # -*- coding: utf-8 -*-
-'''DesignSPHysics Damping Configutarion Dialog'''
+"""DesignSPHysics Damping Configutarion Dialog"""
 
 import FreeCAD
 from PySide import QtCore, QtGui
 
 
 class DampingConfigDialog(QtGui.QDialog):
-    '''Defines the setup window.
-    Modifies data dictionary passed as parameter.'''
+    """Defines the setup window.
+    Modifies data dictionary passed as parameter."""
 
     def __init__(self, object_key):
         super(DampingConfigDialog, self).__init__()

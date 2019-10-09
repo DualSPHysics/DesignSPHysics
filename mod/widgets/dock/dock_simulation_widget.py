@@ -1,6 +1,6 @@
 #!/usr/bin/env python3.7
 # -*- coding: utf-8 -*-
-'''DesignSPHysics Dock Execution Widget '''
+"""DesignSPHysics Dock Execution Widget """
 
 import os
 from traceback import print_exc
@@ -19,7 +19,7 @@ from mod.widgets.run_additional_parameters_dialog import RunAdditionalParameters
 
 
 class DockSimulationWidget(QtGui.QWidget):
-    '''DesignSPHysics Dock Execution Widget '''
+    """DesignSPHysics Dock Execution Widget """
 
     simulation_complete = QtCore.Signal(bool)
     simulation_started = QtCore.Signal()
@@ -65,8 +65,8 @@ class DockSimulationWidget(QtGui.QWidget):
         self.setLayout(self.main_layout)
 
     def on_ex_simulate(self):
-        ''' Defines what happens on simulation button press.
-            It shows the run window and starts a background process with dualsphysics running. Updates the window with useful info.'''
+        """ Defines what happens on simulation button press.
+            It shows the run window and starts a background process with dualsphysics running. Updates the window with useful info."""
 
         if not Case.instance().info.needs_to_run_gencase:
             # Warning window about save_case
@@ -94,19 +94,19 @@ class DockSimulationWidget(QtGui.QWidget):
         run_dialog.run_button_details.clicked.connect(run_dialog.toggle_run_details)
 
         # Launch simulation and watch filesystem to monitor simulation
-        filelist = [f for f in os.listdir(Case.instance().path + '/' + Case.instance().name + "_out/") if f.startswith("Part")]
+        filelist = [f for f in os.listdir(Case.instance().path + "/" + Case.instance().name + "_out/") if f.startswith("Part")]
         for f in filelist:
-            os.remove(Case.instance().path + '/' + Case.instance().name + "_out/" + f)
+            os.remove(Case.instance().path + "/" + Case.instance().name + "_out/" + f)
 
         def on_dsph_sim_finished(exit_code):
-            ''' Simulation finish handler. Defines what happens when the process finishes.'''
+            """ Simulation finish handler. Defines what happens when the process finishes."""
 
             # Reads output and completes the progress bar
             output = Case.instance().info.current_process.readAllStandardOutput()
             run_dialog.set_detail_text(str(output))
             run_dialog.run_complete()
 
-            run_fs_watcher.removePath(Case.instance().path + '/' + Case.instance().name + "_out/")
+            run_fs_watcher.removePath(Case.instance().path + "/" + Case.instance().name + "_out/")
 
             if exit_code == 0:
                 # Simulation went correctly
@@ -141,10 +141,10 @@ class DockSimulationWidget(QtGui.QWidget):
         Case.instance().info.current_process.start(Case.instance().executable_paths.dsphysics, final_params_ex)
 
         def on_fs_change():
-            ''' Executed each time the filesystem changes. This updates the percentage of the simulation and its details.'''
-            run_file_data = ''
+            """ Executed each time the filesystem changes. This updates the percentage of the simulation and its details."""
+            run_file_data = ""
             try:
-                with open(Case.instance().path + '/' + Case.instance().name + "_out/Run.out", "r") as run_file:
+                with open(Case.instance().path + "/" + Case.instance().name + "_out/Run.out", "r") as run_file:
                     run_file_data = run_file.readlines()
             except Exception:
                 print_exc()
@@ -173,7 +173,7 @@ class DockSimulationWidget(QtGui.QWidget):
             run_dialog.run_update(current_value, Case.instance().info.particles_out, str(last_part_lines[-1].split("  ")[-1]))
 
         # Set filesystem watcher to the out directory.
-        run_fs_watcher.addPath(Case.instance().path + '/' + Case.instance().name + "_out/")
+        run_fs_watcher.addPath(Case.instance().path + "/" + Case.instance().name + "_out/")
         run_fs_watcher.directoryChanged.connect(on_fs_change)
 
         Case.instance().info.needs_to_run_gencase = False
@@ -181,12 +181,12 @@ class DockSimulationWidget(QtGui.QWidget):
         # Handle error on simulation start
         if Case.instance().info.current_process.state() == QtCore.QProcess.NotRunning:
             # Probably error happened.
-            run_fs_watcher.removePath(Case.instance().path + '/' + Case.instance().name + "_out/")
+            run_fs_watcher.removePath(Case.instance().path + "/" + Case.instance().name + "_out/")
             Case.instance().info.current_process = None
             error_dialog("Error on simulation start. Check that the DualSPHysics executable is correctly set.")
         else:
             run_dialog.show()
 
     def on_additional_parameters(self):
-        ''' Handles additional parameters button for execution '''
+        """ Handles additional parameters button for execution """
         RunAdditionalParametersDialog()

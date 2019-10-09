@@ -1,12 +1,12 @@
 #!/usr/bin/env python3.7
 # -*- coding: utf-8 -*-
-''' DesignSPHysics Chrono Object. '''
+""" DesignSPHysics Chrono Object. """
 
 from mod.enums import ChronoModelNormalType, ChronoFloatingType
 
 
 class ChronoObject:
-    ''' Chrono Object. '''
+    """ Chrono Object. """
 
     def __init__(self):
         super().__init__()

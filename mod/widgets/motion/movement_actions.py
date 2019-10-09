@@ -1,6 +1,6 @@
 #!/usr/bin/env python3.7
 # -*- coding: utf-8 -*-
-'''DesignSPHysics Movement Actions Widget. '''
+"""DesignSPHysics Movement Actions Widget. """
 
 from PySide import QtCore, QtGui
 
@@ -8,7 +8,7 @@ from mod.translation_tools import __
 from mod.gui_tools import get_icon
 
 class MovementActions(QtGui.QWidget):
-    ''' A set of movement actions (use and delete) with its custom signals'''
+    """ A set of movement actions (use and delete) with its custom signals"""
     delete = QtCore.Signal(int)
     use = QtCore.Signal(int, bool)
     loop = QtCore.Signal(int, bool)
@@ -33,13 +33,13 @@ class MovementActions(QtGui.QWidget):
         self.setLayout(main_layout)
 
     def on_delete(self):
-        ''' Emits a delete signal once the delete button is pressed. '''
+        """ Emits a delete signal once the delete button is pressed. """
         self.delete.emit(self.index)
 
     def on_use(self):
-        ''' Emits a use signal with the checkbox state attached once the use checkbox is clicked. '''
+        """ Emits a use signal with the checkbox state attached once the use checkbox is clicked. """
         self.use.emit(self.index, self.use_checkbox.isChecked())
 
     def on_loop(self):
-        ''' Emits a loop signal with the checkbox state attached once the checkbox is clicked. '''
+        """ Emits a loop signal with the checkbox state attached once the checkbox is clicked. """
         self.loop.emit(self.index, self.loop_checkbox.isChecked())

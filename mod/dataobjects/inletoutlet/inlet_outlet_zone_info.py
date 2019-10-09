@@ -1,12 +1,12 @@
 #!/usr/bin/env python3.7
 # -*- coding: utf-8 -*-
-''' DesignSPHysics Inlet/Outlet zone info. '''
+""" DesignSPHysics Inlet/Outlet zone info. """
 
 from mod.enums import InletOutletZoneType, InletOutletDirection
 
 
 class InletOutletZoneInfo():
-    ''' Stores Inlet/Outlet zone information and parameters. '''
+    """ Stores Inlet/Outlet zone information and parameters. """
 
     def __init__(self):
         super().__init__()

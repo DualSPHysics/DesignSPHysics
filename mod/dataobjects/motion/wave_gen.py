@@ -1,10 +1,10 @@
 #!/usr/bin/env python3.7
 # -*- coding: utf-8 -*-
-''' DesignSPHysics Wave Generator data. '''
+""" DesignSPHysics Wave Generator data. """
 
 
 class WaveGen():
-    ''' Base Wave Generator. It holds properties common to Regular and Irregular waves.
+    """ Base Wave Generator. It holds properties common to Regular and Irregular waves.
 
     Attributes:
         parent_movement: The movement in which this property is contained
@@ -15,7 +15,7 @@ class WaveGen():
         depth: Fluid depth (def 0)
         wave_height: Wave height (def 0.5)
         wave_period: Wave period (def 1)
-    '''
+    """
 
     def __init__(self, parent_movement=None, wave_order=1, start=0, duration=0, depth=0, wave_height=0.5,
                  wave_period=1):

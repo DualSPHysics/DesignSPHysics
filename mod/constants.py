@@ -1,9 +1,9 @@
 #!/usr/bin/env python3.7
 # -*- coding: utf-8 -*-
-'''DesignSPHysics Define Constants.
+"""DesignSPHysics Define Constants.
 
 This file contains a collection of constants meant to use with DesignSPHysics.
-'''
+"""
 
 from mod.enums import FreeCADObjectType
 
@@ -14,7 +14,7 @@ APP_NAME = "DesignSPHysics"
 DEBUGGING = True
 VERBOSE = True
 DIVIDER = 1000
-LINE_END = '\n'
+LINE_END = "\n"
 PICKLE_PROTOCOL = 1  # Binary mode
 VERSION = "0.6.0.1907-18"
 WIDTH_2D = 0.001
@@ -30,10 +30,10 @@ DEFAULT_WORKBENCH = "PartWorkbench"
 CASE_LIMITS_OBJ_NAME = "Case_Limits"
 CASE_LIMITS_2D_LABEL = "Case Limits (2D)"
 CASE_LIMITS_3D_LABEL = "Case Limits (3D)"
-CASE_LIMITS_DEFAULT_LENGTH = '1000 mm'
+CASE_LIMITS_DEFAULT_LENGTH = "1000 mm"
 CASE_LIMITS_LINE_COLOR = (1.00, 0.00, 0.00)
 CASE_LIMITS_LINE_WIDTH = 2.00
-FILLBOX_DEFAULT_LENGTH = '1000 mm'
+FILLBOX_DEFAULT_LENGTH = "1000 mm"
 FILLBOX_DEFAULT_RADIUS = 10
 
 SUPPORTED_TYPES = [FreeCADObjectType.BOX, FreeCADObjectType.SPHERE, FreeCADObjectType.CYLINDER]
@@ -43,7 +43,7 @@ PROP_WIDGET_INTERNAL_NAME = "DSPH_Properties"
 
 # ------ DEFINE CONSTANTS  ------
 
-''' --------- Help Window -------------- '''
+""" --------- Help Window -------------- """
 
 HELP_GRAVITYX = "Gravitational acceleration in X direction."
 HELP_GRAVITYY = "Gravitational acceleration in Y direction."
@@ -60,7 +60,7 @@ HELP_CFLNUMBER = "Coefficient to multiply variable dt."
 
 # ------ EXECUTION PARAMETERS  ------
 
-''' --------- ToolTip -------------- '''
+""" --------- ToolTip -------------- """
 
 DOMAINFIXED = "The domain is fixed with the specified values (xmin:ymin:zmin:xmax:ymax:zmax)"
 
@@ -85,7 +85,7 @@ PERIODZ = ""
 XINCREMENTZ = "Increase of X with periodic BC in axis Z"
 YINCREMENTZ = "Increase of Y with periodic BC in axis Z"
 
-''' --------- Help Window -------------- '''
+""" --------- Help Window -------------- """
 
 HELP_POSDOUBLE = "Precision in particle interaction 0:Simple, 1:Double, 2:Uses and saves double (default=0)."
 HELP_STEPALGORITHM = "Time-integrator algorithm 1:Verlet, 2:Symplectic (default=1)."

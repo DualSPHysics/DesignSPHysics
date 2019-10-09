@@ -1,13 +1,13 @@
 #!/usr/bin/env python3.7
 # -*- coding: utf-8 -*-
-''' DesignSPHysics Regular Piston Wave Generator data '''
+""" DesignSPHysics Regular Piston Wave Generator data """
 
 from mod.dataobjects.motion.wave_gen import WaveGen
 from mod.dataobjects.awas import AWAS
 
 
 class RegularPistonWaveGen(WaveGen):
-    ''' Piston Regular Wave Generator.
+    """ Piston Regular Wave Generator.
 
     Attributes:
         phase: Initial wave phase in function of PI
@@ -18,7 +18,7 @@ class RegularPistonWaveGen(WaveGen):
         disksave_zpos:
         piston_dir: Movement direction (def [1,0,0])
         awas: AWAS object
-    '''
+    """
 
     def __init__(self, parent_movement=None, wave_order=2, start=0, duration=0,
                  depth=0, wave_height=0.5, wave_period=1, phase=0, ramp=0,

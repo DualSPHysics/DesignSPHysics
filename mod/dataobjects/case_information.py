@@ -1,12 +1,12 @@
 #!/usr/bin/env python3.7
 # -*- coding: utf-8 -*-
-''' DesignSPHysics Case Information Data '''
+""" DesignSPHysics Case Information Data """
 
 from PySide import QtCore, QtGui
 
 
 class CaseInformation():
-    ''' Stores miscellaneous information related with the case. '''
+    """ Stores miscellaneous information related with the case. """
 
     def __init__(self):
         self.is_gencase_done: bool = False
@@ -15,7 +15,7 @@ class CaseInformation():
         self.particle_number: int = 0
         self.particles_out: int = 0
         self.exported_parts: int = 0
-        self.run_additional_parameters: str = ''
+        self.run_additional_parameters: str = ""
         self.needs_to_run_gencase: bool = True
         self.current_process: QtCore.QProcess = None
         self.current_info_dialog: QtGui.QDialog = None

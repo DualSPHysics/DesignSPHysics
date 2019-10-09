@@ -1,6 +1,6 @@
 #!/usr/bin/env python3.7
 # -*- coding: utf-8 -*-
-'''DesignSPHysics Irregular Flap Wave Motion timeline widget.'''
+"""DesignSPHysics Irregular Flap Wave Motion timeline widget."""
 
 from PySide import QtCore, QtGui
 
@@ -12,7 +12,7 @@ from mod.dataobjects.motion.irregular_flap_wave_gen import IrregularFlapWaveGen
 
 
 class IrregularFlapWaveMotionTimeline(QtGui.QWidget):
-    ''' An Irregular Flap Wave motion graphical representation for a table-based timeline '''
+    """ An Irregular Flap Wave motion graphical representation for a table-based timeline """
     changed = QtCore.Signal(int, IrregularFlapWaveGen)
 
     def __init__(self, irreg_wave_gen):

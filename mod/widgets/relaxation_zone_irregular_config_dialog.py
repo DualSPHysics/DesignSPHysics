@@ -1,6 +1,6 @@
 #!/usr/bin/env python3.7
 # -*- coding: utf-8 -*-
-'''DesignSPHysics Relaxation Zone Irregular Config Dialog '''
+"""DesignSPHysics Relaxation Zone Irregular Config Dialog """
 
 from PySide import QtGui
 

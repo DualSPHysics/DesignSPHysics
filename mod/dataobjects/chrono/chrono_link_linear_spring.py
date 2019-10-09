@@ -1,12 +1,12 @@
 #!/usr/bin/env python3.7
 # -*- coding: utf-8 -*-
-''' DesignSPHysics Chrono link linearspring. '''
+""" DesignSPHysics Chrono link linearspring. """
 
 from uuid import UUID, uuid4
 
 
 class ChronoLinkLinearSpring:
-    ''' Chrono Link LinearSpring. '''
+    """ Chrono Link LinearSpring. """
 
     def __init__(self):
         super().__init__()

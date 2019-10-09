@@ -1,11 +1,11 @@
 #!/usr/bin/env python3.7
 # -*- coding: utf-8 -*-
-''' DesignSPHysics Inlet/Outlet configuration. '''
+""" DesignSPHysics Inlet/Outlet configuration. """
 
 from mod.enums import InletOutletDetermLimit
 
 class InletOutletConfig():
-    ''' Configuration for Inlet/Oulet Zones. '''
+    """ Configuration for Inlet/Oulet Zones. """
 
     def __init__(self):
         super().__init__()

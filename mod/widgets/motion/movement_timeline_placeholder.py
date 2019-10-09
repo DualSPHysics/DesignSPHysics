@@ -1,13 +1,13 @@
 #!/usr/bin/env python3.7
 # -*- coding: utf-8 -*-
-'''DesignSPHysics Movement Timeline Placeholder Widget '''
+"""DesignSPHysics Movement Timeline Placeholder Widget """
 
 from PySide import QtGui
 
 from mod.translation_tools import __
 
 class MovementTimelinePlaceholder(QtGui.QWidget):
-    ''' A placeholder for the movement timeline table. '''
+    """ A placeholder for the movement timeline table. """
 
     def __init__(self):
         super(MovementTimelinePlaceholder, self).__init__()

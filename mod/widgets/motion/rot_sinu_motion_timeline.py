@@ -1,6 +1,6 @@
 #!/usr/bin/env python3.7
 # -*- coding: utf-8 -*-
-'''DesignSPHysics Rotationial Sinusoidal Motion Timeline Widget. '''
+"""DesignSPHysics Rotationial Sinusoidal Motion Timeline Widget. """
 
 from PySide import QtCore, QtGui
 
@@ -12,7 +12,7 @@ from mod.dataobjects.motion.rot_sinu_motion import RotSinuMotion
 
 
 class RotSinuMotionTimeline(QtGui.QWidget):
-    ''' A sinusoidal rotational motion graphical representation for a table-based timeline '''
+    """ A sinusoidal rotational motion graphical representation for a table-based timeline """
 
     changed = QtCore.Signal(int, RotSinuMotion)
     deleted = QtCore.Signal(int, RotSinuMotion)

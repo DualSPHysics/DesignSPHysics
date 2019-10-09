@@ -1,6 +1,6 @@
 #!/usr/bin/env python3.7
 # -*- coding: utf-8 -*-
-''' 2D Mode Configuration Dialog. '''
+""" 2D Mode Configuration Dialog. """
 
 from PySide import QtGui
 
@@ -9,7 +9,7 @@ from mod.dialog_tools import error_dialog
 
 
 class Mode2DConfigDialog(QtGui.QDialog):
-    ''' A dialog to configure features of going into 2D mode. '''
+    """ A dialog to configure features of going into 2D mode. """
 
     def __init__(self, case_limits_y_value: float):
         super().__init__()
@@ -45,7 +45,7 @@ class Mode2DConfigDialog(QtGui.QDialog):
         self.exit_status: QtGui.QDialog.DialogCode = self.exec_()
 
     def on_ok(self):
-        ''' Tries to convert the current case to 2D mode while saving the 3D mode data. '''
+        """ Tries to convert the current case to 2D mode while saving the 3D mode data. """
         try:
             self.stored_y_value = float(self.y2_pos_input.text())
         except ValueError:
@@ -53,5 +53,5 @@ class Mode2DConfigDialog(QtGui.QDialog):
         self.accept()
 
     def on_cancel(self):
-        ''' Cancels the dialog not saving anything. '''
+        """ Cancels the dialog not saving anything. """
         self.reject()

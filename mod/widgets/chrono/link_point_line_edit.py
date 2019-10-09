@@ -1,6 +1,6 @@
 #!/usr/bin/env python3.7
 # -*- coding: utf-8 -*-
-'''DesignSPHysics LinkPointLine Edit Dialog '''
+"""DesignSPHysics LinkPointLine Edit Dialog """
 
 from PySide import QtGui
 from mod.translation_tools import __
@@ -10,7 +10,7 @@ from mod.dataobjects.case import Case
 
 
 class LinkPointlineEdit(QtGui.QDialog):
-    ''' Defines Link pontline window dialog '''
+    """ Defines Link pontline window dialog """
 
     def __init__(self, link_pointline_id):
         super(LinkPointlineEdit, self).__init__()
@@ -37,8 +37,8 @@ class LinkPointlineEdit(QtGui.QDialog):
         self.body_layout = QtGui.QHBoxLayout()
         self.body_one_label = QtGui.QLabel(__("Body 1: "))
         self.body_one_line_edit = QtGui.QComboBox()
-        if str(target_link_pointline.idbody1) != '':
-            self.body_one_line_edit.insertItems(0, ['', str(target_link_pointline.idbody1)])
+        if str(target_link_pointline.idbody1) != "":
+            self.body_one_line_edit.insertItems(0, ["", str(target_link_pointline.idbody1)])
             self.body_one_line_edit.setCurrentIndex(1)
         else:
             self.body_one_line_edit.insertItems(0, [str(target_link_pointline.idbody1)])
@@ -165,11 +165,11 @@ class LinkPointlineEdit(QtGui.QDialog):
         self.exec_()
 
     def on_cancel(self):
-        ''' Link pointline edit cancel button behaviour.'''
+        """ Link pointline edit cancel button behaviour."""
         self.reject()
 
     def on_save(self):
-        ''' Link pointline save button behaviour'''
+        """ Link pointline save button behaviour"""
         count = -1
         for link_pointline_value in Case.instance().chrono.link_pointline:
             count += 1

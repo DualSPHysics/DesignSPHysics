@@ -1,6 +1,6 @@
 #!/usr/bin/env python3.7
 # -*- coding: utf-8 -*-
-'''Main DesignSPHysics Dock Widget '''
+"""Main DesignSPHysics Dock Widget """
 
 from PySide import QtGui, QtCore
 
@@ -20,7 +20,7 @@ from mod.widgets.dock.dock_object_list_table_widget import DockObjectListTableWi
 
 
 class DesignSPHysicsDock(QtGui.QDockWidget):
-    ''' Main DesignSPHysics Dock, containing all the tools needed to manage cases. '''
+    """ Main DesignSPHysics Dock, containing all the tools needed to manage cases. """
 
     need_refresh = QtCore.Signal()
 
@@ -72,15 +72,15 @@ class DesignSPHysicsDock(QtGui.QDockWidget):
         self.simulation_widget.simulation_cancelled.connect(self.adapt_to_simulation_cancel)
 
     def on_signal_update_dp(self):
-        ''' Defines the behaviour on DP update request. '''
+        """ Defines the behaviour on DP update request. """
         self.dp_widget.dp_input.setText(str(Case.instance().dp))
 
     def refresh_object_list(self):
-        ''' Refreshes the objects shown in the object list widget. '''
+        """ Refreshes the objects shown in the object list widget. """
         self.object_list_widget.refresh()
 
     def adapt_to_no_case(self):
-        ''' Adapts the dock to an environment with no case created/opened. '''
+        """ Adapts the dock to an environment with no case created/opened. """
         self.dock_configuration_widget.adapt_to_no_case()
         self.dp_widget.setEnabled(False)
         self.pre_proccessing_widget.adapt_to_no_case()
@@ -89,7 +89,7 @@ class DesignSPHysicsDock(QtGui.QDockWidget):
         self.object_list_widget.setEnabled(False)
 
     def adapt_to_new_case(self):
-        ''' Adapts the dock to an environment with a new case created or loaded. '''
+        """ Adapts the dock to an environment with a new case created or loaded. """
         self.dock_configuration_widget.adapt_to_new_case()
         self.dp_widget.setEnabled(True)
         self.pre_proccessing_widget.adapt_to_new_case()
@@ -98,17 +98,17 @@ class DesignSPHysicsDock(QtGui.QDockWidget):
         self.object_list_widget.setEnabled(True)
 
     def adapt_to_gencase_done(self, state: bool) -> None:
-        ''' Adapts the dock to an environment depending on if GenCase was executed. '''
+        """ Adapts the dock to an environment depending on if GenCase was executed. """
         self.simulation_widget.setEnabled(state)
 
     def adapt_to_simulation_done(self, state: bool) -> None:
-        ''' Adapts the dock to an environment depending on if GenCase was executed. '''
+        """ Adapts the dock to an environment depending on if GenCase was executed. """
         self.post_processing_widget.setEnabled(state)
 
     def adapt_to_simulation_start(self):
-        ''' Adapts the dock to an environment in which a simulation has just started. '''
+        """ Adapts the dock to an environment in which a simulation has just started. """
         self.simulation_widget.setEnabled(False)
 
     def adapt_to_simulation_cancel(self):
-        ''' Adapts the dock to an environment in which a simulation has been canceled. '''
+        """ Adapts the dock to an environment in which a simulation has been canceled. """
         self.simulation_widget.setEnabled(True)

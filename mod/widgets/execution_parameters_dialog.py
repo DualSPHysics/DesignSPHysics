@@ -1,6 +1,6 @@
 #!/usr/bin/env python3.7
 # -*- coding: utf-8 -*-
-'''DesignSPHysics Execution Parameters Configuration Dialog.'''
+"""DesignSPHysics Execution Parameters Configuration Dialog."""
 
 from PySide import QtCore, QtGui
 
@@ -24,8 +24,8 @@ from mod.constants import HELP_YINCREMENTZ, HELP_POSMINX, HELP_POSMINY, HELP_POS
 
 
 class ExecutionParametersDialog(QtGui.QDialog):
-    '''Defines the execution parameters window.
-    Modifies the data dictionary passed as parameter.'''
+    """Defines the execution parameters window.
+    Modifies the data dictionary passed as parameter."""
 
     def __init__(self):
         super(ExecutionParametersDialog, self).__init__()
@@ -43,7 +43,7 @@ class ExecutionParametersDialog(QtGui.QDialog):
         self.posdouble_label = QtGui.QLabel("Precision in particle interaction: ")
         self.posdouble_input = FocusableComboBox()
         self.posdouble_input.insertItems(0,
-                                         ['Double', 'Simple', 'Uses and saves double'])
+                                         ["Double", "Simple", "Uses and saves double"])
         self.posdouble_input.setCurrentIndex(int(Case.instance().execution_parameters.posdouble))
         self.posdouble_input.set_help_text(__(HELP_POSDOUBLE))
 
@@ -56,7 +56,7 @@ class ExecutionParametersDialog(QtGui.QDialog):
         self.stepalgorithm_layout = QtGui.QHBoxLayout()
         self.stepalgorithm_label = QtGui.QLabel("Step Algorithm: ")
         self.stepalgorithm_input = FocusableComboBox()
-        self.stepalgorithm_input.insertItems(0, ['Symplectic', 'Verlet'])
+        self.stepalgorithm_input.insertItems(0, ["Symplectic", "Verlet"])
         self.stepalgorithm_input.setCurrentIndex(int(Case.instance().execution_parameters.stepalgorithm) - 1)
         self.stepalgorithm_input.set_help_text(__(HELP_STEPALGORITHM))
 
@@ -92,7 +92,7 @@ class ExecutionParametersDialog(QtGui.QDialog):
         self.kernel_layout = QtGui.QHBoxLayout()
         self.kernel_label = QtGui.QLabel("Interaction kernel: ")
         self.kernel_input = FocusableComboBox()
-        self.kernel_input.insertItems(0, ['Cubic spline', 'Wendland'])
+        self.kernel_input.insertItems(0, ["Cubic spline", "Wendland"])
         self.kernel_input.set_help_text(__(HELP_KERNEL))
         self.kernel_input.setCurrentIndex(int(Case.instance().execution_parameters.kernel) - 1)
 
@@ -106,7 +106,7 @@ class ExecutionParametersDialog(QtGui.QDialog):
         self.viscotreatment_layout = QtGui.QHBoxLayout()
         self.viscotreatment_label = QtGui.QLabel("Viscosity Formulation: ")
         self.viscotreatment_input = FocusableComboBox()
-        self.viscotreatment_input.insertItems(0, ['Artificial', 'Laminar + SPS'])
+        self.viscotreatment_input.insertItems(0, ["Artificial", "Laminar + SPS"])
         self.viscotreatment_input.set_help_text(__(HELP_VISCOTREATMENT))
         self.viscotreatment_input.setCurrentIndex(int(Case.instance().execution_parameters.viscotreatment) - 1)
 
@@ -154,7 +154,7 @@ class ExecutionParametersDialog(QtGui.QDialog):
         self.deltasph_en_layout = QtGui.QHBoxLayout()
         self.deltasph_en_label = QtGui.QLabel("Enable DeltaSPH: ")
         self.deltasph_en_input = QtGui.QComboBox()
-        self.deltasph_en_input.insertItems(0, ['No', 'Yes'])
+        self.deltasph_en_input.insertItems(0, ["No", "Yes"])
         self.deltasph_en_input.setCurrentIndex(int(Case.instance().execution_parameters.deltasph_en))
         self.deltasph_en_input.currentIndexChanged.connect(self.on_deltasph_en_change)
 
@@ -184,7 +184,7 @@ class ExecutionParametersDialog(QtGui.QDialog):
         self.shifting_label = QtGui.QLabel("Shifting mode: ")
         self.shifting_input = FocusableComboBox()
         self.shifting_input.insertItems(
-            0, ['None', 'Ignore bound', 'Ignore fixed', 'Full'])
+            0, ["None", "Ignore bound", "Ignore fixed", "Full"])
         self.shifting_input.set_help_text(__(HELP_SHIFTING))
 
         self.shifting_input.focus.connect(self.on_help_focus)
@@ -229,7 +229,7 @@ class ExecutionParametersDialog(QtGui.QDialog):
         self.rigidalgorithm_layout = QtGui.QHBoxLayout()
         self.rigidalgorithm_label = QtGui.QLabel("Solid-solid interaction: ")
         self.rigidalgorithm_input = FocusableComboBox()
-        self.rigidalgorithm_input.insertItems(0, ['SPH', 'DEM', 'CHRONO'])
+        self.rigidalgorithm_input.insertItems(0, ["SPH", "DEM", "CHRONO"])
         self.rigidalgorithm_input.set_help_text(__(HELP_RIGIDALGORITHM))
         self.rigidalgorithm_input.setCurrentIndex(int(Case.instance().execution_parameters.rigidalgorithm) - 1)
 
@@ -393,8 +393,7 @@ class ExecutionParametersDialog(QtGui.QDialog):
         self.rhopoutmin_input.focus.connect(self.on_help_focus)
 
         self.rhopoutmin_input.setText(str(Case.instance().execution_parameters.rhopoutmin))
-        self.rhopoutmin_label2 = QtGui.QLabel(
-            "kg/m<span style='vertical-align:super'>3</span>")
+        self.rhopoutmin_label2 = QtGui.QLabel("kg/m<span style='vertical-align:super'>3</span>")
         self.rhopoutmin_layout.addWidget(self.rhopoutmin_label)
         self.rhopoutmin_layout.addWidget(self.rhopoutmin_input)
         self.rhopoutmin_layout.addWidget(self.rhopoutmin_label2)
@@ -409,8 +408,7 @@ class ExecutionParametersDialog(QtGui.QDialog):
         self.rhopoutmax_input.focus.connect(self.on_help_focus)
 
         self.rhopoutmax_input.setText(str(Case.instance().execution_parameters.rhopoutmax))
-        self.rhopoutmax_label2 = QtGui.QLabel(
-            "kg/m<span style='vertical-align:super'>3</span>")
+        self.rhopoutmax_label2 = QtGui.QLabel("kg/m<span style='vertical-align:super'>3</span>")
         self.rhopoutmax_layout.addWidget(self.rhopoutmax_label)
         self.rhopoutmax_layout.addWidget(self.rhopoutmax_input)
         self.rhopoutmax_layout.addWidget(self.rhopoutmax_label2)
@@ -530,19 +528,19 @@ class ExecutionParametersDialog(QtGui.QDialog):
         self.simdomain_posmaxz_layout = QtGui.QVBoxLayout()
         self.simdomain_posmin_label = QtGui.QLabel("Minimum position(x, y, z): ")
         self.simdomain_posminx_combobox = QtGui.QComboBox()
-        self.simdomain_posminx_combobox.insertItems(0, ['Default', 'Value', 'Default - value', 'Default - %'])
+        self.simdomain_posminx_combobox.insertItems(0, ["Default", "Value", "Default - value", "Default - %"])
         self.simdomain_posminx_line_edit = FocusableLineEdit()
         self.simdomain_posminx_line_edit.set_help_text(__(HELP_POSMINX))
         self.simdomain_posminx_line_edit.focus.connect(self.on_help_focus)
         self.simdomain_posminx_line_edit.setText(str(Case.instance().domain.posmin_x.value))
         self.simdomain_posminy_combobox = QtGui.QComboBox()
-        self.simdomain_posminy_combobox.insertItems(0, ['Default', 'Value', 'Default - value', 'Default - %'])
+        self.simdomain_posminy_combobox.insertItems(0, ["Default", "Value", "Default - value", "Default - %"])
         self.simdomain_posminy_line_edit = FocusableLineEdit()
         self.simdomain_posminy_line_edit.set_help_text(__(HELP_POSMINY))
         self.simdomain_posminy_line_edit.focus.connect(self.on_help_focus)
         self.simdomain_posminy_line_edit.setText(str(Case.instance().domain.posmin_y.value))
         self.simdomain_posminz_combobox = QtGui.QComboBox()
-        self.simdomain_posminz_combobox.insertItems(0, ['Default', 'Value', 'Default - value', 'Default - %'])
+        self.simdomain_posminz_combobox.insertItems(0, ["Default", "Value", "Default - value", "Default - %"])
         self.simdomain_posminz_line_edit = FocusableLineEdit()
         self.simdomain_posminz_line_edit.set_help_text(__(HELP_POSMINZ))
         self.simdomain_posminz_line_edit.focus.connect(self.on_help_focus)
@@ -559,19 +557,19 @@ class ExecutionParametersDialog(QtGui.QDialog):
         self.simdomain_posmin_layout.addLayout(self.simdomain_posminz_layout)
         self.simdomain_posmax_label = QtGui.QLabel("Maximum position(x, y, z): ")
         self.simdomain_posmaxx_combobox = QtGui.QComboBox()
-        self.simdomain_posmaxx_combobox.insertItems(0, ['Default', 'Value', 'Default + value', 'Default + %'])
+        self.simdomain_posmaxx_combobox.insertItems(0, ["Default", "Value", "Default + value", "Default + %"])
         self.simdomain_posmaxx_line_edit = FocusableLineEdit()
         self.simdomain_posmaxx_line_edit.set_help_text(__(HELP_POSMAXX))
         self.simdomain_posmaxx_line_edit.focus.connect(self.on_help_focus)
         self.simdomain_posmaxx_line_edit.setText(str(Case.instance().domain.posmax_x.value))
         self.simdomain_posmaxy_combobox = QtGui.QComboBox()
-        self.simdomain_posmaxy_combobox.insertItems(0, ['Default', 'Value', 'Default + value', 'Default + %'])
+        self.simdomain_posmaxy_combobox.insertItems(0, ["Default", "Value", "Default + value", "Default + %"])
         self.simdomain_posmaxy_line_edit = FocusableLineEdit()
         self.simdomain_posmaxy_line_edit.set_help_text(__(HELP_POSMAXY))
         self.simdomain_posmaxy_line_edit.focus.connect(self.on_help_focus)
         self.simdomain_posmaxy_line_edit.setText(str(Case.instance().domain.posmax_y.value))
         self.simdomain_posmaxz_combobox = QtGui.QComboBox()
-        self.simdomain_posmaxz_combobox.insertItems(0, ['Default', 'Value', 'Default + value', 'Default + %'])
+        self.simdomain_posmaxz_combobox.insertItems(0, ["Default", "Value", "Default + value", "Default + %"])
         self.simdomain_posmaxz_line_edit = FocusableLineEdit()
         self.simdomain_posmaxz_line_edit.set_help_text(__(HELP_POSMAXZ))
         self.simdomain_posmaxz_line_edit.focus.connect(self.on_help_focus)
@@ -688,9 +686,7 @@ class ExecutionParametersDialog(QtGui.QDialog):
         self.visco_input.setText("0.01" if index == 0 else "0.000001")
         self.visco_label.setText("Viscosity value (alpha): "
                                  if index == 0 else "Kinematic viscosity: ")
-        self.visco_units_label.setText(
-            "" if index == 0 else
-            "m<span style='vertical-align:super'>2</span>/s")
+        self.visco_units_label.setText("" if index == 0 else "m<span style='vertical-align:super'>2</span>/s")
 
     # DeltaSPH enabled selector
     def on_deltasph_en_change(self, index):

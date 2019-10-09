@@ -1,6 +1,6 @@
 #!/usr/bin/env python3.7
 # -*- coding: utf-8 -*-
-'''DesignSPHysics Focusable LineEdit implementation.'''
+"""DesignSPHysics Focusable LineEdit implementation."""
 
 from PySide import QtCore, QtGui
 
