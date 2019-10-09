@@ -2,6 +2,8 @@
 # -*- coding: utf-8 -*-
 """ DesignSPHysics Rotational Motion data. """
 
+from mod.enums import MotionType
+
 from mod.dataobjects.motion.base_motion import BaseMotion
 
 
@@ -16,7 +18,7 @@ class RotMotion(BaseMotion):
 
     def __init__(self, duration=1, ang_vel=0, axis1=None, axis2=None, parent_movement=None):
         BaseMotion.__init__(self, duration)
-        self.type = "Rotational Motion"
+        self.type = MotionType.ROTATIONAL
         self.parent_movement = parent_movement
         self.axis1 = axis1 or [0, 0, 0]
         self.axis2 = axis2 or [0, 0, 0]

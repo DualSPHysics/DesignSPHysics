@@ -2,6 +2,8 @@
 # -*- coding: utf-8 -*-
 """ DesignSPHysics Wait Motion data. """
 
+from mod.enums import MotionType
+
 from mod.dataobjects.motion.base_motion import BaseMotion
 
 
@@ -14,7 +16,7 @@ class WaitMotion(BaseMotion):
     def __init__(self, duration=1, parent_movement=None):
         BaseMotion.__init__(self, duration)
         self.parent_movement = parent_movement
-        self.type = "Wait Interval"
+        self.type = MotionType.WAIT
 
     def __str__(self):
         return "WaitMotion [Duration: {}]".format(self.duration)

@@ -2,6 +2,8 @@
 # -*- coding: utf-8 -*-
 """ DesignSPHysics Circular Sinusoidal motion data. """
 
+from mod.enums import MotionType
+
 from mod.dataobjects.motion.base_motion import BaseMotion
 
 
@@ -19,7 +21,7 @@ class CirSinuMotion(BaseMotion):
 
     def __init__(self, reference=None, duration=1, axis1=None, axis2=None, freq=0, ampl=0, phase=0, parent_movement=None):
         BaseMotion.__init__(self, duration)
-        self.type = "Sinusoidal Circular Motion"
+        self.type = MotionType.SINUSOIDAL_CIRCULAR
         self.parent_movement = parent_movement
         self.reference = reference or [0, 0, 0]
         self.axis1 = axis1 or [0, 0, 0]

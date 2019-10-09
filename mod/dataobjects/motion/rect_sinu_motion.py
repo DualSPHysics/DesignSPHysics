@@ -2,6 +2,8 @@
 # -*- coding: utf-8 -*-
 """ DesignSPHysics Sinusoidal Rectilinar Motion data. """
 
+from mod.enums import MotionType
+
 from mod.dataobjects.motion.base_motion import BaseMotion
 
 
@@ -16,7 +18,7 @@ class RectSinuMotion(BaseMotion):
 
     def __init__(self, duration=1, freq=None, ampl=None, phase=None, parent_movement=None):
         BaseMotion.__init__(self, duration)
-        self.type = "Sinusoidal Rectilinear Motion"
+        self.type = MotionType.SINUSOIDAL_RECTILINEAR
         self.parent_movement = parent_movement
         self.freq = freq or [0, 0, 0]
         self.ampl = ampl or [0, 0, 0]

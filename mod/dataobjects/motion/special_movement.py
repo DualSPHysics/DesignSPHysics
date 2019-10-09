@@ -2,6 +2,8 @@
 # -*- coding: utf-8 -*-
 """ DesignSPHysics Special Movement data. """
 
+from mod.enums import MotionType
+
 from mod.dataobjects.motion.wave_gen import WaveGen
 
 
@@ -16,7 +18,7 @@ class SpecialMovement():
 
     def __init__(self, name="New Movement", generator=None):
         self.name = name
-        self.type = "Wave Movement"
+        self.type = MotionType.WAVE
         self.generator = generator
 
     def set_wavegen(self, generator):

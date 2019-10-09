@@ -2,6 +2,8 @@
 # -*- coding: utf-8 -*-
 """ DesignSPHysics Rotational Sinusoidal Motion data. """
 
+from mod.enums import MotionType
+
 from mod.dataobjects.motion.base_motion import BaseMotion
 
 
@@ -18,7 +20,7 @@ class RotSinuMotion(BaseMotion):
 
     def __init__(self, duration=1, axis1=None, axis2=None, freq=0, ampl=0, phase=0, parent_movement=None):
         BaseMotion.__init__(self, duration)
-        self.type = "Sinusoidal Rotational Motion"
+        self.type = MotionType.SINUSOIDAL_ROTATIONAL
         self.parent_movement = parent_movement
         self.axis1 = axis1 or [0, 0, 0]
         self.axis2 = axis2 or [0, 0, 0]

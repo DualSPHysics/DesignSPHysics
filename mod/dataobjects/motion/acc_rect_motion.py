@@ -2,6 +2,8 @@
 # -*- coding: utf-8 -*-
 """ DesignSPHysics Accelerated Rectilinear motion data """
 
+from mod.enums import MotionType
+
 from mod.dataobjects.motion.base_motion import BaseMotion
 
 
@@ -15,7 +17,7 @@ class AccRectMotion(BaseMotion):
 
     def __init__(self, duration=1, velocity=None, acceleration=None, parent_movement=None):
         BaseMotion.__init__(self, duration)
-        self.type = "Accelerated Rectilinear motion"
+        self.type = MotionType.ACCELERATED_RECTILINEAR
         self.parent_movement = parent_movement
         self.velocity = velocity or [0, 0, 0]
         self.acceleration = acceleration or [0, 0, 0]

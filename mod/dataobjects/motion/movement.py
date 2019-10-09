@@ -2,6 +2,8 @@
 # -*- coding: utf-8 -*-
 """ DesignSPHysics Movement data. """
 
+from mod.enums import MotionType
+
 from mod.dataobjects.motion.base_motion import BaseMotion
 
 
@@ -18,7 +20,7 @@ class Movement():
 
     def __init__(self, name="New Movement", motion_list=None, loop=False):
         self.name = name
-        self.type = "Movement"
+        self.type = MotionType.MOVEMENT
         self.motion_list = motion_list or []
         self.loop = loop
 

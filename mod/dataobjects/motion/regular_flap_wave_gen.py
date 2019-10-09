@@ -2,6 +2,7 @@
 # -*- coding: utf-8 -*-
 """ DesignSPHysics Regular Flap wave generator data. """
 
+from mod.enums import MotionType
 
 from mod.dataobjects.motion.wave_gen import WaveGen
 
@@ -22,7 +23,7 @@ class RegularFlapWaveGen(WaveGen):
                  disksave_zpos=-0.15, variable_draft=0.0, flapaxis0=None, flapaxis1=None):
         super(RegularFlapWaveGen, self).__init__(parent_movement, wave_order,
                                                  start, duration, depth, wave_height, wave_period)
-        self.type = "Regular Flap Wave Generator"
+        self.type = MotionType.REGULAR_FLAP_WAVE_GENERATOR
         self.phase = phase
         self.ramp = ramp
         self.variable_draft = variable_draft

@@ -2,6 +2,8 @@
 # -*- coding: utf-8 -*-
 """ DesignSPHysics Accelerated Circular Motion Data """
 
+from mod.enums import MotionType
+
 from mod.dataobjects.motion.base_motion import BaseMotion
 
 
@@ -19,7 +21,7 @@ class AccCirMotion(BaseMotion):
     def __init__(self, duration=1, ang_vel=0, ang_acc=0, reference=None, axis1=None, axis2=None,
                  parent_movement=None):
         BaseMotion.__init__(self, duration)
-        self.type = "Circular Motion"
+        self.type = MotionType.CIRCULAR
         self.parent_movement = parent_movement
         self.reference = reference or [0, 0, 0]
         self.axis1 = axis1 or [0, 0, 0]

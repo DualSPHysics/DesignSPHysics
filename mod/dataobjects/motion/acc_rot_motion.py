@@ -2,6 +2,7 @@
 # -*- coding: utf-8 -*-
 """ DesignSPHysics Accelerated Rotational Motion data """
 
+from mod.enums import MotionType
 
 from mod.dataobjects.motion.base_motion import BaseMotion
 
@@ -18,7 +19,7 @@ class AccRotMotion(BaseMotion):
 
     def __init__(self, duration=1, ang_vel=0, ang_acc=0, axis1=None, axis2=None, parent_movement=None):
         BaseMotion.__init__(self, duration)
-        self.type = "Accelerated Rotational Motion"
+        self.type = MotionType.ACCELERATED_ROTATIONAL
         self.parent_movement = parent_movement
         self.axis1 = axis1 or [0, 0, 0]
         self.axis2 = axis2 or [0, 0, 0]

@@ -4,7 +4,7 @@
 
 from random import randint
 
-from mod.enums import IrregularDiscretization, IrregularSpectrum
+from mod.enums import IrregularDiscretization, IrregularSpectrum, MotionType
 from mod.dataobjects.motion.wave_gen import WaveGen
 from mod.dataobjects.awas import AWAS
 
@@ -33,7 +33,7 @@ class IrregularPistonWaveGen(WaveGen):
                  piston_dir=None, awas=None):
         super(IrregularPistonWaveGen, self).__init__(parent_movement, wave_order, start,
                                                      duration, depth, wave_height, wave_period)
-        self.type = "Irregular Piston Wave Generator"
+        self.type = MotionType.IRREGULAR_PISTON_WAVE_GENERATOR
         self.spectrum = spectrum
         self.discretization = discretization
         self.peak_coef = peak_coef

@@ -4,7 +4,7 @@
 
 from random import randint
 
-from mod.enums import IrregularSpectrum, IrregularDiscretization
+from mod.enums import IrregularSpectrum, IrregularDiscretization, MotionType
 from mod.dataobjects.motion.wave_gen import WaveGen
 
 
@@ -34,7 +34,7 @@ class IrregularFlapWaveGen(WaveGen):
                  variable_draft=0.0, flapaxis0=None, flapaxis1=None):
         super(IrregularFlapWaveGen, self).__init__(parent_movement, wave_order, start,
                                                    duration, depth, wave_height, wave_period)
-        self.type = "Irregular Flap Wave Generator"
+        self.type = MotionType.IRREGULAR_FLAP_WAVE_GENERATOR
         self.spectrum = spectrum
         self.discretization = discretization
         self.peak_coef = peak_coef

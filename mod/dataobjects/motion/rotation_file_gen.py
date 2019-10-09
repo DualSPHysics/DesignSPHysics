@@ -2,6 +2,8 @@
 # -*- coding: utf-8 -*-
 """ DesignSPHysics Rotation-File based motion data """
 
+from mod.enums import MotionType
+
 from mod.dataobjects.motion.wave_gen import WaveGen
 
 
@@ -19,7 +21,7 @@ class RotationFileGen(WaveGen):
     def __init__(self, parent_movement=None, duration=0, filename="", anglesunits="degrees", axisp1=None, axisp2=None):
         super(RotationFileGen, self).__init__(parent_movement)
         self.duration = duration
-        self.name = "File Wave Generator"
+        self.name = MotionType.FILE_ROTATIONAL_WAVE_GENERATOR
         self.anglesunits = anglesunits
         self.filename = filename
         self.axisp1 = axisp1 or [0, 0, 0]
