@@ -7,12 +7,11 @@ import subprocess
 from PySide import QtCore
 
 from mod.translation_tools import __
-from mod.dialog_tools import error_dialog
+from mod.dialog_tools import error_dialog, info_dialog
 from mod.freecad_tools import get_fc_main_window
 from mod.file_tools import get_total_exported_parts_from_disk
 
-from mod.widgets.info_dialog import InfoDialog
-from mod.widgets.export_progress_dialog import ExportProgressDialog
+from mod.widgets.postprocessing.export_progress_dialog import ExportProgressDialog
 
 
 def partvtk_export(options, case, post_processing_widget) -> None:
@@ -60,7 +59,7 @@ def partvtk_export(options, case, post_processing_widget) -> None:
         export_dialog.accept()
 
         if not exit_code:
-            InfoDialog(info_text=__("PartVTK finished successfully"), detailed_text=case.info.current_output)
+            info_dialog(info_text=__("PartVTK finished successfully"), detailed_text=case.info.current_output)
         else:
             error_dialog(__("There was an error on the post-processing. Show details to view the errors."), detailed_text=case.info.current_output)
 
@@ -115,7 +114,7 @@ def floatinginfo_export(options, case, post_processing_widget) -> None:
         export_dialog.accept()
 
         if not exit_code:
-            case.info.current_info_dialog = InfoDialog(info_text=__("FloatingInfo finished successfully"), detailed_text=case.info.current_output)
+            info_dialog(info_text=__("FloatingInfo finished successfully"), detailed_text=case.info.current_output)
         else:
             error_dialog(__("There was an error on the post-processing. Show details to view the errors."), detailed_text=case.info.current_output)
 
@@ -169,7 +168,7 @@ def computeforces_export(options, case, post_processing_widget) -> None:
         export_dialog.accept()
 
         if not exit_code:
-            InfoDialog(info_text=__("ComputeForces finished successfully"), detailed_text=case.info.current_output)
+            info_dialog(info_text=__("ComputeForces finished successfully"), detailed_text=case.info.current_output)
         else:
             error_dialog(__("There was an error on the post-processing. Show details to view the errors."), detailed_text=case.info.current_output)
 
@@ -237,7 +236,7 @@ def measuretool_export(options, case, post_processing_widget) -> None:
         export_dialog.accept()
 
         if not exit_code:
-            InfoDialog(info_text=__("MeasureTool finished successfully."), detailed_text=case.info.current_output)
+            info_dialog(info_text=__("MeasureTool finished successfully."), detailed_text=case.info.current_output)
         else:
             error_dialog(__("There was an error on the post-processing. Show details to view the errors."), detailed_text=case.info.current_output)
 
@@ -286,7 +285,7 @@ def isosurface_export(options, case, post_processing_widget) -> None:
         export_dialog.accept()
 
         if not exit_code:
-            InfoDialog(info_text=__("IsoSurface finished successfully"), detailed_text=case.info.current_output)
+            info_dialog(info_text=__("IsoSurface finished successfully"), detailed_text=case.info.current_output)
         else:
             error_dialog(__("There was an error on the post-processing. Show details to view the errors."), detailed_text=case.info.current_output)
 
@@ -340,7 +339,7 @@ def flowtool_export(options, case, post_processing_widget) -> None:
         export_dialog.accept()
 
         if not exit_code:
-            InfoDialog(info_text=__("FlowTool finished successfully"), detailed_text=case.info.current_output)
+            info_dialog(info_text=__("FlowTool finished successfully"), detailed_text=case.info.current_output)
         else:
             error_dialog(__("There was an error on the post-processing. Show details to view the errors."), detailed_text=case.info.current_output)
 

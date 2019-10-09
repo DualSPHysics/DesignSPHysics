@@ -12,8 +12,8 @@ from mod.translation_tools import __
 from mod.widgets.inlet_zone_edit import InletZoneEdit
 
 from mod.dataobjects.case import Case
-from mod.dataobjects.inlet_outlet_config import InletOutletConfig
-from mod.dataobjects.inlet_outlet_zone import InletOutletZone
+from mod.dataobjects.inletoutlet.inlet_outlet_config import InletOutletConfig
+from mod.dataobjects.inletoutlet.inlet_outlet_zone import InletOutletZone
 
 class InletConfigDialog(QtGui.QDialog):
     ''' Defines the Inlet/Outlet dialog window.

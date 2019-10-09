@@ -25,7 +25,7 @@ from mod.constants import VERSION, DEFAULT_WORKBENCH
 
 from mod.dataobjects.case import Case
 
-from mod.widgets.designsphysics_dock import DesignSPHysicsDock
+from mod.widgets.dock.designsphysics_dock import DesignSPHysicsDock
 from mod.widgets.properties_dock_widget import PropertiesDockWidget
 
 

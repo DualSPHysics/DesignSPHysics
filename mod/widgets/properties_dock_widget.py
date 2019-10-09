@@ -15,7 +15,7 @@ from mod.constants import PROP_WIDGET_INTERNAL_NAME
 
 from mod.widgets.damping_config_dialog import DampingConfigDialog
 from mod.widgets.initials_dialog import InitialsDialog
-from mod.widgets.movement_dialog import MovementDialog
+from mod.widgets.motion.movement_dialog import MovementDialog
 from mod.widgets.float_state_dialog import FloatStateDialog
 from mod.widgets.faces_dialog import FacesDialog
 

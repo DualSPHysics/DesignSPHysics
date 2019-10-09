@@ -21,7 +21,7 @@ from mod.widgets.relaxation_zone_uniform_config_dialog import RelaxationZoneUnif
 from mod.widgets.acceleration_input_dialog import AccelerationInputDialog
 from mod.widgets.damping_config_dialog import DampingConfigDialog
 from mod.widgets.inlet_config_dialog import InletConfigDialog
-from mod.widgets.chrono_config_dialog import ChronoConfigDialog
+from mod.widgets.chrono.chrono_config_dialog import ChronoConfigDialog
 
 from mod.dataobjects.case import Case
 from mod.dataobjects.mk_based_properties import MKBasedProperties

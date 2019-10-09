@@ -7,8 +7,8 @@ from mod.stdout_tools import debug
 from mod.constants import VERSION
 from mod.enums import ObjectType
 
-from mod.dataobjects.inlet_outlet_config import InletOutletConfig
-from mod.dataobjects.chrono_config import ChronoConfig
+from mod.dataobjects.inletoutlet.inlet_outlet_config import InletOutletConfig
+from mod.dataobjects.chrono.chrono_config import ChronoConfig
 from mod.dataobjects.constants import Constants
 from mod.dataobjects.execution_parameters import ExecutionParameters
 from mod.dataobjects.periodicity import Periodicity
