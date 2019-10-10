@@ -32,6 +32,7 @@ from mod.xml import XMLExporter
 from mod.dialog_tools import error_dialog
 from mod.executable_tools import refocus_cwd
 from mod.freecad_tools import document_count, prompt_close_all_documents
+from mod.enums import ObjectType, ObjectFillMode
 
 from mod.constants import VERSION, PICKLE_PROTOCOL
 
@@ -42,6 +43,7 @@ from mod.dataobjects.motion.rotation_file_gen import RotationFileGen
 from mod.dataobjects.ml_piston_1d import MLPiston1D
 from mod.dataobjects.ml_piston_2d import MLPiston2D
 from mod.dataobjects.relaxation_zone_file import RelaxationZoneFile
+from mod.dataobjects.simulation_object import SimulationObject
 
 
 def get_total_exported_parts_from_disk(out_folder_path) -> int:
@@ -302,6 +304,7 @@ def import_geo(filename=None, scale_x=1, scale_y=1, scale_z=1, name=None, autofi
     Mesh.show(loaded_mesh, name)
     FreeCADGui.SendMsgToActiveView("ViewFit")
 
+    case.add_object(SimulationObject(name, case.get_first_mk_not_used(ObjectType.BOUND), ObjectType.BOUND, ObjectFillMode.SOLID))
     case.get_simulation_object(name).autofill = autofill
 
 
