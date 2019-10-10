@@ -115,15 +115,15 @@ class MeasureToolGridDialog(QtGui.QDialog):
                     float(self.current_grid[5])
                 )))
 
-                if self.current_grid[6] is 0:
+                if self.current_grid[6] == 0:
                     self.mgrid_table.setItem(self.mgrid_row, 9, QtGui.QTableWidgetItem(str(
                         "0"
                     )))
-                if self.current_grid[7] is 0:
+                if self.current_grid[7] == 0:
                     self.mgrid_table.setItem(self.mgrid_row, 10, QtGui.QTableWidgetItem(str(
                         "0"
                     )))
-                if self.current_grid[8] is 0:
+                if self.current_grid[8] == 0:
                     self.mgrid_table.setItem(self.mgrid_row, 11, QtGui.QTableWidgetItem(str(
                         "0"
                     )))

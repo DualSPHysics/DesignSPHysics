@@ -141,14 +141,14 @@ class AccelerationInputDialog(QtGui.QDialog):
         self.list_refresh()
 
     def on_remove(self):
-        if len(self.accinput.acclist) is 0:
+        if len(self.accinput.acclist) == 0:
             return
         index = self.accinput_list.currentRow()
         self.accinput.acclist.pop(index)
         self.list_refresh()
 
     def on_list_select(self):
-        if len(self.accinput.acclist) is 0:
+        if len(self.accinput.acclist) == 0:
             return
         index = self.accinput_list.currentRow()
         item = self.accinput.acclist[index]
@@ -166,7 +166,7 @@ class AccelerationInputDialog(QtGui.QDialog):
         self.accinput_list.setCurrentRow(0)
 
     def on_save_data(self):
-        if len(self.accinput.acclist) is 0:
+        if len(self.accinput.acclist) == 0:
             return
         index = self.accinput_list.currentRow()
         item = self.accinput.acclist[index]

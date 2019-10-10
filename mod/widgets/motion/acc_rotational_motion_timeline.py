@@ -163,23 +163,23 @@ class AccRotationalMotionTimeline(QtGui.QWidget):
         self.deleted.emit(self.index, self.construct_motion_object())
 
     def _sanitize_input(self):
-        if len(self.x1_input.text()) is 0:
+        if not self.x1_input.text():
             self.x1_input.setText("0")
-        if len(self.y1_input.text()) is 0:
+        if not self.y1_input.text():
             self.y1_input.setText("0")
-        if len(self.z1_input.text()) is 0:
+        if not self.z1_input.text():
             self.z1_input.setText("0")
-        if len(self.x2_input.text()) is 0:
+        if not self.x2_input.text():
             self.x2_input.setText("0")
-        if len(self.y2_input.text()) is 0:
+        if not self.y2_input.text():
             self.y2_input.setText("0")
-        if len(self.z2_input.text()) is 0:
+        if not self.z2_input.text():
             self.z2_input.setText("0")
-        if len(self.velocity_input.text()) is 0:
+        if not self.velocity_input.text():
             self.velocity_input.setText("0")
-        if len(self.acceleration_input.text()) is 0:
+        if not self.acceleration_input.text():
             self.acceleration_input.setText("0")
-        if len(self.time_input.text()) is 0:
+        if not self.time_input.text():
             self.time_input.setText("0")
 
         self.x1_input.setText(self.x1_input.text().replace(",", "."))

@@ -301,19 +301,19 @@ class RegularPistonWaveMotionTimeline(QtGui.QWidget):
 
     def construct_motion_object(self):
         _cmo_elevation = None
-        if self.awas_elevation_selector.currentIndex() is 0:
+        if self.awas_elevation_selector.currentIndex() == 0:
             _cmo_elevation = AWASWaveOrder.FIRST_ORDER
-        elif self.awas_elevation_selector.currentIndex() is 1:
+        elif self.awas_elevation_selector.currentIndex() == 1:
             _cmo_elevation = AWASWaveOrder.SECOND_ORDER
         else:
             _cmo_elevation = AWASWaveOrder.FIRST_ORDER
 
         _cmo_savedata = None
-        if self.awas_savedata_selector.currentIndex() is 0:
+        if self.awas_savedata_selector.currentIndex() == 0:
             _cmo_savedata = AWASSaveMethod.BY_PART
-        elif self.awas_savedata_selector.currentIndex() is 1:
+        elif self.awas_savedata_selector.currentIndex() == 1:
             _cmo_savedata = AWASSaveMethod.MORE_INFO
-        elif self.awas_savedata_selector.currentIndex() is 2:
+        elif self.awas_savedata_selector.currentIndex() == 2:
             _cmo_savedata = AWASSaveMethod.BY_STEP
         else:
             _cmo_savedata = AWASSaveMethod.BY_PART

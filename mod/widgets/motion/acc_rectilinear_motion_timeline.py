@@ -152,19 +152,19 @@ class AccRectilinearMotionTimeline(QtGui.QWidget):
         self.deleted.emit(self.index, self.construct_motion_object())
 
     def _sanitize_input(self):
-        if len(self.x_input.text()) is 0:
+        if not self.x_input.text():
             self.x_input.setText("0")
-        if len(self.y_input.text()) is 0:
+        if not self.y_input.text():
             self.y_input.setText("0")
-        if len(self.z_input.text()) is 0:
+        if not self.z_input.text():
             self.z_input.setText("0")
-        if len(self.xa_input.text()) is 0:
+        if not self.xa_input.text():
             self.xa_input.setText("0")
-        if len(self.ya_input.text()) is 0:
+        if not self.ya_input.text():
             self.ya_input.setText("0")
-        if len(self.za_input.text()) is 0:
+        if not self.za_input.text():
             self.za_input.setText("0")
-        if len(self.time_input.text()) is 0:
+        if not self.time_input.text():
             self.time_input.setText("0")
 
         self.x_input.setText(self.x_input.text().replace(",", "."))

@@ -178,7 +178,7 @@ def main():
                 shutil.copytree("./resource/images", fc_default_mod_dir + "/DesignSPHysics" + "/images")
                 shutil.copytree("./resource/mod", fc_default_mod_dir + "/DesignSPHysics" + "/mod")
 
-                if installopts_selector.currentIndex() is 0:
+                if installopts_selector.currentIndex() == 0:
                     try:
                         shutil.rmtree(fc_default_mod_dir + "/DesignSPHysics" + "/dualsphysics")
                     except OSError:

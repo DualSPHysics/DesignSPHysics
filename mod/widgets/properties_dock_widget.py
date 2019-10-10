@@ -12,6 +12,7 @@ from PySide import QtCore, QtGui
 from mod.translation_tools import __
 from mod.enums import ObjectType, ObjectFillMode, FreeCADObjectType, HelpURL
 from mod.constants import PROP_WIDGET_INTERNAL_NAME
+from mod.stdout_tools import debug
 
 from mod.widgets.damping_config_dialog import DampingConfigDialog
 from mod.widgets.initials_dialog import InitialsDialog
@@ -408,14 +409,18 @@ class PropertiesDockWidget(QtGui.QDockWidget):
 
         self.mkgroup_prop.setValue(sim_object.obj_mk)
 
+        debug("Object {} supports changing type? {}. Its type is {} with mk {}".format(sim_object.name, sim_object.supports_changing_type(), sim_object.type, sim_object.obj_mk))
+
         # Object Type selector adaptation
         if sim_object.supports_changing_type():
+            debug("Changing objtype_prop to {} in PropertiesDockWidget.adapt_to_simulation_object".format("Fluid" if sim_object.type == ObjectType.FLUID else "Bound"))
             self.objtype_prop.setEnabled(True)
-            self.objtype_prop.setCurrentIndex(0 if sim_object.type is ObjectType.FLUID else 1)
+            self.objtype_prop.setCurrentIndex(0 if sim_object.type == ObjectType.FLUID else 1)
             self.set_mkgroup_range(sim_object.type)
-            self.set_mkgroup_text("{} <a href='{}'>?</a>".format(__("MKFluid" if sim_object.type is ObjectType.FLUID else "MKBound"), HelpURL.BASIC_CONCEPTS))
+            self.set_mkgroup_text("{} <a href='{}'>?</a>".format(__("MKFluid" if sim_object.type == ObjectType.FLUID else "MKBound"), HelpURL.BASIC_CONCEPTS))
         else:
             # Everything else
+            debug("Changing objtype_prop to {} in PropertiesDockWidget.adapt_to_simulation_object".format("Fluid" if sim_object.type == ObjectType.FLUID else "Bound"))
             self.set_mkgroup_range(ObjectType.BOUND)
             self.objtype_prop.setCurrentIndex(1)
             self.objtype_prop.setEnabled(False)
@@ -431,11 +436,11 @@ class PropertiesDockWidget(QtGui.QDockWidget):
 
         # Object Float State button adaptation
         if sim_object.supports_floating():
-            self.floatstate_prop.setEnabled(sim_object.type is not ObjectType.FLUID)
+            self.floatstate_prop.setEnabled(sim_object.type != ObjectType.FLUID)
 
         # Object Initials button adaptation
-        self.initials_prop.setEnabled(sim_object.type is ObjectType.FLUID)
+        self.initials_prop.setEnabled(sim_object.type == ObjectType.FLUID)
 
         # Object Motion button adaptation
         if sim_object.supports_motion:
-            self.motion_prop.setEnabled(sim_object.type is not ObjectType.FLUID)
+            self.motion_prop.setEnabled(sim_object.type != ObjectType.FLUID)

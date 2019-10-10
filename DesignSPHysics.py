@@ -19,7 +19,7 @@ from PySide import QtGui, QtCore
 from mod.translation_tools import __
 from mod.freecad_tools import check_compatibility, document_count, prompt_close_all_documents, get_fc_main_window, get_fc_object
 from mod.freecad_tools import delete_existing_docks, valid_document_environment, enforce_case_limits_restrictions, enforce_fillbox_restrictions
-from mod.stdout_tools import print_license, log
+from mod.stdout_tools import print_license, log, debug
 
 from mod.constants import VERSION, DEFAULT_WORKBENCH
 
@@ -55,13 +55,6 @@ properties_widget = PropertiesDockWidget()
 
 get_fc_main_window().addDockWidget(QtCore.Qt.RightDockWidgetArea, dualsphysics_dock)
 get_fc_main_window().addDockWidget(QtCore.Qt.LeftDockWidgetArea, properties_widget)
-
-
-# Find treewidgets of freecad.
-trees = list()
-for item in get_fc_main_window().findChildren(QtGui.QTreeWidget):
-    if item.objectName() != "DSPH Objects":
-        trees.append(item)
 
 
 def on_tree_item_selection_change():
@@ -105,10 +98,14 @@ def on_tree_item_selection_change():
     properties_widget.fit_size()
 
 
-# Subscribe the trees to the item selection change function. This helps FreeCAD notify DesignSPHysics for the
-# deleted and changed objects to get updated correctly.
-for item in trees:
-    item.itemSelectionChanged.connect(on_tree_item_selection_change)
+# Subscribe the FreeCAD Objects tree to the item selection change function.
+# This helps FreeCAD notify DesignSPHysics for the deleted and changed objects to get updated correctly.
+fc_object_tree: QtGui.QTreeWidget = None
+for item in get_fc_main_window().findChildren(QtGui.QTreeWidget):
+    if "attr" in item.headerItem().text(0).lower():
+        fc_object_tree = item
+
+fc_object_tree.itemSelectionChanged.connect(on_tree_item_selection_change)
 
 properties_widget.need_refresh.connect(on_tree_item_selection_change)
 dualsphysics_dock.need_refresh.connect(on_tree_item_selection_change)
