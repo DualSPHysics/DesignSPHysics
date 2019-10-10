@@ -20,7 +20,6 @@ from mod.constants import CASE_LIMITS_OBJ_NAME, CASE_LIMITS_2D_LABEL, CASE_LIMIT
 from mod.enums import ObjectType, ObjectFillMode
 
 from mod.widgets.add_geo_dialog import AddGEODialog
-from mod.widgets.case_summary import CaseSummary
 from mod.widgets.special_options_selector_dialog import SpecialOptionsSelectorDialog
 from mod.widgets.gencase_completed_dialog import GencaseCompletedDialog
 from mod.widgets.mode_2d_config_dialog import Mode2DConfigDialog
@@ -117,7 +116,8 @@ class DockPreProcessingWidget(QtGui.QWidget):
         self.load_button.clicked.connect(self.on_load_button)
         self.add_fillbox_button.clicked.connect(self.on_add_fillbox)
         self.add_geometry_button.clicked.connect(self.on_add_geo)
-        self.case_summary_button.clicked.connect(CaseSummary)
+        self.import_xml_button.clicked.connect(lambda: error_dialog("XML Import is not available in this version."))
+        self.case_summary_button.clicked.connect(lambda: error_dialog("Summary is not available in this version."))
         self.toggle_2d_mode_button.clicked.connect(self.on_2d_toggle)
         self.special_button.clicked.connect(SpecialOptionsSelectorDialog)
 
@@ -278,7 +278,7 @@ class DockPreProcessingWidget(QtGui.QWidget):
 
     def on_add_geo(self):
         """ Add STL file. Opens a file opener and allows the user to set parameters for the import process """
-        file_name = QtGui.QFileDialog().getOpenFileName(get_fc_main_window(), __("Select GEO to import"), QtCore.QDir.homePath(), "STL Files (*.stl);;PLY Files (*.ply);;VTK Files (*.vtk)")
+        file_name, _ = QtGui.QFileDialog().getOpenFileName(get_fc_main_window(), __("Select GEO to import"), QtCore.QDir.homePath(), "STL Files (*.stl);;PLY Files (*.ply);;VTK Files (*.vtk)")
         if not file_name:
             return
         AddGEODialog(file_name)

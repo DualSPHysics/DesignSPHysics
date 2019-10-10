@@ -12,5 +12,5 @@ class FocusableLineEdit(QtGui.QLineEdit):
         self.help_text = help_text
 
     def focusInEvent(self, *args, **kwargs):
-        QtGui.QLineEdit.focusInEvent(self, *args, **kwargs).__init__()
+        QtGui.QLineEdit.focusInEvent(self, *args, **kwargs)
         self.focus.emit(self.help_text)

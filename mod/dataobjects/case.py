@@ -63,7 +63,7 @@ class Case():
         return Case.__instance
 
     @staticmethod
-    def update_from_disk(disk_data: Case) -> None:
+    def update_from_disk(disk_data: "Case") -> None:
         """ Updates the current instance for the one passed as parameter. """
         Case.__instance = disk_data
 

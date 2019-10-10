@@ -13,5 +13,5 @@ class FocusableComboBox(QtGui.QComboBox):
         self.help_text = help_text
 
     def focusInEvent(self, *args, **kwargs):
-        QtGui.QComboBox.focusInEvent(self, *args, **kwargs).__init__()
+        QtGui.QComboBox.focusInEvent(self, *args, **kwargs)
         self.focus.emit(self.help_text)

@@ -10,6 +10,7 @@ from PySide import QtCore
 
 import FreeCADGui
 
+from mod.stdout_tools import debug
 
 def executable_contains_string(executable: str, string: str) -> bool:
     """ Returns whether the standard output of the executable contains the passed string.
@@ -21,7 +22,7 @@ def executable_contains_string(executable: str, string: str) -> bool:
         if platform in ("linux", "linux2"):
             environ["LD_LIBRARY_PATH"] = path.dirname(executable)
 
-        process.start("'{}' -ver".format(executable))
+        process.start("\"{}\" -ver".format(executable))
         process.waitForFinished()
         output = str(process.readAllStandardOutput())
 

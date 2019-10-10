@@ -73,32 +73,40 @@ class PropertiesDockWidget(QtGui.QDockWidget):
         self.setWidget(self.properties_scaff_widget)
 
         # Different labels to add to the property table
-        self.mkgroup_label = QtGui.QLabel("   {}".format(__("MKGroup")))
+        self.mkgroup_label = QtGui.QLabel()
+        self.mkgroup_label.setText("&nbsp;<span>{}</span>".format(__("MKGroup")))
         self.mkgroup_label.setOpenExternalLinks(True)
         self.mkgroup_label.setToolTip(__("Establishes the object group."))
 
-        self.objtype_label = QtGui.QLabel("   {}".format(__("Type of object")))
+        self.objtype_label = QtGui.QLabel()
+        self.objtype_label.setText("&nbsp;<span>{}</span>".format(__("Type of object")))
         self.objtype_label.setToolTip(__("Establishes the object type: Fluid or bound"))
 
-        self.fillmode_label = QtGui.QLabel("   {}".format(__("Fill mode")))
+        self.fillmode_label = QtGui.QLabel()
+        self.fillmode_label.setText("&nbsp;<span>{}</span>".format(__("Fill mode")))
         self.fillmode_label.setToolTip(__("Sets fill mode.\nFull: generates internal volume and external mesh."
                                           "\nSolid: generates only internal volume."
                                           "\nFace: generates only external mesh."
                                           "\nWire: generates only external mesh polygon edges."))
 
-        self.floatstate_label = QtGui.QLabel("   {}".format(__("Float state")))
+        self.floatstate_label = QtGui.QLabel()
+        self.floatstate_label.setText("&nbsp;<span>{}</span>".format(__("Float state")))
         self.floatstate_label.setToolTip(__("Sets floating state for this object MK."))
 
-        self.initials_label = QtGui.QLabel("   {}".format(__("Initials")))
+        self.initials_label = QtGui.QLabel()
+        self.initials_label.setText("&nbsp;<span>{}</span>".format(__("Initials")))
         self.initials_label.setToolTip(__("Sets initials options for this object"))
 
-        self.material_label = QtGui.QLabel("   {}".format(__("Material")))
+        self.material_label = QtGui.QLabel()
+        self.material_label.setText("&nbsp;<span>{}</span>".format(__("Material")))
         self.material_label.setToolTip(__("Sets material for this object"))
 
-        self.motion_label = QtGui.QLabel("   {}".format(__("Motion")))
+        self.motion_label = QtGui.QLabel()
+        self.motion_label.setText("&nbsp;<span>{}</span>".format(__("Motion")))
         self.motion_label.setToolTip(__("Sets motion for this object"))
 
-        self.faces_label = QtGui.QLabel("   {}".format(__("Faces")))
+        self.faces_label = QtGui.QLabel()
+        self.faces_label.setText("&nbsp;<span>{}</span>".format(__("Faces")))
         self.faces_label.setToolTip(__("Adds faces"))
 
         self.mkgroup_label.setAlignment(QtCore.Qt.AlignLeft)
@@ -218,7 +226,7 @@ class PropertiesDockWidget(QtGui.QDockWidget):
                 pass
             self.floatstate_prop.setEnabled(True)
             self.initials_prop.setEnabled(False)
-            self.mkgroup_label.setText("   {} <a href='{}'>?</a>".format(__("MKBound"), HelpURL.BASIC_CONCEPTS))
+            self.set_mkgroup_text("{} <a href='{}'>?</a>".format(__("MKBound"), HelpURL.BASIC_CONCEPTS))
         elif self.objtype_prop.itemText(index).lower() == "fluid":
             self.mkgroup_prop.setRange(0, 10)
             if simulation_object.type != ObjectType.FLUID:
@@ -239,7 +247,7 @@ class PropertiesDockWidget(QtGui.QDockWidget):
 
             self.floatstate_prop.setEnabled(False)
             self.initials_prop.setEnabled(True)
-            self.mkgroup_label.setText("   {} <a href='{}'>?</a>".format(__("MKFluid"), HelpURL.BASIC_CONCEPTS))
+            self.set_mkgroup_text("{} <a href='{}'>?</a>".format(__("MKFluid"), HelpURL.BASIC_CONCEPTS))
 
         # Update simulation object type
         simulation_object.type = ObjectType.FLUID if index == 0 else ObjectType.BOUND
@@ -338,7 +346,7 @@ class PropertiesDockWidget(QtGui.QDockWidget):
 
     def set_mkgroup_text(self, text: str) -> None:
         """ Sets the mkgroup label text. """
-        self.mkgroup_label.setText(text)
+        self.mkgroup_label.setText("&nbsp;<span>{}</span>".format(text))
 
     def get_cell_widget(self, row: int, column: int) -> QtGui.QWidget:
         """ Retrieves the appropriate QWidget for the row and column specified from the table. """
@@ -405,7 +413,7 @@ class PropertiesDockWidget(QtGui.QDockWidget):
             self.objtype_prop.setEnabled(True)
             self.objtype_prop.setCurrentIndex(0 if sim_object.type is ObjectType.FLUID else 1)
             self.set_mkgroup_range(sim_object.type)
-            self.set_mkgroup_text("   {} <a href='{}'>?</a>".format(__("MKFluid" if sim_object.type is ObjectType.FLUID else "MKBound"), HelpURL.BASIC_CONCEPTS))
+            self.set_mkgroup_text("{} <a href='{}'>?</a>".format(__("MKFluid" if sim_object.type is ObjectType.FLUID else "MKBound"), HelpURL.BASIC_CONCEPTS))
         else:
             # Everything else
             self.set_mkgroup_range(ObjectType.BOUND)

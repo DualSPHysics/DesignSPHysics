@@ -9,6 +9,7 @@ from mod.translation_tools import __
 from mod.dialog_tools import error_dialog
 from mod.freecad_tools import get_fc_main_window
 
+from mod.dataobjects.case import Case
 
 class AddGEODialog(QtGui.QDialog):
     """ A dialog that shows option to import a geometry passed as parameter """
@@ -82,18 +83,18 @@ class AddGEODialog(QtGui.QDialog):
         self.geo_group.setLayout(self.geo_group_layout)
 
         # Create button layout
-        geo_button_layout = QtGui.QHBoxLayout()
-        geo_button_ok = QtGui.QPushButton(__("Import"))
-        geo_button_cancel = QtGui.QPushButton(__("Cancel"))
-        geo_button_cancel.clicked.connect(self.reject)
-        geo_button_layout.addStretch(1)
-        geo_button_layout.addWidget(geo_button_cancel)
-        geo_button_layout.addWidget(geo_button_ok)
+        self.geo_button_layout = QtGui.QHBoxLayout()
+        self.geo_button_ok = QtGui.QPushButton(__("Import"))
+        self.geo_button_cancel = QtGui.QPushButton(__("Cancel"))
+        self.geo_button_cancel.clicked.connect(self.reject)
+        self.geo_button_layout.addStretch(1)
+        self.geo_button_layout.addWidget(self.geo_button_cancel)
+        self.geo_button_layout.addWidget(self.geo_button_ok)
 
         # Compose main window layout
         self.geo_dialog_layout.addWidget(self.geo_group)
         self.geo_dialog_layout.addStretch(1)
-        self.geo_dialog_layout.addLayout(geo_button_layout)
+        self.geo_dialog_layout.addLayout(self. geo_button_layout)
 
         self.setLayout(self.geo_dialog_layout)
 
@@ -113,7 +114,8 @@ class AddGEODialog(QtGui.QDialog):
                        scale_y=float(self.geo_scaling_y_e.text()),
                        scale_z=float(self.geo_scaling_z_e.text()),
                        name=str(self.geo_objname_text.text()),
-                       autofill=self.geo_autofill_chck.isChecked())
+                       autofill=self.geo_autofill_chck.isChecked(),
+                       case=Case.instance())
 
             self.accept()
         except ValueError:

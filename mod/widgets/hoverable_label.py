@@ -18,7 +18,7 @@ class HoverableLabel(QtGui.QLabel):
         """ Sets the help text to emit on hover. """
         self.help_text = help_text
 
-    def enterEvent(self, *args, **kwargs):
+    def enterEvent(self, event: QtGui.QEnterEvent):
         """ Override of the enter event to emit the hover signal. """
-        super(*args, **kwargs)
+        QtGui.QLabel.enterEvent(self, event)
         self.hover.emit(self.help_text)
