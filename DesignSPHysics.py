@@ -50,7 +50,7 @@ if document_count() > 0:
 # Tries to delete docks created by a previous execution of DesignSPHysics
 delete_existing_docks()
 
-dualsphysics_dock = DesignSPHysicsDock()
+dualsphysics_dock = DesignSPHysicsDock(get_fc_main_window())
 properties_widget = PropertiesDockWidget()
 
 get_fc_main_window().addDockWidget(QtCore.Qt.RightDockWidgetArea, dualsphysics_dock)

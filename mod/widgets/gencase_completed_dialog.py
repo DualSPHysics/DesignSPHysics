@@ -19,8 +19,8 @@ class GencaseCompletedDialog(QtGui.QDialog):
     DETAILS_MIN_WIDTH: int = 650
     DIALOG_IS_MODAL: bool = False
 
-    def __init__(self, particle_count=0, detail_text="No details"):
-        super().__init__()
+    def __init__(self, particle_count=0, detail_text="No details", parent=None):
+        super().__init__(parent=parent)
 
         # Window Creation
         self.setWindowModality(QtCore.Qt.NonModal)
@@ -37,10 +37,10 @@ class GencaseCompletedDialog(QtGui.QDialog):
         self.bt_open_with_paraview = QtGui.QPushButton(__("Open with Paraview"))
 
         self.open_menu = QtGui.QMenu()
-        self.open_menu.addAction("{}_MkCells.vtk".format(Case.instance.name))
-        self.open_menu.addAction("{}_All.vtk".format(Case.instance.name))
-        self.open_menu.addAction("{}_Fluid.vtk".format(Case.instance.name))
-        self.open_menu.addAction("{}_Bound.vtk".format(Case.instance.name))
+        self.open_menu.addAction("{}_MkCells.vtk".format(Case.instance().name))
+        self.open_menu.addAction("{}_All.vtk".format(Case.instance().name))
+        self.open_menu.addAction("{}_Fluid.vtk".format(Case.instance().name))
+        self.open_menu.addAction("{}_Bound.vtk".format(Case.instance().name))
 
         self.bt_open_with_paraview.setMenu(self.open_menu)
 
@@ -60,7 +60,7 @@ class GencaseCompletedDialog(QtGui.QDialog):
         self.detail_text_area = QtGui.QTextEdit()
         self.detail_text_area.setText(detail_text)
 
-        self.detail_text_dialog_layout.addWidget(self.sdetail_text_area)
+        self.detail_text_dialog_layout.addWidget(self.detail_text_area)
         self.detail_text_dialog.setLayout(self.detail_text_dialog_layout)
 
         # Main Layout scaffolding

@@ -731,5 +731,8 @@
     "DSPH_Case.FCStd file not found! Corrupt or moved project. Aborting.": "DSPH_Case.FCStd file not found! Corrupt or moved project. Aborting.",
     "Can't change width of the Case Limits object while being in 2D mode.": "Can't change width of the Case Limits object while being in 2D mode.",
     "Time: ": "Time: ",
-    "Time data: ": "Time data: "
+    "Time data: ": "Time data: ",
+    "Case name: {}": "Case name: {}",
+    "Simulation processor: {}": "Simulation processor: {}",
+    "Simulation is complete.": "Simulation is complete."
 }

@@ -24,8 +24,8 @@ class DesignSPHysicsDock(QtGui.QDockWidget):
 
     need_refresh = QtCore.Signal()
 
-    def __init__(self):
-        super().__init__()
+    def __init__(self, parent=None):
+        super().__init__(parent=parent)
 
         self.setObjectName(MAIN_WIDGET_INTERNAL_NAME)
         self.setWindowTitle("{} {}".format(APP_NAME, str(VERSION)))
@@ -37,7 +37,7 @@ class DesignSPHysicsDock(QtGui.QDockWidget):
         self.dock_logo_widget = DockLogoWidget()
         self.dock_configuration_widget = DockConfigurationWidget()
         self.dp_widget = DockDPWidget()
-        self.pre_proccessing_widget = DockPreProcessingWidget()
+        self.pre_proccessing_widget = DockPreProcessingWidget(parent=self)
         self.simulation_widget = DockSimulationWidget()
         self.post_processing_widget = DockPostProcessingWidget()
         self.object_list_widget = DockObjectListTableWidget()

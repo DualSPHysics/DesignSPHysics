@@ -37,8 +37,8 @@ class DockPreProcessingWidget(QtGui.QWidget):
     gencase_completed = QtCore.Signal(bool)
     simulation_completed = QtCore.Signal(bool)
 
-    def __init__(self):
-        super().__init__()
+    def __init__(self, parent=None):
+        super().__init__(parent=parent)
 
         self.main_layout = QtGui.QVBoxLayout()
         self.main_layout.setContentsMargins(0, 0, 0, 0)
@@ -212,7 +212,7 @@ class DockPreProcessingWidget(QtGui.QWidget):
             total_particles = int(total_particles_text[total_particles_text.index(": ") + 2:])
             Case.instance().info.particle_number = total_particles
             Case.instance().info.previous_particle_number = int(total_particles)
-            GencaseCompletedDialog(particle_count=total_particles, detail_text=output).show()
+            GencaseCompletedDialog(particle_count=total_particles, detail_text=output, parent=self).show()
             Case.instance().info.is_gencase_done = True
             self.on_save_case()
         except ValueError:
