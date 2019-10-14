@@ -2,9 +2,11 @@
 # -*- coding: utf-8 -*-
 """ DesignSPHysics main data structure. """
 
+import FreeCAD
+
 from mod.stdout_tools import debug
 
-from mod.constants import VERSION
+from mod.constants import VERSION, SUPPORTED_TYPES
 from mod.enums import ObjectType
 
 from mod.dataobjects.inletoutlet.inlet_outlet_config import InletOutletConfig
@@ -84,6 +86,10 @@ class Case():
         """ Returns a simulation object from its internal name.
         Raises an exception if the selected object is not added to the simulation. """
         return next(filter(lambda obj: obj.name == name, self.objects), None)
+
+    def get_all_complex_objects(self) -> list:
+        """ Returns all complex simulation objects. """
+        return list(filter(lambda obj: FreeCAD.ActiveDocument.getObject(obj.name).TypeId not in SUPPORTED_TYPES and "FillBox" not in obj.name, self.objects))
 
     def get_all_fluid_objects(self) -> list:
         """ Returns all the fluid objects in the simulation. """

@@ -31,7 +31,7 @@ from mod.translation_tools import __
 from mod.xml import XMLExporter
 from mod.dialog_tools import error_dialog
 from mod.executable_tools import refocus_cwd
-from mod.freecad_tools import document_count, prompt_close_all_documents
+from mod.freecad_tools import document_count, prompt_close_all_documents, get_fc_object
 from mod.enums import ObjectType, ObjectFillMode
 
 from mod.constants import VERSION, PICKLE_PROTOCOL
@@ -85,6 +85,10 @@ def save_case(save_name: str, case: "Case") -> None:
 
     if not path.exists("{}/{}_out".format(save_name, project_name)):
         makedirs("{}/{}_out".format(save_name, project_name))
+
+    # Export all complex objects to STL
+    for obj in case.get_all_complex_objects():
+        Mesh.export([get_fc_object(obj.name)], "{}/{}.stl".format(save_name, obj.name))
 
     # Copy files from movements and change its paths to be inside the project.
     for _, mkproperties in case.mkbasedproperties.items():
