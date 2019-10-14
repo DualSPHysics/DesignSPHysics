@@ -734,5 +734,7 @@
     "Time data: ": "Time data: ",
     "Case name: {}": "Case name: {}",
     "Simulation processor: {}": "Simulation processor: {}",
-    "Simulation is complete.": "Simulation is complete."
+    "Simulation is complete.": "Simulation is complete.",
+    "Number of particles: {}": "Number of particles: {}",
+    "Exporting": "Exporting"
 }

@@ -5,6 +5,7 @@
 from PySide import QtCore, QtGui
 
 from mod.translation_tools import __
+from mod.stdout_tools import debug
 
 
 class RunDialog(QtGui.QDialog):
@@ -31,7 +32,7 @@ class RunDialog(QtGui.QDialog):
 
         self.run_group_label_case = QtGui.QLabel(__("Case name: {}").format(case_name))
         self.run_group_label_proc = QtGui.QLabel(__("Simulation processor: {}").format(processor))
-        self.run_group_label_part = QtGui.QLabel(__("Number of particles: ").format(number_of_particles))
+        self.run_group_label_part = QtGui.QLabel(__("Number of particles: {}").format(number_of_particles))
         self.run_group_label_partsout = QtGui.QLabel(self.PARTICLES_OUT_TEMPLATE.format(0))
         self.run_group_label_eta = QtGui.QLabel(self)
         self.run_group_label_eta.setText(self.ETA_TEMPLATE.format("Calculating..."))
@@ -81,6 +82,7 @@ class RunDialog(QtGui.QDialog):
         self.run_details_layout.addWidget(self.run_details_text)
 
         self.run_button_cancel.clicked.connect(self.cancelled.emit)
+        self.run_button_details.clicked.connect(self.toggle_run_details)
 
         self.run_details.setLayout(self.run_details_layout)
 
@@ -91,12 +93,13 @@ class RunDialog(QtGui.QDialog):
 
     def set_value(self, value: int) -> None:
         """ Sets the value for the run dialog progress bar. """
-        self.run_progbar_bar.setvalue(value)
+        self.run_progbar_bar.setValue(value)
 
     def run_update(self, percentage: float, particles_out: int, estimated_time: str) -> None:
         """ Updates the run dialog with information about the execution. """
         self.setWindowTitle(self.WINDOW_TITLE_TEMPLATE.format(percentage))
-        self.set_value(percentage)
+        if percentage:
+            self.set_value(percentage)
         self.run_group_label_partsout.setText(self.PARTICLES_OUT_TEMPLATE.format(str(particles_out)))
         if estimated_time:
             self.run_group_label_eta.setText(self.ETA_TEMPLATE.format(estimated_time))
@@ -110,10 +113,11 @@ class RunDialog(QtGui.QDialog):
 
     def toggle_run_details(self) -> None:
         """ Toggles the run details dialog panel. """
-        self.run_details.setHidden(not self.run_details.isVisible())
+        self.run_details.setVisible(not self.run_details.isVisible())
+        debug(self.run_details.isVisible())
         self.run_details.move(self.x() - self.run_details.width() - 15, self.y())
 
     def set_detail_text(self, details: str) -> None:
         """ Sets the details text contents and scrolls it to the bottom. """
-        self.run_details_text.setText(details)
+        self.run_details_text.setText(details.replace("\\n", "\n"))
         self.run_details_text.moveCursor(QtGui.QTextCursor.End)

@@ -91,7 +91,6 @@ class DockSimulationWidget(QtGui.QWidget):
             self.simulation_cancelled.emit()
 
         run_dialog.cancelled.connect(on_cancel)
-        run_dialog.run_button_details.clicked.connect(run_dialog.toggle_run_details)
 
         # Launch simulation and watch filesystem to monitor simulation
         filelist = [f for f in os.listdir(Case.instance().path + "/" + Case.instance().name + "_out/") if f.startswith("Part")]
@@ -162,6 +161,8 @@ class DockSimulationWidget(QtGui.QWidget):
             last_part_lines = list(filter(lambda x: "Part_" in x and "stored" not in x and "      " in x, run_file_data))
             if last_part_lines:
                 current_value = (float(last_part_lines[-1].split("      ")[1]) * float(100)) / float(Case.instance().execution_parameters.timemax)
+            else:
+                current_value = None
 
             # Update particles out
             last_particles_out_lines = list(filter(lambda x: "(total: " in x and "Particles out:" in x, run_file_data))
@@ -169,8 +170,13 @@ class DockSimulationWidget(QtGui.QWidget):
                 totalpartsout = int(last_particles_out_lines[-1].split("(total: ")[1].split(")")[0])
                 Case.instance().info.particles_out = totalpartsout
 
+            try:
+                last_estimated_time = str(last_part_lines[-1].split("  ")[-1])
+            except IndexError:
+                last_estimated_time = None
+
             # Update run dialog
-            run_dialog.run_update(current_value, Case.instance().info.particles_out, str(last_part_lines[-1].split("  ")[-1]))
+            run_dialog.run_update(current_value, Case.instance().info.particles_out, last_estimated_time)
 
         # Set filesystem watcher to the out directory.
         run_fs_watcher.addPath(Case.instance().path + "/" + Case.instance().name + "_out/")
