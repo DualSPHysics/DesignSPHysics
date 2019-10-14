@@ -24,7 +24,7 @@
 {definition_template}
             <commands>
                 <mainlist>
-                    <!-- TODO: templates for different things -->
+{objects_template}
                 </mainlist>
             </commands>
         </geometry>

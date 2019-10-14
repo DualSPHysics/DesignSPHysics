@@ -6,13 +6,16 @@ The utilities on this module creates
 """
 
 import os
+import math
 from datetime import datetime
 
 import FreeCAD
 
-from mod.constants import APP_NAME, DIVIDER, LINE_END
-from mod.enums import FloatingDensityType
+from mod.constants import APP_NAME, DIVIDER, LINE_END, SUPPORTED_TYPES
+from mod.enums import FloatingDensityType, FreeCADObjectType, ObjectType
 from mod.template_tools import obj_to_dict
+from mod.stdout_tools import debug
+
 
 class XMLExporter():
     """ Handles XML generation and data transformation to adapt to DualSPHysics
@@ -20,6 +23,17 @@ class XMLExporter():
 
     BASE_XML = "/templates/gencase/base.xml"
     DEFINITION_XML = "/templates/gencase/definition.xml"
+    OBJECTS_XML = "/templates/gencase/objects/base.xml"
+    OBJECTS_MKFLUID_XML = "/templates/gencase/objects/each/mkfluid.xml"
+    OBJECTS_MKBOUND_XML = "/templates/gencase/objects/each/mkbound.xml"
+    OBJECTS_ROTATION_XML = "/templates/gencase/objects/each/rotation.xml"
+    OBJECTS_MATRIXRESET_XML = "/templates/gencase/objects/each/matrixreset.xml"
+    OBJECTS_MOVE_XML = "/templates/gencase/objects/each/move.xml"
+    OBJECT_BOX_XML = "/templates/gencase/objects/each/cube.xml"
+    OBJECT_SPHERE_XML = "/templates/gencase/objects/each/sphere.xml"
+    OBJECT_CYLINDER_XML = "/templates/gencase/objects/each/cylinder.xml"
+    OBJECT_FILLBOX_XML = "/templates/gencase/objects/each/fillbox.xml"
+    OBJECT_COMPLEX_XML = "/templates/gencase/objects/each/complex.xml"
     SIMULATIONDOMAIN_XML = "/templates/gencase/simulationdomain.xml"
     INITIALS_XML = "/templates/gencase/simulationdomain.xml"
     FLOATINGS_XML = "/templates/gencase/floatings/base.xml"
@@ -65,6 +79,118 @@ class XMLExporter():
                 min_point.z / DIVIDER + fc_object.Height.Value / DIVIDER
             ]
         }
+        return template.format(**formatter)
+
+    def get_regular_objects_template(self, obj, fc_object) -> str:
+        ''' Builds a template for basic object types, like boxes or spheres. '''
+
+        template = {
+            FreeCADObjectType.BOX: self.OBJECT_BOX_XML,
+            FreeCADObjectType.SPHERE: self.OBJECT_SPHERE_XML,
+            FreeCADObjectType.CYLINDER: self.OBJECT_CYLINDER_XML
+        }[fc_object.TypeId]
+
+        # Formatting general keys
+        obj_formatter = {
+            "label": fc_object.Label,
+            "obj": obj,
+            "pos": [fc_object.Placement.Base.x / DIVIDER, fc_object.Placement.Base.y / DIVIDER, fc_object.Placement.Base.z / DIVIDER] if not fc_object.Placement.Rotation.Angle else [0, 0, 0],
+            "mktype_template": (self.get_template_text(self.OBJECTS_MKBOUND_XML) if obj["type"] == ObjectType.BOUND else self.get_template_text(self.OBJECTS_MKFLUID_XML)).format(**obj),
+            "move_template": self.get_template_text(self.OBJECTS_MOVE_XML).format(**{
+                "vec": [fc_object.Placement.Base.x / DIVIDER, fc_object.Placement.Base.y / DIVIDER, fc_object.Placement.Base.z / DIVIDER]
+            }) if fc_object.Placement.Rotation.Angle else "",
+            "rotation_template": self.get_template_text(self.OBJECTS_ROTATION_XML).format(**{
+                "ang": math.degrees(fc_object.Placement.Rotation.Angle),
+                "vec": [-fc_object.Placement.Rotation.Axis.x, -fc_object.Placement.Rotation.Axis.y, -fc_object.Placement.Rotation.Axis.z]
+            }) if fc_object.Placement.Rotation.Angle else "",
+            "matrixreset_template": self.get_template_text(self.OBJECTS_MATRIXRESET_XML) if fc_object.Placement.Rotation.Angle else ""
+        }
+
+        # Formatting specific keys for each type of object
+        if fc_object.TypeId == FreeCADObjectType.BOX:
+            obj_formatter.update({
+                "boxfill": obj["faces_configuration"]["faces_print"] if obj["faces_configuration"] else "solid",
+                "size": [fc_object.Length.Value / DIVIDER, fc_object.Width.Value / DIVIDER, fc_object.Height.Value / DIVIDER],
+            })
+        if fc_object.TypeId == FreeCADObjectType.SPHERE:
+            obj_formatter.update({
+                "radius": fc_object.Radius.Value / DIVIDER,
+            })
+        if fc_object.TypeId == FreeCADObjectType.CYLINDER:
+            obj_formatter.update({
+                "radius": fc_object.Radius.Value / DIVIDER,
+                "height": fc_object.Height.Value / DIVIDER
+            })
+
+        return self.get_template_text(template).format(**obj_formatter)
+
+    def get_fillbox_object_template(self, obj, fc_object) -> str:
+        ''' Builds a template for fillbox objects. '''
+        fill_limits, fill_point = None, None
+        for element in fc_object.OutList:
+            if "FillLimit" in element.Name:
+                fill_limits = element
+            if "FillPoint" in element.Name:
+                fill_point = element
+        if not fill_limits or not fill_point:
+            raise RuntimeError("Could not find fill limit and fill point inside a fillbox")
+
+        formatter = {
+            "label": fc_object.Label,
+            "mktype_template": (self.get_template_text(self.OBJECTS_MKBOUND_XML) if obj["type"] == ObjectType.BOUND else self.get_template_text(self.OBJECTS_MKFLUID_XML)).format(**obj),
+            "move_template": self.get_template_text(self.OBJECTS_MOVE_XML).format(**{
+                "vec": [fill_limits.Placement.Base.x / DIVIDER, fill_limits.Placement.Base.y / DIVIDER, fill_limits.Placement.Base.z / DIVIDER]
+            }) if fill_limits.Placement.Base.Length else "",
+            "rotation_template": self.get_template_text(self.OBJECTS_ROTATION_XML).format(**{
+                "ang": math.degrees(fill_limits.Placement.Rotation.Angle),
+                "vec": [-fill_limits.Placement.Rotation.Axis.x, -fill_limits.Placement.Rotation.Axis.y, -fill_limits.Placement.Rotation.Axis.z]
+            }) if fill_limits.Placement.Rotation.Angle else "",
+            "matrixreset_template": self.get_template_text(self.OBJECTS_MATRIXRESET_XML) if fill_limits.Placement.Rotation.Angle else "",
+            "pos": [
+                (fill_point.Placement.Base.x - fill_limits.Placement.Base.x) / DIVIDER,
+                (fill_point.Placement.Base.y - fill_limits.Placement.Base.y) / DIVIDER,
+                (fill_point.Placement.Base.z - fill_limits.Placement.Base.z) / DIVIDER
+            ],
+            "size": [
+                fill_limits.Length.Value / DIVIDER,
+                fill_limits.Width.Value / DIVIDER,
+                fill_limits.Height.Value / DIVIDER,
+            ]
+        }
+
+        return self.get_template_text(self.OBJECT_FILLBOX_XML).format(**formatter)
+
+    def get_complex_object_template(self, obj, fc_object) -> str:
+        ''' Builds a template for complex objects. '''
+        formatter = {
+            "label": fc_object.Label,
+            "mktype_template": (self.get_template_text(self.OBJECTS_MKBOUND_XML) if obj["type"] == ObjectType.BOUND else self.get_template_text(self.OBJECTS_MKFLUID_XML)).format(**obj),
+            "file": "{}.stl".format(fc_object.Name),
+            "autofill": "true" if obj["autofill"] else "false"
+        }
+
+        return self.get_template_text(self.OBJECT_COMPLEX_XML).format(**formatter)
+
+    def get_objects_template(self, data) -> str:
+        """ Renders the <mainlist> part for the GenCase XML. """
+        template = self.get_template_text(self.OBJECTS_XML)
+        object_xmls = []
+        for obj in data["objects"]:
+            if obj["type"] == ObjectType.SPECIAL:
+                continue
+            fc_object = FreeCAD.ActiveDocument.getObject(obj["name"])
+
+            if fc_object.TypeId in SUPPORTED_TYPES:
+                object_template: str = self.get_regular_objects_template(obj, fc_object)
+            elif "FillBox" in fc_object.Name:
+                object_template: str = self.get_fillbox_object_template(obj, fc_object)
+            else:
+                # Assuming this is a complex object that needs STL exporting.
+                object_template: str = self.get_complex_object_template(obj, fc_object)
+
+            object_xmls.append(object_template)
+
+        formatter = {"objects_each": LINE_END.join(object_xmls) if object_xmls else ""}
         return template.format(**formatter)
 
     def get_simulationdomain_template(self, data) -> str:
@@ -132,6 +258,7 @@ class XMLExporter():
         data = self.transform_bools_to_strs(data)
 
         data["definition_template"] = self.get_definition_template(data)
+        data["objects_template"] = self.get_objects_template(data)
         data["simulationdomain_template"] = self.get_simulationdomain_template(data)
         data["initials_template"] = self.get_initials_template(data)
         data["floatings_template"] = self.get_floatings_template(data)

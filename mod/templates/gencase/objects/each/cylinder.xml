@@ -1,0 +1,10 @@
+{move_template}
+{rotation_template}
+{mktype_template}
+                <setdrawmode mode="{obj[fillmode]}"/>
+                <drawcylinder radius="{radius}" objname="{label}">
+                    <point x="{pos[0]}" y="{pos[1]}" z="{pos[2]}" />
+                    <point x="0" y="0" z="{height}" />
+                </drawcylinder>
+                <shapeout file="" />
+{matrixreset_template}

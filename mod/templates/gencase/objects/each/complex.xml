@@ -1,0 +1,4 @@
+{mktype_template}
+                <drawfilestl file="{file}" objname="{label}" autofill="{autofill}">
+                    <drawscale x="0.001" y="0.001" z="0.001" />
+                </drawfilestl>
