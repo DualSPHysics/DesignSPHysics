@@ -274,10 +274,8 @@ class PropertiesDockWidget(QtGui.QDockWidget):
                           ObjectFillMode.FACE: 80,
                           ObjectFillMode.WIRE: 85}
 
-        try:
+        if hasattr(selectiongui, "Transparency"):
             selectiongui.Transparency = transparencies[simulation_object.fillmode]
-        except AttributeError:
-            print_exc()
 
     def on_initials_change(self):
         """ Initials configuration button behaviour. """
