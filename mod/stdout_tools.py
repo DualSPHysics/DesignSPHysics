@@ -3,7 +3,10 @@
 
 """ Standard output and error related tools. """
 
+from inspect import getframeinfo, stack
 from os import path
+
+import FreeCAD
 
 from mod.constants import VERBOSE, APP_NAME, DEBUGGING, DISK_DUMP_FILE_NAME
 
@@ -11,25 +14,29 @@ from mod.constants import VERBOSE, APP_NAME, DEBUGGING, DISK_DUMP_FILE_NAME
 def log(message):
     """ Prints a log in the default output."""
     if VERBOSE:
-        print("[" + APP_NAME + "]" + message)
+        caller = getframeinfo(stack()[1][0])
+        FreeCAD.Console.PrintMessage("[{}] {}:{} -> {}\n".format(APP_NAME, path.basename(caller.filename), caller.lineno, message))
 
 
 def warning(message):
     """ Prints a warning in the default output. """
     if VERBOSE:
-        print("[" + APP_NAME + "] " + "[WARNING]" + ": " + str(message))
+        caller = getframeinfo(stack()[1][0])
+        FreeCAD.Console.PrintWarning("[WARNING][{}] {}:{} -> {}\n".format(APP_NAME, path.basename(caller.filename), caller.lineno, message))
 
 
 def error(message):
     """ Prints an error in the default output."""
     if VERBOSE:
-        print("[" + APP_NAME + "] " + "[ERROR]" + ": " + str(message))
+        caller = getframeinfo(stack()[1][0])
+        FreeCAD.Console.PrintError("[ERROR][{}] {}:{} -> {}\n".format(APP_NAME, path.basename(caller.filename), caller.lineno, message))
 
 
 def debug(message):
     """ Prints a debug message in the default output"""
-    if DEBUGGING and VERBOSE:
-        print("[" + APP_NAME + "] " + "[<<<<DEBUG>>>>]" + ": " + str(message))
+    if DEBUGGING:
+        caller = getframeinfo(stack()[1][0])
+        FreeCAD.Console.PrintWarning("[DEBUG][{}] {}:{} -> {}\n".format(APP_NAME, path.basename(caller.filename), caller.lineno, message))
 
 
 def dump_to_disk(text):
@@ -43,6 +50,7 @@ def print_license():
     licpath = "{}{}".format(path.abspath(__file__).split("mod")[0], "LICENSE")
     if path.isfile(licpath) and VERBOSE:
         with open(licpath) as licfile:
-            print(licfile.read())
+            FreeCAD.Console.PrintMessage(licfile.read())
+            FreeCAD.Console.PrintMessage("\n\n")
     else:
         raise EnvironmentError("LICENSE file could not be found.")
