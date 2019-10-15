@@ -7,6 +7,7 @@ from traceback import print_exc
 from PySide import QtGui
 
 from mod.translation_tools import __
+from mod.stdout_tools import debug
 
 
 class VelocityTimesDialog(QtGui.QDialog):
@@ -47,11 +48,8 @@ class VelocityTimesDialog(QtGui.QDialog):
     def on_ok(self):
         self.velocity_times = list()
         for i in range(self.table.rowCount()):
-            value_to_insert = []
-            try:
-                value_to_insert = [float(self.table.item(i, 0).text()), float(self.table.item(i, 0).text())]
-            except:
-                print_exc()
-            if value_to_insert:
-                self.velocity_times.append(value_to_insert)
+            table_item_time: QtGui.QTableWidgetItem = self.table.item(i, 0)
+            table_item_value: QtGui.QTableWidgetItem = self.table.item(i, 1)
+            if table_item_time and table_item_value:
+                self.velocity_times.append([float(table_item_time.text()), float(table_item_value.text())])
         self.accept()

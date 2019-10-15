@@ -211,7 +211,7 @@ def save_case(save_name: str, case: "Case") -> None:
                     error("Unable to copy {} into {}".format(filename, save_name))
 
     # Copies files needed for RelaxationZones into the project folder and changes data paths to relative ones.
-    if isinstance(case.relaxation_zone, RelaxationZoneFile):
+    if isinstance(case.relaxation_zone, RelaxationZoneFile) and case.relaxation_zone.filesvel:
         # Need to copy the abc_x*_y*.csv file series to the out folder
         filename = case.relaxation_zone.filesvel
 

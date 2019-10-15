@@ -36,6 +36,14 @@ class XMLExporter():
     OBJECT_COMPLEX_XML = "/templates/gencase/objects/each/complex.xml"
     SIMULATIONDOMAIN_XML = "/templates/gencase/simulationdomain.xml"
     INITIALS_XML = "/templates/gencase/simulationdomain.xml"
+    RZONES_XML = "/templates/gencase/rzones/base.xml"
+    RZONE_REGULAR_XML = "/templates/gencase/rzones/regular.xml"
+    RZONE_IRREGULAR_XML = "/templates/gencase/rzones/irregular.xml"
+    RZONE_FILE_XML = "/templates/gencase/rzones/file.xml"
+    RZONE_UNIFORM_XML = "/templates/gencase/rzones/uniform.xml"
+    RZONE_UNIFORM_VELOCITY_XML = "/templates/gencase/rzones/uniform_velocity.xml"
+    RZONE_UNIFORM_VELOCITYTIMES_XML = "/templates/gencase/rzones/uniform_velocitytimes.xml"
+    RZONE_UNIFORM_VELOCITYTIMES_EACH_XML = "/templates/gencase/rzones/uniform_velocitytimes_each.xml"
     FLOATINGS_XML = "/templates/gencase/floatings/base.xml"
     FLOATINGS_EACH_XML = "/templates/gencase/floatings/each/base.xml"
     FLOATINGS_CENTER_XML = "/templates/gencase/floatings/each/center.xml"
@@ -217,6 +225,34 @@ class XMLExporter():
         initials = map(lambda y: template.format(**y["mkbasedproperties"]["initials"]), filter(lambda x: x["initials"] is not None, data["mkbasedproperties"].values()))
         return LINE_END.join(initials) if initials else ""
 
+    def get_velocity_times_template(self, times: list) -> str:
+        """ Renders the velocity times template for a uniform relaxation zone. """
+        timevalues = LINE_END.join(map(lambda tv: self.get_template_text(self.RZONE_UNIFORM_VELOCITYTIMES_EACH_XML).format(tv[0], tv[1]), times))
+        return self.get_template_text(self.RZONE_UNIFORM_VELOCITYTIMES_XML).format(each=timevalues)
+
+    def get_rzones_template(self, data, rz_type) -> str:
+        """ Renders the <relaxationzones> part for the GenCase XML. """
+        template = self.get_template_text(self.RZONES_XML)
+        rz_templates = {
+            "RelaxationZoneRegular": self.RZONE_REGULAR_XML,
+            "RelaxationZoneIrregular": self.RZONE_IRREGULAR_XML,
+            "RelaxationZoneFile": self.RZONE_FILE_XML,
+            "RelaxationZoneUniform": self.RZONE_UNIFORM_XML
+        }
+        rzone_formatter = {}
+
+        if rz_type == "RelaxationZoneUniform":
+            if data["relaxation_zone"]["use_velocity"] == "true":
+                rzone_formatter["rzuniform_velocity"] = self.get_template_text(self.RZONE_UNIFORM_VELOCITY_XML).format(data["relaxation_zone"]["velocity"])
+            else:
+                rzone_formatter["rzuniform_velocity"] = self.get_velocity_times_template(data["relaxation_zone"]["velocity_times"])
+
+        rzone_formatter.update(data["relaxation_zone"])
+        formatter = {
+            "rzone": self.get_template_text(rz_templates[rz_type]).format(**rzone_formatter)
+        }
+        return template.format(**formatter)
+
     def get_floatings_template(self, data) -> str:
         """ Renders the <floatings> part of the GenCase XML. """
         float_properties = list(filter(lambda x: x["float_property"] is not None, data["mkbasedproperties"].values()))
@@ -262,6 +298,7 @@ class XMLExporter():
         data["simulationdomain_template"] = self.get_simulationdomain_template(data)
         data["initials_template"] = self.get_initials_template(data)
         data["floatings_template"] = self.get_floatings_template(data)
+        data["rzones_template"] = self.get_rzones_template(data, type(case.relaxation_zone).__name__) if case.relaxation_zone else ""
         data["application"] = APP_NAME
         data["current_date"] = datetime.now().strftime("%d-%m-%Y %H:%M:%S")
         return data

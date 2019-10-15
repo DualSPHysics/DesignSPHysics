@@ -107,7 +107,7 @@ class SpecialOptionsSelectorDialog(QtGui.QDialog):
             return
 
         # Check if object is in the simulation
-        if Case.instance().is_object_in_simulation(selection.Name):
+        if not Case.instance().is_object_in_simulation(selection.Name):
             error_dialog(__("The selected object must be added to the simulation"))
             return
 

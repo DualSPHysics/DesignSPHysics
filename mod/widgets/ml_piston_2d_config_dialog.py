@@ -18,7 +18,7 @@ class MLPiston2DConfigDialog(QtGui.QDialog):
     def __init__(self, mk=None, mlpiston2d=None, parent=None):
         super(MLPiston2DConfigDialog, self).__init__(parent=parent)
         self.mk = mk
-        self.temp_mlpiston2d = mlpiston2d if mlpiston2d is not None else MLPiston2D()
+        self.temp_mlpiston2d = mlpiston2d if mlpiston2d else MLPiston2D()
         self.mlpiston2d = mlpiston2d
 
         self.main_layout = QtGui.QVBoxLayout()
@@ -121,7 +121,7 @@ class MLPiston2DConfigDialog(QtGui.QDialog):
         self.incz_input.setText(str(self.temp_mlpiston2d.incz))
         self.smooth_z.setText(str(self.temp_mlpiston2d.smoothz))
         self.smooth_y.setText(str(self.temp_mlpiston2d.smoothy))
-        if not self.temp_mlpiston2d.veldata:
+        if self.temp_mlpiston2d.veldata:
             self.veldata_files_label.setText(__("The serie has {} files").format(len(self.temp_mlpiston2d.veldata)))
             self.veldata_filevelx_input.setText(self.temp_mlpiston2d.veldata[0].filevelx.split("_x")[0])
             self.veldata_posy_input.setText(",".join([str(x.posy) for x in self.temp_mlpiston2d.veldata]))
