@@ -51,7 +51,7 @@ if document_count() > 0:
 delete_existing_docks()
 
 dualsphysics_dock = DesignSPHysicsDock(get_fc_main_window())
-properties_widget = PropertiesDockWidget(parent=self)
+properties_widget = PropertiesDockWidget(parent=get_fc_main_window())
 
 get_fc_main_window().addDockWidget(QtCore.Qt.RightDockWidgetArea, dualsphysics_dock)
 get_fc_main_window().addDockWidget(QtCore.Qt.LeftDockWidgetArea, properties_widget)
@@ -131,7 +131,8 @@ def selection_monitor():
             for name, damping_zone in Case.instance().damping_zones.items():
                 if FreeCAD.ActiveDocument:
                     damping_group = FreeCAD.ActiveDocument.getObject(name)
-                    damping_zone.overlimit = damping_group.OutList[1].Length.Value
+                    if len(damping_group.OutList) == 2:
+                        damping_zone.overlimit = damping_group.OutList[1].Length.Value
 
             time.sleep(0.5)
         except AttributeError:

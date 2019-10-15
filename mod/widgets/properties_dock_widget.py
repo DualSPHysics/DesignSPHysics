@@ -202,7 +202,7 @@ class PropertiesDockWidget(QtGui.QDockWidget):
 
     def on_damping_config(self):
         """ Configures the damping configuration for the selected object """
-        DampingConfigDialog(FreeCADGui.Selection.getSelection()[0].Name, parent=self)
+        DampingConfigDialog(FreeCADGui.Selection.getSelection()[0].Name, Case.instance(), parent=self)
 
     def on_mkgroup_change(self, value):
         """ Defines what happens when MKGroup is changed. """

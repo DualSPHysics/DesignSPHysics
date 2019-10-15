@@ -136,6 +136,10 @@ class Case():
             raise RuntimeError("The object that you are trying to remove ({}) is not present in the simulation")
         self.objects = list(filter(lambda obj: obj.name != object_name, self.objects))
 
+    def get_damping_zone(self, object_key: str) -> Damping:
+        """ Returns the Damping Zone bound to the object key passed as parameter. Returns None if it's not defined. """
+        return self.damping_zones.get(object_key, None)
+
     def add_damping_group(self, group_name: str) -> None:
         """ Adds a new freecad group/folder to a new Damping Zone. """
         self.damping_zones[group_name] = Damping()

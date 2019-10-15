@@ -10,9 +10,10 @@ class DampingConfigDialog(QtGui.QDialog):
     """Defines the setup window.
     Modifies data dictionary passed as parameter."""
 
-    def __init__(self, object_key, parent=None):
+    def __init__(self, object_key, case, parent=None):
         super(DampingConfigDialog, self).__init__(parent=parent)
 
+        self.case = case
         self.object_key = object_key
 
         # Creates a dialog and 2 main buttons
@@ -50,8 +51,8 @@ class DampingConfigDialog(QtGui.QDialog):
         self.overlimit_layout = QtGui.QHBoxLayout()
         self.overlimit_label = QtGui.QLabel("Overlimit (m): ")
         self.overlimit_input = QtGui.QLineEdit()
-        self.overlimit_layout.addwidget(self.overlimit_label)
-        self.overlimit_layout.addwidget(self.overlimit_input)
+        self.overlimit_layout.addWidget(self.overlimit_label)
+        self.overlimit_layout.addWidget(self.overlimit_input)
 
         self.redumax_layout = QtGui.QHBoxLayout()
         self.redumax_label = QtGui.QLabel("Redumax: ")
@@ -84,8 +85,8 @@ class DampingConfigDialog(QtGui.QDialog):
         self.redumax_input.textChanged.connect(self.on_value_change)
 
         # Fill fields with case data
-        self.enabled_checkbox.setChecked(self.data["damping"][object_key].enabled)
-        self.group = FreeCAD.ActiveDocument.getObject(object_key)
+        self.enabled_checkbox.setChecked(self.case.get_damping_zone(self.object_key).enabled)
+        self.group = FreeCAD.ActiveDocument.getObject(self.object_key)
         self.limitmin_input_x.setText(str(self.group.OutList[0].Start[0] / 1000))
         self.limitmin_input_y.setText(str(self.group.OutList[0].Start[1] / 1000))
         self.limitmin_input_z.setText(str(self.group.OutList[0].Start[2] / 1000))
@@ -93,18 +94,17 @@ class DampingConfigDialog(QtGui.QDialog):
         self.limitmax_input_y.setText(str(self.group.OutList[0].End[1] / 1000))
         self.limitmax_input_z.setText(str(self.group.OutList[0].End[2] / 1000))
         self.overlimit_input.setText(str(self.group.OutList[1].Length.Value / 1000))
-        self.redumax_input.setText(str(self.data["damping"][self.object_key].redumax))
-        self.redumax_input.setText(str(self.data["damping"][self.object_key].redumax))
-        self.on_enable_chk(
-            QtCore.Qt.Checked if self.data["damping"][self.object_key].enabled else QtCore.Qt.Unchecked)
+        self.redumax_input.setText(str(self.case.get_damping_zone(self.object_key).redumax))
+        self.redumax_input.setText(str(self.case.get_damping_zone(self.object_key).redumax))
+        self.on_enable_chk(QtCore.Qt.Checked if self.case.get_damping_zone(self.object_key).enabled else QtCore.Qt.Unchecked)
 
         self.exec_()
 
     # Window logic
     def on_ok(self):
-        self.data["damping"][self.object_key].enabled = self.enabled_checkbox.isChecked()
-        self.data["damping"][self.object_key].overlimit = float(self.overlimit_input.text())
-        self.data["damping"][self.object_key].redumax = float(self.redumax_input.text())
+        self.case.get_damping_zone(self.object_key).enabled = self.enabled_checkbox.isChecked()
+        self.case.get_damping_zone(self.object_key).overlimit = float(self.overlimit_input.text())
+        self.case.get_damping_zone(self.object_key).redumax = float(self.redumax_input.text())
         damping_group = FreeCAD.ActiveDocument.getObject(self.object_key)
         damping_group.OutList[0].Start = (float(self.limitmin_input_x.text()) * 1000,
                                           float(self.limitmin_input_y.text()) * 1000,
@@ -116,7 +116,7 @@ class DampingConfigDialog(QtGui.QDialog):
 
         overlimit_vector = FreeCAD.Vector(*damping_group.OutList[0].End) - FreeCAD.Vector(*damping_group.OutList[0].Start)
         overlimit_vector.normalize()
-        overlimit_vector = overlimit_vector * self.data["damping"][self.object_key].overlimit
+        overlimit_vector = overlimit_vector * self.case.get_damping_zone(self.object_key).overlimit
         overlimit_vector = overlimit_vector + FreeCAD.Vector(*damping_group.OutList[0].End)
 
         damping_group.OutList[1].End = (overlimit_vector.x, overlimit_vector.y, overlimit_vector.z)

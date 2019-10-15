@@ -84,7 +84,7 @@ class SpecialOptionsSelectorDialog(QtGui.QDialog):
         """ Defines damping button behaviour"""
         damping_group_name = setup_damping_environment()
         Case.instance().add_damping_group(damping_group_name)
-        DampingConfigDialog(damping_group_name, parent=self)
+        DampingConfigDialog(damping_group_name, Case.instance(), parent=self)
         self.accept()
 
     def on_inlet_option(self):
