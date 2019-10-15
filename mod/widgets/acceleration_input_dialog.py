@@ -15,8 +15,8 @@ class AccelerationInputDialog(QtGui.QDialog):
     its details when clicked.
     Returns: AccelerationInput object"""
 
-    def __init__(self, accinput):
-        super(AccelerationInputDialog, self).__init__()
+    def __init__(self, accinput, parent=None):
+        super(AccelerationInputDialog, self).__init__(parent=parent)
         self.accinput = accinput
         self.setWindowTitle(__("Acceleration Input List"))
 

@@ -15,14 +15,14 @@ class RegularFlapWaveMotionTimeline(QtGui.QWidget):
     """ A Regular Flap Wave motion graphical representation for a table-based timeline """
     changed = QtCore.Signal(int, RegularFlapWaveGen)
 
-    def __init__(self, reg_wave_gen):
+    def __init__(self, reg_wave_gen, parent=None):
         if not isinstance(reg_wave_gen, RegularFlapWaveGen):
             raise TypeError("You tried to spawn a regular flap wave generator "
                             "motion widget in the timeline with a wrong object")
         if reg_wave_gen is None:
             raise TypeError("You tried to spawn a regular flap wave generator "
                             "motion widget in the timeline without a motion object")
-        super(RegularFlapWaveMotionTimeline, self).__init__()
+        super(RegularFlapWaveMotionTimeline, self).__init__(parent=parent)
 
         self.main_layout = QtGui.QVBoxLayout()
         self.main_layout.setContentsMargins(10, 10, 10, 10)

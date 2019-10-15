@@ -17,8 +17,8 @@ from mod.widgets.object_order_widget import ObjectOrderWidget
 class DockObjectListTableWidget(QtGui.QWidget):
     """ Object List Table Widget. """
 
-    def __init__(self):
-        super().__init__()
+    def __init__(self, parent=None):
+        super().__init__(parent=parent)
 
         self.setObjectName("DSPH Objects")
         self.objectlist_layout = QtGui.QVBoxLayout()

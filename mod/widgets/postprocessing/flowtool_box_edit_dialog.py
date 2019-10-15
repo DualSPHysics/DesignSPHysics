@@ -15,8 +15,8 @@ from mod.dataobjects.flow_tool_box import FlowToolBox
 class FlowToolBoxEditDialog(QtGui.QDialog):
     """ DesignSPHysics FlowTool Box Edit Dialog. """
 
-    def __init__(self, box_id):
-        super().__init__()
+    def __init__(self, box_id, parent=None):
+        super().__init__(parent=parent)
 
         self.box_id = box_id
 

@@ -12,8 +12,8 @@ from mod.dataobjects.case import Case
 class MeasureToolPointsDialog(QtGui.QDialog):
     """ DesignSPHysics ComputeForces Points configuration Dialog. """
 
-    def __init__(self):
-        super().__init__()
+    def __init__(self, parent=None):
+        super().__init__(parent=parent)
         measurepoints_tool_dialog = QtGui.QDialog()
         measurepoints_tool_dialog.setModal(False)
         measurepoints_tool_dialog.setWindowTitle(__("MeasureTool Points"))

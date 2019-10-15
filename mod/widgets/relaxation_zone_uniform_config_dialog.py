@@ -12,12 +12,12 @@ from mod.dataobjects.relaxation_zone_uniform import RelaxationZoneUniform
 
 
 class RelaxationZoneUniformConfigDialog(QtGui.QDialog):
-    def __init__(self, relaxationzone=None):
-        super(RelaxationZoneUniformConfigDialog, self).__init__()
+    def __init__(self, relaxationzone=None, parent=None):
+        super(RelaxationZoneUniformConfigDialog, self).__init__(parent=parent)
         self.temp_relaxationzone = relaxationzone if relaxationzone is not None else RelaxationZoneUniform()
         self.relaxationzone = relaxationzone
         self.velocity_times = list()
-        self.velocity_times_dialog = VelocityTimesDialog(self.temp_relaxationzone)
+        self.velocity_times_dialog = VelocityTimesDialog(self.temp_relaxationzone, parent=self)
 
         self.main_layout = QtGui.QVBoxLayout()
         self.data_layout = QtGui.QVBoxLayout()

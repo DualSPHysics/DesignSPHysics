@@ -20,14 +20,14 @@ class RegularPistonWaveMotionTimeline(QtGui.QWidget):
 
     changed = QtCore.Signal(int, RegularPistonWaveGen)
 
-    def __init__(self, reg_wave_gen):
+    def __init__(self, reg_wave_gen, parent=None):
         if not isinstance(reg_wave_gen, RegularPistonWaveGen):
             raise TypeError("You tried to spawn a regular wave generator "
                             "motion widget in the timeline with a wrong object")
         if reg_wave_gen is None:
             raise TypeError("You tried to spawn a regular wave generator "
                             "motion widget in the timeline without a motion object")
-        super(RegularPistonWaveMotionTimeline, self).__init__()
+        super(RegularPistonWaveMotionTimeline, self).__init__(parent=parent)
 
         self.main_layout = QtGui.QVBoxLayout()
         self.main_layout.setContentsMargins(10, 10, 10, 10)

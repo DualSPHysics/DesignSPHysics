@@ -54,8 +54,8 @@ from mod.widgets.motion.wave_movement_actions import WaveMovementActions
 class MovementDialog(QtGui.QDialog):
     """ Defines a window with motion  """
 
-    def __init__(self):
-        super(MovementDialog, self).__init__()
+    def __init__(self, parent=None):
+        super(MovementDialog, self).__init__(parent=parent)
 
         self.setMinimumSize(1400, 650)
         self.setWindowTitle(__("Motion configuration"))
@@ -393,23 +393,23 @@ class MovementDialog(QtGui.QDialog):
             current_row = 0
             for motion in target_movement.motion_list:
                 if isinstance(motion, RectMotion):
-                    target_to_put = RectilinearMotionTimeline(current_row, motion)
+                    target_to_put = RectilinearMotionTimeline(current_row, motion, parent=self)
                 elif isinstance(motion, WaitMotion):
-                    target_to_put = WaitMotionTimeline(current_row, motion)
+                    target_to_put = WaitMotionTimeline(current_row, motion, parent=self)
                 elif isinstance(motion, AccRectMotion):
-                    target_to_put = AccRectilinearMotionTimeline(current_row, motion)
+                    target_to_put = AccRectilinearMotionTimeline(current_row, motion, parent=self)
                 elif isinstance(motion, RotMotion):
-                    target_to_put = RotationalMotionTimeline(current_row, motion)
+                    target_to_put = RotationalMotionTimeline(current_row, motion, parent=self)
                 elif isinstance(motion, AccRotMotion):
-                    target_to_put = AccRotationalMotionTimeline(current_row, motion)
+                    target_to_put = AccRotationalMotionTimeline(current_row, motion, parent=self)
                 elif isinstance(motion, AccCirMotion):
-                    target_to_put = AccCircularMotionTimeline(current_row, motion)
+                    target_to_put = AccCircularMotionTimeline(current_row, motion, parent=self)
                 elif isinstance(motion, RotSinuMotion):
-                    target_to_put = RotSinuMotionTimeline(current_row, motion)
+                    target_to_put = RotSinuMotionTimeline(current_row, motion, parent=self)
                 elif isinstance(motion, CirSinuMotion):
-                    target_to_put = CirSinuMotionTimeline(current_row, motion)
+                    target_to_put = CirSinuMotionTimeline(current_row, motion, parent=self)
                 elif isinstance(motion, RectSinuMotion):
-                    target_to_put = RectSinuMotionTimeline(current_row, motion)
+                    target_to_put = RectSinuMotionTimeline(current_row, motion, parent=self)
                 else:
                     raise NotImplementedError("The type of movement: {} is not implemented.".format(
                         str(motion.__class__.__name__)))
@@ -432,17 +432,17 @@ class MovementDialog(QtGui.QDialog):
             self.actions_groupbox_table.setEnabled(False)
 
             if isinstance(target_movement.generator, RegularPistonWaveGen):
-                target_to_put = RegularPistonWaveMotionTimeline(target_movement.generator)
+                target_to_put = RegularPistonWaveMotionTimeline(target_movement.generator, parent=self)
             elif isinstance(target_movement.generator, IrregularPistonWaveGen):
-                target_to_put = IrregularPistonWaveMotionTimeline(target_movement.generator)
+                target_to_put = IrregularPistonWaveMotionTimeline(target_movement.generator, parent=self)
             if isinstance(target_movement.generator, RegularFlapWaveGen):
-                target_to_put = RegularFlapWaveMotionTimeline(target_movement.generator)
+                target_to_put = RegularFlapWaveMotionTimeline(target_movement.generator, parent=self)
             elif isinstance(target_movement.generator, IrregularFlapWaveGen):
-                target_to_put = IrregularFlapWaveMotionTimeline(target_movement.generator)
+                target_to_put = IrregularFlapWaveMotionTimeline(target_movement.generator, parent=self)
             elif isinstance(target_movement.generator, FileGen):
-                target_to_put = FileMotionTimeline(target_movement.generator, Case.instance().path)
+                target_to_put = FileMotionTimeline(target_movement.generator, Case.instance().path, parent=self)
             elif isinstance(target_movement.generator, RotationFileGen):
-                target_to_put = RotationFileMotionTimeline(target_movement.generator, Case.instance().path)
+                target_to_put = RotationFileMotionTimeline(target_movement.generator, Case.instance().path, parent=self)
 
             target_to_put.changed.connect(self.on_timeline_item_change)
             self.timeline_list_table.setCellWidget(0, 0, target_to_put)
@@ -459,10 +459,10 @@ class MovementDialog(QtGui.QDialog):
             except AttributeError:
                 has_loop = False
             if isinstance(movement, Movement):
-                movement_actions = MovementActions(current_row, movement in self.movements_selected, has_loop)
+                movement_actions = MovementActions(current_row, movement in self.movements_selected, has_loop, parent=self)
                 movement_actions.loop.connect(self.on_loop_movement)
             elif isinstance(movement, SpecialMovement):
-                movement_actions = WaveMovementActions(current_row, movement in self.movements_selected)
+                movement_actions = WaveMovementActions(current_row, movement in self.movements_selected, parent=self)
 
             movement_actions.delete.connect(self.on_delete_movement)
             movement_actions.use.connect(self.on_check_movement)

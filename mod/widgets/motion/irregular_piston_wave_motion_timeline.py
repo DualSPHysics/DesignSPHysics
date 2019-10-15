@@ -19,14 +19,14 @@ class IrregularPistonWaveMotionTimeline(QtGui.QWidget):
     """ An Irregular Wave motion graphical representation for a table-based timeline """
     changed = QtCore.Signal(int, IrregularPistonWaveGen)
 
-    def __init__(self, irreg_wave_gen):
+    def __init__(self, irreg_wave_gen, parent=None):
         if not isinstance(irreg_wave_gen, IrregularPistonWaveGen):
             raise TypeError("You tried to spawn an irregular wave generator "
                             "motion widget in the timeline with a wrong object")
         if irreg_wave_gen is None:
             raise TypeError("You tried to spawn an irregular wave generator "
                             "motion widget in the timeline without a motion object")
-        super(IrregularPistonWaveMotionTimeline, self).__init__()
+        super(IrregularPistonWaveMotionTimeline, self).__init__(parent=parent)
 
         self.main_layout = QtGui.QVBoxLayout()
         self.main_layout.setContentsMargins(10, 10, 10, 10)

@@ -16,8 +16,8 @@ class AddGEODialog(QtGui.QDialog):
 
     IS_DIALOG_MODAL: bool = True
 
-    def __init__(self, file_name):
-        super().__init__()
+    def __init__(self, file_name, parent=None):
+        super().__init__(parent=parent)
 
         # Defines import stl dialog
         self.setModal(self.IS_DIALOG_MODAL)

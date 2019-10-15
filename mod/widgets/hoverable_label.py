@@ -10,8 +10,8 @@ class HoverableLabel(QtGui.QLabel):
 
     hover = QtCore.Signal(str)
 
-    def __init__(self, text):
-        super().__init__(text)
+    def __init__(self, text, parent=None):
+        super().__init__(text, parent=parent)
         self.help_text = ""
 
     def set_help_text(self, help_text):

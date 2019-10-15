@@ -19,14 +19,14 @@ class AccCircularMotionTimeline(QtGui.QWidget):
     order_up = QtCore.Signal(int)
     order_down = QtCore.Signal(int)
 
-    def __init__(self, index, acc_cir_motion):
+    def __init__(self, index, acc_cir_motion, parent=None):
         if not isinstance(acc_cir_motion, AccCirMotion):
             raise TypeError("You tried to spawn an accelerated circular "
                             "motion widget in the timeline with a wrong object")
         if acc_cir_motion is None:
             raise TypeError("You tried to spawn an accelerated circular "
                             "motion widget in the timeline without a motion object")
-        super(AccCircularMotionTimeline, self).__init__()
+        super(AccCircularMotionTimeline, self).__init__(parent=parent)
 
         self.index = index
         self.main_layout = QtGui.QHBoxLayout()

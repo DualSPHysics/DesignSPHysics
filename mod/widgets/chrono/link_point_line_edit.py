@@ -12,8 +12,8 @@ from mod.dataobjects.case import Case
 class LinkPointlineEdit(QtGui.QDialog):
     """ Defines Link pontline window dialog """
 
-    def __init__(self, link_pointline_id):
-        super(LinkPointlineEdit, self).__init__()
+    def __init__(self, link_pointline_id, parent=None):
+        super(LinkPointlineEdit, self).__init__(parent=parent)
 
         self.link_pointline_id = link_pointline_id
 

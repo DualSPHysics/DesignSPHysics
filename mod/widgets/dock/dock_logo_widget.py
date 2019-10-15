@@ -15,9 +15,9 @@ from mod.enums import HelpURL
 class DockLogoWidget(QtGui.QWidget):
     """DesignSPHysics Dock Logo/Help Widget. """
 
-    def __init__(self):
-        super().__init__()
-        
+    def __init__(self, parent=None):
+        super().__init__(parent=parent)
+
         self.main_layout = QtGui.QHBoxLayout()
         self.main_layout.setSpacing(0)
         self.main_layout.setContentsMargins(0, 0, 0, 0)

@@ -34,8 +34,8 @@ class PropertiesDockWidget(QtGui.QDockWidget):
 
     need_refresh = QtCore.Signal()
 
-    def __init__(self):
-        super().__init__()
+    def __init__(self, parent=None):
+        super().__init__(parent=parent)
 
         self.setObjectName(PROP_WIDGET_INTERNAL_NAME)
         self.setWindowTitle(__("DSPH Object Properties"))
@@ -202,7 +202,7 @@ class PropertiesDockWidget(QtGui.QDockWidget):
 
     def on_damping_config(self):
         """ Configures the damping configuration for the selected object """
-        DampingConfigDialog(FreeCADGui.Selection.getSelection()[0].Name)
+        DampingConfigDialog(FreeCADGui.Selection.getSelection()[0].Name, parent=self)
 
     def on_mkgroup_change(self, value):
         """ Defines what happens when MKGroup is changed. """
@@ -279,19 +279,19 @@ class PropertiesDockWidget(QtGui.QDockWidget):
 
     def on_initials_change(self):
         """ Initials configuration button behaviour. """
-        InitialsDialog()
+        InitialsDialog(parent=self)
 
     def on_motion_change(self):
         """ Movement configuration button behaviour. """
-        MovementDialog()
+        MovementDialog(parent=self)
 
     def on_floatstate_change(self):
         """ Float configuration button behaviour. """
-        FloatStateDialog()
+        FloatStateDialog(parent=self)
 
     def on_faces_clicked(self):
         """ Faces configuration button behaviour. """
-        FacesDialog(FreeCADGui.Selection.getSelection()[0].Name)
+        FacesDialog(FreeCADGui.Selection.getSelection()[0].Name, self)
 
     def update_faces_property(self, selection):
         """ Deletes information about faces if the new fill mode does not support it. """

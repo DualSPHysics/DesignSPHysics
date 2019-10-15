@@ -10,6 +10,7 @@ from mod.stdout_tools import debug
 
 from mod.dataobjects.motion.acc_rect_motion import AccRectMotion
 
+
 class AccRectilinearMotionTimeline(QtGui.QWidget):
     """ An accelerated rectilinear motion graphical representation for a table-based timeline """
 
@@ -18,14 +19,14 @@ class AccRectilinearMotionTimeline(QtGui.QWidget):
     order_up = QtCore.Signal(int)
     order_down = QtCore.Signal(int)
 
-    def __init__(self, index, acc_rect_motion):
+    def __init__(self, index, acc_rect_motion, parent=None):
         if not isinstance(acc_rect_motion, AccRectMotion):
             raise TypeError("You tried to spawn an accelerated rectilinear "
                             "motion widget in the timeline with a wrong object")
         if acc_rect_motion is None:
             raise TypeError("You tried to spawn an accelerated rectilinear "
                             "motion widget in the timeline without a motion object")
-        super(AccRectilinearMotionTimeline, self).__init__()
+        super(AccRectilinearMotionTimeline, self).__init__(parent=parent)
 
         self.index = index
         self.setMinimumHeight(50)

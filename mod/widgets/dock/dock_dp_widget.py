@@ -12,8 +12,8 @@ from mod.dataobjects.case import Case
 class DockDPWidget(QtGui.QWidget):
     """ DesignSPHysics Dock DP Intro widget. """
 
-    def __init__(self):
-        super().__init__()
+    def __init__(self, parent=None):
+        super().__init__(parent=parent)
 
         self.main_layout = QtGui.QHBoxLayout()
         self.main_layout.setContentsMargins(0, 0, 0, 0)

@@ -23,7 +23,7 @@ def partvtk_export(options, case, post_processing_widget) -> None:
 
     exported_parts: int = get_total_exported_parts_from_disk(case.get_out_folder_path())
 
-    export_dialog = ExportProgressDialog(0, exported_parts)
+    export_dialog = ExportProgressDialog(0, exported_parts, parent=get_fc_main_window())
     export_dialog.show()
 
     case.info.current_output = ""
@@ -79,7 +79,7 @@ def floatinginfo_export(options, case, post_processing_widget) -> None:
 
     exported_parts: int = get_total_exported_parts_from_disk(case.get_out_folder_path())
 
-    export_dialog = ExportProgressDialog(0, exported_parts)
+    export_dialog = ExportProgressDialog(0, exported_parts, parent=get_fc_main_window())
     export_dialog.show()
 
     case.info.current_output = ""
@@ -133,7 +133,7 @@ def computeforces_export(options, case, post_processing_widget) -> None:
 
     exported_parts: int = get_total_exported_parts_from_disk(case.get_out_folder_path())
 
-    export_dialog = ExportProgressDialog(0, exported_parts)
+    export_dialog = ExportProgressDialog(0, exported_parts, parent=get_fc_main_window())
     export_dialog.show()
 
     case.info.current_output = ""
@@ -186,7 +186,7 @@ def measuretool_export(options, case, post_processing_widget) -> None:
     save_flag: str = {0: "-savevtk", 1: "-savecsv", 2: "-saveascii"}[options["save_mode"]]
     exported_parts: int = get_total_exported_parts_from_disk(case.get_out_folder_path())
 
-    export_dialog = ExportProgressDialog(0, exported_parts)
+    export_dialog = ExportProgressDialog(0, exported_parts, parent=get_fc_main_window())
     export_dialog.show()
 
     case.info.current_output = ""
@@ -239,7 +239,7 @@ def isosurface_export(options, case, post_processing_widget) -> None:
     post_processing_widget.adapt_to_export_start()
 
     exported_parts: int = get_total_exported_parts_from_disk(case.get_out_folder_path())
-    export_dialog = ExportProgressDialog(0, exported_parts)
+    export_dialog = ExportProgressDialog(0, exported_parts, parent=get_fc_main_window())
     export_dialog.show()
 
     case.info.current_output = ""
@@ -291,7 +291,7 @@ def flowtool_export(options, case, post_processing_widget) -> None:
     post_processing_widget.adapt_to_export_start()
 
     exported_parts: int = get_total_exported_parts_from_disk(case.get_out_folder_path())
-    export_dialog = ExportProgressDialog(0, exported_parts)
+    export_dialog = ExportProgressDialog(0, exported_parts, parent=get_fc_main_window())
     export_dialog.show()
 
     case.info.current_output = ""

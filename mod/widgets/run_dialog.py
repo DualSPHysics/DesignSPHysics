@@ -17,8 +17,8 @@ class RunDialog(QtGui.QDialog):
 
     cancelled = QtCore.Signal()
 
-    def __init__(self, case_name: str, processor: str, number_of_particles: int):
-        super(RunDialog, self).__init__()
+    def __init__(self, case_name: str, processor: str, number_of_particles: int, parent=None):
+        super(RunDialog, self).__init__(parent=parent)
 
         self.run_watcher = QtCore.QFileSystemWatcher()
         # Title and size

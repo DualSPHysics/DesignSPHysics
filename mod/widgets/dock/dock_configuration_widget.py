@@ -14,8 +14,8 @@ from mod.widgets.execution_parameters_dialog import ExecutionParametersDialog
 class DockConfigurationWidget(QtGui.QWidget):
     """DesignSPHysics Dock Configuration Widget. """
 
-    def __init__(self):
-        super().__init__()
+    def __init__(self, parent=None):
+        super().__init__(parent=parent)
 
         self.main_layout = QtGui.QVBoxLayout()
         self.main_layout.setContentsMargins(0, 0, 0, 0)
@@ -49,15 +49,15 @@ class DockConfigurationWidget(QtGui.QWidget):
 
     def on_constants_button_pressed(self):
         """ Opens constant definition window on button click. """
-        ConstantsDialog()
+        ConstantsDialog(parent=self)
 
     def on_setup_button_pressed(self):
         """ Opens constant definition window on button click. """
-        SetupPluginDialog()
+        SetupPluginDialog(parent=self)
 
     def on_execparams_button_presed(self):
         """ Opens a dialog to tweak the simulation's execution parameters """
-        ExecutionParametersDialog()
+        ExecutionParametersDialog(parent=self)
 
     def adapt_to_no_case(self):
         """ Adapts the contents of the widget to an environment with no opened case. """

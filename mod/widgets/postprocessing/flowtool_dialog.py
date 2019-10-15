@@ -13,11 +13,12 @@ from mod.dataobjects.flow_tool_box import FlowToolBox
 
 from mod.widgets.postprocessing.flowtool_box_edit_dialog import FlowToolBoxEditDialog
 
+
 class FlowToolDialog(QtGui.QDialog):
     """ DesignSPHysics FlowTool Config and Execution Dialog. """
 
-    def __init__(self, post_processing_widget):
-        super().__init__()
+    def __init__(self, post_processing_widget, parent=None):
+        super().__init__(parent=parent)
 
         self.post_processing_widget = post_processing_widget
 
@@ -83,7 +84,7 @@ class FlowToolDialog(QtGui.QDialog):
 
     def box_edit(self, box_id):
         """ Box edit button behaviour. Opens a dialog to edit the selected FlowTool Box"""
-        FlowToolBoxEditDialog(box_id)
+        FlowToolBoxEditDialog(box_id, parent=self)
         self.refresh_boxlist()
 
     def box_delete(self, box_id):

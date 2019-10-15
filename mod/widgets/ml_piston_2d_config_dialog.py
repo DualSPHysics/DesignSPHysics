@@ -15,8 +15,8 @@ from mod.dataobjects.ml_piston_2d_veldata import MLPiston2DVeldata
 
 
 class MLPiston2DConfigDialog(QtGui.QDialog):
-    def __init__(self, mk=None, mlpiston2d=None):
-        super(MLPiston2DConfigDialog, self).__init__()
+    def __init__(self, mk=None, mlpiston2d=None, parent=None):
+        super(MLPiston2DConfigDialog, self).__init__(parent=parent)
         self.mk = mk
         self.temp_mlpiston2d = mlpiston2d if mlpiston2d is not None else MLPiston2D()
         self.mlpiston2d = mlpiston2d

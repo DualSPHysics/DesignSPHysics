@@ -13,8 +13,8 @@ from mod.dataobjects.case import Case
 class RunAdditionalParametersDialog(QtGui.QDialog):
     """ A Dialog to introduce text parameters used as additional configuration for running a case simulation. """
 
-    def __init__(self):
-        super().__init__()
+    def __init__(self, parent=None):
+        super().__init__(parent=parent)
 
         self.additional_parameters_window = QtGui.QDialog()
         self.additional_parameters_window.setWindowTitle(__("Additional parameters"))

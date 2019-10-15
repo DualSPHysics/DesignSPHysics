@@ -27,8 +27,8 @@ class ExecutionParametersDialog(QtGui.QDialog):
     """Defines the execution parameters window.
     Modifies the data dictionary passed as parameter."""
 
-    def __init__(self):
-        super(ExecutionParametersDialog, self).__init__()
+    def __init__(self, parent=None):
+        super(ExecutionParametersDialog, self).__init__(parent=parent)
 
         # Creates a dialog and 2 main buttons
         self.setWindowTitle("DSPH Execution Parameters")

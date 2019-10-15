@@ -15,12 +15,13 @@ from mod.dataobjects.case import Case
 from mod.dataobjects.inletoutlet.inlet_outlet_config import InletOutletConfig
 from mod.dataobjects.inletoutlet.inlet_outlet_zone import InletOutletZone
 
+
 class InletConfigDialog(QtGui.QDialog):
     """ Defines the Inlet/Outlet dialog window.
        Modifies data dictionary passed as parameter. """
 
-    def __init__(self):
-        super(InletConfigDialog, self).__init__()
+    def __init__(self, parent=None):
+        super(InletConfigDialog, self).__init__(parent=parent)
 
         # Creates a dialog
         self.setWindowTitle("Inlet/Outlet configuration")
@@ -204,7 +205,7 @@ class InletConfigDialog(QtGui.QDialog):
 
     def zone_edit(self, io):
         """ Calls a window for edit zones """
-        InletZoneEdit(io)
+        InletZoneEdit(io, parent=self)
         self.refresh_zones()
 
     def on_cancel(self):

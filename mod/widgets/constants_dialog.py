@@ -21,8 +21,8 @@ class ConstantsDialog(QtGui.QDialog):
     """ A window to define and configure the constants of the case for later execution
         in the DualSPHysics simulator. """
 
-    def __init__(self):
-        super(ConstantsDialog, self).__init__()
+    def __init__(self, parent=None):
+        super(ConstantsDialog, self).__init__(parent=parent)
 
         self.setWindowTitle("DSPH Constant definition")
         self.help_window = QtGui.QTextEdit()

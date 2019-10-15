@@ -13,8 +13,8 @@ from mod.dataobjects.case import Case
 class LinkHingeEdit(QtGui.QDialog):
     """ Defines Link hinge window dialog """
 
-    def __init__(self, link_hinge_id):
-        super(LinkHingeEdit, self).__init__()
+    def __init__(self, link_hinge_id, parent=None):
+        super(LinkHingeEdit, self).__init__(parent=parent)
 
         self.link_hinge_id = link_hinge_id
 
@@ -145,11 +145,11 @@ class LinkHingeEdit(QtGui.QDialog):
                 Case.instance().chrono.link_hinge[count].idbody1 = str(self.body_one_line_edit.currentText())
                 Case.instance().chrono.link_hinge[count].idbody2 = str(self.body_two_line_edit.currentText())
                 Case.instance().chrono.link_hinge[count].rotpoint = [float(self.rotpoints_x_line_edit.text()),
-                                                               float(self.rotpoints_y_line_edit.text()),
-                                                               float(self.rotpoints_z_line_edit.text())]
+                                                                     float(self.rotpoints_y_line_edit.text()),
+                                                                     float(self.rotpoints_z_line_edit.text())]
                 Case.instance().chrono.link_hinge[count].rotvector = [float(self.rotvector_x_line_edit.text()),
-                                                               float(self.rotvector_y_line_edit.text()),
-                                                               float(self.rotvector_z_line_edit.text())]
+                                                                      float(self.rotvector_y_line_edit.text()),
+                                                                      float(self.rotvector_z_line_edit.text())]
                 Case.instance().chrono.link_hinge[count].stiffness = float(self.stiffness_line_edit.text())
                 Case.instance().chrono.link_hinge[count].damping = float(self.damping_line_edit.text())
 

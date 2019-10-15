@@ -10,6 +10,7 @@ from mod.stdout_tools import debug
 
 from mod.dataobjects.motion.acc_rot_motion import AccRotMotion
 
+
 class AccRotationalMotionTimeline(QtGui.QWidget):
     """ An accelerated rotational motion graphical representation for a table-based timeline """
 
@@ -18,14 +19,14 @@ class AccRotationalMotionTimeline(QtGui.QWidget):
     order_up = QtCore.Signal(int)
     order_down = QtCore.Signal(int)
 
-    def __init__(self, index, acc_rot_motion):
+    def __init__(self, index, acc_rot_motion, parent=None):
         if not isinstance(acc_rot_motion, AccRotMotion):
             raise TypeError("You tried to spawn an accelerated rotational "
                             "motion widget in the timeline with a wrong object")
         if acc_rot_motion is None:
             raise TypeError("You tried to spawn an accelerated rotational "
                             "motion widget in the timeline without a motion object")
-        super(AccRotationalMotionTimeline, self).__init__()
+        super(AccRotationalMotionTimeline, self).__init__(parent=parent)
 
         self.index = index
         self.main_layout = QtGui.QHBoxLayout()

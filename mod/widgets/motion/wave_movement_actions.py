@@ -13,15 +13,15 @@ class WaveMovementActions(QtGui.QWidget):
     delete = QtCore.Signal(int)
     use = QtCore.Signal(int, bool)
 
-    def __init__(self, index, use_checked):
-        super(WaveMovementActions, self).__init__()
+    def __init__(self, index, use_checked, parent=None):
+        super(WaveMovementActions, self).__init__(parent=parent)
         self.index = index
         self.use_checkbox = QtGui.QCheckBox(__("Use"))
         self.use_checkbox.setChecked(use_checked)
         self.use_checkbox.stateChanged.connect(self.on_use)
         self.delete_button = QtGui.QPushButton(get_icon("trash.png"), None)
         self.delete_button.clicked.connect(self.on_delete)
-        
+
         self.main_layout = QtGui.QHBoxLayout()
         self.main_layout.setContentsMargins(10, 0, 10, 0)
         self.main_layout.addWidget(self.use_checkbox)

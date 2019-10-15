@@ -9,11 +9,12 @@ from mod.post_processing_tools import floatinginfo_export
 
 from mod.dataobjects.case import Case
 
+
 class FloatingInfoDialog(QtGui.QDialog):
     """ FloatingInfo configuration and execution Dialog. """
 
-    def __init__(self, post_processing_widget):
-        super().__init__()
+    def __init__(self, post_processing_widget, parent=None):
+        super().__init__(parent=parent)
 
         self.post_processing_widget = post_processing_widget
 

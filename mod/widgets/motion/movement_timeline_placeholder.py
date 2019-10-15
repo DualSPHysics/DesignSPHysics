@@ -6,12 +6,13 @@ from PySide import QtGui
 
 from mod.translation_tools import __
 
+
 class MovementTimelinePlaceholder(QtGui.QWidget):
     """ A placeholder for the movement timeline table. """
 
-    def __init__(self):
-        super(MovementTimelinePlaceholder, self).__init__()
-        
+    def __init__(self, parent=None):
+        super(MovementTimelinePlaceholder, self).__init__(parent=parent)
+
         self.main_layout = QtGui.QVBoxLayout()
         self.main_layout.setContentsMargins(0, 0, 0, 0)
         self.placeholder_layout = QtGui.QHBoxLayout()

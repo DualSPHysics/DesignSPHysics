@@ -19,15 +19,15 @@ class WaitMotionTimeline(QtGui.QWidget):
     order_up = QtCore.Signal(int)
     order_down = QtCore.Signal(int)
 
-    def __init__(self, index, wait_motion):
+    def __init__(self, index, wait_motion, parent=None):
         if not isinstance(wait_motion, WaitMotion):
             raise TypeError(
                 "You tried to spawn a rectilinear motion widget in the timeline with a wrong object")
         if wait_motion is None:
             raise TypeError(
                 "You tried to spawn a rectilinear motion widget in the timeline without a motion object")
+        super(WaitMotionTimeline, self).__init__(parent=parent)
 
-        super(WaitMotionTimeline, self).__init__()
         self.index = index
         self.main_layout = QtGui.QHBoxLayout()
         self.main_layout.setContentsMargins(10, 0, 10, 0)

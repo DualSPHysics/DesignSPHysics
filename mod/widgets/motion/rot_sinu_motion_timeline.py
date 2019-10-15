@@ -19,15 +19,15 @@ class RotSinuMotionTimeline(QtGui.QWidget):
     order_up = QtCore.Signal(int)
     order_down = QtCore.Signal(int)
 
-    def __init__(self, index, rot_sinu_motion):
+    def __init__(self, index, rot_sinu_motion, parent=None):
         if not isinstance(rot_sinu_motion, RotSinuMotion):
             raise TypeError("You tried to spawn a sinusoidal rotational motion widget in the timeline with a wrong object")
         if rot_sinu_motion is None:
             raise TypeError("You tried to spawn a sinusoidal rotational motion widget in the timeline without a motion object")
-        super(RotSinuMotionTimeline, self).__init__()
+        super(RotSinuMotionTimeline, self).__init__(parent=parent)
 
         self.index = index
-        
+
         self.main_layout = QtGui.QHBoxLayout()
         self.main_layout.setContentsMargins(10, 0, 10, 0)
 

@@ -19,15 +19,15 @@ class RectSinuMotionTimeline(QtGui.QWidget):
     order_up = QtCore.Signal(int)
     order_down = QtCore.Signal(int)
 
-    def __init__(self, index, rect_sinu_motion):
+    def __init__(self, index, rect_sinu_motion, parent=None):
         if not isinstance(rect_sinu_motion, RectSinuMotion):
             raise TypeError("You tried to spawn an accelerated circular motion widget in the timeline with a wrong object")
         if rect_sinu_motion is None:
             raise TypeError("You tried to spawn an accelerated circular motion widget in the timeline without a motion object")
-        super(RectSinuMotionTimeline, self).__init__()
+        super(RectSinuMotionTimeline, self).__init__(parent=parent)
 
         self.index = index
-        
+
         self.main_layout = QtGui.QHBoxLayout()
         self.main_layout.setContentsMargins(10, 0, 10, 0)
 

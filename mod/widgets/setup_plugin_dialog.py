@@ -14,8 +14,8 @@ from mod.dataobjects.case import Case
 
 class SetupPluginDialog(QtGui.QDialog):
 
-    def __init__(self):
-        super(SetupPluginDialog, self).__init__()
+    def __init__(self, parent=None):
+        super(SetupPluginDialog, self).__init__(parent=parent)
 
         self.setWindowTitle("DesignSPHysics Setup")
         self.ok_button = QtGui.QPushButton("Ok")

@@ -23,12 +23,13 @@ from mod.widgets.chrono.link_linear_spring_edit import LinkLinearspringEdit
 from mod.widgets.chrono.link_spheric_edit import LinkSphericEdit
 from mod.widgets.chrono.link_point_line_edit import LinkPointlineEdit
 
+
 class ChronoConfigDialog(QtGui.QDialog):
     """ Defines the Chrono dialog window.
     Modifies data dictionary passed as parameter. """
 
-    def __init__(self):
-        super(ChronoConfigDialog, self).__init__()
+    def __init__(self, parent=None):
+        super(ChronoConfigDialog, self).__init__(parent=parent)
 
         # Creates a dialog
         self.setWindowTitle("Chrono configuration")
@@ -103,7 +104,8 @@ class ChronoConfigDialog(QtGui.QDialog):
                 object_mk=sim_object.mk,
                 mktype=sim_object.type,
                 object_name=self.context_object.Label,
-                is_floating=self.is_floating
+                is_floating=self.is_floating,
+                parent=self
             )
 
             # Updates the state of list options
@@ -361,7 +363,7 @@ class ChronoConfigDialog(QtGui.QDialog):
 
     def link_hinge_edit(self, link_hinge_id):
         """ Edit a link hinge element """
-        LinkHingeEdit(Case.instance(), self.chrono_object_options_widgets, link_hinge_id)
+        LinkHingeEdit(link_hinge_id, parent=self)
         self.refresh_link_hinge()
 
     def on_link_linearspring_add(self):
@@ -382,7 +384,7 @@ class ChronoConfigDialog(QtGui.QDialog):
 
     def link_linearspring_edit(self, link_linearspring_id):
         """ Edit a link linearspring element """
-        LinkLinearspringEdit(Case.instance(), self.chrono_object_options_widgets, link_linearspring_id)
+        LinkLinearspringEdit(link_linearspring_id, parent=self)
         self.refresh_link_linearspring()
 
     def on_link_spheric_add(self):
@@ -403,7 +405,7 @@ class ChronoConfigDialog(QtGui.QDialog):
 
     def link_spheric_edit(self, link_spheric_id):
         """ Edit a link spheric element """
-        LinkSphericEdit(Case.instance(), self.chrono_object_options_widgets, link_spheric_id)
+        LinkSphericEdit(link_spheric_id, parent=self)
         self.refresh_link_spheric()
 
     def on_link_pointline_add(self):
@@ -424,7 +426,7 @@ class ChronoConfigDialog(QtGui.QDialog):
 
     def link_pointline_edit(self, link_pointline_id):
         """ Edit a link pointline element """
-        LinkPointlineEdit(Case.instance(), self.chrono_object_options_widgets, link_pointline_id)
+        LinkPointlineEdit(link_pointline_id, parent=self)
         self.refresh_link_pointline()
 
     def on_cancel(self):

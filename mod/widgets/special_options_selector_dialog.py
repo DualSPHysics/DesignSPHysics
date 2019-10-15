@@ -36,8 +36,8 @@ from mod.dataobjects.relaxation_zone_uniform import RelaxationZoneUniform
 class SpecialOptionsSelectorDialog(QtGui.QDialog):
     """ A dialog with different buttons to access special DesignSPHysics options for a case. """
 
-    def __init__(self):
-        super().__init__()
+    def __init__(self, parent=None):
+        super().__init__(parent=parent)
 
         self.setWindowTitle(__("Special"))
         self.setMinimumWidth(200)
@@ -84,17 +84,17 @@ class SpecialOptionsSelectorDialog(QtGui.QDialog):
         """ Defines damping button behaviour"""
         damping_group_name = setup_damping_environment()
         Case.instance().add_damping_group(damping_group_name)
-        DampingConfigDialog(damping_group_name)
+        DampingConfigDialog(damping_group_name, parent=self)
         self.accept()
 
     def on_inlet_option(self):
         """ Defines Inlet/Outlet behaviour """
-        InletConfigDialog()
+        InletConfigDialog(parent=self)
         self.accept()
 
     def on_chrono_option(self):
         """ Defines Coupling CHRONO behaviour"""
-        ChronoConfigDialog()
+        ChronoConfigDialog(parent=self)
         self.accept()
 
     def on_multilayeredmb_menu(self, action):
@@ -135,7 +135,7 @@ class SpecialOptionsSelectorDialog(QtGui.QDialog):
                 if overwrite_warn == QtGui.QMessageBox.Cancel:
                     return
 
-            config_dialog = MLPiston1DConfigDialog(selection_mk, mk_properties.mlayerpiston)
+            config_dialog = MLPiston1DConfigDialog(selection_mk, mk_properties.mlayerpiston, parent=self)
             if config_dialog.result() == QtGui.QDialog.Accepted:
                 warning_dialog(__("All changes have been applied for mk = {}").format(selection_mk))
             mk_properties.mlayerpiston = config_dialog.mlpiston1d
@@ -147,7 +147,7 @@ class SpecialOptionsSelectorDialog(QtGui.QDialog):
                 if overwrite_warn == QtGui.QMessageBox.Cancel:
                     return
 
-            config_dialog = MLPiston2DConfigDialog(selection_mk, mk_properties.mlayerpiston)
+            config_dialog = MLPiston2DConfigDialog(selection_mk, mk_properties.mlayerpiston, parent=self)
             if config_dialog.result() == QtGui.QDialog.Accepted:
                 warning_dialog(__("All changes have been applied for mk = {}").format(selection_mk))
             mk_properties.mlayerpiston = config_dialog.mlpiston2d
@@ -167,7 +167,7 @@ class SpecialOptionsSelectorDialog(QtGui.QDialog):
                     else:
                         Case.instance().relaxation_zone = RelaxationZoneRegular()
 
-            config_dialog = RelaxationZoneRegularConfigDialog(Case.instance().relaxation_zone)
+            config_dialog = RelaxationZoneRegularConfigDialog(Case.instance().relaxation_zone, parent=self)
 
             # Set the relaxation zone. Can be an object or be None
             Case.instance().relaxation_zone = config_dialog.relaxationzone
@@ -180,7 +180,7 @@ class SpecialOptionsSelectorDialog(QtGui.QDialog):
                     else:
                         Case.instance().relaxation_zone = RelaxationZoneIrregular()
 
-            config_dialog = RelaxationZoneIrregularConfigDialog(Case.instance().relaxation_zone)
+            config_dialog = RelaxationZoneIrregularConfigDialog(Case.instance().relaxation_zone, parent=self)
 
             # Set the relaxation zone. Can be an object or be None
             Case.instance().relaxation_zone = config_dialog.relaxationzone
@@ -193,7 +193,7 @@ class SpecialOptionsSelectorDialog(QtGui.QDialog):
                     else:
                         Case.instance().relaxation_zone = RelaxationZoneFile()
 
-            config_dialog = RelaxationZoneFileConfigDialog(Case.instance().relaxation_zone)
+            config_dialog = RelaxationZoneFileConfigDialog(Case.instance().relaxation_zone, parent=self)
 
             # Set the relaxation zone. Can be an object or be None
             Case.instance().relaxation_zone = config_dialog.relaxationzone
@@ -207,7 +207,7 @@ class SpecialOptionsSelectorDialog(QtGui.QDialog):
                     else:
                         Case.instance().relaxation_zone = RelaxationZoneUniform()
 
-            config_dialog = RelaxationZoneUniformConfigDialog(Case.instance().relaxation_zone)
+            config_dialog = RelaxationZoneUniformConfigDialog(Case.instance().relaxation_zone, parent=self)
 
             # Set the relaxation zone. Can be an object or be None
             Case.instance().relaxation_zone = config_dialog.relaxationzone
@@ -216,7 +216,7 @@ class SpecialOptionsSelectorDialog(QtGui.QDialog):
 
     def on_accinput_button(self):
         """ Acceleration input button behaviour."""
-        accinput_dialog = AccelerationInputDialog(Case.instance().acceleration_input)
+        accinput_dialog = AccelerationInputDialog(Case.instance().acceleration_input, parent=self)
         result = accinput_dialog.exec_()
 
         if result == QtGui.QDialog.Accepted:

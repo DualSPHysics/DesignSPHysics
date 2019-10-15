@@ -19,15 +19,15 @@ class RotationalMotionTimeline(QtGui.QWidget):
     order_up = QtCore.Signal(int)
     order_down = QtCore.Signal(int)
 
-    def __init__(self, index, rot_motion):
+    def __init__(self, index, rot_motion, parent=None):
         if not isinstance(rot_motion, RotMotion):
             raise TypeError("You tried to spawn a rotational motion widget in the timeline with a wrong object")
         if rot_motion is None:
             raise TypeError("You tried to spawn a rotational motion widget in the timeline without a motion object")
-        super(RotationalMotionTimeline, self).__init__()
+        super(RotationalMotionTimeline, self).__init__(parent=parent)
 
         self.index = index
-        
+
         self.main_layout = QtGui.QHBoxLayout()
         self.main_layout.setContentsMargins(10, 0, 10, 0)
 

@@ -12,8 +12,8 @@ from mod.translation_tools import __
 class VelocityTimesDialog(QtGui.QDialog):
     """ Dialog with a table to create velocity times. """
 
-    def __init__(self, relaxationzone):
-        super(VelocityTimesDialog, self).__init__()
+    def __init__(self, relaxationzone, parent=None):
+        super(VelocityTimesDialog, self).__init__(parent=parent)
         self.relaxationzone = relaxationzone
         self.velocity_times = relaxationzone.velocity_times
 

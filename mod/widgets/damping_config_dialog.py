@@ -10,8 +10,8 @@ class DampingConfigDialog(QtGui.QDialog):
     """Defines the setup window.
     Modifies data dictionary passed as parameter."""
 
-    def __init__(self, object_key):
-        super(DampingConfigDialog, self).__init__()
+    def __init__(self, object_key, parent=None):
+        super(DampingConfigDialog, self).__init__(parent=parent)
 
         self.object_key = object_key
 

@@ -16,8 +16,8 @@ from mod.dataobjects.initials_property import InitialsProperty
 class InitialsDialog(QtGui.QDialog):
     """ Defines a window with initials  """
 
-    def __init__(self):
-        super(InitialsDialog, self).__init__()
+    def __init__(self, parent=None):
+        super(InitialsDialog, self).__init__(parent=parent)
 
         self.setWindowTitle(__("Initials configuration"))
         self.ok_button = QtGui.QPushButton(__("Ok"))

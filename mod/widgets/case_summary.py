@@ -13,8 +13,8 @@ from mod.dataobjects.case import Case
 class CaseSummary(QtGui.QDialog):
     """ Dialog that shows summarized case details in html format. """
 
-    def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
+    def __init__(self, parent=None):
+        super().__init__(parent=parent)
         self.main_layout = QtGui.QVBoxLayout()
         self.info = QtGui.QTextEdit()
 

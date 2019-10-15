@@ -13,8 +13,8 @@ from mod.dataobjects.case import Case
 class LinkSphericEdit(QtGui.QDialog):
     """ Defines Link spheric window dialog """
 
-    def __init__(self, link_spheric_id):
-        super(LinkSphericEdit, self).__init__()
+    def __init__(self, link_spheric_id, parent=None):
+        super(LinkSphericEdit, self).__init__(parent=parent)
 
         self.link_spheric_id = link_spheric_id
 

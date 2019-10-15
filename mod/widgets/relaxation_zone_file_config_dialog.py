@@ -11,8 +11,8 @@ from mod.dataobjects.relaxation_zone_file import RelaxationZoneFile
 
 
 class RelaxationZoneFileConfigDialog(QtGui.QDialog):
-    def __init__(self, relaxationzone=None):
-        super(RelaxationZoneFileConfigDialog, self).__init__()
+    def __init__(self, relaxationzone=None, parent=None):
+        super(RelaxationZoneFileConfigDialog, self).__init__(parent=parent)
         self.temp_relaxationzone = relaxationzone if relaxationzone is not None else RelaxationZoneFile()
         self.relaxationzone = relaxationzone
 

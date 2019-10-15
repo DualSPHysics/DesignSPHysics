@@ -11,8 +11,8 @@ from mod.dialog_tools import error_dialog
 class Mode2DConfigDialog(QtGui.QDialog):
     """ A dialog to configure features of going into 2D mode. """
 
-    def __init__(self, case_limits_y_value: float):
-        super().__init__()
+    def __init__(self, case_limits_y_value: float, parent=None):
+        super().__init__(parent=parent)
 
         self.stored_y_value = 0.0
 

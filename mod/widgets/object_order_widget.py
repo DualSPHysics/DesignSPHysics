@@ -15,7 +15,7 @@ class ObjectOrderWidget(QtGui.QWidget):
 
     def __init__(self, index=999, object_name="No name", object_mk=-1, mktype="bound",
                  up_disabled=False, down_disabled=False, parent=None):
-        super(ObjectOrderWidget, self).__init__()
+        super(ObjectOrderWidget, self).__init__(parent=parent)
 
         self.index = index
         self.object_name = object_name

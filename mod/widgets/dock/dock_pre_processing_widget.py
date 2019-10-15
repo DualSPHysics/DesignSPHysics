@@ -282,7 +282,7 @@ class DockPreProcessingWidget(QtGui.QWidget):
         file_name, _ = QtGui.QFileDialog().getOpenFileName(get_fc_main_window(), __("Select GEO to import"), QtCore.QDir.homePath(), "STL Files (*.stl);;PLY Files (*.ply);;VTK Files (*.vtk)")
         if not file_name:
             return
-        AddGEODialog(file_name)
+        AddGEODialog(file_name, parent=self)
 
     def on_2d_toggle(self):
         """ Handles Toggle 3D/2D Button. Changes the Case Limits object accordingly. """
@@ -295,7 +295,7 @@ class DockPreProcessingWidget(QtGui.QWidget):
         if Case.instance().mode3d:
             # 3D to 2D
             Case.instance().info.last_3d_width = fc_object.Width.Value
-            config_dialog = Mode2DConfigDialog(fc_object.Placement.Base.y)
+            config_dialog = Mode2DConfigDialog(fc_object.Placement.Base.y, parent=self)
             if config_dialog.exit_status == QtGui.QDialog.Rejected:
                 return
             fc_object.Placement.Base.y = float(config_dialog.stored_y_value)

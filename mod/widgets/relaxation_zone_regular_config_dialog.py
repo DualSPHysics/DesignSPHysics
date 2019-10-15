@@ -10,8 +10,8 @@ from mod.dataobjects.relaxation_zone_regular import RelaxationZoneRegular
 
 
 class RelaxationZoneRegularConfigDialog(QtGui.QDialog):
-    def __init__(self, relaxationzone=None):
-        super(RelaxationZoneRegularConfigDialog, self).__init__()
+    def __init__(self, relaxationzone=None, parent=None):
+        super(RelaxationZoneRegularConfigDialog, self).__init__(parent=parent)
         self.temp_relaxationzone = relaxationzone if relaxationzone is not None else RelaxationZoneRegular()
         self.relaxationzone = relaxationzone
 

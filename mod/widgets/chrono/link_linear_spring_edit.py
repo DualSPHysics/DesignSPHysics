@@ -13,8 +13,8 @@ from mod.dataobjects.case import Case
 class LinkLinearspringEdit(QtGui.QDialog):
     """ Defines Link linearspring window dialog """
 
-    def __init__(self, link_linearspring_id):
-        super(LinkLinearspringEdit, self).__init__()
+    def __init__(self, link_linearspring_id, parent=None):
+        super(LinkLinearspringEdit, self).__init__(parent=parent)
 
         self.link_linearspring_id = link_linearspring_id
 

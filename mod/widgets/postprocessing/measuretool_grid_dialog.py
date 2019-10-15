@@ -13,8 +13,8 @@ from mod.dataobjects.case import Case
 class MeasureToolGridDialog(QtGui.QDialog):
     """ Defines grid point button behaviour."""
 
-    def __init__(self):
-        super(MeasureToolGridDialog, self).__init__()
+    def __init__(self, parent=None):
+        super(MeasureToolGridDialog, self).__init__(parent=parent)
 
         self.current_grid = []
 

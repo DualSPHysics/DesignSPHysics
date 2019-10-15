@@ -17,8 +17,8 @@ from mod.widgets.postprocessing.flowtool_dialog import FlowToolDialog
 class DockPostProcessingWidget(QtGui.QWidget):
     """DesignSPHysics Dock Post Processing Widget """
 
-    def __init__(self):
-        super().__init__()
+    def __init__(self, parent=None):
+        super().__init__(parent=parent)
 
         # Post processing section scaffolding
         self.main_layout = QtGui.QVBoxLayout()
@@ -45,11 +45,11 @@ class DockPostProcessingWidget(QtGui.QWidget):
         self.flowtool_button.setToolTip(__("Opens the FlowTool tool."))
 
         self.partvtk_button.clicked.connect(lambda: PartVTKDialog(self))
-        self.computeforces_button.clicked.connect(lambda: ComputeForcesDialog(self))
-        self.floatinginfo_button.clicked.connect(lambda: FloatingInfoDialog(self))
-        self.measuretool_button.clicked.connect(lambda: MeasureToolDialog(self))
-        self.isosurface_button.clicked.connect(lambda: IsoSurfaceDialog(self))
-        self.flowtool_button.clicked.connect(lambda: FlowToolDialog(self))
+        self.computeforces_button.clicked.connect(lambda: ComputeForcesDialog(self, parent=self))
+        self.floatinginfo_button.clicked.connect(lambda: FloatingInfoDialog(self, parent=self))
+        self.measuretool_button.clicked.connect(lambda: MeasureToolDialog(self, parent=self))
+        self.isosurface_button.clicked.connect(lambda: IsoSurfaceDialog(self, parent=self))
+        self.flowtool_button.clicked.connect(lambda: FlowToolDialog(self, parent=self))
 
         self.main_layout.addWidget(self.title_label)
         self.first_row_layout.addWidget(self.partvtk_button)

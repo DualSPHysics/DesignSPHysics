@@ -7,14 +7,15 @@ from PySide import QtCore, QtGui
 from mod.translation_tools import __
 from mod.gui_tools import get_icon
 
+
 class MovementActions(QtGui.QWidget):
     """ A set of movement actions (use and delete) with its custom signals"""
     delete = QtCore.Signal(int)
     use = QtCore.Signal(int, bool)
     loop = QtCore.Signal(int, bool)
 
-    def __init__(self, index, use_checked, loop_checked):
-        super(MovementActions, self).__init__()
+    def __init__(self, index, use_checked, loop_checked, parent=None):
+        super(MovementActions, self).__init__(parent=parent)
         self.index = index
         self.use_checkbox = QtGui.QCheckBox(__("Use"))
         self.use_checkbox.setChecked(use_checked)
@@ -24,7 +25,7 @@ class MovementActions(QtGui.QWidget):
         self.loop_checkbox.stateChanged.connect(self.on_loop)
         self.delete_button = QtGui.QPushButton(get_icon("trash.png"), None)
         self.delete_button.clicked.connect(self.on_delete)
-        
+
         main_layout = QtGui.QHBoxLayout()
         main_layout.setContentsMargins(10, 0, 10, 0)
         main_layout.addWidget(self.use_checkbox)

@@ -8,11 +8,12 @@ from mod.translation_tools import __
 
 from mod.dataobjects.case import Case
 
+
 class InletZoneEdit(QtGui.QDialog):
     """ Defines Inlet/Outlet window dialog """
 
-    def __init__(self, inlet_object_id):
-        super(InletZoneEdit, self).__init__()
+    def __init__(self, inlet_object_id, parent=None):
+        super(InletZoneEdit, self).__init__(parent=parent)
         self.inlet_object_id = inlet_object_id
         # Creates a dialog
         self.setWindowTitle("Inlet/Outlet object edit")

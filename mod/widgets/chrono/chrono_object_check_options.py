@@ -10,8 +10,8 @@ from mod.translation_tools import __
 class ChronoObjectCheckOptions(QtGui.QWidget):
     """ Widget shows check options for an object """
 
-    def __init__(self, key, object_name="No name", object_mk=-1, mktype="bound", is_floating=""):
-        super(ChronoObjectCheckOptions, self).__init__()
+    def __init__(self, key, object_name="No name", object_mk=-1, mktype="bound", is_floating="", parent=None):
+        super(ChronoObjectCheckOptions, self).__init__(parent=parent)
 
         self.key = key
         self.object_name = object_name

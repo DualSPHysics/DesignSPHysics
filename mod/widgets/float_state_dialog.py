@@ -16,8 +16,8 @@ from mod.dataobjects.float_property import FloatProperty
 class FloatStateDialog(QtGui.QDialog):
     """ Defines a window with floating  """
 
-    def __init__(self):
-        super(FloatStateDialog, self).__init__()
+    def __init__(self, parent=None):
+        super(FloatStateDialog, self).__init__(parent=parent)
 
         self.setWindowTitle(__("Floating configuration"))
         self.ok_button = QtGui.QPushButton(__("Ok"))

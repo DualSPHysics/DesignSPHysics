@@ -25,8 +25,8 @@ class DockSimulationWidget(QtGui.QWidget):
     simulation_started = QtCore.Signal()
     simulation_cancelled = QtCore.Signal()
 
-    def __init__(self):
-        super().__init__()
+    def __init__(self, parent=None):
+        super().__init__(parent=parent)
 
         # Execution section scaffolding
         self.main_layout = QtGui.QVBoxLayout()
@@ -72,7 +72,7 @@ class DockSimulationWidget(QtGui.QWidget):
             # Warning window about save_case
             warning_dialog("You should run GenCase again. Otherwise, the obtained results may not be as expected")
 
-        run_dialog = RunDialog(Case.instance().name, self.device_selector.currentText(), Case.instance().info.particle_number)
+        run_dialog = RunDialog(Case.instance().name, self.device_selector.currentText(), Case.instance().info.particle_number, parent=self)
         run_dialog.set_value(0)
         run_dialog.run_update(0, 0, None)
 
@@ -195,4 +195,4 @@ class DockSimulationWidget(QtGui.QWidget):
 
     def on_additional_parameters(self):
         """ Handles additional parameters button for execution """
-        RunAdditionalParametersDialog()
+        RunAdditionalParametersDialog(parent=self)

@@ -12,11 +12,12 @@ from mod.dataobjects.case import Case
 from mod.widgets.postprocessing.measuretool_grid_dialog import MeasureToolGridDialog
 from mod.widgets.postprocessing.measuretool_points_dialog import MeasureToolPointsDialog
 
+
 class MeasureToolDialog(QtGui.QDialog):
     """ DesignSPHysics ComputeForces Config and Execution Dialog. """
 
-    def __init__(self, post_processing_widget):
-        super().__init__()
+    def __init__(self, post_processing_widget, parent=None):
+        super().__init__(parent=parent)
 
         self.post_processing_widget = post_processing_widget
 
@@ -185,8 +186,8 @@ class MeasureToolDialog(QtGui.QDialog):
 
     def on_mtool_set_points(self):
         """ Point list button behaviour."""
-        MeasureToolPointsDialog()
+        MeasureToolPointsDialog(parent=self)
 
     def on_mtool_set_grid(self):
         """ Spawns a Grid configuration dialog for MeasureTool. """
-        MeasureToolGridDialog()
+        MeasureToolGridDialog(parent=self)

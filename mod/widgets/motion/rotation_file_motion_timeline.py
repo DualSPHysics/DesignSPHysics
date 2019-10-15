@@ -15,18 +15,18 @@ class RotationFileMotionTimeline(QtGui.QWidget):
     """ A rotation file motion graphical representation for a table-based timeline """
     changed = QtCore.Signal(int, RotationFileGen)
 
-    def __init__(self, rot_file_gen, project_folder_path):
+    def __init__(self, rot_file_gen, project_folder_path, parent=None):
         if not isinstance(rot_file_gen, RotationFileGen):
             raise TypeError("You tried to spawn a rotation file generator "
                             "motion widget in the timeline with a wrong object")
         if rot_file_gen is None:
             raise TypeError("You tried to spawn a rotation file generator "
                             "motion widget in the timeline without a motion object")
-        super(RotationFileMotionTimeline, self).__init__()
+        super(RotationFileMotionTimeline, self).__init__(parent=parent)
 
         # Needed for copying movement file to root of the case.
         self.project_folder_path = project_folder_path
-        
+
         self.main_layout = QtGui.QVBoxLayout()
         self.main_layout.setContentsMargins(10, 10, 10, 10)
         self.parent_movement = rot_file_gen.parent_movement

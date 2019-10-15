@@ -10,6 +10,7 @@ from mod.stdout_tools import debug
 
 from mod.dataobjects.motion.cir_sinu_motion import CirSinuMotion
 
+
 class CirSinuMotionTimeline(QtGui.QWidget):
     """ A sinusoidal circular motion graphical representation for a table-based timeline """
 
@@ -18,14 +19,14 @@ class CirSinuMotionTimeline(QtGui.QWidget):
     order_up = QtCore.Signal(int)
     order_down = QtCore.Signal(int)
 
-    def __init__(self, index, cir_sinu_motion):
+    def __init__(self, index, cir_sinu_motion, parent=None):
         if not isinstance(cir_sinu_motion, CirSinuMotion):
             raise TypeError("You tried to spawn a sinusoidal circular "
                             "motion widget in the timeline with a wrong object")
         if cir_sinu_motion is None:
             raise TypeError("You tried to spawn a sinusoidal circular "
                             "motion widget in the timeline without a motion object")
-        super(CirSinuMotionTimeline, self).__init__()
+        super(CirSinuMotionTimeline, self).__init__(parent=parent)
 
         self.index = index
         self.main_layout = QtGui.QHBoxLayout()

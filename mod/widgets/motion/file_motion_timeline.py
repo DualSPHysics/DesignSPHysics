@@ -15,18 +15,18 @@ class FileMotionTimeline(QtGui.QWidget):
     """ A File motion graphical representation for a table-based timeline """
     changed = QtCore.Signal(int, FileGen)
 
-    def __init__(self, file_wave_gen, project_folder_path):
+    def __init__(self, file_wave_gen, project_folder_path, parent=None):
         if not isinstance(file_wave_gen, FileGen):
             raise TypeError("You tried to spawn a regular wave generator "
                             "motion widget in the timeline with a wrong object")
         if file_wave_gen is None:
             raise TypeError("You tried to spawn a regular wave generator "
                             "motion widget in the timeline without a motion object")
-        super(FileMotionTimeline, self).__init__()
+        super(FileMotionTimeline, self).__init__(parent=parent)
 
         # Needed for copying movement file to root of the case.
         self.project_folder_path = project_folder_path
-        
+
         self.main_layout = QtGui.QVBoxLayout()
         self.main_layout.setContentsMargins(10, 10, 10, 10)
         self.parent_movement = file_wave_gen.parent_movement
