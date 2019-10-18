@@ -41,6 +41,7 @@
     <execution>
         <special>
 {damping_template}
+{mlpistons_template}
 {rzones_template}
         </special>
         <parameters>

@@ -1,0 +1,7 @@
+                <piston1d>
+                    <mkbound value="{mk}" comment="Mk-Bound of selected particles" />
+                    <filevelx value="{filevelx}" comment="File name with X velocity" />
+                    <incz value="{incz}" comment="Z offset (def=0)" />
+                    <timedataini value="{timedataini}" comment="Time offset (def=0)" />
+                    <smooth value="{smooth}" comment="Smooth motion level (def=0)" />
+                </piston1d>

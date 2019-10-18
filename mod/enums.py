@@ -172,6 +172,13 @@ class MotionType:
     FILE_ROTATIONAL_WAVE_GENERATOR = "Rotational File Wave Generator"
 
 
+class MLPistonType:
+    """ MLPiston Types """
+    BASE = "Base"
+    MLPISTON1D = "MLPiston1D"
+    MLPISTON2D = "MLPiston2D"
+
+
 class HelpURL:
     """ DesignSPHysics help URLS. """
     WIKI_HOME = "https://github.com/DualSPHysics/DesignSPHysics/wiki"

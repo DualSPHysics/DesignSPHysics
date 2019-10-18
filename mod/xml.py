@@ -12,7 +12,7 @@ from datetime import datetime
 import FreeCAD
 
 from mod.constants import APP_NAME, DIVIDER, LINE_END, SUPPORTED_TYPES
-from mod.enums import FloatingDensityType, FreeCADObjectType, ObjectType
+from mod.enums import FloatingDensityType, FreeCADObjectType, ObjectType, MLPistonType
 from mod.template_tools import obj_to_dict
 from mod.stdout_tools import debug
 
@@ -46,6 +46,10 @@ class XMLExporter():
     RZONE_UNIFORM_VELOCITYTIMES_EACH_XML = "/templates/gencase/rzones/uniform_velocitytimes_each.xml"
     DAMPING_BASE = "/templates/gencase/damping/base.xml"
     DAMPING_EACH = "/templates/gencase/damping/each.xml"
+    MLPISTONS_BASE = "/templates/gencase/mlpistons/base.xml"
+    MLPISTONS_EACH_1D = "/templates/gencase/mlpistons/each_1d.xml"
+    MLPISTONS_EACH_2D = "/templates/gencase/mlpistons/each_2d.xml"
+    MLPISTONS_EACH_2D_VELDATA = "/templates/gencase/mlpistons/each_veldata.xml"
     FLOATINGS_XML = "/templates/gencase/floatings/base.xml"
     FLOATINGS_EACH_XML = "/templates/gencase/floatings/each/base.xml"
     FLOATINGS_CENTER_XML = "/templates/gencase/floatings/each/center.xml"
@@ -316,6 +320,37 @@ class XMLExporter():
 
         return self.get_template_text(self.DAMPING_BASE).format(**formatter)
 
+    def get_mlpistons_template(self, data) -> str:
+        """ Renders the <mlayerpistons> part of the GenCase XML. """
+        ml_pistons: dict = dict()
+        for mk, mk_prop in data["mkbasedproperties"].items():
+            if mk_prop["mlayerpiston"]:
+                ml_pistons[mk] = mk_prop["mlayerpiston"]
+
+        if not ml_pistons.values():
+            return ""
+
+        each_mlpiston_template: list = list()
+        for mk, mlpiston in ml_pistons.items():
+            if mlpiston["type"] == MLPistonType.MLPISTON1D:
+                mlpiston.update({"mk": mk})
+                each_mlpiston_template.append(self.get_template_text(self.MLPISTONS_EACH_1D).format(**mlpiston))
+            elif mlpiston["type"] == MLPistonType.MLPISTON2D:
+                each_veldata_templates: list = list()
+                for veldata in mlpiston["veldata"]:
+                    each_veldata_templates.append(self.get_template_text(self.MLPISTONS_EACH_2D_VELDATA).format(**veldata))
+                mlpiston.update({
+                    "mk": mk,
+                    "each_veldata": LINE_END.join(each_veldata_templates)
+                })
+                each_mlpiston_template.append(self.get_template_text(self.MLPISTONS_EACH_2D).format(**mlpiston))
+
+        formatter = {
+            "each": LINE_END.join(each_mlpiston_template)
+        }
+
+        return self.get_template_text(self.MLPISTONS_BASE).format(**formatter)
+
     def get_adapted_case_data(self, case: "Case") -> dict:
         """ Adapts the case data to a dictionary used to format the resulting XML """
         data: dict = obj_to_dict(case)
@@ -328,6 +363,7 @@ class XMLExporter():
         data["floatings_template"] = self.get_floatings_template(data)
         data["rzones_template"] = self.get_rzones_template(data, type(case.relaxation_zone).__name__) if case.relaxation_zone else ""
         data["damping_template"] = self.get_damping_template(data) if case.damping_zones.keys() else ""
+        data["mlpistons_template"] = self.get_mlpistons_template(data)
         data["application"] = APP_NAME
         data["current_date"] = datetime.now().strftime("%d-%m-%Y %H:%M:%S")
         return data
