@@ -103,7 +103,7 @@ class DampingConfigDialog(QtGui.QDialog):
     # Window logic
     def on_ok(self):
         self.case.get_damping_zone(self.object_key).enabled = self.enabled_checkbox.isChecked()
-        self.case.get_damping_zone(self.object_key).overlimit = float(self.overlimit_input.text())
+        self.case.get_damping_zone(self.object_key).overlimit = float(self.overlimit_input.text()) * 1000
         self.case.get_damping_zone(self.object_key).redumax = float(self.redumax_input.text())
         damping_group = FreeCAD.ActiveDocument.getObject(self.object_key)
         damping_group.OutList[0].Start = (float(self.limitmin_input_x.text()) * 1000,
