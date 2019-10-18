@@ -21,7 +21,7 @@ from mod.freecad_tools import check_compatibility, document_count, prompt_close_
 from mod.freecad_tools import delete_existing_docks, valid_document_environment, enforce_case_limits_restrictions, enforce_fillbox_restrictions
 from mod.stdout_tools import print_license, log, debug
 
-from mod.constants import VERSION, DEFAULT_WORKBENCH, DIVIDER
+from mod.constants import APP_NAME, VERSION, DEFAULT_WORKBENCH, DIVIDER
 
 from mod.dataobjects.case import Case
 
@@ -45,6 +45,7 @@ check_compatibility()
 if document_count() > 0:
     success = prompt_close_all_documents()
     if not success:
+        debug("User chose not to close the currently opened documents. Aborting startup")
         quit()
 
 # Tries to delete docks created by a previous execution of DesignSPHysics
@@ -59,9 +60,8 @@ get_fc_main_window().addDockWidget(QtCore.Qt.LeftDockWidgetArea, properties_widg
 
 def on_tree_item_selection_change():
     """ Refreshes relevant parts of DesignsPHysics under an important change event. """
-
+    debug("Refreshing elements due to object selection change.")
     selection = FreeCADGui.Selection.getSelection()
-
     properties_widget.set_add_button_enabled(True)
 
     if selection:
@@ -106,6 +106,7 @@ for item in get_fc_main_window().findChildren(QtGui.QTreeWidget):
         fc_object_tree = item
 
 fc_object_tree.itemSelectionChanged.connect(on_tree_item_selection_change)
+debug("Subscribing selection change monitor handler to freecad object tree item changed.")
 
 properties_widget.need_refresh.connect(on_tree_item_selection_change)
 dualsphysics_dock.need_refresh.connect(on_tree_item_selection_change)
@@ -117,6 +118,7 @@ def selection_monitor():
     while True:
         try:
             if not valid_document_environment():
+                log("Invalid document environment found. Disabling case-related tools.")
                 dualsphysics_dock.adapt_to_no_case()
                 time.sleep(1.0)
                 continue
@@ -144,4 +146,4 @@ monitor_thread = threading.Thread(target=selection_monitor)
 monitor_thread.start()
 
 FreeCADGui.activateWorkbench(DEFAULT_WORKBENCH)
-log(__("Loading data is done."))
+log(__("Initialization finished for {} v{}".format(APP_NAME, VERSION)))

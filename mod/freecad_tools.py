@@ -13,7 +13,7 @@ import Draft
 from PySide import QtGui
 
 from mod.translation_tools import __
-from mod.stdout_tools import log, error
+from mod.stdout_tools import log, error, debug
 from mod.dialog_tools import ok_cancel_dialog, error_dialog
 
 from mod.constants import APP_NAME, SINGLETON_DOCUMENT_NAME, DEFAULT_WORKBENCH, CASE_LIMITS_OBJ_NAME, CASE_LIMITS_3D_LABEL
@@ -27,6 +27,7 @@ def delete_existing_docks():
     for previous_dock in [get_fc_main_window().findChild(QtGui.QDockWidget, MAIN_WIDGET_INTERNAL_NAME),
                           get_fc_main_window().findChild(QtGui.QDockWidget, PROP_WIDGET_INTERNAL_NAME)]:
         if previous_dock:
+            debug("Removing previous {} dock".format(APP_NAME))
             previous_dock.setParent(None)
             previous_dock = None
 
