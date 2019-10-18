@@ -5,6 +5,11 @@
 import FreeCAD
 from PySide import QtCore, QtGui
 
+from mod.translation_tools import __
+from mod.dialog_tools import error_dialog
+
+from mod.constants import DIVIDER
+
 
 class DampingConfigDialog(QtGui.QDialog):
     """Defines the setup window.
@@ -87,13 +92,13 @@ class DampingConfigDialog(QtGui.QDialog):
         # Fill fields with case data
         self.enabled_checkbox.setChecked(self.case.get_damping_zone(self.object_key).enabled)
         self.group = FreeCAD.ActiveDocument.getObject(self.object_key)
-        self.limitmin_input_x.setText(str(self.group.OutList[0].Start[0] / 1000))
-        self.limitmin_input_y.setText(str(self.group.OutList[0].Start[1] / 1000))
-        self.limitmin_input_z.setText(str(self.group.OutList[0].Start[2] / 1000))
-        self.limitmax_input_x.setText(str(self.group.OutList[0].End[0] / 1000))
-        self.limitmax_input_y.setText(str(self.group.OutList[0].End[1] / 1000))
-        self.limitmax_input_z.setText(str(self.group.OutList[0].End[2] / 1000))
-        self.overlimit_input.setText(str(self.group.OutList[1].Length.Value / 1000))
+        self.limitmin_input_x.setText(str(self.group.OutList[0].Start[0] / DIVIDER))
+        self.limitmin_input_y.setText(str(self.group.OutList[0].Start[1] / DIVIDER))
+        self.limitmin_input_z.setText(str(self.group.OutList[0].Start[2] / DIVIDER))
+        self.limitmax_input_x.setText(str(self.group.OutList[0].End[0] / DIVIDER))
+        self.limitmax_input_y.setText(str(self.group.OutList[0].End[1] / DIVIDER))
+        self.limitmax_input_z.setText(str(self.group.OutList[0].End[2] / DIVIDER))
+        self.overlimit_input.setText(str(self.case.get_damping_zone(self.object_key).overlimit))
         self.redumax_input.setText(str(self.case.get_damping_zone(self.object_key).redumax))
         self.redumax_input.setText(str(self.case.get_damping_zone(self.object_key).redumax))
         self.on_enable_chk(QtCore.Qt.Checked if self.case.get_damping_zone(self.object_key).enabled else QtCore.Qt.Unchecked)
@@ -103,20 +108,24 @@ class DampingConfigDialog(QtGui.QDialog):
     # Window logic
     def on_ok(self):
         self.case.get_damping_zone(self.object_key).enabled = self.enabled_checkbox.isChecked()
-        self.case.get_damping_zone(self.object_key).overlimit = float(self.overlimit_input.text()) * 1000
+        self.case.get_damping_zone(self.object_key).overlimit = float(self.overlimit_input.text())
         self.case.get_damping_zone(self.object_key).redumax = float(self.redumax_input.text())
         damping_group = FreeCAD.ActiveDocument.getObject(self.object_key)
-        damping_group.OutList[0].Start = (float(self.limitmin_input_x.text()) * 1000,
-                                          float(self.limitmin_input_y.text()) * 1000,
-                                          float(self.limitmin_input_z.text()) * 1000)
-        damping_group.OutList[0].End = (float(self.limitmax_input_x.text()) * 1000,
-                                        float(self.limitmax_input_y.text()) * 1000,
-                                        float(self.limitmax_input_z.text()) * 1000)
+        damping_group.OutList[0].Start = (float(self.limitmin_input_x.text()) * DIVIDER,
+                                          float(self.limitmin_input_y.text()) * DIVIDER,
+                                          float(self.limitmin_input_z.text()) * DIVIDER)
+        damping_group.OutList[0].End = (float(self.limitmax_input_x.text()) * DIVIDER,
+                                        float(self.limitmax_input_y.text()) * DIVIDER,
+                                        float(self.limitmax_input_z.text()) * DIVIDER)
         damping_group.OutList[1].Start = damping_group.OutList[0].End
 
         overlimit_vector = FreeCAD.Vector(*damping_group.OutList[0].End) - FreeCAD.Vector(*damping_group.OutList[0].Start)
-        overlimit_vector.normalize()
-        overlimit_vector = overlimit_vector * self.case.get_damping_zone(self.object_key).overlimit
+        try:
+            overlimit_vector.normalize()
+        except FreeCAD.Base.FreeCADError:
+            error_dialog(__("The vector between minimum and maximum limit must have length."))
+
+        overlimit_vector = overlimit_vector * (self.case.get_damping_zone(self.object_key).overlimit * DIVIDER)
         overlimit_vector = overlimit_vector + FreeCAD.Vector(*damping_group.OutList[0].End)
 
         damping_group.OutList[1].End = (overlimit_vector.x, overlimit_vector.y, overlimit_vector.z)

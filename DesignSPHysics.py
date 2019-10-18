@@ -21,7 +21,7 @@ from mod.freecad_tools import check_compatibility, document_count, prompt_close_
 from mod.freecad_tools import delete_existing_docks, valid_document_environment, enforce_case_limits_restrictions, enforce_fillbox_restrictions
 from mod.stdout_tools import print_license, log, debug
 
-from mod.constants import VERSION, DEFAULT_WORKBENCH
+from mod.constants import VERSION, DEFAULT_WORKBENCH, DIVIDER
 
 from mod.dataobjects.case import Case
 
@@ -132,7 +132,7 @@ def selection_monitor():
                 if FreeCAD.ActiveDocument:
                     damping_group = FreeCAD.ActiveDocument.getObject(name)
                     if len(damping_group.OutList) == 2:
-                        damping_zone.overlimit = damping_group.OutList[1].Length.Value
+                        damping_zone.overlimit = damping_group.OutList[1].Length.Value / DIVIDER
 
             time.sleep(0.5)
         except AttributeError:

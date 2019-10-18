@@ -1,0 +1,6 @@
+                <dampingzone>
+                    <limitmin x="{limitmin[0]}" y="{limitmin[1]}" z="{limitmin[2]}" />
+                    <limitmax x="{limitmax[0]}" y="{limitmax[1]}" z="{limitmax[2]}" />
+                    <overlimit value="{overlimit}" />
+                    <redumax value="{redumax}" />
+                </dampingzone>

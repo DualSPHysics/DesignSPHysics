@@ -44,6 +44,8 @@ class XMLExporter():
     RZONE_UNIFORM_VELOCITY_XML = "/templates/gencase/rzones/uniform_velocity.xml"
     RZONE_UNIFORM_VELOCITYTIMES_XML = "/templates/gencase/rzones/uniform_velocitytimes.xml"
     RZONE_UNIFORM_VELOCITYTIMES_EACH_XML = "/templates/gencase/rzones/uniform_velocitytimes_each.xml"
+    DAMPING_BASE = "/templates/gencase/damping/base.xml"
+    DAMPING_EACH = "/templates/gencase/damping/each.xml"
     FLOATINGS_XML = "/templates/gencase/floatings/base.xml"
     FLOATINGS_EACH_XML = "/templates/gencase/floatings/each/base.xml"
     FLOATINGS_CENTER_XML = "/templates/gencase/floatings/each/center.xml"
@@ -288,6 +290,32 @@ class XMLExporter():
         formatter = {"floatings_each": LINE_END.join(float_properties_xmls) if float_properties_xmls else ""}
         return self.get_template_text(self.FLOATINGS_XML).format(**formatter)
 
+    def get_damping_template(self, data) -> str:
+        """ Renders the <damping> part of the GenCase XML. """
+        each_damping_template: list = []
+
+        for obj_name, dzone in data["damping_zones"].items():
+            fc_object = FreeCAD.ActiveDocument.getObject(obj_name)
+            dzone.update({
+                "limitmin": [
+                    fc_object.OutList[0].Start[0] / DIVIDER,
+                    fc_object.OutList[0].Start[1] / DIVIDER,
+                    fc_object.OutList[0].Start[2] / DIVIDER
+                ],
+                "limitmax": [
+                    str(fc_object.OutList[0].End[0] / DIVIDER),
+                    str(fc_object.OutList[0].End[1] / DIVIDER),
+                    str(fc_object.OutList[0].End[2] / DIVIDER)
+                ]
+            })
+            each_damping_template.append(self.get_template_text(self.DAMPING_EACH).format(**dzone))
+
+        formatter = {
+            "each": LINE_END.join(each_damping_template)
+        }
+
+        return self.get_template_text(self.DAMPING_BASE).format(**formatter)
+
     def get_adapted_case_data(self, case: "Case") -> dict:
         """ Adapts the case data to a dictionary used to format the resulting XML """
         data: dict = obj_to_dict(case)
@@ -299,6 +327,7 @@ class XMLExporter():
         data["initials_template"] = self.get_initials_template(data)
         data["floatings_template"] = self.get_floatings_template(data)
         data["rzones_template"] = self.get_rzones_template(data, type(case.relaxation_zone).__name__) if case.relaxation_zone else ""
+        data["damping_template"] = self.get_damping_template(data) if case.damping_zones.keys() else ""
         data["application"] = APP_NAME
         data["current_date"] = datetime.now().strftime("%d-%m-%Y %H:%M:%S")
         return data
