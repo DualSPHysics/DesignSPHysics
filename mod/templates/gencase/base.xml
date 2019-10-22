@@ -31,15 +31,13 @@
 {initials_template}
 {floatings_template}
         <!-- TODO: Motion templates -->
-        <!-- TODO: Acceleration Input templates -->
-        <!-- TODO: Damping templates -->
         <!-- TODO: Chrono templates -->
         <!-- TODO: Inlet/Outlet templates -->
         <!-- TODO: SpecialMovements templates -->
-        <!-- TODO: MLPiston templates -->
     </casedef>
     <execution>
         <special>
+{accinput_template}
 {damping_template}
 {mlpistons_template}
 {rzones_template}

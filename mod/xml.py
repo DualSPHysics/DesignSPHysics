@@ -44,6 +44,8 @@ class XMLExporter():
     RZONE_UNIFORM_VELOCITY_XML = "/templates/gencase/rzones/uniform_velocity.xml"
     RZONE_UNIFORM_VELOCITYTIMES_XML = "/templates/gencase/rzones/uniform_velocitytimes.xml"
     RZONE_UNIFORM_VELOCITYTIMES_EACH_XML = "/templates/gencase/rzones/uniform_velocitytimes_each.xml"
+    ACCINPUT_BASE = "/templates/gencase/accinput/base.xml"
+    ACCINPUT_EACH = "/templates/gencase/accinput/each.xml"
     DAMPING_BASE = "/templates/gencase/damping/base.xml"
     DAMPING_EACH = "/templates/gencase/damping/each.xml"
     MLPISTONS_BASE = "/templates/gencase/mlpistons/base.xml"
@@ -351,6 +353,23 @@ class XMLExporter():
 
         return self.get_template_text(self.MLPISTONS_BASE).format(**formatter)
 
+    def get_accinput_template(self, data) -> str:
+        """ Renders the <accinput> part of the GenCase XML. """
+        if data["acceleration_input"]["enabled"] == "false":
+            return ""
+
+        accinput_template_list: list = list()
+
+        for accinput in data["acceleration_input"]["acclist"]:
+            accinput["globalgravity_int"] = 1 if accinput["globalgravity"] else 0
+            accinput_template_list.append(self.get_template_text(self.ACCINPUT_EACH).format(**accinput))
+
+        formatter: dict = {
+            "each": LINE_END.join(accinput_template_list)
+        }
+
+        return self.get_template_text(self.ACCINPUT_BASE).format(**formatter)
+
     def get_adapted_case_data(self, case: "Case") -> dict:
         """ Adapts the case data to a dictionary used to format the resulting XML """
         data: dict = obj_to_dict(case)
@@ -362,6 +381,7 @@ class XMLExporter():
         data["initials_template"] = self.get_initials_template(data)
         data["floatings_template"] = self.get_floatings_template(data)
         data["rzones_template"] = self.get_rzones_template(data, type(case.relaxation_zone).__name__) if case.relaxation_zone else ""
+        data["accinput_template"] = self.get_accinput_template(data)
         data["damping_template"] = self.get_damping_template(data) if case.damping_zones.keys() else ""
         data["mlpistons_template"] = self.get_mlpistons_template(data)
         data["application"] = APP_NAME
