@@ -4,6 +4,7 @@
 
 
 from mod.dataobjects.domain_fixed_parameter import DomainFixedParameter
+from mod.enums import DensityDTType
 
 
 class ExecutionParameters():
@@ -17,8 +18,8 @@ class ExecutionParameters():
         self.viscotreatment: int = 1
         self.visco: float = 0.01
         self.viscoboundfactor: int = 1
-        self.deltasph: int = 0
-        self.deltasph_en: int = 0
+        self.densitydt_type: DensityDTType = DensityDTType.NONE;
+        self.densitydt_value: float = 0.1;
         self.shifting: int = 0
         self.shiftcoef: int = -2
         self.shifttfs: int = 0

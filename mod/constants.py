@@ -16,7 +16,7 @@ VERBOSE = True
 DIVIDER = 1000
 LINE_END = "\n"
 PICKLE_PROTOCOL = 1  # Binary mode
-VERSION = "0.6.0.1910-22-1"
+VERSION = "0.6.0.1910-22-2"
 WIDTH_2D = 0.001
 MAX_PARTICLE_WARNING = 2000000
 DISK_DUMP_FILE_NAME = "designsphysics-{}.log".format(VERSION)
@@ -94,6 +94,7 @@ HELP_VISCOTREATMENT = "Viscosity formulation 1:Artificial, 2:Laminar+SPS (defaul
 HELP_VISCO = "Viscosity value (apha when VISCOTREATMENT=1 and kinematic viscosity when VISCOTREATMENT=2)."
 HELP_VISCOBOUNDFACTOR = "Multiply viscosity value for fluid-boundary interaction (default=1)."
 HELP_DELTASPH = "DeltaSPH value, 0.1 is the typical value, with 0 disabled (default=0)."
+HELP_DENSITYDT = "DDT value (default=0.1)."
 HELP_SHIFTING = "Shifting mode 0:None, 1:Ignore bound, 2:Ignore fixed, 3:Full (default=0)."
 HELP_SHIFTINGCOEF = "Coefficient for shifting computation (default=-2)."
 HELP_SHIFTINGTFS = "Threshold to detect free surface. Typically 1.5 for 2D and 2.75 for 3D (default=0)."

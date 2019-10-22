@@ -52,7 +52,8 @@
             <parameter key="ViscoTreatment" value="{execution_parameters[viscotreatment]}" comment="Viscosity formulation 1:Artificial, 2:Laminar+SPS (default=1)" />
             <parameter key="Visco" value="{execution_parameters[visco]}" comment="Viscosity value" /> % Note alpha can depend on the resolution. A value of 0.01 is recommended for near irrotational flows.
             <parameter key="ViscoBoundFactor" value="{execution_parameters[viscoboundfactor]}" comment="Multiply viscosity value with boundary (default=1)" />
-            <parameter key="DeltaSPH" value="{execution_parameters[deltasph]}" comment="DeltaSPH value, 0.1 is the typical value, with 0 disabled (default=0)" />
+            <parameter key="DensityDT" value="{execution_parameters[densitydt_type]}" comment="Density Diffusion Term 0:None, 1:Molteni, 2:Fourtakas, 3:Fourtakas(full) (default=0)" />
+            <parameter key="DensityDTvalue" value="{execution_parameters[densitydt_value]}" comment="DDT value (default=0.1)" />
             <parameter key="Shifting" value="{execution_parameters[shifting]}" comment="Shifting mode 0:None, 1:Ignore bound, 2:Ignore fixed, 3:Full (default=0)" />
             <parameter key="ShiftCoef" value="{execution_parameters[shiftcoef]}" comment="Coefficient for shifting computation (default=-2)" />
             <parameter key="ShiftTFS" value="{execution_parameters[shifttfs]}" comment="Threshold to detect free surface. Typically 1.5 for 2D and 2.75 for 3D (default=0)" />

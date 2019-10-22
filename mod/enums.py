@@ -184,3 +184,11 @@ class HelpURL:
     WIKI_HOME = "https://github.com/DualSPHysics/DesignSPHysics/wiki"
     MOTION_HELP = "https://github.com/DualSPHysics/DesignSPHysics/wiki/Feature-Reference#configure-object-motion"
     BASIC_CONCEPTS = "https://github.com/DualSPHysics/DesignSPHysics/wiki/Concepts-and-Clarifications"
+
+
+class DensityDTType:
+    """ Density DT types. """
+    NONE = 0
+    MOLTENI = 1
+    FOURTAKAS = 2
+    FOURTAKAS_FULL = 3
