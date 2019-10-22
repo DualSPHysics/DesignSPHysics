@@ -9,8 +9,10 @@ from PySide import QtGui, QtCore
 
 from mod.translation_tools import __
 from mod.gui_tools import get_icon
+from mod.freecad_tools import get_fc_main_window
 from mod.stdout_tools import log, error
 from mod.dialog_tools import error_dialog, warning_dialog
+from mod.executable_tools import refocus_cwd
 
 from mod.dataobjects.case import Case
 
@@ -68,17 +70,19 @@ class DockSimulationWidget(QtGui.QWidget):
         """ Defines what happens on simulation button press.
             It shows the run window and starts a background process with dualsphysics running. Updates the window with useful info."""
 
+        refocus_cwd()
+
         if not Case.instance().info.needs_to_run_gencase:
             # Warning window about save_case
             warning_dialog("You should run GenCase again. Otherwise, the obtained results may not be as expected")
 
-        run_dialog = RunDialog(Case.instance().name, self.device_selector.currentText(), Case.instance().info.particle_number, parent=self)
+        run_dialog = RunDialog(Case.instance().name, self.device_selector.currentText(), Case.instance().info.particle_number, parent=get_fc_main_window())
         run_dialog.set_value(0)
         run_dialog.run_update(0, 0, None)
+        Case.instance().info.is_simulation_done = False
 
         run_fs_watcher = QtCore.QFileSystemWatcher()
 
-        Case.instance().info.is_simulation_done = False
         self.simulation_started.emit()
 
         # Cancel button handler
@@ -195,4 +199,4 @@ class DockSimulationWidget(QtGui.QWidget):
 
     def on_additional_parameters(self):
         """ Handles additional parameters button for execution """
-        RunAdditionalParametersDialog(parent=self)
+        RunAdditionalParametersDialog(parent=get_fc_main_window())

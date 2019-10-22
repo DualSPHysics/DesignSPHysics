@@ -8,6 +8,7 @@ from traceback import print_exc
 from PySide import QtCore, QtGui
 
 from mod.translation_tools import __
+from mod.freecad_tools import get_fc_main_window
 
 from mod.widgets.inlet_zone_edit import InletZoneEdit
 
@@ -205,7 +206,7 @@ class InletConfigDialog(QtGui.QDialog):
 
     def zone_edit(self, io):
         """ Calls a window for edit zones """
-        InletZoneEdit(io, parent=self)
+        InletZoneEdit(io, parent=get_fc_main_window())
         self.refresh_zones()
 
     def on_cancel(self):

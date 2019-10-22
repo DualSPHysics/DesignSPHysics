@@ -5,6 +5,7 @@
 from PySide import QtGui, QtCore
 
 from mod.gui_tools import h_line_generator
+from mod.freecad_tools import get_fc_main_window
 
 from mod.constants import MAIN_WIDGET_INTERNAL_NAME, APP_NAME, VERSION
 
@@ -34,13 +35,13 @@ class DesignSPHysicsDock(QtGui.QDockWidget):
         self.main_layout = QtGui.QVBoxLayout()
         self.main_layout.setContentsMargins(5, 0, 5, 0)
 
-        self.dock_logo_widget = DockLogoWidget(parent=self)
-        self.dock_configuration_widget = DockConfigurationWidget(parent=self)
-        self.dp_widget = DockDPWidget(parent=self)
-        self.pre_proccessing_widget = DockPreProcessingWidget(parent=self)
-        self.simulation_widget = DockSimulationWidget(parent=self)
-        self.post_processing_widget = DockPostProcessingWidget(parent=self)
-        self.object_list_widget = DockObjectListTableWidget(parent=self)
+        self.dock_logo_widget = DockLogoWidget(parent=get_fc_main_window())
+        self.dock_configuration_widget = DockConfigurationWidget(parent=get_fc_main_window())
+        self.dp_widget = DockDPWidget(parent=get_fc_main_window())
+        self.pre_proccessing_widget = DockPreProcessingWidget(parent=get_fc_main_window())
+        self.simulation_widget = DockSimulationWidget(parent=get_fc_main_window())
+        self.post_processing_widget = DockPostProcessingWidget(parent=get_fc_main_window())
+        self.object_list_widget = DockObjectListTableWidget(parent=get_fc_main_window())
 
         self.main_layout.addWidget(self.dock_logo_widget)
         self.main_layout.addWidget(h_line_generator())

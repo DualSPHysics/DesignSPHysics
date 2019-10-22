@@ -5,6 +5,7 @@
 from PySide import QtGui
 
 from mod.translation_tools import __
+from mod.freecad_tools import get_fc_main_window
 
 from mod.widgets.postprocessing.partvtk_dialog import PartVTKDialog
 from mod.widgets.postprocessing.computeforces_dialog import ComputeForcesDialog
@@ -45,11 +46,11 @@ class DockPostProcessingWidget(QtGui.QWidget):
         self.flowtool_button.setToolTip(__("Opens the FlowTool tool."))
 
         self.partvtk_button.clicked.connect(lambda: PartVTKDialog(self))
-        self.computeforces_button.clicked.connect(lambda: ComputeForcesDialog(self, parent=self))
-        self.floatinginfo_button.clicked.connect(lambda: FloatingInfoDialog(self, parent=self))
-        self.measuretool_button.clicked.connect(lambda: MeasureToolDialog(self, parent=self))
-        self.isosurface_button.clicked.connect(lambda: IsoSurfaceDialog(self, parent=self))
-        self.flowtool_button.clicked.connect(lambda: FlowToolDialog(self, parent=self))
+        self.computeforces_button.clicked.connect(lambda: ComputeForcesDialog(self, parent=get_fc_main_window()))
+        self.floatinginfo_button.clicked.connect(lambda: FloatingInfoDialog(self, parent=get_fc_main_window()))
+        self.measuretool_button.clicked.connect(lambda: MeasureToolDialog(self, parent=get_fc_main_window()))
+        self.isosurface_button.clicked.connect(lambda: IsoSurfaceDialog(self, parent=get_fc_main_window()))
+        self.flowtool_button.clicked.connect(lambda: FlowToolDialog(self, parent=get_fc_main_window()))
 
         self.main_layout.addWidget(self.title_label)
         self.first_row_layout.addWidget(self.partvtk_button)

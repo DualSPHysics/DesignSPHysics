@@ -5,6 +5,7 @@
 from PySide import QtGui
 
 from mod.translation_tools import __
+from mod.freecad_tools import get_fc_main_window
 
 from mod.widgets.velocity_times_dialog import VelocityTimesDialog
 
@@ -17,7 +18,7 @@ class RelaxationZoneUniformConfigDialog(QtGui.QDialog):
         self.temp_relaxationzone = relaxationzone if relaxationzone is not None else RelaxationZoneUniform()
         self.relaxationzone = relaxationzone
         self.velocity_times = list()
-        self.velocity_times_dialog = VelocityTimesDialog(self.temp_relaxationzone, parent=self)
+        self.velocity_times_dialog = VelocityTimesDialog(self.temp_relaxationzone, parent=get_fc_main_window())
 
         self.main_layout = QtGui.QVBoxLayout()
         self.data_layout = QtGui.QVBoxLayout()

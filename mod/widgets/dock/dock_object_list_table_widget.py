@@ -4,7 +4,7 @@
 
 from PySide import QtGui
 
-from mod.freecad_tools import get_fc_object
+from mod.freecad_tools import get_fc_object, get_fc_main_window
 from mod.translation_tools import __
 
 from mod.constants import CASE_LIMITS_OBJ_NAME
@@ -63,7 +63,7 @@ class DockObjectListTableWidget(QtGui.QWidget):
         for sim_object in Case.instance().objects:
             if sim_object.name == CASE_LIMITS_OBJ_NAME:
                 continue
-            target_widget = ObjectOrderWidget(index=current_row, object_mk=sim_object.obj_mk, mktype=sim_object.type, object_name=get_fc_object(sim_object.name).Label, parent=self)
+            target_widget = ObjectOrderWidget(index=current_row, object_mk=sim_object.obj_mk, mktype=sim_object.type, object_name=get_fc_object(sim_object.name).Label, parent=get_fc_main_window())
 
             if current_row == 0:
                 target_widget.disable_up()

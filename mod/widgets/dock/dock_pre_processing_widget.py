@@ -205,19 +205,21 @@ class DockPreProcessingWidget(QtGui.QWidget):
         if process.exitCode():
             Case.instance().info.is_gencase_done = False
             error_dialog(__("Error executing GenCase. Did you add objects to the case?. Another reason could be memory issues. View details for more info."), output)
-            return
+        else:
+            try:
+                total_particles_text = output[output.index("Total particles: "):output.index(" (bound=")]
+                total_particles = int(total_particles_text[total_particles_text.index(": ") + 2:])
+                Case.instance().info.particle_number = total_particles
+                Case.instance().info.previous_particle_number = int(total_particles)
+                GencaseCompletedDialog(particle_count=total_particles, detail_text=output, parent=get_fc_main_window()).show()
+                Case.instance().info.is_gencase_done = True
+                self.on_save_case()
+            except ValueError:
+                print_exc()
+                Case.instance().info.is_gencase_done = False
 
-        try:
-            total_particles_text = output[output.index("Total particles: "):output.index(" (bound=")]
-            total_particles = int(total_particles_text[total_particles_text.index(": ") + 2:])
-            Case.instance().info.particle_number = total_particles
-            Case.instance().info.previous_particle_number = int(total_particles)
-            GencaseCompletedDialog(particle_count=total_particles, detail_text=output, parent=self).show()
-            Case.instance().info.is_gencase_done = True
-            self.on_save_case()
-        except ValueError:
-            print_exc()
-            Case.instance().info.is_gencase_done = False
+        # Refresh widget enable/disable status as GenCase finishes
+        self.gencase_completed.emit(Case.instance().info.is_gencase_done)
 
     def on_newdoc_menu(self, action):
         """ Handles the new document button and its dropdown items. """
@@ -282,7 +284,7 @@ class DockPreProcessingWidget(QtGui.QWidget):
         file_name, _ = QtGui.QFileDialog().getOpenFileName(get_fc_main_window(), __("Select GEO to import"), QtCore.QDir.homePath(), "STL Files (*.stl);;PLY Files (*.ply);;VTK Files (*.vtk)")
         if not file_name:
             return
-        AddGEODialog(file_name, parent=self)
+        AddGEODialog(file_name, parent=get_fc_main_window())
 
     def on_2d_toggle(self):
         """ Handles Toggle 3D/2D Button. Changes the Case Limits object accordingly. """
@@ -295,7 +297,7 @@ class DockPreProcessingWidget(QtGui.QWidget):
         if Case.instance().mode3d:
             # 3D to 2D
             Case.instance().info.last_3d_width = fc_object.Width.Value
-            config_dialog = Mode2DConfigDialog(fc_object.Placement.Base.y, parent=self)
+            config_dialog = Mode2DConfigDialog(fc_object.Placement.Base.y, parent=get_fc_main_window())
             if config_dialog.exit_status == QtGui.QDialog.Rejected:
                 return
             fc_object.Placement.Base.y = float(config_dialog.stored_y_value)

@@ -7,6 +7,7 @@ from PySide import QtGui
 from mod.translation_tools import __
 from mod.file_tools import create_flowtool_boxes
 from mod.post_processing_tools import flowtool_export
+from mod.freecad_tools import get_fc_main_window
 
 from mod.dataobjects.case import Case
 from mod.dataobjects.flow_tool_box import FlowToolBox
@@ -84,7 +85,7 @@ class FlowToolDialog(QtGui.QDialog):
 
     def box_edit(self, box_id):
         """ Box edit button behaviour. Opens a dialog to edit the selected FlowTool Box"""
-        FlowToolBoxEditDialog(box_id, parent=self)
+        FlowToolBoxEditDialog(box_id, parent=get_fc_main_window())
         self.refresh_boxlist()
 
     def box_delete(self, box_id):

@@ -13,6 +13,7 @@ from mod.translation_tools import __
 from mod.enums import ObjectType, ObjectFillMode, FreeCADObjectType, HelpURL
 from mod.constants import PROP_WIDGET_INTERNAL_NAME
 from mod.stdout_tools import debug
+from mod.freecad_tools import get_fc_main_window
 
 from mod.widgets.damping_config_dialog import DampingConfigDialog
 from mod.widgets.initials_dialog import InitialsDialog
@@ -202,7 +203,7 @@ class PropertiesDockWidget(QtGui.QDockWidget):
 
     def on_damping_config(self):
         """ Configures the damping configuration for the selected object """
-        DampingConfigDialog(FreeCADGui.Selection.getSelection()[0].Name, Case.instance(), parent=self)
+        DampingConfigDialog(FreeCADGui.Selection.getSelection()[0].Name, Case.instance(), parent=get_fc_main_window())
 
     def on_mkgroup_change(self, value):
         """ Defines what happens when MKGroup is changed. """
@@ -279,15 +280,15 @@ class PropertiesDockWidget(QtGui.QDockWidget):
 
     def on_initials_change(self):
         """ Initials configuration button behaviour. """
-        InitialsDialog(parent=self)
+        InitialsDialog(parent=get_fc_main_window())
 
     def on_motion_change(self):
         """ Movement configuration button behaviour. """
-        MovementDialog(parent=self)
+        MovementDialog(parent=get_fc_main_window())
 
     def on_floatstate_change(self):
         """ Float configuration button behaviour. """
-        FloatStateDialog(parent=self)
+        FloatStateDialog(parent=get_fc_main_window())
 
     def on_faces_clicked(self):
         """ Faces configuration button behaviour. """

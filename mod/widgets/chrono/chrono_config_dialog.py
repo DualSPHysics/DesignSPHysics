@@ -9,6 +9,7 @@ from PySide import QtCore, QtGui
 from mod.translation_tools import __
 from mod.stdout_tools import debug
 from mod.enums import ChronoModelNormalType
+from mod.freecad_tools import get_fc_main_window
 
 from mod.dataobjects.case import Case
 from mod.dataobjects.chrono.chrono_object import ChronoObject
@@ -105,7 +106,7 @@ class ChronoConfigDialog(QtGui.QDialog):
                 mktype=sim_object.type,
                 object_name=self.context_object.Label,
                 is_floating=self.is_floating,
-                parent=self
+                parent=get_fc_main_window()
             )
 
             # Updates the state of list options
@@ -363,7 +364,7 @@ class ChronoConfigDialog(QtGui.QDialog):
 
     def link_hinge_edit(self, link_hinge_id):
         """ Edit a link hinge element """
-        LinkHingeEdit(link_hinge_id, parent=self)
+        LinkHingeEdit(link_hinge_id, parent=get_fc_main_window())
         self.refresh_link_hinge()
 
     def on_link_linearspring_add(self):
@@ -384,7 +385,7 @@ class ChronoConfigDialog(QtGui.QDialog):
 
     def link_linearspring_edit(self, link_linearspring_id):
         """ Edit a link linearspring element """
-        LinkLinearspringEdit(link_linearspring_id, parent=self)
+        LinkLinearspringEdit(link_linearspring_id, parent=get_fc_main_window())
         self.refresh_link_linearspring()
 
     def on_link_spheric_add(self):
@@ -405,7 +406,7 @@ class ChronoConfigDialog(QtGui.QDialog):
 
     def link_spheric_edit(self, link_spheric_id):
         """ Edit a link spheric element """
-        LinkSphericEdit(link_spheric_id, parent=self)
+        LinkSphericEdit(link_spheric_id, parent=get_fc_main_window())
         self.refresh_link_spheric()
 
     def on_link_pointline_add(self):
@@ -426,7 +427,7 @@ class ChronoConfigDialog(QtGui.QDialog):
 
     def link_pointline_edit(self, link_pointline_id):
         """ Edit a link pointline element """
-        LinkPointlineEdit(link_pointline_id, parent=self)
+        LinkPointlineEdit(link_pointline_id, parent=get_fc_main_window())
         self.refresh_link_pointline()
 
     def on_cancel(self):

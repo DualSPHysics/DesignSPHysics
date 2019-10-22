@@ -6,6 +6,7 @@ from PySide import QtGui, QtCore
 
 from mod.translation_tools import __
 from mod.post_processing_tools import measuretool_export
+from mod.freecad_tools import get_fc_main_window
 
 from mod.dataobjects.case import Case
 
@@ -186,8 +187,8 @@ class MeasureToolDialog(QtGui.QDialog):
 
     def on_mtool_set_points(self):
         """ Point list button behaviour."""
-        MeasureToolPointsDialog(parent=self)
+        MeasureToolPointsDialog(parent=get_fc_main_window())
 
     def on_mtool_set_grid(self):
         """ Spawns a Grid configuration dialog for MeasureTool. """
-        MeasureToolGridDialog(parent=self)
+        MeasureToolGridDialog(parent=get_fc_main_window())

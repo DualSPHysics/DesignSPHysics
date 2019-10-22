@@ -5,6 +5,7 @@
 from PySide import QtGui
 
 from mod.translation_tools import __
+from mod.freecad_tools import get_fc_main_window
 
 from mod.widgets.constants_dialog import ConstantsDialog
 from mod.widgets.setup_plugin_dialog import SetupPluginDialog
@@ -49,15 +50,15 @@ class DockConfigurationWidget(QtGui.QWidget):
 
     def on_constants_button_pressed(self):
         """ Opens constant definition window on button click. """
-        ConstantsDialog(parent=self)
+        ConstantsDialog(parent=get_fc_main_window())
 
     def on_setup_button_pressed(self):
         """ Opens constant definition window on button click. """
-        SetupPluginDialog(parent=self)
+        SetupPluginDialog(parent=get_fc_main_window())
 
     def on_execparams_button_presed(self):
         """ Opens a dialog to tweak the simulation's execution parameters """
-        ExecutionParametersDialog(parent=self)
+        ExecutionParametersDialog(parent=get_fc_main_window())
 
     def adapt_to_no_case(self):
         """ Adapts the contents of the widget to an environment with no opened case. """
