@@ -3,6 +3,7 @@
 """DesignSPHysics MLPiston2D Configuration Dialog """
 
 import glob
+from os import path
 
 from PySide import QtCore, QtGui
 
@@ -134,14 +135,14 @@ class MLPiston2DConfigDialog(QtGui.QDialog):
 
     def on_browse(self):
         # noinspection PyArgumentList
-        filename, _ = QtGui.QFileDialog.getOpenFileName(
-            self,
-            __("Open a file from the serie"),
-            QtCore.QDir.homePath(),
-            "External velocity data (*_x*_y*.csv)")
+        filename, _ = QtGui.QFileDialog.getOpenFileName(self, __("Open a file from the serie"), QtCore.QDir.homePath(), "External velocity data (*_x*_y*.csv)")
         if not filename:
             return
-        filename_filtered = filename.split("_x")[0]
+
+        basename: str = path.basename(filename)
+        folder: str = path.dirname(filename)
+
+        filename_filtered = "{}/{}".format(folder, basename.split("_x")[0])
         self.veldata_filevelx_input.setText(str(filename_filtered))
         serie_filenames = glob.glob("{}*.csv".format(filename_filtered))
         self.temp_mlpiston2d.veldata = list()

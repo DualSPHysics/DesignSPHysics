@@ -2,6 +2,8 @@
 # -*- coding: utf-8 -*-
 """DesignSPHysics Relaxation Zone File config Dialog"""
 
+from os import path
+
 from PySide import QtCore, QtGui
 
 from mod.translation_tools import __
@@ -183,16 +185,15 @@ class RelaxationZoneFileConfigDialog(QtGui.QDialog):
 
     def on_browse(self):
         # noinspection PyArgumentList
-        file_name, _ = QtGui.QFileDialog.getOpenFileName(
-            self,
-            __("Open a file from the serie"),
-            QtCore.QDir.homePath(),
-            "External velocity data (*_x*_y*.csv)")
+        file_name, _ = QtGui.QFileDialog.getOpenFileName(self, __("Open a file from the serie"), QtCore.QDir.homePath(), "External velocity data (*_x*_y*.csv)")
         if not file_name:
             return
+
+        basename: str = path.basename(file_name)
+        folder: str = path.dirname(file_name)
+            
         # Takes only the filename without the serie data in its name
-        filtered_filename = file_name.split("_v")[0]
-        self.filesvel_input.setText(filtered_filename)
+        self.filesvel_input.setText("{}/{}".format(folder, basename.split("_vel")[0]))
 
     def on_apply(self):
         self.temp_relaxationzone.start = float(self.start_input.text())
