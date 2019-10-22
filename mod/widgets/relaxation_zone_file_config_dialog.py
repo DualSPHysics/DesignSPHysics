@@ -207,7 +207,7 @@ class RelaxationZoneFileConfigDialog(QtGui.QDialog):
         self.temp_relaxationzone.movedata[1] = float(self.movedata_y.text())
         self.temp_relaxationzone.movedata[2] = float(self.movedata_z.text())
         self.temp_relaxationzone.dpz = float(self.dpz_input.text())
-        self.temp_relaxationzone.smooth = float(self.smooth_input.text())
+        self.temp_relaxationzone.smooth = int(self.smooth_input.text())
         self.temp_relaxationzone.center[0] = float(self.center_x.text())
         self.temp_relaxationzone.center[1] = float(self.center_y.text())
         self.temp_relaxationzone.center[2] = float(self.center_z.text())

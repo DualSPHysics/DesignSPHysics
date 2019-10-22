@@ -82,7 +82,7 @@ class MLPiston1DConfigDialog(QtGui.QDialog):
         self.temp_mlpiston1d.filevelx = str(self.filevelx_input.text())
         self.temp_mlpiston1d.incz = float(self.incz_input.text())
         self.temp_mlpiston1d.timedataini = float(self.timedataini_input.text())
-        self.temp_mlpiston1d.smooth = float(self.smooth_input.text())
+        self.temp_mlpiston1d.smooth = int(self.smooth_input.text())
         self.mlpiston1d = self.temp_mlpiston1d
         self.accept()
 

@@ -99,8 +99,8 @@ class MLPiston2DConfigDialog(QtGui.QDialog):
 
     def on_apply(self):
         self.temp_mlpiston2d.incz = float(self.incz_input.text())
-        self.temp_mlpiston2d.smoothz = float(self.smooth_z.text())
-        self.temp_mlpiston2d.smoothy = float(self.smooth_y.text())
+        self.temp_mlpiston2d.smoothz = int(self.smooth_z.text())
+        self.temp_mlpiston2d.smoothy = int(self.smooth_y.text())
         list_posy = self.veldata_posy_input.text().split(",")
         list_timedataini = self.veldata_timedataini_input.text().split(",")
         if len(list_posy) != len(list_timedataini) or len(self.temp_mlpiston2d.veldata) != len(list_posy) or len(self.temp_mlpiston2d.veldata) != len(list_timedataini):
