@@ -9,6 +9,8 @@ from PySide import QtGui
 from mod.translation_tools import __
 from mod.dialog_tools import info_dialog
 
+from mod.enums import ObjectType
+
 from mod.dataobjects.case import Case
 from mod.dataobjects.initials_property import InitialsProperty
 
@@ -75,7 +77,7 @@ class InitialsDialog(QtGui.QDialog):
 
         self.setLayout(self.initials_window_layout)
 
-        initials_object = Case.instance().get_mk_based_properties(self.target_mk).initials
+        initials_object = Case.instance().get_mk_based_properties(ObjectType.FLUID, self.target_mk).initials
         if initials_object:
             self.has_initials_selector.setCurrentIndex(0)
             self.on_initials_change(0)
@@ -99,12 +101,12 @@ class InitialsDialog(QtGui.QDialog):
         info_dialog(__("This will apply the initials properties to all objects with mkfluid = ") + str(self.target_mk))
         if self.has_initials_selector.currentIndex() == 1:
             # Initials false
-            Case.instance().get_mk_based_properties(self.target_mk).initials = None
+            Case.instance().get_mk_based_properties(ObjectType.FLUID, self.target_mk).initials = None
         else:
             # Initials true
             # Structure: InitialsProperty Object
             force_vector: list = [float(self.initials_vector_input_x.text()), float(self.initials_vector_input_y.text()), float(self.initials_vector_input_z.text())]
-            Case.instance().get_mk_based_properties(self.target_mk).initials = InitialsProperty(mk=self.target_mk, force=force_vector)
+            Case.instance().get_mk_based_properties(ObjectType.FLUID, self.target_mk).initials = InitialsProperty(mk=self.target_mk, force=force_vector)
         self.accept()
 
     # Cancel button handler

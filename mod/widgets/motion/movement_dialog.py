@@ -9,7 +9,7 @@ from PySide import QtCore, QtGui
 from mod.translation_tools import __
 from mod.gui_tools import get_icon
 from mod.dialog_tools import info_dialog
-from mod.enums import HelpURL
+from mod.enums import HelpURL, ObjectType
 from mod.freecad_tools import get_fc_main_window
 
 from mod.dataobjects.case import Case
@@ -55,7 +55,7 @@ from mod.widgets.motion.wave_movement_actions import WaveMovementActions
 class MovementDialog(QtGui.QDialog):
     """ Defines a window with motion  """
 
-    def __init__(self, parent=None):
+    def __init__(self, target_mk=None, parent=None):
         super(MovementDialog, self).__init__(parent=parent)
 
         self.setMinimumSize(1400, 650)
@@ -65,7 +65,7 @@ class MovementDialog(QtGui.QDialog):
         self.notice_label = QtGui.QLabel("")
         self.notice_label.setStyleSheet("QLabel { color : red; }")
         self.target_mk = Case.instance().get_simulation_object(FreeCADGui.Selection.getSelection()[0].Name)
-        self.mkbasedproperties = Case.instance().get_mk_based_properties(self.target_mk)
+        self.mkbasedproperties = Case.instance().get_mk_based_properties(ObjectType.BOUND, self.target_mk)
         self.movements_selected = self.mkbasedproperties.movements
 
         self.ok_button.clicked.connect(self.on_ok)

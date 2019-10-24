@@ -11,7 +11,7 @@ class MKBasedProperties():
     """ Stores data related with an mk number on the case. """
 
     def __init__(self, mk=None):
-        self.mk: int = mk
+        self.mk: int = mk # This is a realmk (bound + 11)
         self.movements: list = list()  # [Movement]
         self.float_property: FloatProperty = None
         self.initials: InitialsProperty = None

@@ -9,6 +9,8 @@ from PySide import QtCore, QtGui
 from mod.translation_tools import __
 from mod.dialog_tools import info_dialog
 
+from mod.enums import ObjectType
+
 from mod.dataobjects.case import Case
 from mod.dataobjects.float_property import FloatProperty
 
@@ -219,7 +221,7 @@ class FloatStateDialog(QtGui.QDialog):
 
         self.setLayout(self.floatings_window_layout)
 
-        float_property: FloatProperty = Case.instance().get_mk_based_properties(self.target_mk).float_property
+        float_property: FloatProperty = Case.instance().get_mk_based_properties(ObjectType.BOUND, self.target_mk).float_property
         if float_property:
             self.is_floating_selector.setCurrentIndex(0)
             self.on_floating_change(0)
@@ -335,7 +337,7 @@ class FloatStateDialog(QtGui.QDialog):
         info_dialog(__("This will apply the floating properties to all objects with mkbound = ") + str(self.target_mk))
         if self.is_floating_selector.currentIndex() == 1:
             # Remove Floating
-            Case.instance().get_mk_based_properties(self.target_mk).float_property = None
+            Case.instance().get_mk_based_properties(ObjectType.BOUND, self.target_mk).float_property = None
         else:
             # Floating true
             fp = FloatProperty()  # FloatProperty to be inserted
@@ -383,7 +385,7 @@ class FloatStateDialog(QtGui.QDialog):
             else:
                 fp.material = str(self.floating_material_line_edit.text())
 
-            Case.instance().get_mk_based_properties(self.target_mk).float_property = fp
+            Case.instance().get_mk_based_properties(ObjectType.BOUND, self.target_mk).float_property = fp
 
         self.accept()
 

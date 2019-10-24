@@ -45,7 +45,7 @@ class Case():
         self.constants: Constants = Constants()
         self.execution_parameters: ExecutionParameters = ExecutionParameters()
         self.objects: list = list()  # [SimulationObject]
-        self.mkbasedproperties: dict = dict()  # {mk: MKBasedProperties}
+        self.mkbasedproperties: dict = dict()  # {realmk: MKBasedProperties}
         self.damping_zones: dict = dict()  # {freecad_object_name: Damping}
         self.flowtool_boxes: list = list()  # [FlowToolBox]
         self.periodicity: Periodicity = Periodicity()
@@ -103,15 +103,19 @@ class Case():
         """ Return the total number of objects in the simulation """
         return len(list(filter(lambda obj: obj.type != ObjectType.SPECIAL, self.objects)))
 
-    def get_mk_based_properties(self, mknumber: int) -> MKBasedProperties:
-        """ Returns the properties set for a given MK number """
-        if mknumber not in self.mkbasedproperties.keys():
-            raise RuntimeError("MK has no properties applied! This should not happen.")
+    def get_mk_based_properties(self, obj_type: ObjectType, mknumber: int) -> MKBasedProperties:
+        """ Returns the properties set for a given MK number of a given type """
+        if obj_type == ObjectType.BOUND:
+            mknumber += 11
+        if not self.has_mk_properties(mknumber):
+            debug("Creating MKBasedProperties on demand for realmk: {}".format(mknumber))
+            self.mkbasedproperties[mknumber] = MKBasedProperties(mk=mknumber)
+        debug("Returning MKBasedProperties object for realmk: {}".format(mknumber))
         return self.mkbasedproperties[mknumber]
 
-    def has_mk_properties(self, mk) -> bool:
-        """ Returns whether a given mk has properties applier or not. """
-        return mk in self.mkbasedproperties.keys()
+    def has_mk_properties(self, realmk: int) -> bool:
+        """ Returns whether a given realmk has properties applier or not. """
+        return realmk in self.mkbasedproperties.keys()
 
     def is_object_in_simulation(self, name) -> bool:
         """ Returns whether an object is contained in the current case for simulating or not. """
@@ -126,8 +130,6 @@ class Case():
         if simobject.name in self.get_all_simulation_object_names():
             raise RuntimeError("Object with the name: {} is already added to the case".format(simobject.name))
         self.objects.append(simobject)
-        if not self.has_mk_properties(simobject.obj_mk):
-            self.mkbasedproperties[simobject.obj_mk] = MKBasedProperties(mk=simobject.obj_mk)
 
     def remove_object(self, object_name: str) -> SimulationObject:
         """ Tries to remove the given object name from the simulation.

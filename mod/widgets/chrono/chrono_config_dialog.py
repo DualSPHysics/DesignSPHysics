@@ -97,7 +97,7 @@ class ChronoConfigDialog(QtGui.QDialog):
 
         # Select the objects that are going to be listed
         for sim_object in Case.instance().get_all_bound_objects():
-            self.is_floating = "bodyfloating" if Case.instance().get_mk_based_properties(sim_object.mk).float_property else "bodyfixed"
+            self.is_floating = "bodyfloating" if Case.instance().get_mk_based_properties(sim_object.type, sim_object.mk).float_property else "bodyfixed"
 
             # Collects the information of the object
             self.target_widget = ChronoObjectCheckOptions(
