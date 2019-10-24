@@ -11,6 +11,7 @@ from mod.gui_tools import get_icon
 from mod.dialog_tools import info_dialog
 from mod.enums import HelpURL, ObjectType
 from mod.freecad_tools import get_fc_main_window
+from mod.stdout_tools import debug
 
 from mod.dataobjects.case import Case
 from mod.dataobjects.motion.movement import Movement
@@ -58,13 +59,15 @@ class MovementDialog(QtGui.QDialog):
     def __init__(self, target_mk=None, parent=None):
         super(MovementDialog, self).__init__(parent=parent)
 
+        self.currently_selected_movement = None
+
         self.setMinimumSize(1400, 650)
         self.setWindowTitle(__("Motion configuration"))
         self.ok_button = QtGui.QPushButton(__("Ok"))
         self.cancel_button = QtGui.QPushButton(__("Cancel"))
         self.notice_label = QtGui.QLabel("")
         self.notice_label.setStyleSheet("QLabel { color : red; }")
-        self.target_mk = Case.instance().get_simulation_object(FreeCADGui.Selection.getSelection()[0].Name)
+        self.target_mk = Case.instance().get_simulation_object(FreeCADGui.Selection.getSelection()[0].Name).obj_mk
         self.mkbasedproperties = Case.instance().get_mk_based_properties(ObjectType.BOUND, self.target_mk)
         self.movements_selected = self.mkbasedproperties.movements
 
@@ -217,7 +220,7 @@ class MovementDialog(QtGui.QDialog):
         self.actions_groupbox_table.setCellWidget(8, 0, self.bt_to_add)
 
         # Set motion suscription for this mk
-        self.has_motion_selector.setCurrentIndex(1 if self.movements_selected else 0)
+        self.has_motion_selector.setCurrentIndex(0 if self.movements_selected else 1)
 
         self.exec_()
 
@@ -328,7 +331,6 @@ class MovementDialog(QtGui.QDialog):
         if __("Rotation from a file") in action.text():
             to_add = SpecialMovement(name="Rotation from a file", generator=RotationFileGen())
 
-        to_add.generator.parent_movement = to_add
         Case.instance().info.global_movements.append(to_add)
         self.check_movement_compatibility(to_add)
         self.movements_selected.append(to_add)
@@ -347,14 +349,14 @@ class MovementDialog(QtGui.QDialog):
         """ Changes the values of an item on the timeline. """
         self.notice_label.setText("")  # Reset the notice label if a valid change is made
         if isinstance(motion_object, WaveGen):
-            motion_object.parent_movement.set_wavegen(motion_object)
+            self.currently_selected_movement.set_wavegen(motion_object)
         else:
-            motion_object.parent_movement.motion_list[index] = motion_object
+            self.currently_selected_movement.motion_list[index] = motion_object
 
-    def on_timeline_item_delete(self, index, motion_object):
+    def on_timeline_item_delete(self, index, _):
         """ Deletes an item from the timeline. """
         self.notice_label.setText("")  # Reset the notice label if a valid change is made
-        motion_object.parent_movement.motion_list.pop(index)
+        self.currently_selected_movement.motion_list.pop(index)
         self.on_movement_selected(self.movement_list_table.selectedIndexes()[0].row(), None)
 
     def on_timeline_item_order_up(self, index):
@@ -374,7 +376,7 @@ class MovementDialog(QtGui.QDialog):
     def on_movement_selected(self, row, _):
         """ Shows the timeline for the selected movement. """
         try:
-            target_movement = Case.instance().info.global_movements[row]
+            self.currently_selected_movement = Case.instance().info.global_movements[row]
         except IndexError:
             self.timeline_list_table.clearContents()
             self.timeline_list_table.setEnabled(False)
@@ -386,13 +388,13 @@ class MovementDialog(QtGui.QDialog):
         # Reset the notice label if a valid change is made
         self.notice_label.setText("")
 
-        if isinstance(target_movement, Movement):
-            self.timeline_list_table.setRowCount(len(target_movement.motion_list))
+        if isinstance(self.currently_selected_movement, Movement):
+            self.timeline_list_table.setRowCount(len(self.currently_selected_movement.motion_list))
             self.timeline_list_table.setEnabled(True)
             self.actions_groupbox_table.setEnabled(True)
 
             current_row = 0
-            for motion in target_movement.motion_list:
+            for motion in self.currently_selected_movement.motion_list:
                 if isinstance(motion, RectMotion):
                     target_to_put = RectilinearMotionTimeline(current_row, motion, parent=get_fc_main_window())
                 elif isinstance(motion, WaitMotion):
@@ -423,27 +425,27 @@ class MovementDialog(QtGui.QDialog):
 
                 if current_row is 0:
                     target_to_put.disable_order_up_button()
-                elif current_row is len(target_movement.motion_list) - 1:
+                elif current_row is len(self.currently_selected_movement.motion_list) - 1:
                     target_to_put.disable_order_down_button()
 
                 current_row += 1
-        elif isinstance(target_movement, SpecialMovement):
+        elif isinstance(self.currently_selected_movement, SpecialMovement):
             self.timeline_list_table.setRowCount(1)
             self.timeline_list_table.setEnabled(True)
             self.actions_groupbox_table.setEnabled(False)
 
-            if isinstance(target_movement.generator, RegularPistonWaveGen):
-                target_to_put = RegularPistonWaveMotionTimeline(target_movement.generator, parent=get_fc_main_window())
-            elif isinstance(target_movement.generator, IrregularPistonWaveGen):
-                target_to_put = IrregularPistonWaveMotionTimeline(target_movement.generator, parent=get_fc_main_window())
-            if isinstance(target_movement.generator, RegularFlapWaveGen):
-                target_to_put = RegularFlapWaveMotionTimeline(target_movement.generator, parent=get_fc_main_window())
-            elif isinstance(target_movement.generator, IrregularFlapWaveGen):
-                target_to_put = IrregularFlapWaveMotionTimeline(target_movement.generator, parent=get_fc_main_window())
-            elif isinstance(target_movement.generator, FileGen):
-                target_to_put = FileMotionTimeline(target_movement.generator, Case.instance().path, parent=get_fc_main_window())
-            elif isinstance(target_movement.generator, RotationFileGen):
-                target_to_put = RotationFileMotionTimeline(target_movement.generator, Case.instance().path, parent=get_fc_main_window())
+            if isinstance(self.currently_selected_movement.generator, RegularPistonWaveGen):
+                target_to_put = RegularPistonWaveMotionTimeline(self.currently_selected_movement.generator, parent=get_fc_main_window())
+            elif isinstance(self.currently_selected_movement.generator, IrregularPistonWaveGen):
+                target_to_put = IrregularPistonWaveMotionTimeline(self.currently_selected_movement.generator, parent=get_fc_main_window())
+            if isinstance(self.currently_selected_movement.generator, RegularFlapWaveGen):
+                target_to_put = RegularFlapWaveMotionTimeline(self.currently_selected_movement.generator, parent=get_fc_main_window())
+            elif isinstance(self.currently_selected_movement.generator, IrregularFlapWaveGen):
+                target_to_put = IrregularFlapWaveMotionTimeline(self.currently_selected_movement.generator, parent=get_fc_main_window())
+            elif isinstance(self.currently_selected_movement.generator, FileGen):
+                target_to_put = FileMotionTimeline(self.currently_selected_movement.generator, Case.instance().path, parent=get_fc_main_window())
+            elif isinstance(self.currently_selected_movement.generator, RotationFileGen):
+                target_to_put = RotationFileMotionTimeline(self.currently_selected_movement.generator, Case.instance().path, parent=get_fc_main_window())
 
             target_to_put.changed.connect(self.on_timeline_item_change)
             self.timeline_list_table.setCellWidget(0, 0, target_to_put)
@@ -470,6 +472,13 @@ class MovementDialog(QtGui.QDialog):
             self.movement_list_table.setCellWidget(current_row, 1, movement_actions)
 
             current_row += 1
+
+        try:
+            self.create_new_movement_button.clicked.disconnect()
+            self.create_new_movement_menu.triggered.disconnect()
+        except RuntimeError:
+            # Nothing connected yet.
+            pass
 
         self.create_new_movement_button.clicked.connect(self.on_new_movement)
         self.create_new_movement_menu.triggered.connect(self.on_new_wave_generator)

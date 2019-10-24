@@ -31,8 +31,6 @@ class WaitMotionTimeline(QtGui.QWidget):
         self.index = index
         self.main_layout = QtGui.QHBoxLayout()
         self.main_layout.setContentsMargins(10, 0, 10, 0)
-
-        self.parent_movement = wait_motion.parent_movement
         self.label = QtGui.QLabel("Wait")
         self.label.setMinimumWidth(75)
         self.time_label = QtGui.QLabel(__("Duration (s): "))
@@ -82,7 +80,7 @@ class WaitMotionTimeline(QtGui.QWidget):
         self.time_input.setText(str(wait_motion.duration))
 
     def construct_motion_object(self):
-        return WaitMotion(duration=float(self.time_input.text()), parent_movement=self.parent_movement)
+        return WaitMotion(duration=float(self.time_input.text()))
 
     def on_change(self):
         if not self.time_input.text():

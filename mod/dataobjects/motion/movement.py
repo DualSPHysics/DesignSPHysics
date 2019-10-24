@@ -27,7 +27,6 @@ class Movement():
     def add_motion(self, motion):
         """ Adds a motion to the movement """
         if isinstance(motion, BaseMotion):
-            motion.parent_movement = self
             self.motion_list.append(motion)
         else:
             raise TypeError(

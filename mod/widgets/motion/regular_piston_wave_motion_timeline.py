@@ -31,7 +31,6 @@ class RegularPistonWaveMotionTimeline(QtGui.QWidget):
 
         self.main_layout = QtGui.QVBoxLayout()
         self.main_layout.setContentsMargins(10, 10, 10, 10)
-        self.parent_movement = reg_wave_gen.parent_movement
 
         self.root_label = QtGui.QLabel(__("Regular wave generator (Piston)"))
 
@@ -341,8 +340,7 @@ class RegularPistonWaveMotionTimeline(QtGui.QWidget):
             correction=_cmo_correction
         )
 
-        return RegularPistonWaveGen(parent_movement=self.parent_movement,
-                                    wave_order=self.wave_order_selector.currentIndex() + 1, start=0,
+        return RegularPistonWaveGen(wave_order=self.wave_order_selector.currentIndex() + 1, start=0,
                                     duration=float(self.duration_input.text()), depth=float(self.depth_input.text()),
                                     piston_dir=[float(self.piston_dir_x.text()),
                                                 float(

@@ -19,10 +19,9 @@ class CirSinuMotion(BaseMotion):
             phase: Phase
         """
 
-    def __init__(self, reference=None, duration=1, axis1=None, axis2=None, freq=0, ampl=0, phase=0, parent_movement=None):
+    def __init__(self, reference=None, duration=1, axis1=None, axis2=None, freq=0, ampl=0, phase=0):
         BaseMotion.__init__(self, duration)
         self.type = MotionType.SINUSOIDAL_CIRCULAR
-        self.parent_movement = parent_movement
         self.reference = reference or [0, 0, 0]
         self.axis1 = axis1 or [0, 0, 0]
         self.axis2 = axis2 or [0, 0, 0]

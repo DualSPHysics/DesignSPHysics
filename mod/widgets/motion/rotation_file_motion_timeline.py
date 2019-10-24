@@ -29,7 +29,6 @@ class RotationFileMotionTimeline(QtGui.QWidget):
 
         self.main_layout = QtGui.QVBoxLayout()
         self.main_layout.setContentsMargins(10, 10, 10, 10)
-        self.parent_movement = rot_file_gen.parent_movement
 
         self.root_label = QtGui.QLabel(__("Rotation file movement"))
 
@@ -127,8 +126,7 @@ class RotationFileMotionTimeline(QtGui.QWidget):
             debug("Introduced an invalid value for a float number.")
 
     def construct_motion_object(self):
-        return RotationFileGen(parent_movement=self.parent_movement,
-                               duration=float(self.duration_input.text()),
+        return RotationFileGen(duration=float(self.duration_input.text()),
                                filename=str(self.filename_input.text()),
                                anglesunits=str(
                                    self.anglesunits_selector.currentText().lower()),

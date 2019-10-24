@@ -30,8 +30,6 @@ class RectSinuMotionTimeline(QtGui.QWidget):
 
         self.main_layout = QtGui.QHBoxLayout()
         self.main_layout.setContentsMargins(10, 0, 10, 0)
-
-        self.parent_movement = rect_sinu_motion.parent_movement
         self.label = QtGui.QLabel("Sinusoidal \nRectilinear \nMotion ")
         self.label.setMinimumWidth(75)
         self.freq_amp_layout = QtGui.QVBoxLayout()
@@ -158,7 +156,7 @@ class RectSinuMotionTimeline(QtGui.QWidget):
             ampl=[float(self.amp_x_input.text()),
                   float(self.amp_y_input.text()),
                   float(self.amp_z_input.text())],
-            duration=float(self.time_input.text()), parent_movement=self.parent_movement)
+            duration=float(self.time_input.text()))
 
     def on_delete(self):
         self.deleted.emit(self.index, self.construct_motion_object())

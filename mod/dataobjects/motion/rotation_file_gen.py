@@ -18,8 +18,8 @@ class RotationFileGen(WaveGen):
         axisp2: Point 2 of the axis
     """
 
-    def __init__(self, parent_movement=None, duration=0, filename="", anglesunits="degrees", axisp1=None, axisp2=None):
-        super(RotationFileGen, self).__init__(parent_movement)
+    def __init__(self, duration=0, filename="", anglesunits="degrees", axisp1=None, axisp2=None):
+        super(RotationFileGen, self).__init__()
         self.duration = duration
         self.name = MotionType.FILE_ROTATIONAL_WAVE_GENERATOR
         self.anglesunits = anglesunits

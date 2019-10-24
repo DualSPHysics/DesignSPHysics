@@ -26,7 +26,6 @@ class IrregularFlapWaveMotionTimeline(QtGui.QWidget):
 
         self.main_layout = QtGui.QVBoxLayout()
         self.main_layout.setContentsMargins(10, 10, 10, 10)
-        self.parent_movement = irreg_wave_gen.parent_movement
 
         self.root_label = QtGui.QLabel(
             __("Irregular flap wave generator (Flap)"))
@@ -255,8 +254,7 @@ class IrregularFlapWaveMotionTimeline(QtGui.QWidget):
             debug("Introduced an invalid value for a float number.")
 
     def construct_motion_object(self):
-        return IrregularFlapWaveGen(parent_movement=self.parent_movement,
-                                    wave_order=self.wave_order_selector.currentIndex() + 1, start=0,
+        return IrregularFlapWaveGen(wave_order=self.wave_order_selector.currentIndex() + 1, start=0,
                                     duration=float(self.duration_input.text()), depth=float(self.depth_input.text()),
                                     flapaxis0=[float(self.flap_axis_0_x.text()),
                                                float(

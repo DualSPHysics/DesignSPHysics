@@ -32,8 +32,6 @@ class AccRectilinearMotionTimeline(QtGui.QWidget):
         self.setMinimumHeight(50)
         self.main_layout = QtGui.QHBoxLayout()
         self.main_layout.setContentsMargins(10, 0, 10, 0)
-
-        self.parent_movement = acc_rect_motion.parent_movement
         self.label = QtGui.QLabel("Accelerated \nRectilinear \nMotion ")
         self.label.setMinimumWidth(75)
         self.data_layout = QtGui.QVBoxLayout()
@@ -147,7 +145,7 @@ class AccRectilinearMotionTimeline(QtGui.QWidget):
             acceleration=[float(self.xa_input.text()),
                           float(self.ya_input.text()),
                           float(self.za_input.text())],
-            duration=float(self.time_input.text()), parent_movement=self.parent_movement)
+            duration=float(self.time_input.text()))
 
     def on_delete(self):
         self.deleted.emit(self.index, self.construct_motion_object())

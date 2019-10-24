@@ -15,10 +15,9 @@ class AccRectMotion(BaseMotion):
             acceleration: Acceleration vector that defines the acceleration
         """
 
-    def __init__(self, duration=1, velocity=None, acceleration=None, parent_movement=None):
+    def __init__(self, duration=1, velocity=None, acceleration=None):
         BaseMotion.__init__(self, duration)
         self.type = MotionType.ACCELERATED_RECTILINEAR
-        self.parent_movement = parent_movement
         self.velocity = velocity or [0, 0, 0]
         self.acceleration = acceleration or [0, 0, 0]
 

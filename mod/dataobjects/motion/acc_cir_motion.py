@@ -18,11 +18,9 @@ class AccCirMotion(BaseMotion):
             axis2: Finishing point of the vector that defines the rotation axis
         """
 
-    def __init__(self, duration=1, ang_vel=0, ang_acc=0, reference=None, axis1=None, axis2=None,
-                 parent_movement=None):
+    def __init__(self, duration=1, ang_vel=0, ang_acc=0, reference=None, axis1=None, axis2=None):
         BaseMotion.__init__(self, duration)
         self.type = MotionType.CIRCULAR
-        self.parent_movement = parent_movement
         self.reference = reference or [0, 0, 0]
         self.axis1 = axis1 or [0, 0, 0]
         self.axis2 = axis2 or [0, 0, 0]

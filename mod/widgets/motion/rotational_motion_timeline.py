@@ -30,8 +30,6 @@ class RotationalMotionTimeline(QtGui.QWidget):
 
         self.main_layout = QtGui.QHBoxLayout()
         self.main_layout.setContentsMargins(10, 0, 10, 0)
-
-        self.parent_movement = rot_motion.parent_movement
         self.label = QtGui.QLabel("Rotational \nMotion  ")
         self.label.setMinimumWidth(75)
         self.velocity_label = QtGui.QLabel("Vel: ")
@@ -142,7 +140,7 @@ class RotationalMotionTimeline(QtGui.QWidget):
             axis2=[float(self.x2_input.text()),
                    float(self.y2_input.text()),
                    float(self.z2_input.text())],
-            duration=float(self.time_input.text()), parent_movement=self.parent_movement)
+            duration=float(self.time_input.text()))
 
     def on_delete(self):
         self.deleted.emit(self.index, self.construct_motion_object())

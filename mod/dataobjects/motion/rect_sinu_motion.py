@@ -16,10 +16,9 @@ class RectSinuMotion(BaseMotion):
             phase: Phase (vector)
         """
 
-    def __init__(self, duration=1, freq=None, ampl=None, phase=None, parent_movement=None):
+    def __init__(self, duration=1, freq=None, ampl=None, phase=None):
         BaseMotion.__init__(self, duration)
         self.type = MotionType.SINUSOIDAL_RECTILINEAR
-        self.parent_movement = parent_movement
         self.freq = freq or [0, 0, 0]
         self.ampl = ampl or [0, 0, 0]
         self.phase = phase or [0, 0, 0]

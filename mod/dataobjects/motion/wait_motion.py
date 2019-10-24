@@ -13,9 +13,8 @@ class WaitMotion(BaseMotion):
         Attributes inherited from superclass.
         """
 
-    def __init__(self, duration=1, parent_movement=None):
+    def __init__(self, duration=1):
         BaseMotion.__init__(self, duration)
-        self.parent_movement = parent_movement
         self.type = MotionType.WAIT
 
     def __str__(self):

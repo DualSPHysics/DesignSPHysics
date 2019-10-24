@@ -29,7 +29,6 @@ class FileMotionTimeline(QtGui.QWidget):
 
         self.main_layout = QtGui.QVBoxLayout()
         self.main_layout.setContentsMargins(10, 10, 10, 10)
-        self.parent_movement = file_wave_gen.parent_movement
 
         self.root_label = QtGui.QLabel(__("File movement: "))
 
@@ -115,8 +114,7 @@ class FileMotionTimeline(QtGui.QWidget):
             debug("Introduced an invalid value for a float number.")
 
     def construct_motion_object(self):
-        return FileGen(parent_movement=self.parent_movement,
-                       duration=float(self.duration_input.text()),
+        return FileGen(duration=float(self.duration_input.text()),
                        filename=str(self.filename_input.text()),
                        fields=str(self.fields_input.text()),
                        fieldtime=str(self.fieldtime_input.text()),

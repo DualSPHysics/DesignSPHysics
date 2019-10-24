@@ -30,8 +30,6 @@ class RotSinuMotionTimeline(QtGui.QWidget):
 
         self.main_layout = QtGui.QHBoxLayout()
         self.main_layout.setContentsMargins(10, 0, 10, 0)
-
-        self.parent_movement = rot_sinu_motion.parent_movement
         self.label = QtGui.QLabel("Sinusoidal \nRotational \nMotion ")
         self.label.setMinimumWidth(75)
         self.axis_label = QtGui.QLabel(
@@ -161,8 +159,7 @@ class RotSinuMotionTimeline(QtGui.QWidget):
                    float(self.y2_input.text()),
                    float(self.z2_input.text())],
             duration=float(self.time_input.text()), freq=float(self.freq_input.text()),
-            ampl=float(self.ampl_input.text()), phase=float(self.phase_input.text()),
-            parent_movement=self.parent_movement)
+            ampl=float(self.ampl_input.text()), phase=float(self.phase_input.text()))
 
     def on_delete(self):
         self.deleted.emit(self.index, self.construct_motion_object())

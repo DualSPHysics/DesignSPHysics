@@ -23,7 +23,7 @@ class IrregularPistonWaveGen(WaveGen):
         piston_dir: Movement direction (def [1,0,0])
     """
 
-    def __init__(self, parent_movement=None, wave_order=1, start=0, duration=0, depth=0, wave_height=0.5,
+    def __init__(self, wave_order=1, start=0, duration=0, depth=0, wave_height=0.5,
                  wave_period=1, spectrum=IrregularSpectrum.JONSWAP,
                  discretization=IrregularDiscretization.STRETCHED,
                  peak_coef=0.1, waves=50, randomseed=randint(0, 9999), serieini=0, ramptime=0,
@@ -31,7 +31,7 @@ class IrregularPistonWaveGen(WaveGen):
                  savemotion_zpos=-0.15, saveserie_timemin=0, saveserie_timemax=1300, saveserie_timedt=0.05,
                  saveserie_xpos=0, saveseriewaves_timemin=0, saveseriewaves_timemax=1000, saveseriewaves_xpos=2,
                  piston_dir=None, awas=None):
-        super(IrregularPistonWaveGen, self).__init__(parent_movement, wave_order, start,
+        super(IrregularPistonWaveGen, self).__init__(wave_order, start,
                                                      duration, depth, wave_height, wave_period)
         self.type = MotionType.IRREGULAR_PISTON_WAVE_GENERATOR
         self.spectrum = spectrum

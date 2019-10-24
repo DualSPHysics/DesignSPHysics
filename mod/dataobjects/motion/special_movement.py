@@ -24,7 +24,6 @@ class SpecialMovement():
     def set_wavegen(self, generator):
         """ Sets the wave generator for the special movement """
         if isinstance(generator, WaveGen):
-            generator.parent_movement = self
             self.generator = generator
         else:
             raise TypeError("You are trying to set a non-generator object.")

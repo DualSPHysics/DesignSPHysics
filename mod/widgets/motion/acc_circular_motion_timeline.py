@@ -31,8 +31,6 @@ class AccCircularMotionTimeline(QtGui.QWidget):
         self.index = index
         self.main_layout = QtGui.QHBoxLayout()
         self.main_layout.setContentsMargins(10, 0, 10, 0)
-
-        self.parent_movement = acc_cir_motion.parent_movement
         self.label = QtGui.QLabel("Accelerated \nCircular \nMotion ")
         self.label.setMinimumWidth(75)
         self.vel_and_acc_layout = QtGui.QVBoxLayout()
@@ -183,7 +181,7 @@ class AccCircularMotionTimeline(QtGui.QWidget):
             axis2=[float(self.x2_input.text()),
                    float(self.y2_input.text()),
                    float(self.z2_input.text())],
-            duration=float(self.time_input.text()), parent_movement=self.parent_movement)
+            duration=float(self.time_input.text()))
 
     def on_delete(self):
         self.deleted.emit(self.index, self.construct_motion_object())
