@@ -125,7 +125,7 @@ class XMLExporter():
         # Formatting specific keys for each type of object
         if fc_object.TypeId == FreeCADObjectType.BOX:
             obj_formatter.update({
-                "boxfill": obj["faces_configuration"]["faces_print"] if obj["faces_configuration"] else "solid",
+                "boxfill": obj["faces_configuration"]["face_print"] if obj["faces_configuration"] else "solid",
                 "size": [fc_object.Length.Value / DIVIDER, fc_object.Width.Value / DIVIDER, fc_object.Height.Value / DIVIDER],
             })
         if fc_object.TypeId == FreeCADObjectType.SPHERE:

@@ -51,7 +51,7 @@ class FacesDialog(QtGui.QDialog):
             self.bottom_face.setCheckState(QtCore.Qt.Checked if self.target_object.faces_configuration.bottom_face else QtCore.Qt.Unchecked)
             self.left_face.setCheckState(QtCore.Qt.Checked if self.target_object.faces_configuration.left_face else QtCore.Qt.Unchecked)
             self.right_face.setCheckState(QtCore.Qt.Checked if self.target_object.faces_configuration.right_face else QtCore.Qt.Unchecked)
-        
+
         self.all_faces.toggled.connect(self.on_faces_checkbox)
 
         self.faces_layout.addWidget(self.all_faces)
@@ -74,7 +74,6 @@ class FacesDialog(QtGui.QDialog):
     def on_ok(self):
 
         fp = FacesProperty()
-        fp.mk = self.target_object.mk
 
         if self.all_faces.isChecked():
             fp.all_faces = True
