@@ -88,8 +88,8 @@ class DockSimulationWidget(QtGui.QWidget):
         # Cancel button handler
         def on_cancel():
             log(__("Stopping simulation"))
-            if Case.instance().info.current_process:
-                Case.instance().info.current_process.kill()
+            if process:
+                process.kill()
             run_dialog.hide_all()
             Case.instance().info.is_simulation_done = False
             self.simulation_cancelled.emit()
@@ -105,7 +105,7 @@ class DockSimulationWidget(QtGui.QWidget):
             """ Simulation finish handler. Defines what happens when the process finishes."""
 
             # Reads output and completes the progress bar
-            output = Case.instance().info.current_process.readAllStandardOutput()
+            output = process.readAllStandardOutput()
             run_dialog.set_detail_text(str(output))
             run_dialog.run_complete()
 
@@ -126,10 +126,8 @@ class DockSimulationWidget(QtGui.QWidget):
                                  str(output).split("================================")[1])
 
         # Launches a QProcess in background
-        process = QtCore.QProcess(run_dialog)
+        process = QtCore.QProcess(get_fc_main_window())
         process.finished.connect(on_dsph_sim_finished)
-
-        Case.instance().info.current_process = process
 
         static_params_exe = [Case.instance().get_out_xml_file_path(),
                              Case.instance().get_out_folder_path(),
@@ -141,7 +139,7 @@ class DockSimulationWidget(QtGui.QWidget):
             additional_parameters = Case.instance().info.run_additional_parameters.split(" ")
 
         final_params_ex = static_params_exe + additional_parameters
-        Case.instance().info.current_process.start(Case.instance().executable_paths.dsphysics, final_params_ex)
+        process.start(Case.instance().executable_paths.dsphysics, final_params_ex)
 
         def on_fs_change():
             """ Executed each time the filesystem changes. This updates the percentage of the simulation and its details."""
@@ -189,10 +187,10 @@ class DockSimulationWidget(QtGui.QWidget):
         Case.instance().info.needs_to_run_gencase = False
 
         # Handle error on simulation start
-        if Case.instance().info.current_process.state() == QtCore.QProcess.NotRunning:
+        if process.state() == QtCore.QProcess.NotRunning:
             # Probably error happened.
             run_fs_watcher.removePath(Case.instance().path + "/" + Case.instance().name + "_out/")
-            Case.instance().info.current_process = None
+            process = None
             error_dialog("Error on simulation start. Check that the DualSPHysics executable is correctly set.")
         else:
             run_dialog.show()
