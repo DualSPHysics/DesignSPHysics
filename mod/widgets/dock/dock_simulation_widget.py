@@ -170,7 +170,6 @@ class DockSimulationWidget(QtGui.QWidget):
             last_particles_out_lines = list(filter(lambda x: "(total: " in x and "Particles out:" in x, run_file_data))
             if last_particles_out_lines:
                 totalpartsout = int(last_particles_out_lines[-1].split("(total: ")[1].split(")")[0])
-                Case.instance().info.particles_out = totalpartsout
 
             try:
                 last_estimated_time = str(last_part_lines[-1].split("  ")[-1])
@@ -178,7 +177,7 @@ class DockSimulationWidget(QtGui.QWidget):
                 last_estimated_time = None
 
             # Update run dialog
-            run_dialog.run_update(current_value, Case.instance().info.particles_out, last_estimated_time)
+            run_dialog.run_update(current_value, totalpartsout, last_estimated_time)
 
         # Set filesystem watcher to the out directory.
         run_fs_watcher.addPath(Case.instance().path + "/" + Case.instance().name + "_out/")

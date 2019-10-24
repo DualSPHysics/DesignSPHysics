@@ -210,7 +210,6 @@ class DockPreProcessingWidget(QtGui.QWidget):
                 total_particles_text = output[output.index("Total particles: "):output.index(" (bound=")]
                 total_particles = int(total_particles_text[total_particles_text.index(": ") + 2:])
                 Case.instance().info.particle_number = total_particles
-                Case.instance().info.previous_particle_number = int(total_particles)
                 GencaseCompletedDialog(particle_count=total_particles, detail_text=output, parent=get_fc_main_window()).show()
                 Case.instance().info.is_gencase_done = True
                 self.on_save_case()
