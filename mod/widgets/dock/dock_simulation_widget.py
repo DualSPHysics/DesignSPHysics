@@ -159,6 +159,10 @@ class DockSimulationWidget(QtGui.QWidget):
                     if "TimeMax=" in l:
                         Case.instance().execution_parameters.timemax = float(l.split("=")[1])
 
+            current_value: float = 0.0
+            totalpartsout: int = 0
+            last_estimated_time = None
+
             # Update execution metrics
             last_part_lines = list(filter(lambda x: "Part_" in x and "stored" not in x and "      " in x, run_file_data))
             if last_part_lines:
