@@ -1,0 +1,4 @@
+                <mvrectace id="{index}" duration="{duration}">
+                    <velini x="{velocity[0]}" y="{velocity[1]}" z="{velocity[2]}" units_comment="m/s" />
+                    <ace x="{acceleration[0]}" y="{acceleration[1]}" z="{acceleration[2]}" units_comment="m/s^2" />
+                </mvrectace>

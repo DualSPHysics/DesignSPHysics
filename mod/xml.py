@@ -12,7 +12,7 @@ from datetime import datetime
 import FreeCAD
 
 from mod.constants import APP_NAME, DIVIDER, LINE_END, SUPPORTED_TYPES
-from mod.enums import FloatingDensityType, FreeCADObjectType, ObjectType, MLPistonType
+from mod.enums import FloatingDensityType, FreeCADObjectType, ObjectType, MLPistonType, MotionType
 from mod.template_tools import obj_to_dict
 from mod.stdout_tools import debug
 
@@ -61,6 +61,20 @@ class XMLExporter():
     FLOATINGS_ROTATION_XML = "/templates/gencase/floatings/each/rotation.xml"
     FLOATINGS_TRANSLATION_XML = "/templates/gencase/floatings/each/translation.xml"
     FLOATINGS_MATERIAL_XML = "/templates/gencase/floatings/each/material.xml"
+    MOTION_BASE_XML = "/templates/gencase/motion/base.xml"
+    MOTION_EACH_BASE_XML = "/templates/gencase/motion/each/base.xml"
+    MOTION_EACH_MOVEMENT_LIST_XML = "/templates/gencase/motion/each/movements_list.xml"
+    MOTION_TEMPLATES = {
+        MotionType.RECTILINEAR: "/templates/gencase/motion/each/normal/rectilinear.xml",
+        MotionType.WAIT: "/templates/gencase/motion/each/normal/wait.xml",
+        MotionType.ACCELERATED_RECTILINEAR: "/templates/gencase/motion/each/normal/acc_rectilinear.xml",
+        MotionType.ROTATIONAL: "/templates/gencase/motion/each/normal/rotational.xml",
+        MotionType.ACCELERATED_ROTATIONAL: "/templates/gencase/motion/each/normal/acc_rotational.xml",
+        MotionType.CIRCULAR: "/templates/gencase/motion/each/normal/circular.xml",
+        MotionType.SINUSOIDAL_ROTATIONAL: "/templates/gencase/motion/each/normal/sinu_rotational.xml",
+        MotionType.SINUSOIDAL_CIRCULAR: "/templates/gencase/motion/each/normal/sinu_circular.xml",
+        MotionType.SINUSOIDAL_RECTILINEAR: "/templates/gencase/motion/each/normal/sinu_rectilinear.xml"
+    }
     GENCASE_XML_SUFFIX = "_Def.xml"
 
     def __init__(self):
@@ -370,6 +384,66 @@ class XMLExporter():
 
         return self.get_template_text(self.ACCINPUT_BASE).format(**formatter)
 
+    def get_specific_motion_template(self, motion, index: int):
+        """ Renders an individual motion based on its type. """
+        motion.update({
+            "index": index
+        })
+        return self.get_template_text(self.MOTION_TEMPLATES[motion["type"]]).format(**motion)
+
+    def get_motion_templates(self, motion_list: list, counter: int) -> str:
+        """ Renders the list of motions inside a movement. """
+        if not motion_list:
+            return ""
+
+        motion_templates: list = list()
+        index = counter
+
+        for motion in motion_list:
+            motion_templates.append(self.get_specific_motion_template(motion, index))
+            index += 1
+
+        return LINE_END.join(motion_templates)
+
+    def get_movement_template_list(self, mk_based_prop: dict) -> str:
+        """ Returns a rendered list of movements. """
+        counter: int = 1
+        each_movement_template: list = list()
+        for mov in mk_based_prop["movements"]:
+            formatter: dict = {
+                "count": counter,
+                "motions_list": self.get_motion_templates(mov["motion_list"], counter)
+            }
+            each_movement_template.append(self.get_template_text(self.MOTION_EACH_MOVEMENT_LIST_XML).format(**formatter))
+            counter += len(mov["motion_list"])
+
+        return LINE_END.join(each_movement_template)
+
+    def get_motion_template(self, data: dict) -> str:
+        """ Renders the <motion> part of the GenCaes XML. """
+
+        each_objreal_template: list = list()
+        for prop in data["mkbasedproperties"].values():
+            if not prop["movements"]:
+                continue
+
+            formatter: dict = {
+                "ref": prop["mk"],
+                "movements_list": self.get_movement_template_list(prop)
+            }
+
+            each_objreal_template.append(self.get_template_text(self.MOTION_EACH_BASE_XML).format(**formatter))
+
+        if not each_objreal_template:
+            # There are no movements in the case. Do not bother rendering the <motion> tag.
+            return ""
+
+        formatter: dict = {
+            "each_objreal": LINE_END.join(each_objreal_template)
+        }
+
+        return self.get_template_text(self.MOTION_BASE_XML).format(**formatter)
+
     def get_adapted_case_data(self, case: "Case") -> dict:
         """ Adapts the case data to a dictionary used to format the resulting XML """
         data: dict = obj_to_dict(case)
@@ -384,6 +458,7 @@ class XMLExporter():
         data["accinput_template"] = self.get_accinput_template(data)
         data["damping_template"] = self.get_damping_template(data) if case.damping_zones.keys() else ""
         data["mlpistons_template"] = self.get_mlpistons_template(data)
+        data["motion_template"] = self.get_motion_template(data)
         data["application"] = APP_NAME
         data["current_date"] = datetime.now().strftime("%d-%m-%Y %H:%M:%S")
         return data

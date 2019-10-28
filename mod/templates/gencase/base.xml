@@ -30,7 +30,7 @@
         </geometry>
 {initials_template}
 {floatings_template}
-        <!-- TODO: Motion templates -->
+{motion_template}
         <!-- TODO: Chrono templates -->
         <!-- TODO: Inlet/Outlet templates -->
         <!-- TODO: SpecialMovements templates -->
