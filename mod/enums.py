@@ -168,8 +168,8 @@ class MotionType:
     IRREGULAR_PISTON_WAVE_GENERATOR = "Irregular Piston Wave Generator"
     REGULAR_FLAP_WAVE_GENERATOR = "Regular Flap Wave Generator"
     IRREGULAR_FLAP_WAVE_GENERATOR = "Irregular Flap Wave Generator"
-    FILE_WAVE_GENERATOR = "File Wave Generator"
-    FILE_ROTATIONAL_WAVE_GENERATOR = "Rotational File Wave Generator"
+    FILE_GENERATOR = "File Generator"
+    FILE_ROTATIONAL_GENERATOR = "Rotational File Generator"
 
 
 class MLPistonType:
