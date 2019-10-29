@@ -1,0 +1,3 @@
+                <mvfile id="1" duration="{duration}">
+                    <file name="{filename}" fields="{fields}" fieldtime="{fieldtime}" fieldx="{fieldx}" fieldy="{fieldy}" />
+                </mvfile>

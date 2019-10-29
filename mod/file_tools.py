@@ -669,7 +669,7 @@ def save_measuretool_info(case_path: str, points: list, grid: list) -> None:
 #             f.write('\t\t\t<objreal ref="' + str(key) + '">\n')
 #             f.write('\t\t\t\t<begin mov="{}" start="0"/>\n'.format(mov_counter))
 #             f.write('\t\t\t\t<mvnull id="{}" />\n'.format(mov_counter))
-#             f.write('\t\t\t</objreal>\n')
+#             f.write('\5t\t\t</objreal>\n')
 #             mov_counter += 1
 
 #         for key, value in data["motion_mks"].items():

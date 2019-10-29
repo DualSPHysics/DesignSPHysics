@@ -21,7 +21,7 @@ class RotationFileGen(WaveGen):
     def __init__(self, duration=0, filename="", anglesunits="degrees", axisp1=None, axisp2=None):
         super(RotationFileGen, self).__init__()
         self.duration = duration
-        self.name = MotionType.FILE_ROTATIONAL_GENERATOR
+        self.type = MotionType.FILE_ROTATIONAL_GENERATOR
         self.anglesunits = anglesunits
         self.filename = filename
         self.axisp1 = axisp1 or [0, 0, 0]

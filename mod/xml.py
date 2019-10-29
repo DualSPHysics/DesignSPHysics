@@ -75,6 +75,11 @@ class XMLExporter():
         MotionType.SINUSOIDAL_CIRCULAR: "/templates/gencase/motion/each/normal/sinu_circular.xml",
         MotionType.SINUSOIDAL_RECTILINEAR: "/templates/gencase/motion/each/normal/sinu_rectilinear.xml"
     }
+    MOTION_GENERATORS_TEMPLATES = {
+        MotionType.FILE_GENERATOR: "/templates/gencase/motion/each/special/file_gen.xml",
+        MotionType.FILE_ROTATIONAL_GENERATOR: "/templates/gencase/motion/each/special/file_rotational_gen.xml"
+    }
+    MOTION_NULL_TEMPLATE = "/templates/gencase/motion/each/null.xml"
     GENCASE_XML_SUFFIX = "_Def.xml"
 
     def __init__(self):
@@ -386,20 +391,39 @@ class XMLExporter():
 
     def get_specific_motion_template(self, motion, index: int):
         """ Renders an individual motion based on its type. """
+        if motion["type"] not in self.MOTION_TEMPLATES.keys():
+            return self.get_template_text(self.MOTION_NULL_TEMPLATE)
+
         motion.update({
             "index": index
         })
+
         return self.get_template_text(self.MOTION_TEMPLATES[motion["type"]]).format(**motion)
 
-    def get_motion_templates(self, motion_list: list, counter: int) -> str:
+    def get_special_motion_template(self, motion_generator: dict) -> str:
+        """ Renders an SpecialMovement motion inside a movement. """
+        if not motion_generator:
+            raise ValueError("Generator for an SpecialMovement should always have a value")
+
+        if motion_generator["type"] not in self.MOTION_GENERATORS_TEMPLATES.keys():
+            return self.get_template_text(self.MOTION_NULL_TEMPLATE)
+
+        return self.get_template_text(self.MOTION_GENERATORS_TEMPLATES[motion_generator["type"]]).format(**motion_generator)
+
+    def get_motion_templates(self, movement: dict, counter: int) -> str:
         """ Renders the list of motions inside a movement. """
-        if not motion_list:
+        if "generator" in movement.keys():
+            # Is a SpecialMovement
+            return self.get_special_motion_template(movement["generator"])
+
+        # If this code path is followed, is a regular movement
+        if not movement["motion_list"]:
             return ""
 
         motion_templates: list = list()
         index = counter
 
-        for motion in motion_list:
+        for motion in movement["motion_list"]:
             motion_templates.append(self.get_specific_motion_template(motion, index))
             index += 1
 
@@ -412,10 +436,11 @@ class XMLExporter():
         for mov in mk_based_prop["movements"]:
             formatter: dict = {
                 "count": counter,
-                "motions_list": self.get_motion_templates(mov["motion_list"], counter)
+                "motions_list": self.get_motion_templates(mov, counter)
             }
+            # FIXME: Support looping
             each_movement_template.append(self.get_template_text(self.MOTION_EACH_MOVEMENT_LIST_XML).format(**formatter))
-            counter += len(mov["motion_list"])
+            counter += len(mov["motion_list"]) if "motion_list" in mov.keys() else 1
 
         return LINE_END.join(each_movement_template)
 
