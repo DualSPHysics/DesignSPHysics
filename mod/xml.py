@@ -75,6 +75,7 @@ class XMLExporter():
         MotionType.SINUSOIDAL_CIRCULAR: "/templates/gencase/motion/each/normal/sinu_circular.xml",
         MotionType.SINUSOIDAL_RECTILINEAR: "/templates/gencase/motion/each/normal/sinu_rectilinear.xml"
     }
+    MOTION_NEXT_ATTR = "/templates/gencase/motion/each/next_attr.txt"
     MOTION_GENERATORS_TEMPLATES = {
         MotionType.FILE_GENERATOR: "/templates/gencase/motion/each/special/file_gen.xml",
         MotionType.FILE_ROTATIONAL_GENERATOR: "/templates/gencase/motion/each/special/file_rotational_gen.xml"
@@ -389,14 +390,18 @@ class XMLExporter():
 
         return self.get_template_text(self.ACCINPUT_BASE).format(**formatter)
 
-    def get_specific_motion_template(self, motion, index: int):
+    def get_specific_motion_template(self, motion, first_index: int, index: int, is_last: bool, loops: bool):
         """ Renders an individual motion based on its type. """
         if motion["type"] not in self.MOTION_TEMPLATES.keys():
             return self.get_template_text(self.MOTION_NULL_TEMPLATE)
 
         motion.update({
-            "index": index
+            "index": index,
+            "next_attr": self.get_template_text(self.MOTION_NEXT_ATTR).format(next_index=index + 1)
         })
+
+        if is_last:
+            motion["next_attr"] = "" if not loops else self.get_template_text(self.MOTION_NEXT_ATTR).format(next_index=first_index)
 
         return self.get_template_text(self.MOTION_TEMPLATES[motion["type"]]).format(**motion)
 
@@ -421,10 +426,13 @@ class XMLExporter():
             return ""
 
         motion_templates: list = list()
+        first_index = counter
         index = counter
 
-        for motion in movement["motion_list"]:
-            motion_templates.append(self.get_specific_motion_template(motion, index))
+        for it_index, motion in enumerate(movement["motion_list"]):
+            is_last = it_index == len(movement["motion_list"]) - 1
+            loops = is_last and movement["loop"]
+            motion_templates.append(self.get_specific_motion_template(motion, first_index, index, is_last, loops))
             index += 1
 
         return LINE_END.join(motion_templates)
@@ -443,7 +451,7 @@ class XMLExporter():
             for mov in mk_based_prop["movements"]:
                 formatter: dict = {
                     "count": counter,
-                    "motions_list": self.get_motion_templates(mov, counter)
+                    "motions_list": self.get_motion_templates(mov, counter),
                 }
                 # FIXME: Support looping
                 each_movement_template.append(self.get_template_text(self.MOTION_EACH_MOVEMENT_LIST_XML).format(**formatter))

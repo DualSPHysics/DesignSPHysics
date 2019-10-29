@@ -1,4 +1,4 @@
-                <mvcirsinu id="{index}" duration="{duration}" anglesunits="degrees">
+                <mvcirsinu id="{index}" duration="{duration}" anglesunits="degrees" {next_attr}>
                     <freq v="{freq}" units_comment="1/s" />
                     <ampl v="{ampl}" units_comment="degrees" />
                     <phase v="{phase}" units_comment="degrees" />

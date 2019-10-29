@@ -1,4 +1,4 @@
-                <mvcirace id="{index}" duration="{duration}" anglesunits="degrees">
+                <mvcirace id="{index}" duration="{duration}" anglesunits="degrees" {next_attr}>
                     <ace ang="{ang_acc}" units_comment="degrees/s^2" />
                     <velini ang="{ang_vel}" units_comment="degrees/s" />
                     <ref x="{reference[0]}" y="{reference[1]}" z="{reference[2]}" />

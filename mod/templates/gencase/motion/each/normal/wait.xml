@@ -1,1 +1,1 @@
-                <wait id="{index}" duration="{duration}" />
+                <wait id="{index}" duration="{duration}" {next_attr}/>
