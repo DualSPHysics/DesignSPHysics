@@ -10,6 +10,7 @@ More info in http://design.sphysics.org/
 
 import time
 import threading
+import ptvsd
 
 import FreeCAD
 import FreeCADGui
@@ -19,14 +20,20 @@ from PySide import QtGui, QtCore
 from mod.translation_tools import __
 from mod.freecad_tools import check_compatibility, document_count, prompt_close_all_documents, get_fc_main_window, get_fc_object
 from mod.freecad_tools import delete_existing_docks, valid_document_environment, enforce_case_limits_restrictions, enforce_fillbox_restrictions
+from mod.dialog_tools import warning_dialog
 from mod.stdout_tools import print_license, log, debug
 
-from mod.constants import APP_NAME, VERSION, DEFAULT_WORKBENCH, DIVIDER
+from mod.constants import APP_NAME, VERSION, DEFAULT_WORKBENCH, DIVIDER, DEBUGGING
 
 from mod.dataobjects.case import Case
 
 from mod.widgets.dock.designsphysics_dock import DesignSPHysicsDock
 from mod.widgets.properties_dock_widget import PropertiesDockWidget
+
+if DEBUGGING:
+    warning_dialog("Starting {} with a debugger. Take in mind that the application will freeze until you connect a debugger".format(APP_NAME))
+    ptvsd.enable_attach(address=('localhost', 5678), redirect_output=True)
+    ptvsd.wait_for_attach()
 
 
 __author__ = "Andrés Vieira"
