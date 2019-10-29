@@ -30,12 +30,6 @@ from mod.dataobjects.case import Case
 from mod.widgets.dock.designsphysics_dock import DesignSPHysicsDock
 from mod.widgets.properties_dock_widget import PropertiesDockWidget
 
-if DEBUGGING:
-    warning_dialog("Starting {} with a debugger. Take in mind that the application will freeze until you connect a debugger".format(APP_NAME))
-    ptvsd.enable_attach(address=('localhost', 5678), redirect_output=True)
-    ptvsd.wait_for_attach()
-
-
 __author__ = "Andrés Vieira"
 __copyright__ = "Copyright 2016-2019, DualSHPysics Team"
 __credits__ = ["Andrés Vieira", "Lorena Docasar", "Alejandro Jacobo Cabrera Crespo", "Orlando García Feal"]
