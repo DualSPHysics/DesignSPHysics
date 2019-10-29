@@ -433,14 +433,21 @@ class XMLExporter():
         """ Returns a rendered list of movements. """
         counter: int = 1
         each_movement_template: list = list()
-        for mov in mk_based_prop["movements"]:
+        if mk_based_prop["mlayerpiston"]:
             formatter: dict = {
                 "count": counter,
-                "motions_list": self.get_motion_templates(mov, counter)
+                "motions_list": self.get_template_text(self.MOTION_NULL_TEMPLATE)
             }
-            # FIXME: Support looping
             each_movement_template.append(self.get_template_text(self.MOTION_EACH_MOVEMENT_LIST_XML).format(**formatter))
-            counter += len(mov["motion_list"]) if "motion_list" in mov.keys() else 1
+        else:
+            for mov in mk_based_prop["movements"]:
+                formatter: dict = {
+                    "count": counter,
+                    "motions_list": self.get_motion_templates(mov, counter)
+                }
+                # FIXME: Support looping
+                each_movement_template.append(self.get_template_text(self.MOTION_EACH_MOVEMENT_LIST_XML).format(**formatter))
+                counter += len(mov["motion_list"]) if "motion_list" in mov.keys() else 1
 
         return LINE_END.join(each_movement_template)
 
@@ -449,7 +456,7 @@ class XMLExporter():
 
         each_objreal_template: list = list()
         for prop in data["mkbasedproperties"].values():
-            if not prop["movements"]:
+            if not prop["movements"] and not prop["mlayerpiston"]:
                 continue
 
             formatter: dict = {
