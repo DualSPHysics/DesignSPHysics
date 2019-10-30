@@ -3,18 +3,17 @@
 
 """ Template loading and formatting related tools. """
 
-import os
-
-from mod.enums import Template
+from os import path
 
 
-def get_template(template: Template) -> str:
-    """ Loads a template from disk and return its contents as a string. """
+def get_template_text(template_path) -> str:
+    """ Returns the text for a given template. """
+    template_data = ""
+    mod_folder = path.dirname(path.realpath(__file__))
 
-    lib_folder = os.path.dirname(os.path.realpath(__file__))
-
-    with open("{}/templates/{}".format(lib_folder, template), "r") as input_template:
-        return input_template.read()
+    with open("{}{}".format(mod_folder, template_path), "r") as template:
+        template_data = template.read()
+    return template_data
 
 
 def obj_to_dict(obj, classkey=None):

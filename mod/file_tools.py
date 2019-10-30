@@ -28,7 +28,7 @@ from femmesh.femmesh2mesh import femmesh_2_mesh
 
 from mod.stdout_tools import error, debug
 from mod.translation_tools import __
-from mod.xml import XMLExporter
+from mod.xml.xml_exporter import XMLExporter
 from mod.dialog_tools import error_dialog
 from mod.executable_tools import refocus_cwd
 from mod.freecad_tools import document_count, prompt_close_all_documents, get_fc_object

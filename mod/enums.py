@@ -86,12 +86,6 @@ class FreeCADDisplayMode:
     WIREFRAME = "Wireframe"
     FLAT_LINES = "Flat Lines"
 
-
-class Template:
-    """ Text templates stored in disk. """
-    CASE_SUMMARY = "case_summary_template.html"
-
-
 class InletOutletDetermLimit:
     """ Inlet/Oulet DetermLimit Value. """
     ZEROTH_ORDER = "1e+3"
