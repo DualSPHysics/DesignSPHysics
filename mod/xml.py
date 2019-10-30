@@ -81,6 +81,13 @@ class XMLExporter():
         MotionType.FILE_ROTATIONAL_GENERATOR: "/templates/gencase/motion/each/special/file_rotational_gen.xml"
     }
     MOTION_NULL_TEMPLATE = "/templates/gencase/motion/each/null.xml"
+    WAVEPADDLES_TEMPLATE_BASE = "/templates/gencase/wavepaddles/base.xml"
+    WAVEPADDLES_REGULAR_PISTON = "/templates/gencase/wavepaddles/piston/regular.xml"
+    WAVEPADDLES_IRREGULAR_PISTON = "/templates/gencase/wavepaddles/piston/irregular.xml"
+    WAVEPADDLES_PISTON_AWAS = "/templates/gencase/wavepaddles/awas.xml"
+    WAVEPADDLES_PISTON_AWAS_CORRECTION = "/templates/gencase/wavepaddles/awas_correction.xml"
+    WAVEPADDLES_REGULAR_FLAP = "/templates/gencase/wavepaddles/flap/regular.xml"
+    WAVEPADDLES_IRREGULAR_FLAP = "/templates/gencase/wavepaddles/flap/irregular.xml"
     GENCASE_XML_SUFFIX = "_Def.xml"
 
     def __init__(self):
@@ -460,7 +467,7 @@ class XMLExporter():
         return LINE_END.join(each_movement_template)
 
     def get_motion_template(self, data: dict) -> str:
-        """ Renders the <motion> part of the GenCaes XML. """
+        """ Renders the <motion> part of the GenCase XML. """
 
         each_objreal_template: list = list()
         for prop in data["mkbasedproperties"].values():
@@ -484,6 +491,71 @@ class XMLExporter():
 
         return self.get_template_text(self.MOTION_BASE_XML).format(**formatter)
 
+    def get_awas_template(self, awas: dict) -> str:
+        """ Renders the <awas_zsurf> tag for a piston generator. """
+        awas["correction_template"] = self.get_template_text(self.WAVEPADDLES_PISTON_AWAS_CORRECTION).format(**awas["correction"]) if awas["correction"]["enabled"] else ""
+
+        return self.get_template_text(self.WAVEPADDLES_PISTON_AWAS).format(**awas)
+
+    def get_regular_piston_wave_template(self, mk: int, generator: dict) -> str:
+        """ Renders a <piston> tag from a regular piston wave generator. """
+        generator["mk"] = mk
+
+        generator["awas_template"] = self.get_awas_template(generator["awas"]) if generator["awas"]["enabled"] else ""
+
+        return self.get_template_text(self.WAVEPADDLES_REGULAR_PISTON).format(**generator)
+
+    def get_irregular_piston_wave_template(self, mk: int, generator: dict) -> str:
+        """ Renders a <piston_spectrum> tag from an irregular piston wave generator. """
+        generator["mk"] = mk
+
+        generator["awas_template"] = self.get_awas_template(generator["awas"]) if generator["awas"]["enabled"] else ""
+
+        return self.get_template_text(self.WAVEPADDLES_IRREGULAR_PISTON).format(**generator)
+
+    def get_regular_flap_wave_template(self, mk: int, generator: dict) -> str:
+        """ Renders a <flap> tag from a regular flap wave generator. """
+        generator["mk"] = mk
+
+        return self.get_template_text(self.WAVEPADDLES_REGULAR_FLAP).format(**generator)
+
+    def get_irregular_flap_wave_template(self, mk: int, generator: dict) -> str:
+        """ Renders a <flap_spectrum> tag from a regular flap wave generator. """
+        generator["mk"] = mk
+
+        return self.get_template_text(self.WAVEPADDLES_IRREGULAR_FLAP).format(**generator)
+
+    def get_each_wavepaddle(self, mkprops: list) -> str:
+        """ Returns a string with a list of wavepaddles (wave generators) from the received mkbasedproperties list. """
+        each_template: list = []
+        for prop in mkprops:
+            movement = prop["movements"][0]
+            mk_bound = prop["mk"] - 11
+            if movement["generator"]["type"] == MotionType.REGULAR_PISTON_WAVE_GENERATOR:
+                each_template.append(self.get_regular_piston_wave_template(mk_bound, movement["generator"]))
+            elif movement["generator"]["type"] == MotionType.IRREGULAR_PISTON_WAVE_GENERATOR:
+                each_template.append(self.get_irregular_piston_wave_template(mk_bound, movement["generator"]))
+            elif movement["generator"]["type"] == MotionType.REGULAR_FLAP_WAVE_GENERATOR:
+                each_template.append(self.get_regular_flap_wave_template(mk_bound, movement["generator"]))
+            elif movement["generator"]["type"] == MotionType.IRREGULAR_FLAP_WAVE_GENERATOR:
+                each_template.append(self.get_irregular_flap_wave_template(mk_bound, movement["generator"]))
+
+        return LINE_END.join(each_template)
+
+    def get_wavepaddles_template(self, data: dict) -> str:
+        """ Renders the <wavepaddles> tar of the GenCase XML. """
+        target_types: list = [MotionType.REGULAR_PISTON_WAVE_GENERATOR, MotionType.IRREGULAR_PISTON_WAVE_GENERATOR, MotionType.REGULAR_FLAP_WAVE_GENERATOR, MotionType.IRREGULAR_FLAP_WAVE_GENERATOR]
+        filtered_mkprops: list = list(filter(lambda mkprop: len(mkprop["movements"]) == 1 and mkprop["movements"][0]["generator"] and mkprop["movements"][0]["generator"]["type"] in target_types, data["mkbasedproperties"].values()))
+
+        if not filtered_mkprops:
+            return ""
+
+        formatter: dict = {
+            "each": self.get_each_wavepaddle(filtered_mkprops)
+        }
+
+        return self.get_template_text(self.WAVEPADDLES_TEMPLATE_BASE).format(**formatter)
+
     def get_adapted_case_data(self, case: "Case") -> dict:
         """ Adapts the case data to a dictionary used to format the resulting XML """
         data: dict = obj_to_dict(case)
@@ -499,13 +571,20 @@ class XMLExporter():
         data["damping_template"] = self.get_damping_template(data) if case.damping_zones.keys() else ""
         data["mlpistons_template"] = self.get_mlpistons_template(data)
         data["motion_template"] = self.get_motion_template(data)
+        data["wavepaddles_template"] = self.get_wavepaddles_template(data)
         data["application"] = APP_NAME
         data["current_date"] = datetime.now().strftime("%d-%m-%Y %H:%M:%S")
         return data
 
     def generate(self, case) -> str:
         """ Returns the GenCase-compatible XML resulting from the case """
-        return self.get_template_text(self.BASE_XML).format(**self.get_adapted_case_data(case))
+        final_xml: str = self.get_template_text(self.BASE_XML).format(**self.get_adapted_case_data(case))
+
+        # Strip empty lines from the final XML to clean it up.
+        while "\n\n" in final_xml:
+            final_xml = final_xml.replace("\n\n", "\n")
+
+        return final_xml
 
     def save_to_disk(self, path, case: "Case") -> None:
         """ Creates a file on disk with the contents of the GenCase generated XML. """

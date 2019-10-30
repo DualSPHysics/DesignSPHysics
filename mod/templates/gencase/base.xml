@@ -33,7 +33,6 @@
 {motion_template}
         <!-- TODO: Chrono templates -->
         <!-- TODO: Inlet/Outlet templates -->
-        <!-- TODO: SpecialMovements templates -->
     </casedef>
     <execution>
         <special>
@@ -41,6 +40,7 @@
 {damping_template}
 {mlpistons_template}
 {rzones_template}
+{wavepaddles_template}
         </special>
         <parameters>
             <parameter key="PosDouble" value="{execution_parameters[posdouble]}" comment="Precision in particle interaction 0:Simple, 1:Double, 2:Uses and saves double (default=0)" />
