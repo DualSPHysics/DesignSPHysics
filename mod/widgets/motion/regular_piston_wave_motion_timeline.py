@@ -294,6 +294,8 @@ class RegularPistonWaveMotionTimeline(QtGui.QWidget):
         if not self.awas_enabled.isChecked():
             enable_state = False
 
+        self.changed.emit(0, self.construct_motion_object())
+
         for x in [self.awas_correction_coefstroke_input, self.awas_correction_powerfunc_input,
                   self.awas_correction_coefperiod_input]:
             x.setEnabled(enable_state)
