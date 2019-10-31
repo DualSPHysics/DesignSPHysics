@@ -22,6 +22,8 @@ from mod.xml.renderers.damping_renderer import DampingRenderer
 from mod.xml.renderers.mlpistons_renderer import MLPistonsRenderer
 from mod.xml.renderers.motion_renderer import MotionRenderer
 from mod.xml.renderers.wavepaddles_renderer import WavePaddlesRenderer
+from mod.xml.renderers.inout_renderer import InoutRenderer
+from mod.xml.renderers.chrono_renderer import ChronoRenderer
 
 
 class XMLExporter():
@@ -58,6 +60,8 @@ class XMLExporter():
         data["mlpistons_template"] = MLPistonsRenderer.render(data)
         data["motion_template"] = MotionRenderer.render(data)
         data["wavepaddles_template"] = WavePaddlesRenderer.render(data)
+        # data["inout_template"] = InoutRenderer.render(data)
+        # data["chrono_template"] = ChronoRenderer.render(data)
         data["application"] = APP_NAME
         data["current_date"] = datetime.now().strftime("%d-%m-%Y %H:%M:%S")
         return data

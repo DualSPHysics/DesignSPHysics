@@ -1,0 +1,15 @@
+            <inoutzone>
+                <layers value="{layers}" comment="Number of inlet/outlet particle layers" />
+                <zone2d comment="Input zone for 2D simulations">
+                    <particles mkfluid="{}}" direction="{}" />
+                </zone2d>
+                <imposevelocity mode="{}" comment="Imposed velocity 0:fixed value, 1:variable value, 2:Extrapolated value (default=0)">
+                    <velocity v="{}" comment="Uniform velocity" units_comment="m/s" />
+                </imposevelocity>
+                <imposerhop mode="{}" comment="Outlet rhop 0:Imposed fixed value, 1:Hydrostatic, 2:Extrapolated from ghost nodes (default=0)" />
+                <rhop value="{}" comment="Characteristic inlet rhop (default=1000)" units_comment="kg/m^2" />
+                <imposezsurf mode="{}" comment="Inlet Z-surface 0:Imposed fixed value, 1:Imposed variable value, 2:Calculated from fluid domain (default=0)">
+                    <zbottom value="{}" comment="Bottom level of water (only for Hydrostatic option)" units_comment="m" />
+                    <zsurf value="{}" comment="Characteristic inlet Z-surface (only for Hydrostatic option)" units_comment="m" />
+                </imposezsurf>
+            </inoutzone>
