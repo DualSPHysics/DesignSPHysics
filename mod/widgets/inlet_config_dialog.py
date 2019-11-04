@@ -160,8 +160,8 @@ class InletConfigDialog(QtGui.QDialog):
             to_add_deletebutton = QtGui.QPushButton("Delete")
             to_add_layout.addWidget(to_add_editbutton)
             to_add_layout.addWidget(to_add_deletebutton)
-            to_add_editbutton.clicked.connect(lambda: self.zone_edit(io_object.id))
-            to_add_deletebutton.clicked.connect(lambda: self.zone_delete(io_object))
+            to_add_editbutton.clicked.connect(lambda _=False, io_object=io_object: self.zone_edit(io_object.id))
+            to_add_deletebutton.clicked.connect(lambda _=False, io_object=io_object: self.zone_delete(io_object))
             self.io_zones_list_layout.addLayout(to_add_layout)
         self.io_zones_list_layout.addStretch(1)
 
