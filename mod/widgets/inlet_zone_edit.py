@@ -6,7 +6,10 @@ from PySide import QtCore, QtGui
 
 from mod.translation_tools import __
 
+from mod.enums import InletOutletZoneType
+
 from mod.dataobjects.case import Case
+from mod.dataobjects.inletoutlet.inlet_outlet_zone import InletOutletZone
 
 
 class InletZoneEdit(QtGui.QDialog):
@@ -14,28 +17,20 @@ class InletZoneEdit(QtGui.QDialog):
 
     def __init__(self, inlet_object_id, parent=None):
         super(InletZoneEdit, self).__init__(parent=parent)
-        self.inlet_object_id = inlet_object_id
+
+        # Find the zone for which button was pressed
+        self.target_io_zone: InletOutletZone = Case.instance().inlet_outlet.get_io_zone_for_id(inlet_object_id)
+
         # Creates a dialog
         self.setWindowTitle("Inlet/Outlet object edit")
         self.main_layout = QtGui.QVBoxLayout()
-
-        # Find the zone for which button was pressed
-        target_inlet_zone = None
-
-        for inlet_zone in Case.instance().inlet_outlet.zones:
-            if inlet_zone.id == self.inlet_object_id:
-                target_inlet_zone = inlet_zone
 
         # Add Convert Fluid option
         self.convertfluid_layout = QtGui.QHBoxLayout()
         self.convertfluid_option = QtGui.QLabel(__("Convertfluid: "))
         self.convertfluid_combobox = QtGui.QComboBox()
         self.convertfluid_combobox.insertItems(0, [__("True"), __("False")])
-
-        if target_inlet_zone.convertfluid == "True":
-            self.convertfluid_combobox.setCurrentIndex(0)
-        else:
-            self.convertfluid_combobox.setCurrentIndex(1)
+        self.convertfluid_combobox.setCurrentIndex(1 if self.target_io_zone.convertfluid else 0)
 
         self.convertfluid_layout.addWidget(self.convertfluid_option)
         self.convertfluid_layout.addWidget(self.convertfluid_combobox)
@@ -44,7 +39,7 @@ class InletZoneEdit(QtGui.QDialog):
         # Add Layers option
         self.layers_layout = QtGui.QHBoxLayout()
         self.layers_option = QtGui.QLabel(__("Layers: "))
-        self.layers_line_edit = QtGui.QLineEdit(str(target_inlet_zone.layers))
+        self.layers_line_edit = QtGui.QLineEdit(str(self.target_io_zone.layers))
 
         self.layers_layout.addWidget(self.layers_option)
         self.layers_layout.addWidget(self.layers_line_edit)
@@ -58,7 +53,7 @@ class InletZoneEdit(QtGui.QDialog):
         self.zone2d_option = QtGui.QCheckBox("Zone 2D")
         self.zone3d_option = QtGui.QCheckBox("Zone 3D")
         self.zone2d3d_mk_label = QtGui.QLabel("MK fluid: ")
-        self.zone2d3d_mk_line_edit = QtGui.QLineEdit(str(target_inlet_zone.zone_info.convertfluid))
+        self.zone2d3d_mk_line_edit = QtGui.QLineEdit(str(self.target_io_zone.zone_info.mkfluid))
         self.zone2d3d_mk_line_edit.setEnabled(False)
         self.zone2d3d_combobox_label = QtGui.QLabel(__("Direction: "))
         self.zone2d3d_combobox = QtGui.QComboBox()
@@ -68,23 +63,12 @@ class InletZoneEdit(QtGui.QDialog):
         self.zone2d_option.toggled.connect(self.on_zone_check)
         self.zone3d_option.toggled.connect(self.on_zone_check)
 
-        if target_inlet_zone.zone_info.zone_type == "zone2d":
+        if self.target_io_zone.zone_info.zone_type == "zone2d":
             self.zone2d_option.setCheckState(QtCore.Qt.Checked)
         else:
             self.zone3d_option.setCheckState(QtCore.Qt.Checked)
 
-        if target_inlet_zone.zone_info.layers == "Left":
-            self.zone2d3d_combobox.setCurrentIndex(0)
-        elif target_inlet_zone.zone_info.layers == "Right":
-            self.zone2d3d_combobox.setCurrentIndex(1)
-        elif target_inlet_zone.zone_info.layers == "Front":
-            self.zone2d3d_combobox.setCurrentIndex(2)
-        elif target_inlet_zone.zone_info.layers == "Back":
-            self.zone2d3d_combobox.setCurrentIndex(3)
-        elif target_inlet_zone.zone_info.layers == "Top":
-            self.zone2d3d_combobox.setCurrentIndex(4)
-        elif target_inlet_zone.zone_info.layers == "Bottom":
-            self.zone2d3d_combobox.setCurrentIndex(5)
+        self.zone2d3d_combobox.setCurrentIndex(self.target_io_zone.layers)
 
         self.zone2d3d_zones_layout.addWidget(self.zone2d_option)
         self.zone2d3d_zones_layout.addWidget(self.zone3d_option)
@@ -110,19 +94,11 @@ class InletZoneEdit(QtGui.QDialog):
         self.imposevelocity_combobox = QtGui.QComboBox()
         self.imposevelocity_combobox.insertItems(0, [__("Fixed"), __("Variable"), __("Extrapolated"), __("Interpolated")])
         self.imposevelocity_velocity_label = QtGui.QLabel("Value: ")
-        self.imposevelocity_velocity_line_edit = QtGui.QLineEdit(str(target_inlet_zone.velocity_info.convertfluid))
+        self.imposevelocity_velocity_line_edit = QtGui.QLineEdit(str(self.target_io_zone.velocity_info.value))
         self.imposevelocity_velocity_units = QtGui.QLabel(__("m/s"))
 
         self.imposevelocity_combobox.currentIndexChanged.connect(self.on_imposevelocity_change)
-
-        if target_inlet_zone.velocity_info.velocity_type == 0:
-            self.imposevelocity_combobox.setCurrentIndex(0)
-        elif target_inlet_zone.velocity_info.velocity_type == 1:
-            self.imposevelocity_combobox.setCurrentIndex(1)
-        elif target_inlet_zone.velocity_info.velocity_type == 2:
-            self.imposevelocity_combobox.setCurrentIndex(2)
-        elif target_inlet_zone.velocity_info.velocity_type == 3:
-            self.imposevelocity_combobox.setCurrentIndex(3)
+        self.imposevelocity_combobox.setCurrentIndex(self.target_io_zone.velocity_info.velocity_type)
 
         self.imposevelocity_velocity_layout.addWidget(self.imposevelocity_combobox_label)
         self.imposevelocity_velocity_layout.addWidget(self.imposevelocity_combobox)
@@ -144,16 +120,10 @@ class InletZoneEdit(QtGui.QDialog):
         self.imposerhop_combobox = QtGui.QComboBox()
         self.imposerhop_combobox.insertItems(0, [__("Fixed"), __("Hydrostatic"), __("Extrapolated")])
         self.imposerhop_value_label = QtGui.QLabel("Value: ")
-        self.imposerhop_value_line_edit = QtGui.QLineEdit(str(target_inlet_zone.density_info.convertfluid))
+        self.imposerhop_value_line_edit = QtGui.QLineEdit(str(self.target_io_zone.density_info.value))
 
         self.imposerhop_combobox.currentIndexChanged.connect(self.on_imposerhop_change)
-
-        if target_inlet_zone.density_info.density_type == 0:
-            self.imposerhop_combobox.setCurrentIndex(0)
-        elif target_inlet_zone.density_info.density_type == 1:
-            self.imposerhop_combobox.setCurrentIndex(1)
-        elif target_inlet_zone.density_info.density_type == 2:
-            self.imposerhop_combobox.setCurrentIndex(2)
+        self.imposerhop_combobox.setCurrentIndex(self.target_io_zone.density_info.density_type)
 
         self.imposerhop_combobox_layout.addWidget(self.imposerhop_label)
         self.imposerhop_combobox_layout.addWidget(self.imposerhop_combobox)
@@ -175,23 +145,17 @@ class InletZoneEdit(QtGui.QDialog):
         self.imposezsurf_combobox.insertItems(0, [__("Fixed"), __("Variable"), __("Automatic")])
 
         self.imposezsurf_fixed_zbottom_label = QtGui.QLabel("Zbottom: ")
-        self.imposezsurf_fixed_zbottom = QtGui.QLineEdit(str(target_inlet_zone.elevation_info.convertfluid))
+        self.imposezsurf_fixed_zbottom = QtGui.QLineEdit(str(self.target_io_zone.elevation_info.zbottom))
         self.imposezsurf_fixed_zbottom_units = QtGui.QLabel("metres")
         self.imposezsurf_fixed_zsurf_label = QtGui.QLabel("Zsurf: ")
-        self.imposezsurf_fixed_zsurf = QtGui.QLineEdit(str(target_inlet_zone.elevation_info.layers))
+        self.imposezsurf_fixed_zsurf = QtGui.QLineEdit(str(self.target_io_zone.elevation_info.zsurf))
         self.imposezsurf_fixed_zsurf_units = QtGui.QLabel("metres")
 
         self.imposezsurf_fixed_zbottom.setEnabled(True)
         self.imposezsurf_fixed_zsurf.setEnabled(True)
 
         self.imposezsurf_combobox.currentIndexChanged.connect(self.on_imposezsurf_change)
-
-        if target_inlet_zone.elevation_info.elevation_type == 0:
-            self.imposezsurf_combobox.setCurrentIndex(0)
-        elif target_inlet_zone.elevation_info.elevation_type == 1:
-            self.imposezsurf_combobox.setCurrentIndex(1)
-        elif target_inlet_zone.elevation_info.elevation_type == 2:
-            self.imposezsurf_combobox.setCurrentIndex(2)
+        self.imposezsurf_combobox.setCurrentIndex(self.target_io_zone.elevation_info.elevation_type)
 
         self.imposezsurf_combobox_layout.addWidget(self.imposezsurf_combobox_label)
         self.imposezsurf_combobox_layout.addWidget(self.imposezsurf_combobox)
@@ -289,21 +253,21 @@ class InletZoneEdit(QtGui.QDialog):
 
     def on_ok(self):
         """ Save data """
-        count = -1
+        self.target_io_zone.convertfluid = self.convertfluid_combobox.currentIndex() == 0
+        self.target_io_zone.layers = int(self.layers_line_edit.text())
 
-        for inlet_zone in Case.instance().inlet_outlet.zones:
-            count += 1
-            if inlet_zone.id == self.inlet_object_id:
-                # [id, convertfluid, layers, [zone2 / 3D, mk, direction], [velocity, value], [density, value],[elevation, zbottom, zsurf]]
-                Case.instance().inlet_outlet.zones[count].convertfluid = str(self.convertfluid_combobox.currentText())
-                Case.instance().inlet_outlet.zones[count].layers = int(self.layers_line_edit.text())
+        self.target_io_zone.zone_info.zone_type = InletOutletZoneType.ZONE_2D if self.zone2d_option.isChecked() else InletOutletZoneType.ZONE_3D
+        self.target_io_zone.zone_info.mkfluid = int(self.zone2d3d_mk_line_edit.text())
+        self.target_io_zone.zone_info.direction = self.zone2d3d_combobox.currentIndex()
 
-                if self.zone2d_option.isChecked():
-                    Case.instance().inlet_outlet.zones[count].zone_info = ["zone2d", int(self.zone2d3d_mk_line_edit.text()), str(self.zone2d3d_combobox.currentText())]
-                elif self.zone3d_option.isChecked():
-                    Case.instance().inlet_outlet.zones[count].zone_info = ["zone3d", int(self.zone2d3d_mk_line_edit.text()), str(self.zone2d3d_combobox.currentText())]
+        self.target_io_zone.velocity_info.type = self.imposevelocity_combobox.currentIndex()
+        self.target_io_zone.velocity_info.value = float(self.imposevelocity_velocity_line_edit.text())
 
-                Case.instance().inlet_outlet.zones[count].velocity_info = [int(self.imposevelocity_combobox.currentIndex()), float(self.imposevelocity_velocity_line_edit.text())]
-                Case.instance().inlet_outlet.zones[count].density_info = [int(self.imposerhop_combobox.currentIndex()), float(self.imposerhop_value_line_edit.text())]
-                Case.instance().inlet_outlet.zones[count].elevation_info = [int(self.imposezsurf_combobox.currentIndex()), float(self.imposezsurf_fixed_zbottom.text()), float(self.imposezsurf_fixed_zsurf.text())]
+        self.target_io_zone.density_info.density_type = self.imposerhop_combobox.currentIndex()
+        self.target_io_zone.density_info.value = float(self.imposerhop_value_line_edit.text())
+
+        self.target_io_zone.elevation_info.elevation_type = self.imposezsurf_combobox.currentIndex()
+        self.target_io_zone.elevation_info.zbottom = float(self.imposezsurf_fixed_zbottom.text())
+        self.target_io_zone.elevation_info.zsurf = float(self.imposezsurf_fixed_zsurf.text())
+
         InletZoneEdit.accept(self)

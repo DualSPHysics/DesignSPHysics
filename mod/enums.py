@@ -110,24 +110,24 @@ class InletOutletDirection:
 
 class InletOutletVelocityType:
     """ Inlet/Outlet Velocity Type """
-    FIXED = "fixed"
-    VARIABLE = "variable"
-    EXTRAPOLATED = "extrapolated"
-    INTERPOLATED = "interpolated"
+    FIXED = 0
+    VARIABLE = 1
+    EXTRAPOLATED = 2
+    INTERPOLATED = 3
 
 
 class InletOutletDensityType:
     """ Inlet/Outlet Density Type. """
-    FIXED = "fixed"
-    HYDROSTATIC = "hydrostatic"
-    EXTRAPOLATED = "extrapolated"
+    FIXED = 0
+    HYDROSTATIC = 1
+    EXTRAPOLATED = 2
 
 
 class InletOutletElevationType:
     """ Inlet/Outler Elevation Type. """
-    FIXED = "fixed"
-    VARIABLE = "variable"
-    AUTOMATIC = "automatic"
+    FIXED = 0
+    VARIABLE = 1
+    AUTOMATIC = 2
 
 
 class ChronoModelNormalType:

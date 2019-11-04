@@ -10,6 +10,6 @@ class InletOutletElevationInfo():
 
     def __init__(self):
         super().__init__()
-        self.elevation_type: InletOutletElevationType.FIXED
+        self.elevation_type: InletOutletElevationType = InletOutletElevationType.FIXED
         self.zbottom: float = 0.0
         self.zsurf: float = 0.0

@@ -9,6 +9,7 @@ from mod.dataobjects.inletoutlet.inlet_outlet_velocity_info import InletOutletVe
 from mod.dataobjects.inletoutlet.inlet_outlet_density_info import InletOutletDensityInfo
 from mod.dataobjects.inletoutlet.inlet_outlet_elevation_info import InletOutletElevationInfo
 
+
 class InletOutletZone:
     """ Inlet/Outlet Zone definition. """
 
