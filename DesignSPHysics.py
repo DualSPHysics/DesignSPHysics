@@ -10,7 +10,6 @@ More info in http://design.sphysics.org/
 
 import time
 import threading
-import ptvsd
 
 import FreeCAD
 import FreeCADGui
@@ -20,10 +19,9 @@ from PySide import QtGui, QtCore
 from mod.translation_tools import __
 from mod.freecad_tools import check_compatibility, document_count, prompt_close_all_documents, get_fc_main_window, get_fc_object
 from mod.freecad_tools import delete_existing_docks, valid_document_environment, enforce_case_limits_restrictions, enforce_fillbox_restrictions
-from mod.dialog_tools import warning_dialog
 from mod.stdout_tools import print_license, log, debug
 
-from mod.constants import APP_NAME, VERSION, DEFAULT_WORKBENCH, DIVIDER, DEBUGGING
+from mod.constants import APP_NAME, VERSION, DEFAULT_WORKBENCH, DIVIDER
 
 from mod.dataobjects.case import Case
 
@@ -61,7 +59,7 @@ get_fc_main_window().addDockWidget(QtCore.Qt.LeftDockWidgetArea, properties_widg
 
 def on_tree_item_selection_change():
     """ Refreshes relevant parts of DesignsPHysics under an important change event. """
-    debug("Refreshing elements due to object selection change.")
+    debug("Syncronizing FreeCAD data structures with DesignSPHysics")
     selection = FreeCADGui.Selection.getSelection()
     properties_widget.set_add_button_enabled(True)
 
@@ -93,6 +91,9 @@ def on_tree_item_selection_change():
         fc_object = get_fc_object(object_name)
         if not fc_object or fc_object.InList:
             Case.the().remove_object(object_name)
+
+    for damping_to_delete in list(filter(lambda x: not get_fc_object(x), Case.the().damping_zones)):
+        Case.the().remove_damping_zone(damping_to_delete)
 
     # Update dsph objects list
     dualsphysics_dock.refresh_object_list()

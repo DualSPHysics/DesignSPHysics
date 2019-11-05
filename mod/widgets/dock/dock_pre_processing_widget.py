@@ -173,6 +173,7 @@ class DockPreProcessingWidget(QtGui.QWidget):
     def on_save_case(self, save_as=None):
         """ Defines what happens when save case button is clicked.
         Saves a freecad scene definition, and a dump of dsph data for the case."""
+        self.need_refresh.emit()
         if Case.the().was_not_saved() or save_as:
             save_name, _ = QtGui.QFileDialog.getSaveFileName(self, __("Save Case"), QtCore.QDir.homePath())
         else:

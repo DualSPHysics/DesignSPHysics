@@ -142,6 +142,10 @@ class Case():
         """ Returns the Damping Zone bound to the object key passed as parameter. Returns None if it's not defined. """
         return self.damping_zones.get(object_key, None)
 
+    def remove_damping_zone(self, object_key: str) -> None:
+        """ Removes the damping zone from the data structure. """
+        self.damping_zones.pop(object_key)
+
     def add_damping_group(self, group_name: str) -> None:
         """ Adds a new freecad group/folder to a new Damping Zone. """
         self.damping_zones[group_name] = Damping()
