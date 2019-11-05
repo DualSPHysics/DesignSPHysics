@@ -77,69 +77,16 @@ class FacesDialog(QtGui.QDialog):
 
         if self.all_faces.isChecked():
             fp.all_faces = True
-            fp.back_face = False
-            fp.front_face = False
-            fp.top_face = False
-            fp.bottom_face = False
-            fp.left_face = False
-            fp.right_face = False
-            fp.face_print = "all"
         else:
-            fp.all_faces = False
+            fp.front_face = self.front_face.isChecked()
+            fp.back_face = self.back_face.isChecked()
+            fp.top_face = self.top_face.isChecked()
+            fp.bottom_face = self.bottom_face.isChecked()
+            fp.left_face = self.left_face.isChecked()
+            fp.right_face = self.right_face.isChecked()
 
-            if self.front_face.isChecked():
-                fp.front_face = True
-                fp.face_print = "front"
-            else:
-                fp.front_face = False
-
-            if self.back_face.isChecked():
-                fp.back_face = True
-                if fp.face_print != "":
-                    fp.face_print += " | back"
-                else:
-                    fp.face_print = "back"
-            else:
-                fp.back_face = False
-
-            if self.top_face.isChecked():
-                fp.top_face = True
-                if fp.face_print != "":
-                    fp.face_print += " | top"
-                else:
-                    fp.face_print = "top"
-            else:
-                fp.top_face = False
-
-            if self.bottom_face.isChecked():
-                fp.bottom_face = True
-                if fp.face_print != "":
-                    fp.face_print += " | bottom"
-                else:
-                    fp.face_print = "bottom"
-            else:
-                fp.bottom_face = False
-
-            if self.left_face.isChecked():
-                fp.left_face = True
-                if fp.face_print != "":
-                    fp.face_print += " | left"
-                else:
-                    fp.face_print = "left"
-            else:
-                fp.left_face = False
-
-            if self.right_face.isChecked():
-                fp.right_face = True
-                if fp.face_print != "":
-                    fp.face_print += " | right"
-                else:
-                    fp.face_print = "right"
-            else:
-                fp.right_face = False
-
+        fp.build_face_print()
         self.target_object.faces_configuration = fp
-
         self.accept()
 
     def on_cancel(self):

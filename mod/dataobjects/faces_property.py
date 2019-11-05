@@ -17,3 +17,19 @@ class FacesProperty():
         self.left_face = left_face
         self.right_face = right_face
         self.face_print = face_print
+
+    def build_face_print(self) -> None:
+        """ Builds a string to print faces. """
+        if self.all_faces:
+            self.face_print = "all"
+            return
+
+        applied_faces: list = list()
+        applied_faces.append("front" if self.front_face else None)
+        applied_faces.append("back" if self.back_face else None)
+        applied_faces.append("top" if self.top_face else None)
+        applied_faces.append("bottom" if self.bottom_face else None)
+        applied_faces.append("left" if self.left_face else None)
+        applied_faces.append("right" if self.right_face else None)
+
+        self.face_print = " | ".join(filter(lambda x: x is not None, applied_faces))
