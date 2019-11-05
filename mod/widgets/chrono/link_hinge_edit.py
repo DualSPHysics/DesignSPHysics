@@ -17,6 +17,7 @@ class LinkHingeEdit(QtGui.QDialog):
         super(LinkHingeEdit, self).__init__(parent=parent)
 
         self.link_hinge_id = link_hinge_id
+        self.case = Case.the()
 
         # Title
         self.setWindowTitle(__("Link hinge configuration"))
@@ -25,7 +26,7 @@ class LinkHingeEdit(QtGui.QDialog):
         # Find the link hinge for which the button was pressed
         target_link_hinge = None
 
-        for link_hinge in Case.the().chrono.link_hinge:
+        for link_hinge in self.case.chrono.link_hinge:
             if link_hinge.id == self.link_hinge_id:
                 target_link_hinge = link_hinge
 
@@ -138,7 +139,7 @@ class LinkHingeEdit(QtGui.QDialog):
 
     def on_save(self):
         """ Link hinge save button behaviour"""
-        link_hinge = Case.the().chrono.get_link_hinge_for_id(self.link_hinge_id)
+        link_hinge = self.case.chrono.get_link_hinge_for_id(self.link_hinge_id)
         link_hinge.idbody1 = str(self.body_one_line_edit.currentText())
         link_hinge.idbody2 = str(self.body_two_line_edit.currentText())
         link_hinge.rotpoint = [float(self.rotpoints_x_line_edit.text()), float(self.rotpoints_y_line_edit.text()), float(self.rotpoints_z_line_edit.text())]

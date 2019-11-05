@@ -15,6 +15,7 @@ class LinkPointlineEdit(QtGui.QDialog):
     def __init__(self, link_pointline_id, bodies_widgets, parent=None):
         super(LinkPointlineEdit, self).__init__(parent=parent)
 
+        self.case = Case.the()
         self.link_pointline_id = link_pointline_id
 
         # Title
@@ -24,7 +25,7 @@ class LinkPointlineEdit(QtGui.QDialog):
         # Find the link pointline for which the button was pressed
         target_link_pointline = None
 
-        for link_pointline in Case.the().chrono.link_pointline:
+        for link_pointline in self.case.chrono.link_pointline:
             if link_pointline.id == self.link_pointline_id:
                 target_link_pointline = link_pointline
 
@@ -170,7 +171,7 @@ class LinkPointlineEdit(QtGui.QDialog):
 
     def on_save(self):
         """ Link pointline save button behaviour"""
-        link_pointline = Case.the().chrono.get_link_pointline_for_id(self.link_pointline_id)
+        link_pointline = self.case.chrono.get_link_pointline_for_id(self.link_pointline_id)
 
         link_pointline.idbody1 = str(self.body_one_line_edit.currentText())
         link_pointline.slidingvector = [float(self.sliding_vector_x_line_edit.text()), float(self.sliding_vector_y_line_edit.text()), float(self.sliding_vector_z_line_edit.text())]

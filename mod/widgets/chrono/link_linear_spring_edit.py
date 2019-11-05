@@ -16,6 +16,7 @@ class LinkLinearspringEdit(QtGui.QDialog):
     def __init__(self, link_linearspring_id, bodies_widgets, parent=None):
         super(LinkLinearspringEdit, self).__init__(parent=parent)
 
+        self.case = Case.the()
         self.link_linearspring_id = link_linearspring_id
 
         # Title
@@ -25,7 +26,7 @@ class LinkLinearspringEdit(QtGui.QDialog):
         # Find the link linearspring for which the button was pressed
         target_link_linearspring = None
 
-        for link_linearspring in Case.the().chrono.link_linearspring:
+        for link_linearspring in self.case.chrono.link_linearspring:
             if link_linearspring.id == self.link_linearspring_id:
                 target_link_linearspring = link_linearspring
 
@@ -166,7 +167,7 @@ class LinkLinearspringEdit(QtGui.QDialog):
 
     def on_save(self):
         """ Link linearspring save button behaviour"""
-        target_linearspring = Case.the().chrono.get_link_linearspring_for_id(self.link_linearspring_id)
+        target_linearspring = self.case.chrono.get_link_linearspring_for_id(self.link_linearspring_id)
 
         target_linearspring.idbody1 = str(self.body_one_line_edit.currentText())
         target_linearspring.idbody2 = str(self.body_two_line_edit.currentText())

@@ -16,6 +16,7 @@ class LinkSphericEdit(QtGui.QDialog):
     def __init__(self, link_spheric_id, bodies_widgets, parent=None):
         super(LinkSphericEdit, self).__init__(parent=parent)
 
+        self.case = Case.the()
         self.link_spheric_id = link_spheric_id
 
         # Title
@@ -25,7 +26,7 @@ class LinkSphericEdit(QtGui.QDialog):
         # Find the link spheric for which the button was pressed
         target_link_spheric = None
 
-        for link_spheric in Case.the().chrono.link_spheric:
+        for link_spheric in self.case.chrono.link_spheric:
             if link_spheric.id == self.link_spheric_id:
                 target_link_spheric = link_spheric
 
@@ -126,7 +127,7 @@ class LinkSphericEdit(QtGui.QDialog):
 
     def on_save(self):
         """ Link Spheric save button behaviour"""
-        link_spheric = Case.the().chrono.get_link_spheric_for_id(self.link_spheric_id)
+        link_spheric = self.case.chrono.get_link_spheric_for_id(self.link_spheric_id)
 
         link_spheric.idbody1 = str(self.body_one_line_edit.currentText())
         link_spheric.idbody2 = str(self.body_two_line_edit.currentText())
