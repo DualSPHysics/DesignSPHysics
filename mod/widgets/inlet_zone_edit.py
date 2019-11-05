@@ -6,7 +6,7 @@ from PySide import QtCore, QtGui
 
 from mod.translation_tools import __
 
-from mod.enums import InletOutletZoneType
+from mod.enums import InletOutletZoneType, InletOutletDirection
 
 from mod.dataobjects.case import Case
 from mod.dataobjects.inletoutlet.inlet_outlet_zone import InletOutletZone
@@ -14,6 +14,15 @@ from mod.dataobjects.inletoutlet.inlet_outlet_zone import InletOutletZone
 
 class InletZoneEdit(QtGui.QDialog):
     """ Defines Inlet/Outlet window dialog """
+
+    DIRECTION_MAPPING: dict = {
+        0: InletOutletDirection.LEFT,
+        1: InletOutletDirection.RIGHT,
+        2: InletOutletDirection.FRONT,
+        3: InletOutletDirection.BACK,
+        4: InletOutletDirection.TOP,
+        5: InletOutletDirection.BOTTOM,
+    }
 
     def __init__(self, inlet_object_id, parent=None):
         super(InletZoneEdit, self).__init__(parent=parent)
@@ -68,7 +77,11 @@ class InletZoneEdit(QtGui.QDialog):
         else:
             self.zone3d_option.setCheckState(QtCore.Qt.Checked)
 
-        self.zone2d3d_combobox.setCurrentIndex(self.target_io_zone.layers)
+        index_to_put = 0
+        for index, direction in self.DIRECTION_MAPPING.items():
+            if direction == self.target_io_zone.zone_info.direction:
+                index_to_put = index
+        self.zone2d3d_combobox.setCurrentIndex(index_to_put)
 
         self.zone2d3d_zones_layout.addWidget(self.zone2d_option)
         self.zone2d3d_zones_layout.addWidget(self.zone3d_option)
@@ -258,7 +271,8 @@ class InletZoneEdit(QtGui.QDialog):
 
         self.target_io_zone.zone_info.zone_type = InletOutletZoneType.ZONE_2D if self.zone2d_option.isChecked() else InletOutletZoneType.ZONE_3D
         self.target_io_zone.zone_info.mkfluid = int(self.zone2d3d_mk_line_edit.text())
-        self.target_io_zone.zone_info.direction = self.zone2d3d_combobox.currentIndex()
+
+        self.target_io_zone.zone_info.direction = self.DIRECTION_MAPPING[self.zone2d3d_combobox.currentIndex()]
 
         self.target_io_zone.velocity_info.type = self.imposevelocity_combobox.currentIndex()
         self.target_io_zone.velocity_info.value = float(self.imposevelocity_velocity_line_edit.text())

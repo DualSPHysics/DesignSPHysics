@@ -1,0 +1,2 @@
+                        <zbottom value="{zbottom}" comment="Bottom level of water (only for Hydrostatic option)" units_comment="m" />
+                        <zsurf value="{zsurf}" comment="Characteristic inlet Z-surface (only for Hydrostatic option)" units_comment="m" />

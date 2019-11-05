@@ -1,0 +1,3 @@
+                    <zone2d comment="Input zone for 2D simulations">
+                        <particles mkfluid="{mkfluid}" direction="{direction}" />
+                    </zone2d>

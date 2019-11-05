@@ -39,7 +39,7 @@
 {mlpistons_template}
 {rzones_template}
 {wavepaddles_template}
-<!-- FIXME: ADD inout_template -->
+{inout_template}
 <!-- FIXME: ADD chrono_template -->
         </special>
         <parameters>
