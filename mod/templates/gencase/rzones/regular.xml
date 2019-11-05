@@ -1,0 +1,18 @@
+                <rzwaves_regular>
+                    <waveorder value="{waveorder}" comment="Order wave generation 1:1st order, 2:2nd order (def=1)" />
+                    <start value="{start}" comment="Start time (def=0)" />
+                    <duration value="{duration}" comment="Movement duration, Zero is the end of simulation (def=0)" />
+                    <depth value="{depth}" comment="Fluid depth (def=0)" />
+                    <swl value="{swl}" comment="Still water level (free-surface water)" />
+                    <center x="{center[0]}" y="{center[1]}" z="{center[2]}" comment="Central point of application" />
+                    <width value="{width}" comment="Width for generation" />
+                    <waveheight value="{waveheight}" comment="Wave height" />
+                    <waveperiod value="{waveperiod}" comment="Wave period" />
+                    <phase value="{phase}" comment="Initial wave phase in function of PI (def=0)" />
+                    <ramp value="{ramp}" comment="Periods of ramp (def=0)" />
+                    <savemotion periods="{savemotion_periods}" periodsteps="{savemotion_periodsteps}" xpos="{savemotion_xpos}" zpos="{savemotion_zpos}" comment="Saves motion data. xpos and zpos are optional. zpos=-depth of the measuring point" />
+                    <coefdir x="{coefdir[0]}" y="{coefdir[1]}" z="{coefdir[2]}" comment="Coefficients for each direction (default=(1,0,0))" />
+                    <coefdt value="{coefdt}" comment="Multiplies by dt value in the calculation (using 0 is not applied) (default=1000)" />
+                    <function psi="{function_psi}" beta="{function_beta}" comment="Coefficients in function for velocity (def. psi=0.9, beta=1)" />
+                    <driftcorrection value="{driftcorrection}" comment="Coefficient of drift correction applied in velocity X. 0:Disabled, 1:Full correction (def=0)" />
+                </rzwaves_regular>

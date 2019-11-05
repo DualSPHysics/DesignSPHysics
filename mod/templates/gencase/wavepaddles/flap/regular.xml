@@ -1,0 +1,14 @@
+                <flap>
+                    <mkbound value="{mk}" comment="Mk-Bound of selected particles" />
+                    <start value="{start}" comment="Start time (default=0)" />
+                    <duration value="{duration}" comment="Movement duration, Zero is the end of simulation (default=0)" />
+                    <depth value="{depth}" comment="Water depth (default=0)" />
+                    <variabledraft value="{variable_draft}" comment="Position of the wavemaker hinge (above the bottom <0; below the bottom >0) (default=0)" />
+                    <flapaxis0 x="{flapaxis0[0]}" y="{flapaxis0[1]}" z="{flapaxis0[2]}" comment="Point 0 of axis rotation" />
+                    <flapaxis1 x="{flapaxis1[0]}" y="{flapaxis1[1]}" z="{flapaxis1[2]}" comment="Point 1 of axis rotation" />
+                    <waveheight value="{wave_height}" comment="Wave height" />
+                    <waveperiod value="{wave_period}" comment="Wave period" />
+                    <phase value="{phase}" comment="Initial wave phase in function of PI (default=0)" />
+                    <ramp value="{ramp}" comment="Periods of ramp (default=0)" />
+                    <savemotion periods="{disksave_periods}" periodsteps="{disksave_periodsteps}" xpos="{disksave_xpos}" zpos="{disksave_zpos}" comment="Saves motion data. xpos and zpos are optional. zpos=-depth of the measuring point" />
+                </flap>

@@ -1,0 +1,19 @@
+                <rzwaves_external_1d>
+                    <start value="{start}" comment="Start time (def=0)" />
+                    <duration value="{duration}" comment="Movement duration, Zero is the end of simulation (def=0)" />
+                    <depth value="{depth}" comment="Water depth. It is necessary for drift correction (def=0)" />
+                    <swl value="{swl}" comment="Still water level (free-surface). It is necessary for drift correction (def=0)" />
+                    <filesvel value="{filesvel}" comment="Main name of files with velocity to use" />
+                    <filesvelx initial="{filesvelx_initial}" count="{filesvelx_count}" comment="First file and count to use" />
+                    <usevelz value="{usevelz}" comment="Use velocity in Z or not (def=false)" />
+                    <movedata x="{movedata[0]}" y="{movedata[1]}" z="{movedata[2]}" comment="Movement of data in CSV files" />
+                    <dpz valuedp="{dpz}" comment="Distance between key points in Z (def=2)" />
+                    <smooth value="{smooth}" comment="Smooth motion level (def=0)" />
+                    <center x="{center[0]}" y="{center[1]}" z="{center[2]}" comment="Central point of application" />
+                    <width value="{width}" comment="Width for generation" />
+                    <coefdir x="{coefdir[0]}" y="{coefdir[1]}" z="{coefdir[2]}" comment="Coefficients for each direction (default=(1,0,0))" />
+                    <coefdt value="{coefdt}" comment="Multiplies by dt value in the calculation (using 0 is not applied) (default=1000)" />
+                    <function psi="{function_psi}" beta="{function_beta}" comment="Coefficients in function for velocity (def. psi=0.9, beta=1)" />
+                    <driftcorrection value="{driftcorrection}" comment="Coefficient of drift correction applied in velocity X. 0:Disabled, 1:Full correction (def=0)" />
+                    <driftinitialramp value="{driftinitialramp}" comment="Ignore waves from external data in initial seconds (def=0)" />
+                </rzwaves_external_1d>

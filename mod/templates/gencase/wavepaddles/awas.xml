@@ -1,0 +1,14 @@
+                    <awas_zsurf>
+                        <startawas value="{startawas}" comment="Time to start AWAS correction (default=start+ramp*waveperiod)" />
+                        <swl value="{swl}" comment="Still water level (free-surface water)" />
+                        <elevation value="{elevation}" comment="Order wave to calculate elevation 1:1st order, 2:2nd order (default=2)" />
+                        <gaugex value="{gaugex}" comment="Position in X from piston to measure free-surface water (default=5*Dp)" />
+                        <gaugey value="{gaugey}" comment="Position in Y to measure free-surface water" />
+                        <gaugezmin value="{gaugezmin}" comment="Minimum position in Z to measure free-surface water, it must be in water (default=domain limits)" />
+                        <gaugezmax value="{gaugezmax}" comment="Maximum position in Z to measure free-surface water (default=domain limits)" />
+                        <gaugedp value="{gaugedp}" comment="Resolution to measure free-surface water, it uses Dp*gaugedp (default=0.1)" />
+                        <_coefmasslimit value="{coefmasslimit}" comment="Coefficient to calculate mass of free-surface (default=0.5 on 3D and 0.4 on 2D)" />
+                        <savedata value="{savedata}" comment="Saves CSV with information 1:by part, 2:more information, 3:by step (default=0)" />
+                        <limitace value="{limitace}" comment="Factor to limit maximum value of acceleration, with 0 disabled (default=2)" />
+{correction_template}
+                    </awas_zsurf>

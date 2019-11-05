@@ -133,3 +133,8 @@ release-*/
 .env
 .idea/
 .vscode/
+
+# Do not include 3d models
+**/*.stl
+**/*.vtk
+**/*.ply

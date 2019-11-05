@@ -1,0 +1,6 @@
+                <mvrotace id="{index}" duration="{duration}" anglesunits="degrees" {next_attr}>
+                    <ace ang="{ang_acc}" units_comment="degrees/s^2" />
+                    <velini ang="{ang_vel}" units_comment="degrees/s" />
+                    <axisp1 x="{axis1[0]}" y="{axis1[1]}" z="{axis1[2]}" />
+                    <axisp2 x="{axis2[0]}" y="{axis2[1]}" z="{axis2[2]}" />
+                </mvrotace>

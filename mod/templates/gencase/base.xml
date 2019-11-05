@@ -1,0 +1,72 @@
+<!-- Case name: {name} -->
+<?xml version="1.0" encoding="UTF-8" ?>
+<case app="{application} v{version}" date="{current_date}">
+    <casedef>
+        <constantsdef>
+            <lattice bound="{constants[lattice_bound]}" fluid="{constants[lattice_fluid]}" />
+            <gravity x="{constants[gravity][0]}" y="{constants[gravity][1]}" z="{constants[gravity][2]}" comment="Gravitational acceleration" units_comment="m/s^2" />
+            <rhop0 value="{constants[rhop0]}" comment="Reference density of the fluid" units_comment="kg/m^3" />
+            <hswl value="{constants[hswl]}" auto="{constants[hswl_auto]}" comment="Maximum still water level to calculate speedofsound using coefsound" units_comment="metres (m)" />
+            <gamma value="{constants[gamma]}" comment="Polytropic constant for water used in the state equation" />
+            <speedsystem value="{constants[speedsystem]}" auto="{constants[speedsystem_auto]}" comment="Maximum system speed (by default the dam-break propagation is used)" />
+            <coefsound value="{constants[coefsound]}" comment="Coefficient to multiply speedsystem" />
+            <speedsound value="{constants[speedsound]}" auto="{constants[speedsound_auto]}" comment="Speed of sound to use in the simulation (by default speedofsound=coefsound*speedsystem)" />
+            <coefh value="{constants[coefh]}" comment="Coefficient to calculate the smoothing length (h=coefh*sqrt(3*dp^2) in 3D)" />
+            <cflnumber value="{constants[cflnumber]}" comment="Coefficient to multiply dt" />
+            <h value="{constants[h]}" auto="{constants[h_auto]}" units_comment="metres (m)" />
+            <b value="{constants[b]}" auto="{constants[b_auto]}" units_comment="Pascal (Pa)" />
+            <massbound value="{constants[massbound]}" auto="{constants[massbound_auto]}" units_comment="kg" />
+            <massfluid value="{constants[massfluid]}" auto="{constants[massfluid_auto]}" units_comment="kg" />
+        </constantsdef>
+        <mkconfig boundcount="241" fluidcount="9">
+        </mkconfig>
+        <geometry>
+{definition_template}
+            <commands>
+                <mainlist>
+{objects_template}
+                </mainlist>
+            </commands>
+        </geometry>
+{initials_template}
+{floatings_template}
+{motion_template}
+    </casedef>
+    <execution>
+        <special>
+{accinput_template}
+{damping_template}
+{mlpistons_template}
+{rzones_template}
+{wavepaddles_template}
+{inout_template}
+{chrono_template}
+        </special>
+        <parameters>
+            <parameter key="PosDouble" value="{execution_parameters[posdouble]}" comment="Precision in particle interaction 0:Simple, 1:Double, 2:Uses and saves double (default=0)" />
+            <parameter key="StepAlgorithm" value="{execution_parameters[stepalgorithm]}" comment="Step Algorithm 1:Verlet, 2:Symplectic (default=1)" />
+            <parameter key="VerletSteps" value="{execution_parameters[verletsteps]}" comment="Verlet only: Number of steps to apply Euler timestepping (default=40)" />
+            <parameter key="Kernel" value="{execution_parameters[kernel]}" comment="Interaction Kernel 1:Cubic Spline, 2:Wendland (default=2)" />
+            <parameter key="ViscoTreatment" value="{execution_parameters[viscotreatment]}" comment="Viscosity formulation 1:Artificial, 2:Laminar+SPS (default=1)" />
+            <parameter key="Visco" value="{execution_parameters[visco]}" comment="Viscosity value" /> % Note alpha can depend on the resolution. A value of 0.01 is recommended for near irrotational flows.
+            <parameter key="ViscoBoundFactor" value="{execution_parameters[viscoboundfactor]}" comment="Multiply viscosity value with boundary (default=1)" />
+            <parameter key="DensityDT" value="{execution_parameters[densitydt_type]}" comment="Density Diffusion Term 0:None, 1:Molteni, 2:Fourtakas, 3:Fourtakas(full) (default=0)" />
+            <parameter key="DensityDTvalue" value="{execution_parameters[densitydt_value]}" comment="DDT value (default=0.1)" />
+            <parameter key="Shifting" value="{execution_parameters[shifting]}" comment="Shifting mode 0:None, 1:Ignore bound, 2:Ignore fixed, 3:Full (default=0)" />
+            <parameter key="ShiftCoef" value="{execution_parameters[shiftcoef]}" comment="Coefficient for shifting computation (default=-2)" />
+            <parameter key="ShiftTFS" value="{execution_parameters[shifttfs]}" comment="Threshold to detect free surface. Typically 1.5 for 2D and 2.75 for 3D (default=0)" />
+            <parameter key="RigidAlgorithm" value="{execution_parameters[rigidalgorithm]}" comment="Rigid Algorithm 1:SPH, 2:DEM, 3:CHRONO (default=1)" />
+            <parameter key="FtPause" value="{execution_parameters[ftpause]}" comment="Time to freeze the floatings at simulation start (warmup) (default=0)" units_comment="seconds" />
+            <parameter key="CoefDtMin" value="{execution_parameters[coefdtmin]}" comment="Coefficient to calculate minimum time step dtmin=coefdtmin*h/speedsound (default=0.05)" />
+            <parameter key="#DtIni" value="{execution_parameters[dtini]}" comment="Initial time step (default=h/speedsound)" units_comment="seconds" />
+            <parameter key="#DtMin" value="{execution_parameters[dtmin]}" comment="Minimum time step (default=coefdtmin*h/speedsound)" units_comment="seconds" />
+            <parameter key="DtAllParticles" value="{execution_parameters[dtallparticles]}" comment="Velocity of particles used to calculate DT. 1:All, 0:Only fluid/floating (default=0)" />
+            <parameter key="TimeMax" value="{execution_parameters[timemax]}" comment="Time of simulation" units_comment="seconds" />
+            <parameter key="TimeOut" value="{execution_parameters[timeout]}" comment="Time out data" units_comment="seconds" />
+            <parameter key="PartsOutMax" value="{execution_parameters[partsoutmax]}" comment="%/100 of fluid particles allowed to be excluded from domain (default=1)" units_comment="decimal" />
+            <parameter key="RhopOutMin" value="{execution_parameters[rhopoutmin]}" comment="Minimum rhop valid (default=700)" units_comment="kg/m^3" />
+            <parameter key="RhopOutMax" value="{execution_parameters[rhopoutmax]}" comment="Maximum rhop valid (default=1300)" units_comment="kg/m^3" />
+{simulationdomain_template}
+        </parameters>
+    </execution>
+</case>

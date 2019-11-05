@@ -1,0 +1,5 @@
+                <mvrectsinu id="{index}" duration="{duration}" anglesunits="degrees" {next_attr}>
+                    <freq x="{freq[0]}" y="{freq[1]}" z="{freq[2]}" units_comment="1/s" />
+                    <ampl x="{ampl[0]}" y="{ampl[1]}" z="{ampl[2]}" units_comment="metres (m)" />
+                    <phase x="{phase[0]}" y="{phase[1]}" z="{phase[2]}" units_comment="degrees" />
+                </mvrectsinu>

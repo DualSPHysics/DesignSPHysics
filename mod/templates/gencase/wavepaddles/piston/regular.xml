@@ -1,0 +1,14 @@
+                <piston>
+                    <mkbound value="{mk}" comment="Mk-Bound of selected particles" />
+                    <start value="{start}" comment="Start time (default=0)" />
+                    <duration value="{duration}" comment="Movement duration, Zero is the end of simulation (default=0)" />
+                    <depth value="{depth}" comment="Water depth (default=0)" />
+                    <pistondir x="{piston_dir[0]}" y="{piston_dir[1]}" z="{piston_dir[2]}" comment="Movement direction (default=(1,0,0))" />
+                    <waveorder value="{wave_order}" comment="Order wave generation 1:1st order, 2:2nd order (default=1)" />
+                    <waveheight value="{wave_height}" comment="Wave height" />
+                    <waveperiod value="{wave_period}" comment="Wave period" />
+                    <phase value="{phase}" comment="Initial wave phase in function of PI (default=0)" />
+                    <ramp value="{ramp}" comment="Periods of ramp (default=0)" />
+                    <savemotion periods="{disksave_periods}" periodsteps="{disksave_periodsteps}" xpos="{disksave_xpos}" zpos="{disksave_zpos}" comment="Saves motion data. xpos and zpos are optional. zpos=-depth of the measuring point" />
+{awas_template}
+                </piston>

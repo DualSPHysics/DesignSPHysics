@@ -4,7 +4,7 @@
 """
 
 This file acts as a bootstraper to load DesignSPHysics from the
-'Mod' folder of the FreeCAD install directory.
+"Mod" folder of the FreeCAD install directory.
 
 """
 

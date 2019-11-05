@@ -1,0 +1,9 @@
+{move_template}
+{rotation_template}
+{mktype_template}
+                <fillbox x="{pos[0]}" y="{pos[1]}" z="{pos[2]}" objname="{label}">
+                    <modefill>void</modefill>
+                    <point x="0" y="0" z="0" />
+                    <size x="{size[0]}" y="{size[1]}" z="{size[2]}" />
+                </fillbox>
+{matrixreset_template}
