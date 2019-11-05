@@ -13,6 +13,6 @@ class ChronoObject:
         self.id: str = ""  # FreeCAD Object Name
         self.name: str = ""
         self.mkbound: int = 0
-        self.modelnormal_enabled: bool = 0
+        self.modelnormal_enabled: bool = False
         self.modelnormal_type: ChronoModelNormalType.ORIGINAL
         self.floating_type: ChronoFloatingType = ChronoFloatingType.BODYFIXED

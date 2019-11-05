@@ -117,7 +117,7 @@ class ChronoConfigDialog(QtGui.QDialog):
             if self.case.chrono.objects:
                 for elem in self.case.chrono.objects:
                     if elem.id == sim_object.name:
-                        self.target_widget.object_check.setCheckState(QtCore.Qt.Checked if elem.modelnormal_enabled else QtCore.Qt.Unchecked)
+                        self.target_widget.object_check.setCheckState(QtCore.Qt.Checked)
                         self.target_widget.geometry_check.setCheckState(QtCore.Qt.Checked if elem.modelnormal_enabled else QtCore.Qt.Unchecked)
                         self.target_widget.modelnormal_input.setCurrentIndex({ChronoModelNormalType.ORIGINAL: 0, ChronoModelNormalType.INVERT: 1, ChronoModelNormalType.TWOFACE: 2}[elem.modelnormal_type])
 
@@ -443,6 +443,8 @@ class ChronoConfigDialog(QtGui.QDialog):
 
         # Clean the chrono object list
         self.case.chrono.objects = list()
+
+        # FIXME: Save only selected objects. This is a bit wrong
 
         # Checks the chrono objects and options for save
         for elem in self.chrono_object_options_widgets:
