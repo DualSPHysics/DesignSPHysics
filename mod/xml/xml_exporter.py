@@ -9,6 +9,7 @@ import os
 from datetime import datetime
 
 from mod.constants import APP_NAME
+from mod.stdout_tools import debug
 from mod.template_tools import obj_to_dict, get_template_text
 
 from mod.xml.renderers.definition_renderer import DefinitionRenderer
@@ -37,9 +38,11 @@ class XMLExporter():
         self.mod_folder = "{}/..".format(os.path.dirname(os.path.realpath(__file__)))
 
     def transform_bools_to_strs(self, value):
-        """"Transforms a boolean value to a string representing its state, understandable by GenCase. """
+        """ Transforms a boolean value to a string representing its state, understandable by GenCase. """
         if isinstance(value, bool):
             return "true" if value else "false"
+        if isinstance(value, list):
+            return [self.transform_bools_to_strs(v) for v in value]
         if isinstance(value, dict):
             return {k: self.transform_bools_to_strs(v) for k, v in value.items()}
         return value
