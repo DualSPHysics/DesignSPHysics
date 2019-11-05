@@ -5,4 +5,4 @@
     "Mod" folder of the FreeCAD install directory.
 """
 
-import mod.DesignSPHysics  # pylint: disable=unused-import
+import mod.main  # pylint: disable=unused-import
