@@ -148,8 +148,8 @@ class DockPreProcessingWidget(QtGui.QWidget):
             return
 
         create_dsph_document()
-        Case.instance().reset()
-        Case.instance().add_object(SimulationObject(CASE_LIMITS_OBJ_NAME, -1, ObjectType.SPECIAL, ObjectFillMode.SPECIAL))
+        Case.the().reset()
+        Case.the().add_object(SimulationObject(CASE_LIMITS_OBJ_NAME, -1, ObjectType.SPECIAL, ObjectFillMode.SPECIAL))
 
         self.case_created.emit()
         self.update_dp.emit()
@@ -163,8 +163,8 @@ class DockPreProcessingWidget(QtGui.QWidget):
             return
 
         create_dsph_document_from_fcstd(file_name)
-        Case.instance().reset()
-        Case.instance().add_object_to_sim(SimulationObject(CASE_LIMITS_OBJ_NAME, -1, ObjectType.SPECIAL, ObjectFillMode.SPECIAL))
+        Case.the().reset()
+        Case.the().add_object_to_sim(SimulationObject(CASE_LIMITS_OBJ_NAME, -1, ObjectType.SPECIAL, ObjectFillMode.SPECIAL))
 
         self.update_dp.emit()
         self.case_created.emit()
@@ -173,52 +173,52 @@ class DockPreProcessingWidget(QtGui.QWidget):
     def on_save_case(self, save_as=None):
         """ Defines what happens when save case button is clicked.
         Saves a freecad scene definition, and a dump of dsph data for the case."""
-        if Case.instance().was_not_saved() or save_as:
+        if Case.the().was_not_saved() or save_as:
             save_name, _ = QtGui.QFileDialog.getSaveFileName(self, __("Save Case"), QtCore.QDir.homePath())
         else:
-            save_name = Case.instance().path
+            save_name = Case.the().path
 
         if not save_name:
             return
 
-        save_case(save_name, Case.instance())
-        save_current_freecad_document(Case.instance().path)
+        save_case(save_name, Case.the())
+        save_current_freecad_document(Case.the().path)
 
     def on_execute_gencase(self):
         """ Saves data into disk and uses GenCase to generate the case files."""
         self.on_save_case()
-        if not Case.instance().executable_paths.gencase:
+        if not Case.the().executable_paths.gencase:
             warning_dialog(__("GenCase executable is not set."))
             return
 
         refocus_cwd()
         process = QtCore.QProcess(get_fc_main_window())
-        gencase_full_path = path.abspath(Case.instance().executable_paths.gencase)
-        process.setWorkingDirectory(Case.instance().path)
-        process.start(gencase_full_path, ["{path}/{name}_Def".format(path=Case.instance().path, name=Case.instance().name),
-                                          "{path}/{name}_out/{name}".format(path=Case.instance().path, name=Case.instance().name),
+        gencase_full_path = path.abspath(Case.the().executable_paths.gencase)
+        process.setWorkingDirectory(Case.the().path)
+        process.start(gencase_full_path, ["{path}/{name}_Def".format(path=Case.the().path, name=Case.the().name),
+                                          "{path}/{name}_out/{name}".format(path=Case.the().path, name=Case.the().name),
                                           "-save:+all"])
         process.waitForFinished()
 
         output = str(process.readAllStandardOutput()).replace("\\n", "\n").split("================================")[1]
 
         if process.exitCode():
-            Case.instance().info.is_gencase_done = False
+            Case.the().info.is_gencase_done = False
             error_dialog(__("Error executing GenCase. Did you add objects to the case?. Another reason could be memory issues. View details for more info."), output)
         else:
             try:
                 total_particles_text = output[output.index("Total particles: "):output.index(" (bound=")]
                 total_particles = int(total_particles_text[total_particles_text.index(": ") + 2:])
-                Case.instance().info.particle_number = total_particles
+                Case.the().info.particle_number = total_particles
                 GencaseCompletedDialog(particle_count=total_particles, detail_text=output, parent=get_fc_main_window()).show()
-                Case.instance().info.is_gencase_done = True
+                Case.the().info.is_gencase_done = True
                 self.on_save_case()
             except ValueError:
                 print_exc()
-                Case.instance().info.is_gencase_done = False
+                Case.the().info.is_gencase_done = False
 
         # Refresh widget enable/disable status as GenCase finishes
-        self.gencase_completed.emit(Case.instance().info.is_gencase_done)
+        self.gencase_completed.emit(Case.the().info.is_gencase_done)
 
     def on_newdoc_menu(self, action):
         """ Handles the new document button and its dropdown items. """
@@ -262,16 +262,16 @@ class DockPreProcessingWidget(QtGui.QWidget):
                             "This could be caused due to file corruption, caused by operating system based line endings or ends-of-file, or other related aspects."))
 
         # User may have changed the name of the folder/project
-        Case.instance().path = path.dirname(load_path)
-        Case.instance().name = Case.instance().path.split("/")[-1]
+        Case.the().path = path.dirname(load_path)
+        Case.the().name = Case.the().path.split("/")[-1]
 
         # Adapt widget state to case info
         self.case_created.emit()
-        self.gencase_completed.emit(Case.instance().info.is_gencase_done)
-        self.simulation_completed.emit(Case.instance().info.is_simulation_done)
+        self.gencase_completed.emit(Case.the().info.is_gencase_done)
+        self.simulation_completed.emit(Case.the().info.is_simulation_done)
         self.need_refresh.emit()
 
-        Case.instance().executable_paths.check_and_filter()
+        Case.the().executable_paths.check_and_filter()
 
     def on_add_fillbox(self):
         """ Add fillbox group. It consists in a group with 2 objects inside: a point and a box.
@@ -293,19 +293,19 @@ class DockPreProcessingWidget(QtGui.QWidget):
 
         fc_object = get_fc_object(CASE_LIMITS_OBJ_NAME)
 
-        if Case.instance().mode3d:
+        if Case.the().mode3d:
             # 3D to 2D
-            Case.instance().info.last_3d_width = fc_object.Width.Value
+            Case.the().info.last_3d_width = fc_object.Width.Value
             config_dialog = Mode2DConfigDialog(fc_object.Placement.Base.y, parent=get_fc_main_window())
             if config_dialog.exit_status == QtGui.QDialog.Rejected:
                 return
             fc_object.Placement.Base.y = float(config_dialog.stored_y_value)
             fc_object.Label = CASE_LIMITS_2D_LABEL
-            Case.instance().mode3d = not Case.instance().mode3d
+            Case.the().mode3d = not Case.the().mode3d
         else:
             # 2D to 3D
-            Case.instance().mode3d = not Case.instance().mode3d
-            fc_object.Width = Case.instance().info.last_3d_width if Case.instance().info.last_3d_width > 0.0 else fc_object.Length
+            Case.the().mode3d = not Case.the().mode3d
+            fc_object.Width = Case.the().info.last_3d_width if Case.the().info.last_3d_width > 0.0 else fc_object.Length
             fc_object.Label = CASE_LIMITS_3D_LABEL
 
     def adapt_to_no_case(self):

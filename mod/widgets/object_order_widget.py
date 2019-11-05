@@ -54,12 +54,12 @@ class ObjectOrderWidget(QtGui.QWidget):
 
     def on_up(self):
         """ Defines the behaviour on up buttton press. """
-        Case.instance().shift_object_up_in_order(self.index)
+        Case.the().shift_object_up_in_order(self.index)
         if self.parent:
             self.parent.refresh()
 
     def on_down(self):
         """ Defines the behaviour on down button press. """
-        Case.instance().shift_object_down_in_order(self.index)
+        Case.the().shift_object_down_in_order(self.index)
         if self.parent:
             self.parent.refresh()

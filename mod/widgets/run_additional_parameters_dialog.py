@@ -34,7 +34,7 @@ class RunAdditionalParametersDialog(QtGui.QDialog):
         self.paramintro_layout = QtGui.QHBoxLayout()
         self.paramintro_label = QtGui.QLabel(__("Additional Parameters: "))
         self.export_params = QtGui.QLineEdit()
-        self.export_params.setText(Case.instance().info.run_additional_parameters)
+        self.export_params.setText(Case.the().info.run_additional_parameters)
         self.paramintro_layout.addWidget(self.paramintro_label)
         self.paramintro_layout.addWidget(self.export_params)
 
@@ -48,7 +48,7 @@ class RunAdditionalParametersDialog(QtGui.QDialog):
 
     def on_ok(self):
         """ OK Button handler."""
-        Case.instance().info.run_additional_parameters = self.export_params.text()
+        Case.the().info.run_additional_parameters = self.export_params.text()
         self.additional_parameters_window.accept()
 
     def on_cancel(self):

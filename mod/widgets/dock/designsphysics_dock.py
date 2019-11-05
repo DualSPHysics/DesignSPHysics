@@ -74,7 +74,7 @@ class DesignSPHysicsDock(QtGui.QDockWidget):
 
     def on_signal_update_dp(self):
         """ Defines the behaviour on DP update request. """
-        self.dp_widget.dp_input.setText(str(Case.instance().dp))
+        self.dp_widget.dp_input.setText(str(Case.the().dp))
 
     def refresh_object_list(self):
         """ Refreshes the objects shown in the object list widget. """

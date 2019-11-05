@@ -66,7 +66,7 @@ class PartVTKDialog(QtGui.QDialog):
         self.pvtk_parameters_layout.addWidget(self.pvtk_parameters_text)
 
         self.pvtk_open_at_end = QtGui.QCheckBox("Open with ParaView")
-        self.pvtk_open_at_end.setEnabled(Case.instance().executable_paths.paraview != "")
+        self.pvtk_open_at_end.setEnabled(Case.the().executable_paths.paraview != "")
 
         self.pvtk_export_button = QtGui.QPushButton(__("Export"))
         self.pvtk_cancel_button = QtGui.QPushButton(__("Cancel"))
@@ -133,7 +133,7 @@ class PartVTKDialog(QtGui.QDialog):
         else:
             export_parameters["additional_parameters"] = ""
 
-        partvtk_export(export_parameters, Case.instance(), self.post_processing_widget)
+        partvtk_export(export_parameters, Case.the(), self.post_processing_widget)
         self.accept()
 
     def on_pvtk_type_all_change(self, state):
@@ -173,7 +173,7 @@ class PartVTKDialog(QtGui.QDialog):
 
     def on_pvtk_export_format_change(self, _):
         """ Export format combobox handler"""
-        if "vtk" in self.outformat_combobox.currentText().lower() and Case.instance().executable_paths.paraview != "":
+        if "vtk" in self.outformat_combobox.currentText().lower() and Case.the().executable_paths.paraview != "":
             self.pvtk_open_at_end.setEnabled(True)
         else:
             self.pvtk_open_at_end.setEnabled(False)

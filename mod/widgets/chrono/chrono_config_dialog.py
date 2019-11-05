@@ -33,7 +33,7 @@ class ChronoConfigDialog(QtGui.QDialog):
         super(ChronoConfigDialog, self).__init__(parent=parent)
 
         # Reference to avoid calling instance every time
-        self.case = Case.instance()
+        self.case = Case.the()
 
         # Creates a dialog
         self.setWindowTitle("Chrono configuration")

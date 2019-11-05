@@ -92,12 +92,12 @@ class FlowToolDialog(QtGui.QDialog):
         """ Box delete button behaviour. Tries to find the box for which the button was pressed and deletes it."""
         box_to_remove = None
 
-        for box in Case.instance().flowtool_boxes:
+        for box in Case.the().flowtool_boxes:
             if box.id == box_id:
                 box_to_remove = box
 
         if box_to_remove is not None:
-            Case.instance().flowtool_boxes.remove(box_to_remove)
+            Case.the().flowtool_boxes.remove(box_to_remove)
             self.refresh_boxlist()
 
     def refresh_boxlist(self):
@@ -106,7 +106,7 @@ class FlowToolDialog(QtGui.QDialog):
             target = self.fltool_boxlist_layout.takeAt(0)
             target.setParent(None)
 
-        for box in Case.instance().flowtool_boxes:
+        for box in Case.the().flowtool_boxes:
             to_add_layout = QtGui.QHBoxLayout()
             to_add_label = QtGui.QLabel(str(box.name))
             to_add_layout.addWidget(to_add_label)
@@ -121,7 +121,7 @@ class FlowToolDialog(QtGui.QDialog):
 
     def on_fltool_addbox(self):
         """ Adds a box to the data structure."""
-        Case.instance().flowtool_boxes.append(FlowToolBox())
+        Case.the().flowtool_boxes.append(FlowToolBox())
         self.refresh_boxlist()
 
     def on_fltool_cancel(self):
@@ -147,7 +147,7 @@ class FlowToolDialog(QtGui.QDialog):
         else:
             export_parameters["additional_parameters"] = ""
 
-        create_flowtool_boxes(Case.instance().path + "/" + "fileboxes.txt", Case.instance().flowtool_boxes)
+        create_flowtool_boxes(Case.the().path + "/" + "fileboxes.txt", Case.the().flowtool_boxes)
 
-        flowtool_export(export_parameters, Case.instance(), self.post_processing_widget)
+        flowtool_export(export_parameters, Case.the(), self.post_processing_widget)
         self.accept()

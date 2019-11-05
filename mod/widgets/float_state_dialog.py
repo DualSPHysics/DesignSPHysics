@@ -25,7 +25,7 @@ class FloatStateDialog(QtGui.QDialog):
         self.ok_button = QtGui.QPushButton(__("Ok"))
         self.cancel_button = QtGui.QPushButton(__("Cancel"))
 
-        self.target_mk = Case.instance().get_simulation_object(FreeCADGui.Selection.getSelection()[0].Name).obj_mk
+        self.target_mk = Case.the().get_simulation_object(FreeCADGui.Selection.getSelection()[0].Name).obj_mk
 
         self.ok_button.clicked.connect(self.on_ok)
         self.cancel_button.clicked.connect(self.on_cancel)
@@ -221,7 +221,7 @@ class FloatStateDialog(QtGui.QDialog):
 
         self.setLayout(self.floatings_window_layout)
 
-        float_property: FloatProperty = Case.instance().get_mk_based_properties(ObjectType.BOUND, self.target_mk).float_property
+        float_property: FloatProperty = Case.the().get_mk_based_properties(ObjectType.BOUND, self.target_mk).float_property
         if float_property:
             self.is_floating_selector.setCurrentIndex(0)
             self.on_floating_change(0)
@@ -337,7 +337,7 @@ class FloatStateDialog(QtGui.QDialog):
         info_dialog(__("This will apply the floating properties to all objects with mkbound = ") + str(self.target_mk))
         if self.is_floating_selector.currentIndex() == 1:
             # Remove Floating
-            Case.instance().get_mk_based_properties(ObjectType.BOUND, self.target_mk).float_property = None
+            Case.the().get_mk_based_properties(ObjectType.BOUND, self.target_mk).float_property = None
         else:
             # Floating true
             fp = FloatProperty()  # FloatProperty to be inserted
@@ -385,7 +385,7 @@ class FloatStateDialog(QtGui.QDialog):
             else:
                 fp.material = str(self.floating_material_line_edit.text())
 
-            Case.instance().get_mk_based_properties(ObjectType.BOUND, self.target_mk).float_property = fp
+            Case.the().get_mk_based_properties(ObjectType.BOUND, self.target_mk).float_property = fp
 
         self.accept()
 

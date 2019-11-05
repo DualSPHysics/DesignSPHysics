@@ -58,7 +58,7 @@ class Case():
         self.chrono: ChronoConfig = ChronoConfig()
 
     @staticmethod
-    def instance() -> "Case":
+    def the() -> "Case":
         """ Static access method. """
         if Case.__instance is None:
             Case()

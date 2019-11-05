@@ -44,7 +44,7 @@ class ExecutionParametersDialog(QtGui.QDialog):
         self.posdouble_input = FocusableComboBox()
         self.posdouble_input.insertItems(0,
                                          ["Double", "Simple", "Uses and saves double"])
-        self.posdouble_input.setCurrentIndex(int(Case.instance().execution_parameters.posdouble))
+        self.posdouble_input.setCurrentIndex(int(Case.the().execution_parameters.posdouble))
         self.posdouble_input.set_help_text(__(HELP_POSDOUBLE))
 
         self.posdouble_input.focus.connect(self.on_help_focus)
@@ -57,7 +57,7 @@ class ExecutionParametersDialog(QtGui.QDialog):
         self.stepalgorithm_label = QtGui.QLabel("Step Algorithm: ")
         self.stepalgorithm_input = FocusableComboBox()
         self.stepalgorithm_input.insertItems(0, ["Symplectic", "Verlet"])
-        self.stepalgorithm_input.setCurrentIndex(int(Case.instance().execution_parameters.stepalgorithm) - 1)
+        self.stepalgorithm_input.setCurrentIndex(int(Case.the().execution_parameters.stepalgorithm) - 1)
         self.stepalgorithm_input.set_help_text(__(HELP_STEPALGORITHM))
 
         self.stepalgorithm_input.focus.connect(self.on_help_focus)
@@ -79,7 +79,7 @@ class ExecutionParametersDialog(QtGui.QDialog):
         self.verletsteps_input.focus.connect(self.on_help_focus)
 
         self.verletsteps_validator = QtGui.QIntValidator(0, 9999, self.verletsteps_input)
-        self.verletsteps_input.setText(str(Case.instance().execution_parameters.verletsteps))
+        self.verletsteps_input.setText(str(Case.the().execution_parameters.verletsteps))
         self.verletsteps_input.setValidator(self.verletsteps_validator)
 
         self.verletsteps_layout.addWidget(self.verletsteps_label)
@@ -94,7 +94,7 @@ class ExecutionParametersDialog(QtGui.QDialog):
         self.kernel_input = FocusableComboBox()
         self.kernel_input.insertItems(0, ["Cubic spline", "Wendland"])
         self.kernel_input.set_help_text(__(HELP_KERNEL))
-        self.kernel_input.setCurrentIndex(int(Case.instance().execution_parameters.kernel) - 1)
+        self.kernel_input.setCurrentIndex(int(Case.the().execution_parameters.kernel) - 1)
 
         self.kernel_input.focus.connect(self.on_help_focus)
 
@@ -108,7 +108,7 @@ class ExecutionParametersDialog(QtGui.QDialog):
         self.viscotreatment_input = FocusableComboBox()
         self.viscotreatment_input.insertItems(0, ["Artificial", "Laminar + SPS"])
         self.viscotreatment_input.set_help_text(__(HELP_VISCOTREATMENT))
-        self.viscotreatment_input.setCurrentIndex(int(Case.instance().execution_parameters.viscotreatment) - 1)
+        self.viscotreatment_input.setCurrentIndex(int(Case.the().execution_parameters.viscotreatment) - 1)
 
         self.viscotreatment_input.focus.connect(self.on_help_focus)
 
@@ -130,8 +130,8 @@ class ExecutionParametersDialog(QtGui.QDialog):
         self.visco_layout.addWidget(self.visco_input)
         self.visco_layout.addWidget(self.visco_units_label)
 
-        self.on_viscotreatment_change(int(Case.instance().execution_parameters.viscotreatment) - 1)
-        self.visco_input.setText(str(Case.instance().execution_parameters.visco))
+        self.on_viscotreatment_change(int(Case.the().execution_parameters.viscotreatment) - 1)
+        self.visco_input.setText(str(Case.the().execution_parameters.visco))
 
         self.viscotreatment_input.currentIndexChanged.connect(self.on_viscotreatment_change)
 
@@ -146,7 +146,7 @@ class ExecutionParametersDialog(QtGui.QDialog):
 
         self.viscoboundfactor_input.focus.connect(self.on_help_focus)
 
-        self.viscoboundfactor_input.setText(str(Case.instance().execution_parameters.viscoboundfactor))
+        self.viscoboundfactor_input.setText(str(Case.the().execution_parameters.viscoboundfactor))
 
         self.viscoboundfactor_layout.addWidget(self.viscoboundfactor_label)
         self.viscoboundfactor_layout.addWidget(self.viscoboundfactor_input)
@@ -155,7 +155,7 @@ class ExecutionParametersDialog(QtGui.QDialog):
         self.densitydt_type_label = QtGui.QLabel("Density Diffusion Term: ")
         self.densitydt_type_input = QtGui.QComboBox()
         self.densitydt_type_input.insertItems(0, ['None', 'Molteni', 'Fourtakas', 'Fourtakas (Full)'])
-        self.densitydt_type_input.setCurrentIndex(Case.instance().execution_parameters.densitydt_type)
+        self.densitydt_type_input.setCurrentIndex(Case.the().execution_parameters.densitydt_type)
         self.densitydt_type_input.currentIndexChanged.connect(self.on_densitydt_type_change)
 
         self.densitydt_type_layout.addWidget(self.densitydt_type_label)
@@ -171,7 +171,7 @@ class ExecutionParametersDialog(QtGui.QDialog):
 
         self.densitydt_input.focus.connect(self.on_help_focus)
 
-        self.densitydt_input.setText(str(Case.instance().execution_parameters.densitydt_value))
+        self.densitydt_input.setText(str(Case.the().execution_parameters.densitydt_value))
         self.densitydt_layout.addWidget(self.densitydt_label)
         self.densitydt_layout.addWidget(self.densitydt_input)
 
@@ -189,7 +189,7 @@ class ExecutionParametersDialog(QtGui.QDialog):
 
         self.shifting_input.focus.connect(self.on_help_focus)
 
-        self.shifting_input.setCurrentIndex(int(Case.instance().execution_parameters.shifting))
+        self.shifting_input.setCurrentIndex(int(Case.the().execution_parameters.shifting))
         self.shifting_input.currentIndexChanged.connect(self.on_shifting_change)
 
         self.shifting_layout.addWidget(self.shifting_label)
@@ -205,7 +205,7 @@ class ExecutionParametersDialog(QtGui.QDialog):
 
         self.shiftcoef_input.focus.connect(self.on_help_focus)
 
-        self.shiftcoef_input.setText(str(Case.instance().execution_parameters.shiftcoef))
+        self.shiftcoef_input.setText(str(Case.the().execution_parameters.shiftcoef))
         self.shiftcoef_layout.addWidget(self.shiftcoef_label)
         self.shiftcoef_layout.addWidget(self.shiftcoef_input)
 
@@ -218,7 +218,7 @@ class ExecutionParametersDialog(QtGui.QDialog):
 
         self.shifttfs_input.focus.connect(self.on_help_focus)
 
-        self.shifttfs_input.setText(str(Case.instance().execution_parameters.shifttfs))
+        self.shifttfs_input.setText(str(Case.the().execution_parameters.shifttfs))
         self.shifttfs_layout.addWidget(self.shifttfs_label)
         self.shifttfs_layout.addWidget(self.shifttfs_input)
 
@@ -231,7 +231,7 @@ class ExecutionParametersDialog(QtGui.QDialog):
         self.rigidalgorithm_input = FocusableComboBox()
         self.rigidalgorithm_input.insertItems(0, ["SPH", "DEM", "CHRONO"])
         self.rigidalgorithm_input.set_help_text(__(HELP_RIGIDALGORITHM))
-        self.rigidalgorithm_input.setCurrentIndex(int(Case.instance().execution_parameters.rigidalgorithm) - 1)
+        self.rigidalgorithm_input.setCurrentIndex(int(Case.the().execution_parameters.rigidalgorithm) - 1)
 
         self.rigidalgorithm_input.focus.connect(self.on_help_focus)
 
@@ -248,7 +248,7 @@ class ExecutionParametersDialog(QtGui.QDialog):
 
         self.ftpause_input.focus.connect(self.on_help_focus)
 
-        self.ftpause_input.setText(str(Case.instance().execution_parameters.ftpause))
+        self.ftpause_input.setText(str(Case.the().execution_parameters.ftpause))
         self.ftpause_label2 = QtGui.QLabel("seconds")
         self.ftpause_layout.addWidget(self.ftpause_label)
         self.ftpause_layout.addWidget(self.ftpause_input)
@@ -263,14 +263,14 @@ class ExecutionParametersDialog(QtGui.QDialog):
 
         self.coefdtmin_input.focus.connect(self.on_help_focus)
 
-        self.coefdtmin_input.setText(str(Case.instance().execution_parameters.coefdtmin))
+        self.coefdtmin_input.setText(str(Case.the().execution_parameters.coefdtmin))
         self.coefdtmin_layout.addWidget(self.coefdtmin_label)
         self.coefdtmin_layout.addWidget(self.coefdtmin_input)
 
         # Initial time step
         self.dtiniauto_layout = QtGui.QHBoxLayout()
         self.dtiniauto_chk = QtGui.QCheckBox("Initial time step auto")
-        if Case.instance().execution_parameters.dtini_auto:
+        if Case.the().execution_parameters.dtini_auto:
             self.dtiniauto_chk.setCheckState(QtCore.Qt.Checked)
         else:
             self.dtiniauto_chk.setCheckState(QtCore.Qt.Unchecked)
@@ -285,7 +285,7 @@ class ExecutionParametersDialog(QtGui.QDialog):
 
         self.dtini_input.focus.connect(self.on_help_focus)
 
-        self.dtini_input.setText(str(Case.instance().execution_parameters.dtini))
+        self.dtini_input.setText(str(Case.the().execution_parameters.dtini))
         self.dtini_label2 = QtGui.QLabel("seconds")
         self.dtini_layout.addWidget(self.dtini_label)
         self.dtini_layout.addWidget(self.dtini_input)
@@ -295,7 +295,7 @@ class ExecutionParametersDialog(QtGui.QDialog):
         # Minimum time step
         self.dtminauto_layout = QtGui.QHBoxLayout()
         self.dtminauto_chk = QtGui.QCheckBox("Minimum time step: ")
-        if Case.instance().execution_parameters.dtmin_auto:
+        if Case.the().execution_parameters.dtmin_auto:
             self.dtminauto_chk.setCheckState(QtCore.Qt.Checked)
         else:
             self.dtminauto_chk.setCheckState(QtCore.Qt.Unchecked)
@@ -310,7 +310,7 @@ class ExecutionParametersDialog(QtGui.QDialog):
 
         self.dtmin_input.focus.connect(self.on_help_focus)
 
-        self.dtmin_input.setText(str(Case.instance().execution_parameters.dtmin))
+        self.dtmin_input.setText(str(Case.the().execution_parameters.dtmin))
         self.dtmin_label2 = QtGui.QLabel("seconds")
         self.dtmin_layout.addWidget(self.dtmin_label)
         self.dtmin_layout.addWidget(self.dtmin_input)
@@ -321,7 +321,7 @@ class ExecutionParametersDialog(QtGui.QDialog):
         self.dtfixed_layout = QtGui.QHBoxLayout()
         self.dtfixed_label = QtGui.QLabel("Fixed DT file: ")
         self.dtfixed_input = QtGui.QLineEdit()
-        self.dtfixed_input.setText(str(Case.instance().execution_parameters.dtfixed))
+        self.dtfixed_input.setText(str(Case.the().execution_parameters.dtfixed))
         self.dtfixed_label2 = QtGui.QLabel("file")
         self.dtfixed_layout.addWidget(self.dtfixed_label)
         self.dtfixed_layout.addWidget(self.dtfixed_input)
@@ -333,7 +333,7 @@ class ExecutionParametersDialog(QtGui.QDialog):
         self.dtallparticles_input = QtGui.QLineEdit()
         self.dtallparticles_input.setMaxLength(1)
         self.dtallparticles_validator = QtGui.QIntValidator(0, 1, self.dtallparticles_input)
-        self.dtallparticles_input.setText(str(Case.instance().execution_parameters.dtallparticles))
+        self.dtallparticles_input.setText(str(Case.the().execution_parameters.dtallparticles))
         self.dtallparticles_input.setValidator(self.dtallparticles_validator)
         self.dtallparticles_label2 = QtGui.QLabel("[0,1]")
         self.dtallparticles_layout.addWidget(self.dtallparticles_label)
@@ -349,7 +349,7 @@ class ExecutionParametersDialog(QtGui.QDialog):
 
         self.timemax_input.focus.connect(self.on_help_focus)
 
-        self.timemax_input.setText(str(Case.instance().execution_parameters.timemax))
+        self.timemax_input.setText(str(Case.the().execution_parameters.timemax))
         self.timemax_label2 = QtGui.QLabel("seconds")
         self.timemax_layout.addWidget(self.timemax_label)
         self.timemax_layout.addWidget(self.timemax_input)
@@ -364,7 +364,7 @@ class ExecutionParametersDialog(QtGui.QDialog):
 
         self.timeout_input.focus.connect(self.on_help_focus)
 
-        self.timeout_input.setText(str(Case.instance().execution_parameters.timeout))
+        self.timeout_input.setText(str(Case.the().execution_parameters.timeout))
         self.timeout_label2 = QtGui.QLabel("seconds")
         self.timeout_layout.addWidget(self.timeout_label)
         self.timeout_layout.addWidget(self.timeout_input)
@@ -379,7 +379,7 @@ class ExecutionParametersDialog(QtGui.QDialog):
 
         self.partsoutmax_input.focus.connect(self.on_help_focus)
 
-        self.partsoutmax_input.setText(str(float(Case.instance().execution_parameters.partsoutmax) * 100))
+        self.partsoutmax_input.setText(str(float(Case.the().execution_parameters.partsoutmax) * 100))
         self.partsoutmax_layout.addWidget(self.partsoutmax_label)
         self.partsoutmax_layout.addWidget(self.partsoutmax_input)
 
@@ -392,7 +392,7 @@ class ExecutionParametersDialog(QtGui.QDialog):
 
         self.rhopoutmin_input.focus.connect(self.on_help_focus)
 
-        self.rhopoutmin_input.setText(str(Case.instance().execution_parameters.rhopoutmin))
+        self.rhopoutmin_input.setText(str(Case.the().execution_parameters.rhopoutmin))
         self.rhopoutmin_label2 = QtGui.QLabel("kg/m<span style='vertical-align:super'>3</span>")
         self.rhopoutmin_layout.addWidget(self.rhopoutmin_label)
         self.rhopoutmin_layout.addWidget(self.rhopoutmin_input)
@@ -407,7 +407,7 @@ class ExecutionParametersDialog(QtGui.QDialog):
 
         self.rhopoutmax_input.focus.connect(self.on_help_focus)
 
-        self.rhopoutmax_input.setText(str(Case.instance().execution_parameters.rhopoutmax))
+        self.rhopoutmax_input.setText(str(Case.the().execution_parameters.rhopoutmax))
         self.rhopoutmax_label2 = QtGui.QLabel("kg/m<span style='vertical-align:super'>3</span>")
         self.rhopoutmax_layout.addWidget(self.rhopoutmax_label)
         self.rhopoutmax_layout.addWidget(self.rhopoutmax_input)
@@ -437,10 +437,10 @@ class ExecutionParametersDialog(QtGui.QDialog):
         self.period_x_layout.addLayout(self.period_x_inc_layout)
         self.period_x_chk.stateChanged.connect(self.on_period_x_chk)
 
-        self.period_x_chk.setChecked(Case.instance().periodicity.x_periodicity.enabled)
-        self.period_x_inc_x_input.setText(str(Case.instance().periodicity.x_periodicity.x_increment))
-        self.period_x_inc_y_input.setText(str(Case.instance().periodicity.x_periodicity.y_increment))
-        self.period_x_inc_z_input.setText(str(Case.instance().periodicity.x_periodicity.z_increment))
+        self.period_x_chk.setChecked(Case.the().periodicity.x_periodicity.enabled)
+        self.period_x_inc_x_input.setText(str(Case.the().periodicity.x_periodicity.x_increment))
+        self.period_x_inc_y_input.setText(str(Case.the().periodicity.x_periodicity.y_increment))
+        self.period_x_inc_z_input.setText(str(Case.the().periodicity.x_periodicity.z_increment))
 
         # Change the state of periodicity input on window open
         self.on_period_x_chk()
@@ -470,10 +470,10 @@ class ExecutionParametersDialog(QtGui.QDialog):
         self.period_y_layout.addLayout(self.period_y_inc_layout)
         self.period_y_chk.stateChanged.connect(self.on_period_y_chk)
 
-        self.period_y_chk.setChecked(Case.instance().periodicity.y_periodicity.enabled)
-        self.period_y_inc_x_input.setText(str(Case.instance().periodicity.y_periodicity.x_increment))
-        self.period_y_inc_y_input.setText(str(Case.instance().periodicity.y_periodicity.y_increment))
-        self.period_y_inc_z_input.setText(str(Case.instance().periodicity.y_periodicity.z_increment))
+        self.period_y_chk.setChecked(Case.the().periodicity.y_periodicity.enabled)
+        self.period_y_inc_x_input.setText(str(Case.the().periodicity.y_periodicity.x_increment))
+        self.period_y_inc_y_input.setText(str(Case.the().periodicity.y_periodicity.y_increment))
+        self.period_y_inc_z_input.setText(str(Case.the().periodicity.y_periodicity.z_increment))
 
         # Change the state of periodicity input on window open
         self.on_period_y_chk()
@@ -504,10 +504,10 @@ class ExecutionParametersDialog(QtGui.QDialog):
         self.period_z_layout.addLayout(self.period_z_inc_layout)
         self.period_z_chk.stateChanged.connect(self.on_period_z_chk)
 
-        self.period_z_chk.setChecked(Case.instance().periodicity.z_periodicity.enabled)
-        self.period_z_inc_x_input.setText(str(Case.instance().periodicity.z_periodicity.x_increment))
-        self.period_z_inc_y_input.setText(str(Case.instance().periodicity.z_periodicity.y_increment))
-        self.period_z_inc_z_input.setText(str(Case.instance().periodicity.z_periodicity.z_increment))
+        self.period_z_chk.setChecked(Case.the().periodicity.z_periodicity.enabled)
+        self.period_z_inc_x_input.setText(str(Case.the().periodicity.z_periodicity.x_increment))
+        self.period_z_inc_y_input.setText(str(Case.the().periodicity.z_periodicity.y_increment))
+        self.period_z_inc_z_input.setText(str(Case.the().periodicity.z_periodicity.z_increment))
 
         # Change the state of periodicity input on window open
         self.on_period_z_chk()
@@ -516,7 +516,7 @@ class ExecutionParametersDialog(QtGui.QDialog):
         self.simdomain_layout = QtGui.QVBoxLayout()
         self.simdomain_chk = QtGui.QCheckBox("Simulation Domain")
 
-        self.simdomain_chk.setChecked(Case.instance().domain.enabled)
+        self.simdomain_chk.setChecked(Case.the().domain.enabled)
 
         self.simdomain_posmin_layout = QtGui.QHBoxLayout()
         self.simdomain_posminx_layout = QtGui.QVBoxLayout()
@@ -532,19 +532,19 @@ class ExecutionParametersDialog(QtGui.QDialog):
         self.simdomain_posminx_line_edit = FocusableLineEdit()
         self.simdomain_posminx_line_edit.set_help_text(__(HELP_POSMINX))
         self.simdomain_posminx_line_edit.focus.connect(self.on_help_focus)
-        self.simdomain_posminx_line_edit.setText(str(Case.instance().domain.posmin_x.value))
+        self.simdomain_posminx_line_edit.setText(str(Case.the().domain.posmin_x.value))
         self.simdomain_posminy_combobox = QtGui.QComboBox()
         self.simdomain_posminy_combobox.insertItems(0, ["Default", "Value", "Default - value", "Default - %"])
         self.simdomain_posminy_line_edit = FocusableLineEdit()
         self.simdomain_posminy_line_edit.set_help_text(__(HELP_POSMINY))
         self.simdomain_posminy_line_edit.focus.connect(self.on_help_focus)
-        self.simdomain_posminy_line_edit.setText(str(Case.instance().domain.posmin_y.value))
+        self.simdomain_posminy_line_edit.setText(str(Case.the().domain.posmin_y.value))
         self.simdomain_posminz_combobox = QtGui.QComboBox()
         self.simdomain_posminz_combobox.insertItems(0, ["Default", "Value", "Default - value", "Default - %"])
         self.simdomain_posminz_line_edit = FocusableLineEdit()
         self.simdomain_posminz_line_edit.set_help_text(__(HELP_POSMINZ))
         self.simdomain_posminz_line_edit.focus.connect(self.on_help_focus)
-        self.simdomain_posminz_line_edit.setText(str(Case.instance().domain.posmin_z.value))
+        self.simdomain_posminz_line_edit.setText(str(Case.the().domain.posmin_z.value))
         self.simdomain_posminx_layout.addWidget(self.simdomain_posminx_combobox)
         self.simdomain_posminx_layout.addWidget(self.simdomain_posminx_line_edit)
         self.simdomain_posminy_layout.addWidget(self.simdomain_posminy_combobox)
@@ -561,19 +561,19 @@ class ExecutionParametersDialog(QtGui.QDialog):
         self.simdomain_posmaxx_line_edit = FocusableLineEdit()
         self.simdomain_posmaxx_line_edit.set_help_text(__(HELP_POSMAXX))
         self.simdomain_posmaxx_line_edit.focus.connect(self.on_help_focus)
-        self.simdomain_posmaxx_line_edit.setText(str(Case.instance().domain.posmax_x.value))
+        self.simdomain_posmaxx_line_edit.setText(str(Case.the().domain.posmax_x.value))
         self.simdomain_posmaxy_combobox = QtGui.QComboBox()
         self.simdomain_posmaxy_combobox.insertItems(0, ["Default", "Value", "Default + value", "Default + %"])
         self.simdomain_posmaxy_line_edit = FocusableLineEdit()
         self.simdomain_posmaxy_line_edit.set_help_text(__(HELP_POSMAXY))
         self.simdomain_posmaxy_line_edit.focus.connect(self.on_help_focus)
-        self.simdomain_posmaxy_line_edit.setText(str(Case.instance().domain.posmax_y.value))
+        self.simdomain_posmaxy_line_edit.setText(str(Case.the().domain.posmax_y.value))
         self.simdomain_posmaxz_combobox = QtGui.QComboBox()
         self.simdomain_posmaxz_combobox.insertItems(0, ["Default", "Value", "Default + value", "Default + %"])
         self.simdomain_posmaxz_line_edit = FocusableLineEdit()
         self.simdomain_posmaxz_line_edit.set_help_text(__(HELP_POSMAXZ))
         self.simdomain_posmaxz_line_edit.focus.connect(self.on_help_focus)
-        self.simdomain_posmaxz_line_edit.setText(str(Case.instance().domain.posmax_z.value))
+        self.simdomain_posmaxz_line_edit.setText(str(Case.the().domain.posmax_z.value))
         self.simdomain_posmaxx_layout.addWidget(self.simdomain_posmaxx_combobox)
         self.simdomain_posmaxx_layout.addWidget(self.simdomain_posmaxx_line_edit)
         self.simdomain_posmaxy_layout.addWidget(self.simdomain_posmaxy_combobox)
@@ -585,12 +585,12 @@ class ExecutionParametersDialog(QtGui.QDialog):
         self.simdomain_posmax_layout.addLayout(self.simdomain_posmaxy_layout)
         self.simdomain_posmax_layout.addLayout(self.simdomain_posmaxz_layout)
 
-        self.simdomain_posminx_combobox.setCurrentIndex(Case.instance().domain.posmin_x.type)
-        self.simdomain_posminy_combobox.setCurrentIndex(Case.instance().domain.posmin_y.type)
-        self.simdomain_posminz_combobox.setCurrentIndex(Case.instance().domain.posmin_z.type)
-        self.simdomain_posmaxx_combobox.setCurrentIndex(Case.instance().domain.posmax_x.type)
-        self.simdomain_posmaxy_combobox.setCurrentIndex(Case.instance().domain.posmax_y.type)
-        self.simdomain_posmaxz_combobox.setCurrentIndex(Case.instance().domain.posmax_z.type)
+        self.simdomain_posminx_combobox.setCurrentIndex(Case.the().domain.posmin_x.type)
+        self.simdomain_posminy_combobox.setCurrentIndex(Case.the().domain.posmin_y.type)
+        self.simdomain_posminz_combobox.setCurrentIndex(Case.the().domain.posmin_z.type)
+        self.simdomain_posmaxx_combobox.setCurrentIndex(Case.the().domain.posmax_x.type)
+        self.simdomain_posmaxy_combobox.setCurrentIndex(Case.the().domain.posmax_y.type)
+        self.simdomain_posmaxz_combobox.setCurrentIndex(Case.the().domain.posmax_z.type)
 
         self.simdomain_layout.addWidget(self.simdomain_chk)
         self.simdomain_layout.addLayout(self.simdomain_posmin_layout)
@@ -843,49 +843,49 @@ class ExecutionParametersDialog(QtGui.QDialog):
 
     # ------------ Button behaviour definition --------------
     def on_ok(self):
-        Case.instance().execution_parameters.posdouble = int(self.posdouble_input.currentIndex())
-        Case.instance().execution_parameters.stepalgorithm = int(self.stepalgorithm_input.currentIndex() + 1)
-        Case.instance().execution_parameters.verletsteps = int(self.verletsteps_input.text())
-        Case.instance().execution_parameters.kernel = int(self.kernel_input.currentIndex() + 1)
-        Case.instance().execution_parameters.viscotreatment = int(self.viscotreatment_input.currentIndex() + 1)
-        Case.instance().execution_parameters.visco = float(self.visco_input.text())
-        Case.instance().execution_parameters.viscoboundfactor = int(self.viscoboundfactor_input.text())
-        Case.instance().execution_parameters.densitydt_type = int(self.densitydt_type_input.currentIndex())
-        Case.instance().execution_parameters.densitydt_value = float(self.densitydt_input.text())
-        Case.instance().execution_parameters.shifting = int(self.shifting_input.currentIndex())
-        Case.instance().execution_parameters.shiftcoef = int(self.shiftcoef_input.text())
-        Case.instance().execution_parameters.shifttfs = int(self.shifttfs_input.text())
-        Case.instance().execution_parameters.rigidalgorithm = int(self.rigidalgorithm_input.currentIndex() + 1)
-        Case.instance().execution_parameters.ftpause = float(self.ftpause_input.text())
-        Case.instance().execution_parameters.coefdtmin = float(self.coefdtmin_input.text())
-        Case.instance().execution_parameters.dtini = float(self.dtini_input.text())
-        Case.instance().execution_parameters.dtini_auto = self.dtiniauto_chk.isChecked()
-        Case.instance().execution_parameters.dtmin = float(self.dtmin_input.text())
-        Case.instance().execution_parameters.dtmin_auto = self.dtminauto_chk.isChecked()
-        Case.instance().execution_parameters.dtfixed = str(self.dtfixed_input.text())
-        Case.instance().execution_parameters.dtallparticles = int(self.dtallparticles_input.text())
-        Case.instance().execution_parameters.timemax = float(self.timemax_input.text())
-        Case.instance().execution_parameters.timeout = float(self.timeout_input.text())
-        Case.instance().execution_parameters.partsoutmax = float(self.partsoutmax_input.text()) / 100
-        Case.instance().execution_parameters.rhopoutmin = int(self.rhopoutmin_input.text())
-        Case.instance().execution_parameters.rhopoutmax = int(self.rhopoutmax_input.text())
+        Case.the().execution_parameters.posdouble = int(self.posdouble_input.currentIndex())
+        Case.the().execution_parameters.stepalgorithm = int(self.stepalgorithm_input.currentIndex() + 1)
+        Case.the().execution_parameters.verletsteps = int(self.verletsteps_input.text())
+        Case.the().execution_parameters.kernel = int(self.kernel_input.currentIndex() + 1)
+        Case.the().execution_parameters.viscotreatment = int(self.viscotreatment_input.currentIndex() + 1)
+        Case.the().execution_parameters.visco = float(self.visco_input.text())
+        Case.the().execution_parameters.viscoboundfactor = int(self.viscoboundfactor_input.text())
+        Case.the().execution_parameters.densitydt_type = int(self.densitydt_type_input.currentIndex())
+        Case.the().execution_parameters.densitydt_value = float(self.densitydt_input.text())
+        Case.the().execution_parameters.shifting = int(self.shifting_input.currentIndex())
+        Case.the().execution_parameters.shiftcoef = int(self.shiftcoef_input.text())
+        Case.the().execution_parameters.shifttfs = int(self.shifttfs_input.text())
+        Case.the().execution_parameters.rigidalgorithm = int(self.rigidalgorithm_input.currentIndex() + 1)
+        Case.the().execution_parameters.ftpause = float(self.ftpause_input.text())
+        Case.the().execution_parameters.coefdtmin = float(self.coefdtmin_input.text())
+        Case.the().execution_parameters.dtini = float(self.dtini_input.text())
+        Case.the().execution_parameters.dtini_auto = self.dtiniauto_chk.isChecked()
+        Case.the().execution_parameters.dtmin = float(self.dtmin_input.text())
+        Case.the().execution_parameters.dtmin_auto = self.dtminauto_chk.isChecked()
+        Case.the().execution_parameters.dtfixed = str(self.dtfixed_input.text())
+        Case.the().execution_parameters.dtallparticles = int(self.dtallparticles_input.text())
+        Case.the().execution_parameters.timemax = float(self.timemax_input.text())
+        Case.the().execution_parameters.timeout = float(self.timeout_input.text())
+        Case.the().execution_parameters.partsoutmax = float(self.partsoutmax_input.text()) / 100
+        Case.the().execution_parameters.rhopoutmin = int(self.rhopoutmin_input.text())
+        Case.the().execution_parameters.rhopoutmax = int(self.rhopoutmax_input.text())
 
-        Case.instance().periodicity = Periodicity()
-        Case.instance().periodicity.x_periodicity = PeriodicityInfo(
+        Case.the().periodicity = Periodicity()
+        Case.the().periodicity.x_periodicity = PeriodicityInfo(
             self.period_x_chk.isChecked(),
             float(self.period_x_inc_x_input.text()),
             float(self.period_x_inc_y_input.text()),
             float(self.period_x_inc_z_input.text())
         )
 
-        Case.instance().periodicity.y_periodicity = PeriodicityInfo(
+        Case.the().periodicity.y_periodicity = PeriodicityInfo(
             self.period_y_chk.isChecked(),
             float(self.period_y_inc_x_input.text()),
             float(self.period_y_inc_y_input.text()),
             float(self.period_y_inc_z_input.text())
         )
 
-        Case.instance().periodicity.z_periodicity = PeriodicityInfo(
+        Case.the().periodicity.z_periodicity = PeriodicityInfo(
             self.period_z_chk.isChecked(),
             float(self.period_z_inc_x_input.text()),
             float(self.period_z_inc_y_input.text()),
@@ -893,20 +893,20 @@ class ExecutionParametersDialog(QtGui.QDialog):
         )
 
         if self.simdomain_chk.isChecked():
-            Case.instance().domain.enabled = True
+            Case.the().domain.enabled = True
             # IncZ must be 0 in simulations with specified domain
-            Case.instance().execution_parameters.incz = 0
+            Case.the().execution_parameters.incz = 0
 
-            Case.instance().domain.posmin_x = SDPositionProperty(self.simdomain_posminx_combobox.currentIndex(), float(self.simdomain_posminx_line_edit.text()))
-            Case.instance().domain.posmin_y = SDPositionProperty(self.simdomain_posminy_combobox.currentIndex(), float(self.simdomain_posminy_line_edit.text()))
-            Case.instance().domain.posmin_z = SDPositionProperty(self.simdomain_posminz_combobox.currentIndex(), float(self.simdomain_posminz_line_edit.text()))
+            Case.the().domain.posmin_x = SDPositionProperty(self.simdomain_posminx_combobox.currentIndex(), float(self.simdomain_posminx_line_edit.text()))
+            Case.the().domain.posmin_y = SDPositionProperty(self.simdomain_posminy_combobox.currentIndex(), float(self.simdomain_posminy_line_edit.text()))
+            Case.the().domain.posmin_z = SDPositionProperty(self.simdomain_posminz_combobox.currentIndex(), float(self.simdomain_posminz_line_edit.text()))
 
-            Case.instance().domain.posmax_x = SDPositionProperty(self.simdomain_posmaxx_combobox.currentIndex(), float(self.simdomain_posmaxx_line_edit.text()))
-            Case.instance().domain.posmax_y = SDPositionProperty(self.simdomain_posmaxy_combobox.currentIndex(), float(self.simdomain_posmaxy_line_edit.text()))
-            Case.instance().domain.posmax_z = SDPositionProperty(self.simdomain_posmaxz_combobox.currentIndex(), float(self.simdomain_posmaxz_line_edit.text()))
+            Case.the().domain.posmax_x = SDPositionProperty(self.simdomain_posmaxx_combobox.currentIndex(), float(self.simdomain_posmaxx_line_edit.text()))
+            Case.the().domain.posmax_y = SDPositionProperty(self.simdomain_posmaxy_combobox.currentIndex(), float(self.simdomain_posmaxy_line_edit.text()))
+            Case.the().domain.posmax_z = SDPositionProperty(self.simdomain_posmaxz_combobox.currentIndex(), float(self.simdomain_posmaxz_line_edit.text()))
         else:
-            Case.instance().domain.enabled = False
-            Case.instance().reset_simulation_domain()
+            Case.the().domain.enabled = False
+            Case.the().reset_simulation_domain()
 
         log("Execution Parameters changed")
         self.accept()

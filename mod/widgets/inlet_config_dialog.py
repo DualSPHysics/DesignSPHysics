@@ -28,7 +28,7 @@ class InletConfigDialog(QtGui.QDialog):
         super(InletConfigDialog, self).__init__(parent=parent)
 
         # Reference to the inlet outlet configuration on the case data
-        self.inlet_outlet: InletOutletConfig = Case.instance().inlet_outlet
+        self.inlet_outlet: InletOutletConfig = Case.the().inlet_outlet
 
         # Creates a dialog
         self.setWindowTitle("Inlet/Outlet configuration")

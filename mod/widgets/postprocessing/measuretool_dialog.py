@@ -163,7 +163,7 @@ class MeasureToolDialog(QtGui.QDialog):
         else:
             export_parameters["additional_parameters"] = ""
 
-        measuretool_export(export_parameters, Case.instance(), self.post_processing_widget)
+        measuretool_export(export_parameters, Case.the(), self.post_processing_widget)
         self.accept()
 
     def on_mtool_measure_all_change(self, state):

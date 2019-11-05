@@ -37,10 +37,10 @@ class GencaseCompletedDialog(QtGui.QDialog):
         self.bt_open_with_paraview = QtGui.QPushButton(__("Open with Paraview"))
 
         self.open_menu = QtGui.QMenu()
-        self.open_menu.addAction("{}_MkCells.vtk".format(Case.instance().name))
-        self.open_menu.addAction("{}_All.vtk".format(Case.instance().name))
-        self.open_menu.addAction("{}_Fluid.vtk".format(Case.instance().name))
-        self.open_menu.addAction("{}_Bound.vtk".format(Case.instance().name))
+        self.open_menu.addAction("{}_MkCells.vtk".format(Case.the().name))
+        self.open_menu.addAction("{}_All.vtk".format(Case.the().name))
+        self.open_menu.addAction("{}_Fluid.vtk".format(Case.the().name))
+        self.open_menu.addAction("{}_Bound.vtk".format(Case.the().name))
 
         self.bt_open_with_paraview.setMenu(self.open_menu)
 
@@ -70,7 +70,7 @@ class GencaseCompletedDialog(QtGui.QDialog):
         # Window logic
         self.detail_text_dialog.hide()
 
-        if Case.instance().executable_paths.paraview:
+        if Case.the().executable_paths.paraview:
             self.bt_open_with_paraview.show()
         else:
             self.bt_open_with_paraview.hide()
@@ -98,7 +98,7 @@ class GencaseCompletedDialog(QtGui.QDialog):
     def on_open_paraview_menu(self, action):
         """ Tries to open Paraview with the selected option. """
         try:
-            subprocess.Popen([Case.instance().executable_paths.paraview, "--data={}\\{}".format(Case.instance().path + "\\" + Case.instance().name + "_out", action.text())], stdout=subprocess.PIPE)
+            subprocess.Popen([Case.the().executable_paths.paraview, "--data={}\\{}".format(Case.the().path + "\\" + Case.the().name + "_out", action.text())], stdout=subprocess.PIPE)
             self.detail_text_dialog.hide()
             self.accept()
         except:

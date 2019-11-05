@@ -73,6 +73,6 @@ class FloatingInfoDialog(QtGui.QDialog):
         export_parameters["filename"] = self.finfo_filename_text.text()
         export_parameters["additional_parameters"] = self.finfo_additional_parameters_text.text()
 
-        floatinginfo_export(export_parameters, Case.instance(), self.post_processing_widget)
+        floatinginfo_export(export_parameters, Case.the(), self.post_processing_widget)
 
         self.accept()

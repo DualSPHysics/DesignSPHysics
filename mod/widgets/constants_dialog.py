@@ -36,7 +36,7 @@ class ConstantsDialog(QtGui.QDialog):
         self.lattice_label = QtGui.QLabel("Lattice for Boundaries: ")
         self.lattice_input = QtGui.QComboBox()
         self.lattice_input.insertItems(0, ["Lattice 1", "Lattice 2"])
-        self.lattice_input.setCurrentIndex(Case.instance().constants.lattice_bound - 1)
+        self.lattice_input.setCurrentIndex(Case.the().constants.lattice_bound - 1)
 
         self.lattice_layout.addWidget(self.lattice_label)
         self.lattice_layout.addWidget(self.lattice_input)
@@ -47,7 +47,7 @@ class ConstantsDialog(QtGui.QDialog):
         self.lattice2_label = QtGui.QLabel("Lattice for Fluids: ")
         self.lattice2_input = QtGui.QComboBox()
         self.lattice2_input.insertItems(0, ["Lattice 1", "Lattice 2"])
-        self.lattice2_input.setCurrentIndex(Case.instance().constants.lattice_fluid - 1)
+        self.lattice2_input.setCurrentIndex(Case.the().constants.lattice_fluid - 1)
 
         self.lattice2_layout.addWidget(self.lattice2_label)
         self.lattice2_layout.addWidget(self.lattice2_input)
@@ -65,7 +65,7 @@ class ConstantsDialog(QtGui.QDialog):
         self.gravityx_input.focus.connect(self.on_help_focus)
 
         self.gravityx_validator = QtGui.QDoubleValidator(-200, 200, 8, self.gravityx_input)
-        self.gravityx_input.setText(str(Case.instance().constants.gravity[0]))
+        self.gravityx_input.setText(str(Case.the().constants.gravity[0]))
         self.gravityx_input.setValidator(self.gravityx_validator)
 
         self.gravityy_input = QtGui.QLineEdit()
@@ -76,7 +76,7 @@ class ConstantsDialog(QtGui.QDialog):
         self.gravityy_input.focus.connect(self.on_help_focus)
 
         self.gravityy_validator = QtGui.QDoubleValidator(-200, 200, 8, self.gravityy_input)
-        self.gravityy_input.setText(str(Case.instance().constants.gravity[1]))
+        self.gravityy_input.setText(str(Case.the().constants.gravity[1]))
         self.gravityy_input.setValidator(self.gravityy_validator)
 
         self.gravityz_input = QtGui.QLineEdit()
@@ -87,7 +87,7 @@ class ConstantsDialog(QtGui.QDialog):
         self.gravityz_input.focus.connect(self.on_help_focus)
 
         self.gravityz_validator = QtGui.QDoubleValidator(-200, 200, 8, self.gravityz_input)
-        self.gravityz_input.setText(str(Case.instance().constants.gravity[2]))
+        self.gravityz_input.setText(str(Case.the().constants.gravity[2]))
         self.gravityz_input.setValidator(self.gravityz_validator)
 
         self.gravity_label2 = QtGui.QLabel("m/s<span style='vertical-align:super'>2</span>")
@@ -110,7 +110,7 @@ class ConstantsDialog(QtGui.QDialog):
         self.rhop0_input.focus.connect(self.on_help_focus)
 
         self.rhop0_validator = QtGui.QIntValidator(0, 10000, self.rhop0_input)
-        self.rhop0_input.setText(str(Case.instance().constants.rhop0))
+        self.rhop0_input.setText(str(Case.the().constants.rhop0))
         self.rhop0_input.setValidator(self.rhop0_validator)
         self.rhop0_label2 = QtGui.QLabel("kg/m<span style='vertical-align:super'>3<span>")
 
@@ -122,7 +122,7 @@ class ConstantsDialog(QtGui.QDialog):
         # components
         self.hswlauto_layout = QtGui.QHBoxLayout()
         self.hswlauto_chk = QtGui.QCheckBox("Auto HSWL ")
-        if Case.instance().constants.hswl_auto:
+        if Case.the().constants.hswl_auto:
             self.hswlauto_chk.setCheckState(QtCore.Qt.Checked)
         else:
             self.hswlauto_chk.setCheckState(QtCore.Qt.Unchecked)
@@ -140,7 +140,7 @@ class ConstantsDialog(QtGui.QDialog):
         self.hswl_input.focus.connect(self.on_help_focus)
 
         self.hswl_validator = QtGui.QIntValidator(0, 10000, self.hswl_input)
-        self.hswl_input.setText(str(Case.instance().constants.hswl))
+        self.hswl_input.setText(str(Case.the().constants.hswl))
         self.hswl_input.setValidator(self.hswl_validator)
         self.hswl_label2 = QtGui.QLabel("metres")
 
@@ -162,7 +162,7 @@ class ConstantsDialog(QtGui.QDialog):
         self.gamma_input.focus.connect(self.on_help_focus)
 
         self.gamma_validator = QtGui.QIntValidator(0, 999, self.gamma_input)
-        self.gamma_input.setText(str(Case.instance().constants.gamma))
+        self.gamma_input.setText(str(Case.the().constants.gamma))
         self.gamma_input.setValidator(self.gamma_validator)
         self.gamma_label2 = QtGui.QLabel("units")
 
@@ -173,7 +173,7 @@ class ConstantsDialog(QtGui.QDialog):
         # Speedsystem: layout and components
         self.speedsystemauto_layout = QtGui.QHBoxLayout()
         self.speedsystemauto_chk = QtGui.QCheckBox("Auto Speedsystem ")
-        if Case.instance().constants.speedsystem_auto:
+        if Case.the().constants.speedsystem_auto:
             self.speedsystemauto_chk.setCheckState(QtCore.Qt.Checked)
         else:
             self.speedsystemauto_chk.setCheckState(QtCore.Qt.Unchecked)
@@ -191,7 +191,7 @@ class ConstantsDialog(QtGui.QDialog):
         self.speedsystem_input.focus.connect(self.on_help_focus)
 
         self.speedsystem_validator = QtGui.QIntValidator(0, 10000, self.speedsystem_input)
-        self.speedsystem_input.setText(str(Case.instance().constants.speedsystem))
+        self.speedsystem_input.setText(str(Case.the().constants.speedsystem))
         self.speedsystem_input.setValidator(self.speedsystem_validator)
         self.speedsystem_label2 = QtGui.QLabel("m/s")
 
@@ -213,7 +213,7 @@ class ConstantsDialog(QtGui.QDialog):
         self.coefsound_input.focus.connect(self.on_help_focus)
 
         self.coefsound_validator = QtGui.QIntValidator(0, 999, self.coefsound_input)
-        self.coefsound_input.setText(str(Case.instance().constants.coefsound))
+        self.coefsound_input.setText(str(Case.the().constants.coefsound))
         self.coefsound_input.setValidator(self.coefsound_validator)
         self.coefsound_label2 = QtGui.QLabel("units")
 
@@ -224,7 +224,7 @@ class ConstantsDialog(QtGui.QDialog):
         # Speedsound: layout and components
         self.speedsoundauto_layout = QtGui.QHBoxLayout()
         self.speedsoundauto_chk = QtGui.QCheckBox("Auto Speedsound ")
-        if Case.instance().constants.speedsound_auto:
+        if Case.the().constants.speedsound_auto:
             self.speedsoundauto_chk.setCheckState(QtCore.Qt.Checked)
         else:
             self.speedsoundauto_chk.setCheckState(QtCore.Qt.Unchecked)
@@ -242,7 +242,7 @@ class ConstantsDialog(QtGui.QDialog):
         self.speedsound_input.focus.connect(self.on_help_focus)
 
         self.speedsound_validator = QtGui.QIntValidator(0, 10000, self.speedsound_input)
-        self.speedsound_input.setText(str(Case.instance().constants.speedsound))
+        self.speedsound_input.setText(str(Case.the().constants.speedsound))
         self.speedsound_input.setValidator(self.speedsound_validator)
         self.speedsound_label2 = QtGui.QLabel("m/s")
 
@@ -264,7 +264,7 @@ class ConstantsDialog(QtGui.QDialog):
         self.coefh_input.focus.connect(self.on_help_focus)
 
         self.coefh_validator = QtGui.QDoubleValidator(0, 10, 8, self.coefh_input)
-        self.coefh_input.setText(str(Case.instance().constants.coefh))
+        self.coefh_input.setText(str(Case.the().constants.coefh))
         self.coefh_input.setValidator(self.coefh_validator)
         self.coefh_label2 = QtGui.QLabel("units")
 
@@ -283,7 +283,7 @@ class ConstantsDialog(QtGui.QDialog):
         self.cflnumber_input.focus.connect(self.on_help_focus)
 
         self.cflnumber_validator = QtGui.QDoubleValidator(0, 10, 8, self.coefh_input)
-        self.cflnumber_input.setText(str(Case.instance().constants.cflnumber))
+        self.cflnumber_input.setText(str(Case.the().constants.cflnumber))
         self.cflnumber_input.setValidator(self.cflnumber_validator)
         self.cflnumber_label2 = QtGui.QLabel("units")
 
@@ -294,7 +294,7 @@ class ConstantsDialog(QtGui.QDialog):
         # h: layout and components
         self.hauto_layout = QtGui.QHBoxLayout()
         self.hauto_chk = QtGui.QCheckBox("Auto Smoothing length ")
-        if Case.instance().constants.h_auto:
+        if Case.the().constants.h_auto:
             self.hauto_chk.setCheckState(QtCore.Qt.Checked)
         else:
             self.hauto_chk.setCheckState(QtCore.Qt.Unchecked)
@@ -312,7 +312,7 @@ class ConstantsDialog(QtGui.QDialog):
         self.h_input.focus.connect(self.on_help_focus)
 
         self.h_validator = QtGui.QDoubleValidator(0, 100, 8, self.h_input)
-        self.h_input.setText(str(Case.instance().constants.h))
+        self.h_input.setText(str(Case.the().constants.h))
         self.h_input.setValidator(self.h_validator)
         self.h_label2 = QtGui.QLabel("metres")
 
@@ -326,7 +326,7 @@ class ConstantsDialog(QtGui.QDialog):
         # b: layout and components
         self.bauto_layout = QtGui.QHBoxLayout()
         self.bauto_chk = QtGui.QCheckBox("Auto b constant for EOS ")
-        if Case.instance().constants.b_auto:
+        if Case.the().constants.b_auto:
             self.bauto_chk.setCheckState(QtCore.Qt.Checked)
         else:
             self.bauto_chk.setCheckState(QtCore.Qt.Unchecked)
@@ -344,7 +344,7 @@ class ConstantsDialog(QtGui.QDialog):
         self.b_input.focus.connect(self.on_help_focus)
 
         self.b_validator = QtGui.QDoubleValidator(0, 100, 8, self.b_input)
-        self.b_input.setText(str(Case.instance().constants.b))
+        self.b_input.setText(str(Case.the().constants.b))
         self.b_input.setValidator(self.b_validator)
         self.b_label2 = QtGui.QLabel("Pascal")
 
@@ -451,28 +451,28 @@ class ConstantsDialog(QtGui.QDialog):
             self.b_input.setEnabled(True)
 
     def on_ok(self):
-        Case.instance().constants.lattice_bound = self.lattice_input.currentIndex() + 1
-        Case.instance().constants.lattice_fluid = self.lattice2_input.currentIndex() + 1
-        Case.instance().constants.gravity = [
+        Case.the().constants.lattice_bound = self.lattice_input.currentIndex() + 1
+        Case.the().constants.lattice_fluid = self.lattice2_input.currentIndex() + 1
+        Case.the().constants.gravity = [
             float(self.gravityx_input.text()),
             float(self.gravityy_input.text()),
             float(self.gravityz_input.text())
         ]
-        Case.instance().constants.rhop0 = float(self.rhop0_input.text())
-        Case.instance().constants.hswl = float(self.hswl_input.text())
-        Case.instance().constants.hswl_auto = self.hswlauto_chk.isChecked()
-        Case.instance().constants.gamma = float(self.gamma_input.text())
-        Case.instance().constants.speedsystem = float(self.speedsystem_input.text())
-        Case.instance().constants.speedsystem_auto = self.speedsystemauto_chk.isChecked()
-        Case.instance().constants.coefsound = float(self.coefsound_input.text())
-        Case.instance().constants.speedsound = float(self.speedsound_input.text())
-        Case.instance().constants.speedsound_auto = self.speedsoundauto_chk.isChecked()
-        Case.instance().constants.coefh = float(self.coefh_input.text())
-        Case.instance().constants.cflnumber = float(self.cflnumber_input.text())
-        Case.instance().constants.h = float(self.h_input.text())
-        Case.instance().constants.h_auto = self.hauto_chk.isChecked()
-        Case.instance().constants.b = float(self.b_input.text())
-        Case.instance().constants.b_auto = self.bauto_chk.isChecked()
+        Case.the().constants.rhop0 = float(self.rhop0_input.text())
+        Case.the().constants.hswl = float(self.hswl_input.text())
+        Case.the().constants.hswl_auto = self.hswlauto_chk.isChecked()
+        Case.the().constants.gamma = float(self.gamma_input.text())
+        Case.the().constants.speedsystem = float(self.speedsystem_input.text())
+        Case.the().constants.speedsystem_auto = self.speedsystemauto_chk.isChecked()
+        Case.the().constants.coefsound = float(self.coefsound_input.text())
+        Case.the().constants.speedsound = float(self.speedsound_input.text())
+        Case.the().constants.speedsound_auto = self.speedsoundauto_chk.isChecked()
+        Case.the().constants.coefh = float(self.coefh_input.text())
+        Case.the().constants.cflnumber = float(self.cflnumber_input.text())
+        Case.the().constants.h = float(self.h_input.text())
+        Case.the().constants.h_auto = self.hauto_chk.isChecked()
+        Case.the().constants.b = float(self.b_input.text())
+        Case.the().constants.b_auto = self.bauto_chk.isChecked()
         log("Constants changed")
         self.accept()
 

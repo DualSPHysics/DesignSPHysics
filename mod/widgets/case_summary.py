@@ -20,7 +20,7 @@ class CaseSummary(QtGui.QDialog):
 
         self.summary_template = get_template(Template.CASE_SUMMARY)
 
-        self.info_text = self.summary_template.format(obj_to_dict(Case.instance()))
+        self.info_text = self.summary_template.format(obj_to_dict(Case.the()))
 
         self.info.setText(self.info_text)
         self.info.setReadOnly(True)

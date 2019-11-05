@@ -93,7 +93,7 @@ class ComputeForcesDialog(QtGui.QDialog):
         export_parameters["onlyprocess"] = self.cfces_onlyprocess_text.text()
         export_parameters["filename"] = self.cfces_filename_text.text()
         export_parameters["additional_parameters"] = self.cfces_additional_parameters_text.text()
-        computeforces_export(export_parameters, Case.instance(), self.post_processing_widget)
+        computeforces_export(export_parameters, Case.the(), self.post_processing_widget)
         self.accept()
 
     def on_cfces_onlyprocess_changed(self):

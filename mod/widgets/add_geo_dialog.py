@@ -115,7 +115,7 @@ class AddGEODialog(QtGui.QDialog):
                        scale_z=float(self.geo_scaling_z_e.text()),
                        name=str(self.geo_objname_text.text()),
                        autofill=self.geo_autofill_chck.isChecked(),
-                       case=Case.instance())
+                       case=Case.the())
 
             self.accept()
         except ValueError:

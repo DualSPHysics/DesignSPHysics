@@ -24,14 +24,14 @@ class MeasureToolPointsDialog(QtGui.QDialog):
         mpoints_table.verticalHeader().setVisible(False)
         mpoints_table.setHorizontalHeaderLabels(["X", "Y", "Z"])
 
-        for i, point in enumerate(Case.instance().info.measuretool_points):
+        for i, point in enumerate(Case.the().info.measuretool_points):
             mpoints_table.setItem(i, 0, QtGui.QTableWidgetItem(str(point[0])))
             mpoints_table.setItem(i, 1, QtGui.QTableWidgetItem(str(point[1])))
             mpoints_table.setItem(i, 2, QtGui.QTableWidgetItem(str(point[2])))
 
         def on_mpoints_accept():
             """ MeasureTool points dialog accept button behaviour. """
-            Case.instance().info.measuretool_points = list()
+            Case.the().info.measuretool_points = list()
             for mtool_row in range(0, mpoints_table.rowCount()):
                 try:
                     current_point = [
@@ -39,12 +39,12 @@ class MeasureToolPointsDialog(QtGui.QDialog):
                         float(mpoints_table.item(mtool_row, 1).text()),
                         float(mpoints_table.item(mtool_row, 2).text())
                     ]
-                    Case.instance().info.measuretool_points.append(current_point)
+                    Case.the().info.measuretool_points.append(current_point)
                 except (ValueError, AttributeError):
                     pass
 
             # Deletes the grid points (not compatible together)
-            Case.instance().info.measuretool_grid = list()
+            Case.the().info.measuretool_grid = list()
             measurepoints_tool_dialog.accept()
 
         def on_mpoints_cancel():

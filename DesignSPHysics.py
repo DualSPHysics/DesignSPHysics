@@ -73,12 +73,12 @@ def on_tree_item_selection_change():
             # One object selected
             if selection[0].Name == "Case_Limits" or "_internal_" in selection[0].Name:
                 properties_widget.configure_to_no_selection()
-            elif Case.instance().is_damping_bound_to_object(selection[0].Name):
+            elif Case.the().is_damping_bound_to_object(selection[0].Name):
                 properties_widget.configure_to_damping_selection()
-            elif Case.instance().is_object_in_simulation(selection[0].Name):
+            elif Case.the().is_object_in_simulation(selection[0].Name):
                 # Show properties on table
                 properties_widget.configure_to_regular_selection()
-                properties_widget.adapt_to_simulation_object(Case.instance().get_simulation_object(selection[0].Name), selection[0])
+                properties_widget.adapt_to_simulation_object(Case.the().get_simulation_object(selection[0].Name), selection[0])
             else:
                 if not selection[0].InList:
                     # Show button to add to simulation
@@ -89,10 +89,10 @@ def on_tree_item_selection_change():
         properties_widget.configure_to_no_selection()
 
     # Delete invalid or already deleted (in FreeCAD) objects
-    for object_name in Case.instance().get_all_simulation_object_names():
+    for object_name in Case.the().get_all_simulation_object_names():
         fc_object = get_fc_object(object_name)
         if not fc_object or fc_object.InList:
-            Case.instance().remove_object(object_name)
+            Case.the().remove_object(object_name)
 
     # Update dsph objects list
     dualsphysics_dock.refresh_object_list()
@@ -127,11 +127,11 @@ def selection_monitor():
             if not FreeCADGui.Selection.getSelection():
                 properties_widget.configure_to_no_selection()
 
-            enforce_case_limits_restrictions(Case.instance().mode3d)
+            enforce_case_limits_restrictions(Case.the().mode3d)
             enforce_fillbox_restrictions()
 
             # Adjust damping properties when freecad related properties change
-            for name, damping_zone in Case.instance().damping_zones.items():
+            for name, damping_zone in Case.the().damping_zones.items():
                 if FreeCAD.ActiveDocument:
                     damping_group = FreeCAD.ActiveDocument.getObject(name)
                     if len(damping_group.OutList) == 2:

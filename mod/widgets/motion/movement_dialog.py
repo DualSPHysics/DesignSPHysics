@@ -67,8 +67,8 @@ class MovementDialog(QtGui.QDialog):
         self.cancel_button = QtGui.QPushButton(__("Cancel"))
         self.notice_label = QtGui.QLabel("")
         self.notice_label.setStyleSheet("QLabel { color : red; }")
-        self.target_mk = Case.instance().get_simulation_object(FreeCADGui.Selection.getSelection()[0].Name).obj_mk
-        self.mkbasedproperties = Case.instance().get_mk_based_properties(ObjectType.BOUND, self.target_mk)
+        self.target_mk = Case.the().get_simulation_object(FreeCADGui.Selection.getSelection()[0].Name).obj_mk
+        self.mkbasedproperties = Case.the().get_mk_based_properties(ObjectType.BOUND, self.target_mk)
         self.movements_selected = self.mkbasedproperties.movements
 
         self.ok_button.clicked.connect(self.on_ok)
@@ -275,7 +275,7 @@ class MovementDialog(QtGui.QDialog):
     def on_check_movement(self, index, checked):
         """ Add or delete a movement from the temporal list of selected movements. """
         self.notice_label.setText("")  # Reset the notice label if a valid change is made
-        target_movement = Case.instance().info.global_movements[index]
+        target_movement = Case.the().info.global_movements[index]
         if checked:
             self.check_movement_compatibility(target_movement)
             self.movements_selected.append(target_movement)
@@ -286,18 +286,18 @@ class MovementDialog(QtGui.QDialog):
     def on_loop_movement(self, index, checked):
         """ Make a movement loop itself """
         self.notice_label.setText("")  # Reset the notice label if a valid change is made
-        Case.instance().info.global_movements[index].set_loop(checked)
+        Case.the().info.global_movements[index].set_loop(checked)
 
     def on_delete_movement(self, index):
         """ Remove a movement from the project. """
         try:
-            self.movements_selected.remove(Case.instance().info.global_movements[index])
+            self.movements_selected.remove(Case.the().info.global_movements[index])
             # Reset the notice label if a valid change is made
             self.notice_label.setText("")
         except ValueError:
             # Movement wasn't selected
             pass
-        Case.instance().info.global_movements.pop(index)
+        Case.the().info.global_movements.pop(index)
         self.refresh_movements_table()
         self.on_movement_selected(self.timeline_list_table.rowCount() - 1, None)
 
@@ -305,7 +305,7 @@ class MovementDialog(QtGui.QDialog):
         """ Creates a movement on the project. """
         self.notice_label.setText("")  # Reset the notice label if a valid change is made
         to_add = Movement(name="New Movement")
-        Case.instance().info.global_movements.append(to_add)
+        Case.the().info.global_movements.append(to_add)
         self.movements_selected.append(to_add)
         self.check_movement_compatibility(to_add)
 
@@ -331,7 +331,7 @@ class MovementDialog(QtGui.QDialog):
         if __("Rotation from a file") in action.text():
             to_add = SpecialMovement(name="Rotation from a file", generator=RotationFileGen())
 
-        Case.instance().info.global_movements.append(to_add)
+        Case.the().info.global_movements.append(to_add)
         self.check_movement_compatibility(to_add)
         self.movements_selected.append(to_add)
 
@@ -340,10 +340,10 @@ class MovementDialog(QtGui.QDialog):
     def on_movement_name_change(self, row, column):
         """ Changes the name of a movement on the project. """
         target_item = self.movement_list_table.item(row, column)
-        if target_item is not None and Case.instance().info.global_movements[row].name != target_item.text():
+        if target_item is not None and Case.the().info.global_movements[row].name != target_item.text():
             # Reset the notice label if a valid change is made
             self.notice_label.setText("")
-            Case.instance().info.global_movements[row].name = target_item.text()
+            Case.the().info.global_movements[row].name = target_item.text()
 
     def on_timeline_item_change(self, index, motion_object):
         """ Changes the values of an item on the timeline. """
@@ -362,21 +362,21 @@ class MovementDialog(QtGui.QDialog):
     def on_timeline_item_order_up(self, index):
         # Reset the notice label if a valid change is made
         self.notice_label.setText("")
-        movement = Case.instance().info.global_movements[self.movement_list_table.selectedIndexes()[0].row()]
+        movement = Case.the().info.global_movements[self.movement_list_table.selectedIndexes()[0].row()]
         movement.motion_list.insert(index - 1, movement.motion_list.pop(index))
         self.on_movement_selected(self.movement_list_table.selectedIndexes()[0].row(), None)
 
     def on_timeline_item_order_down(self, index):
         # Reset the notice label if a valid change is made
         self.notice_label.setText("")
-        movement = Case.instance().info.global_movements[self.movement_list_table.selectedIndexes()[0].row()]
+        movement = Case.the().info.global_movements[self.movement_list_table.selectedIndexes()[0].row()]
         movement.motion_list.insert(index + 1, movement.motion_list.pop(index))
         self.on_movement_selected(self.movement_list_table.selectedIndexes()[0].row(), None)
 
     def on_movement_selected(self, row, _):
         """ Shows the timeline for the selected movement. """
         try:
-            self.currently_selected_movement = Case.instance().info.global_movements[row]
+            self.currently_selected_movement = Case.the().info.global_movements[row]
         except IndexError:
             self.timeline_list_table.clearContents()
             self.timeline_list_table.setEnabled(False)
@@ -443,9 +443,9 @@ class MovementDialog(QtGui.QDialog):
             elif isinstance(self.currently_selected_movement.generator, IrregularFlapWaveGen):
                 target_to_put = IrregularFlapWaveMotionTimeline(self.currently_selected_movement.generator, parent=get_fc_main_window())
             elif isinstance(self.currently_selected_movement.generator, FileGen):
-                target_to_put = FileMotionTimeline(self.currently_selected_movement.generator, Case.instance().path, parent=get_fc_main_window())
+                target_to_put = FileMotionTimeline(self.currently_selected_movement.generator, Case.the().path, parent=get_fc_main_window())
             elif isinstance(self.currently_selected_movement.generator, RotationFileGen):
-                target_to_put = RotationFileMotionTimeline(self.currently_selected_movement.generator, Case.instance().path, parent=get_fc_main_window())
+                target_to_put = RotationFileMotionTimeline(self.currently_selected_movement.generator, Case.the().path, parent=get_fc_main_window())
 
             target_to_put.changed.connect(self.on_timeline_item_change)
             self.timeline_list_table.setCellWidget(0, 0, target_to_put)
@@ -453,9 +453,9 @@ class MovementDialog(QtGui.QDialog):
     def refresh_movements_table(self):
         """ Refreshes the movement table. """
         self.movement_list_table.clearContents()
-        self.movement_list_table.setRowCount(len(Case.instance().info.global_movements) + 1)
+        self.movement_list_table.setRowCount(len(Case.the().info.global_movements) + 1)
         current_row = 0
-        for movement in Case.instance().info.global_movements:
+        for movement in Case.the().info.global_movements:
             self.movement_list_table.setItem(current_row, 0, QtGui.QTableWidgetItem(movement.name))
             try:
                 has_loop = movement.loop
@@ -489,24 +489,24 @@ class MovementDialog(QtGui.QDialog):
         """ Adds a WaitMotion to the timeline of the selected movement. """
         self.notice_label.setText("")  # Reset the notice label if a valid change is made
         if self.movement_list_table.selectedIndexes():
-            if self.movement_list_table.selectedIndexes()[0].row() is not len(Case.instance().info.global_movements):
-                Case.instance().info.global_movements[self.movement_list_table.selectedIndexes()[0].row()].add_motion(WaitMotion())
+            if self.movement_list_table.selectedIndexes()[0].row() is not len(Case.the().info.global_movements):
+                Case.the().info.global_movements[self.movement_list_table.selectedIndexes()[0].row()].add_motion(WaitMotion())
                 self.on_movement_selected(self.movement_list_table.selectedIndexes()[0].row(), None)
 
     def on_add_rectilinear(self):
         """ Adds a RectMotion to the timeline of the selected movement. """
         self.notice_label.setText("")  # Reset the notice label if a valid change is made
         if self.movement_list_table.selectedIndexes():
-            if self.movement_list_table.selectedIndexes()[0].row() is not len(Case.instance().info.global_movements):
-                Case.instance().info.global_movements[self.movement_list_table.selectedIndexes()[0].row()].add_motion(RectMotion())
+            if self.movement_list_table.selectedIndexes()[0].row() is not len(Case.the().info.global_movements):
+                Case.the().info.global_movements[self.movement_list_table.selectedIndexes()[0].row()].add_motion(RectMotion())
                 self.on_movement_selected(self.movement_list_table.selectedIndexes()[0].row(), None)
 
     def on_add_accrectilinear(self):
         """ Adds a AccRectMotion to the timeline of the selected movement. """
         self.notice_label.setText("")  # Reset the notice label if a valid change is made
         if self.movement_list_table.selectedIndexes():
-            if self.movement_list_table.selectedIndexes()[0].row() is not len(Case.instance().info.global_movements):
-                Case.instance().info.global_movements[self.movement_list_table.selectedIndexes()[0].row()].add_motion(AccRectMotion())
+            if self.movement_list_table.selectedIndexes()[0].row() is not len(Case.the().info.global_movements):
+                Case.the().info.global_movements[self.movement_list_table.selectedIndexes()[0].row()].add_motion(AccRectMotion())
                 self.on_movement_selected(
                     self.movement_list_table.selectedIndexes()[0].row(), None)
 
@@ -515,8 +515,8 @@ class MovementDialog(QtGui.QDialog):
         self.notice_label.setText(
             "")  # Reset the notice label if a valid change is made
         if self.movement_list_table.selectedIndexes():
-            if self.movement_list_table.selectedIndexes()[0].row() is not len(Case.instance().info.global_movements):
-                Case.instance().info.global_movements[self.movement_list_table.selectedIndexes()[0].row()].add_motion(RotMotion())
+            if self.movement_list_table.selectedIndexes()[0].row() is not len(Case.the().info.global_movements):
+                Case.the().info.global_movements[self.movement_list_table.selectedIndexes()[0].row()].add_motion(RotMotion())
                 self.on_movement_selected(
                     self.movement_list_table.selectedIndexes()[0].row(), None)
 
@@ -524,8 +524,8 @@ class MovementDialog(QtGui.QDialog):
         """ Adds a AccRotMotion to the timeline of the selected movement. """
         self.notice_label.setText("")  # Reset the notice label if a valid change is made
         if self.movement_list_table.selectedIndexes():
-            if self.movement_list_table.selectedIndexes()[0].row() is not len(Case.instance().info.global_movements):
-                Case.instance().info.global_movements[self.movement_list_table.selectedIndexes()[0].row()].add_motion(AccRotMotion())
+            if self.movement_list_table.selectedIndexes()[0].row() is not len(Case.the().info.global_movements):
+                Case.the().info.global_movements[self.movement_list_table.selectedIndexes()[0].row()].add_motion(AccRotMotion())
                 self.on_movement_selected(
                     self.movement_list_table.selectedIndexes()[0].row(), None)
 
@@ -533,8 +533,8 @@ class MovementDialog(QtGui.QDialog):
         """ Adds a AccCirMotion to the timeline of the selected movement. """
         self.notice_label.setText("")  # Reset the notice label if a valid change is made
         if self.movement_list_table.selectedIndexes():
-            if self.movement_list_table.selectedIndexes()[0].row() is not len(Case.instance().info.global_movements):
-                Case.instance().info.global_movements[self.movement_list_table.selectedIndexes()[0].row()].add_motion(AccCirMotion())
+            if self.movement_list_table.selectedIndexes()[0].row() is not len(Case.the().info.global_movements):
+                Case.the().info.global_movements[self.movement_list_table.selectedIndexes()[0].row()].add_motion(AccCirMotion())
                 self.on_movement_selected(
                     self.movement_list_table.selectedIndexes()[0].row(), None)
 
@@ -542,8 +542,8 @@ class MovementDialog(QtGui.QDialog):
         """ Adds a RotSinuMotion to the timeline of the selected movement. """
         self.notice_label.setText("")  # Reset the notice label if a valid change is made
         if self.movement_list_table.selectedIndexes():
-            if self.movement_list_table.selectedIndexes()[0].row() is not len(Case.instance().info.global_movements):
-                Case.instance().info.global_movements[self.movement_list_table.selectedIndexes()[0].row()].add_motion(RotSinuMotion())
+            if self.movement_list_table.selectedIndexes()[0].row() is not len(Case.the().info.global_movements):
+                Case.the().info.global_movements[self.movement_list_table.selectedIndexes()[0].row()].add_motion(RotSinuMotion())
                 self.on_movement_selected(
                     self.movement_list_table.selectedIndexes()[0].row(), None)
 
@@ -551,8 +551,8 @@ class MovementDialog(QtGui.QDialog):
         """ Adds a CirSinuMotion to the timeline of the selected movement. """
         self.notice_label.setText("")  # Reset the notice label if a valid change is made
         if self.movement_list_table.selectedIndexes():
-            if self.movement_list_table.selectedIndexes()[0].row() is not len(Case.instance().info.global_movements):
-                Case.instance().info.global_movements[self.movement_list_table.selectedIndexes()[0].row()].add_motion(CirSinuMotion())
+            if self.movement_list_table.selectedIndexes()[0].row() is not len(Case.the().info.global_movements):
+                Case.the().info.global_movements[self.movement_list_table.selectedIndexes()[0].row()].add_motion(CirSinuMotion())
                 self.on_movement_selected(
                     self.movement_list_table.selectedIndexes()[0].row(), None)
 
@@ -560,6 +560,6 @@ class MovementDialog(QtGui.QDialog):
         """ Adds a RectSinuMotion to the timeline of the selected movement. """
         self.notice_label.setText("")  # Reset the notice label if a valid change is made
         if self.movement_list_table.selectedIndexes():
-            if self.movement_list_table.selectedIndexes()[0].row() is not len(Case.instance().info.global_movements):
-                Case.instance().info.global_movements[self.movement_list_table.selectedIndexes()[0].row()].add_motion(RectSinuMotion())
+            if self.movement_list_table.selectedIndexes()[0].row() is not len(Case.the().info.global_movements):
+                Case.the().info.global_movements[self.movement_list_table.selectedIndexes()[0].row()].add_motion(RectSinuMotion())
                 self.on_movement_selected(self.movement_list_table.selectedIndexes()[0].row(), None)

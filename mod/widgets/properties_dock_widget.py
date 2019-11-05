@@ -182,13 +182,13 @@ class PropertiesDockWidget(QtGui.QDockWidget):
         for each in selection:
             if each.Name == "Case_Limits" or "_internal_" in each.Name or each.InList:
                 continue
-            if not Case.instance().is_object_in_simulation(each.Name):
+            if not Case.the().is_object_in_simulation(each.Name):
                 if "fillbox" in each.Name.lower():
-                    mktoput = Case.instance().get_first_mk_not_used(ObjectType.FLUID)
-                    Case.instance().add_object(SimulationObject(each.Name, mktoput, ObjectType.FLUID, ObjectFillMode.SOLID))
+                    mktoput = Case.the().get_first_mk_not_used(ObjectType.FLUID)
+                    Case.the().add_object(SimulationObject(each.Name, mktoput, ObjectType.FLUID, ObjectFillMode.SOLID))
                 else:
-                    mktoput = Case.instance().get_first_mk_not_used(ObjectType.BOUND)
-                    Case.instance().add_object(SimulationObject(each.Name, mktoput, ObjectType.BOUND, ObjectFillMode.FULL))
+                    mktoput = Case.the().get_first_mk_not_used(ObjectType.BOUND)
+                    Case.the().add_object(SimulationObject(each.Name, mktoput, ObjectType.BOUND, ObjectFillMode.FULL))
 
         self.need_refresh.emit()
 
@@ -197,29 +197,29 @@ class PropertiesDockWidget(QtGui.QDockWidget):
         for each in FreeCADGui.Selection.getSelection():
             if each.Name == "Case_Limits":
                 continue
-            Case.instance().remove_object(each.Name)
+            Case.the().remove_object(each.Name)
 
         self.need_refresh.emit()
 
     def on_damping_config(self):
         """ Configures the damping configuration for the selected object """
-        DampingConfigDialog(FreeCADGui.Selection.getSelection()[0].Name, Case.instance(), parent=get_fc_main_window())
+        DampingConfigDialog(FreeCADGui.Selection.getSelection()[0].Name, Case.the(), parent=get_fc_main_window())
 
     def on_mkgroup_change(self, value):
         """ Defines what happens when MKGroup is changed. """
-        Case.instance().get_simulation_object(FreeCADGui.Selection.getSelection()[0].Name).obj_mk = value
+        Case.the().get_simulation_object(FreeCADGui.Selection.getSelection()[0].Name).obj_mk = value
 
     def on_objtype_change(self, index):
         """ Defines what happens when type of object is changed """
         selection = FreeCADGui.Selection.getSelection()[0]
         selectiongui = FreeCADGui.ActiveDocument.getObject(selection.Name)
-        simulation_object = Case.instance().get_simulation_object(selection.Name)
-        mk_properties = Case.instance().get_mk_based_properties(simulation_object.type, simulation_object.obj_mk)
+        simulation_object = Case.the().get_simulation_object(selection.Name)
+        mk_properties = Case.the().get_mk_based_properties(simulation_object.type, simulation_object.obj_mk)
 
         if self.objtype_prop.itemText(index).lower() == "bound":
             self.mkgroup_prop.setRange(0, 240)
             if simulation_object.type != ObjectType.BOUND:
-                self.mkgroup_prop.setValue(int(Case.instance().get_first_mk_not_used(ObjectType.BOUND)))
+                self.mkgroup_prop.setValue(int(Case.the().get_first_mk_not_used(ObjectType.BOUND)))
             try:
                 selectiongui.ShapeColor = (0.80, 0.80, 0.80)
                 selectiongui.Transparency = 0
@@ -232,7 +232,7 @@ class PropertiesDockWidget(QtGui.QDockWidget):
         elif self.objtype_prop.itemText(index).lower() == "fluid":
             self.mkgroup_prop.setRange(0, 10)
             if simulation_object.type != ObjectType.FLUID:
-                self.mkgroup_prop.setValue(int(Case.instance().get_first_mk_not_used(ObjectType.FLUID)))
+                self.mkgroup_prop.setValue(int(Case.the().get_first_mk_not_used(ObjectType.FLUID)))
             try:
                 selectiongui.ShapeColor = (0.00, 0.45, 1.00)
                 selectiongui.Transparency = 30
@@ -260,7 +260,7 @@ class PropertiesDockWidget(QtGui.QDockWidget):
         """ Defines what happens when fill mode is changed """
         selection = FreeCADGui.Selection.getSelection()[0]
         selectiongui = FreeCADGui.ActiveDocument.getObject(selection.Name)
-        simulation_object = Case.instance().get_simulation_object(selection.Name)
+        simulation_object = Case.the().get_simulation_object(selection.Name)
         object_prop_item_text = self.objtype_prop.itemText(self.objtype_prop.currentIndex()).lower()
 
         # Update simulation object fill mode
@@ -284,7 +284,7 @@ class PropertiesDockWidget(QtGui.QDockWidget):
 
     def on_motion_change(self):
         """ Movement configuration button behaviour. """
-        target_mk = Case.instance().get_simulation_object(FreeCADGui.Selection.getSelection()[0].Name).obj_mk
+        target_mk = Case.the().get_simulation_object(FreeCADGui.Selection.getSelection()[0].Name).obj_mk
         MovementDialog(target_mk=target_mk, parent=get_fc_main_window())
 
     def on_floatstate_change(self):
@@ -300,7 +300,7 @@ class PropertiesDockWidget(QtGui.QDockWidget):
         if self.faces_prop.isEnabled():
             return
 
-        sim_object = Case.instance().get_simulation_object(selection.Name)
+        sim_object = Case.the().get_simulation_object(selection.Name)
         sim_object.clean_faces()
 
     def set_add_button_enabled(self, enabled: bool) -> None:

@@ -25,7 +25,7 @@ class SetupPluginDialog(QtGui.QDialog):
         self.gencasepath_layout = QtGui.QHBoxLayout()
         self.gencasepath_label = QtGui.QLabel("GenCase Path: ")
         self.gencasepath_input = QtGui.QLineEdit()
-        self.gencasepath_input.setText(Case.instance().executable_paths.gencase)
+        self.gencasepath_input.setText(Case.the().executable_paths.gencase)
         self.gencasepath_input.setPlaceholderText("Put GenCase path here")
         self.gencasepath_browse = QtGui.QPushButton("...")
 
@@ -37,7 +37,7 @@ class SetupPluginDialog(QtGui.QDialog):
         self.dsphpath_layout = QtGui.QHBoxLayout()
         self.dsphpath_label = QtGui.QLabel("DualSPHysics Path: ")
         self.dsphpath_input = QtGui.QLineEdit()
-        self.dsphpath_input.setText(Case.instance().executable_paths.dsphysics)
+        self.dsphpath_input.setText(Case.the().executable_paths.dsphysics)
         self.dsphpath_input.setPlaceholderText("Put DualSPHysics path here")
         self.dsphpath_browse = QtGui.QPushButton("...")
 
@@ -49,7 +49,7 @@ class SetupPluginDialog(QtGui.QDialog):
         self.partvtk4path_layout = QtGui.QHBoxLayout()
         self.partvtk4path_label = QtGui.QLabel("PartVTK Path: ")
         self.partvtk4path_input = QtGui.QLineEdit()
-        self.partvtk4path_input.setText(Case.instance().executable_paths.partvtk4)
+        self.partvtk4path_input.setText(Case.the().executable_paths.partvtk4)
         self.partvtk4path_input.setPlaceholderText("Put PartVTK4 path here")
         self.partvtk4path_browse = QtGui.QPushButton("...")
 
@@ -61,7 +61,7 @@ class SetupPluginDialog(QtGui.QDialog):
         self.computeforces_layout = QtGui.QHBoxLayout()
         self.computeforces_label = QtGui.QLabel("ComputeForces Path: ")
         self.computeforces_input = QtGui.QLineEdit()
-        self.computeforces_input.setText(Case.instance().executable_paths.computeforces)
+        self.computeforces_input.setText(Case.the().executable_paths.computeforces)
         self.computeforces_input.setPlaceholderText("Put ComputeForces path here")
         self.computeforces_browse = QtGui.QPushButton("...")
 
@@ -73,7 +73,7 @@ class SetupPluginDialog(QtGui.QDialog):
         self.floatinginfo_layout = QtGui.QHBoxLayout()
         self.floatinginfo_label = QtGui.QLabel("FloatingInfo Path: ")
         self.floatinginfo_input = QtGui.QLineEdit()
-        self.floatinginfo_input.setText(Case.instance().executable_paths.floatinginfo)
+        self.floatinginfo_input.setText(Case.the().executable_paths.floatinginfo)
         self.floatinginfo_input.setPlaceholderText("Put FloatingInfo path here")
         self.floatinginfo_browse = QtGui.QPushButton("...")
 
@@ -85,7 +85,7 @@ class SetupPluginDialog(QtGui.QDialog):
         self.measuretool_layout = QtGui.QHBoxLayout()
         self.measuretool_label = QtGui.QLabel("MeasureTool Path: ")
         self.measuretool_input = QtGui.QLineEdit()
-        self.measuretool_input.setText(Case.instance().executable_paths.measuretool)
+        self.measuretool_input.setText(Case.the().executable_paths.measuretool)
         self.measuretool_input.setPlaceholderText("Put MeasureTool path here")
         self.measuretool_browse = QtGui.QPushButton("...")
 
@@ -97,7 +97,7 @@ class SetupPluginDialog(QtGui.QDialog):
         self.isosurface_layout = QtGui.QHBoxLayout()
         self.isosurface_label = QtGui.QLabel("IsoSurface Path: ")
         self.isosurface_input = QtGui.QLineEdit()
-        self.isosurface_input.setText(Case.instance().executable_paths.isosurface)
+        self.isosurface_input.setText(Case.the().executable_paths.isosurface)
         self.isosurface_input.setPlaceholderText("Put IsoSurface path here")
         self.isosurface_browse = QtGui.QPushButton("...")
 
@@ -109,7 +109,7 @@ class SetupPluginDialog(QtGui.QDialog):
         self.boundaryvtk_layout = QtGui.QHBoxLayout()
         self.boundaryvtk_label = QtGui.QLabel("BoundaryVTK Path: ")
         self.boundaryvtk_input = QtGui.QLineEdit()
-        self.boundaryvtk_input.setText(Case.instance().executable_paths.boundaryvtk)
+        self.boundaryvtk_input.setText(Case.the().executable_paths.boundaryvtk)
         self.boundaryvtk_input.setPlaceholderText("Put BoundaryVTK path here")
         self.boundaryvtk_browse = QtGui.QPushButton("...")
 
@@ -121,7 +121,7 @@ class SetupPluginDialog(QtGui.QDialog):
         self.flowtool_layout = QtGui.QHBoxLayout()
         self.flowtool_label = QtGui.QLabel("FlowTool Path: ")
         self.flowtool_input = QtGui.QLineEdit()
-        self.flowtool_input.setText(Case.instance().executable_paths.flowtool)
+        self.flowtool_input.setText(Case.the().executable_paths.flowtool)
         self.flowtool_input.setPlaceholderText("Put FlowTool path here")
         self.flowtool_browse = QtGui.QPushButton("...")
 
@@ -133,7 +133,7 @@ class SetupPluginDialog(QtGui.QDialog):
         self.paraview_layout = QtGui.QHBoxLayout()
         self.paraview_label = QtGui.QLabel("ParaView Path: ")
         self.paraview_input = QtGui.QLineEdit()
-        self.paraview_input.setText(Case.instance().executable_paths.paraview)
+        self.paraview_input.setText(Case.the().executable_paths.paraview)
         self.paraview_input.setPlaceholderText("Put ParaView path here")
         self.paraview_browse = QtGui.QPushButton("...")
 
@@ -186,17 +186,17 @@ class SetupPluginDialog(QtGui.QDialog):
         self.exec_()
 
     def on_ok(self):
-        Case.instance().executable_paths.gencase = self.gencasepath_input.text()
-        Case.instance().executable_paths.dsphysics = self.dsphpath_input.text()
-        Case.instance().executable_paths.partvtk4 = self.partvtk4path_input.text()
-        Case.instance().executable_paths.computeforces = self.computeforces_input.text()
-        Case.instance().executable_paths.floatinginfo = self.floatinginfo_input.text()
-        Case.instance().executable_paths.measuretool = self.measuretool_input.text()
-        Case.instance().executable_paths.isosurface = self.isosurface_input.text()
-        Case.instance().executable_paths.boundaryvtk = self.boundaryvtk_input.text()
-        Case.instance().executable_paths.flowtool = self.flowtool_input.text()
-        Case.instance().executable_paths.paraview = self.paraview_input.text()
-        if not Case.instance().executable_paths.check_and_filter():
+        Case.the().executable_paths.gencase = self.gencasepath_input.text()
+        Case.the().executable_paths.dsphysics = self.dsphpath_input.text()
+        Case.the().executable_paths.partvtk4 = self.partvtk4path_input.text()
+        Case.the().executable_paths.computeforces = self.computeforces_input.text()
+        Case.the().executable_paths.floatinginfo = self.floatinginfo_input.text()
+        Case.the().executable_paths.measuretool = self.measuretool_input.text()
+        Case.the().executable_paths.isosurface = self.isosurface_input.text()
+        Case.the().executable_paths.boundaryvtk = self.boundaryvtk_input.text()
+        Case.the().executable_paths.flowtool = self.flowtool_input.text()
+        Case.the().executable_paths.paraview = self.paraview_input.text()
+        if not Case.the().executable_paths.check_and_filter():
             warning_dialog(__("One or more of the specified executables are not correct."),
                            __("Make sure all executable have execution permissions set (specially on GNU/Linux) and try to set the configuration again."))
         self.accept()

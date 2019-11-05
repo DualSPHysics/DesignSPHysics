@@ -83,8 +83,8 @@ class SpecialOptionsSelectorDialog(QtGui.QDialog):
     def on_damping_option(self):
         """ Defines damping button behaviour"""
         damping_group_name = setup_damping_environment()
-        Case.instance().add_damping_group(damping_group_name)
-        DampingConfigDialog(damping_group_name, Case.instance(), parent=get_fc_main_window())
+        Case.the().add_damping_group(damping_group_name)
+        DampingConfigDialog(damping_group_name, Case.the(), parent=get_fc_main_window())
         self.accept()
 
     def on_inlet_option(self):
@@ -107,19 +107,19 @@ class SpecialOptionsSelectorDialog(QtGui.QDialog):
             return
 
         # Check if object is in the simulation
-        if not Case.instance().is_object_in_simulation(selection.Name):
+        if not Case.the().is_object_in_simulation(selection.Name):
             error_dialog(__("The selected object must be added to the simulation"))
             return
 
         # Check if it is fluid and warn the user.
-        if Case.instance().get_simulation_object(selection.Name).type == ObjectType.FLUID:
+        if Case.the().get_simulation_object(selection.Name).type == ObjectType.FLUID:
             error_dialog(__("You can't apply a piston movement to a fluid.\nPlease select a boundary and try again"))
             return
 
         # Get selection mk
-        selection_obj = Case.instance().get_simulation_object(selection.Name)
+        selection_obj = Case.the().get_simulation_object(selection.Name)
         selection_mk: int = selection_obj.obj_mk
-        mk_properties: MKBasedProperties = Case.instance().get_mk_based_properties(selection_obj.type, selection_mk)
+        mk_properties: MKBasedProperties = Case.the().get_mk_based_properties(selection_obj.type, selection_mk)
 
         # Check that this mk has no other motions applied
         if mk_properties.has_movements():
@@ -160,65 +160,65 @@ class SpecialOptionsSelectorDialog(QtGui.QDialog):
 
         # Check which type of relaxationzone it is
         if action.text() == __("Regular waves"):
-            if Case.instance().relaxation_zone is not None:
-                if not isinstance(Case.instance().relaxation_zone, RelaxationZoneRegular):
+            if Case.the().relaxation_zone is not None:
+                if not isinstance(Case.the().relaxation_zone, RelaxationZoneRegular):
                     overwrite_warn = ok_cancel_dialog(__("Relaxation Zone"), __("There's already another type of Relaxation Zone defined. Continuing will overwrite it. Are you sure?"))
                     if overwrite_warn == QtGui.QMessageBox.Cancel:
                         return
                     else:
-                        Case.instance().relaxation_zone = RelaxationZoneRegular()
+                        Case.the().relaxation_zone = RelaxationZoneRegular()
 
-            config_dialog = RelaxationZoneRegularConfigDialog(Case.instance().relaxation_zone, parent=get_fc_main_window())
+            config_dialog = RelaxationZoneRegularConfigDialog(Case.the().relaxation_zone, parent=get_fc_main_window())
 
             # Set the relaxation zone. Can be an object or be None
-            Case.instance().relaxation_zone = config_dialog.relaxationzone
+            Case.the().relaxation_zone = config_dialog.relaxationzone
         if action.text() == __("Irregular waves"):
-            if Case.instance().relaxation_zone is not None:
-                if not isinstance(Case.instance().relaxation_zone, RelaxationZoneIrregular):
+            if Case.the().relaxation_zone is not None:
+                if not isinstance(Case.the().relaxation_zone, RelaxationZoneIrregular):
                     overwrite_warn = ok_cancel_dialog(__("Relaxation Zone"), __("There's already another type of Relaxation Zone defined. Continuing will overwrite it. Are you sure?"))
                     if overwrite_warn == QtGui.QMessageBox.Cancel:
                         return
                     else:
-                        Case.instance().relaxation_zone = RelaxationZoneIrregular()
+                        Case.the().relaxation_zone = RelaxationZoneIrregular()
 
-            config_dialog = RelaxationZoneIrregularConfigDialog(Case.instance().relaxation_zone, parent=get_fc_main_window())
+            config_dialog = RelaxationZoneIrregularConfigDialog(Case.the().relaxation_zone, parent=get_fc_main_window())
 
             # Set the relaxation zone. Can be an object or be None
-            Case.instance().relaxation_zone = config_dialog.relaxationzone
+            Case.the().relaxation_zone = config_dialog.relaxationzone
         if action.text() == __("External Input"):
-            if Case.instance().relaxation_zone is not None:
-                if not isinstance(Case.instance().relaxation_zone, RelaxationZoneFile):
+            if Case.the().relaxation_zone is not None:
+                if not isinstance(Case.the().relaxation_zone, RelaxationZoneFile):
                     overwrite_warn = ok_cancel_dialog(__("Relaxation Zone"), __("There's already another type of Relaxation Zone defined. Continuing will overwrite it. Are you sure?"))
                     if overwrite_warn == QtGui.QMessageBox.Cancel:
                         return
                     else:
-                        Case.instance().relaxation_zone = RelaxationZoneFile()
+                        Case.the().relaxation_zone = RelaxationZoneFile()
 
-            config_dialog = RelaxationZoneFileConfigDialog(Case.instance().relaxation_zone, parent=get_fc_main_window())
+            config_dialog = RelaxationZoneFileConfigDialog(Case.the().relaxation_zone, parent=get_fc_main_window())
 
             # Set the relaxation zone. Can be an object or be None
-            Case.instance().relaxation_zone = config_dialog.relaxationzone
+            Case.the().relaxation_zone = config_dialog.relaxationzone
 
         if action.text() == __("Uniform velocity"):
-            if Case.instance().relaxation_zone is not None:
-                if not isinstance(Case.instance().relaxation_zone, RelaxationZoneUniform):
+            if Case.the().relaxation_zone is not None:
+                if not isinstance(Case.the().relaxation_zone, RelaxationZoneUniform):
                     overwrite_warn = ok_cancel_dialog(__("Relaxation Zone"), __("There's already another type of Relaxation Zone defined. Continuing will overwrite it. Are you sure?"))
                     if overwrite_warn == QtGui.QMessageBox.Cancel:
                         return
                     else:
-                        Case.instance().relaxation_zone = RelaxationZoneUniform()
+                        Case.the().relaxation_zone = RelaxationZoneUniform()
 
-            config_dialog = RelaxationZoneUniformConfigDialog(Case.instance().relaxation_zone, parent=get_fc_main_window())
+            config_dialog = RelaxationZoneUniformConfigDialog(Case.the().relaxation_zone, parent=get_fc_main_window())
 
             # Set the relaxation zone. Can be an object or be None
-            Case.instance().relaxation_zone = config_dialog.relaxationzone
+            Case.the().relaxation_zone = config_dialog.relaxationzone
 
         self.accept()
 
     def on_accinput_button(self):
         """ Acceleration input button behaviour."""
-        accinput_dialog = AccelerationInputDialog(Case.instance().acceleration_input, parent=get_fc_main_window())
+        accinput_dialog = AccelerationInputDialog(Case.the().acceleration_input, parent=get_fc_main_window())
         result = accinput_dialog.exec_()
 
         if result == QtGui.QDialog.Accepted:
-            Case.instance().acceleration_input = accinput_dialog.get_result()
+            Case.the().acceleration_input = accinput_dialog.get_result()

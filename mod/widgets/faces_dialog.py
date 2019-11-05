@@ -22,7 +22,7 @@ class FacesDialog(QtGui.QDialog):
         self.cancel_button = QtGui.QPushButton(__("Cancel"))
         self.main_faces_layout = QtGui.QVBoxLayout()
 
-        self.target_object: SimulationObject = Case.instance().get_simulation_object(selection_name)
+        self.target_object: SimulationObject = Case.the().get_simulation_object(selection_name)
 
         self.button_layout = QtGui.QHBoxLayout()
         self.button_layout.addWidget(self.ok_button)

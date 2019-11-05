@@ -45,7 +45,7 @@ class IsoSurfaceDialog(QtGui.QDialog):
         self.isosfc_parameters_layout.addWidget(self.isosfc_parameters_text)
 
         self.isosfc_open_at_end = QtGui.QCheckBox("Open with ParaView")
-        self.isosfc_open_at_end.setEnabled(Case.instance().executable_paths.paraview != "")
+        self.isosfc_open_at_end.setEnabled(Case.the().executable_paths.paraview != "")
 
         self.isosfc_export_button = QtGui.QPushButton(__("Export"))
         self.isosfc_cancel_button = QtGui.QPushButton(__("Cancel"))
@@ -90,5 +90,5 @@ class IsoSurfaceDialog(QtGui.QDialog):
 
         export_parameters["open_paraview"] = self.isosfc_open_at_end.isChecked()
 
-        isosurface_export(export_parameters, Case.instance(), self.post_procesing_widget)
+        isosurface_export(export_parameters, Case.the(), self.post_procesing_widget)
         self.accept()

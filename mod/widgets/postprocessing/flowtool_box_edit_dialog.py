@@ -25,7 +25,7 @@ class FlowToolBoxEditDialog(QtGui.QDialog):
         # Find the box for which the button was pressed
         target_box = None
 
-        for box in Case.instance().flowtool_boxes:
+        for box in Case.the().flowtool_boxes:
             if box.id == self.box_id:
                 target_box = box
 
@@ -169,7 +169,7 @@ class FlowToolBoxEditDialog(QtGui.QDialog):
         """ FlowTool box edit ok behaviour."""
         box_to_edit: FlowToolBox = None
 
-        for box in Case.instance().flowtool_boxes:
+        for box in Case.the().flowtool_boxes:
             if box.id == self.box_id:
                 box_to_edit = box
                 break

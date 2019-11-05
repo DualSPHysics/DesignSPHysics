@@ -26,7 +26,7 @@ class DockDPWidget(QtGui.QWidget):
         self.dp_validator = QtGui.QDoubleValidator(0.0, 100, 8, self.dp_input)
         self.dp_input.setValidator(self.dp_validator)
         self.dp_input.setMaxLength(10)
-        self.dp_input.setText(str(Case.instance().dp))
+        self.dp_input.setText(str(Case.the().dp))
         self.dp_input.textChanged.connect(self.on_dp_changed)
 
         self.dp_units_label = QtGui.QLabel(" meters")
@@ -39,4 +39,4 @@ class DockDPWidget(QtGui.QWidget):
 
     def on_dp_changed(self):
         """ DP Introduction. Changes the dp at the moment the user changes the text. """
-        Case.instance().dp = float(self.dp_input.text())
+        Case.the().dp = float(self.dp_input.text())

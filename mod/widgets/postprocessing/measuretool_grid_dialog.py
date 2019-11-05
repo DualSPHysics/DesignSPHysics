@@ -39,7 +39,7 @@ class MeasureToolGridDialog(QtGui.QDialog):
             "FinalZ"
         ])
 
-        for i, grid in enumerate(Case.instance().info.measuretool_grid):
+        for i, grid in enumerate(Case.the().info.measuretool_grid):
             for j in range(0, self.mgrid_table.columnCount()):
                 self.mgrid_table.setItem(i, j, QtGui.QTableWidgetItem(str(grid[j])))
                 if j > 8:
@@ -47,7 +47,7 @@ class MeasureToolGridDialog(QtGui.QDialog):
                     self.mgrid_table.item(i, j).setBackground(QtGui.QColor(210, 255, 255))
                     self.mgrid_table.item(i, j).setFlags(QtCore.Qt.ItemIsSelectable | QtCore.Qt.ItemIsEnabled)
 
-        if Case.instance().info.measuretool_grid == list():
+        if Case.the().info.measuretool_grid == list():
             for self.mgrid_row in range(0, self.mgrid_table.rowCount()):
                 self.mgrid_table.setItem(self.mgrid_row, 9, QtGui.QTableWidgetItem(""))
                 self.mgrid_table.setItem(self.mgrid_row, 10, QtGui.QTableWidgetItem(""))
@@ -143,7 +143,7 @@ class MeasureToolGridDialog(QtGui.QDialog):
 
     def on_mgrid_accept(self):
         """ MeasureTool point grid accept button behaviour."""
-        Case.instance().info.measuretool_grid = list()
+        Case.the().info.measuretool_grid = list()
         for self.mgrid_row in range(0, self.mgrid_table.rowCount()):
             try:
                 self.current_grid = [
@@ -160,12 +160,12 @@ class MeasureToolGridDialog(QtGui.QDialog):
                     float(self.mgrid_table.item(self.mgrid_row, 10).text()),
                     float(self.mgrid_table.item(self.mgrid_row, 11).text())
                 ]
-                Case.instance().info.measuretool_grid.append(self.current_grid)
+                Case.the().info.measuretool_grid.append(self.current_grid)
             except (ValueError, AttributeError):
                 pass
 
         # Deletes the list of points (not compatible together)
-        Case.instance().info.measuretool_points = list()
+        Case.the().info.measuretool_points = list()
         self.accept()
 
     def on_mgrid_cancel(self):

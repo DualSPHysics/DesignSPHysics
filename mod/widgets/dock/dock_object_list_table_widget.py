@@ -56,11 +56,11 @@ class DockObjectListTableWidget(QtGui.QWidget):
     def refresh(self) -> None:
         """ Deletes everything and refreshes contents with the current simulation objects. """
         self.clear_table_contents()
-        num_objects_in_simulation: int = Case.instance().number_of_objects_in_simulation()
+        num_objects_in_simulation: int = Case.the().number_of_objects_in_simulation()
         self.set_table_row_count(num_objects_in_simulation)
 
         current_row = 0
-        for sim_object in Case.instance().objects:
+        for sim_object in Case.the().objects:
             if sim_object.name == CASE_LIMITS_OBJ_NAME:
                 continue
             target_widget = ObjectOrderWidget(index=current_row, object_mk=sim_object.obj_mk, mktype=sim_object.type, object_name=get_fc_object(sim_object.name).Label, parent=get_fc_main_window())
