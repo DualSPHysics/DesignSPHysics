@@ -64,7 +64,7 @@ class XMLExporter():
         data["motion_template"] = MotionRenderer.render(data)
         data["wavepaddles_template"] = WavePaddlesRenderer.render(data)
         data["inout_template"] = InoutRenderer.render(data)
-        # data["chrono_template"] = ChronoRenderer.render(data)
+        data["chrono_template"] = ChronoRenderer.render(data)
         data["application"] = APP_NAME
         data["current_date"] = datetime.now().strftime("%d-%m-%Y %H:%M:%S")
         return data
