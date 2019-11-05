@@ -5,12 +5,13 @@
 import glob
 from os import path
 
-from PySide import QtCore, QtGui
+from PySide import QtGui
 
 from mod.translation_tools import __
 from mod.gui_tools import h_line_generator
 from mod.dialog_tools import error_dialog
 
+from mod.dataobjects.case import Case
 from mod.dataobjects.ml_piston_2d import MLPiston2D
 from mod.dataobjects.ml_piston_2d_veldata import MLPiston2DVeldata
 
@@ -135,7 +136,8 @@ class MLPiston2DConfigDialog(QtGui.QDialog):
 
     def on_browse(self):
         # noinspection PyArgumentList
-        filename, _ = QtGui.QFileDialog.getOpenFileName(self, __("Open a file from the serie"), QtCore.QDir.homePath(), "External velocity data (*_x*_y*.csv)")
+        filename, _ = QtGui.QFileDialog.getOpenFileName(self, __("Open a file from the serie"), Case.the().info.last_used_directory, "External velocity data (*_x*_y*.csv)")
+        Case.the().info.update_last_used_directory(filename)
         if not filename:
             return
 

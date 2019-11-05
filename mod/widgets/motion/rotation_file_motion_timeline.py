@@ -8,6 +8,7 @@ from mod.translation_tools import __
 from mod.gui_tools import h_line_generator
 from mod.stdout_tools import debug
 
+from mod.dataobjects.case import Case
 from mod.dataobjects.motion.rotation_file_gen import RotationFileGen
 
 
@@ -114,8 +115,8 @@ class RotationFileMotionTimeline(QtGui.QWidget):
 
     def on_file_browse(self):
         # noinspection PyArgumentList
-        filename, _ = QtGui.QFileDialog.getOpenFileName(
-            self, __("Open file"), QtCore.QDir.homePath())
+        filename, _ = QtGui.QFileDialog.getOpenFileName(self, __("Open file"), Case.the().info.last_used_directory)
+        Case.the().info.update_last_used_directory(filename)
         self.filename_input.setText(filename)
 
     def on_change(self):

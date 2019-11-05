@@ -206,7 +206,9 @@ class SetupPluginDialog(QtGui.QDialog):
 
     def browse(self, app_name, input_prop) -> None:
         """ Generic browse method for other to wrap. """
-        file_name, _ = QtGui.QFileDialog().getOpenFileName(self, __("Select {} path").format(app_name), get_designsphysics_path())
+        file_name, _ = QtGui.QFileDialog().getOpenFileName(self, __("Select {} path").format(app_name), Case.the().info.last_used_directory)
+        Case.the().info.update_last_used_directory(file_name)
+
         if not file_name:
             return
 
@@ -216,6 +218,6 @@ class SetupPluginDialog(QtGui.QDialog):
             error_dialog(__("Can't recognize {} in the selected executable.").format(app_name))
 
     def on_paraview_browse(self):
-        file_name, _ = QtGui.QFileDialog().getOpenFileName(self, "Select ParaView path", get_designsphysics_path())
+        file_name, _ = QtGui.QFileDialog().getOpenFileName(self, "Select ParaView path", Case.the().info.last_used_directory)
         if file_name:
             self.paraview_input.setText(file_name)

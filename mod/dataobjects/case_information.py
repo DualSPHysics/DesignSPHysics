@@ -2,7 +2,10 @@
 # -*- coding: utf-8 -*-
 """ DesignSPHysics Case Information Data """
 
-from PySide import QtCore, QtGui
+from os.path import isdir, isfile, dirname
+from pathlib import Path
+
+from mod.stdout_tools import debug
 
 
 class CaseInformation():
@@ -18,4 +21,14 @@ class CaseInformation():
         self.measuretool_points: list = []
         self.measuretool_grid: list = []
         self.last_3d_width: float = -1.0
-        self.global_movements: list = list() # [Movement]
+        self.global_movements: list = list()  # [Movement]
+        self.last_used_directory: str = str(Path.home())
+
+    def update_last_used_directory(self, new_path: str) -> None:
+        """ Updates the last used directory with the folder from the provided path. """
+        if not new_path:
+            return
+        if isdir(new_path):
+            self.last_used_directory = new_path
+        elif isfile(new_path):
+            self.last_used_directory = dirname(new_path)

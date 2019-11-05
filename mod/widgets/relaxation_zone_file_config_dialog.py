@@ -4,11 +4,11 @@
 
 from os import path
 
-from PySide import QtCore, QtGui
+from PySide import QtGui
 
 from mod.translation_tools import __
 
-
+from mod.dataobjects.case import Case
 from mod.dataobjects.relaxation_zone_file import RelaxationZoneFile
 
 
@@ -185,13 +185,14 @@ class RelaxationZoneFileConfigDialog(QtGui.QDialog):
 
     def on_browse(self):
         # noinspection PyArgumentList
-        file_name, _ = QtGui.QFileDialog.getOpenFileName(self, __("Open a file from the serie"), QtCore.QDir.homePath(), "External velocity data (*_x*_y*.csv)")
+        file_name, _ = QtGui.QFileDialog.getOpenFileName(self, __("Open a file from the serie"), Case.the().info.last_used_directory, "External velocity data (*_x*_y*.csv)")
+        Case.the().info.update_last_used_directory(file_name)
         if not file_name:
             return
 
         basename: str = path.basename(file_name)
         folder: str = path.dirname(file_name)
-            
+
         # Takes only the filename without the serie data in its name
         self.filesvel_input.setText("{}/{}".format(folder, basename.split("_vel")[0]))
 

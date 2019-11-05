@@ -9,7 +9,7 @@ from PySide import QtCore, QtGui
 
 from mod.translation_tools import __
 from mod.gui_tools import get_icon
-from mod.stdout_tools import error
+from mod.stdout_tools import error, debug
 from mod.dialog_tools import error_dialog, warning_dialog
 from mod.executable_tools import refocus_cwd
 from mod.file_tools import save_case, load_case
@@ -158,7 +158,8 @@ class DockPreProcessingWidget(QtGui.QWidget):
     def on_new_from_freecad_document(self, prompt=True):
         """ Creates a new case based on an existing FreeCAD document.
         This is specially useful for CAD users that want to use existing geometry for DesignSPHysics. """
-        file_name, _ = QtGui.QFileDialog().getOpenFileName(get_fc_main_window(), "Select document to import", QtCore.QDir.homePath())
+        file_name, _ = QtGui.QFileDialog().getOpenFileName(get_fc_main_window(), "Select document to import", Case.the().info.last_used_directory)
+        Case.the().info.update_last_used_directory(file_name)
         if file_name and document_count() and not prompt_close_all_documents(prompt):
             return
 
@@ -175,7 +176,8 @@ class DockPreProcessingWidget(QtGui.QWidget):
         Saves a freecad scene definition, and a dump of dsph data for the case."""
         self.need_refresh.emit()
         if Case.the().was_not_saved() or save_as:
-            save_name, _ = QtGui.QFileDialog.getSaveFileName(self, __("Save Case"), QtCore.QDir.homePath())
+            save_name, _ = QtGui.QFileDialog.getSaveFileName(self, __("Save Case"), Case.the().info.last_used_directory)
+            Case.the().info.update_last_used_directory(save_name)
         else:
             save_name = Case.the().path
 
@@ -246,7 +248,8 @@ class DockPreProcessingWidget(QtGui.QWidget):
         """Defines loading case mechanism. Load points to a dsphdata custom file, that stores all the relevant info.
            If FCStd file is not found the project is considered corrupt."""
 
-        load_path, _ = QtGui.QFileDialog.getOpenFileName(self, __("Load Case"), QtCore.QDir.homePath(), "casedata.dsphdata")
+        load_path, _ = QtGui.QFileDialog.getOpenFileName(self, __("Load Case"), Case.the().info.last_used_directory, "casedata.dsphdata")
+        Case.the().info.update_last_used_directory(load_path)
 
         if load_path == "":
             return
@@ -273,6 +276,7 @@ class DockPreProcessingWidget(QtGui.QWidget):
         self.need_refresh.emit()
 
         Case.the().executable_paths.check_and_filter()
+        Case.the().info.update_last_used_directory(load_path)
 
     def on_add_fillbox(self):
         """ Add fillbox group. It consists in a group with 2 objects inside: a point and a box.
@@ -281,7 +285,8 @@ class DockPreProcessingWidget(QtGui.QWidget):
 
     def on_add_geo(self):
         """ Add STL file. Opens a file opener and allows the user to set parameters for the import process """
-        file_name, _ = QtGui.QFileDialog().getOpenFileName(get_fc_main_window(), __("Select GEO to import"), QtCore.QDir.homePath(), "STL Files (*.stl);;PLY Files (*.ply);;VTK Files (*.vtk)")
+        file_name, _ = QtGui.QFileDialog().getOpenFileName(get_fc_main_window(), __("Select GEO to import"), Case.the().info.last_used_directory, "STL Files (*.stl);;PLY Files (*.ply);;VTK Files (*.vtk)")
+        Case.the().info.update_last_used_directory(file_name)
         if not file_name:
             return
         AddGEODialog(file_name, parent=get_fc_main_window())

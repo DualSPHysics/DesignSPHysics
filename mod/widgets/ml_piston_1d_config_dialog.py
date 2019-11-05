@@ -2,11 +2,12 @@
 # -*- coding: utf-8 -*-
 """DesignSPHysics MLPiston1D Configuration Dialog. """
 
-from PySide import QtCore, QtGui
+from PySide import QtGui
 
 from mod.translation_tools import __
 from mod.gui_tools import h_line_generator
 
+from mod.dataobjects.case import Case
 from mod.dataobjects.ml_piston_1d import MLPiston1D
 
 
@@ -97,10 +98,6 @@ class MLPiston1DConfigDialog(QtGui.QDialog):
         self.smooth_input.setText(str(self.temp_mlpiston1d.smooth))
 
     def on_browse(self):
-        # noinspection PyArgumentList
-        filename, _ = QtGui.QFileDialog.getOpenFileName(
-            self,
-            __("Open file"),
-            QtCore.QDir.homePath(),
-            "External velocity data (*.csv)")
+        filename, _ = QtGui.QFileDialog.getOpenFileName(self, __("Open file"), Case.the().info.last_used_directory, "External velocity data (*.csv)")
+        Case.the().info.update_last_used_directory(filename)
         self.filevelx_input.setText(filename)

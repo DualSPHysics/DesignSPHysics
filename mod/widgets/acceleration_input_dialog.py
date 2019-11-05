@@ -8,6 +8,8 @@ from mod.translation_tools import __
 
 from mod.dataobjects.acceleration_input_data import AccelerationInputData
 
+from mod.dataobjects.case import Case
+
 
 class AccelerationInputDialog(QtGui.QDialog):
     """ A Dialog which shows the contents of the case AccelerationInput object.
@@ -132,8 +134,8 @@ class AccelerationInputDialog(QtGui.QDialog):
         self.accept()
 
     def on_browse(self):
-        file_name, _ = QtGui.QFileDialog().getOpenFileName(self,
-                                                           "Select file to use", QtCore.QDir.homePath())
+        file_name, _ = QtGui.QFileDialog().getOpenFileName(self, "Select file to use", Case.the().info.last_used_directory)
+        Case.the().info.update_last_used_directory(file_name)
         self.accinput_datafile_input.setText(file_name)
 
     def on_add(self):
