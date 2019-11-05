@@ -13,7 +13,7 @@ from mod.dataobjects.case import Case
 class LinkSphericEdit(QtGui.QDialog):
     """ Defines Link spheric window dialog """
 
-    def __init__(self, link_spheric_id, parent=None):
+    def __init__(self, link_spheric_id, bodies_widgets, parent=None):
         super(LinkSphericEdit, self).__init__(parent=parent)
 
         self.link_spheric_id = link_spheric_id
@@ -43,7 +43,7 @@ class LinkSphericEdit(QtGui.QDialog):
             self.body_one_line_edit.setCurrentIndex(1)
         else:
             self.body_one_line_edit.insertItems(0, [str(target_link_spheric.idbody1)])
-        for body in self.temp_data:
+        for body in bodies_widgets:
             if body.object_check.isChecked() and body.object_name != str(target_link_spheric.idbody1):
                 self.body_one_line_edit.insertItems(0, [body.object_name])
         self.body_two_label = QtGui.QLabel(__("Body 2: "))
@@ -53,7 +53,7 @@ class LinkSphericEdit(QtGui.QDialog):
             self.body_two_line_edit.setCurrentIndex(1)
         else:
             self.body_two_line_edit.insertItems(0, [str(target_link_spheric.idbody2)])
-        for body in self.temp_data:
+        for body in bodies_widgets:
             if body.object_check.isChecked() and body.object_name != str(target_link_spheric.idbody2):
                 self.body_two_line_edit.insertItems(0, [body.object_name])
         self.body_to_body_label = QtGui.QLabel(__("to"))
@@ -126,23 +126,15 @@ class LinkSphericEdit(QtGui.QDialog):
 
     def on_save(self):
         """ Link Spheric save button behaviour"""
-        count = -1
-        for link_spheric_value in Case.instance().chrono.link_spheric:
-            count += 1
-            if link_spheric_value[0] == self.link_spheric_id:
-                Case.instance().chrono.link_spheric[count].idbody1 = str(self.body_one_line_edit.currentText())
-                Case.instance().chrono.link_spheric[count].idbody2 = str(self.body_two_line_edit.currentText())
-                Case.instance().chrono.link_spheric[count].rotpoint = [float(self.point_x_line_edit.text()),
-                                                                       float(self.point_y_line_edit.text()),
-                                                                       float(self.point_z_line_edit.text())]
-                Case.instance().chrono.link_spheric[count].stiffness = float(self.stiffness_line_edit.text())
-                Case.instance().chrono.link_spheric[count].damping = float(self.damping_line_edit.text())
+        link_spheric = Case.instance().chrono.get_link_spheric_for_id(self.link_spheric_id)
 
-        if Case.instance().chrono.link_spheric[count].idbody1:
+        link_spheric.idbody1 = str(self.body_one_line_edit.currentText())
+        link_spheric.idbody2 = str(self.body_two_line_edit.currentText())
+        link_spheric.rotpoint = [float(self.point_x_line_edit.text()), float(self.point_y_line_edit.text()), float(self.point_z_line_edit.text())]
+        link_spheric.stiffness = float(self.stiffness_line_edit.text())
+        link_spheric.damping = float(self.damping_line_edit.text())
+
+        if link_spheric.idbody1:
             LinkSphericEdit.accept(self)
         else:
-            link_spheric_error_dialog = QtGui.QMessageBox()
-            link_spheric_error_dialog.setWindowTitle(__("Error!"))
-            link_spheric_error_dialog.setText(__("body 1 is necessary!"))
-            link_spheric_error_dialog.setIcon(QtGui.QMessageBox.Critical)
-            link_spheric_error_dialog.exec_()
+            error_dialog("You need to select an option for the body to use.")

@@ -13,7 +13,7 @@ from mod.dataobjects.case import Case
 class LinkLinearspringEdit(QtGui.QDialog):
     """ Defines Link linearspring window dialog """
 
-    def __init__(self, link_linearspring_id, parent=None):
+    def __init__(self, link_linearspring_id, bodies_widgets, parent=None):
         super(LinkLinearspringEdit, self).__init__(parent=parent)
 
         self.link_linearspring_id = link_linearspring_id
@@ -39,13 +39,13 @@ class LinkLinearspringEdit(QtGui.QDialog):
         self.body_one_label = QtGui.QLabel(__("Body 1: "))
         self.body_one_line_edit = QtGui.QComboBox()
         self.body_one_line_edit.insertItems(0, [str(target_link_linearspring.idbody1)])
-        for body in self.temp_data:
+        for body in bodies_widgets:
             if body.object_check.isChecked() and body.object_name != str(target_link_linearspring.idbody1):
                 self.body_one_line_edit.insertItems(0, [body.object_name])
         self.body_two_label = QtGui.QLabel(__("Body 2: "))
         self.body_two_line_edit = QtGui.QComboBox()
         self.body_two_line_edit.insertItems(0, [str(target_link_linearspring.idbody2)])
-        for body in self.temp_data:
+        for body in bodies_widgets:
             if body.object_check.isChecked() and body.object_name != str(target_link_linearspring.idbody2):
                 self.body_two_line_edit.insertItems(0, [body.object_name])
         self.body_to_body_label = QtGui.QLabel(__("to"))
@@ -130,7 +130,7 @@ class LinkLinearspringEdit(QtGui.QDialog):
         self.vtk_nside_label = QtGui.QLabel(__("Number of sections: "))
         self.vtk_nside_line_edit = QtGui.QLineEdit(str(target_link_linearspring.number_of_sections))
         self.vtk_radius_label = QtGui.QLabel(__("Spring radius: "))
-        self.vtk_radius_line_edit = QtGui.QLineEdit(str(target_link_linearspring.sprint_radius))
+        self.vtk_radius_line_edit = QtGui.QLineEdit(str(target_link_linearspring.spring_radius))
         self.vtk_length_label = QtGui.QLabel(__("Length for revolution: "))
         self.vtk_length_line_edit = QtGui.QLineEdit(str(target_link_linearspring.revolution_length))
 
@@ -166,30 +166,20 @@ class LinkLinearspringEdit(QtGui.QDialog):
 
     def on_save(self):
         """ Link linearspring save button behaviour"""
-        count = -1
-        for link_linearspring_value in Case.instance().chrono.link_linearspring:
-            count += 1
-            if link_linearspring_value[0] == self.link_linearspring_id:
-                Case.instance().chrono.link_linearspring[count].idbody1 = str(self.body_one_line_edit.currentText())
-                Case.instance().chrono.link_linearspring[count].idbody2 = str(self.body_two_line_edit.currentText())
-                Case.instance().chrono.link_linearspring[count].point_fb1 = [float(self.point_b1_x_line_edit.text()),
-                                                                             float(self.point_b1_y_line_edit.text()),
-                                                                             float(self.point_b1_z_line_edit.text())]
-                Case.instance().chrono.link_linearspring[count].point_fb2 = [float(self.point_b2_x_line_edit.text()),
-                                                                             float(self.point_b2_y_line_edit.text()),
-                                                                             float(self.point_b2_z_line_edit.text())]
-                Case.instance().chrono.link_linearspring[count].stiffness = float(self.stiffness_line_edit.text())
-                Case.instance().chrono.link_linearspring[count].damping = float(self.damping_line_edit.text())
-                Case.instance().chrono.link_linearspring[count].rest_length = float(self.rest_line_edit.text())
-                Case.instance().chrono.link_linearspring[count].number_of_sections = float(self.vtk_nside_line_edit.text())
-                Case.instance().chrono.link_linearspring[count].spring_radius = float(self.vtk_radius_line_edit.text())
-                Case.instance().chrono.link_linearspring[count].revolution_length = float(self.vtk_length_line_edit.text())
+        target_linearspring = Case.instance().chrono.get_link_linearspring_for_id(self.link_linearspring_id)
 
-        if Case.instance().chrono.link_linearspring[count].idbody1 and Case.instance().chrono.link_linearspring[count].idbody2:
+        target_linearspring.idbody1 = str(self.body_one_line_edit.currentText())
+        target_linearspring.idbody2 = str(self.body_two_line_edit.currentText())
+        target_linearspring.point_fb1 = [float(self.point_b1_x_line_edit.text()), float(self.point_b1_y_line_edit.text()), float(self.point_b1_z_line_edit.text())]
+        target_linearspring.point_fb2 = [float(self.point_b2_x_line_edit.text()), float(self.point_b2_y_line_edit.text()), float(self.point_b2_z_line_edit.text())]
+        target_linearspring.stiffness = float(self.stiffness_line_edit.text())
+        target_linearspring.damping = float(self.damping_line_edit.text())
+        target_linearspring.rest_length = float(self.rest_line_edit.text())
+        target_linearspring.number_of_sections = int(self.vtk_nside_line_edit.text())
+        target_linearspring.spring_radius = float(self.vtk_radius_line_edit.text())
+        target_linearspring.revolution_length = float(self.vtk_length_line_edit.text())
+
+        if target_linearspring.idbody1 and target_linearspring.idbody2:
             LinkLinearspringEdit.accept(self)
         else:
-            link_linearspring_error_dialog = QtGui.QMessageBox()
-            link_linearspring_error_dialog.setWindowTitle(__("Error!"))
-            link_linearspring_error_dialog.setText(__("bodies are necessary!"))
-            link_linearspring_error_dialog.setIcon(QtGui.QMessageBox.Critical)
-            link_linearspring_error_dialog.exec_()
+            error_dialog("You need to select an option for each one of the bodies.")

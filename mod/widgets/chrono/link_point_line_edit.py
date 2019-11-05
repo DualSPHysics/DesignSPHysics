@@ -12,7 +12,7 @@ from mod.dataobjects.case import Case
 class LinkPointlineEdit(QtGui.QDialog):
     """ Defines Link pontline window dialog """
 
-    def __init__(self, link_pointline_id, parent=None):
+    def __init__(self, link_pointline_id, bodies_widgets, parent=None):
         super(LinkPointlineEdit, self).__init__(parent=parent)
 
         self.link_pointline_id = link_pointline_id
@@ -42,7 +42,7 @@ class LinkPointlineEdit(QtGui.QDialog):
             self.body_one_line_edit.setCurrentIndex(1)
         else:
             self.body_one_line_edit.insertItems(0, [str(target_link_pointline.idbody1)])
-        for body in self.temp_data:
+        for body in bodies_widgets:
             if body.object_check.isChecked() and body.object_name != str(target_link_pointline.idbody1):
                 self.body_one_line_edit.insertItems(0, [body.object_name])
         self.body_layout.addWidget(self.body_one_label)
@@ -170,31 +170,17 @@ class LinkPointlineEdit(QtGui.QDialog):
 
     def on_save(self):
         """ Link pointline save button behaviour"""
-        count = -1
-        for link_pointline_value in Case.instance().chrono.link_pointline:
-            count += 1
-            if link_pointline_value.id == self.link_pointline_id:
-                Case.instance().chrono.link_pointline[count].idbody1 = str(self.body_one_line_edit.currentText())
-                Case.instance().chrono.link_pointline[count].slidingvector = [float(self.sliding_vector_x_line_edit.text()),
-                                                                              float(self.sliding_vector_y_line_edit.text()),
-                                                                              float(self.sliding_vector_z_line_edit.text())]
-                Case.instance().chrono.link_pointline[count].rotpoint = [float(self.rotpoint_x_line_edit.text()),
-                                                                         float(self.rotpoint_y_line_edit.text()),
-                                                                         float(self.rotpoint_z_line_edit.text())]
-                Case.instance().chrono.link_pointline[count].rotvector = [float(self.rotvector_x_line_edit.text()),
-                                                                          float(self.rotvector_y_line_edit.text()),
-                                                                          float(self.rotvector_z_line_edit.text())]
-                Case.instance().chrono.link_pointline[count].rotvector2 = [float(self.rotvector2_x_line_edit.text()),
-                                                                           float(self.rotvector2_y_line_edit.text()),
-                                                                           float(self.rotvector2_z_line_edit.text())]
-                Case.instance().chrono.link_pointline[count].stiffness = float(self.stiffness_line_edit.text())
-                Case.instance().chrono.link_pointline[count].damping = float(self.damping_line_edit.text())
+        link_pointline = Case.instance().chrono.get_link_pointline_for_id(self.link_pointline_id)
 
-        if Case.instance().chrono.link_pointline[count].idbody1:
+        link_pointline.idbody1 = str(self.body_one_line_edit.currentText())
+        link_pointline.slidingvector = [float(self.sliding_vector_x_line_edit.text()), float(self.sliding_vector_y_line_edit.text()), float(self.sliding_vector_z_line_edit.text())]
+        link_pointline.rotpoint = [float(self.rotpoint_x_line_edit.text()), float(self.rotpoint_y_line_edit.text()), float(self.rotpoint_z_line_edit.text())]
+        link_pointline.rotvector = [float(self.rotvector_x_line_edit.text()), float(self.rotvector_y_line_edit.text()), float(self.rotvector_z_line_edit.text())]
+        link_pointline.rotvector2 = [float(self.rotvector2_x_line_edit.text()), float(self.rotvector2_y_line_edit.text()), float(self.rotvector2_z_line_edit.text())]
+        link_pointline.stiffness = float(self.stiffness_line_edit.text())
+        link_pointline.damping = float(self.damping_line_edit.text())
+
+        if link_pointline.idbody1:
             LinkPointlineEdit.accept(self)
         else:
-            link_pointline_error_dialog = QtGui.QMessageBox()
-            link_pointline_error_dialog.setWindowTitle(__("Error!"))
-            link_pointline_error_dialog.setText(__("body 1 is necessary!"))
-            link_pointline_error_dialog.setIcon(QtGui.QMessageBox.Critical)
-            link_pointline_error_dialog.exec_()
+            error_dialog("You need to select an option for the body to use.")

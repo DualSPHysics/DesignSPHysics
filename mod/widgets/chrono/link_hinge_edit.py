@@ -13,7 +13,7 @@ from mod.dataobjects.case import Case
 class LinkHingeEdit(QtGui.QDialog):
     """ Defines Link hinge window dialog """
 
-    def __init__(self, link_hinge_id, parent=None):
+    def __init__(self, link_hinge_id, bodies_widgets, parent=None):
         super(LinkHingeEdit, self).__init__(parent=parent)
 
         self.link_hinge_id = link_hinge_id
@@ -39,13 +39,13 @@ class LinkHingeEdit(QtGui.QDialog):
         self.body_one_label = QtGui.QLabel(__("Body 1: "))
         self.body_one_line_edit = QtGui.QComboBox()
         self.body_one_line_edit.insertItems(0, [str(target_link_hinge.idbody1)])
-        for body in self.temp_data:
+        for body in bodies_widgets:
             if body.object_check.isChecked() and body.object_name != str(target_link_hinge.idbody1):
                 self.body_one_line_edit.insertItems(0, [body.object_name])
         self.body_two_label = QtGui.QLabel(__("Body 2: "))
         self.body_two_line_edit = QtGui.QComboBox()
         self.body_two_line_edit.insertItems(0, [str(target_link_hinge.idbody2)])
-        for body in self.temp_data:
+        for body in bodies_widgets:
             if body.object_check.isChecked() and body.object_name != str(target_link_hinge.idbody2):
                 self.body_two_line_edit.insertItems(0, [body.object_name])
         self.body_to_body_label = QtGui.QLabel(__("to"))
@@ -138,26 +138,15 @@ class LinkHingeEdit(QtGui.QDialog):
 
     def on_save(self):
         """ Link hinge save button behaviour"""
-        count = -1
-        for link_hinge_value in Case.instance().chrono.link_hinge:
-            count += 1
-            if link_hinge_value.id == self.link_hinge_id:
-                Case.instance().chrono.link_hinge[count].idbody1 = str(self.body_one_line_edit.currentText())
-                Case.instance().chrono.link_hinge[count].idbody2 = str(self.body_two_line_edit.currentText())
-                Case.instance().chrono.link_hinge[count].rotpoint = [float(self.rotpoints_x_line_edit.text()),
-                                                                     float(self.rotpoints_y_line_edit.text()),
-                                                                     float(self.rotpoints_z_line_edit.text())]
-                Case.instance().chrono.link_hinge[count].rotvector = [float(self.rotvector_x_line_edit.text()),
-                                                                      float(self.rotvector_y_line_edit.text()),
-                                                                      float(self.rotvector_z_line_edit.text())]
-                Case.instance().chrono.link_hinge[count].stiffness = float(self.stiffness_line_edit.text())
-                Case.instance().chrono.link_hinge[count].damping = float(self.damping_line_edit.text())
+        link_hinge = Case.instance().chrono.get_link_hinge_for_id(self.link_hinge_id)
+        link_hinge.idbody1 = str(self.body_one_line_edit.currentText())
+        link_hinge.idbody2 = str(self.body_two_line_edit.currentText())
+        link_hinge.rotpoint = [float(self.rotpoints_x_line_edit.text()), float(self.rotpoints_y_line_edit.text()), float(self.rotpoints_z_line_edit.text())]
+        link_hinge.rotvector = [float(self.rotvector_x_line_edit.text()), float(self.rotvector_y_line_edit.text()), float(self.rotvector_z_line_edit.text())]
+        link_hinge.stiffness = float(self.stiffness_line_edit.text())
+        link_hinge.damping = float(self.damping_line_edit.text())
 
-        if Case.instance().chrono.link_hinge[count].idbody1 and Case.instance().chrono.link_hinge[count].idbody2:
+        if link_hinge.idbody1 and link_hinge.idbody2:
             LinkHingeEdit.accept(self)
         else:
-            link_hinge_error_dialog = QtGui.QMessageBox()
-            link_hinge_error_dialog.setWindowTitle(__("Error!"))
-            link_hinge_error_dialog.setText(__("bodies are necessary!"))
-            link_hinge_error_dialog.setIcon(QtGui.QMessageBox.Critical)
-            link_hinge_error_dialog.exec_()
+            error_dialog("You need to select an option for each one of the bodies.")
