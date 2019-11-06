@@ -5,6 +5,7 @@ Renders the <floatings> tag of the GenCase XML.
 """
 
 from mod.template_tools import get_template_text
+from mod.stdout_tools import debug
 
 from mod.enums import FloatingDensityType
 from mod.constants import LINE_END
@@ -17,7 +18,7 @@ class FloatingsRenderer():
     FLOATINGS_EACH_XML = "/templates/gencase/floatings/each/base.xml"
     FLOATINGS_CENTER_XML = "/templates/gencase/floatings/each/center.xml"
     FLOATINGS_INERTIA_XML = "/templates/gencase/floatings/each/inertia.xml"
-    FLOATINGS_LINEARVELINI_XML = "/templates/gencase/floatings/each/linearvleini.xml"
+    FLOATINGS_LINEARVELINI_XML = "/templates/gencase/floatings/each/linearvelini.xml"
     FLOATINGS_ANGULARVELINI_XML = "/templates/gencase/floatings/each/angularvelini.xml"
     FLOATINGS_ROTATION_XML = "/templates/gencase/floatings/each/rotation.xml"
     FLOATINGS_TRANSLATION_XML = "/templates/gencase/floatings/each/translation.xml"
@@ -26,7 +27,7 @@ class FloatingsRenderer():
     @classmethod
     def render(cls, data):
         """ Returns the rendered string. """
-        float_properties = list(filter(lambda x: x["float_property"] is not None, data["mkbasedproperties"].values()))
+        float_properties = list(map(lambda x: x["float_property"], filter(lambda x: x["float_property"] is not None, data["mkbasedproperties"].values())))
         if not float_properties:
             return ""
         float_properties_xmls = []
@@ -42,7 +43,7 @@ class FloatingsRenderer():
                 cls.FLOATINGS_MATERIAL_XML: "material"
             }
             for xml, attr in class_attributes.items():
-                if fp[attr] is not None:
+                if fp[attr]:
                     if isinstance(fp[attr], list):
                         float_property_attributes.append(get_template_text(xml).format(*fp[attr]))
                     else:
@@ -52,7 +53,7 @@ class FloatingsRenderer():
                 "floating_mk": fp["mk"],
                 "floating_density_type": {FloatingDensityType.MASSBODY: "massbody", FloatingDensityType.RHOPBODY: "rhopbody"}[fp["mass_density_type"]],
                 "floating_density_value": fp["mass_density_value"],
-                "float_property_attributes": float_property_attributes
+                "float_property_attributes": LINE_END.join(float_property_attributes)
             }
             float_properties_xmls.append(get_template_text(cls.FLOATINGS_EACH_XML).format(**formatter))
 
