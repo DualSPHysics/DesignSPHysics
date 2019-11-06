@@ -194,13 +194,17 @@ class DockPreProcessingWidget(QtGui.QWidget):
             warning_dialog(__("GenCase executable is not set."))
             return
 
+        gencase_full_path = path.abspath(Case.the().executable_paths.gencase)
+        arguments = ["{path}/{name}_Def".format(path=Case.the().path, name=Case.the().name),
+                     "{path}/{name}_out/{name}".format(path=Case.the().path, name=Case.the().name),
+                     "-save:+all"]
+        cmd_string = "{} {}".format(gencase_full_path, " ".join(arguments))
+
         refocus_cwd()
         process = QtCore.QProcess(get_fc_main_window())
-        gencase_full_path = path.abspath(Case.the().executable_paths.gencase)
         process.setWorkingDirectory(Case.the().path)
-        process.start(gencase_full_path, ["{path}/{name}_Def".format(path=Case.the().path, name=Case.the().name),
-                                          "{path}/{name}_out/{name}".format(path=Case.the().path, name=Case.the().name),
-                                          "-save:+all"])
+        process.start(gencase_full_path, arguments)
+        debug("Executing -> {}".format(cmd_string))
         process.waitForFinished()
 
         output = str(process.readAllStandardOutput()).replace("\\n", "\n").split("================================")[1]
@@ -213,7 +217,7 @@ class DockPreProcessingWidget(QtGui.QWidget):
                 total_particles_text = output[output.index("Total particles: "):output.index(" (bound=")]
                 total_particles = int(total_particles_text[total_particles_text.index(": ") + 2:])
                 Case.the().info.particle_number = total_particles
-                GencaseCompletedDialog(particle_count=total_particles, detail_text=output, parent=get_fc_main_window()).show()
+                GencaseCompletedDialog(particle_count=total_particles, detail_text=output, cmd_string=cmd_string, parent=get_fc_main_window()).show()
                 Case.the().info.is_gencase_done = True
                 self.on_save_case()
             except ValueError:

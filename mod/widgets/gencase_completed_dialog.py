@@ -19,18 +19,27 @@ class GencaseCompletedDialog(QtGui.QDialog):
     DETAILS_MIN_WIDTH: int = 650
     DIALOG_IS_MODAL: bool = False
 
-    def __init__(self, particle_count=0, detail_text="No details", parent=None):
+    def __init__(self, particle_count=0, detail_text="No details", cmd_string="", parent=None):
         super().__init__(parent=parent)
 
         # Window Creation
         self.setWindowModality(QtCore.Qt.NonModal)
         self.setWindowTitle(__("Save & GenCase"))
+        self.setMinimumSize(400, 150)
 
         # Main Layout creation
         self.main_layout = QtGui.QVBoxLayout()
 
         # Main Layout elements
-        self.info_message = QtGui.QLabel(__("Gencase exported {} particles.\nPress \"Details\" to check the output").format(str(particle_count)))
+        self.info_message = QtGui.QLabel(__(
+            "Gencase exported <b>{}</b> particles.<br/>"
+            "Press the <i>Details</i> button to check the output<br/><br/>"
+            "The executed command line was:"
+        ).format(str(particle_count)))
+        self.cmd_executed = QtGui.QLineEdit(cmd_string)
+        self.cmd_executed.setReadOnly(True)
+        self.cmd_executed.setFont(QtGui.QFont("Courier New", 10, QtGui.QFont.Monospace))
+        self.cmd_executed.setCursorPosition(0)
 
         self.button_layout = QtGui.QHBoxLayout()
 
@@ -48,6 +57,7 @@ class GencaseCompletedDialog(QtGui.QDialog):
         self.bt_ok = QtGui.QPushButton(__("Ok"))
 
         self.button_layout.addWidget(self.bt_open_with_paraview)
+        self.button_layout.addStretch(1)
         self.button_layout.addWidget(self.bt_details)
         self.button_layout.addWidget(self.bt_ok)
 
@@ -65,6 +75,8 @@ class GencaseCompletedDialog(QtGui.QDialog):
 
         # Main Layout scaffolding
         self.main_layout.addWidget(self.info_message)
+        self.main_layout.addWidget(self.cmd_executed)
+        self.main_layout.addStretch(1)
         self.main_layout.addLayout(self.button_layout)
 
         # Window logic
