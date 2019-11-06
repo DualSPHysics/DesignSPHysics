@@ -148,7 +148,6 @@ class DockSimulationWidget(QtGui.QWidget):
             run_file_data = ""
             with open(Case.the().path + "/" + Case.the().name + "_out/Run.out", "r") as run_file:
                 run_file_data = run_file.readlines()
-            print_exc()
 
             # Fill details window
             run_dialog.set_detail_text("".join(run_file_data))

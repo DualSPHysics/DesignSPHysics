@@ -52,5 +52,3 @@ def print_license():
         with open(licpath) as licfile:
             FreeCAD.Console.PrintMessage(licfile.read())
             FreeCAD.Console.PrintMessage("\n\n")
-    else:
-        raise EnvironmentError("LICENSE file could not be found.")

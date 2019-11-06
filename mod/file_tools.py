@@ -29,7 +29,7 @@ from femmesh.femmesh2mesh import femmesh_2_mesh
 from mod.stdout_tools import error, debug
 from mod.translation_tools import __
 from mod.xml.xml_exporter import XMLExporter
-from mod.dialog_tools import error_dialog
+from mod.dialog_tools import error_dialog, warning_dialog
 from mod.executable_tools import refocus_cwd
 from mod.freecad_tools import document_count, prompt_close_all_documents, get_fc_object
 from mod.enums import ObjectType, ObjectFillMode
@@ -70,7 +70,12 @@ def load_case(load_path: str) -> "Case":
 
     with open(load_path, "rb") as load_picklefile:
         try:
-            return pickle.load(load_picklefile)
+            loaded_data = pickle.load(load_picklefile)
+            if not loaded_data.version:
+                warning_dialog(__("The case data you're trying to load is older than version 0.6 and cannot be loaded."))
+                prompt_close_all_documents(prompt=False)
+                return None
+            return loaded_data
         except AttributeError:
             error_dialog(__("There was an error opening the case. Case Data file seems to be corrupted."))
             return None
