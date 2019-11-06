@@ -17,7 +17,7 @@ class RunDialog(QtGui.QDialog):
 
     cancelled = QtCore.Signal()
 
-    def __init__(self, case_name: str, processor: str, number_of_particles: int, parent=None):
+    def __init__(self, case_name: str, processor: str, number_of_particles: int, cmd_string="", parent=None):
         super(RunDialog, self).__init__(parent=parent)
 
         self.run_watcher = QtCore.QFileSystemWatcher()
@@ -39,12 +39,22 @@ class RunDialog(QtGui.QDialog):
         self.run_group_label_completed = QtGui.QLabel("<b>{}</b>".format(__("Simulation is complete.")))
         self.run_group_label_completed.setVisible(False)
 
+        self.run_group_cmd_executed_label = QtGui.QLabel(__("The executed command was:"))
+        self.run_group_cmd_executed = QtGui.QLineEdit(cmd_string)
+        self.run_group_cmd_executed.setReadOnly(True)
+        self.run_group_cmd_executed.setFont(QtGui.QFont("Courier New", 10, QtGui.QFont.Monospace))
+        self.run_group_cmd_executed.setCursorPosition(0)
+        self.run_group_cmd_executed_label.setVisible(False)
+        self.run_group_cmd_executed.setVisible(False)
+
         self.run_group_layout.addWidget(self.run_group_label_case)
         self.run_group_layout.addWidget(self.run_group_label_proc)
         self.run_group_layout.addWidget(self.run_group_label_part)
         self.run_group_layout.addWidget(self.run_group_label_partsout)
         self.run_group_layout.addWidget(self.run_group_label_eta)
         self.run_group_layout.addWidget(self.run_group_label_completed)
+        self.run_group_layout.addWidget(self.run_group_cmd_executed_label)
+        self.run_group_layout.addWidget(self.run_group_cmd_executed)
         self.run_group_layout.addStretch(1)
 
         self.run_group.setLayout(self.run_group_layout)
@@ -114,8 +124,9 @@ class RunDialog(QtGui.QDialog):
     def toggle_run_details(self) -> None:
         """ Toggles the run details dialog panel. """
         self.run_details.setVisible(not self.run_details.isVisible())
-        debug(self.run_details.isVisible())
         self.run_details.move(self.x() - self.run_details.width() - 15, self.y())
+        self.run_group_cmd_executed.setVisible(not self.run_group_cmd_executed.isVisible())
+        self.run_group_cmd_executed_label.setVisible(not self.run_group_cmd_executed_label.isVisible())
 
     def set_detail_text(self, details: str) -> None:
         """ Sets the details text contents and scrolls it to the bottom. """

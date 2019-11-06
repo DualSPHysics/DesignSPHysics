@@ -76,7 +76,19 @@ class DockSimulationWidget(QtGui.QWidget):
             # Warning window about save_case
             warning_dialog("You should run GenCase again. Otherwise, the obtained results may not be as expected")
 
-        run_dialog = RunDialog(Case.the().name, self.device_selector.currentText(), Case.the().info.particle_number, parent=get_fc_main_window())
+        static_params_exe = [Case.the().get_out_xml_file_path(),
+                             Case.the().get_out_folder_path(),
+                             "-{device}".format(device=self.device_selector.currentText().lower()),
+                             "-svres"]
+
+        additional_parameters = list()
+        if Case.the().info.run_additional_parameters:
+            additional_parameters = Case.the().info.run_additional_parameters.split(" ")
+
+        final_params_ex = static_params_exe + additional_parameters
+        cmd_string = "{} {}".format(Case.the().executable_paths.dsphysics, " ".join(final_params_ex))
+
+        run_dialog = RunDialog(case_name=Case.the().name, processor=self.device_selector.currentText(), number_of_particles=Case.the().info.particle_number, cmd_string=cmd_string, parent=get_fc_main_window())
         run_dialog.set_value(0)
         run_dialog.run_update(0, 0, None)
         Case.the().info.is_simulation_done = False
@@ -129,16 +141,6 @@ class DockSimulationWidget(QtGui.QWidget):
         process = QtCore.QProcess(get_fc_main_window())
         process.finished.connect(on_dsph_sim_finished)
 
-        static_params_exe = [Case.the().get_out_xml_file_path(),
-                             Case.the().get_out_folder_path(),
-                             "-{device}".format(device=self.device_selector.currentText().lower()),
-                             "-svres"]
-
-        additional_parameters = list()
-        if Case.the().info.run_additional_parameters:
-            additional_parameters = Case.the().info.run_additional_parameters.split(" ")
-
-        final_params_ex = static_params_exe + additional_parameters
         process.start(Case.the().executable_paths.dsphysics, final_params_ex)
 
         def on_fs_change():

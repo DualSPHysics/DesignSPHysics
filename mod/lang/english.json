@@ -783,5 +783,6 @@
     "Gencase exported {} particles.\nPress \"Details\" to check the output\n\nThe executed command (you can copy it) was:\n": "Gencase exported {} particles.\nPress \"Details\" to check the output\n\nThe executed command (you can copy it) was:\n",
     "Gencase exported {} particles.\nPress \"Details\" to check the output\n\nThe executed command line was:": "Gencase exported {} particles.\nPress \"Details\" to check the output\n\nThe executed command line was:",
     "Gencase exported <b>{}</b> particles.\nPress the <i>Details</i> button to check the output\n\nThe executed command line was:": "Gencase exported <b>{}</b> particles.\nPress the <i>Details</i> button to check the output\n\nThe executed command line was:",
-    "Gencase exported <b>{}</b> particles.<br/>Press the <i>Details</i> button to check the output<br/><br/>The executed command line was:": "Gencase exported <b>{}</b> particles.<br/>Press the <i>Details</i> button to check the output<br/><br/>The executed command line was:"
+    "Gencase exported <b>{}</b> particles.<br/>Press the <i>Details</i> button to check the output<br/><br/>The executed command line was:": "Gencase exported <b>{}</b> particles.<br/>Press the <i>Details</i> button to check the output<br/><br/>The executed command line was:",
+    "The executed command was:": "The executed command was:"
 }
