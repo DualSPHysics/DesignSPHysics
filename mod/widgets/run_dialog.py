@@ -97,8 +97,8 @@ class RunDialog(QtGui.QDialog):
 
     def run_update(self, percentage: float, particles_out: int, estimated_time: str) -> None:
         """ Updates the run dialog with information about the execution. """
-        self.setWindowTitle(self.WINDOW_TITLE_TEMPLATE.format(percentage))
         if percentage:
+            self.setWindowTitle(self.WINDOW_TITLE_TEMPLATE.format("{0:.2f}".format(percentage)))
             self.set_value(percentage)
         self.run_group_label_partsout.setText(self.PARTICLES_OUT_TEMPLATE.format(str(particles_out)))
         if estimated_time:
