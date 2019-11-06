@@ -1,3 +1,4 @@
+# pylint: skip-file
 #!/usr/bin/env python3.7
 "Makes working with XML feel like you are working with JSON"
 

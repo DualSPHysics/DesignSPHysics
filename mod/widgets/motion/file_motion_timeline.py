@@ -88,6 +88,7 @@ class FileMotionTimeline(QtGui.QWidget):
         self._init_connections()
 
     def fill_values(self, file_wave_gen):
+        """ Fills value from the data structure onto the widget. """
         self.duration_input.setText(str(file_wave_gen.duration))
         self.filename_input.setText(str(file_wave_gen.filename))
         self.fields_input.setText(str(file_wave_gen.fields))
@@ -102,12 +103,13 @@ class FileMotionTimeline(QtGui.QWidget):
         self.filename_browse.clicked.connect(self.on_file_browse)
 
     def on_file_browse(self):
-        # noinspection PyArgumentList
+        """ Opens a file browser dialog and sets the path on the widget. """
         filename, _ = QtGui.QFileDialog.getOpenFileName(self, __("Open file"), Case.the().info.last_used_directory)
         Case.the().info.update_last_used_directory(filename)
         self.filename_input.setText(filename)
 
     def on_change(self):
+        """ Reacts to any change on the widget, sanitizes the input and fires a signal with the corresponding motion object """
         self._sanitize_input()
         try:
             self.changed.emit(0, self.construct_motion_object())
@@ -115,6 +117,7 @@ class FileMotionTimeline(QtGui.QWidget):
             debug("Introduced an invalid value for a float number.")
 
     def construct_motion_object(self):
+        """ Constructs an FileGen object based on the widget data. """
         return FileGen(duration=float(self.duration_input.text()),
                        filename=str(self.filename_input.text()),
                        fields=str(self.fields_input.text()),
@@ -124,6 +127,7 @@ class FileMotionTimeline(QtGui.QWidget):
                        fieldz=str(self.fieldz_input.text()))
 
     def on_delete(self):
+        """ Deletes the currently defined object. """
         self.deleted.emit(self.index, self.construct_motion_object())
 
     def _sanitize_input(self):

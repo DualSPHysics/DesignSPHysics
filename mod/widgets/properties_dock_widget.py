@@ -282,8 +282,7 @@ class PropertiesDockWidget(QtGui.QDockWidget):
 
     def on_motion_change(self):
         """ Movement configuration button behaviour. """
-        target_mk = Case.the().get_simulation_object(FreeCADGui.Selection.getSelection()[0].Name).obj_mk
-        MovementDialog(target_mk=target_mk, parent=get_fc_main_window())
+        MovementDialog(parent=get_fc_main_window())
 
     def on_floatstate_change(self):
         """ Float configuration button behaviour. """

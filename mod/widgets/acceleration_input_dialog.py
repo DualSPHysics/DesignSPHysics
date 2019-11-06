@@ -116,12 +116,14 @@ class AccelerationInputDialog(QtGui.QDialog):
         return self.accinput
 
     def fill_data(self):
+        """ Sets the data for the dialog. """
         self.list_refresh()
         self.on_list_select()
         self.enabled_check.setCheckState(QtCore.Qt.Checked if self.accinput.enabled else QtCore.Qt.Unchecked)
         self.on_enable()
 
     def init_connections(self):
+        """ Connects widget signals with their corresponding methods. """
         self.ok_button.clicked.connect(self.on_ok)
         self.accinput_datafile_button.clicked.connect(self.on_browse)
         self.accinput_list_add_button.clicked.connect(self.on_add)
@@ -131,26 +133,31 @@ class AccelerationInputDialog(QtGui.QDialog):
         self.enabled_check.stateChanged.connect(self.on_enable)
 
     def on_ok(self):
+        """ Defines behaviour on ok button press. """
         self.accept()
 
     def on_browse(self):
+        """ Opens a file dialog to select a file to use. """
         file_name, _ = QtGui.QFileDialog().getOpenFileName(self, "Select file to use", Case.the().info.last_used_directory)
         Case.the().info.update_last_used_directory(file_name)
         self.accinput_datafile_input.setText(file_name)
 
     def on_add(self):
+        """ Adds the acceleration input thata to the acceleration input list. """
         self.accinput.acclist.append(AccelerationInputData())
         self.list_refresh()
 
     def on_remove(self):
-        if len(self.accinput.acclist) == 0:
+        """ Removes the acceleration input data from the data structure. """
+        if self.accinput.acclist:
             return
         index = self.accinput_list.currentRow()
         self.accinput.acclist.pop(index)
         self.list_refresh()
 
     def on_list_select(self):
-        if len(self.accinput.acclist) == 0:
+        """ Reacts to an acceleration input data being selected. """
+        if self.accinput.acclist:
             return
         index = self.accinput_list.currentRow()
         item = self.accinput.acclist[index]
@@ -163,12 +170,14 @@ class AccelerationInputDialog(QtGui.QDialog):
         self.accinput_datafile_input.setText(item.datafile)
 
     def list_refresh(self):
+        """ Refreshes the acceleration input list. """
         self.accinput_list.clear()
         self.accinput_list.insertItems(0, [x.label for x in self.accinput.acclist])
         self.accinput_list.setCurrentRow(0)
 
     def on_save_data(self):
-        if len(self.accinput.acclist) == 0:
+        """ Saves the data on the window to the acceleration input configuration. """
+        if self.accinput.acclist:
             return
         index = self.accinput_list.currentRow()
         item = self.accinput.acclist[index]
@@ -185,6 +194,7 @@ class AccelerationInputDialog(QtGui.QDialog):
         self.list_refresh()
 
     def on_enable(self):
+        """ Enables the widgets on acceleration input enable. """
         self.accinput.enabled = self.enabled_check.isChecked()
         self.accinput_list_groupbox.setEnabled(self.accinput.enabled)
         self.accinput_data_groupbox.setEnabled(self.accinput.enabled)

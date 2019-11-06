@@ -120,6 +120,7 @@ class RegularFlapWaveMotionTimeline(QtGui.QWidget):
         self._init_connections()
 
     def fill_values(self, reg_wave_gen):
+        """ Fills the values from the data structure onto the widget. """
         self.duration_input.setText(str(reg_wave_gen.duration))
         self.wave_order_selector.setCurrentIndex(
             int(reg_wave_gen.wave_order) - 1)
@@ -155,6 +156,7 @@ class RegularFlapWaveMotionTimeline(QtGui.QWidget):
             x.textChanged.connect(self.on_change)
 
     def on_change(self):
+        """ Reacts to input change, sanitizing it and firing a signal with the corresponding object. """
         self._sanitize_input()
         try:
             self.changed.emit(0, self.construct_motion_object())
@@ -162,6 +164,7 @@ class RegularFlapWaveMotionTimeline(QtGui.QWidget):
             debug("Introduced an invalid value for a float number.")
 
     def construct_motion_object(self):
+        """ Constructs a RegularFlapWaveGen with the data currently introduced in the widget. """
         return RegularFlapWaveGen(wave_order=self.wave_order_selector.currentIndex() + 1, start=0,
                                   duration=float(self.duration_input.text()), depth=float(self.depth_input.text()),
                                   flapaxis0=[float(self.flap_axis_0_x.text()),
@@ -189,6 +192,7 @@ class RegularFlapWaveMotionTimeline(QtGui.QWidget):
                                   disksave_zpos=float(self.disksave_zpos.text()))
 
     def on_delete(self):
+        """ Deletes the currently represented object. """
         self.deleted.emit(self.index, self.construct_motion_object())
 
     def _sanitize_input(self):

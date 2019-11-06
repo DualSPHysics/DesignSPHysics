@@ -7,12 +7,12 @@ from PySide import QtGui
 from mod.translation_tools import __
 from mod.executable_tools import executable_contains_string
 from mod.dialog_tools import warning_dialog, error_dialog
-from mod.file_tools import get_designsphysics_path
 
 from mod.dataobjects.case import Case
 
 
 class SetupPluginDialog(QtGui.QDialog):
+    """ A configuration dialog to set up the DesignSPHysics plugin for FreeCAD. """
 
     def __init__(self, parent=None):
         super(SetupPluginDialog, self).__init__(parent=parent)
@@ -186,6 +186,7 @@ class SetupPluginDialog(QtGui.QDialog):
         self.exec_()
 
     def on_ok(self):
+        """ Dumps the data from the dialog onto the main case data structure. """
         Case.the().executable_paths.gencase = self.gencasepath_input.text()
         Case.the().executable_paths.dsphysics = self.dsphpath_input.text()
         Case.the().executable_paths.partvtk4 = self.partvtk4path_input.text()
@@ -202,10 +203,11 @@ class SetupPluginDialog(QtGui.QDialog):
         self.accept()
 
     def on_cancel(self):
+        """ Closes the dialog rejecting it. """
         self.reject()
 
     def browse(self, app_name, input_prop) -> None:
-        """ Generic browse method for other to wrap. """
+        """ Opens a file browser to check for the provided app name. """
         file_name, _ = QtGui.QFileDialog().getOpenFileName(self, __("Select {} path").format(app_name), Case.the().info.last_used_directory)
         Case.the().info.update_last_used_directory(file_name)
 
@@ -218,6 +220,7 @@ class SetupPluginDialog(QtGui.QDialog):
             error_dialog(__("Can't recognize {} in the selected executable.").format(app_name))
 
     def on_paraview_browse(self):
+        """ Opens a file dialog to select a paraview executable. """
         file_name, _ = QtGui.QFileDialog().getOpenFileName(self, "Select ParaView path", Case.the().info.last_used_directory)
         if file_name:
             self.paraview_input.setText(file_name)

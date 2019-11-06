@@ -146,11 +146,9 @@ class DockSimulationWidget(QtGui.QWidget):
         def on_fs_change():
             """ Executed each time the filesystem changes. This updates the percentage of the simulation and its details."""
             run_file_data = ""
-            try:
-                with open(Case.the().path + "/" + Case.the().name + "_out/Run.out", "r") as run_file:
-                    run_file_data = run_file.readlines()
-            except Exception:
-                print_exc()
+            with open(Case.the().path + "/" + Case.the().name + "_out/Run.out", "r") as run_file:
+                run_file_data = run_file.readlines()
+            print_exc()
 
             # Fill details window
             run_dialog.set_detail_text("".join(run_file_data))

@@ -9,7 +9,6 @@ import os
 from datetime import datetime
 
 from mod.constants import APP_NAME
-from mod.stdout_tools import debug
 from mod.template_tools import obj_to_dict, get_template_text
 
 from mod.xml.renderers.definition_renderer import DefinitionRenderer

@@ -334,6 +334,7 @@ class FloatStateDialog(QtGui.QDialog):
         self.exec_()
 
     def on_ok(self):
+        """ Composes floating options and saves them into the appropriate data structure. """
         info_dialog(__("This will apply the floating properties to all objects with mkbound = ") + str(self.target_mk))
         if self.is_floating_selector.currentIndex() == 1:
             # Remove Floating
@@ -345,6 +346,7 @@ class FloatStateDialog(QtGui.QDialog):
             fp.mass_density_type = self.floating_props_massrhop_selector.currentIndex()
             fp.mass_density_value = float(self.floating_props_massrhop_input.text())
 
+            # TODO: This could be refactored and cleaned
             if self.floating_center_auto.isChecked():
                 fp.gravity_center = list()
             else:
@@ -390,21 +392,25 @@ class FloatStateDialog(QtGui.QDialog):
         self.accept()
 
     def on_cancel(self):
+        """ Closes the dialog and rejects. """
         self.reject()
 
     def on_floating_change(self, index):
+        """ Reacts to the floating index changing enabling/disabling the floating properties. """
         if index == 0:
             self.floating_props_group.setEnabled(True)
         else:
             self.floating_props_group.setEnabled(False)
 
     def on_massrhop_change(self, index):
+        """ Reacts to the massrhop checkbox change enabling disabling its input. """
         if index == 0:
             self.floating_props_massrhop_input.setText("0.0")
         else:
             self.floating_props_massrhop_input.setText("0.0")
 
     def on_gravity_auto(self):
+        """ Reacts to the gravity auto check enabling/disabling its inputs. """
         if self.floating_center_auto.isChecked():
             self.floating_center_input_x.setEnabled(False)
             self.floating_center_input_y.setEnabled(False)
@@ -415,6 +421,7 @@ class FloatStateDialog(QtGui.QDialog):
             self.floating_center_input_z.setEnabled(True)
 
     def on_inertia_auto(self):
+        """ Reacts to the inertia auto check enabling/disabling its inputs. """
         if self.floating_inertia_auto.isChecked():
             self.floating_inertia_input_x.setEnabled(False)
             self.floating_inertia_input_y.setEnabled(False)
@@ -425,6 +432,7 @@ class FloatStateDialog(QtGui.QDialog):
             self.floating_inertia_input_z.setEnabled(True)
 
     def on_velini_auto(self):
+        """ Reacts to the velini auto check enabling/disabling its inputs. """
         if self.floating_velini_auto.isChecked():
             self.floating_velini_input_x.setEnabled(False)
             self.floating_velini_input_y.setEnabled(False)
@@ -435,6 +443,7 @@ class FloatStateDialog(QtGui.QDialog):
             self.floating_velini_input_z.setEnabled(True)
 
     def on_omegaini_auto(self):
+        """ Reacts to the omegaini auto check enabling/disabling its inputs. """
         if self.floating_omegaini_auto.isChecked():
             self.floating_omegaini_input_x.setEnabled(False)
             self.floating_omegaini_input_y.setEnabled(False)
@@ -445,6 +454,7 @@ class FloatStateDialog(QtGui.QDialog):
             self.floating_omegaini_input_z.setEnabled(True)
 
     def on_translation_auto(self):
+        """ Reacts to the translation auto check enabling disabling its inputs. """
         if self.floating_translation_auto.isChecked():
             self.floating_translation_input_x.setEnabled(False)
             self.floating_translation_input_y.setEnabled(False)
@@ -455,6 +465,7 @@ class FloatStateDialog(QtGui.QDialog):
             self.floating_translation_input_z.setEnabled(True)
 
     def on_rotation_auto(self):
+        """ Reacts to the rotation checkbox being pressed enabling/disabling its inputs. """
         if self.floating_rotation_auto.isChecked():
             self.floating_rotation_input_x.setEnabled(False)
             self.floating_rotation_input_y.setEnabled(False)
@@ -465,6 +476,7 @@ class FloatStateDialog(QtGui.QDialog):
             self.floating_rotation_input_z.setEnabled(True)
 
     def on_material_auto(self):
+        """ Reacts to the material auto checkbox being pressed enabling/disabling its input. """
         if self.floating_material_auto.isChecked():
             self.floating_material_line_edit.setEnabled(False)
         else:

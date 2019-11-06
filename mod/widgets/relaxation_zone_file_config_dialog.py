@@ -13,6 +13,8 @@ from mod.dataobjects.relaxation_zone_file import RelaxationZoneFile
 
 
 class RelaxationZoneFileConfigDialog(QtGui.QDialog):
+    """ A dialog with configuration related to a relaxation zone with file. """
+
     def __init__(self, relaxationzone=None, parent=None):
         super(RelaxationZoneFileConfigDialog, self).__init__(parent=parent)
         self.temp_relaxationzone = relaxationzone if relaxationzone is not None else RelaxationZoneFile()
@@ -184,7 +186,7 @@ class RelaxationZoneFileConfigDialog(QtGui.QDialog):
         self.exec_()
 
     def on_browse(self):
-        # noinspection PyArgumentList
+        """ Opens a file dialog to select a series of files. Then processes it to extract the series. """
         file_name, _ = QtGui.QFileDialog.getOpenFileName(self, __("Open a file from the serie"), Case.the().info.last_used_directory, "External velocity data (*_x*_y*.csv)")
         Case.the().info.update_last_used_directory(file_name)
         if not file_name:
@@ -197,6 +199,7 @@ class RelaxationZoneFileConfigDialog(QtGui.QDialog):
         self.filesvel_input.setText("{}/{}".format(folder, basename.split("_vel")[0]))
 
     def on_apply(self):
+        """ Saves the data on the dialog into the data structure. """
         self.temp_relaxationzone.start = float(self.start_input.text())
         self.temp_relaxationzone.duration = float(self.duration_input.text())
         self.temp_relaxationzone.depth = float(self.depth_input.text())
@@ -226,10 +229,12 @@ class RelaxationZoneFileConfigDialog(QtGui.QDialog):
         self.accept()
 
     def on_delete(self):
+        """ Deletes the currently represented relaxation zone. """
         self.relaxationzone = None
         self.reject()
 
     def fill_data(self):
+        """ Fills the data from the data structure onto the dialog. """
         self.start_input.setText(str(self.temp_relaxationzone.start))
         self.duration_input.setText(str(self.temp_relaxationzone.duration))
         self.depth_input.setText(str(self.temp_relaxationzone.depth))

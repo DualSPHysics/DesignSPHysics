@@ -165,8 +165,7 @@ class SpecialOptionsSelectorDialog(QtGui.QDialog):
                     overwrite_warn = ok_cancel_dialog(__("Relaxation Zone"), __("There's already another type of Relaxation Zone defined. Continuing will overwrite it. Are you sure?"))
                     if overwrite_warn == QtGui.QMessageBox.Cancel:
                         return
-                    else:
-                        Case.the().relaxation_zone = RelaxationZoneRegular()
+                    Case.the().relaxation_zone = RelaxationZoneRegular()
 
             config_dialog = RelaxationZoneRegularConfigDialog(Case.the().relaxation_zone, parent=get_fc_main_window())
 
@@ -178,8 +177,7 @@ class SpecialOptionsSelectorDialog(QtGui.QDialog):
                     overwrite_warn = ok_cancel_dialog(__("Relaxation Zone"), __("There's already another type of Relaxation Zone defined. Continuing will overwrite it. Are you sure?"))
                     if overwrite_warn == QtGui.QMessageBox.Cancel:
                         return
-                    else:
-                        Case.the().relaxation_zone = RelaxationZoneIrregular()
+                    Case.the().relaxation_zone = RelaxationZoneIrregular()
 
             config_dialog = RelaxationZoneIrregularConfigDialog(Case.the().relaxation_zone, parent=get_fc_main_window())
 
@@ -191,8 +189,7 @@ class SpecialOptionsSelectorDialog(QtGui.QDialog):
                     overwrite_warn = ok_cancel_dialog(__("Relaxation Zone"), __("There's already another type of Relaxation Zone defined. Continuing will overwrite it. Are you sure?"))
                     if overwrite_warn == QtGui.QMessageBox.Cancel:
                         return
-                    else:
-                        Case.the().relaxation_zone = RelaxationZoneFile()
+                    Case.the().relaxation_zone = RelaxationZoneFile()
 
             config_dialog = RelaxationZoneFileConfigDialog(Case.the().relaxation_zone, parent=get_fc_main_window())
 
@@ -205,8 +202,7 @@ class SpecialOptionsSelectorDialog(QtGui.QDialog):
                     overwrite_warn = ok_cancel_dialog(__("Relaxation Zone"), __("There's already another type of Relaxation Zone defined. Continuing will overwrite it. Are you sure?"))
                     if overwrite_warn == QtGui.QMessageBox.Cancel:
                         return
-                    else:
-                        Case.the().relaxation_zone = RelaxationZoneUniform()
+                    Case.the().relaxation_zone = RelaxationZoneUniform()
 
             config_dialog = RelaxationZoneUniformConfigDialog(Case.the().relaxation_zone, parent=get_fc_main_window())
 

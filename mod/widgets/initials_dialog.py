@@ -96,8 +96,8 @@ class InitialsDialog(QtGui.QDialog):
 
         self.exec_()
 
-    # Ok button handler
     def on_ok(self):
+        """ Saves the dialog settings on the data structure. """
         info_dialog(__("This will apply the initials properties to all objects with mkfluid = ") + str(self.target_mk))
         if self.has_initials_selector.currentIndex() == 1:
             # Initials false
@@ -109,12 +109,12 @@ class InitialsDialog(QtGui.QDialog):
             Case.the().get_mk_based_properties(ObjectType.FLUID, self.target_mk).initials = InitialsProperty(mk=self.target_mk, force=force_vector)
         self.accept()
 
-    # Cancel button handler
     def on_cancel(self):
+        """ Closes the window and rejects it. """
         self.reject()
 
-    # Initials enable/disable dropdown handler
     def on_initials_change(self, index):
+        """ Reacts to the initials enabled combobox enabling/disabling the properties configuration widget. """
         if index == 0:
             self.initials_props_group.setEnabled(True)
         else:

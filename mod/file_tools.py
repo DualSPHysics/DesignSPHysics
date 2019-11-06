@@ -92,11 +92,13 @@ def save_case(save_name: str, case: "Case") -> None:
     for obj in case.get_all_complex_objects():
         Mesh.export([get_fc_object(obj.name)], "{}/{}.stl".format(save_name, obj.name))
 
+    # FIXME: Too many branches
+
     # Copy files from movements and change its paths to be inside the project.
     for _, mkproperties in case.mkbasedproperties.items():
         for movement in mkproperties.movements:
             if isinstance(movement, SpecialMovement):
-                if isinstance(movement.generator, FileGen) or isinstance(movement.generator, RotationFileGen):
+                if isinstance(movement.generator, (FileGen, RotationFileGen)):
                     filename = movement.generator.filename
                     debug("Copying {} to {}".format(filename, save_name))
 

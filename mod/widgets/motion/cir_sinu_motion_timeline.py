@@ -128,6 +128,7 @@ class CirSinuMotionTimeline(QtGui.QWidget):
         self._init_connections()
 
     def fill_values(self, cir_sinu_motion):
+        """ Fills the values from the data structure onto the widget. """
         self.x1_input.setText(str(cir_sinu_motion.axis1[0]))
         self.y1_input.setText(str(cir_sinu_motion.axis1[1]))
         self.z1_input.setText(str(cir_sinu_motion.axis1[2]))
@@ -161,18 +162,23 @@ class CirSinuMotionTimeline(QtGui.QWidget):
         self.order_down_button.clicked.connect(self.on_order_down)
 
     def disable_order_up_button(self):
+        """ Disables the order up button. """
         self.order_up_button.setEnabled(False)
 
     def disable_order_down_button(self):
+        """ Disables the order down button. """
         self.order_down_button.setEnabled(False)
 
     def on_order_up(self):
+        """ Reacts to the order up button being pressed. """
         self.order_up.emit(self.index)
 
     def on_order_down(self):
+        """ Reacts to the order down button being pressed. """
         self.order_down.emit(self.index)
 
     def on_change(self):
+        """ Reacts to any change made sanitizing it and firing a signal with the appropriate data object. """
         self._sanitize_input()
         try:
             self.changed.emit(self.index, self.construct_motion_object())
@@ -180,6 +186,7 @@ class CirSinuMotionTimeline(QtGui.QWidget):
             debug("Introduced an invalid value for a float number.")
 
     def construct_motion_object(self):
+        """ Constructs a new CirSinuMotion from the data on the widget. """
         return CirSinuMotion(
             axis1=[float(self.x1_input.text()),
                    float(self.y1_input.text()),
@@ -194,34 +201,35 @@ class CirSinuMotionTimeline(QtGui.QWidget):
             ampl=float(self.ampl_input.text()), phase=float(self.phase_input.text()))
 
     def on_delete(self):
+        """ Deletes the currenlty represented motion object. """
         self.deleted.emit(self.index, self.construct_motion_object())
 
     def _sanitize_input(self):
-        if len(self.x1_input.text()) is 0:
+        if self.x1_input.text():
             self.x1_input.setText("0")
-        if len(self.y1_input.text()) is 0:
+        if self.y1_input.text():
             self.y1_input.setText("0")
-        if len(self.z1_input.text()) is 0:
+        if self.z1_input.text():
             self.z1_input.setText("0")
-        if len(self.x2_input.text()) is 0:
+        if self.x2_input.text():
             self.x2_input.setText("0")
-        if len(self.y2_input.text()) is 0:
+        if self.y2_input.text():
             self.y2_input.setText("0")
-        if len(self.z2_input.text()) is 0:
+        if self.z2_input.text():
             self.z2_input.setText("0")
-        if len(self.reference_x_input.text()) is 0:
+        if self.reference_x_input.text():
             self.reference_x_input.setText("0")
-        if len(self.reference_y_input.text()) is 0:
+        if self.reference_y_input.text():
             self.reference_y_input.setText("0")
-        if len(self.reference_z_input.text()) is 0:
+        if self.reference_z_input.text():
             self.reference_z_input.setText("0")
-        if len(self.freq_input.text()) is 0:
+        if self.freq_input.text():
             self.freq_input.setText("0")
-        if len(self.ampl_input.text()) is 0:
+        if self.ampl_input.text():
             self.ampl_input.setText("0")
-        if len(self.phase_input.text()) is 0:
+        if self.phase_input.text():
             self.phase_input.setText("0")
-        if len(self.time_input.text()) is 0:
+        if self.time_input.text():
             self.time_input.setText("0")
 
         self.x1_input.setText(self.x1_input.text().replace(",", "."))

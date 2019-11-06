@@ -94,8 +94,8 @@ class RotationFileMotionTimeline(QtGui.QWidget):
         self._init_connections()
 
     def fill_values(self, rot_file_wave_gen):
-        self.anglesunits_selector.setCurrentIndex(
-            0 if rot_file_wave_gen.anglesunits == "degrees" else 1)
+        """ Fills values from the data structure into the widget. """
+        self.anglesunits_selector.setCurrentIndex(0 if rot_file_wave_gen.anglesunits == "degrees" else 1)
         self.duration_input.setText(str(rot_file_wave_gen.duration))
         self.filename_input.setText(str(rot_file_wave_gen.filename))
         self.axisp1x_input.setText(str(rot_file_wave_gen.axisp1[0]))
@@ -114,12 +114,13 @@ class RotationFileMotionTimeline(QtGui.QWidget):
         self.filename_browse.clicked.connect(self.on_file_browse)
 
     def on_file_browse(self):
-        # noinspection PyArgumentList
+        """ Opens a file dialog to open the filename, then puts it into the widget. """
         filename, _ = QtGui.QFileDialog.getOpenFileName(self, __("Open file"), Case.the().info.last_used_directory)
         Case.the().info.update_last_used_directory(filename)
         self.filename_input.setText(filename)
 
     def on_change(self):
+        """ Reacts to input change, sanitizing it and firing a signal with the appropriate data object. """
         self._sanitize_input()
         try:
             self.changed.emit(0, self.construct_motion_object())
@@ -127,6 +128,7 @@ class RotationFileMotionTimeline(QtGui.QWidget):
             debug("Introduced an invalid value for a float number.")
 
     def construct_motion_object(self):
+        """ Constructs a motion object from the data on the widget. """
         return RotationFileGen(duration=float(self.duration_input.text()),
                                filename=str(self.filename_input.text()),
                                anglesunits=str(
@@ -139,6 +141,7 @@ class RotationFileMotionTimeline(QtGui.QWidget):
                                        float(self.axisp2z_input.text())])
 
     def on_delete(self):
+        """ Deletes the currently represented object. """
         self.deleted.emit(self.index, self.construct_motion_object())
 
     def _sanitize_input(self):

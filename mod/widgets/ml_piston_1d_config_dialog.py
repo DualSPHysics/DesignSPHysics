@@ -80,6 +80,7 @@ class MLPiston1DConfigDialog(QtGui.QDialog):
         self.exec_()
 
     def on_apply(self):
+        """ Applies the currently introduced data on the selected mlpiston1d. """
         self.temp_mlpiston1d.filevelx = str(self.filevelx_input.text())
         self.temp_mlpiston1d.incz = float(self.incz_input.text())
         self.temp_mlpiston1d.timedataini = float(self.timedataini_input.text())
@@ -88,16 +89,19 @@ class MLPiston1DConfigDialog(QtGui.QDialog):
         self.accept()
 
     def on_delete(self):
+        """ Deletes the mlpiston1d """
         self.mlpiston1d = None
         self.reject()
 
     def fill_data(self):
+        """ Fills the data for the dialog with the mlpiston1d information. """
         self.filevelx_input.setText(str(self.temp_mlpiston1d.filevelx))
         self.incz_input.setText(str(self.temp_mlpiston1d.incz))
         self.timedataini_input.setText(str(self.temp_mlpiston1d.timedataini))
         self.smooth_input.setText(str(self.temp_mlpiston1d.smooth))
 
     def on_browse(self):
+        """ Opens a file browser and sets the path for the file on the dialog. """
         filename, _ = QtGui.QFileDialog.getOpenFileName(self, __("Open file"), Case.the().info.last_used_directory, "External velocity data (*.csv)")
         Case.the().info.update_last_used_directory(filename)
         self.filevelx_input.setText(filename)

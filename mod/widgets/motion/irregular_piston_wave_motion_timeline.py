@@ -258,6 +258,7 @@ class IrregularPistonWaveMotionTimeline(QtGui.QWidget):
         self._init_connections()
 
     def fill_values(self, irreg_wave_gen):
+        """ Fills the value from the data structure onto the widget. """
         self.duration_input.setText(str(irreg_wave_gen.duration))
         self.wave_order_selector.setCurrentIndex(
             int(irreg_wave_gen.wave_order) - 1)
@@ -351,6 +352,7 @@ class IrregularPistonWaveMotionTimeline(QtGui.QWidget):
             x.textChanged.connect(self.on_change)
 
     def on_change(self):
+        """ Reacts to change, sanitizes input and fires an event with the resulting object. """
         self._sanitize_input()
         self._awas_enabled_handler()
         try:
@@ -381,6 +383,7 @@ class IrregularPistonWaveMotionTimeline(QtGui.QWidget):
             x.setEnabled(enable_state)
 
     def construct_motion_object(self):
+        """ Constructs an object from the data introduced in the widget. """
         _cmo_elevation = None
         if self.awas_elevation_selector.currentIndex() == 0:
             _cmo_elevation = AWASWaveOrder.FIRST_ORDER
@@ -424,50 +427,32 @@ class IrregularPistonWaveMotionTimeline(QtGui.QWidget):
 
         return IrregularPistonWaveGen(wave_order=self.wave_order_selector.currentIndex() + 1, start=0,
                                       duration=float(self.duration_input.text()), depth=float(self.depth_input.text()),
-                                      piston_dir=[float(self.piston_dir_x.text()),
-                                                  float(
-                                          self.piston_dir_y.text()),
-                                          float(self.piston_dir_z.text())],
-                                      wave_height=float(
-                                          self.wave_height_input.text()),
-                                      wave_period=float(
-                                          self.wave_period_input.text()),
+                                      piston_dir=[float(self.piston_dir_x.text()), float(self.piston_dir_y.text()), float(self.piston_dir_z.text())],
+                                      wave_height=float(self.wave_height_input.text()),
+                                      wave_period=float(self.wave_period_input.text()),
                                       spectrum=self.spectrum_selector.currentIndex(),
                                       discretization=self.discretization_selector.currentIndex(),
-                                      peak_coef=float(
-                                          self.peak_coef_input.text()),
+                                      peak_coef=float(self.peak_coef_input.text()),
                                       waves=float(self.waves_input.text()),
-                                      randomseed=float(
-                                          self.randomseed_input.text()),
-                                      serieini=float(
-                                          self.serieini_input.text()),
-                                      ramptime=float(
-                                          self.ramptime_input.text()),
+                                      randomseed=float(self.randomseed_input.text()),
+                                      serieini=float(self.serieini_input.text()),
+                                      ramptime=float(self.ramptime_input.text()),
                                       serieini_autofit=self.serieini_autofit.isChecked(),
-                                      savemotion_time=str(
-                                          self.savemotion_time_input.text()),
-                                      savemotion_timedt=str(
-                                          self.savemotion_timedt_input.text()),
-                                      savemotion_xpos=str(
-                                          self.savemotion_xpos_input.text()),
-                                      savemotion_zpos=str(
-                                          self.savemotion_zpos_input.text()),
-                                      saveserie_timemin=str(
-                                          self.saveserie_timemin_input.text()),
-                                      saveserie_timemax=str(
-                                          self.saveserie_timemax_input.text()),
-                                      saveserie_timedt=str(
-                                          self.saveserie_timedt_input.text()),
-                                      saveserie_xpos=str(
-                                          self.saveserie_xpos_input.text()),
-                                      saveseriewaves_timemin=str(
-                                          self.saveseriewaves_timemin_input.text()),
-                                      saveseriewaves_timemax=str(
-                                          self.saveseriewaves_timemax_input.text()),
+                                      savemotion_time=str(self.savemotion_time_input.text()),
+                                      savemotion_timedt=str(self.savemotion_timedt_input.text()),
+                                      savemotion_xpos=str(self.savemotion_xpos_input.text()),
+                                      savemotion_zpos=str(self.savemotion_zpos_input.text()),
+                                      saveserie_timemin=str(self.saveserie_timemin_input.text()),
+                                      saveserie_timemax=str(self.saveserie_timemax_input.text()),
+                                      saveserie_timedt=str(self.saveserie_timedt_input.text()),
+                                      saveserie_xpos=str(self.saveserie_xpos_input.text()),
+                                      saveseriewaves_timemin=str(self.saveseriewaves_timemin_input.text()),
+                                      saveseriewaves_timemax=str(self.saveseriewaves_timemax_input.text()),
                                       saveseriewaves_xpos=str(self.saveseriewaves_xpos_input.text()),
                                       awas=awas_object)
 
     def on_delete(self):
+        """ Deletes the currently defined object. """
         self.deleted.emit(self.index, self.construct_motion_object())
 
     def _sanitize_input(self):

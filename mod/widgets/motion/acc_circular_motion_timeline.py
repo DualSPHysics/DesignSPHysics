@@ -153,15 +153,19 @@ class AccCircularMotionTimeline(QtGui.QWidget):
         self.order_up_button.setEnabled(False)
 
     def disable_order_down_button(self):
+        """ Disables the order down button. """
         self.order_down_button.setEnabled(False)
 
     def on_order_up(self):
+        """ Reacts to the order up button being pressed and moves the element up a position. """
         self.order_up.emit(self.index)
 
     def on_order_down(self):
+        """ Reacts to the order down button being pressed and moves the element down a position. """
         self.order_down.emit(self.index)
 
     def on_change(self):
+        """ Reacts to a change and emits an object construction signal. """
         self._sanitize_input()
         try:
             self.changed.emit(self.index, self.construct_motion_object())
@@ -169,6 +173,7 @@ class AccCircularMotionTimeline(QtGui.QWidget):
             debug("Introduced an invalid value for a float number.")
 
     def construct_motion_object(self):
+        """ Constructs a AccCirMotion object with the data introduced in the widget. """
         return AccCirMotion(
             ang_vel=float(self.velocity_input.text()),
             ang_acc=float(self.acceleration_input.text()),
@@ -184,32 +189,33 @@ class AccCircularMotionTimeline(QtGui.QWidget):
             duration=float(self.time_input.text()))
 
     def on_delete(self):
+        """ Emits the delete signal on the current motion object specified. """
         self.deleted.emit(self.index, self.construct_motion_object())
 
     def _sanitize_input(self):
-        if len(self.x1_input.text()) is 0:
+        if self.x1_input.text():
             self.x1_input.setText("0")
-        if len(self.y1_input.text()) is 0:
+        if self.y1_input.text():
             self.y1_input.setText("0")
-        if len(self.z1_input.text()) is 0:
+        if self.z1_input.text():
             self.z1_input.setText("0")
-        if len(self.x2_input.text()) is 0:
+        if self.x2_input.text():
             self.x2_input.setText("0")
-        if len(self.y2_input.text()) is 0:
+        if self.y2_input.text():
             self.y2_input.setText("0")
-        if len(self.z2_input.text()) is 0:
+        if self.z2_input.text():
             self.z2_input.setText("0")
-        if len(self.reference_x_input.text()) is 0:
+        if self.reference_x_input.text():
             self.reference_x_input.setText("0")
-        if len(self.reference_y_input.text()) is 0:
+        if self.reference_y_input.text():
             self.reference_y_input.setText("0")
-        if len(self.reference_z_input.text()) is 0:
+        if self.reference_z_input.text():
             self.reference_z_input.setText("0")
-        if len(self.velocity_input.text()) is 0:
+        if self.velocity_input.text():
             self.velocity_input.setText("0")
-        if len(self.acceleration_input.text()) is 0:
+        if self.acceleration_input.text():
             self.acceleration_input.setText("0")
-        if len(self.time_input.text()) is 0:
+        if self.time_input.text():
             self.time_input.setText("0")
 
         self.x1_input.setText(self.x1_input.text().replace(",", "."))

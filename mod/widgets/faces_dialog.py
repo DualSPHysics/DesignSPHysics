@@ -72,7 +72,7 @@ class FacesDialog(QtGui.QDialog):
         self.exec_()
 
     def on_ok(self):
-
+        """ Composes a FacesProperty object and saves it in the data structure. """
         fp = FacesProperty()
 
         if self.all_faces.isChecked():
@@ -90,6 +90,7 @@ class FacesDialog(QtGui.QDialog):
         self.accept()
 
     def on_cancel(self):
+        """ Closes the dialog and rejects it. """
         self.reject()
 
     def on_faces_checkbox(self):

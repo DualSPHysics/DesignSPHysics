@@ -17,6 +17,8 @@ from mod.dataobjects.ml_piston_2d_veldata import MLPiston2DVeldata
 
 
 class MLPiston2DConfigDialog(QtGui.QDialog):
+    """ A Dialog to configure an MLPiston2D configuration. """
+
     def __init__(self, mk=None, mlpiston2d=None, parent=None):
         super(MLPiston2DConfigDialog, self).__init__(parent=parent)
         self.mk = mk
@@ -100,6 +102,7 @@ class MLPiston2DConfigDialog(QtGui.QDialog):
         self.exec_()
 
     def on_apply(self):
+        """ Applies the currently introduced MLPiston2D configuration to the data structure. """
         self.temp_mlpiston2d.incz = float(self.incz_input.text())
         self.temp_mlpiston2d.smoothz = int(self.smooth_z.text())
         self.temp_mlpiston2d.smoothy = int(self.smooth_y.text())
@@ -116,10 +119,12 @@ class MLPiston2DConfigDialog(QtGui.QDialog):
         self.accept()
 
     def on_delete(self):
+        """ Deletes the MLPiston2D from the data structure. """
         self.mlpiston2d = None
         self.reject()
 
     def fill_data(self):
+        """ Fills the data for this MLPiston2D into the dialog. """
         self.incz_input.setText(str(self.temp_mlpiston2d.incz))
         self.smooth_z.setText(str(self.temp_mlpiston2d.smoothz))
         self.smooth_y.setText(str(self.temp_mlpiston2d.smoothy))
@@ -135,7 +140,7 @@ class MLPiston2DConfigDialog(QtGui.QDialog):
             self.veldata_timedataini_input.setText("")
 
     def on_browse(self):
-        # noinspection PyArgumentList
+        """ Opens a file browser to select the external velocity data, then parses it and fills the dialog with the information. """
         filename, _ = QtGui.QFileDialog.getOpenFileName(self, __("Open a file from the serie"), Case.the().info.last_used_directory, "External velocity data (*_x*_y*.csv)")
         Case.the().info.update_last_used_directory(filename)
         if not filename:

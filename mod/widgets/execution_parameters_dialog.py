@@ -673,31 +673,32 @@ class ExecutionParametersDialog(QtGui.QDialog):
         self.exec_()
 
     def on_help_focus(self, help_text):
+        """ Reacts to focusing the help setting the corresponding help text. """
         self.help_window.setText(help_text)
 
-    # Step Algorithm
     def on_step_change(self, index):
+        """ Reacts to step algorithm changing enabling/disabling the verletsteps option. """
         if index == 1:
             self.verletsteps_input.setEnabled(True)
         else:
             self.verletsteps_input.setEnabled(False)
 
     def on_viscotreatment_change(self, index):
+        """ Reacts to viscotreatment change. """
         self.visco_input.setText("0.01" if index == 0 else "0.000001")
-        self.visco_label.setText("Viscosity value (alpha): "
-                                 if index == 0 else "Kinematic viscosity: ")
+        self.visco_label.setText("Viscosity value (alpha): " if index == 0 else "Kinematic viscosity: ")
         self.visco_units_label.setText("" if index == 0 else "m<span style='vertical-align:super'>2</span>/s")
 
-    # DeltaSPH enabled selector
     def on_densitydt_type_change(self, index):
+        """ Reacts to densitydt type change enabling/disabling the input. """
         if index == 0:
             self.densitydt_input.setEnabled(False)
         else:
             self.densitydt_input.setEnabled(True)
             self.densitydt_input.setText("0.1")
 
-    # Shifting mode
     def on_shifting_change(self, index):
+        """ Reacts to the shifting mode change enabling/disabling its input. """
         if index == 0:
             self.shiftcoef_input.setEnabled(False)
             self.shifttfs_input.setEnabled(False)
@@ -705,24 +706,22 @@ class ExecutionParametersDialog(QtGui.QDialog):
             self.shiftcoef_input.setEnabled(True)
             self.shifttfs_input.setEnabled(True)
 
-    # Controls if user selected auto b or not enabling/disablen b custom value
     def on_dtiniauto_check(self):
-        # introduction
+        """ Reacts to the dtini automatic checkbox enabling/disabling its input. """
         if self.dtiniauto_chk.isChecked():
             self.dtini_input.setEnabled(False)
         else:
             self.dtini_input.setEnabled(True)
 
-    # Controls if user selected auto b or not enabling/disablen b custom value
     def on_dtminauto_check(self):
-        # introduction
+        """ Reacts to the dtminauto checkbox enabling disabling its input. """
         if self.dtminauto_chk.isChecked():
             self.dtmin_input.setEnabled(False)
         else:
             self.dtmin_input.setEnabled(True)
 
-    # Periodicity in X
     def on_period_x_chk(self):
+        """ Reacts to the period_x checkbox being pressed enabling/disabling its inputs. """
         if self.period_x_chk.isChecked():
             self.period_x_inc_x_input.setEnabled(False)
             self.period_x_inc_y_input.setEnabled(True)
@@ -732,8 +731,8 @@ class ExecutionParametersDialog(QtGui.QDialog):
             self.period_x_inc_y_input.setEnabled(False)
             self.period_x_inc_z_input.setEnabled(False)
 
-    # Periodicity in Y
     def on_period_y_chk(self):
+        """ Reacts to the period y checkbox being pressed enabling/disabling its inputs. """
         if self.period_y_chk.isChecked():
             self.period_y_inc_x_input.setEnabled(True)
             self.period_y_inc_y_input.setEnabled(False)
@@ -743,8 +742,8 @@ class ExecutionParametersDialog(QtGui.QDialog):
             self.period_y_inc_y_input.setEnabled(False)
             self.period_y_inc_z_input.setEnabled(False)
 
-    # Periodicity in X
     def on_period_z_chk(self):
+        """ Reacts to the period y checkbox being pressed enabling/disabling its inputs. """
         if self.period_z_chk.isChecked():
             self.period_z_inc_x_input.setEnabled(True)
             self.period_z_inc_y_input.setEnabled(True)
@@ -755,6 +754,7 @@ class ExecutionParametersDialog(QtGui.QDialog):
             self.period_z_inc_z_input.setEnabled(False)
 
     def on_simdomain_chk(self):
+        """ Reacts to the simdomain checkbox being pressed enabling/disabling its inputs. """
         if self.simdomain_chk.isChecked():
             self.simdomain_posminx_combobox.setEnabled(True)
             self.simdomain_posminy_combobox.setEnabled(True)
@@ -806,36 +806,42 @@ class ExecutionParametersDialog(QtGui.QDialog):
             self.simdomain_posmaxz_line_edit.setEnabled(False)
 
     def on_posminx_changed(self):
+        """ Reacts to the posminx combobox being changed enabling/disabling its input. """
         if self.simdomain_posminx_combobox.currentIndex() == 0:
             self.simdomain_posminx_line_edit.setEnabled(False)
         else:
             self.simdomain_posminx_line_edit.setEnabled(True)
 
     def on_posminy_changed(self):
+        """ Reacts to the posminy combobox being changed enabling/disabling its input. """
         if self.simdomain_posminy_combobox.currentIndex() == 0:
             self.simdomain_posminy_line_edit.setEnabled(False)
         else:
             self.simdomain_posminy_line_edit.setEnabled(True)
 
     def on_posminz_changed(self):
+        """ Reacts to the posminz combobox being changed enabling/disabling its input. """
         if self.simdomain_posminz_combobox.currentIndex() == 0:
             self.simdomain_posminz_line_edit.setEnabled(False)
         else:
             self.simdomain_posminz_line_edit.setEnabled(True)
 
     def on_posmaxx_changed(self):
+        """ Reacts to the posmaxx combobox being changed enabling/disabling its input. """
         if self.simdomain_posmaxx_combobox.currentIndex() == 0:
             self.simdomain_posmaxx_line_edit.setEnabled(False)
         else:
             self.simdomain_posmaxx_line_edit.setEnabled(True)
 
     def on_posmaxy_changed(self):
+        """ Reacts to the posmaxy combobox being changed enabling/disabling its input. """
         if self.simdomain_posmaxy_combobox.currentIndex() == 0:
             self.simdomain_posmaxy_line_edit.setEnabled(False)
         else:
             self.simdomain_posmaxy_line_edit.setEnabled(True)
 
     def on_posmaxz_changed(self):
+        """ Reacts to the posmaxz combobox being changed enabling/disabling its input. """
         if self.simdomain_posmaxz_combobox.currentIndex() == 0:
             self.simdomain_posmaxz_line_edit.setEnabled(False)
         else:
@@ -843,6 +849,7 @@ class ExecutionParametersDialog(QtGui.QDialog):
 
     # ------------ Button behaviour definition --------------
     def on_ok(self):
+        """ Applies the data from the dialog onto the main data structure. """
         Case.the().execution_parameters.posdouble = int(self.posdouble_input.currentIndex())
         Case.the().execution_parameters.stepalgorithm = int(self.stepalgorithm_input.currentIndex() + 1)
         Case.the().execution_parameters.verletsteps = int(self.verletsteps_input.text())
@@ -912,5 +919,6 @@ class ExecutionParametersDialog(QtGui.QDialog):
         self.accept()
 
     def on_cancel(self):
+        """ Canceles the dialog rejecting it. """
         log("Execution Parameters not changed")
         self.reject()

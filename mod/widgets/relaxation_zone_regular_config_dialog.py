@@ -10,6 +10,8 @@ from mod.dataobjects.relaxation_zone_regular import RelaxationZoneRegular
 
 
 class RelaxationZoneRegularConfigDialog(QtGui.QDialog):
+    """ A configuration dialog for a regular relaxation zone. """
+
     def __init__(self, relaxationzone=None, parent=None):
         super(RelaxationZoneRegularConfigDialog, self).__init__(parent=parent)
         self.temp_relaxationzone = relaxationzone if relaxationzone is not None else RelaxationZoneRegular()
@@ -179,6 +181,7 @@ class RelaxationZoneRegularConfigDialog(QtGui.QDialog):
         self.exec_()
 
     def on_apply(self):
+        """ Saves the current dialog data into the data structure. """
         self.temp_relaxationzone.start = float(self.start_input.text())
         self.temp_relaxationzone.duration = float(self.duration_input.text())
         self.temp_relaxationzone.waveorder = float(self.waveorder_input.text())
@@ -207,10 +210,12 @@ class RelaxationZoneRegularConfigDialog(QtGui.QDialog):
         self.accept()
 
     def on_delete(self):
+        """ Deletes the currently represented relaxation zone. """
         self.relaxationzone = None
         self.reject()
 
     def fill_data(self):
+        """ Fills the data from the data structure onto the dialog. """
         self.start_input.setText(str(self.temp_relaxationzone.start))
         self.duration_input.setText(str(self.temp_relaxationzone.duration))
         self.waveorder_input.setText(str(self.temp_relaxationzone.waveorder))

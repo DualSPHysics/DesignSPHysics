@@ -11,7 +11,6 @@ from mod.gui_tools import get_icon
 from mod.dialog_tools import info_dialog
 from mod.enums import HelpURL, ObjectType
 from mod.freecad_tools import get_fc_main_window
-from mod.stdout_tools import debug
 
 from mod.dataobjects.case import Case
 from mod.dataobjects.motion.movement import Movement
@@ -56,7 +55,7 @@ from mod.widgets.motion.wave_movement_actions import WaveMovementActions
 class MovementDialog(QtGui.QDialog):
     """ Defines a window with motion  """
 
-    def __init__(self, target_mk=None, parent=None):
+    def __init__(self, parent=None):
         super(MovementDialog, self).__init__(parent=parent)
 
         self.currently_selected_movement = None
@@ -225,6 +224,7 @@ class MovementDialog(QtGui.QDialog):
         self.exec_()
 
     def on_ok(self):
+        """ Applies the current dialog data on the data structure. """
         info_dialog(__("This will apply the motion properties to all objects with mkbound = ") + str(self.target_mk))
         if self.has_motion_selector.currentIndex() == 0:
             # True has been selected
@@ -238,6 +238,7 @@ class MovementDialog(QtGui.QDialog):
         self.accept()
 
     def on_cancel(self):
+        """ Closes the dialog rejecting it. """
         self.reject()
 
     def on_motion_change(self, index):
@@ -260,7 +261,7 @@ class MovementDialog(QtGui.QDialog):
             self.actions_groupbox.setEnabled(False)
 
     def check_movement_compatibility(self, target_movement):
-        # Wave generators are exclusive
+        """ Ensures the selected movements are compatible. """
         if isinstance(target_movement, SpecialMovement):
             self.notice_label.setText("Notice: Wave generators and file movements are exclusive. All movements are disabled when using one.")
             del self.movements_selected[:]
@@ -360,14 +361,14 @@ class MovementDialog(QtGui.QDialog):
         self.on_movement_selected(self.movement_list_table.selectedIndexes()[0].row(), None)
 
     def on_timeline_item_order_up(self, index):
-        # Reset the notice label if a valid change is made
+        """ Reacts to signal for an ordering up from a widget. """
         self.notice_label.setText("")
         movement = Case.the().info.global_movements[self.movement_list_table.selectedIndexes()[0].row()]
         movement.motion_list.insert(index - 1, movement.motion_list.pop(index))
         self.on_movement_selected(self.movement_list_table.selectedIndexes()[0].row(), None)
 
     def on_timeline_item_order_down(self, index):
-        # Reset the notice label if a valid change is made
+        """ Reacts to signal for an ordering down from a widget. """
         self.notice_label.setText("")
         movement = Case.the().info.global_movements[self.movement_list_table.selectedIndexes()[0].row()]
         movement.motion_list.insert(index + 1, movement.motion_list.pop(index))
@@ -423,7 +424,7 @@ class MovementDialog(QtGui.QDialog):
                 target_to_put.order_down.connect(self.on_timeline_item_order_down)
                 self.timeline_list_table.setCellWidget(current_row, 0, target_to_put)
 
-                if current_row is 0:
+                if current_row == 0:
                     target_to_put.disable_order_up_button()
                 elif current_row is len(self.currently_selected_movement.motion_list) - 1:
                     target_to_put.disable_order_down_button()

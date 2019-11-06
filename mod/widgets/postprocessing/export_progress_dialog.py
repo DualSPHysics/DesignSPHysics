@@ -12,7 +12,7 @@ class ExportProgressDialog(QtGui.QDialog):
 
     on_cancel = QtCore.Signal()
 
-    def __init__(self, minimum: int, maximum: int, cmd_string="", parent=None):
+    def __init__(self, minimum: int, maximum: int, parent=None):
         super().__init__(parent=parent)
 
         self.minimum = minimum

@@ -5,7 +5,6 @@ Renders the <floatings> tag of the GenCase XML.
 """
 
 from mod.template_tools import get_template_text
-from mod.stdout_tools import debug
 
 from mod.enums import FloatingDensityType
 from mod.constants import LINE_END

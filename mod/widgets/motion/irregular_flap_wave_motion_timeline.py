@@ -182,6 +182,8 @@ class IrregularFlapWaveMotionTimeline(QtGui.QWidget):
         self._init_connections()
 
     def fill_values(self, irreg_wave_gen):
+        """ Fills the value from the data structure onto the widget. """
+
         self.duration_input.setText(str(irreg_wave_gen.duration))
         self.wave_order_selector.setCurrentIndex(
             int(irreg_wave_gen.wave_order) - 1)
@@ -246,6 +248,7 @@ class IrregularFlapWaveMotionTimeline(QtGui.QWidget):
             x.textChanged.connect(self.on_change)
 
     def on_change(self):
+        """ Reacts to changes on the widget, sanitizes the input and fires an event with the resulting object. """
         self._sanitize_input()
         try:
             self.changed.emit(0, self.construct_motion_object())
@@ -253,6 +256,7 @@ class IrregularFlapWaveMotionTimeline(QtGui.QWidget):
             debug("Introduced an invalid value for a float number.")
 
     def construct_motion_object(self):
+        """ Constructs an IrregularFlapWaveGen object from the widget data. """
         return IrregularFlapWaveGen(wave_order=self.wave_order_selector.currentIndex() + 1, start=0,
                                     duration=float(self.duration_input.text()), depth=float(self.depth_input.text()),
                                     flapaxis0=[float(self.flap_axis_0_x.text()),
@@ -304,6 +308,7 @@ class IrregularFlapWaveMotionTimeline(QtGui.QWidget):
                                     saveseriewaves_xpos=str(self.saveseriewaves_xpos_input.text()))
 
     def on_delete(self):
+        """ Deletes the currently defined object. """
         self.deleted.emit(self.index, self.construct_motion_object())
 
     def _sanitize_input(self):

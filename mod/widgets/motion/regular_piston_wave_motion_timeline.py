@@ -204,6 +204,8 @@ class RegularPistonWaveMotionTimeline(QtGui.QWidget):
         self._init_connections()
 
     def fill_values(self, reg_wave_gen):
+        """ Fills the values from the data structure onto the widget. """
+
         self.duration_input.setText(str(reg_wave_gen.duration))
         self.wave_order_selector.setCurrentIndex(
             int(reg_wave_gen.wave_order) - 1)
@@ -269,6 +271,7 @@ class RegularPistonWaveMotionTimeline(QtGui.QWidget):
             x.textChanged.connect(self.on_change)
 
     def on_change(self):
+        """ Reacts to input change, sanitizing it and firing a signal with the correspondent data object. """
         self._sanitize_input()
         self._awas_enabled_handler()
         try:
@@ -301,6 +304,7 @@ class RegularPistonWaveMotionTimeline(QtGui.QWidget):
             x.setEnabled(enable_state)
 
     def construct_motion_object(self):
+        """ Constructs an RegularPistonWaveGen object from the data currently introduced on the widget. """
         _cmo_elevation = None
         if self.awas_elevation_selector.currentIndex() == 0:
             _cmo_elevation = AWASWaveOrder.FIRST_ORDER
@@ -365,6 +369,7 @@ class RegularPistonWaveMotionTimeline(QtGui.QWidget):
                                     awas=awas_object)
 
     def on_delete(self):
+        """ Deletes the currently represented motion object. """
         self.deleted.emit(self.index, self.construct_motion_object())
 
     def _sanitize_input(self):

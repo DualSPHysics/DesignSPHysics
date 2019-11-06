@@ -29,7 +29,9 @@ class WaveMovementActions(QtGui.QWidget):
         self.setLayout(self.main_layout)
 
     def on_delete(self):
+        """ Reacts to the delete button being pressed. """
         self.delete.emit(self.index)
 
     def on_use(self):
+        """ Reacts to the use checkbox being pressed. """
         self.use.emit(self.index, self.use_checkbox.isChecked())

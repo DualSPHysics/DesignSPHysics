@@ -65,24 +65,30 @@ class WaitMotionTimeline(QtGui.QWidget):
         self.order_down_button.clicked.connect(self.on_order_down)
 
     def disable_order_up_button(self):
+        """ Disables the order up button. """
         self.order_up_button.setEnabled(False)
 
     def disable_order_down_button(self):
+        """ Disables the order down button. """
         self.order_down_button.setEnabled(False)
 
     def on_order_up(self):
+        """ Reacts to the order up button being pressed. """
         self.order_up.emit(self.index)
 
     def on_order_down(self):
+        """ Reacts to the order down button being pressed. """
         self.order_down.emit(self.index)
 
     def _fill_values(self, wait_motion):
         self.time_input.setText(str(wait_motion.duration))
 
     def construct_motion_object(self):
+        """ Constructs a new WaitMotion data object from the data currently introduced on the widget. """
         return WaitMotion(duration=float(self.time_input.text()))
 
     def on_change(self):
+        """ Reacts to any input change sanitizing it and firing a signal with the appropriate data object. """
         if not self.time_input.text():
             self.time_input.setText("0")
         self.time_input.setText(self.time_input.text().replace(",", "."))
@@ -92,4 +98,5 @@ class WaitMotionTimeline(QtGui.QWidget):
             debug("Introduced an invalid value for a float number")
 
     def on_delete(self):
+        """ Deletes the currently represented data object. """
         self.deleted.emit(self.index, self.construct_motion_object())

@@ -98,6 +98,7 @@ class AccRectilinearMotionTimeline(QtGui.QWidget):
         self._init_connections()
 
     def fill_values(self, acc_rect_motion):
+        """ Fills the values from the data structure for the dialog. """
         self.x_input.setText(str(acc_rect_motion.velocity[0]))
         self.y_input.setText(str(acc_rect_motion.velocity[1]))
         self.z_input.setText(str(acc_rect_motion.velocity[2]))
@@ -119,18 +120,23 @@ class AccRectilinearMotionTimeline(QtGui.QWidget):
         self.order_down_button.clicked.connect(self.on_order_down)
 
     def disable_order_up_button(self):
+        """ Disables the order up button. """
         self.order_up_button.setEnabled(False)
 
     def disable_order_down_button(self):
+        """ Disables the order down button. """
         self.order_down_button.setEnabled(False)
 
     def on_order_up(self):
+        """ Defines the behaviour for the order up button. """
         self.order_up.emit(self.index)
 
     def on_order_down(self):
+        """ Defines the behaviour for the order down button. """
         self.order_down.emit(self.index)
 
     def on_change(self):
+        """ Reacts to data changing and sanitizes the input data. """
         self._sanitize_input()
         try:
             self.changed.emit(self.index, self.construct_motion_object())
@@ -138,6 +144,7 @@ class AccRectilinearMotionTimeline(QtGui.QWidget):
             debug("Introduced an invalid value for a float number.")
 
     def construct_motion_object(self):
+        """ Constructs an AccRectMotion object with the data on the widget. """
         return AccRectMotion(
             velocity=[float(self.x_input.text()),
                       float(self.y_input.text()),
@@ -148,9 +155,11 @@ class AccRectilinearMotionTimeline(QtGui.QWidget):
             duration=float(self.time_input.text()))
 
     def on_delete(self):
+        """ Deletes the object represented on the widget. """
         self.deleted.emit(self.index, self.construct_motion_object())
 
     def _sanitize_input(self):
+        """ Sanitizes the input data and replaces wrong characters. """
         if not self.x_input.text():
             self.x_input.setText("0")
         if not self.y_input.text():

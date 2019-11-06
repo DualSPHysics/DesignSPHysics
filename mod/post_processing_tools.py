@@ -10,7 +10,6 @@ from mod.translation_tools import __
 from mod.dialog_tools import error_dialog, info_dialog
 from mod.freecad_tools import get_fc_main_window
 from mod.file_tools import get_total_exported_parts_from_disk, save_measuretool_info
-from mod.stdout_tools import debug
 
 from mod.widgets.postprocessing.export_progress_dialog import ExportProgressDialog
 

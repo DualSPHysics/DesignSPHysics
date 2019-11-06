@@ -2,9 +2,9 @@
 # -*- coding: utf-8 -*-
 """DesignSPHysics Add STL Dialog. """
 
-from PySide import QtCore, QtGui
-
 from uuid import uuid4
+
+from PySide import QtCore, QtGui
 
 from mod.file_tools import import_geo
 from mod.translation_tools import __
@@ -12,6 +12,7 @@ from mod.dialog_tools import error_dialog
 from mod.freecad_tools import get_fc_main_window
 
 from mod.dataobjects.case import Case
+
 
 class AddGEODialog(QtGui.QDialog):
     """ A dialog that shows option to import a geometry passed as parameter """

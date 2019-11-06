@@ -5,7 +5,6 @@
 from PySide import QtCore, QtGui
 
 from mod.translation_tools import __
-from mod.stdout_tools import debug
 
 
 class RunDialog(QtGui.QDialog):

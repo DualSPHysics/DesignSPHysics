@@ -100,6 +100,7 @@ class RectSinuMotionTimeline(QtGui.QWidget):
         self._init_connections()
 
     def fill_values(self, rect_sinu_motion):
+        """ Fills the values from the data structure onto the widget. """
         self.freq_x_input.setText(str(rect_sinu_motion.freq[0]))
         self.freq_y_input.setText(str(rect_sinu_motion.freq[1]))
         self.freq_z_input.setText(str(rect_sinu_motion.freq[2]))
@@ -127,18 +128,23 @@ class RectSinuMotionTimeline(QtGui.QWidget):
         self.order_down_button.clicked.connect(self.on_order_down)
 
     def disable_order_up_button(self):
+        """ Disables the order up button. """
         self.order_up_button.setEnabled(False)
 
     def disable_order_down_button(self):
+        """ Disables the order down button. """
         self.order_down_button.setEnabled(False)
 
     def on_order_up(self):
+        """ Reacts to the order up button being pressed. """
         self.order_up.emit(self.index)
 
     def on_order_down(self):
+        """ Reacts to the order down button being pressed. """
         self.order_down.emit(self.index)
 
     def on_change(self):
+        """ Reacts to any input changes, sanitizes it and fires a signal with the corresponding data object. """
         self._sanitize_input()
         try:
             self.changed.emit(self.index, self.construct_motion_object())
@@ -146,6 +152,7 @@ class RectSinuMotionTimeline(QtGui.QWidget):
             debug("Introduced an invalid value for a float number.")
 
     def construct_motion_object(self):
+        """ Constructs a RectSinuMotion object from the values in the widget. """
         return RectSinuMotion(
             phase=[float(self.phase_x_input.text()),
                    float(self.phase_y_input.text()),
@@ -159,6 +166,7 @@ class RectSinuMotionTimeline(QtGui.QWidget):
             duration=float(self.time_input.text()))
 
     def on_delete(self):
+        """ Deletes the currently represented object. """
         self.deleted.emit(self.index, self.construct_motion_object())
 
     def _sanitize_input(self):

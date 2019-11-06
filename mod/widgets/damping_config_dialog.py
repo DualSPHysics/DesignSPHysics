@@ -107,6 +107,7 @@ class DampingConfigDialog(QtGui.QDialog):
 
     # Window logic
     def on_ok(self):
+        """ Saves damping zone data to the data structure. """
         self.case.get_damping_zone(self.object_key).enabled = self.enabled_checkbox.isChecked()
         self.case.get_damping_zone(self.object_key).overlimit = float(self.overlimit_input.text())
         self.case.get_damping_zone(self.object_key).redumax = float(self.redumax_input.text())
@@ -133,14 +134,17 @@ class DampingConfigDialog(QtGui.QDialog):
         self.accept()
 
     def on_cancel(self):
+        """ Closes the window with a rejection when cancel is pressed. """
         self.reject()
 
     def on_enable_chk(self, state):
+        """ Reacts to the enable checkbox enabling the main group of the window. """
         if state == QtCore.Qt.Checked:
             self.main_groupbox.setEnabled(True)
         else:
             self.main_groupbox.setEnabled(False)
 
     def on_value_change(self):
+        """ Reacts to a value change and reformats wrong introduced and invalid characters. """
         for x in [self.overlimit_input, self.redumax_input, self.limitmin_input_x, self.limitmin_input_y, self.limitmin_input_z, self.limitmax_input_x, self.limitmax_input_y, self.limitmax_input_z]:
             x.setText(x.text().replace(",", "."))

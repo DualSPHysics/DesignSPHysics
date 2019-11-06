@@ -25,7 +25,7 @@ jobs=8
 load-plugins=
 
 # Pickle collected data for later comparisons.
-persistent=yes
+persistent=no
 
 # Specify a configuration file.
 #rcfile=
@@ -165,7 +165,7 @@ single-line-if-stmt=no
 [MISCELLANEOUS]
 
 # List of note tags to take in consideration, separated by a comma.
-notes=FIXME,XXX,TODO
+notes=
 
 
 [SIMILARITIES]

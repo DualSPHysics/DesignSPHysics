@@ -5,8 +5,6 @@
 from os.path import isdir, isfile, dirname
 from pathlib import Path
 
-from mod.stdout_tools import debug
-
 
 class CaseInformation():
     """ Stores miscellaneous information related with the case. """

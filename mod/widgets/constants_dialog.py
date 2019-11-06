@@ -410,54 +410,50 @@ class ConstantsDialog(QtGui.QDialog):
         self.resize(600, 400)
         self.exec_()
 
-    # Controls if user selected auto HSWL or not enabling/disablen HSWL custom
     def on_hswlauto_check(self):
-        # value introduction
+        """ Reacts to the user selectin auto HSWL. """
         if self.hswlauto_chk.isChecked():
             self.hswl_input.setEnabled(False)
         else:
             self.hswl_input.setEnabled(True)
 
     def on_help_focus(self, help_text):
+        """ Reacts to focus signal setting a help text. """
         self.help_window.setText(help_text)
 
-    # Controls if user selected auto speedsystem or not enabling/disablen
     def on_speedsystemauto_check(self):
-        # speedsystem custom value introduction
+        """ Reacts to the speedsystemauto checkbox enabling/disabling its input. """
         if self.speedsystemauto_chk.isChecked():
             self.speedsystem_input.setEnabled(False)
         else:
             self.speedsystem_input.setEnabled(True)
 
-    def on_speedsoundauto_check(self):  # Controls if user selected auto speedsound or not enabling/disablen speedsound
-        # custom value introduction
+    def on_speedsoundauto_check(self):
+        """ Reacts to the speedsoundauto checkbos enabling/disabling its inputs. """
         if self.speedsoundauto_chk.isChecked():
             self.speedsound_input.setEnabled(False)
         else:
             self.speedsound_input.setEnabled(True)
 
-    # Controls if user selected auto h or not enabling/disablen h custom value introduction
     def on_hauto_check(self):
+        """ Reacts to the hauto checkbox being pressed enabling/disabling its inputs. """
         if self.hauto_chk.isChecked():
             self.h_input.setEnabled(False)
         else:
             self.h_input.setEnabled(True)
 
-    # Controls if user selected auto b or not enabling/disablen b custom value introduction
     def on_bauto_check(self):
+        """ Reacts to the bauto checkbox being pressed enabling/disabling its inputs. """
         if self.bauto_chk.isChecked():
             self.b_input.setEnabled(False)
         else:
             self.b_input.setEnabled(True)
 
     def on_ok(self):
+        """ Applies the current dialog data onto the main data structure. """
         Case.the().constants.lattice_bound = self.lattice_input.currentIndex() + 1
         Case.the().constants.lattice_fluid = self.lattice2_input.currentIndex() + 1
-        Case.the().constants.gravity = [
-            float(self.gravityx_input.text()),
-            float(self.gravityy_input.text()),
-            float(self.gravityz_input.text())
-        ]
+        Case.the().constants.gravity = [float(self.gravityx_input.text()), float(self.gravityy_input.text()), float(self.gravityz_input.text())]
         Case.the().constants.rhop0 = float(self.rhop0_input.text())
         Case.the().constants.hswl = float(self.hswl_input.text())
         Case.the().constants.hswl_auto = self.hswlauto_chk.isChecked()
@@ -477,5 +473,6 @@ class ConstantsDialog(QtGui.QDialog):
         self.accept()
 
     def on_cancel(self):
+        """ Closes the dialog rejecting it. """
         log("Constants not changed")
         self.reject()

@@ -13,6 +13,7 @@ from mod.dataobjects.relaxation_zone_uniform import RelaxationZoneUniform
 
 
 class RelaxationZoneUniformConfigDialog(QtGui.QDialog):
+    """ A configuration dialog for a uniform relaxation zone. """
     def __init__(self, relaxationzone=None, parent=None):
         super(RelaxationZoneUniformConfigDialog, self).__init__(parent=parent)
         self.temp_relaxationzone = relaxationzone if relaxationzone is not None else RelaxationZoneUniform()
@@ -137,6 +138,7 @@ class RelaxationZoneUniformConfigDialog(QtGui.QDialog):
         self.exec_()
 
     def on_apply(self):
+        """ Applies the data from the dialog to the data structure. """
         self.temp_relaxationzone.start = float(self.start_input.text())
         self.temp_relaxationzone.duration = float(self.duration_input.text())
         self.temp_relaxationzone.domainbox_point = [
@@ -161,19 +163,23 @@ class RelaxationZoneUniformConfigDialog(QtGui.QDialog):
         self.accept()
 
     def on_delete(self):
+        """ Deletes the currently represented relaxation zone. """
         self.relaxationzone = None
         self.reject()
 
     def on_velocity_times(self):
+        """ Reacts to the velocity times button being pressed to configure the velocity times. """
         result = self.velocity_times_dialog.exec_()
         if result == QtGui.QDialog.Accepted:
             self.velocity_times = self.velocity_times_dialog.velocity_times
 
     def on_velocity_check(self):
+        """ Reacts to the velocity checkbox enabling/disabling velocity times and input. """
         self.velocity_times_button.setEnabled(not self.use_velocity_check.isChecked())
         self.velocity_input.setEnabled(self.use_velocity_check.isChecked())
 
     def fill_data(self):
+        """ Fills the data from the data structure onto the dialog. """
         self.start_input.setText(str(self.temp_relaxationzone.start))
         self.duration_input.setText(str(self.temp_relaxationzone.duration))
         self.domainbox_point_x.setText(str(self.temp_relaxationzone.domainbox_point[0]))

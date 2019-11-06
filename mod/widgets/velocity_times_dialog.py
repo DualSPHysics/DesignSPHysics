@@ -35,14 +35,17 @@ class VelocityTimesDialog(QtGui.QDialog):
         self.fill_data()
 
     def fill_data(self):
+        """ Fills the data from the data structure onto the dialog. """
         for row, value in enumerate(self.velocity_times):
             self.table.setItem(row, 0, QtGui.QTableWidgetItem(str(value[0])))
             self.table.setItem(row, 1, QtGui.QTableWidgetItem(str(value[1])))
 
     def on_cancel(self):
+        """ Closes the dialog rejecting it. """
         self.reject()
 
     def on_ok(self):
+        """ Saves the dialog data onto the data structure. """
         self.velocity_times = list()
         for i in range(self.table.rowCount()):
             table_item_time: QtGui.QTableWidgetItem = self.table.item(i, 0)
