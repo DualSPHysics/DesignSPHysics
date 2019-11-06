@@ -12,13 +12,14 @@ class ExportProgressDialog(QtGui.QDialog):
 
     on_cancel = QtCore.Signal()
 
-    def __init__(self, minimum: int, maximum: int, parent=None):
+    def __init__(self, minimum: int, maximum: int, cmd_string="", parent=None):
         super().__init__(parent=parent)
 
         self.minimum = minimum
         self.maximum = maximum
 
         self.setModal(False)
+        self.setMinimumSize(400, 100)
         self.setWindowTitle(__("Exporting: {}%").format("0"))
         self.export_dialog_layout = QtGui.QVBoxLayout()
 
@@ -34,6 +35,7 @@ class ExportProgressDialog(QtGui.QDialog):
         self.export_button_layout.addWidget(self.export_button_cancel)
 
         self.export_dialog_layout.addLayout(self.export_progbar_layout)
+        self.export_dialog_layout.addStretch(1)
         self.export_dialog_layout.addLayout(self.export_button_layout)
 
         self.export_button_cancel.clicked.connect(self.on_cancel.emit)

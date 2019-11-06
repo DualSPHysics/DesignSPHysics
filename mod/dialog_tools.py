@@ -6,6 +6,7 @@ Contains general use standard dialogs. """
 
 from PySide import QtGui
 
+
 def warning_dialog(warn_text, detailed_text=None):
     """Spawns a warning dialog with the text and details passed."""
 
@@ -32,10 +33,11 @@ def info_dialog(info_text, detailed_text=None):
     """Spawns an info dialog with the text and details passed."""
 
     info_messagebox = QtGui.QMessageBox()
-    info_messagebox.setText(info_text)
+    # FIXME: Setting tab characters is a hacky fix to enforce minimum size. However we should subclass a dialog and make a custom MessageBox.
+    info_messagebox.setText("{}\t\t\t\t\t".format(info_text.replace("\\n", "\n")))
     info_messagebox.setIcon(QtGui.QMessageBox.Information)
     if detailed_text is not None:
-        info_messagebox.setDetailedText(str(detailed_text))
+        info_messagebox.setDetailedText(str(detailed_text).replace("\\n", "\n"))
     info_messagebox.exec_()
 
 

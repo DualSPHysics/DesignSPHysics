@@ -58,11 +58,12 @@ def partvtk_export(options, case, post_processing_widget) -> None:
         """ Closes and displays info/error about the process. """
         post_processing_widget.adapt_to_export_finished()
         export_dialog.accept()
+        detailed_text = "Command: {} {}\n\n{}".format(case.executable_paths.partvtk4, " ".join(executable_parameters), case.info.current_output)
 
         if not exit_code:
-            info_dialog(info_text=__("PartVTK finished successfully"), detailed_text=case.info.current_output)
+            info_dialog(info_text=__("PartVTK finished successfully"), detailed_text=detailed_text)
         else:
-            error_dialog(__("There was an error on the post-processing. Show details to view the errors."), detailed_text=case.info.current_output)
+            error_dialog(__("There was an error on the post-processing. Show details to view the errors."), detailed_text=detailed_text)
 
         if options["open_paraview"]:
             subprocess.Popen([case.executable_paths.paraview, "--data={}\\{}_..{}".format(case.get_out_folder_path(), options["file_name"], save_extension)], stdout=subprocess.PIPE)
@@ -71,7 +72,6 @@ def partvtk_export(options, case, post_processing_widget) -> None:
     export_process = QtCore.QProcess(get_fc_main_window())
     export_process.finished.connect(on_export_finished)
     export_process.readyReadStandardOutput.connect(on_stdout_ready)
-    debug("Executing -> {} {}".format(case.executable_paths.partvtk4, " ".join(executable_parameters)))
     export_process.start(case.executable_paths.partvtk4, executable_parameters)
 
 
@@ -114,11 +114,12 @@ def floatinginfo_export(options, case, post_processing_widget) -> None:
         """ Closes and displays info/error about the process. """
         post_processing_widget.adapt_to_export_finished()
         export_dialog.accept()
+        detailed_text = "Command: {} {}\n\n{}".format(case.executable_paths.floatinginfo, " ".join(executable_parameters), case.info.current_output)
 
         if not exit_code:
-            info_dialog(info_text=__("FloatingInfo finished successfully"), detailed_text=case.info.current_output)
+            info_dialog(info_text=__("FloatingInfo finished successfully"), detailed_text=detailed_text)
         else:
-            error_dialog(__("There was an error on the post-processing. Show details to view the errors."), detailed_text=case.info.current_output)
+            error_dialog(__("There was an error on the post-processing. Show details to view the errors."), detailed_text=detailed_text)
 
     export_dialog.on_cancel.connect(on_cancel)
     export_process = QtCore.QProcess(get_fc_main_window())
@@ -168,11 +169,12 @@ def computeforces_export(options, case, post_processing_widget) -> None:
         """ Closes and displays info/error about the process. """
         post_processing_widget.adapt_to_export_finished()
         export_dialog.accept()
+        detailed_text = "Command: {} {}\n\n{}".format(case.executable_paths.computeforces, " ".join(executable_parameters), case.info.current_output)
 
         if not exit_code:
-            info_dialog(info_text=__("ComputeForces finished successfully"), detailed_text=case.info.current_output)
+            info_dialog(info_text=__("ComputeForces finished successfully"), detailed_text=detailed_text)
         else:
-            error_dialog(__("There was an error on the post-processing. Show details to view the errors."), detailed_text=case.info.current_output)
+            error_dialog(__("There was an error on the post-processing. Show details to view the errors."), detailed_text=detailed_text)
 
     export_dialog.on_cancel.connect(on_cancel)
     export_process = QtCore.QProcess(get_fc_main_window())
@@ -223,11 +225,12 @@ def measuretool_export(options, case, post_processing_widget) -> None:
         """ Closes and displays info/error about the process. """
         post_processing_widget.adapt_to_export_finished()
         export_dialog.accept()
+        detailed_text = "Command: {} {}\n\n{}".format(case.executable_paths.measuretool, " ".join(executable_parameters), case.info.current_output)
 
         if not exit_code:
-            info_dialog(info_text=__("MeasureTool finished successfully."), detailed_text=case.info.current_output)
+            info_dialog(info_text=__("MeasureTool finished successfully."), detailed_text=detailed_text)
         else:
-            error_dialog(__("There was an error on the post-processing. Show details to view the errors."), detailed_text=case.info.current_output)
+            error_dialog(__("There was an error on the post-processing. Show details to view the errors."), detailed_text=detailed_text)
 
     export_dialog.on_cancel.connect(on_cancel)
     export_process = QtCore.QProcess(get_fc_main_window())
@@ -272,11 +275,12 @@ def isosurface_export(options, case, post_processing_widget) -> None:
         """ Closes and displays info/error about the process. """
         post_processing_widget.adapt_to_export_finished()
         export_dialog.accept()
+        detailed_text = "Command: {} {}\n\n{}".format(case.executable_paths.isosurface, " ".join(executable_parameters), case.info.current_output)
 
         if not exit_code:
-            info_dialog(info_text=__("IsoSurface finished successfully"), detailed_text=case.info.current_output)
+            info_dialog(info_text=__("IsoSurface finished successfully"), detailed_text=detailed_text)
         else:
-            error_dialog(__("There was an error on the post-processing. Show details to view the errors."), detailed_text=case.info.current_output)
+            error_dialog(__("There was an error on the post-processing. Show details to view the errors."), detailed_text=detailed_text)
 
         if options["open_paraview"]:
             subprocess.Popen([case.executable_paths.paraview, "--data={}\\{}_..{}".format(case.path + "\\" + case.name + "_out", options["file_name"], "vtk")], stdout=subprocess.PIPE)
@@ -325,11 +329,12 @@ def flowtool_export(options, case, post_processing_widget) -> None:
         """ Closes and displays info/error about the process. """
         post_processing_widget.adapt_to_export_finished()
         export_dialog.accept()
+        detailed_text = "Command: {} {}\n\n{}".format(case.executable_paths.flowtool, " ".join(executable_parameters), case.info.current_output)
 
         if not exit_code:
-            info_dialog(info_text=__("FlowTool finished successfully"), detailed_text=case.info.current_output)
+            info_dialog(info_text=__("FlowTool finished successfully"), detailed_text=detailed_text)
         else:
-            error_dialog(__("There was an error on the post-processing. Show details to view the errors."), detailed_text=case.info.current_output)
+            error_dialog(__("There was an error on the post-processing. Show details to view the errors."), detailed_text=detailed_text)
 
     export_dialog.on_cancel.connect(on_cancel)
     export_process = QtCore.QProcess(get_fc_main_window())
