@@ -366,7 +366,8 @@ class ChronoConfigDialog(QtGui.QDialog):
 
     def link_hinge_edit(self, link_hinge_id):
         """ Edit a link hinge element """
-        LinkHingeEdit(link_hinge_id=link_hinge_id, bodies_widgets=self.chrono_object_options_widgets, parent=get_fc_main_window())
+        selected_chrono_object_widgets = list(filter(lambda x: x.object_check.isChecked(), self.chrono_object_options_widgets))
+        LinkHingeEdit(link_hinge_id=link_hinge_id, bodies_widgets=selected_chrono_object_widgets, parent=get_fc_main_window())
         self.refresh_link_hinge()
 
     def on_link_linearspring_add(self):
@@ -387,7 +388,8 @@ class ChronoConfigDialog(QtGui.QDialog):
 
     def link_linearspring_edit(self, link_linearspring_id):
         """ Edit a link linearspring element """
-        LinkLinearspringEdit(link_linearspring_id=link_linearspring_id, bodies_widgets=self.chrono_object_options_widgets, parent=get_fc_main_window())
+        selected_chrono_object_widgets = list(filter(lambda x: x.object_check.isChecked(), self.chrono_object_options_widgets))
+        LinkLinearspringEdit(link_linearspring_id=link_linearspring_id, bodies_widgets=selected_chrono_object_widgets, parent=get_fc_main_window())
         self.refresh_link_linearspring()
 
     def on_link_spheric_add(self):
@@ -408,7 +410,8 @@ class ChronoConfigDialog(QtGui.QDialog):
 
     def link_spheric_edit(self, link_spheric_id):
         """ Edit a link spheric element """
-        LinkSphericEdit(link_spheric_id=link_spheric_id, bodies_widgets=self.chrono_object_options_widgets, parent=get_fc_main_window())
+        selected_chrono_object_widgets = list(filter(lambda x: x.object_check.isChecked(), self.chrono_object_options_widgets))
+        LinkSphericEdit(link_spheric_id=link_spheric_id, bodies_widgets=selected_chrono_object_widgets, parent=get_fc_main_window())
         self.refresh_link_spheric()
 
     def on_link_pointline_add(self):
@@ -429,7 +432,8 @@ class ChronoConfigDialog(QtGui.QDialog):
 
     def link_pointline_edit(self, link_pointline_id):
         """ Edit a link pointline element """
-        LinkPointlineEdit(link_pointline_id=link_pointline_id, bodies_widgets=self.chrono_object_options_widgets, parent=get_fc_main_window())
+        selected_chrono_object_widgets = list(filter(lambda x: x.object_check.isChecked(), self.chrono_object_options_widgets))
+        LinkPointlineEdit(link_pointline_id=link_pointline_id, bodies_widgets=selected_chrono_object_widgets, parent=get_fc_main_window())
         self.refresh_link_pointline()
 
     def on_cancel(self):
@@ -442,10 +446,10 @@ class ChronoConfigDialog(QtGui.QDialog):
         # Clean the chrono object list
         self.case.chrono.objects = list()
 
-        # FIXME: Save only selected objects. This is a bit wrong
-
         # Checks the chrono objects and options for save
         for elem in self.chrono_object_options_widgets:
+            if not elem.object_check.isChecked():
+                continue
             chrono_object = ChronoObject()
             chrono_object.id = elem.key
             chrono_object.name = elem.object_name
