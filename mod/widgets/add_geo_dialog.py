@@ -4,6 +4,8 @@
 
 from PySide import QtCore, QtGui
 
+from uuid import uuid4
+
 from mod.file_tools import import_geo
 from mod.translation_tools import __
 from mod.dialog_tools import error_dialog
@@ -60,7 +62,7 @@ class AddGEODialog(QtGui.QDialog):
         # Import object name
         self.geo_objname_layout = QtGui.QHBoxLayout()
         self.geo_objname_label = QtGui.QLabel(__("Import object name: "))
-        self.geo_objname_text = QtGui.QLineEdit("ImportedGEO")
+        self.geo_objname_text = QtGui.QLineEdit("GEO-{}".format(uuid4()))
         for x in [self.geo_objname_label, self.geo_objname_text]:
             self.geo_objname_layout.addWidget(x)
         # End object name
