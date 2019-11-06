@@ -48,7 +48,9 @@ from mod.dataobjects.simulation_object import SimulationObject
 
 def get_total_exported_parts_from_disk(out_folder_path) -> int:
     """ Gets the integer for the part with largest number on the out folder. """
-    return int(re.search("Part_(.*).bi4", glob("{}/Part_*.bi4".format(out_folder_path))).group(1))
+    files_glob = glob("{}/Part_*.bi4".format(out_folder_path))
+    files_glob.sort()
+    return int(re.search("Part_(.*).bi4", files_glob[-1]).group(1))
 
 
 def load_case(load_path: str) -> "Case":
