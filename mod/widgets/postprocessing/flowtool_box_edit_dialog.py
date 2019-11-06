@@ -125,9 +125,9 @@ class FlowToolBoxEditDialog(QtGui.QDialog):
 
         self.box_edit_point_h_layout = QtGui.QHBoxLayout()
         self.box_edit_point_h_label = QtGui.QLabel(__("Point H (X, Y, Z)"))
-        self.box_edit_point_h_x = QtGui.QLineEdit(str(self.target_box.point8[0]))
-        self.box_edit_point_h_y = QtGui.QLineEdit(str(self.target_box.point8[1]))
-        self.box_edit_point_h_z = QtGui.QLineEdit(str(self.target_box.point8[2]))
+        self.box_edit_point_h_x = QtGui.QLineEdit(str(target_box.point8[0]))
+        self.box_edit_point_h_y = QtGui.QLineEdit(str(target_box.point8[1]))
+        self.box_edit_point_h_z = QtGui.QLineEdit(str(target_box.point8[2]))
         self.box_edit_point_h_layout.addWidget(self.box_edit_point_h_label)
         self.box_edit_point_h_layout.addWidget(self.box_edit_point_h_x)
         self.box_edit_point_h_layout.addWidget(self.box_edit_point_h_y)
@@ -158,7 +158,7 @@ class FlowToolBoxEditDialog(QtGui.QDialog):
         self.box_edit_layout.addLayout(self.box_edit_points_layout)
         self.box_edit_layout.addLayout(self.box_edit_button_layout)
 
-        self.self.setLayout(self.box_edit_layout)
+        self.setLayout(self.box_edit_layout)
 
         self.box_edit_button_ok.clicked.connect(self.on_ok)
         self.box_edit_button_cancel.clicked.connect(self.on_cancel)

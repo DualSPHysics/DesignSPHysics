@@ -115,8 +115,8 @@ class FlowToolDialog(QtGui.QDialog):
             to_add_deletebutton = QtGui.QPushButton("Delete")
             to_add_layout.addWidget(to_add_editbutton)
             to_add_layout.addWidget(to_add_deletebutton)
-            to_add_editbutton.clicked.connect(lambda b=box.id: self.box_edit(b))
-            to_add_deletebutton.clicked.connect(lambda b=box.id: self.box_delete(b))
+            to_add_editbutton.clicked.connect(lambda _=False, b=box.id: self.box_edit(b))
+            to_add_deletebutton.clicked.connect(lambda _=False, b=box.id: self.box_delete(b))
             self.fltool_boxlist_layout.addLayout(to_add_layout)
 
     def on_fltool_addbox(self):
