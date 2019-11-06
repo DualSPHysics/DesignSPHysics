@@ -1,0 +1,7 @@
+            <!-- Input label: {label} -->
+            <accinput>
+                <mkfluid value="{mkfluid}" comment="Mk-Fluid of selected particles" />
+                <acccentre x="{acccentre[0]}" y="{acccentre[1]}" z="{acccentre[2]}" comment="Center of acceleration" />
+                <globalgravity value="{globalgravity_int}" comment="Global gravity enabled (1) or disabled (0)" />
+                <datafile value="{datafile}" comment="File with acceleration data" />
+            </accinput>

@@ -1,0 +1,5 @@
+            <inout reuseids="{reuseids}" resizetime="{resizetime}">
+                <userefilling value="{userefilling}" comment="Use advanced refilling algorithm but slower. It is necessary when outflow becomes inflow (default=false)" />
+                <determlimit value="{determlimit}" comment="Use 1e-3 for first_order or 1e+3 for zeroth_order (default=1e+3)" />    
+{each_zone}
+            </inout>

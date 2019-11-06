@@ -1,0 +1,5 @@
+                <link_spheric idbody1="{idbody1}" {idbody2_template}>
+                    <rotpoint x="{rotpoint[0]}" y="{rotpoint[1]}" z="{rotpoint[2]}" comment="Point for rotation" />
+                    <stiffness value="{stiffness}" comment="Torsional stiffness [N/rad]" />
+                    <damping value="{damping}" comment="Torsional damping [-]" />
+                </link_spheric>

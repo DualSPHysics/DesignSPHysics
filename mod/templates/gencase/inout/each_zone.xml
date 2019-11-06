@@ -1,0 +1,13 @@
+                <inoutzone>
+                    <convertfluid value="{convertfluid}" comment="Converts fluid in inlet/outlet area (default=true)" />
+                    <layers value="{layers}" comment="Number of inlet/outlet particle layers" />
+{zone}
+                    <imposevelocity mode="{velocity_info[velocity_type]}" comment="Imposed velocity 0:fixed value, 1:variable value, 2:Extrapolated value (default=0)">
+{imposevelocity_param}
+                    </imposevelocity>
+                    <imposerhop mode="{density_info[density_type]}" comment="Outlet rhop 0:Imposed fixed value, 1:Hydrostatic, 2:Extrapolated from ghost nodes (default=0)" />
+                    <rhop value="{density_info[value]}" comment="Characteristic inlet rhop (default=1000)" units_comment="kg/m^2" />
+                    <imposezsurf mode="{elevation_info[elevation_type]}" comment="Inlet Z-surface 0:Imposed fixed value, 1:Imposed variable value, 2:Calculated from fluid domain (default=0)">
+{zsurf_param}
+                    </imposezsurf>
+                </inoutzone>

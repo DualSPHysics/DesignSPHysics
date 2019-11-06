@@ -1,0 +1,5 @@
+                <mvrotfile id="1" duration="{duration}" anglesunits="{anglesunits}">
+                    <file name="{filename}" />
+                    <axisp1 x="{axisp1[0]}" y="{axisp1[1]}" z="{axisp1[2]}" />
+                    <axisp2 x="{axisp2[0]}" y="{axisp2[1]}" z="{axisp2[2]}" />
+                </mvrotfile>

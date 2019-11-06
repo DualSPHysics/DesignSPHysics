@@ -1,0 +1,6 @@
+                <link_hinge idbody1="{idbody1}" idbody2="{idbody2}">
+                    <rotpoint x="{rotpoint[0]}" y="{rotpoint[1]}" z="{rotpoint[2]}" comment="Point for rotation" />
+                    <rotvector x="{rotvector[0]}" y="{rotvector[1]}" z="{rotvector[2]}" comment="Vector direction for rotation" />
+                    <stiffness value="{stiffness}" comment="Torsional stiffness [N/rad]" />
+                    <damping value="{damping}" comment="Torsional damping [-]" />
+                </link_hinge>

@@ -4,7 +4,7 @@ DesignSPHysics is currently under development and not ready for consumer use. It
 This document was updated at 31 of July, 2018. It is probable that the project has been modified since then and this document does not contain correct information.
 
 # How to contribute
-Theres 2 main ways to contribute: Opening issues and contributing to the code. Below you can find information about the 2.
+There's 2 main ways to contribute: Opening issues and contributing to the code. Below you can find information about the 2.
 
 ## Opening issues
 You can open issues in [this github repository](https://github.com/DualSPHysics/DesignSPHysics) to report errors or suggest new features or how to improve them. Keep in mind that there are a lot of things left to do and probably most of the missing features are coming eventually. The most useful feedback right now is error reporting and fixing.
@@ -12,7 +12,7 @@ You can open issues in [this github repository](https://github.com/DualSPHysics/
 ## Contributing to the code
 To contribute to the project please check the following section (Project Structure) as it contains a brief description about how the project is structure and where to find the related code for each UI element.
 
-To submit code please make your changes onto the `develop` branch and open a pull request. The current mantainer of the code will check it as soon as possible to merge the change onto the branch.
+To submit code please make your changes onto the `develop` branch and open a pull request. The current maintainer of the code will check it as soon as possible to merge the change onto the branch.
 
 # Project structure
 ## Branches
@@ -25,18 +25,15 @@ This is a brief description on how the project files are structure and what each
 - `DesignSPHysics.FCMacro`: Macro file designed to use with FreeCAD. It only includes the DesignSPHysics FreeCAD module installed on the system, if there is any.
 - `DesignSPHysics.py`: Main code file. From here all the data structures and GUI elements are created. 
 - `build-release.*`: Scripts to automate installer creation for release.
-- `ds_modules`: DesignSPHysics modules. It contains all the code used by `DesignSPHysics.py`.
-    - `enum`: Enum support for python 2.7. Used by the `stl` module.
-    - `python_utils`: A set of python utilities. Used by the `stl` module.
-    - `stl`: Module to manage STL files.
+- `mod`: DesignSPHysics modules. It contains all the code used by `DesignSPHysics.py`.
     - `lang`: Language files and translations.
     - `templates`: Template files used in DesignSPHysics to create batch files, represent information on screen etc.
-    - `dsphwidgets.py`: Contains classes extending visual components to use in the interface.
+    - `widgets.py`: Contains classes extending visual components to use in the interface.
     - `execution_parameters.py`: Contains data classes to structure execution parameters for DualSPHysics
-    - `properties.py`: Contains data classes to structure different DualSPHysics properties, parameters and configurations
-    - `propenums.py`: Contains enums to manage property data with names.
-    - `utils.py`: Contains helper functions for all of the DesignSPHysics utilities.
-    - `guiutils.py`: Similar to `utils.py` but containing only utilities related with user interface operations.
+    - `dataobjects.py`: Contains data classes to structure different DualSPHysics properties, parameters and configurations
+    - `enums.py`: Contains enums to manage property data with names.
+    - `file_tools.py`: Contains helper functions for all of the DesignSPHysics utilities.
+    - `gui_tools.py`: Similar to `file_tools.py` but containing only utilities related with user interface operations.
     - `xmlimporter.py`: Code related with importing existing DualSPHysics cases to DesignSPHysics (uses lib `xmltodict.py`)
 - `images`: Images and icons used in the user interface
 - `dualsphysics/bin`: DualSPHysics executables.
@@ -52,7 +49,7 @@ For example, when the "Load Case" button is pressed, the function binded to it g
 
 To implement a new UI component with a feature just create, for example, a button and a function to execute when pressed.
 
-The main data structure is a Python Dictionary with different data attached to its keys. To see a reference to the strucutre, check the `get_default_data()` function in `ds_modules.utils`.
+The main data structure is a Python Dictionary with different data attached to its keys. To see a reference to the structure, check the `get_default_data()` function in `mod.file_tools`.
 
 # Need more help?
 If you need help on how to contribute please contact one of the following people

@@ -1,0 +1,5 @@
+                    <veldata>
+                        <filevelx value="{filevelx}" comment="File name with X velocity" />
+                        <posy value="{posy}" comment="Position Y of data" />
+                        <timedataini value="{timedataini}" comment="Time offset (def=0)" />
+                    </veldata>

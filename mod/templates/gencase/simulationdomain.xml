@@ -1,0 +1,4 @@
+            <simulationdomain comment="Defines domain of simulation (default=Uses minimum and maximum position of the generated particles)" >
+                <posmin x="{posmin_x}" y="{posmin_y}" z="{posmin_z}" comment="e.g.: x=0.5, y=default-1, z=default-10%" />
+                <posmax x="{posmax_x}" y="{posmax_y}" z="{posmax_z}"/>
+            </simulationdomain>

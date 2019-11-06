@@ -1,0 +1,12 @@
+                <link_linearspring idbody1="{idbody1}" idbody2="{idbody2}">
+                    <point_fb1 x="{point_fb1[0]}" y="{point_fb1[1]}" z="{point_fb1[2]}" comment="Point in body 1" />
+                    <point_fb2 x="{point_fb2[0]}" y="{point_fb2[1]}" z="{point_fb2[2]}" comment="Point in body 2" />
+                    <stiffness value="{stiffness}" comment="Stiffness [N/m]" />
+                    <damping value="{damping}" comment="Damping [-]" />
+                    <rest_length value="{rest_length}" comment="Spring equilibrium length [m]" />
+                    <savevtk>
+                        <nside value="{number_of_sections}" comment="number of sections for each revolution. 0=not saved, 1=line (default=16)" />
+                        <radius value="{spring_radius}" comment="spring radius (default=3)" />
+                        <length value="{revolution_length}" comment="length for each revolution (default=1)" />
+                    </savevtk>
+                </link_linearspring>

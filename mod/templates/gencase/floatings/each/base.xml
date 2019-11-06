@@ -1,0 +1,3 @@
+            <floating mkbound="{floating_mk}" {floating_density_type}="{floating_density_value}">
+{float_property_attributes}
+            </floating>

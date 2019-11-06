@@ -1,0 +1,8 @@
+                <mvcirsinu id="{index}" duration="{duration}" anglesunits="degrees" {next_attr}>
+                    <freq v="{freq}" units_comment="1/s" />
+                    <ampl v="{ampl}" units_comment="degrees" />
+                    <phase v="{phase}" units_comment="degrees" />
+                    <ref x="{reference[0]}" y="{reference[1]}" z="{reference[2]}" />
+                    <axisp1 x="{axis1[0]}" y="{axis1[1]}" z="{axis1[2]}" />
+                    <axisp2 x="{axis2[0]}" y="{axis2[1]}" z="{axis2[2]}" />
+                </mvcirsinu>

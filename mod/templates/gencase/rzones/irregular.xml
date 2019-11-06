@@ -1,0 +1,25 @@
+                <rzwaves_spectrum>
+                    <start value="{start}" comment="Start time (def=0)" />
+                    <duration value="{duration}" comment="Movement duration, Zero is the end of simulation (def=0)" />
+                    <peakcoef value="{peakcoef}" comment="Peak enhancement coefficient (default=3.3)" />
+                    <spectrum value="{spectrum}" comment="Spectrum type: jonswap,pierson-moskowitz" />
+                    <discretization value="{discretization}" comment="Spectrum discretization: regular,random,stretched,cosstretched (default=stretched)" />
+                    <waveorder value="{waveorder}" comment="Order wave generation 1:1st order, 2:2nd order (default=1)" />
+                    <waveheight value="{waveheight}" comment="Significant Wave Height" />
+                    <waveperiod value="{waveperiod}" comment="Peak Period" />
+                    <waves value="{waves}" comment="Number of waves to create irregular waves (default=50)" />
+                    <randomseed value="{randomseed}" comment="Random seed to initialize a pseudorandom number generator" />
+                    <depth value="{depth}" comment="Water depth for wave generation" />
+                    <swl value="{swl}" comment="Still water level (free-surface)" />
+                    <center x="{center[0]}" y="{center[1]}" z="{center[2]}"  comment="Central point of application" />
+                    <width value="{width}"comment="Width for generation" />
+                    <ramptime value="{ramptime}" comment="Time of initial ramp (default=0)" />
+                    <serieini value="{serieini}" comment="Initial time in irregular wave serie (default=0)" />
+                    <savemotion time="{savemotion_time}" timedt="{savemotion_timedt}" xpos="{savemotion_xpos}" zpos="{savemotion_zpos}" comment="Saves motion data. xpos and zpos are optional. zpos=-depth of the measuring point" />
+                    <saveserie timemin="{saveserie_timemin}" timemax="{saveserie_timemax}" timedt="{saveserie_timedt}" xpos="{saveserie_xpos}" comment="Saves serie data (optional)" />
+                    <saveseriewaves timemin="{saveseriewaves_timemin}" timemax="{saveseriewaves_timemax}" xpos="{saveseriewaves_xpos}" comment="Saves serie heights" />
+                    <coefdir x="{coefdir[0]}" y="{coefdir[1]}" z="{coefdir[2]}" comment="Coefficients for each direction (default=(1,0,0))" />
+                    <coefdt value="{coefdt}" comment="Multiplies by dt value in the calculation (using 0 is not applied) (default=1000)" />
+                    <function psi="{function_psi}" beta="{function_beta}" comment="Coefficients in function for velocity (def. psi=0.9, beta=1)" />
+                    <driftcorrection value="{driftcorrection}" comment="Coefficient of drift correction applied in velocity X. 0:Disabled, 1:Full correction (def=0)" />
+                </rzwaves_spectrum>

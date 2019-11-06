@@ -1,0 +1,21 @@
+                <piston_spectrum>
+                    <mkbound value="{mk}" comment="Mk-Bound of selected particles" />
+                    <depth value="{depth}" comment="Water depth (default=0)" />
+                    <start value="{start}" comment="Start time (default=0)" />
+                    <duration value="{duration}" comment="Movement duration, Zero is the end of simulation (default=0)" />
+                    <pistondir x="{piston_dir[0]}" y="{piston_dir[1]}" z="{piston_dir[2]}" comment="Movement direction (default=(1,0,0))" />
+                    <spectrum value="{spectrum}" comment="Spectrum type: jonswap,pierson-moskowitz" />
+                    <discretization value="{discretization}" comment="Spectrum discretization: regular,random,stretched,cosstretched (default=stretched)" />
+                    <waveorder value="{wave_order}" comment="Order wave generation 1:1st order, 2:2nd order (default=1)" />
+                    <waveheight value="{wave_height}" comment="Significant Wave Height (Hs)" />
+                    <waveperiod value="{wave_period}" comment="Peak Period" />
+                    <peakcoef value="{peak_coef}" comment="Peak enhancement coefficient (default=3.3)" />
+                    <waves value="{waves}" comment="Number of waves to create irregular waves (default=50)" />
+                    <randomseed value="{randomseed}" comment="Random seed to initialize a pseudorandom number generator" />
+                    <serieini value="{serieini}" autofit="true" comment="Initial time in irregular wave serie (default=0 and autofit=false)" />
+                    <ramptime value="{ramptime}" comment="Time of ramp (default=0)" />
+                    <savemotion time="{savemotion_time}" timedt="{savemotion_timedt}" xpos="{savemotion_xpos}" zpos="{savemotion_zpos}" comment="Saves motion data. xpos and zpos are optional. zpos=-depth of the measuring point" />
+                    <saveserie timemin="{saveserie_timemin}" timemax="{saveserie_timemin}" timedt="{saveserie_timedt}" xpos="{saveserie_xpos}" comment="Saves serie data (optional)" />
+                    <saveseriewaves timemin="{saveseriewaves_timemin}" timemax="{saveseriewaves_timemax}" xpos="{saveseriewaves_xpos}" comment="Saves serie heights" />
+{awas_template}
+                </piston_spectrum>

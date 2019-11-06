@@ -1,0 +1,3 @@
+                <mvrect id="{index}" duration="{duration}" {next_attr}>
+                    <vel x="{velocity[0]}" y="{velocity[1]}" z="{velocity[2]}" units_comment="m/s" />
+                </mvrect>

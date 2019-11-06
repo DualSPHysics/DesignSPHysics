@@ -1,0 +1,16 @@
+                <rzwaves_uniform>
+                    <start value="{start}" comment="Start time (default=0)" />
+                    <duration value="{duration}" comment="Duration, Zero is the end of simulation (default=0)" />
+                    <domainbox>
+                        <point x="{domainbox_point[0]}" y="{domainbox_point[1]}" z="{domainbox_point[2]}" />
+                        <size x="{domainbox_size[0]}" y="{domainbox_size[1]}" z="{domainbox_size[2]}" />
+                        <direction x="{domainbox_direction[0]}" y="{domainbox_direction[1]}" z="{domainbox_direction[2]}" />
+                        <_rotateaxis angle="{domainbox_rotateaxis_angle}" anglesunits="degrees">
+                            <point1 x="{domainbox_rotateaxis_point1[0]}" y="{domainbox_rotateaxis_point1[1]}" z="{domainbox_rotateaxis_point1[2]}" />
+                            <point2 x="{domainbox_rotateaxis_point2[0]}" y="{domainbox_rotateaxis_point2[1]}" z="{domainbox_rotateaxis_point2[2]}" />
+                        </_rotateaxis>
+                    </domainbox>
+{rzuniform_velocity}
+                    <coefdt value="{coefdt}" comment="Multiplies by dt value in the calculation (using 0 is not applied) (default=1000)" />
+                    <function psi="{function_psi}" beta="{function_beta}" comment="Coefficients in function for velocity (def. psi=0.9, beta=1)" />
+                </rzwaves_uniform>
