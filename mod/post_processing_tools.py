@@ -150,7 +150,7 @@ def computeforces_export(options, case, post_processing_widget) -> None:
 
     def on_stdout_ready():
         """ Updates the export dialog on every stdout available from the process. """
-        current_output = str(case.info.current_export_process.readAllStandardOutput())
+        current_output = str(export_process.readAllStandardOutput())
         case.info.current_output += current_output
         try:
             current_part = int(current_output.split("Part_")[1].split(".bi4")[0])
@@ -205,7 +205,7 @@ def measuretool_export(options, case, post_processing_widget) -> None:
 
     def on_stdout_ready():
         """ Updates the export dialog on every stdout available from the process. """
-        current_output = str(case.info.current_export_process.readAllStandardOutput())
+        current_output = str(export_process.readAllStandardOutput())
         case.info.current_output += current_output
         try:
             current_part = int(current_output.split("/Part_")[1].split(".bi4")[0])
@@ -248,12 +248,12 @@ def isosurface_export(options, case, post_processing_widget) -> None:
 
     # Build parameters
     executable_parameters = ["-dirin {out_path}".format(out_path=case.get_out_folder_path()),
-                             "{surface_or_slice} {out_path}{file_name}".format(surface_or_slice=options["surface_or_slice"], out_path=case.get_out_folder_path(), file_name=options["filename"]),
+                             "{surface_or_slice} {out_path}{file_name}".format(surface_or_slice=options["surface_or_slice"], out_path=case.get_out_folder_path(), file_name=options["file_name"]),
                              options["additional_parameters"]]
 
     def on_stdout_ready():
         """ Updates the export dialog on every stdout available from the process. """
-        current_output = str(case.info.current_export_process.readAllStandardOutput())
+        current_output = str(export_process.readAllStandardOutput())
         case.info.current_output += current_output
         try:
             current_part = current_output.split("{}_".format(options["file_name"]))[1]
@@ -306,7 +306,7 @@ def flowtool_export(options, case, post_processing_widget) -> None:
 
     def on_stdout_ready():
         """ Updates the export dialog on every stdout available from the process. """
-        current_output = str(case.info.current_export_process.readAllStandardOutput())
+        current_output = str(export_process.readAllStandardOutput())
         case.info.current_output += current_output
         try:
             current_part = current_output.split("{}_".format(options["vtk_name"]))[1]
