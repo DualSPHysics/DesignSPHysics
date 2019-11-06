@@ -91,7 +91,7 @@ class DockSimulationWidget(QtGui.QWidget):
             if process:
                 process.kill()
             run_dialog.hide_all()
-            Case.the().info.is_simulation_done = False
+            Case.the().info.is_simulation_done = True
             self.simulation_cancelled.emit()
 
         run_dialog.cancelled.connect(on_cancel)

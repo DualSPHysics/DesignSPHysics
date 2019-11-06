@@ -10,6 +10,7 @@ from mod.translation_tools import __
 from mod.dialog_tools import error_dialog, info_dialog
 from mod.freecad_tools import get_fc_main_window
 from mod.file_tools import get_total_exported_parts_from_disk, save_measuretool_info
+from mod.stdout_tools import debug
 
 from mod.widgets.postprocessing.export_progress_dialog import ExportProgressDialog
 
@@ -31,7 +32,7 @@ def partvtk_export(options, case, post_processing_widget) -> None:
     # Build parameters
     executable_parameters = ["-dirin {}".format(case.get_out_folder_path()),
                              "{save_flag} {out_path}{file_name}".format(save_flag=save_flag, out_path=case.get_out_folder_path(), file_name=options["file_name"]),
-                             "-onlytype: {save_types} {additional}".format(save_types=options["save_types"], additional=options["additional_parameters"])]
+                             "-onlytype:{save_types} {additional}".format(save_types=options["save_types"], additional=options["additional_parameters"])]
 
     # Information ready handler.
     def on_stdout_ready():
@@ -40,7 +41,7 @@ def partvtk_export(options, case, post_processing_widget) -> None:
         case.info.current_output += current_output
         try:
             current_part = current_output.split("{}_".format(options["file_name"]))[1]
-            current_part = int(current_part.split(save_extension[0]))
+            current_part = int(current_part.split(".{}".format(save_extension))[0])
         except IndexError:
             current_part = export_dialog.get_value()
         export_dialog.update_data(current_part)
@@ -64,12 +65,13 @@ def partvtk_export(options, case, post_processing_widget) -> None:
             error_dialog(__("There was an error on the post-processing. Show details to view the errors."), detailed_text=case.info.current_output)
 
         if options["open_paraview"]:
-            subprocess.Popen([case.executable_paths.paraview, "--data={}\\{}_..{}".format(case.info.get_out_folder_path, options["file_name"], save_extension)], stdout=subprocess.PIPE)
+            subprocess.Popen([case.executable_paths.paraview, "--data={}\\{}_..{}".format(case.get_out_folder_path(), options["file_name"], save_extension)], stdout=subprocess.PIPE)
 
     export_dialog.on_cancel.connect(on_cancel)
     export_process = QtCore.QProcess(get_fc_main_window())
     export_process.finished.connect(on_export_finished)
     export_process.readyReadStandardOutput.connect(on_stdout_ready)
+    debug("Executing -> {} {}".format(case.executable_paths.partvtk4, " ".join(executable_parameters)))
     export_process.start(case.executable_paths.partvtk4, executable_parameters)
 
 

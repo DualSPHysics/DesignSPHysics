@@ -18,9 +18,6 @@ class ExportProgressDialog(QtGui.QDialog):
         self.minimum = minimum
         self.maximum = maximum
 
-        self.set_range(self.minimum, self.maximum)
-        self.set_value(self.minimum)
-
         self.setModal(False)
         self.setWindowTitle(__("Exporting: {}%").format("0"))
         self.export_dialog_layout = QtGui.QVBoxLayout()
@@ -43,6 +40,9 @@ class ExportProgressDialog(QtGui.QDialog):
 
         self.setLayout(self.export_dialog_layout)
 
+        self.set_range(self.minimum, self.maximum)
+        self.set_value(self.minimum)
+
     def set_range(self, minimum: int, maximum: int) -> None:
         """ Sets the range of the progress bar within the dialog. """
         self.export_progbar_bar.setRange(minimum, maximum)
@@ -58,4 +58,4 @@ class ExportProgressDialog(QtGui.QDialog):
     def update_data(self, current) -> None:
         """ Updates the dialog with new data. """
         self.set_value(current)
-        self.setWindowTitle("{export_text} {current}/{total}").format(export_text=__("Exporting:"), current=current, total=self.maximum)
+        self.setWindowTitle("{export_text} {current}/{total}".format(export_text=__("Exporting:"), current=current, total=self.maximum))

@@ -45,7 +45,7 @@ class DockPostProcessingWidget(QtGui.QWidget):
         self.isosurface_button.setToolTip(__("Opens the IsoSurface tool."))
         self.flowtool_button.setToolTip(__("Opens the FlowTool tool."))
 
-        self.partvtk_button.clicked.connect(lambda: PartVTKDialog(self))
+        self.partvtk_button.clicked.connect(lambda: PartVTKDialog(self, parent=get_fc_main_window()))
         self.computeforces_button.clicked.connect(lambda: ComputeForcesDialog(self, parent=get_fc_main_window()))
         self.floatinginfo_button.clicked.connect(lambda: FloatingInfoDialog(self, parent=get_fc_main_window()))
         self.measuretool_button.clicked.connect(lambda: MeasureToolDialog(self, parent=get_fc_main_window()))

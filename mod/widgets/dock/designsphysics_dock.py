@@ -113,3 +113,4 @@ class DesignSPHysicsDock(QtGui.QDockWidget):
     def adapt_to_simulation_cancel(self):
         """ Adapts the dock to an environment in which a simulation has been canceled. """
         self.simulation_widget.setEnabled(True)
+        self.post_processing_widget.setEnabled(Case.the().info.is_simulation_done)
