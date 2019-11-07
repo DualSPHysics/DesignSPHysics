@@ -75,6 +75,11 @@ def load_case(load_path: str) -> "Case":
                 warning_dialog(__("The case data you're trying to load is older than version 0.6 and cannot be loaded."))
                 prompt_close_all_documents(prompt=False)
                 return None
+            if loaded_data.version < VERSION:
+                warning_dialog(__("The case data you are loading is from a previous version ({}) of this software. They may be missing features or errors.").format(loaded_data.version))
+            elif loaded_data.version > VERSION:
+                warning_dialog(__("You're loading a case data from a future version ({}) of this software. You should upgrade DesignSPHysics as they may be errors using this file.").format(loaded_data.version))
+
             return loaded_data
         except AttributeError:
             error_dialog(__("There was an error opening the case. Case Data file seems to be corrupted."))
@@ -254,7 +259,7 @@ def save_case(save_name: str, case: "Case") -> None:
     XMLExporter().save_to_disk(save_name, case)
 
     case.info.needs_to_run_gencase = False
-
+    case.version = VERSION
     # Save data array on disk. It is saved as a binary file with Pickle.
     try:
         with open(save_name + "/casedata.dsphdata", "wb") as picklefile:
