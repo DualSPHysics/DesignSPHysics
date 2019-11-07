@@ -86,6 +86,7 @@ class FreeCADDisplayMode:
     WIREFRAME = "Wireframe"
     FLAT_LINES = "Flat Lines"
 
+
 class InletOutletDetermLimit:
     """ Inlet/Oulet DetermLimit Value. """
     ZEROTH_ORDER = "1e+3"
@@ -178,6 +179,7 @@ class HelpURL:
     WIKI_HOME = "https://github.com/DualSPHysics/DesignSPHysics/wiki"
     MOTION_HELP = "https://github.com/DualSPHysics/DesignSPHysics/wiki/Feature-Reference#configure-object-motion"
     BASIC_CONCEPTS = "https://github.com/DualSPHysics/DesignSPHysics/wiki/Concepts-and-Clarifications"
+    GITHUB_ISSUES = "https://github.com/DualSPHysics/DesignSPHysics/issues"
 
 
 class DensityDTType:
