@@ -3,7 +3,9 @@
 """DesignSPHysics General Error Report Dialog"""
 
 import webbrowser
+from platform import platform
 
+import FreeCAD
 from PySide import QtGui
 
 from mod.gui_tools import h_line_generator
@@ -33,6 +35,8 @@ class ErrorReportDialog(QtGui.QDialog):
         self.button_layout.addWidget(self.ok_button)
 
         self.traceback_textarea = QtGui.QTextEdit("<b>DesignSPHysics version</b>: {}<br/>".format(VERSION) +
+                                                  "<b>Platform:</b> {}<br/>".format(platform()) +
+                                                  "<b>FreeCAD Version:</b> {}<br/>".format(".".join(FreeCAD.Version()[0:3])) +
                                                   "<b>Exception type:</b> {}<br/>".format(exception_type) +
                                                   "<b>Exception value:</b> {}<br/>".format(value) +
                                                   "<b>Traceback:</b><br/><pre>{}</pre>".format(traceback_str))
