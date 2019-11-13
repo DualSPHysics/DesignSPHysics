@@ -22,6 +22,7 @@ from mod.dataobjects.relaxation_zone import RelaxationZone
 from mod.dataobjects.simulation_object import SimulationObject
 from mod.dataobjects.mk_based_properties import MKBasedProperties
 from mod.dataobjects.damping import Damping
+from mod.dataobjects.moorings.moorings_configuration import MooringsConfiguration
 
 
 class Case():
@@ -55,6 +56,7 @@ class Case():
         self.acceleration_input: AccelerationInput = AccelerationInput()
         self.relaxation_zone: RelaxationZone = None
         self.inlet_outlet: InletOutletConfig = InletOutletConfig()
+        self.moorings: MooringsConfiguration = MooringsConfiguration()
         self.chrono: ChronoConfig = ChronoConfig()
 
     @staticmethod
