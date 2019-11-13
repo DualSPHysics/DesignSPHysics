@@ -132,11 +132,7 @@ def boot():
 
     # Subscribe the FreeCAD Objects tree to the item selection change function.
     # This helps FreeCAD notify DesignSPHysics for the deleted and changed objects to get updated correctly.
-    fc_object_tree: QtGui.QTreeWidget = None
-    for item in get_fc_main_window().findChildren(QtGui.QTreeWidget):
-        if "attr" in item.headerItem().text(0).lower():
-            fc_object_tree = item
-
+    fc_object_tree: QtGui.QTreeWidget = get_fc_main_window().findChildren(QtGui.QSplitter)[0].findChildren(QtGui.QTreeWidget)[0]
     fc_object_tree.itemSelectionChanged.connect(lambda p=properties_widget, d=designsphysics_dock: on_tree_item_selection_change(p, d))
     debug("Subscribing selection change monitor handler to freecad object tree item changed.")
 
