@@ -38,26 +38,7 @@ __email__ = "avieira@uvigo.es"
 __status__ = "Development"
 
 
-print_license()
-check_compatibility()
-
-if document_count() > 0:
-    success = prompt_close_all_documents()
-    if not success:
-        debug("User chose not to close the currently opened documents. Aborting startup")
-        quit()
-
-# Tries to delete docks created by a previous execution of DesignSPHysics
-delete_existing_docks()
-
-dualsphysics_dock = DesignSPHysicsDock(get_fc_main_window())
-properties_widget = PropertiesDockWidget(parent=get_fc_main_window())
-
-get_fc_main_window().addDockWidget(QtCore.Qt.RightDockWidgetArea, dualsphysics_dock)
-get_fc_main_window().addDockWidget(QtCore.Qt.LeftDockWidgetArea, properties_widget)
-
-
-def on_tree_item_selection_change():
+def on_tree_item_selection_change(properties_widget, designsphysics_dock):
     """ Refreshes relevant parts of DesignsPHysics under an important change event. """
     debug("Syncronizing FreeCAD data structures with DesignSPHysics")
     selection = FreeCADGui.Selection.getSelection()
@@ -96,32 +77,18 @@ def on_tree_item_selection_change():
         Case.the().remove_damping_zone(damping_to_delete)
 
     # Update dsph objects list
-    dualsphysics_dock.refresh_object_list()
+    designsphysics_dock.refresh_object_list()
     properties_widget.fit_size()
 
 
-# Subscribe the FreeCAD Objects tree to the item selection change function.
-# This helps FreeCAD notify DesignSPHysics for the deleted and changed objects to get updated correctly.
-fc_object_tree: QtGui.QTreeWidget = None
-for item in get_fc_main_window().findChildren(QtGui.QTreeWidget):
-    if "attr" in item.headerItem().text(0).lower():
-        fc_object_tree = item
-
-fc_object_tree.itemSelectionChanged.connect(on_tree_item_selection_change)
-debug("Subscribing selection change monitor handler to freecad object tree item changed.")
-
-properties_widget.need_refresh.connect(on_tree_item_selection_change)
-dualsphysics_dock.need_refresh.connect(on_tree_item_selection_change)
-
-
-def selection_monitor():
+def selection_monitor(properties_widget, designsphysics_dock):
     """ Watches and fixes unwanted changes in the current selection. """
     time.sleep(2.0)
     while True:
         try:
             if not valid_document_environment():
                 log("Invalid document environment found. Disabling case-related tools.")
-                dualsphysics_dock.adapt_to_no_case()
+                designsphysics_dock.adapt_to_no_case()
                 time.sleep(1.0)
                 continue
 
@@ -143,9 +110,38 @@ def selection_monitor():
             time.sleep(1.0)
 
 
-# Launch a monitor thread that ensures some things are not changed.
-monitor_thread = threading.Thread(target=selection_monitor)
-monitor_thread.start()
+def boot():
+    """ Boots the application. """
+    print_license()
+    check_compatibility()
 
-FreeCADGui.activateWorkbench(DEFAULT_WORKBENCH)
-log(__("Initialization finished for {} v{}").format(APP_NAME, VERSION))
+    if document_count() > 0:
+        success = prompt_close_all_documents()
+        if not success:
+            debug("User chose not to close the currently opened documents. Aborting startup")
+            quit()
+
+    # Tries to delete docks created by a previous execution of DesignSPHysics
+    delete_existing_docks()
+
+    designsphysics_dock = DesignSPHysicsDock(get_fc_main_window())
+    properties_widget = PropertiesDockWidget(parent=get_fc_main_window())
+
+    get_fc_main_window().addDockWidget(QtCore.Qt.RightDockWidgetArea, designsphysics_dock)
+    get_fc_main_window().addDockWidget(QtCore.Qt.LeftDockWidgetArea, properties_widget)
+
+    # Subscribe the FreeCAD Objects tree to the item selection change function.
+    # This helps FreeCAD notify DesignSPHysics for the deleted and changed objects to get updated correctly.
+    fc_object_tree: QtGui.QTreeWidget = get_fc_main_window().findChildren(QtGui.QSplitter)[0].findChildren(QtGui.QTreeWidget)[0]
+    fc_object_tree.itemSelectionChanged.connect(lambda p=properties_widget, d=designsphysics_dock: on_tree_item_selection_change(p, d))
+    debug("Subscribing selection change monitor handler to freecad object tree item changed.")
+
+    properties_widget.need_refresh.connect(lambda p=properties_widget, d=designsphysics_dock: on_tree_item_selection_change(p, d))
+    designsphysics_dock.need_refresh.connect(lambda p=properties_widget, d=designsphysics_dock: on_tree_item_selection_change(p, d))
+
+    # Launch a monitor thread that ensures some things are not changed.
+    monitor_thread = threading.Thread(target=lambda p=properties_widget, d=designsphysics_dock: selection_monitor(p, d))
+    monitor_thread.start()
+
+    FreeCADGui.activateWorkbench(DEFAULT_WORKBENCH)
+    log(__("Initialization finished for {} v{}").format(APP_NAME, VERSION))

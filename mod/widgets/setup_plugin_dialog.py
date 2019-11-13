@@ -197,9 +197,7 @@ class SetupPluginDialog(QtGui.QDialog):
         Case.the().executable_paths.boundaryvtk = self.boundaryvtk_input.text()
         Case.the().executable_paths.flowtool = self.flowtool_input.text()
         Case.the().executable_paths.paraview = self.paraview_input.text()
-        if not Case.the().executable_paths.check_and_filter():
-            warning_dialog(__("One or more of the specified executables are not correct."),
-                           __("Make sure all executable have execution permissions set (specially on GNU/Linux) and try to set the configuration again."))
+        Case.the().executable_paths.check_and_filter()
         self.accept()
 
     def on_cancel(self):

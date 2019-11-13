@@ -784,5 +784,7 @@
     "Gencase exported {} particles.\nPress \"Details\" to check the output\n\nThe executed command line was:": "Gencase exported {} particles.\nPress \"Details\" to check the output\n\nThe executed command line was:",
     "Gencase exported <b>{}</b> particles.\nPress the <i>Details</i> button to check the output\n\nThe executed command line was:": "Gencase exported <b>{}</b> particles.\nPress the <i>Details</i> button to check the output\n\nThe executed command line was:",
     "Gencase exported <b>{}</b> particles.<br/>Press the <i>Details</i> button to check the output<br/><br/>The executed command line was:": "Gencase exported <b>{}</b> particles.<br/>Press the <i>Details</i> button to check the output<br/><br/>The executed command line was:",
-    "The executed command was:": "The executed command was:"
+    "The executed command was:": "The executed command was:",
+    "The case data you are loading is from a previous version ({}) of this software. They may be missing features or errors.": "The case data you are loading is from a previous version ({}) of this software. They may be missing features or errors.",
+    "You're loading a case data from a future version ({}) of this software. You should upgrade DesignSPHysics as they may be errors using this file.": "You're loading a case data from a future version ({}) of this software. You should upgrade DesignSPHysics as they may be errors using this file."
 }

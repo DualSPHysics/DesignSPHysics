@@ -7,8 +7,10 @@ import os
 
 from mod.executable_tools import executable_contains_string
 from mod.file_tools import get_saved_config_file, get_default_config_file
+from mod.dialog_tools import error_dialog
 from mod.stdout_tools import debug
 
+from mod.constants import LINE_END
 from mod.constants import PICKLE_PROTOCOL
 
 
@@ -45,11 +47,18 @@ class ExecutablePaths():
             "flowtool": self.flowtool
         }
 
+        bad_executables: list = list()
+
         for word, executable in execs_to_check.items():
             if not executable_contains_string(executable, word):
                 debug("Executable {} does not contain the word {}".format(executable, word))
                 execs_correct = False
+                bad_executables.append(executable)
                 executable = ""
+
+        if not execs_correct:
+            error_dialog("One or more of the executables set on the configuration is not correct. Please see the details below.",
+                         "These executables do not correspond to their appropriate tool or don't have execution permissions:\n\n{}".format(LINE_END.join(bad_executables)))
 
         self.persist()
         return execs_correct

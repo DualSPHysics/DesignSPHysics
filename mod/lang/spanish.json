@@ -602,5 +602,7 @@
     "3": "3",
     "1": "1",
     "Initial properties": "Initial properties",
-    "m/s": "m/s"
+    "m/s": "m/s",
+    "Initialization finished for {} v{}": "Initialization finished for {} v{}",
+    "Add all possible objects to DSPH Simulation": "Add all possible objects to DSPH Simulation"
 }

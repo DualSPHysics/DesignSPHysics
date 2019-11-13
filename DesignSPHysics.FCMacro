@@ -6,21 +6,19 @@
 """
 
 import sys
+from html import escape
 from traceback import format_tb
 
-from mod.constants import VERSION
-from mod.dialog_tools import error_dialog
+from mod.main import boot
+
+from mod.widgets.error_report_dialog import ErrorReportDialog
 
 
 def report_error(exctype, value, tb):
     """ Displays a dialog with options about the sudden crash. """
     sys.__excepthook__(exctype, value, tb)
-    error_dialog("DesignSPHysics encountered an error. Please report the developer the following details.",
-                 "DesignSPHysics version: {}\n\n".format(VERSION) +
-                 "Exception type: {}\n\n".format(exctype) +
-                 "Exception value: {}\n\n".format(value) +
-                 "Traceback:\n{}".format(''.join(format_tb(tb))))
+    ErrorReportDialog(escape(str(exctype)), escape(str(value)), escape(''.join(format_tb(tb))))
 
 
 sys.excepthook = report_error
-import mod.main  # pylint: disable=unused-import
+boot()
