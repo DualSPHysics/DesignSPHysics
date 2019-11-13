@@ -188,3 +188,9 @@ class DensityDTType:
     MOLTENI = 1
     FOURTAKAS = 2
     FOURTAKAS_FULL = 3
+
+
+class MooringsConfigurationMethod:
+    """ Types of MoorDyn configuration types. """
+    EMBEDDED = 0
+    FROM_XML = 1

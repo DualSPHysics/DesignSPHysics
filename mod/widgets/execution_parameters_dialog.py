@@ -42,8 +42,7 @@ class ExecutionParametersDialog(QtGui.QDialog):
         self.posdouble_layout = QtGui.QHBoxLayout()
         self.posdouble_label = QtGui.QLabel("Precision in particle interaction: ")
         self.posdouble_input = FocusableComboBox()
-        self.posdouble_input.insertItems(0,
-                                         ["Double", "Simple", "Uses and saves double"])
+        self.posdouble_input.insertItems(0, ["Simple", "Double", "Uses and saves double"])
         self.posdouble_input.setCurrentIndex(int(Case.the().execution_parameters.posdouble))
         self.posdouble_input.set_help_text(__(HELP_POSDOUBLE))
 
