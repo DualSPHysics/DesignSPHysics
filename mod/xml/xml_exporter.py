@@ -24,6 +24,7 @@ from mod.xml.renderers.motion_renderer import MotionRenderer
 from mod.xml.renderers.wavepaddles_renderer import WavePaddlesRenderer
 from mod.xml.renderers.inout_renderer import InoutRenderer
 from mod.xml.renderers.chrono_renderer import ChronoRenderer
+from mod.xml.renderers.periodicity_renderer import PeriodicityRenderer
 
 
 class XMLExporter():
@@ -54,6 +55,7 @@ class XMLExporter():
         data["definition_template"] = DefinitionRenderer.render(data)
         data["objects_template"] = ObjectsRenderer.render(data)
         data["simulationdomain_template"] = SimulationDomainRenderer.render(data)
+        data["periodicity_template"] = PeriodicityRenderer.render(data)
         data["initials_template"] = InitialsRenderer.render(data)
         data["floatings_template"] = FloatingsRenderer.render(data)
         data["rzones_template"] = RZonesRenderer.render(data, type(case.relaxation_zone).__name__) if case.relaxation_zone else ""
