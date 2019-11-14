@@ -73,14 +73,15 @@ class SpecialOptionsSelectorDialog(QtGui.QDialog):
         self.sp_accinput_button.clicked.connect(self.on_accinput_button)
         self.sp_moorings_button.clicked.connect(self.on_moorings_button)
 
-        for x in [self.sp_damping_button,
-                  self.sp_inlet_button,
-                  self.sp_chrono_button,
-                  self.sp_multilayeredmb_button,
-                  self.sp_relaxationzone_button,
-                  self.sp_accinput_button,
-                  self.sp_moorings_button]:
-            self.sp_window_layout.addWidget(x)
+        # Add buttons to the special window
+        self.sp_window_layout.addWidget(self.sp_damping_button)
+        self.sp_window_layout.addWidget(self.sp_inlet_button)
+        self.sp_window_layout.addWidget(self.sp_chrono_button)
+        self.sp_window_layout.addWidget(self.sp_multilayeredmb_button)
+        self.sp_window_layout.addWidget(self.sp_relaxationzone_button)
+        self.sp_window_layout.addWidget(self.sp_accinput_button)
+        # FIXME: Enable Moorings button when ready
+        # self.sp_window_layout.addWidget(self.sp_moorings_button)
 
         self.setLayout(self.sp_window_layout)
         self.exec_()
