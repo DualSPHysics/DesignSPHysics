@@ -15,6 +15,7 @@ class MooringsConfiguration():
         super().__init__()
         self.enabled = False
         self.saveoptions: MooringsSaveOptions = MooringsSaveOptions()
+        self.moored_floatings: list()  # MKBound (int)
         self.configuration_method: MooringsConfigurationMethod = MooringsConfigurationMethod.EMBEDDED
         self.moordyn_xml: str = ""
         self.moordyn_configuration: MoorDynConfiguration = MoorDynConfiguration()

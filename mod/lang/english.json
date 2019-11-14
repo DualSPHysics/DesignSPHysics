@@ -786,5 +786,19 @@
     "Gencase exported <b>{}</b> particles.<br/>Press the <i>Details</i> button to check the output<br/><br/>The executed command line was:": "Gencase exported <b>{}</b> particles.<br/>Press the <i>Details</i> button to check the output<br/><br/>The executed command line was:",
     "The executed command was:": "The executed command was:",
     "The case data you are loading is from a previous version ({}) of this software. They may be missing features or errors.": "The case data you are loading is from a previous version ({}) of this software. They may be missing features or errors.",
-    "You're loading a case data from a future version ({}) of this software. You should upgrade DesignSPHysics as they may be errors using this file.": "You're loading a case data from a future version ({}) of this software. You should upgrade DesignSPHysics as they may be errors using this file."
+    "You're loading a case data from a future version ({}) of this software. You should upgrade DesignSPHysics as they may be errors using this file.": "You're loading a case data from a future version ({}) of this software. You should upgrade DesignSPHysics as they may be errors using this file.",
+    "Moorings": "Moorings",
+    "Moorings configuration Dialog": "Moorings configuration Dialog",
+    "Enabled:": "Enabled:",
+    "Save VTK:": "Save VTK:",
+    "Save points (CSV):": "Save points (CSV):",
+    "Save points (VTK):": "Save points (VTK):",
+    "Select floatings to use with moorings": "Select floatings to use with moorings",
+    "Select floatings to use with moorings:": "Select floatings to use with moorings:",
+    "Embedded": "Embedded",
+    "From XML": "From XML",
+    "XML File:": "XML File:",
+    "Type a path or select a file": "Type a path or select a file",
+    "Configuration method for MoorDyn:": "Configuration method for MoorDyn:",
+    "Configure MoorDyn Parameters": "Configure MoorDyn Parameters"
 }
