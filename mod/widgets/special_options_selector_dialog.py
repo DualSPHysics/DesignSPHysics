@@ -22,6 +22,7 @@ from mod.widgets.acceleration_input_dialog import AccelerationInputDialog
 from mod.widgets.damping_config_dialog import DampingConfigDialog
 from mod.widgets.inlet_config_dialog import InletConfigDialog
 from mod.widgets.chrono.chrono_config_dialog import ChronoConfigDialog
+from mod.widgets.moorings.moorings_configuration_dialog import MooringsConfigurationDialog
 
 from mod.dataobjects.case import Case
 from mod.dataobjects.mk_based_properties import MKBasedProperties
@@ -62,20 +63,25 @@ class SpecialOptionsSelectorDialog(QtGui.QDialog):
 
         self.sp_accinput_button = QtGui.QPushButton(__("Acceleration Inputs"))
 
+        self.sp_moorings_button = QtGui.QPushButton(__("Moorings"))
+
         self.sp_damping_button.clicked.connect(self.on_damping_option)
         self.sp_inlet_button.clicked.connect(self.on_inlet_option)
         self.sp_chrono_button.clicked.connect(self.on_chrono_option)
         self.sp_multilayeredmb_menu.triggered.connect(self.on_multilayeredmb_menu)
         self.sp_relaxationzone_menu.triggered.connect(self.on_relaxationzone_menu)
         self.sp_accinput_button.clicked.connect(self.on_accinput_button)
+        self.sp_moorings_button.clicked.connect(self.on_moorings_button)
 
-        for x in [self.sp_damping_button,
-                  self.sp_inlet_button,
-                  self.sp_chrono_button,
-                  self.sp_multilayeredmb_button,
-                  self.sp_relaxationzone_button,
-                  self.sp_accinput_button]:
-            self.sp_window_layout.addWidget(x)
+        # Add buttons to the special window
+        self.sp_window_layout.addWidget(self.sp_damping_button)
+        self.sp_window_layout.addWidget(self.sp_inlet_button)
+        self.sp_window_layout.addWidget(self.sp_chrono_button)
+        self.sp_window_layout.addWidget(self.sp_multilayeredmb_button)
+        self.sp_window_layout.addWidget(self.sp_relaxationzone_button)
+        self.sp_window_layout.addWidget(self.sp_accinput_button)
+        # FIXME: Enable Moorings button when ready
+        # self.sp_window_layout.addWidget(self.sp_moorings_button)
 
         self.setLayout(self.sp_window_layout)
         self.exec_()
@@ -218,3 +224,7 @@ class SpecialOptionsSelectorDialog(QtGui.QDialog):
 
         if result == QtGui.QDialog.Accepted:
             Case.the().acceleration_input = accinput_dialog.get_result()
+
+    def on_moorings_button(self):
+        """ Moorings button behaviour."""
+        MooringsConfigurationDialog(parent=get_fc_main_window())

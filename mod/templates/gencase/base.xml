@@ -66,6 +66,7 @@
             <parameter key="PartsOutMax" value="{execution_parameters[partsoutmax]}" comment="%/100 of fluid particles allowed to be excluded from domain (default=1)" units_comment="decimal" />
             <parameter key="RhopOutMin" value="{execution_parameters[rhopoutmin]}" comment="Minimum rhop valid (default=700)" units_comment="kg/m^3" />
             <parameter key="RhopOutMax" value="{execution_parameters[rhopoutmax]}" comment="Maximum rhop valid (default=1300)" units_comment="kg/m^3" />
+{periodicity_template}
 {simulationdomain_template}
         </parameters>
     </execution>
