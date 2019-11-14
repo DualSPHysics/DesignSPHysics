@@ -80,8 +80,7 @@ class SpecialOptionsSelectorDialog(QtGui.QDialog):
         self.sp_window_layout.addWidget(self.sp_multilayeredmb_button)
         self.sp_window_layout.addWidget(self.sp_relaxationzone_button)
         self.sp_window_layout.addWidget(self.sp_accinput_button)
-        # FIXME: Enable Moorings button when ready
-        # self.sp_window_layout.addWidget(self.sp_moorings_button)
+        self.sp_window_layout.addWidget(self.sp_moorings_button)
 
         self.setLayout(self.sp_window_layout)
         self.exec_()
