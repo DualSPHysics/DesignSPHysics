@@ -2,6 +2,8 @@
 # -*- coding: utf-8 -*-
 """ DesignSPHysics MoorDyn Line. """
 
+from uuid import UUID, uuid4
+
 from mod.dataobjects.moorings.moordyn.moordyn_vessel_connection import MoorDynVesselConnection
 from mod.dataobjects.moorings.moordyn.moordyn_fix_connection import MoorDynFixConnection
 from mod.dataobjects.moorings.moordyn.moordyn_connect_connection import MoorDynConnectConnection
@@ -12,6 +14,7 @@ class MoorDynLine():
 
     def __init__(self):
         super().__init__()
+        self.line_id: UUID = uuid4()
         # Not more than 2 connections allowed.
         self.vessel_connection: MoorDynVesselConnection = None
         self.fix_connection: MoorDynFixConnection = None
