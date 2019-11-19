@@ -25,7 +25,7 @@ class WavePaddlesRenderer():
     def render(cls, data):
         """ Returns the rendered string. """
         target_types: list = [MotionType.REGULAR_PISTON_WAVE_GENERATOR, MotionType.IRREGULAR_PISTON_WAVE_GENERATOR, MotionType.REGULAR_FLAP_WAVE_GENERATOR, MotionType.IRREGULAR_FLAP_WAVE_GENERATOR]
-        filtered_mkprops: list = list(filter(lambda mkprop: len(mkprop["movements"]) == 1 and mkprop["movements"][0]["generator"] and mkprop["movements"][0]["generator"]["type"] in target_types, data["mkbasedproperties"].values()))
+        filtered_mkprops: list = list(filter(lambda mkprop: len(mkprop["movements"]) == 1 and "generator" in mkprop["movements"][0] and mkprop["movements"][0]["generator"] and mkprop["movements"][0]["generator"]["type"] in target_types, data["mkbasedproperties"].values()))
 
         if not filtered_mkprops:
             return ""
@@ -48,7 +48,7 @@ class WavePaddlesRenderer():
         """ Renders a <piston> tag from a regular piston wave generator. """
         generator["mk"] = mk
 
-        generator["awas_template"] = cls.get_awas_template(generator["awas"]) if generator["awas"]["enabled"] else ""
+        generator["awas_template"] = cls.get_awas_template(generator["awas"]) if generator["awas"]["enabled"] == "true" else ""
 
         return get_template_text(cls.WAVEPADDLES_REGULAR_PISTON).format(**generator)
 
@@ -57,7 +57,7 @@ class WavePaddlesRenderer():
         """ Renders a <piston_spectrum> tag from an irregular piston wave generator. """
         generator["mk"] = mk
 
-        generator["awas_template"] = cls.get_awas_template(generator["awas"]) if generator["awas"]["enabled"] else ""
+        generator["awas_template"] = cls.get_awas_template(generator["awas"]) if generator["awas"]["enabled"] == "true" else ""
 
         return get_template_text(cls.WAVEPADDLES_IRREGULAR_PISTON).format(**generator)
 

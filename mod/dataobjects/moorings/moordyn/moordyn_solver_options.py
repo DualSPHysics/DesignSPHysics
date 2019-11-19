@@ -8,3 +8,6 @@ class MoorDynSolverOptions():
 
     def __init__(self):
         super().__init__()
+        self.gravity: float = 9.81
+        self.water_depth: float = 0.5
+        # FIXME: Finish this

@@ -800,5 +800,6 @@
     "XML File:": "XML File:",
     "Type a path or select a file": "Type a path or select a file",
     "Configuration method for MoorDyn:": "Configuration method for MoorDyn:",
-    "Configure MoorDyn Parameters": "Configure MoorDyn Parameters"
+    "Configure MoorDyn Parameters": "Configure MoorDyn Parameters",
+    "Select mks to use with moorings:": "Select mks to use with moorings:"
 }
