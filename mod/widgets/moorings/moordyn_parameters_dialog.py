@@ -14,6 +14,9 @@ from mod.stdout_tools import debug
 from mod.dataobjects.moorings.moordyn.moordyn_configuration import MoorDynConfiguration
 from mod.dataobjects.moorings.moordyn.moordyn_line import MoorDynLine
 
+from mod.widgets.moorings.moordyn_body_configuration_dialog import MoorDynBodyConfigurationDialog
+from mod.widgets.moorings.moordyn_line_configuration_dialog import MoorDynLineConfigurationDialog
+
 
 class MoorDynBodyWidget(QtGui.QWidget):
     """ Widget to embed in each element of the body list for the MoorDyn configuration dialog. """
@@ -210,7 +213,10 @@ class MoorDynParametersDialog(QtGui.QDialog):
         pass
 
     def _on_configure_body(self, mkbound):
-        pass
+        selected_body = next(filter(lambda body: body.ref == mkbound, self.stored_configuration.bodies), None)
+        if not selected_body:
+            raise RuntimeError("The specified body to configure does not exist in the list of bodies.")
+        MoorDynBodyConfigurationDialog(selected_body)
 
     def _fill_data(self):
         # Solver options

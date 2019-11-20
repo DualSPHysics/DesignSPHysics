@@ -823,5 +823,11 @@
     "Mass in Air (kg/m):": "Mass in Air (kg/m):",
     "Line internal damping (Ns):": "Line internal damping (Ns):",
     "Add a new Line": "Add a new Line",
-    "You must at least select one floating body to configure MoorDyn": "You must at least select one floating body to configure MoorDyn"
+    "You must at least select one floating body to configure MoorDyn": "You must at least select one floating body to configure MoorDyn",
+    "MoorDyn Line Body Configuration": "MoorDyn Line Body Configuration",
+    "Editing settings for reference (mkbound): {}": "Editing settings for reference (mkbound): {}",
+    "Enable": "Enable",
+    "Editing settings for reference (mkbound): <b>{}</b>": "Editing settings for reference (mkbound): <b>{}</b>",
+    "Water depth: ": "Water depth: ",
+    "Override": "Override"
 }
