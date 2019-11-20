@@ -17,7 +17,7 @@ class MoorDynBodyConfigurationDialog(QtGui.QDialog):
         super().__init__()
         self.body: MoorDynBody = body
 
-        self.setWindowTitle(__("MoorDyn Line Body Configuration"))
+        self.setWindowTitle(__("MoorDyn Body Configuration"))
         self.setMinimumWidth(440)
         self.root_layout: QtGui.QVBoxLayout = QtGui.QVBoxLayout()
 
