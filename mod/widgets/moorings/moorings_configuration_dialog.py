@@ -7,6 +7,7 @@ from copy import deepcopy
 from PySide import QtGui
 
 from mod.translation_tools import __
+from mod.dialog_tools import error_dialog
 
 from mod.enums import MooringsConfigurationMethod, ObjectType
 
@@ -193,12 +194,20 @@ class MooringsConfigurationDialog(QtGui.QDialog):
 
     def _on_configure_moordyn_parameters(self) -> None:
         """ Opens up the MoorDyn configuration parameters dialog. """
-        # FIXME: This overrides all the bodies, making them lose their configuration. Check first if the body is already there and don't destroy it if it is.
-        self.moordyn_parameters_data.bodies: list = list()
+        new_selected_bodies: list = list()
+
         for row_num in range(0, self.floating_selection_table.rowCount()):
             target_widget: MooringsCompatibleFloatingWidget = self.floating_selection_table.cellWidget(row_num, 0)
             if target_widget.use_checkbox.isChecked():
-                self.moordyn_parameters_data.bodies.append(MoorDynBody(target_widget.mkbound))
+                list_of_matching_bodies: list = list(filter(lambda body: body.ref == target_widget.mkbound, self.moordyn_parameters_data.bodies))
+                new_body: MoorDynBody = list_of_matching_bodies[0] if list_of_matching_bodies else MoorDynBody(target_widget.mkbound)
+                new_selected_bodies.append(new_body)
+
+        self.moordyn_parameters_data.bodies = list(new_selected_bodies)
+        if not self.moordyn_parameters_data.bodies:
+            error_dialog(__("You must at least select one floating body to configure MoorDyn"))
+            return
+
         MoorDynParametersDialog(self.moordyn_parameters_data)
 
     def _on_ok(self) -> None:
