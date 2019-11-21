@@ -139,6 +139,13 @@ class Case():
         if object_name not in self.get_all_simulation_object_names():
             raise RuntimeError("The object that you are trying to remove ({}) is not present in the simulation")
         self.objects = list(filter(lambda obj: obj.name != object_name, self.objects))
+        # Delete al orphan MKBasedProperties
+        keys_to_delete: list = list()
+        for realmk in self.mkbasedproperties:
+            if realmk not in map(lambda obj: obj.obj_mk if obj.type == ObjectType.FLUID else obj.obj_mk + 11, Case.the().objects):
+                keys_to_delete.append(realmk)
+        for key in keys_to_delete:
+            self.mkbasedproperties.pop(key)
 
     def get_damping_zone(self, object_key: str) -> Damping:
         """ Returns the Damping Zone bound to the object key passed as parameter. Returns None if it's not defined. """
