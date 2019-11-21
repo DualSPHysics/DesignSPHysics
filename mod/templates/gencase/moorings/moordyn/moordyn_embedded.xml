@@ -1,0 +1,43 @@
+                <moordyn comment="MoorDyn configuration">
+                    <solverOptions>
+                        <gravity value="{solver_options[gravity]}" comment="(m/s^2)"/>
+                        <waterDepth value="{solver_options[water_depth]}" comment="(m)"/>
+                        <kBot value="{solver_options[kBot]}" comment="Stifness (Pa/m). (default=3.0e6)" />
+                        <cBot value="{solver_options[cBot]}" comment="Damping Pa/m/s). (default=3.0e5)" />
+                        <dtM value="{solver_options[dtM]}" comment="time step to use in mooring integration. (default=0.0001)"/>
+                        <waveKin value="{solver_options[waveKin]}" comment="wave kinematics flag (0=neglect, the only option currently supported)"/>
+                        <writeUnits value="{solver_options[writeUnits]}" comment="write units line (default=yes) [yes no]" />
+                        <frictionCoefficient value="{solver_options[frictionCoefficient]}" comment="General bottom friction coefficient, as a start. (default=0.0)" />
+                        <fricDamp value="{solver_options[fricDamp]}" comment="A damping coefficient used to model the friction at speeds near zero. (default=200.0)" />
+                        <statDynFricScale value="{solver_options[statDynFricScale]}" comment="A ratio of static to dynamic friction ( = mu_static/mu_dynamic). (default=1.0)" />   
+                        <dtIC value="{solver_options[dtIC]}" comment="[ICdt] convergence analysis time step. (default=1.0)"/>
+                        <cdScaleIC value="{solver_options[cdScaleIC]}" comment="[ICDfac] factor by which to scale drag coefficients during dynamic relaxation IC gen. (default=5)" />    
+                        <threshIC value="{solver_options[threshIC]}" comment="threshold for IC convergence. (defaul=0.001)"/>
+                        <tmaxIC value="{solver_options[tmaxIC]}" comment="max time for IC generation.(default=120)"/> 
+                        <timeMax value="{solver_options[timeMax]}" comment="Time of simulation(s)" />
+                    </solverOptions>
+                    <bodies>
+{bodies_template}
+                    </bodies>
+                    <lines>
+                        <linedefault> 
+                            <ea value="{line_default_configuration[ea]}" comment="stiffness(N)" />
+                            <diameter value="{line_default_configuration[diameter]}" comment="(m)" />
+                            <massDenInAir value="{line_default_configuration[massDenInAir]}" comment="massDenInAirDenInAir (kg/m)" />
+                            <ba value="{line_default_configuration[ba]}" comment="BA/-zeta – the line internal damping (Ns). (default=-0.8)" />
+                            <can value="{line_default_configuration[can]}" comment="Default= 1.0 "/>   
+                            <cat value="{line_default_configuration[cat]}" comment="Default= 0.0 " />  
+                            <cdn value="{line_default_configuration[cdn]}" comment="Default= 1.6 " />  
+                            <cdt value="{line_default_configuration[cdt]}" comment="Default= 0.05" /> 
+                            <outputFlags value="{line_default_configuration[outputFlags]}" comment="Node output properties.(default=-) [-=None, p=positions, v=velocities, U=waveVelocities, t=tension, D=HydrodynamicDragForce, c=internalDamping]" /> 
+                        </linedefault>
+{lines_template}
+                    </lines>
+                    <output>
+                        <time startTime="0" endTime="{endTime}" dtOut="{dtOut}" comment="Default [startTime= 0; endTime= 0; dtOut=0.01]"/>
+                        <tension type="{output_configuration[tension]}" comment="type=[fixed|vessel|all].(default: type=all)  "/>
+                        <force type="{output_configuration[force]}" comment="type=[fixed|vessel|all]. " />
+                        <velocity type="{output_configuration[velocity]}" comment="type=[fixed|vessel|all]." />
+                        <position type="{output_configuration[position]}" comment="type=[fixed|vessel|all]." />
+                    </output>
+                </moordyn>
