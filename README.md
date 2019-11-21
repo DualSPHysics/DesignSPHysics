@@ -4,7 +4,7 @@ DesignSPHysics is a software module built into [FreeCAD](http://www.freecadweb.o
 
 Check the [Official Webpage](http://design.sphysics.org) for downloads and more information.
 
-![Screenshot](http://design.sphysics.org/img/github-shot-31072018.png)
+![Screenshot](https://design.sphysics.org/img/github-shot-21112019.png)
 
 ## Description
 DesignSPHysics enables the user to create cases with solids and fluids and exports it to a DualSPHysics compatible format. In addition, it does the hard work for the user, generating the case data automatically, simulating, and post-processing, all inside FreeCAD.
