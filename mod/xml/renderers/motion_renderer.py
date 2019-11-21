@@ -43,7 +43,7 @@ class MotionRenderer():
                 continue
 
             formatter: dict = {
-                "ref": prop["mk"],
+                "ref": prop["mk"] - 11,
                 "movements_list": cls.get_movement_template_list(prop)
             }
 

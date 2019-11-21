@@ -22,6 +22,7 @@ from mod.freecad_tools import delete_existing_docks, valid_document_environment,
 from mod.stdout_tools import print_license, log, debug
 
 from mod.constants import APP_NAME, VERSION, DEFAULT_WORKBENCH, DIVIDER
+from mod.enums import ObjectType
 
 from mod.dataobjects.case import Case
 

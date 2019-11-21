@@ -2,31 +2,37 @@
 # -*- coding: utf-8 -*-
 """ DesignSPHysics Moorings Configuration Dialog. """
 
+from copy import deepcopy
+
 from PySide import QtGui
 
-from mod.dialog_tools import info_dialog
 from mod.translation_tools import __
+from mod.dialog_tools import error_dialog
 
 from mod.enums import MooringsConfigurationMethod, ObjectType
 
 from mod.dataobjects.case import Case
+from mod.dataobjects.moorings.moordyn.moordyn_body import MoorDynBody
+from mod.dataobjects.moorings.moordyn.moordyn_configuration import MoorDynConfiguration
+
+from mod.widgets.moorings.moordyn_parameters_dialog import MoorDynParametersDialog
 
 
 class MooringsCompatibleFloatingWidget(QtGui.QWidget):
     """ Widget to embed in each element of the floating list for the Moorings Configuration Dialog. """
 
-    def __init__(self, checked: bool, obj_type: ObjectType, mk: int):
+    def __init__(self, checked: bool, obj_type: ObjectType, mkbound: int):
         super().__init__()
         self.root_layout: QtGui.QHBoxLayout = QtGui.QHBoxLayout()
-        self.mk = mk
+        self.mkbound = mkbound
 
         self.use_checkbox: QtGui.QCheckBox = QtGui.QCheckBox()
         self.use_checkbox.setChecked(checked)
 
-        self.mk_label: QtGui.QLabel = QtGui.QLabel("{} - <b>{}</b>".format(obj_type.capitalize(), str(self.mk)))
+        self.mkbound_label: QtGui.QLabel = QtGui.QLabel("{} - <b>{}</b>".format(obj_type.capitalize(), str(self.mkbound)))
 
         self.root_layout.addWidget(self.use_checkbox)
-        self.root_layout.addWidget(self.mk_label)
+        self.root_layout.addWidget(self.mkbound_label)
         self.root_layout.addStretch(1)
 
         self.setLayout(self.root_layout)
@@ -39,6 +45,8 @@ class MooringsConfigurationDialog(QtGui.QDialog):
         super().__init__(parent=parent)
         self.setWindowTitle(__("Moorings configuration Dialog"))
         self.setMinimumSize(640, 480)
+
+        self.moordyn_parameters_data: MoorDynConfiguration = deepcopy(Case.the().moorings.moordyn_configuration)  # Result of the MoorDynParametersDialog
 
         self.root_layout: QtGui.QVBoxLayout = QtGui.QVBoxLayout()
 
@@ -181,12 +189,26 @@ class MooringsConfigurationDialog(QtGui.QDialog):
         self.xml_file_selection_edit.setText(case.moorings.moordyn_xml)
 
         for index, mkprop in enumerate(floating_mkbasedproperties):
-            target_widget: MooringsCompatibleFloatingWidget = MooringsCompatibleFloatingWidget(mkprop.mk in case.moorings.moored_floatings, ObjectType.BOUND, mkprop.mk)
+            target_widget: MooringsCompatibleFloatingWidget = MooringsCompatibleFloatingWidget(mkprop.mk - 11 in case.moorings.moored_floatings, ObjectType.BOUND, mkprop.mk - 11)  # Offset the mk to convert in mkbound
             self.floating_selection_table.setCellWidget(index, 0, target_widget)
 
     def _on_configure_moordyn_parameters(self) -> None:
         """ Opens up the MoorDyn configuration parameters dialog. """
-        info_dialog("Not yet implemented")
+        new_selected_bodies: list = list()
+
+        for row_num in range(0, self.floating_selection_table.rowCount()):
+            target_widget: MooringsCompatibleFloatingWidget = self.floating_selection_table.cellWidget(row_num, 0)
+            if target_widget.use_checkbox.isChecked():
+                list_of_matching_bodies: list = list(filter(lambda body: body.ref == target_widget.mkbound, self.moordyn_parameters_data.bodies))
+                new_body: MoorDynBody = list_of_matching_bodies[0] if list_of_matching_bodies else MoorDynBody(target_widget.mkbound)
+                new_selected_bodies.append(new_body)
+
+        self.moordyn_parameters_data.bodies = list(new_selected_bodies)
+        if not self.moordyn_parameters_data.bodies:
+            error_dialog(__("You must at least select one floating body to configure MoorDyn"))
+            return
+
+        MoorDynParametersDialog(self.moordyn_parameters_data)
 
     def _on_ok(self) -> None:
         """ Reacts to the ok button being pressed. """
@@ -199,10 +221,11 @@ class MooringsConfigurationDialog(QtGui.QDialog):
         moored_floatings = Case.the().moorings.moored_floatings
         for row_num in range(0, self.floating_selection_table.rowCount()):
             target_widget: MooringsCompatibleFloatingWidget = self.floating_selection_table.cellWidget(row_num, 0)
-            if target_widget.use_checkbox.isChecked() and target_widget.mk not in moored_floatings:
-                moored_floatings.append(target_widget.mk)
-            if not target_widget.use_checkbox.isChecked() and target_widget.mk in moored_floatings:
-                moored_floatings.remove(target_widget.mk)
+            if target_widget.use_checkbox.isChecked() and target_widget.mkbound not in moored_floatings:
+                moored_floatings.append(target_widget.mkbound)
+            if not target_widget.use_checkbox.isChecked() and target_widget.mkbound in moored_floatings:
+                moored_floatings.remove(target_widget.mkbound)
+        Case.the().moorings.moordyn_configuration = deepcopy(self.moordyn_parameters_data)
         self.accept()
 
     def _on_cancel(self) -> None:
