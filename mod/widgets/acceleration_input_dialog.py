@@ -149,7 +149,7 @@ class AccelerationInputDialog(QtGui.QDialog):
 
     def on_remove(self):
         """ Removes the acceleration input data from the data structure. """
-        if self.accinput.acclist:
+        if not self.accinput.acclist:
             return
         index = self.accinput_list.currentRow()
         self.accinput.acclist.pop(index)
@@ -157,9 +157,11 @@ class AccelerationInputDialog(QtGui.QDialog):
 
     def on_list_select(self):
         """ Reacts to an acceleration input data being selected. """
-        if self.accinput.acclist:
+        if not self.accinput.acclist:
             return
         index = self.accinput_list.currentRow()
+        if index < 0 or index > len(self.accinput.acclist) - 1:
+            return
         item = self.accinput.acclist[index]
         self.accinput_label_input.setText(item.label)
         self.accinput_mkfluid_input.setText(str(item.mkfluid))
@@ -177,7 +179,7 @@ class AccelerationInputDialog(QtGui.QDialog):
 
     def on_save_data(self):
         """ Saves the data on the window to the acceleration input configuration. """
-        if self.accinput.acclist:
+        if not self.accinput.acclist:
             return
         index = self.accinput_list.currentRow()
         item = self.accinput.acclist[index]
