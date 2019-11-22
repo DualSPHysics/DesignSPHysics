@@ -69,7 +69,25 @@ class Case():
     @staticmethod
     def update_from_disk(disk_data: "Case") -> None:
         """ Updates the current instance for the one passed as parameter. """
+        Case.the().reset()
+        Case.merge_old_object(disk_data, Case.__instance)
         Case.__instance = disk_data
+
+    @staticmethod
+    def merge_old_object(old, new):
+        """ Merges an old object with the current version. """
+        # FIXME: Add support for dicts,lists,tuples...
+        for attr, value in new.__dict__.items():
+            debug("Evaluating attr {} from the new object of type {}, for the old object of type {}".format(attr, type(new), type(old)))
+            if not hasattr(old, attr):
+                debug("Old object didn't have that attribute. Just updating it and going forward")
+                setattr(old, attr, value)
+                continue
+            if hasattr(value, "__dict__") and hasattr(old, attr):
+                # FIXME: old.attr may not have __dict__...
+                debug("The attr {} is an object, and the old object has it. Exploring...".format(attr))
+                Case.merge_old_object(getattr(old, attr), value)
+                continue
 
     def get_first_mk_not_used(self, object_type: ObjectType):
         """ Checks simulation objects to find the first not used MK group number. """
