@@ -7,6 +7,7 @@ from PySide import QtGui
 from mod.translation_tools import __
 from mod.executable_tools import executable_contains_string
 from mod.dialog_tools import warning_dialog, error_dialog
+from mod.file_tools import get_default_config_file
 
 from mod.dataobjects.case import Case
 
@@ -20,6 +21,7 @@ class SetupPluginDialog(QtGui.QDialog):
         self.setWindowTitle("DesignSPHysics Setup")
         self.ok_button = QtGui.QPushButton("Ok")
         self.cancel_button = QtGui.QPushButton("Cancel")
+        self.defaults_button = QtGui.QPushButton(__("Load defaults"))
 
         # GenCase path
         self.gencasepath_layout = QtGui.QHBoxLayout()
@@ -141,6 +143,7 @@ class SetupPluginDialog(QtGui.QDialog):
         self.paraview_layout.addWidget(self.paraview_input)
         self.paraview_layout.addWidget(self.paraview_browse)
 
+        self.defaults_button.clicked.connect(self.on_set_defaults)
         self.ok_button.clicked.connect(self.on_ok)
         self.cancel_button.clicked.connect(self.on_cancel)
         self.gencasepath_browse.clicked.connect(lambda: self.browse("GenCase", self.gencasepath_input))
@@ -156,6 +159,7 @@ class SetupPluginDialog(QtGui.QDialog):
 
         # Button layout definition
         self.stp_button_layout = QtGui.QHBoxLayout()
+        self.stp_button_layout.addWidget(self.defaults_button)
         self.stp_button_layout.addStretch(1)
         self.stp_button_layout.addWidget(self.ok_button)
         self.stp_button_layout.addWidget(self.cancel_button)
@@ -199,6 +203,19 @@ class SetupPluginDialog(QtGui.QDialog):
         Case.the().executable_paths.paraview = self.paraview_input.text()
         Case.the().executable_paths.check_and_filter()
         self.accept()
+
+    def on_set_defaults(self):
+        """ Set the executable paths on the dialog to the defaults ones. """
+        default_config: dict = get_default_config_file()
+        self.gencasepath_input.setText(default_config["gencase"])
+        self.dsphpath_input.setText(default_config["dsphysics"])
+        self.partvtk4path_input.setText(default_config["partvtk4"])
+        self.computeforces_input.setText(default_config["computeforces"])
+        self.floatinginfo_input.setText(default_config["floatinginfo"])
+        self.measuretool_input.setText(default_config["measuretool"])
+        self.isosurface_input.setText(default_config["isosurface"])
+        self.boundaryvtk_input.setText(default_config["boundaryvtk"])
+        self.flowtool_input.setText(default_config["flowtool"])
 
     def on_cancel(self):
         """ Closes the dialog rejecting it. """
