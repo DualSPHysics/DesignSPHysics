@@ -131,12 +131,12 @@ class DockSimulationWidget(QtGui.QWidget):
             else:
                 # In case of an error
                 if "exception" in str(output).lower():
-                    error(__("Exception in execution."))
+                    log("There was an error on the execution. Opening an error dialog for that.")
                     run_dialog.hide()
                     self.simulation_complete.emit(False)
                     error_dialog(__("An error occurred during execution. Make sure that parameters exist and are properly defined. "
                                     "You can also check your execution device (update the driver of your GPU). Read the details for more information."),
-                                 str(output).split("================================")[1])
+                                 str(output).split("===========\n")[1])
 
         # Launches a QProcess in background
         process = QtCore.QProcess(get_fc_main_window())
