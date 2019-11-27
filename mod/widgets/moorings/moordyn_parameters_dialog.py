@@ -45,7 +45,7 @@ class MoorDynLineWidget(QtGui.QWidget):
     """ Widget to embed in each element of the line list for the MoorDyn configuration dialog. """
 
     configure_clicked = QtCore.Signal(UUID)
-    delete_clicked = QtCore.Signal(UUID, int)
+    delete_clicked = QtCore.Signal(UUID)
 
     def __init__(self, line_id, row):
         super().__init__()
@@ -65,7 +65,7 @@ class MoorDynLineWidget(QtGui.QWidget):
         self.root_layout.addWidget(self.delete_button)
 
         self.configure_button.clicked.connect(lambda _=False, line_id=self.line_id: self.configure_clicked.emit(line_id))
-        self.delete_button.clicked.connect(lambda _=False, line_id=self.line_id, row=self.row: self.delete_clicked.emit(line_id, row))
+        self.delete_button.clicked.connect(lambda _=False, line_id=self.line_id: self.delete_clicked.emit(line_id))
 
         self.setLayout(self.root_layout)
 
@@ -201,13 +201,27 @@ class MoorDynParametersDialog(QtGui.QDialog):
         self.lines_table.setRowCount(self.lines_table.rowCount() + 1)
         widget: MoorDynLineWidget = MoorDynLineWidget(new_line.line_id, self.lines_table.rowCount() - 1)
         widget.configure_clicked.connect(lambda line_id=None: self._on_configure_line(line_id))
-        widget.delete_clicked.connect(lambda line_id=None, row=None: self._on_delete_line(line_id, row))
+        widget.delete_clicked.connect(lambda line_id=None: self._on_delete_line(line_id))
         self.lines_table.setCellWidget(self.lines_table.rowCount() - 1, 0, widget)
 
-    def _on_delete_line(self, line_id, row):
-        debug("Deleting line {} in row {}".format(line_id, row))
+    def _on_delete_line(self, line_id):
+        debug("Deleting line {}".format(line_id))
+        debug("Lines before: {}".format(self.stored_configuration.lines))
         self.stored_configuration.lines = list(filter(lambda line: line.line_id != line_id, self.stored_configuration.lines))
-        self.lines_table.removeRow(row)
+        debug("Lines after: {}".format(self.stored_configuration.lines))
+
+        index_to_delete: int = 0
+        for i in range(0, self.lines_table.rowCount()):
+            if self.lines_table.cellWidget(i, 0).line_id == line_id:
+                index_to_delete = i
+                break
+
+        self.lines_table.removeRow(index_to_delete)
+
+        for index in range(0, self.lines_table.rowCount()):
+            target_widget: MoorDynLineWidget = self.lines_table.cellWidget(index, 0)
+            target_widget.row = index
+            self.lines_table.setCellWidget(index, 0, target_widget)
 
     def _on_configure_line(self, line_id):
         selected_line = next(filter(lambda line: line.line_id == line_id, self.stored_configuration.lines), None)
@@ -249,5 +263,5 @@ class MoorDynParametersDialog(QtGui.QDialog):
         for index, line in enumerate(self.stored_configuration.lines):
             widget: MoorDynLineWidget = MoorDynLineWidget(line.line_id, index)
             widget.configure_clicked.connect(lambda line_id=None: self._on_configure_line(line_id))
-            widget.delete_clicked.connect(lambda line_id=None, row=None: self._on_delete_line(line_id, row))
+            widget.delete_clicked.connect(lambda line_id=None: self._on_delete_line(line_id))
             self.lines_table.setCellWidget(index, 0, widget)
