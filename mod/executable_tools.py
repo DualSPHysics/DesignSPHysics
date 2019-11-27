@@ -22,7 +22,8 @@ def executable_contains_string(executable: str, string: str) -> bool:
 
         process.start("\"{}\" -ver".format(executable))
         process.waitForFinished()
-        output = str(process.readAllStandardOutput())
+        output = str(process.readAllStandardOutput().data(), encoding='utf-8')
+
 
         return string.lower() in output.lower()
 

@@ -36,7 +36,7 @@ def partvtk_export(options, case, post_processing_widget) -> None:
     # Information ready handler.
     def on_stdout_ready():
         """ Updates the export dialog on every stdout available from the process. """
-        current_output = str(export_process.readAllStandardOutput())
+        current_output = str(export_process.readAllStandardOutput().data(), encoding='utf-8')
         case.info.current_output += current_output
         try:
             current_part = current_output.split("{}_".format(options["file_name"]))[1]
@@ -95,7 +95,7 @@ def floatinginfo_export(options, case, post_processing_widget) -> None:
 
     def on_stdout_ready():
         """ Updates the export dialog on every stdout avasilable from the process. """
-        current_output = str(export_process.readAllStandardOutput())
+        current_output = str(export_process.readAllStandardOutput().data(), encoding='utf-8')
         case.info.current_output += current_output
         try:
             current_part = int(current_output.split("Part_")[1].split("  ")[0])
@@ -150,7 +150,7 @@ def computeforces_export(options, case, post_processing_widget) -> None:
 
     def on_stdout_ready():
         """ Updates the export dialog on every stdout available from the process. """
-        current_output = str(export_process.readAllStandardOutput())
+        current_output = str(export_process.readAllStandardOutput().data(), encoding='utf-8')
         case.info.current_output += current_output
         try:
             current_part = int(current_output.split("Part_")[1].split(".bi4")[0])
@@ -206,7 +206,7 @@ def measuretool_export(options, case, post_processing_widget) -> None:
 
     def on_stdout_ready():
         """ Updates the export dialog on every stdout available from the process. """
-        current_output = str(export_process.readAllStandardOutput())
+        current_output = str(export_process.readAllStandardOutput().data(), encoding='utf-8')
         case.info.current_output += current_output
         try:
             current_part = int(current_output.split("/Part_")[1].split(".bi4")[0])
@@ -255,7 +255,7 @@ def isosurface_export(options, case, post_processing_widget) -> None:
 
     def on_stdout_ready():
         """ Updates the export dialog on every stdout available from the process. """
-        current_output = str(export_process.readAllStandardOutput())
+        current_output = str(export_process.readAllStandardOutput().data(), encoding='utf-8')
         case.info.current_output += current_output
         try:
             current_part = current_output.split("{}_".format(options["file_name"]))[1]
@@ -309,7 +309,7 @@ def flowtool_export(options, case, post_processing_widget) -> None:
 
     def on_stdout_ready():
         """ Updates the export dialog on every stdout available from the process. """
-        current_output = str(export_process.readAllStandardOutput())
+        current_output = str(export_process.readAllStandardOutput().data(), encoding='utf-8')
         case.info.current_output += current_output
         try:
             current_part = current_output.split("{}_".format(options["vtk_name"]))[1]
