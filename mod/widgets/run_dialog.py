@@ -5,6 +5,8 @@
 from PySide import QtCore, QtGui
 
 from mod.translation_tools import __
+from mod.constants import LINE_END
+from mod.dialog_tools import warning_dialog
 
 
 class RunDialog(QtGui.QDialog):
@@ -67,8 +69,11 @@ class RunDialog(QtGui.QDialog):
 
         # Buttons
         self.run_button_layout = QtGui.QHBoxLayout()
+        self.run_button_warnings = QtGui.QPushButton(__("Show Warnings"))
+        self.run_button_warnings.hide()
         self.run_button_details = QtGui.QPushButton(__("Details"))
         self.run_button_cancel = QtGui.QPushButton(__("Cancel Simulation"))
+        self.run_button_layout.addWidget(self.run_button_warnings)
         self.run_button_layout.addStretch(1)
         self.run_button_layout.addWidget(self.run_button_details)
         self.run_button_layout.addWidget(self.run_button_cancel)
@@ -119,6 +124,21 @@ class RunDialog(QtGui.QDialog):
         self.run_progbar_bar.setValue(100)
         self.run_button_cancel.setText(__("Close"))
         self.run_group_label_completed.setVisible(True)
+        self.compute_warnings()
+
+    def compute_warnings(self) -> None:
+        """ Checks the resulting output for a [Warnings] tab and adds a button to see them. """
+        details_text: str = self.run_details_text.toPlainText()
+        if "[WARNINGS]" not in details_text:
+            return
+        warning_list: list = details_text.split("[WARNINGS]\n")[1].split("\n\n")[0].split("\n")
+        self.run_group_label_completed.setText("<b style='color: #ABA400'>{}</b>".format(__("Simulation completed with warnings.")))
+        try:
+            self.run_button_warnings.clicked.disconnect()
+        except RuntimeError: # If nothing is yet connected it will throw an exception.
+            pass
+        self.run_button_warnings.clicked.connect(lambda _=False, text=(LINE_END*2).join(warning_list): warning_dialog(text))
+        self.run_button_warnings.show()
 
     def toggle_run_details(self) -> None:
         """ Toggles the run details dialog panel. """

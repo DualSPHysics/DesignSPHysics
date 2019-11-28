@@ -849,5 +849,7 @@
     "Line Lenght:": "Line Lenght:",
     "Number of Segments:": "Number of Segments:",
     "Fix Connection: ": "Fix Connection: ",
-    "Load defaults": "Load defaults"
+    "Load defaults": "Load defaults",
+    "Simulation completed with warnings.": "Simulation completed with warnings.",
+    "Show Warnings": "Show Warnings"
 }
