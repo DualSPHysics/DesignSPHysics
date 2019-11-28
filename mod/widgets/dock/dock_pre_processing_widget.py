@@ -184,6 +184,7 @@ class DockPreProcessingWidget(QtGui.QWidget):
         if not save_name:
             return
 
+        Case.the().info.needs_to_run_gencase = True
         save_case(save_name, Case.the())
         save_current_freecad_document(Case.the().path)
 
@@ -220,9 +221,11 @@ class DockPreProcessingWidget(QtGui.QWidget):
                 GencaseCompletedDialog(particle_count=total_particles, detail_text=output, cmd_string=cmd_string, parent=get_fc_main_window()).show()
                 Case.the().info.is_gencase_done = True
                 self.on_save_case()
+                Case.the().info.needs_to_run_gencase = False
             except ValueError:
                 print_exc()
                 Case.the().info.is_gencase_done = False
+                Case.the().info.needs_to_run_gencase = True
 
         # Refresh widget enable/disable status as GenCase finishes
         self.gencase_completed.emit(Case.the().info.is_gencase_done)

@@ -72,7 +72,7 @@ class DockSimulationWidget(QtGui.QWidget):
 
         refocus_cwd()
 
-        if not Case.the().info.needs_to_run_gencase:
+        if Case.the().info.needs_to_run_gencase:
             # Warning window about save_case
             warning_dialog("You should run GenCase again. Otherwise, the obtained results may not be as expected")
 
@@ -127,9 +127,11 @@ class DockSimulationWidget(QtGui.QWidget):
             if exit_code == 0:
                 # Simulation went correctly
                 Case.the().info.is_simulation_done = True
+                Case.the().info.needs_to_run_gencase = False
                 self.simulation_complete.emit(True)
             else:
                 # In case of an error
+                Case.the().info.needs_to_run_gencase = True
                 if "exception" in str(output).lower():
                     log("There was an error on the execution. Opening an error dialog for that.")
                     run_dialog.hide()
@@ -186,8 +188,6 @@ class DockSimulationWidget(QtGui.QWidget):
         # Set filesystem watcher to the out directory.
         run_fs_watcher.addPath(Case.the().path + "/" + Case.the().name + "_out/")
         run_fs_watcher.directoryChanged.connect(on_fs_change)
-
-        Case.the().info.needs_to_run_gencase = False
 
         # Handle error on simulation start
         if process.state() == QtCore.QProcess.NotRunning:
