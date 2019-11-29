@@ -853,5 +853,12 @@
     "Simulation completed with warnings.": "Simulation completed with warnings.",
     "Show Warnings": "Show Warnings",
     "Select an input to show help about it.": "Select an input to show help about it.",
-    "Help": "Help"
+    "Help": "Help",
+    "The domain is fixed with the specified values (xmin:ymin:zmin:xmax:ymax:zmax)": "The domain is fixed with the specified values (xmin:ymin:zmin:xmax:ymax:zmax)",
+    "The domain is fixed in the specified limit (default=not applied)": "The domain is fixed in the specified limit (default=not applied)",
+    "Increase of Y with periodic BC in axis X": "Increase of Y with periodic BC in axis X",
+    "Increase of Z with periodic BC in axis X": "Increase of Z with periodic BC in axis X",
+    "Increase of Z with periodic BC in axis Y": "Increase of Z with periodic BC in axis Y",
+    "Increase of Z+ (%) (default=0).": "Increase of Z+ (%) (default=0).",
+    "The domain is fixed with the specified values (xmin:ymin:zmin:xmax:ymax:zmax).": "The domain is fixed with the specified values (xmin:ymin:zmin:xmax:ymax:zmax)."
 }

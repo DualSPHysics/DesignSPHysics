@@ -7,9 +7,7 @@ from PySide import QtCore, QtGui
 
 from mod.translation_tools import __
 from mod.stdout_tools import log
-
-from mod.constants import HELP_GRAVITYX, HELP_GRAVITYY, HELP_GRAVITYZ, HELP_RHOP0, HELP_HSWL, HELP_GAMMA, HELP_SPEEDSYSTEM
-from mod.constants import HELP_COEFSOUND, HELP_SPEEDSOUND, HELP_COEFH, HELP_CFLNUMBER
+from mod.enums import HelpText
 
 from mod.widgets.hoverable_label import HoverableLabel
 from mod.widgets.focusable_line_edit import FocusableLineEdit
@@ -21,13 +19,13 @@ class ConstantsDialog(QtGui.QDialog):
     """ A window to define and configure the constants of the case for later execution
         in the DualSPHysics simulator. """
 
-    HELP_LABEL_DEFAULT_TEXT = "<i>{}</i>".format(__("Select an input to show help about it."))
+    LABEL_DEFAULT_TEXT = "<i>{}</i>".format(__("Select an input to show help about it."))
 
     def __init__(self, parent=None):
         super(ConstantsDialog, self).__init__(parent=parent)
 
         self.setWindowTitle("DSPH Constant definition")
-        self.help_label: QtGui.QLabel = QtGui.QLabel(self.HELP_LABEL_DEFAULT_TEXT)
+        self.help_label: QtGui.QLabel = QtGui.QLabel(self.LABEL_DEFAULT_TEXT)
 
         self.ok_button = QtGui.QPushButton("Ok")
         self.cancel_button = QtGui.QPushButton("Cancel")
@@ -60,7 +58,7 @@ class ConstantsDialog(QtGui.QDialog):
 
         self.gravityx_input = QtGui.QLineEdit()
         self.gravityx_input = FocusableLineEdit()
-        self.gravityx_input.set_help_text(__(HELP_GRAVITYX))
+        self.gravityx_input.set_help_text(HelpText.GRAVITYX)
         self.gravityx_input.setMaxLength(10)
 
         self.gravityx_input.focus.connect(self.on_help_focus)
@@ -71,7 +69,7 @@ class ConstantsDialog(QtGui.QDialog):
 
         self.gravityy_input = QtGui.QLineEdit()
         self.gravityy_input = FocusableLineEdit()
-        self.gravityy_input.set_help_text(__(HELP_GRAVITYY))
+        self.gravityy_input.set_help_text(HelpText.GRAVITYY)
         self.gravityy_input.setMaxLength(10)
 
         self.gravityy_input.focus.connect(self.on_help_focus)
@@ -82,7 +80,7 @@ class ConstantsDialog(QtGui.QDialog):
 
         self.gravityz_input = QtGui.QLineEdit()
         self.gravityz_input = FocusableLineEdit()
-        self.gravityz_input.set_help_text(__(HELP_GRAVITYZ))
+        self.gravityz_input.set_help_text(HelpText.GRAVITYZ)
         self.gravityz_input.setMaxLength(10)
 
         self.gravityz_input.focus.connect(self.on_help_focus)
@@ -105,7 +103,7 @@ class ConstantsDialog(QtGui.QDialog):
 
         self.rhop0_input = QtGui.QLineEdit()
         self.rhop0_input = FocusableLineEdit()
-        self.rhop0_input.set_help_text(__(HELP_RHOP0))
+        self.rhop0_input.set_help_text(HelpText.RHOP0)
         self.rhop0_input.setMaxLength(10)
 
         self.rhop0_input.focus.connect(self.on_help_focus)
@@ -135,7 +133,7 @@ class ConstantsDialog(QtGui.QDialog):
         self.hswl_label = QtGui.QLabel("HSWL: ")
         self.hswl_input = QtGui.QLineEdit()
         self.hswl_input = FocusableLineEdit()
-        self.hswl_input.set_help_text(__(HELP_HSWL))
+        self.hswl_input.set_help_text(HelpText.HSWL)
         self.hswl_input.setMaxLength(10)
 
         self.hswl_input.focus.connect(self.on_help_focus)
@@ -157,7 +155,7 @@ class ConstantsDialog(QtGui.QDialog):
         self.gamma_label = QtGui.QLabel("Gamma: ")
         self.gamma_input = QtGui.QLineEdit()
         self.gamma_input = FocusableLineEdit()
-        self.gamma_input.set_help_text(__(HELP_GAMMA))
+        self.gamma_input.set_help_text(HelpText.GAMMA)
         self.gamma_input.setMaxLength(3)
 
         self.gamma_input.focus.connect(self.on_help_focus)
@@ -186,7 +184,7 @@ class ConstantsDialog(QtGui.QDialog):
         self.speedsystem_label = QtGui.QLabel("Speedsystem: ")
         self.speedsystem_input = QtGui.QLineEdit()
         self.speedsystem_input = FocusableLineEdit()
-        self.speedsystem_input.set_help_text(__(HELP_SPEEDSYSTEM))
+        self.speedsystem_input.set_help_text(HelpText.SPEEDSYSTEM)
         self.speedsystem_input.setMaxLength(10)
 
         self.speedsystem_input.focus.connect(self.on_help_focus)
@@ -208,7 +206,7 @@ class ConstantsDialog(QtGui.QDialog):
         self.coefsound_label = QtGui.QLabel("Coefsound: ")
         self.coefsound_input = QtGui.QLineEdit()
         self.coefsound_input = FocusableLineEdit()
-        self.coefsound_input.set_help_text(__(HELP_COEFSOUND))
+        self.coefsound_input.set_help_text(HelpText.COEFSOUND)
         self.coefsound_input.setMaxLength(3)
 
         self.coefsound_input.focus.connect(self.on_help_focus)
@@ -237,7 +235,7 @@ class ConstantsDialog(QtGui.QDialog):
         self.speedsound_label = QtGui.QLabel("Speedsound: ")
         self.speedsound_input = QtGui.QLineEdit()
         self.speedsound_input = FocusableLineEdit()
-        self.speedsound_input.set_help_text(__(HELP_SPEEDSOUND))
+        self.speedsound_input.set_help_text(HelpText.SPEEDSOUND)
         self.speedsound_input.setMaxLength(10)
 
         self.speedsound_input.focus.connect(self.on_help_focus)
@@ -259,7 +257,7 @@ class ConstantsDialog(QtGui.QDialog):
         self.coefh_label = QtGui.QLabel("CoefH: ")
         self.coefh_input = QtGui.QLineEdit()
         self.coefh_input = FocusableLineEdit()
-        self.coefh_input.set_help_text(__(HELP_COEFH))
+        self.coefh_input.set_help_text(HelpText.COEFH)
         self.coefh_input.setMaxLength(10)
 
         self.coefh_input.focus.connect(self.on_help_focus)
@@ -278,7 +276,7 @@ class ConstantsDialog(QtGui.QDialog):
         self.cflnumber_label = QtGui.QLabel("cflnumber: ")
         self.cflnumber_input = QtGui.QLineEdit()
         self.cflnumber_input = FocusableLineEdit()
-        self.cflnumber_input.set_help_text(__(HELP_CFLNUMBER))
+        self.cflnumber_input.set_help_text(HelpText.CFLNUMBER)
         self.cflnumber_input.setMaxLength(10)
 
         self.cflnumber_input.focus.connect(self.on_help_focus)
