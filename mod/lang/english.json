@@ -851,5 +851,7 @@
     "Fix Connection: ": "Fix Connection: ",
     "Load defaults": "Load defaults",
     "Simulation completed with warnings.": "Simulation completed with warnings.",
-    "Show Warnings": "Show Warnings"
+    "Show Warnings": "Show Warnings",
+    "Select an input to show help about it.": "Select an input to show help about it.",
+    "Help": "Help"
 }

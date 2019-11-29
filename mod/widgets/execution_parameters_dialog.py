@@ -27,14 +27,14 @@ class ExecutionParametersDialog(QtGui.QDialog):
     """Defines the execution parameters window.
     Modifies the data dictionary passed as parameter."""
 
+    HELP_LABEL_DEFAULT_TEXT = "<i>{}</i>".format(__("Select an input to show help about it."))
+
     def __init__(self, parent=None):
         super(ExecutionParametersDialog, self).__init__(parent=parent)
 
         # Creates a dialog and 2 main buttons
         self.setWindowTitle("DSPH Execution Parameters")
-        self.help_window = QtGui.QTextEdit()
-        self.help_window.setMaximumHeight(50)
-        self.help_window.setReadOnly(True)
+        self.help_label = QtGui.QLabel(self.HELP_LABEL_DEFAULT_TEXT)
         self.ok_button = QtGui.QPushButton("Ok")
         self.cancel_button = QtGui.QPushButton("Cancel")
 
@@ -613,11 +613,6 @@ class ExecutionParametersDialog(QtGui.QDialog):
         self.ok_button.clicked.connect(self.on_ok)
         self.cancel_button.clicked.connect(self.on_cancel)
 
-        # Help Text Layout definition
-        self.ep_helpText_layout = QtGui.QHBoxLayout()
-        self.ep_helpText_layout.addWidget(self.help_window)
-        self.ep_helpText_layout.setStretchFactor(self.help_window, 0)
-
         # Button layout definition
         self.ep_button_layout = QtGui.QHBoxLayout()
         self.ep_button_layout.addStretch(1)
@@ -664,7 +659,7 @@ class ExecutionParametersDialog(QtGui.QDialog):
 
         self.execparams_window_layout = QtGui.QVBoxLayout()
         self.execparams_window_layout.addWidget(self.ep_main_layout_scroll)
-        self.execparams_window_layout.addLayout(self.ep_helpText_layout)
+        self.execparams_window_layout.addWidget(self.help_label)
         self.execparams_window_layout.addLayout(self.ep_button_layout)
         self.setLayout(self.execparams_window_layout)
 
@@ -673,7 +668,7 @@ class ExecutionParametersDialog(QtGui.QDialog):
 
     def on_help_focus(self, help_text):
         """ Reacts to focusing the help setting the corresponding help text. """
-        self.help_window.setText(help_text)
+        self.help_label.setText("<b>{}: </b>{}".format(__("Help"), help_text))
 
     def on_step_change(self, index):
         """ Reacts to step algorithm changing enabling/disabling the verletsteps option. """
