@@ -72,7 +72,7 @@ class DockSimulationWidget(QtGui.QWidget):
 
         refocus_cwd()
 
-        if not Case.the().info.needs_to_run_gencase:
+        if Case.the().info.needs_to_run_gencase:
             # Warning window about save_case
             warning_dialog("You should run GenCase again. Otherwise, the obtained results may not be as expected")
 
@@ -117,7 +117,8 @@ class DockSimulationWidget(QtGui.QWidget):
             """ Simulation finish handler. Defines what happens when the process finishes."""
 
             # Reads output and completes the progress bar
-            output = process.readAllStandardOutput()
+            output = str(process.readAllStandardOutput().data(), encoding='utf-8')
+
             run_dialog.set_detail_text(str(output))
             run_dialog.run_complete()
 
@@ -126,16 +127,18 @@ class DockSimulationWidget(QtGui.QWidget):
             if exit_code == 0:
                 # Simulation went correctly
                 Case.the().info.is_simulation_done = True
+                Case.the().info.needs_to_run_gencase = False
                 self.simulation_complete.emit(True)
             else:
                 # In case of an error
+                Case.the().info.needs_to_run_gencase = True
                 if "exception" in str(output).lower():
-                    error(__("Exception in execution."))
+                    log("There was an error on the execution. Opening an error dialog for that.")
                     run_dialog.hide()
                     self.simulation_complete.emit(False)
                     error_dialog(__("An error occurred during execution. Make sure that parameters exist and are properly defined. "
                                     "You can also check your execution device (update the driver of your GPU). Read the details for more information."),
-                                 str(output).split("================================")[1])
+                                 str(output).split("===========\n")[1])
 
         # Launches a QProcess in background
         process = QtCore.QProcess(get_fc_main_window())
@@ -185,8 +188,6 @@ class DockSimulationWidget(QtGui.QWidget):
         # Set filesystem watcher to the out directory.
         run_fs_watcher.addPath(Case.the().path + "/" + Case.the().name + "_out/")
         run_fs_watcher.directoryChanged.connect(on_fs_change)
-
-        Case.the().info.needs_to_run_gencase = False
 
         # Handle error on simulation start
         if process.state() == QtCore.QProcess.NotRunning:

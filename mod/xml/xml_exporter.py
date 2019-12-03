@@ -25,6 +25,7 @@ from mod.xml.renderers.wavepaddles_renderer import WavePaddlesRenderer
 from mod.xml.renderers.inout_renderer import InoutRenderer
 from mod.xml.renderers.chrono_renderer import ChronoRenderer
 from mod.xml.renderers.periodicity_renderer import PeriodicityRenderer
+from mod.xml.renderers.moorings_renderer import MooringsRenderer
 
 
 class XMLExporter():
@@ -66,6 +67,7 @@ class XMLExporter():
         data["wavepaddles_template"] = WavePaddlesRenderer.render(data)
         data["inout_template"] = InoutRenderer.render(data)
         data["chrono_template"] = ChronoRenderer.render(data)
+        data["moorings_template"] = MooringsRenderer.render(data)
         data["application"] = APP_NAME
         data["current_date"] = datetime.now().strftime("%d-%m-%Y %H:%M:%S")
         return data

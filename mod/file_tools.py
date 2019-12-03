@@ -258,7 +258,6 @@ def save_case(save_name: str, case: "Case") -> None:
     # Dumps all the case data to an XML file.
     XMLExporter().save_to_disk(save_name, case)
 
-    case.info.needs_to_run_gencase = False
     case.version = VERSION
     # Save data array on disk. It is saved as a binary file with Pickle.
     try:

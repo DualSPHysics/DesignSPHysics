@@ -6,6 +6,8 @@ This file holds a collection of useful enums
 in class forms, for code organization
 """
 
+from mod.translation_tools import __
+
 
 class IrregularSpectrum():
     """ Types of supported wave spectrums. """
@@ -194,3 +196,61 @@ class MooringsConfigurationMethod:
     """ Types of MoorDyn configuration types. """
     EMBEDDED = 0
     FROM_XML = 1
+
+
+class HelpText:
+    """ Help strings for different zones of the application GUIs. """
+    GRAVITYX = __("Gravitational acceleration in X direction.")
+    GRAVITYY = __("Gravitational acceleration in Y direction.")
+    GRAVITYZ = __("Gravitational acceleration in Z direction.")
+    RHOP0 = __("Reference density of the fluid.")
+    HSWL = __("Maximum still water level to calculate speedofsound as the celerity during dam-break propagation.")
+    GAMMA = __("Polytropic constant for ocean water used in the state equation.")
+    SPEEDSYSTEM = __("Maximum speed system (by default the celerity during dam-break propagation).")
+    COEFSOUND = __("Coefficient to multiply speedsystem")
+    SPEEDSOUND = __("Speed of sound (by default speedofsound=coefsound*speedsystem). ")
+    COEFH = __("Coefficient to calculate the smoothing length (h=coefh*sqrt(3*dp^2) in 3D).")
+    CFLNUMBER = __("Coefficient to multiply variable dt.")
+    DOMAINFIXED = __("The domain is fixed with the specified values (xmin:ymin:zmin:xmax:ymax:zmax)")
+    XMIN = __("The domain is fixed in the specified limit (default=not applied)")
+    XMAX = __("The domain is fixed in the specified limit (default=not applied)")
+    YMIN = __("The domain is fixed in the specified limit (default=not applied)")
+    YMAX = __("The domain is fixed in the specified limit (default=not applied)")
+    ZMIN = __("The domain is fixed in the specified limit (default=not applied)")
+    ZMAX = __("The domain is fixed in the specified limit (default=not applied)")
+    POSDOUBLE = __("Precision in particle interaction 0:Simple, 1:Double, 2:Uses and saves double (default=0).")
+    STEPALGORITHM = __("Time-integrator algorithm 1:Verlet, 2:Symplectic (default=1).")
+    VERLETSTEPS = __("Verlet only: Number of steps to apply Euler timestepping (default=40).")
+    KERNEL = __("Interaction Kernel 1:Cubic Spline, 2:Wendland, 3:Gaussian (default=2)")
+    VISCOTREATMENT = __("Viscosity formulation 1:Artificial, 2:Laminar+SPS (default=1)")
+    VISCO = __("Viscosity value (apha when VISCOTREATMENT=1 and kinematic viscosity when VISCOTREATMENT=2).")
+    VISCOBOUNDFACTOR = __("Multiply viscosity value for fluid-boundary interaction (default=1).")
+    DELTASPH = __("DeltaSPH value, 0.1 is the typical value, with 0 disabled (default=0).")
+    DENSITYDT = __("DDT value (default=0.1).")
+    SHIFTING = __("Shifting mode 0:None, 1:Ignore bound, 2:Ignore fixed, 3:Full (default=0).")
+    SHIFTINGCOEF = __("Coefficient for shifting computation (default=-2).")
+    SHIFTINGTFS = __("Threshold to detect free surface. Typically 1.5 for 2D and 2.75 for 3D (default=0).")
+    RIGIDALGORITHM = __("Rigid Algorithm 1:SPH, 2:DEM, 3:Chrono (default=1).")
+    FTPAUSE = __("Time to freeze the floating objects at beginning of simulation (default=0).")
+    DTINI = __("Initial time step (default=h/speedsound).")
+    DTMIN = __("Minimum time step (default=coefdtmin*h/speedsound).")
+    COEFDTMIN = __("Coefficient to calculate minimum time step dtmin=coefdtmin*h/speedsound (default=0.05).")
+    TIMEMAX = __("Time of simulation.")
+    TIMEOUT = __("Time to save output data.")
+    INCZ = __("Increase of Z+ (%) (default=0).")
+    PARTSOUTMAX = __("%%/100 of fluid particles allowed to be excluded from domain (default=1).")
+    RHOPOUTMIN = __("Minimum rhop valid (default=700).")
+    RHOPOUTMAX = __("Maximum rhop valid (default=1300).")
+    DOMAINFIXED = __("The domain is fixed with the specified values (xmin:ymin:zmin:xmax:ymax:zmax).")
+    YINCREMENTX = __("")
+    ZINCREMENTX = __("")
+    XINCREMENTY = __("")
+    ZINCREMENTY = __("")
+    XINCREMENTZ = __("")
+    YINCREMENTZ = __("")
+    POSMINX = __("")
+    POSMINY = __("")
+    POSMINZ = __("")
+    POSMAXX = __("")
+    POSMAXY = __("")
+    POSMAXZ = __("")

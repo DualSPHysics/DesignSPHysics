@@ -1,0 +1,3 @@
+                        <body ref="{ref}">
+                            <depth value="{depth}"/>
+                        </body>

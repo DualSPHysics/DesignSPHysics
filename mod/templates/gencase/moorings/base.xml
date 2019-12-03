@@ -1,0 +1,9 @@
+            <moorings>
+                <savevtk_moorings value="{savevtk_moorings}" comment="Saves vtk with moorings (default=true)" />
+                <savecsv_points value="{savecsv_points}" comment="Saves csv with link points (default=true)" />
+                <savevtk_points value="{savevtk_points}" comment="Saves vtk with link points (default=false)" />
+                <mooredfloatings>
+{each_mooredfloatings_template}
+                </mooredfloatings>
+{moordyn_template}
+            </moorings>

@@ -114,6 +114,10 @@ class MoorDynLineConfigurationDialog(QtGui.QDialog):
 
         # Connections
         self.ok_button.clicked.connect(self._on_ok)
+        self.ea_input_check.stateChanged.connect(self._on_ea_check)
+        self.diameter_input_check.stateChanged.connect(self._on_diameter_check)
+        self.massDenInAir_input_check.stateChanged.connect(self._on_massDenInAir_check)
+        self.ba_input_check.stateChanged.connect(self._on_ba_check)
 
         self._fill_data()
         self.exec_()
@@ -150,6 +154,30 @@ class MoorDynLineConfigurationDialog(QtGui.QDialog):
         current_body_enumerated_tuple: tuple = next(filter(lambda index_body_tuple: index_body_tuple[1].ref == self.line.vessel_connection.bodyref, enumerate(Case.the().moorings.moordyn_configuration.bodies)), None)
         self.vessel_connection_body_combo.setCurrentIndex(current_body_enumerated_tuple[0] + 1 if current_body_enumerated_tuple else 0)
 
+    def _on_ea_check(self):
+        self.ea_input.setEnabled(self.ea_input_check.isChecked())
+
+    def _on_diameter_check(self):
+        self.diameter_input.setEnabled(self.diameter_input_check.isChecked())
+
+    def _on_massDenInAir_check(self):
+        self.massDenInAir_input.setEnabled(self.massDenInAir_input_check.isChecked())
+
+    def _on_ba_check(self):
+        self.ba_input.setEnabled(self.ba_input_check.isChecked())
+
     def _on_ok(self):
-        # TODO: Save data
+        self.line.length = float(self.lenght_input.text())
+        self.line.segments = int(self.segments_input.text())
+
+        self.line.ea = str(self.ea_input.text()) if self.ea_input_check.isChecked() else None
+        self.line.diameter = str(self.diameter_input.text()) if self.diameter_input_check.isChecked() else None
+        self.line.massDenInAir = str(self.massDenInAir_input.text()) if self.massDenInAir_input_check.isChecked() else None
+        self.line.ba = str(self.ba_input.text()) if self.ba_input_check.isChecked() else None
+
+        self.line.vessel_connection.bodyref = int(self.vessel_connection_body_combo.currentText().split("MKBound: ")[1]) if self.vessel_connection_body_combo.currentIndex() > 0 else -1
+        self.line.vessel_connection.point = [float(self.vessel_connection_point_x.text()), float(self.vessel_connection_point_y.text()), float(self.vessel_connection_point_z.text())]
+
+        self.line.fix_connection.point = [float(self.fix_connection_point_x.text()), float(self.fix_connection_point_y.text()), float(self.fix_connection_point_z.text())]
+
         self.accept()
