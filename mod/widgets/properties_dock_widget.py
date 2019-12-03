@@ -26,7 +26,7 @@ from mod.dataobjects.simulation_object import SimulationObject
 class PropertiesDockWidget(QtGui.QDockWidget):
     """ DesignSPHysics object properties widget. """
 
-    NUMBER_OF_ROWS = 7
+    NUMBER_OF_ROWS = 8
     NUMBER_OF_COLUMNS = 2
 
     MIN_HEIGHT = 220
@@ -109,6 +109,10 @@ class PropertiesDockWidget(QtGui.QDockWidget):
         self.faces_label.setText("&nbsp;<span>{}</span>".format(__("Faces")))
         self.faces_label.setToolTip(__("Adds faces"))
 
+        self.autofill_label = QtGui.QLabel()
+        self.autofill_label.setText("&nbsp;<span>{}</span>".format(__("Autofill")))
+        self.autofill_label.setToolTip(__("Controls geometry autofill"))
+
         self.mkgroup_label.setAlignment(QtCore.Qt.AlignLeft)
         self.material_label.setAlignment(QtCore.Qt.AlignLeft)
         self.objtype_label.setAlignment(QtCore.Qt.AlignLeft)
@@ -116,6 +120,7 @@ class PropertiesDockWidget(QtGui.QDockWidget):
         self.floatstate_label.setAlignment(QtCore.Qt.AlignLeft)
         self.initials_label.setAlignment(QtCore.Qt.AlignLeft)
         self.motion_label.setAlignment(QtCore.Qt.AlignLeft)
+        self.autofill_label.setAlignment(QtCore.Qt.AlignLeft)
 
         # Property change labels insertion
         self.object_property_table.setCellWidget(0, 0, self.objtype_label)
@@ -125,6 +130,7 @@ class PropertiesDockWidget(QtGui.QDockWidget):
         self.object_property_table.setCellWidget(4, 0, self.initials_label)
         self.object_property_table.setCellWidget(5, 0, self.motion_label)
         self.object_property_table.setCellWidget(6, 0, self.faces_label)
+        self.object_property_table.setCellWidget(7, 0, self.autofill_label)
 
         # Property change widgets
         self.mkgroup_prop = QtGui.QSpinBox()
@@ -134,6 +140,7 @@ class PropertiesDockWidget(QtGui.QDockWidget):
         self.initials_prop = QtGui.QPushButton(__("Configure"))
         self.motion_prop = QtGui.QPushButton(__("Configure"))
         self.faces_prop = QtGui.QPushButton(__("Configure"))
+        self.autofill_prop = QtGui.QCheckBox("Enabled")
 
         self.faces_prop.setEnabled(False)
         self.mkgroup_prop.setRange(0, 240)
@@ -148,6 +155,7 @@ class PropertiesDockWidget(QtGui.QDockWidget):
         self.initials_prop.clicked.connect(self.on_initials_change)
         self.motion_prop.clicked.connect(self.on_motion_change)
         self.faces_prop.clicked.connect(self.on_faces_clicked)
+        self.autofill_prop.stateChanged.connect(self.on_autofill_check)
 
         # Property change widget insertion
         self.object_property_table.setCellWidget(0, 1, self.objtype_prop)
@@ -157,6 +165,7 @@ class PropertiesDockWidget(QtGui.QDockWidget):
         self.object_property_table.setCellWidget(4, 1, self.initials_prop)
         self.object_property_table.setCellWidget(5, 1, self.motion_prop)
         self.object_property_table.setCellWidget(6, 1, self.faces_prop)
+        self.object_property_table.setCellWidget(7, 1, self.autofill_prop)
 
         # By default all is hidden in the widget
         self.object_property_table.hide()
@@ -275,6 +284,10 @@ class PropertiesDockWidget(QtGui.QDockWidget):
 
         if hasattr(selectiongui, "Transparency"):
             selectiongui.Transparency = transparencies[simulation_object.fillmode]
+
+    def on_autofill_check(self):
+        """ Autofill checkbox behaviour. """
+        Case.the().get_simulation_object(FreeCADGui.Selection.getSelection()[0].Name).autofill = self.autofill_prop.isChecked()
 
     def on_initials_change(self):
         """ Initials configuration button behaviour. """
@@ -405,6 +418,7 @@ class PropertiesDockWidget(QtGui.QDockWidget):
         """ Adapts the contents of the property widget to the specifications of the simulation object passed as a parameter. """
 
         self.mkgroup_prop.setValue(sim_object.obj_mk)
+        self.autofill_prop.setChecked(bool(sim_object.autofill))
 
         debug("Object {} supports changing type? {}. Its type is {} with mk {}".format(sim_object.name, sim_object.supports_changing_type(), sim_object.type, sim_object.obj_mk))
 
@@ -441,3 +455,6 @@ class PropertiesDockWidget(QtGui.QDockWidget):
         # Object Motion button adaptation
         if sim_object.supports_motion:
             self.motion_prop.setEnabled(sim_object.type != ObjectType.FLUID)
+
+        # Is an external object that supports autofill
+        self.autofill_prop.setEnabled(sim_object.autofill is not None)

@@ -860,5 +860,7 @@
     "Increase of Z with periodic BC in axis X": "Increase of Z with periodic BC in axis X",
     "Increase of Z with periodic BC in axis Y": "Increase of Z with periodic BC in axis Y",
     "Increase of Z+ (%) (default=0).": "Increase of Z+ (%) (default=0).",
-    "The domain is fixed with the specified values (xmin:ymin:zmin:xmax:ymax:zmax).": "The domain is fixed with the specified values (xmin:ymin:zmin:xmax:ymax:zmax)."
+    "The domain is fixed with the specified values (xmin:ymin:zmin:xmax:ymax:zmax).": "The domain is fixed with the specified values (xmin:ymin:zmin:xmax:ymax:zmax).",
+    "Controls geometry autofill": "Controls geometry autofill",
+    "Autofill": "Autofill"
 }
