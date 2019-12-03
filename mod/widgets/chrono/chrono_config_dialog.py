@@ -241,6 +241,8 @@ class ChronoConfigDialog(QtGui.QDialog):
 
         self.setLayout(self.main_layout_dialog)
 
+        self.ok_button.setFocus()
+
         self.exec_()
 
     def on_collisiondp_checkbox(self):

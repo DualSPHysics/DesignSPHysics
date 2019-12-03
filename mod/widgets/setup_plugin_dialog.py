@@ -186,6 +186,8 @@ class SetupPluginDialog(QtGui.QDialog):
         self.setLayout(self.main_layout)
         # END Main layout definition and composition.
 
+        self.ok_button.setFocus()
+
         self.resize(600, 400)
         self.exec_()
 
@@ -225,6 +227,8 @@ class SetupPluginDialog(QtGui.QDialog):
         """ Opens a file browser to check for the provided app name. """
         file_name, _ = QtGui.QFileDialog().getOpenFileName(self, __("Select {} path").format(app_name), Case.the().info.last_used_directory)
         Case.the().info.update_last_used_directory(file_name)
+
+        self.ok_button.setFocus()
 
         if not file_name:
             return
