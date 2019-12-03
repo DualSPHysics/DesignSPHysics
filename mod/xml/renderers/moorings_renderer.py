@@ -30,6 +30,9 @@ class MooringsRenderer():
         """ Returns the rendered string. """
         moorings: dict = data["moorings"]
 
+        if moorings["enabled"] == "false":
+            return ""
+
         each_mooredfloatings_templates: list = list(map(lambda mkbound: get_template_text(cls.MOORINGS_MOORED_FLOATING).format(**{"mkbound": mkbound}), moorings["moored_floatings"]))
 
         formatter: dict = {
