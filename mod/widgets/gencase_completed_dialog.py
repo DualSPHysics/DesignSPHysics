@@ -25,7 +25,7 @@ class GencaseCompletedDialog(QtGui.QDialog):
         # Window Creation
         self.setWindowModality(QtCore.Qt.NonModal)
         self.setWindowTitle(__("Save & GenCase"))
-        self.setMinimumSize(400, 150)
+        self.setMinimumSize(400, 100)
 
         # Main Layout creation
         self.main_layout = QtGui.QVBoxLayout()
@@ -33,13 +33,8 @@ class GencaseCompletedDialog(QtGui.QDialog):
         # Main Layout elements
         self.info_message = QtGui.QLabel(__(
             "Gencase exported <b>{}</b> particles.<br/>"
-            "Press the <i>Details</i> button to check the output<br/><br/>"
-            "The executed command line was:"
+            "Press the <i>Details</i> button to check the output."
         ).format(str(particle_count)))
-        self.cmd_executed = QtGui.QLineEdit(cmd_string)
-        self.cmd_executed.setReadOnly(True)
-        self.cmd_executed.setFont(QtGui.QFont("Courier New", 10, QtGui.QFont.Monospace))
-        self.cmd_executed.setCursorPosition(0)
 
         self.button_layout = QtGui.QHBoxLayout()
 
@@ -68,14 +63,13 @@ class GencaseCompletedDialog(QtGui.QDialog):
         self.detail_text_dialog_layout = QtGui.QVBoxLayout()
 
         self.detail_text_area = QtGui.QTextEdit()
-        self.detail_text_area.setText(detail_text)
+        self.detail_text_area.setText("<b>{}:</b> <tt>{}</tt><br><pre>{}</pre>".format(__("The executed command line was"), cmd_string, detail_text))
 
         self.detail_text_dialog_layout.addWidget(self.detail_text_area)
         self.detail_text_dialog.setLayout(self.detail_text_dialog_layout)
 
         # Main Layout scaffolding
         self.main_layout.addWidget(self.info_message)
-        self.main_layout.addWidget(self.cmd_executed)
         self.main_layout.addStretch(1)
         self.main_layout.addLayout(self.button_layout)
 

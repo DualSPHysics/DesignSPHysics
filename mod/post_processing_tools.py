@@ -57,7 +57,7 @@ def partvtk_export(options, case, post_processing_widget) -> None:
         """ Closes and displays info/error about the process. """
         post_processing_widget.adapt_to_export_finished()
         export_dialog.accept()
-        detailed_text = "Command: {} {}\n\n{}".format(case.executable_paths.partvtk4, " ".join(executable_parameters), case.info.current_output)
+        detailed_text = "The executed command line was: {} {}\n\n{}".format(case.executable_paths.partvtk4, " ".join(executable_parameters), case.info.current_output)
 
         if not exit_code:
             info_dialog(info_text=__("PartVTK finished successfully"), detailed_text=detailed_text)
@@ -113,7 +113,7 @@ def floatinginfo_export(options, case, post_processing_widget) -> None:
         """ Closes and displays info/error about the process. """
         post_processing_widget.adapt_to_export_finished()
         export_dialog.accept()
-        detailed_text = "Command: {} {}\n\n{}".format(case.executable_paths.floatinginfo, " ".join(executable_parameters), case.info.current_output)
+        detailed_text = "The executed command line was: {} {}\n\n{}".format(case.executable_paths.floatinginfo, " ".join(executable_parameters), case.info.current_output)
 
         if not exit_code:
             info_dialog(info_text=__("FloatingInfo finished successfully"), detailed_text=detailed_text)
@@ -168,7 +168,7 @@ def computeforces_export(options, case, post_processing_widget) -> None:
         """ Closes and displays info/error about the process. """
         post_processing_widget.adapt_to_export_finished()
         export_dialog.accept()
-        detailed_text = "Command: {} {}\n\n{}".format(case.executable_paths.computeforces, " ".join(executable_parameters), case.info.current_output)
+        detailed_text = "The executed command line was: {} {}\n\n{}".format(case.executable_paths.computeforces, " ".join(executable_parameters), case.info.current_output)
 
         if not exit_code:
             info_dialog(info_text=__("ComputeForces finished successfully"), detailed_text=detailed_text)
@@ -224,7 +224,7 @@ def measuretool_export(options, case, post_processing_widget) -> None:
         """ Closes and displays info/error about the process. """
         post_processing_widget.adapt_to_export_finished()
         export_dialog.accept()
-        detailed_text = "Command: {} {}\n\n{}".format(case.executable_paths.measuretool, " ".join(executable_parameters), case.info.current_output)
+        detailed_text = "The executed command line was: {} {}\n\n{}".format(case.executable_paths.measuretool, " ".join(executable_parameters), case.info.current_output)
 
         if not exit_code:
             info_dialog(info_text=__("MeasureTool finished successfully."), detailed_text=detailed_text)
@@ -274,7 +274,7 @@ def isosurface_export(options, case, post_processing_widget) -> None:
         """ Closes and displays info/error about the process. """
         post_processing_widget.adapt_to_export_finished()
         export_dialog.accept()
-        detailed_text = "Command: {} {}\n\n{}".format(case.executable_paths.isosurface, " ".join(executable_parameters), case.info.current_output)
+        detailed_text = "The executed command line was: {} {}\n\n{}".format(case.executable_paths.isosurface, " ".join(executable_parameters), case.info.current_output)
 
         if not exit_code:
             info_dialog(info_text=__("IsoSurface finished successfully"), detailed_text=detailed_text)
@@ -328,7 +328,7 @@ def flowtool_export(options, case, post_processing_widget) -> None:
         """ Closes and displays info/error about the process. """
         post_processing_widget.adapt_to_export_finished()
         export_dialog.accept()
-        detailed_text = "Command: {} {}\n\n{}".format(case.executable_paths.flowtool, " ".join(executable_parameters), case.info.current_output)
+        detailed_text = "The executed command line was: {} {}\n\n{}".format(case.executable_paths.flowtool, " ".join(executable_parameters), case.info.current_output)
 
         if not exit_code:
             info_dialog(info_text=__("FlowTool finished successfully"), detailed_text=detailed_text)
