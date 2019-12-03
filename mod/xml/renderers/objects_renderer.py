@@ -116,7 +116,7 @@ class ObjectsRenderer():
             "label": fc_object.Label,
             "mktype_template": (get_template_text(cls.OBJECTS_MKBOUND_XML) if obj["type"] == ObjectType.BOUND else get_template_text(cls.OBJECTS_MKFLUID_XML)).format(**obj),
             "file": "{}.stl".format(fc_object.Name),
-            "autofill": "true" if obj["autofill"] else "false"
+            "autofill": "true" if obj["autofill"] == "true" else "false"
         }
 
         return get_template_text(cls.OBJECT_COMPLEX_XML).format(**formatter)
