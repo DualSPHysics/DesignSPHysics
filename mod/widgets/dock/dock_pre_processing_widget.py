@@ -23,6 +23,7 @@ from mod.widgets.add_geo_dialog import AddGEODialog
 from mod.widgets.special_options_selector_dialog import SpecialOptionsSelectorDialog
 from mod.widgets.gencase_completed_dialog import GencaseCompletedDialog
 from mod.widgets.mode_2d_config_dialog import Mode2DConfigDialog
+from mod.widgets.case_summary import CaseSummary
 
 from mod.dataobjects.case import Case
 from mod.dataobjects.simulation_object import SimulationObject
@@ -117,7 +118,7 @@ class DockPreProcessingWidget(QtGui.QWidget):
         self.add_fillbox_button.clicked.connect(self.on_add_fillbox)
         self.add_geometry_button.clicked.connect(self.on_add_geo)
         self.import_xml_button.clicked.connect(lambda: error_dialog("XML Import is not available in this version."))
-        self.case_summary_button.clicked.connect(lambda: error_dialog("Summary is not available in this version."))
+        self.case_summary_button.clicked.connect(CaseSummary)
         self.toggle_2d_mode_button.clicked.connect(self.on_2d_toggle)
         self.special_button.clicked.connect(SpecialOptionsSelectorDialog)
 
@@ -158,7 +159,7 @@ class DockPreProcessingWidget(QtGui.QWidget):
     def on_new_from_freecad_document(self, prompt=True):
         """ Creates a new case based on an existing FreeCAD document.
         This is specially useful for CAD users that want to use existing geometry for DesignSPHysics. """
-        file_name, _ = QtGui.QFileDialog().getOpenFileName(get_fc_main_window(), "Select document to import", Case.the().info.last_used_directory)
+        file_name, _=QtGui.QFileDialog().getOpenFileName(get_fc_main_window(), "Select document to import", Case.the().info.last_used_directory)
         Case.the().info.update_last_used_directory(file_name)
         if file_name and document_count() and not prompt_close_all_documents(prompt):
             return
@@ -176,15 +177,15 @@ class DockPreProcessingWidget(QtGui.QWidget):
         Saves a freecad scene definition, and a dump of dsph data for the case."""
         self.need_refresh.emit()
         if Case.the().was_not_saved() or save_as:
-            save_name, _ = QtGui.QFileDialog.getSaveFileName(self, __("Save Case"), Case.the().info.last_used_directory)
+            save_name, _=QtGui.QFileDialog.getSaveFileName(self, __("Save Case"), Case.the().info.last_used_directory)
             Case.the().info.update_last_used_directory(save_name)
         else:
-            save_name = Case.the().path
+            save_name=Case.the().path
 
         if not save_name:
             return
 
-        Case.the().info.needs_to_run_gencase = True
+        Case.the().info.needs_to_run_gencase=True
         save_case(save_name, Case.the())
         save_current_freecad_document(Case.the().path)
 
@@ -195,37 +196,37 @@ class DockPreProcessingWidget(QtGui.QWidget):
             warning_dialog(__("GenCase executable is not set."))
             return
 
-        gencase_full_path = path.abspath(Case.the().executable_paths.gencase)
-        arguments = ["{path}/{name}_Def".format(path=Case.the().path, name=Case.the().name),
+        gencase_full_path=path.abspath(Case.the().executable_paths.gencase)
+        arguments=["{path}/{name}_Def".format(path=Case.the().path, name=Case.the().name),
                      "{path}/{name}_out/{name}".format(path=Case.the().path, name=Case.the().name),
                      "-save:+all"]
-        cmd_string = "{} {}".format(gencase_full_path, " ".join(arguments))
+        cmd_string="{} {}".format(gencase_full_path, " ".join(arguments))
 
         refocus_cwd()
-        process = QtCore.QProcess(get_fc_main_window())
+        process=QtCore.QProcess(get_fc_main_window())
         process.setWorkingDirectory(Case.the().path)
         process.start(gencase_full_path, arguments)
         debug("Executing -> {}".format(cmd_string))
         process.waitForFinished()
 
-        output = str(process.readAllStandardOutput().data(), encoding='utf-8')
+        output=str(process.readAllStandardOutput().data(), encoding='utf-8')
 
         if process.exitCode():
-            Case.the().info.is_gencase_done = False
+            Case.the().info.is_gencase_done=False
             error_dialog(__("Error executing GenCase. Did you add objects to the case?. Another reason could be memory issues. View details for more info."), output)
         else:
             try:
-                total_particles_text = output[output.index("Total particles: "):output.index(" (bound=")]
-                total_particles = int(total_particles_text[total_particles_text.index(": ") + 2:])
-                Case.the().info.particle_number = total_particles
+                total_particles_text=output[output.index("Total particles: "):output.index(" (bound=")]
+                total_particles=int(total_particles_text[total_particles_text.index(": ") + 2:])
+                Case.the().info.particle_number=total_particles
                 GencaseCompletedDialog(particle_count=total_particles, detail_text=output, cmd_string=cmd_string, parent=get_fc_main_window()).show()
-                Case.the().info.is_gencase_done = True
+                Case.the().info.is_gencase_done=True
                 self.on_save_case()
-                Case.the().info.needs_to_run_gencase = False
+                Case.the().info.needs_to_run_gencase=False
             except ValueError:
                 print_exc()
-                Case.the().info.is_gencase_done = False
-                Case.the().info.needs_to_run_gencase = True
+                Case.the().info.is_gencase_done=False
+                Case.the().info.needs_to_run_gencase=True
 
         # Refresh widget enable/disable status as GenCase finishes
         self.gencase_completed.emit(Case.the().info.is_gencase_done)
@@ -255,13 +256,13 @@ class DockPreProcessingWidget(QtGui.QWidget):
         """Defines loading case mechanism. Load points to a dsphdata custom file, that stores all the relevant info.
            If FCStd file is not found the project is considered corrupt."""
 
-        load_path, _ = QtGui.QFileDialog.getOpenFileName(self, __("Load Case"), Case.the().info.last_used_directory, "casedata.dsphdata")
+        load_path, _=QtGui.QFileDialog.getOpenFileName(self, __("Load Case"), Case.the().info.last_used_directory, "casedata.dsphdata")
         Case.the().info.update_last_used_directory(load_path)
 
         if load_path == "":
             return
 
-        disk_data: Case = load_case(load_path)
+        disk_data: Case=load_case(load_path)
         if not disk_data:
             return
 
@@ -273,8 +274,8 @@ class DockPreProcessingWidget(QtGui.QWidget):
                             "This could be caused due to file corruption, caused by operating system based line endings or ends-of-file, or other related aspects."))
 
         # User may have changed the name of the folder/project
-        Case.the().path = path.dirname(load_path)
-        Case.the().name = Case.the().path.split("/")[-1]
+        Case.the().path=path.dirname(load_path)
+        Case.the().name=Case.the().path.split("/")[-1]
 
         # Adapt widget state to case info
         self.case_created.emit()
@@ -292,7 +293,7 @@ class DockPreProcessingWidget(QtGui.QWidget):
 
     def on_add_geo(self):
         """ Add STL file. Opens a file opener and allows the user to set parameters for the import process """
-        file_name, _ = QtGui.QFileDialog().getOpenFileName(get_fc_main_window(), __("Select GEO to import"), Case.the().info.last_used_directory, "STL Files (*.stl);;PLY Files (*.ply);;VTK Files (*.vtk)")
+        file_name, _=QtGui.QFileDialog().getOpenFileName(get_fc_main_window(), __("Select GEO to import"), Case.the().info.last_used_directory, "STL Files (*.stl);;PLY Files (*.ply);;VTK Files (*.vtk)")
         Case.the().info.update_last_used_directory(file_name)
         if not file_name:
             return
@@ -304,22 +305,22 @@ class DockPreProcessingWidget(QtGui.QWidget):
             error("Not a valid case environment")
             return
 
-        fc_object = get_fc_object(CASE_LIMITS_OBJ_NAME)
+        fc_object=get_fc_object(CASE_LIMITS_OBJ_NAME)
 
         if Case.the().mode3d:
             # 3D to 2D
-            Case.the().info.last_3d_width = fc_object.Width.Value
-            config_dialog = Mode2DConfigDialog(fc_object.Placement.Base.y, parent=get_fc_main_window())
+            Case.the().info.last_3d_width=fc_object.Width.Value
+            config_dialog=Mode2DConfigDialog(fc_object.Placement.Base.y, parent=get_fc_main_window())
             if config_dialog.exit_status == QtGui.QDialog.Rejected:
                 return
-            fc_object.Placement.Base.y = float(config_dialog.stored_y_value)
-            fc_object.Label = CASE_LIMITS_2D_LABEL
-            Case.the().mode3d = not Case.the().mode3d
+            fc_object.Placement.Base.y=float(config_dialog.stored_y_value)
+            fc_object.Label=CASE_LIMITS_2D_LABEL
+            Case.the().mode3d=not Case.the().mode3d
         else:
             # 2D to 3D
-            Case.the().mode3d = not Case.the().mode3d
-            fc_object.Width = Case.the().info.last_3d_width if Case.the().info.last_3d_width > 0.0 else fc_object.Length
-            fc_object.Label = CASE_LIMITS_3D_LABEL
+            Case.the().mode3d=not Case.the().mode3d
+            fc_object.Width=Case.the().info.last_3d_width if Case.the().info.last_3d_width > 0.0 else fc_object.Length
+            fc_object.Label=CASE_LIMITS_3D_LABEL
 
     def adapt_to_no_case(self):
         """ Adapts the widget to an environment with no case opened. """
