@@ -105,6 +105,8 @@ class AddGEODialog(QtGui.QDialog):
         self.geo_button_ok.clicked.connect(self.geo_ok_clicked)
         self.geo_file_browse.clicked.connect(self.geo_dialog_browse)
 
+        self.geo_button_ok.setFocus()
+
         self.exec_()
 
     def geo_ok_clicked(self):
@@ -128,6 +130,8 @@ class AddGEODialog(QtGui.QDialog):
         """ Defines the browse button behaviour."""
         file_name_temp, _ = QtGui.QFileDialog().getOpenFileName(get_fc_main_window(), __("Select GEO to import"), Case.the().info.last_used_directory, "STL Files (*.stl);;PLY Files (*.ply);;VTK Files (*.vtk)")
         Case.the().info.update_last_used_directory(file_name_temp)
-        self.geo_file_path.setText(file_name_temp)
+        if file_name_temp:
+            self.geo_file_path.setText(file_name_temp)
         self.raise_()
         self.activateWindow()
+        self.geo_button_ok.setFocus()

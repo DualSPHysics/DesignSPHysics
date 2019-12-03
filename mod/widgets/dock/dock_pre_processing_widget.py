@@ -208,7 +208,7 @@ class DockPreProcessingWidget(QtGui.QWidget):
         debug("Executing -> {}".format(cmd_string))
         process.waitForFinished()
 
-        output = str(process.readAllStandardOutput().data(), encoding='utf-8').split("================================\n")[1]
+        output = str(process.readAllStandardOutput().data(), encoding='utf-8')
 
         if process.exitCode():
             Case.the().info.is_gencase_done = False

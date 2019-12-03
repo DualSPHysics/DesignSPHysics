@@ -22,6 +22,7 @@ class RunDialog(QtGui.QDialog):
         super(RunDialog, self).__init__(parent=parent)
 
         self.run_watcher = QtCore.QFileSystemWatcher()
+        self.cmd_string = cmd_string
         # Title and size
         self.setModal(False)
         self.setWindowTitle(__("DualSPHysics Simulation: {}%").format("0"))
@@ -40,22 +41,12 @@ class RunDialog(QtGui.QDialog):
         self.run_group_label_completed = QtGui.QLabel("<b>{}</b>".format(__("Simulation is complete.")))
         self.run_group_label_completed.setVisible(False)
 
-        self.run_group_cmd_executed_label = QtGui.QLabel(__("The executed command was:"))
-        self.run_group_cmd_executed = QtGui.QLineEdit(cmd_string)
-        self.run_group_cmd_executed.setReadOnly(True)
-        self.run_group_cmd_executed.setFont(QtGui.QFont("Courier New", 10, QtGui.QFont.Monospace))
-        self.run_group_cmd_executed.setCursorPosition(0)
-        self.run_group_cmd_executed_label.setVisible(False)
-        self.run_group_cmd_executed.setVisible(False)
-
         self.run_group_layout.addWidget(self.run_group_label_case)
         self.run_group_layout.addWidget(self.run_group_label_proc)
         self.run_group_layout.addWidget(self.run_group_label_part)
         self.run_group_layout.addWidget(self.run_group_label_partsout)
         self.run_group_layout.addWidget(self.run_group_label_eta)
         self.run_group_layout.addWidget(self.run_group_label_completed)
-        self.run_group_layout.addWidget(self.run_group_cmd_executed_label)
-        self.run_group_layout.addWidget(self.run_group_cmd_executed)
         self.run_group_layout.addStretch(1)
 
         self.run_group.setLayout(self.run_group_layout)
@@ -124,6 +115,8 @@ class RunDialog(QtGui.QDialog):
         self.run_progbar_bar.setValue(100)
         self.run_button_cancel.setText(__("Close"))
         self.run_group_label_completed.setVisible(True)
+        self.run_details_text.setText("<b>{}:</b> <tt>{}</tt><br><pre>{}</pre>".format(__("The executed command line was"), self.cmd_string, self.run_details_text.toPlainText()))
+        self.run_details_text.moveCursor(QtGui.QTextCursor.Start)
         self.compute_warnings()
 
     def compute_warnings(self) -> None:
@@ -135,7 +128,7 @@ class RunDialog(QtGui.QDialog):
         self.run_group_label_completed.setText("<b style='color: #ABA400'>{}</b>".format(__("Simulation completed with warnings.")))
         try:
             self.run_button_warnings.clicked.disconnect()
-        except RuntimeError: # If nothing is yet connected it will throw an exception.
+        except RuntimeError:  # If nothing is yet connected it will throw an exception.
             pass
         self.run_button_warnings.clicked.connect(lambda _=False, text=(LINE_END*2).join(warning_list): warning_dialog(text))
         self.run_button_warnings.show()
@@ -144,8 +137,6 @@ class RunDialog(QtGui.QDialog):
         """ Toggles the run details dialog panel. """
         self.run_details.setVisible(not self.run_details.isVisible())
         self.run_details.move(self.x() - self.run_details.width() - 15, self.y())
-        self.run_group_cmd_executed.setVisible(not self.run_group_cmd_executed.isVisible())
-        self.run_group_cmd_executed_label.setVisible(not self.run_group_cmd_executed_label.isVisible())
 
     def set_detail_text(self, details: str) -> None:
         """ Sets the details text contents and scrolls it to the bottom. """

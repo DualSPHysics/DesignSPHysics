@@ -130,6 +130,8 @@ class InletConfigDialog(QtGui.QDialog):
 
         self.refresh_zones()
 
+        self.finish_button.setFocus()
+
         self.exec_()
 
     def on_add_zone(self):
