@@ -9,7 +9,7 @@ from PySide import QtCore, QtGui
 
 from mod.translation_tools import __
 from mod.enums import ObjectType, ObjectFillMode, FreeCADObjectType, HelpURL
-from mod.constants import PROP_WIDGET_INTERNAL_NAME
+from mod.constants import PROP_WIDGET_INTERNAL_NAME, MKFLUID_LIMIT, MKFLUID_OFFSET
 from mod.stdout_tools import debug
 from mod.freecad_tools import get_fc_main_window
 
@@ -237,7 +237,7 @@ class PropertiesDockWidget(QtGui.QDockWidget):
             self.initials_prop.setEnabled(False)
             self.set_mkgroup_text("{} <a href='{}'>?</a>".format(__("MKBound"), HelpURL.BASIC_CONCEPTS))
         elif self.objtype_prop.itemText(index).lower() == "fluid":
-            self.mkgroup_prop.setRange(0, 10)
+            self.mkgroup_prop.setRange(0, MKFLUID_LIMIT - MKFLUID_OFFSET - 1)
             if simulation_object.type != ObjectType.FLUID:
                 self.mkgroup_prop.setValue(int(Case.the().get_first_mk_not_used(ObjectType.FLUID)))
             try:
@@ -351,7 +351,7 @@ class PropertiesDockWidget(QtGui.QDockWidget):
 
     def set_mkgroup_range(self, obj_type: ObjectType) -> int:
         """ Sets the mkgroup range according to the object type specified. """
-        mk_range = {ObjectType.BOUND: 240, ObjectType.FLUID: 10}[obj_type]
+        mk_range = {ObjectType.BOUND: 240, ObjectType.FLUID: MKFLUID_LIMIT - MKFLUID_OFFSET}[obj_type]
         self.mkgroup_prop.setRange(0, mk_range)
         return mk_range
 

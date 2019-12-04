@@ -7,7 +7,7 @@ Renders the <wavepaddles> tag of the GenCase XML.
 from mod.template_tools import get_template_text
 
 from mod.enums import MotionType
-from mod.constants import LINE_END
+from mod.constants import LINE_END, MKFLUID_LIMIT
 
 
 class WavePaddlesRenderer():
@@ -81,7 +81,7 @@ class WavePaddlesRenderer():
         each_template: list = []
         for prop in mkprops:
             movement = prop["movements"][0]
-            mk_bound = prop["mk"] - 11
+            mk_bound = prop["mk"] - MKFLUID_LIMIT
             if movement["generator"]["type"] == MotionType.REGULAR_PISTON_WAVE_GENERATOR:
                 each_template.append(cls.get_regular_piston_wave_template(mk_bound, movement["generator"]))
             elif movement["generator"]["type"] == MotionType.IRREGULAR_PISTON_WAVE_GENERATOR:

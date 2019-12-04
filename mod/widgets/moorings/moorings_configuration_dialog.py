@@ -9,6 +9,7 @@ from PySide import QtGui
 from mod.translation_tools import __
 from mod.dialog_tools import error_dialog
 
+from mod.constants import MKFLUID_LIMIT
 from mod.enums import MooringsConfigurationMethod, ObjectType
 
 from mod.dataobjects.case import Case
@@ -189,7 +190,7 @@ class MooringsConfigurationDialog(QtGui.QDialog):
         self.xml_file_selection_edit.setText(case.moorings.moordyn_xml)
 
         for index, mkprop in enumerate(floating_mkbasedproperties):
-            target_widget: MooringsCompatibleFloatingWidget = MooringsCompatibleFloatingWidget(mkprop.mk - 11 in case.moorings.moored_floatings, ObjectType.BOUND, mkprop.mk - 11)  # Offset the mk to convert in mkbound
+            target_widget: MooringsCompatibleFloatingWidget = MooringsCompatibleFloatingWidget(mkprop.mk - MKFLUID_LIMIT in case.moorings.moored_floatings, ObjectType.BOUND, mkprop.mk - MKFLUID_LIMIT)  # Offset the mk to convert in mkbound
             self.floating_selection_table.setCellWidget(index, 0, target_widget)
 
     def _on_configure_moordyn_parameters(self) -> None:

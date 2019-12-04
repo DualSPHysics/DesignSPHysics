@@ -8,7 +8,7 @@ from mod.translation_tools import __
 from mod.template_tools import get_template_text, obj_to_dict
 from mod.freecad_tools import get_fc_object
 
-from mod.constants import CASE_LIMITS_OBJ_NAME
+from mod.constants import CASE_LIMITS_OBJ_NAME, MKFLUID_LIMIT, MKFLUID_OFFSET
 from mod.enums import ObjectType
 
 from mod.dataobjects.case import Case
@@ -99,7 +99,7 @@ class CaseSummary(QtGui.QDialog):
             to_append += "<b>{}</b> ({})<br>".format(get_fc_object(obj.name).Label, obj.name)
             to_append += "Type: {type} (MK{type}: <b>{mk}</b> ; MK: <b>{real_mk}</b>)<br/>".format(type=str(obj.type).capitalize(),
                                                                                                    mk=str(obj.obj_mk),
-                                                                                                   real_mk=str(obj.obj_mk if obj.type == ObjectType.FLUID else obj.obj_mk + 11))
+                                                                                                   real_mk=str(obj.obj_mk + MKFLUID_OFFSET if obj.type == ObjectType.FLUID else obj.obj_mk + MKFLUID_LIMIT))
             to_append += "Fill mode: {}<br/>".format(str(obj.fillmode).capitalize())
             to_append += "Floating: {}<br/>".format(is_floating_text)
             to_append += "Initials: {}</li><br/>".format(has_initials_text)
@@ -118,7 +118,7 @@ class CaseSummary(QtGui.QDialog):
             mklist = list()
             for mkbasedproperties in Case.the().mkbasedproperties.values():
                 if movement in mkbasedproperties.movements:
-                    mklist.append(str(mkbasedproperties.mk - 11))
+                    mklist.append(str(mkbasedproperties.mk - MKFLUID_LIMIT))
 
             to_append = "<li>"
             to_append += "{}: <u>{}</u><br>".format(movement.type, movement.name)

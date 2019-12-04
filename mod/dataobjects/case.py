@@ -6,7 +6,7 @@ import FreeCAD
 
 from mod.stdout_tools import debug
 
-from mod.constants import VERSION, SUPPORTED_TYPES
+from mod.constants import VERSION, SUPPORTED_TYPES, MKFLUID_LIMIT
 from mod.enums import ObjectType
 
 from mod.dataobjects.inletoutlet.inlet_outlet_config import InletOutletConfig
@@ -126,7 +126,7 @@ class Case():
     def get_mk_based_properties(self, obj_type: ObjectType, mknumber: int) -> MKBasedProperties:
         """ Returns the properties set for a given MK number of a given type """
         if obj_type == ObjectType.BOUND:
-            mknumber += 11
+            mknumber += MKFLUID_LIMIT
         if not self.has_mk_properties(mknumber):
             debug("Creating MKBasedProperties on demand for realmk: {}".format(mknumber))
             self.mkbasedproperties[mknumber] = MKBasedProperties(mk=mknumber)
@@ -160,7 +160,7 @@ class Case():
         # Delete al orphan MKBasedProperties
         keys_to_delete: list = list()
         for realmk in self.mkbasedproperties:
-            if realmk not in map(lambda obj: obj.obj_mk if obj.type == ObjectType.FLUID else obj.obj_mk + 11, Case.the().objects):
+            if realmk not in map(lambda obj: obj.obj_mk if obj.type == ObjectType.FLUID else obj.obj_mk + MKFLUID_LIMIT, Case.the().objects):
                 keys_to_delete.append(realmk)
         for key in keys_to_delete:
             self.mkbasedproperties.pop(key)
