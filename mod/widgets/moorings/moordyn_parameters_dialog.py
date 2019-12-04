@@ -13,6 +13,8 @@ from mod.stdout_tools import debug
 
 from mod.dataobjects.moorings.moordyn.moordyn_configuration import MoorDynConfiguration
 from mod.dataobjects.moorings.moordyn.moordyn_line import MoorDynLine
+from mod.dataobjects.moorings.moordyn.moordyn_solver_options import MoorDynSolverOptions
+from mod.dataobjects.moorings.moordyn.moordyn_line_default_configuration import MoorDynLineDefaultConfiguration
 
 from mod.widgets.moorings.moordyn_body_configuration_dialog import MoorDynBodyConfigurationDialog
 from mod.widgets.moorings.moordyn_line_configuration_dialog import MoorDynLineConfigurationDialog
@@ -96,6 +98,21 @@ class MoorDynParametersDialog(QtGui.QDialog):
         self.solver_options_groupbox: QtGui.QGroupBox = QtGui.QGroupBox(__("Solver Options"))
         self.solver_options_groupbox_layout: QtGui.QFormLayout = QtGui.QFormLayout()
         self.water_depth_line_edit: QtGui.QLineEdit = QtGui.QLineEdit()
+
+        self.kBot_line_edit: QtGui.QLineEdit = QtGui.QLineEdit()
+        self.kBot_line_check: QtGui.QCheckBox = QtGui.QCheckBox(__("Auto"))
+        self.kBot_line_edit_layout: QtGui.QHBoxLayout = QtGui.QHBoxLayout()
+        self.kBot_line_edit_layout.setContentsMargins(0, 0, 0, 0)
+        self.kBot_line_edit_layout.addWidget(self.kBot_line_edit)
+        self.kBot_line_edit_layout.addWidget(self.kBot_line_check)
+
+        self.cBot_line_edit: QtGui.QLineEdit = QtGui.QLineEdit()
+        self.cBot_line_check: QtGui.QCheckBox = QtGui.QCheckBox(__("Auto"))
+        self.cBot_line_edit_layout: QtGui.QHBoxLayout = QtGui.QHBoxLayout()
+        self.cBot_line_edit_layout.setContentsMargins(0, 0, 0, 0)
+        self.cBot_line_edit_layout.addWidget(self.cBot_line_edit)
+        self.cBot_line_edit_layout.addWidget(self.cBot_line_check)
+
         self.fricdamp_line_edit: QtGui.QLineEdit = QtGui.QLineEdit()
         self.statdynfricscale_line_edit: QtGui.QLineEdit = QtGui.QLineEdit()
         self.dtIC_line_edit: QtGui.QLineEdit = QtGui.QLineEdit()
@@ -105,7 +122,11 @@ class MoorDynParametersDialog(QtGui.QDialog):
 
         self.water_depth_label: QtGui.QLabel = QtGui.QLabel(__("<b>[waterDepth]</b> Water Depth (m):"))
         self.water_depth_label.setToolTip(__("Water depth"))
-        self.fricdamp_label: QtGui.QLabel = QtGui.QLabel(__("<b>[cBot]</b> Damping:"))
+        self.kBot_label: QtGui.QLabel = QtGui.QLabel(__("<b>[kBot]</b> Stiffness:"))
+        self.kBot_label.setToolTip(__("Stiffness (Pa/m). (default=3.0e6)"))
+        self.cBot_label: QtGui.QLabel = QtGui.QLabel(__("<b>[cBot]</b> Damping:"))
+        self.cBot_label.setToolTip(__("Damping Pa/m/s). (default=3.0e5)"))
+        self.fricdamp_label: QtGui.QLabel = QtGui.QLabel(__("<b>[fricDamp]</b> Damping:"))
         self.fricdamp_label.setToolTip(__("A damping coefficient used to model the friction at speeds near zero. (default=200.0)"))
         self.statdynfricscale_label: QtGui.QLabel = QtGui.QLabel(__("<b>[statDynFricScale]</b> Static Dynamic Friction ratio:"))
         self.statdynfricscale_label.setToolTip(__("A ratio of static to dynamic friction ( = mu_static/mu_dynamic). (default=1.0)"))
@@ -120,6 +141,8 @@ class MoorDynParametersDialog(QtGui.QDialog):
 
         self.solver_options_groupbox_layout.setLabelAlignment(QtCore.Qt.AlignLeft)
         self.solver_options_groupbox_layout.addRow(self.water_depth_label, self.water_depth_line_edit)
+        self.solver_options_groupbox_layout.addRow(self.kBot_label, self.kBot_line_edit_layout)
+        self.solver_options_groupbox_layout.addRow(self.cBot_label, self.cBot_line_edit_layout)
         self.solver_options_groupbox_layout.addRow(self.fricdamp_label, self.fricdamp_line_edit)
         self.solver_options_groupbox_layout.addRow(self.statdynfricscale_label, self.statdynfricscale_line_edit)
         self.solver_options_groupbox_layout.addRow(self.dtIC_label, self.dtIC_line_edit)
@@ -146,7 +169,41 @@ class MoorDynParametersDialog(QtGui.QDialog):
         self.ea_line_edit: QtGui.QLineEdit = QtGui.QLineEdit()
         self.diameter_line_edit: QtGui.QLineEdit = QtGui.QLineEdit()
         self.massDenInAir_line_edit: QtGui.QLineEdit = QtGui.QLineEdit()
+
         self.ba_line_edit: QtGui.QLineEdit = QtGui.QLineEdit()
+        self.ba_line_check: QtGui.QCheckBox = QtGui.QCheckBox(__("Auto"))
+        self.ba_line_edit_layout: QtGui.QHBoxLayout = QtGui.QHBoxLayout()
+        self.ba_line_edit_layout.setContentsMargins(0, 0, 0, 0)
+        self.ba_line_edit_layout.addWidget(self.ba_line_edit)
+        self.ba_line_edit_layout.addWidget(self.ba_line_check)
+
+        self.can_line_edit: QtGui.QLineEdit = QtGui.QLineEdit()
+        self.can_line_check: QtGui.QCheckBox = QtGui.QCheckBox(__("Auto"))
+        self.can_line_edit_layout: QtGui.QHBoxLayout = QtGui.QHBoxLayout()
+        self.can_line_edit_layout.setContentsMargins(0, 0, 0, 0)
+        self.can_line_edit_layout.addWidget(self.can_line_edit)
+        self.can_line_edit_layout.addWidget(self.can_line_check)
+
+        self.cat_line_edit: QtGui.QLineEdit = QtGui.QLineEdit()
+        self.cat_line_check: QtGui.QCheckBox = QtGui.QCheckBox(__("Auto"))
+        self.cat_line_edit_layout: QtGui.QHBoxLayout = QtGui.QHBoxLayout()
+        self.cat_line_edit_layout.setContentsMargins(0, 0, 0, 0)
+        self.cat_line_edit_layout.addWidget(self.cat_line_edit)
+        self.cat_line_edit_layout.addWidget(self.cat_line_check)
+
+        self.cdn_line_edit: QtGui.QLineEdit = QtGui.QLineEdit()
+        self.cdn_line_check: QtGui.QCheckBox = QtGui.QCheckBox(__("Auto"))
+        self.cdn_line_edit_layout: QtGui.QHBoxLayout = QtGui.QHBoxLayout()
+        self.cdn_line_edit_layout.setContentsMargins(0, 0, 0, 0)
+        self.cdn_line_edit_layout.addWidget(self.cdn_line_edit)
+        self.cdn_line_edit_layout.addWidget(self.cdn_line_check)
+
+        self.cdt_line_edit: QtGui.QLineEdit = QtGui.QLineEdit()
+        self.cdt_line_check: QtGui.QCheckBox = QtGui.QCheckBox(__("Auto"))
+        self.cdt_line_edit_layout: QtGui.QHBoxLayout = QtGui.QHBoxLayout()
+        self.cdt_line_edit_layout.setContentsMargins(0, 0, 0, 0)
+        self.cdt_line_edit_layout.addWidget(self.cdt_line_edit)
+        self.cdt_line_edit_layout.addWidget(self.cdt_line_check)
 
         self.ea_label: QtGui.QLabel = QtGui.QLabel(__("<b>[ea]</b> Stiffness (N):"))
         self.ea_label.setToolTip(__("Stiffness (N)"))
@@ -156,12 +213,24 @@ class MoorDynParametersDialog(QtGui.QDialog):
         self.massDenInAir_label.setToolTip(__("massDenInAir (kg/m)"))
         self.ba_label: QtGui.QLabel = QtGui.QLabel(__("<b>[ba]</b> Line internal damping (Ns):"))
         self.ba_label.setToolTip(__("BA/-zeta – the line internal damping (Ns). (default=-0.8)"))
+        self.can_label: QtGui.QLabel = QtGui.QLabel(__("<b>[can]</b>:"))
+        self.can_label.setToolTip(__("Default= 1.0 "))
+        self.cat_label: QtGui.QLabel = QtGui.QLabel(__("<b>[cat]</b>:"))
+        self.cat_label.setToolTip(__("Default= 0.0 "))
+        self.cdn_label: QtGui.QLabel = QtGui.QLabel(__("<b>[cdn]</b>:"))
+        self.cdn_label.setToolTip(__("Default= 1.6 "))
+        self.cdt_label: QtGui.QLabel = QtGui.QLabel(__("<b>[cdt]</b>:"))
+        self.cdt_label.setToolTip(__("Default= 0.05"))
 
         self.line_default_configuration_groupbox_layout.setLabelAlignment(QtCore.Qt.AlignLeft)
         self.line_default_configuration_groupbox_layout.addRow(self.ea_label, self.ea_line_edit)
         self.line_default_configuration_groupbox_layout.addRow(self.diameter_label, self.diameter_line_edit)
         self.line_default_configuration_groupbox_layout.addRow(self.massDenInAir_label, self.massDenInAir_line_edit)
-        self.line_default_configuration_groupbox_layout.addRow(self.ba_label, self.ba_line_edit)
+        self.line_default_configuration_groupbox_layout.addRow(self.ba_label, self.ba_line_edit_layout)
+        self.line_default_configuration_groupbox_layout.addRow(self.can_label, self.can_line_edit_layout)
+        self.line_default_configuration_groupbox_layout.addRow(self.cat_label, self.cat_line_edit_layout)
+        self.line_default_configuration_groupbox_layout.addRow(self.cdn_label, self.cdn_line_edit_layout)
+        self.line_default_configuration_groupbox_layout.addRow(self.cdt_label, self.cdt_line_edit_layout)
         self.line_default_configuration_groupbox.setLayout(self.line_default_configuration_groupbox_layout)
 
         # Lines groupbox
@@ -199,6 +268,13 @@ class MoorDynParametersDialog(QtGui.QDialog):
         self.setLayout(self.root_layout)
 
         # Bind connections
+        self.kBot_line_check.stateChanged.connect(self._on_kBot_check)
+        self.cBot_line_check.stateChanged.connect(self._on_cBot_check)
+        self.ba_line_check.stateChanged.connect(self._on_ba_check)
+        self.can_line_check.stateChanged.connect(self._on_can_check)
+        self.cat_line_check.stateChanged.connect(self._on_cat_check)
+        self.cdn_line_check.stateChanged.connect(self._on_cdn_check)
+        self.cdt_line_check.stateChanged.connect(self._on_cdt_check)
         self.ok_button.clicked.connect(self._on_ok)
         self.add_line_button.clicked.connect(self._on_add_new_line)
 
@@ -208,6 +284,9 @@ class MoorDynParametersDialog(QtGui.QDialog):
 
     def _on_ok(self):
         # Solver options
+        default_solver_options = MoorDynSolverOptions()
+        self.stored_configuration.solver_options.kBot = default_solver_options.kBot if self.kBot_line_check.isChecked() else str(self.kBot_line_edit.text())
+        self.stored_configuration.solver_options.cBot = default_solver_options.cBot if self.cBot_line_check.isChecked() else str(self.cBot_line_edit.text())
         self.stored_configuration.solver_options.water_depth = float(self.water_depth_line_edit.text())
         self.stored_configuration.solver_options.fricDamp = float(self.fricdamp_line_edit.text())
         self.stored_configuration.solver_options.statDynFricScale = float(self.statdynfricscale_line_edit.text())
@@ -217,13 +296,39 @@ class MoorDynParametersDialog(QtGui.QDialog):
         self.stored_configuration.solver_options.timeMax = float(self.timeMax_line_edit.text())
 
         # Line default config
+        default_line_default_configuration = MoorDynLineDefaultConfiguration()
         self.stored_configuration.line_default_configuration.ea = self.ea_line_edit.text()
         self.stored_configuration.line_default_configuration.diameter = self.diameter_line_edit.text()
         self.stored_configuration.line_default_configuration.massDenInAir = float(self.massDenInAir_line_edit.text())
-        self.stored_configuration.line_default_configuration.ba = float(self.ba_line_edit.text())
+        self.stored_configuration.line_default_configuration.ba = default_line_default_configuration.ba if self.ba_line_check.isChecked() else float(self.ba_line_edit.text())
+        self.stored_configuration.line_default_configuration.can = default_line_default_configuration.can if self.can_line_check.isChecked() else float(self.can_line_edit.text())
+        self.stored_configuration.line_default_configuration.cat = default_line_default_configuration.cat if self.cat_line_check.isChecked() else float(self.cat_line_edit.text())
+        self.stored_configuration.line_default_configuration.cdn = default_line_default_configuration.cdn if self.cdn_line_check.isChecked() else float(self.cdn_line_edit.text())
+        self.stored_configuration.line_default_configuration.cdt = default_line_default_configuration.cdt if self.cdt_line_check.isChecked() else float(self.cdt_line_edit.text())
 
         # Bodies and lines are references to lists, so they're already modified in memory :)
         self.accept()
+
+    def _on_kBot_check(self):
+        self.kBot_line_edit.setEnabled(not self.kBot_line_check.isChecked())
+
+    def _on_cBot_check(self):
+        self.cBot_line_edit.setEnabled(not self.cBot_line_check.isChecked())
+
+    def _on_ba_check(self):
+        self.ba_line_edit.setEnabled(not self.ba_line_check.isChecked())
+
+    def _on_can_check(self):
+        self.can_line_edit.setEnabled(not self.can_line_check.isChecked())
+
+    def _on_cat_check(self):
+        self.cat_line_edit.setEnabled(not self.cat_line_check.isChecked())
+
+    def _on_cdn_check(self):
+        self.cdn_line_edit.setEnabled(not self.cdn_line_check.isChecked())
+
+    def _on_cdt_check(self):
+        self.cdt_line_edit.setEnabled(not self.cdt_line_check.isChecked())
 
     def _on_add_new_line(self):
         used_line_ids = list(map(lambda line: line.line_id, self.stored_configuration.lines))
@@ -274,6 +379,11 @@ class MoorDynParametersDialog(QtGui.QDialog):
 
     def _fill_data(self):
         # Solver options
+        default_solver_options = MoorDynSolverOptions()
+        self.kBot_line_edit.setText(str(self.stored_configuration.solver_options.kBot))
+        self.kBot_line_check.setChecked(self.stored_configuration.solver_options.kBot == default_solver_options.kBot)
+        self.cBot_line_edit.setText(str(self.stored_configuration.solver_options.cBot))
+        self.cBot_line_check.setChecked(self.stored_configuration.solver_options.cBot == default_solver_options.cBot)
         self.water_depth_line_edit.setText(str(self.stored_configuration.solver_options.water_depth))
         self.fricdamp_line_edit.setText(str(self.stored_configuration.solver_options.fricDamp))
         self.statdynfricscale_line_edit.setText(str(self.stored_configuration.solver_options.statDynFricScale))
@@ -290,10 +400,20 @@ class MoorDynParametersDialog(QtGui.QDialog):
             self.body_configuration_table.setCellWidget(index, 0, widget)
 
         # Line default config
+        default_line_default_configuration = MoorDynLineDefaultConfiguration()
         self.ea_line_edit.setText(str(self.stored_configuration.line_default_configuration.ea))
         self.diameter_line_edit.setText(str(self.stored_configuration.line_default_configuration.diameter))
         self.massDenInAir_line_edit.setText(str(self.stored_configuration.line_default_configuration.massDenInAir))
         self.ba_line_edit.setText(str(self.stored_configuration.line_default_configuration.ba))
+        self.ba_line_check.setChecked(self.stored_configuration.line_default_configuration.ba == default_line_default_configuration.ba)
+        self.can_line_edit.setText(str(self.stored_configuration.line_default_configuration.can))
+        self.can_line_check.setChecked(self.stored_configuration.line_default_configuration.can == default_line_default_configuration.can)
+        self.cat_line_edit.setText(str(self.stored_configuration.line_default_configuration.cat))
+        self.cat_line_check.setChecked(self.stored_configuration.line_default_configuration.cat == default_line_default_configuration.cat)
+        self.cdn_line_edit.setText(str(self.stored_configuration.line_default_configuration.cdn))
+        self.cdn_line_check.setChecked(self.stored_configuration.line_default_configuration.cdn == default_line_default_configuration.cdn)
+        self.cdt_line_edit.setText(str(self.stored_configuration.line_default_configuration.cdt))
+        self.cdt_line_check.setChecked(self.stored_configuration.line_default_configuration.cdt == default_line_default_configuration.cdt)
 
         # Lines
         self.lines_table.setRowCount(len(self.stored_configuration.lines))
@@ -302,3 +422,12 @@ class MoorDynParametersDialog(QtGui.QDialog):
             widget.configure_clicked.connect(lambda line_id=None: self._on_configure_line(line_id))
             widget.delete_clicked.connect(lambda line_id=None: self._on_delete_line(line_id))
             self.lines_table.setCellWidget(index, 0, widget)
+
+        # Refresh appropriate widgets
+        self._on_kBot_check()
+        self._on_cBot_check()
+        self._on_ba_check()
+        self._on_can_check()
+        self._on_cat_check()
+        self._on_cdn_check()
+        self._on_cdt_check()
