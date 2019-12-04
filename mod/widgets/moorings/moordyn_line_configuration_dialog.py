@@ -107,7 +107,7 @@ class MoorDynLineConfigurationDialog(QtGui.QDialog):
         self.root_layout.addWidget(self.reference_label)
         self.root_layout.addWidget(h_line_generator())
         self.root_layout.addWidget(self.basic_configuration_groupbox)
-        self.root_layout.addWidget(self.override_configuration_groupbox)
+        # self.root_layout.addWidget(self.override_configuration_groupbox)
         self.root_layout.addStretch(1)
         self.root_layout.addLayout(self.button_layout)
         self.setLayout(self.root_layout)

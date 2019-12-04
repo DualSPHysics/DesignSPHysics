@@ -25,7 +25,9 @@ class MoorDynBodyWidget(QtGui.QWidget):
 
     def __init__(self, obj_type: ObjectType, mk: int):
         super().__init__()
+        self.setContentsMargins(0, 0, 0, 0)
         self.root_layout: QtGui.QHBoxLayout = QtGui.QHBoxLayout()
+        self.root_layout.setContentsMargins(5, 1, 5, 1)
         self.mk = mk
 
         self.mk_label: QtGui.QLabel = QtGui.QLabel("{} - <b>{}</b>".format(obj_type.capitalize(), str(self.mk)))
@@ -49,7 +51,9 @@ class MoorDynLineWidget(QtGui.QWidget):
 
     def __init__(self, line_id, row):
         super().__init__()
+        self.setContentsMargins(0, 0, 0, 0)
         self.root_layout: QtGui.QHBoxLayout = QtGui.QHBoxLayout()
+        self.root_layout.setContentsMargins(5, 1, 5, 1)
 
         self.line_id = line_id
         self.row = row
