@@ -226,7 +226,14 @@ class MoorDynParametersDialog(QtGui.QDialog):
         self.accept()
 
     def _on_add_new_line(self):
-        new_line: MoorDynLine = MoorDynLine()
+        used_line_ids = list(map(lambda line: line.line_id, self.stored_configuration.lines))
+        debug("Line ids currently in use: {}".format(used_line_ids))
+        for i in range(0, 999):  # Note: I hope no one tries to create more lines...
+            if i not in used_line_ids:
+                break
+        debug("Found this appropriate int for a new line id: {}".format(i))
+
+        new_line: MoorDynLine = MoorDynLine(i)
         self.stored_configuration.lines.append(new_line)
         self.lines_table.setRowCount(self.lines_table.rowCount() + 1)
         widget: MoorDynLineWidget = MoorDynLineWidget(new_line.line_id, self.lines_table.rowCount() - 1)
