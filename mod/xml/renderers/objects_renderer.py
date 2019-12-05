@@ -51,8 +51,12 @@ class ObjectsRenderer():
                 "ang": math.degrees(fc_object.Placement.Rotation.Angle),
                 "vec": [-fc_object.Placement.Rotation.Axis.x, -fc_object.Placement.Rotation.Axis.y, -fc_object.Placement.Rotation.Axis.z]
             }) if fc_object.Placement.Rotation.Angle else "",
-            "matrixreset_template": get_template_text(cls.OBJECTS_MATRIXRESET_XML) if fc_object.Placement.Rotation.Angle else ""
         }
+
+        # Decide if reset matrix or not
+        obj_formatter.update({
+            "matrixreset_template": get_template_text(cls.OBJECTS_MATRIXRESET_XML) if obj_formatter["move_template"] or obj_formatter["rotation_template"] else ""
+        })
 
         # Formatting specific keys for each type of object
         if fc_object.TypeId == FreeCADObjectType.BOX:
@@ -94,7 +98,6 @@ class ObjectsRenderer():
                 "ang": math.degrees(fill_limits.Placement.Rotation.Angle),
                 "vec": [-fill_limits.Placement.Rotation.Axis.x, -fill_limits.Placement.Rotation.Axis.y, -fill_limits.Placement.Rotation.Axis.z]
             }) if fill_limits.Placement.Rotation.Angle else "",
-            "matrixreset_template": get_template_text(cls.OBJECTS_MATRIXRESET_XML) if fill_limits.Placement.Rotation.Angle else "",
             "pos": [
                 (fill_point.Placement.Base.x - fill_limits.Placement.Base.x) / DIVIDER,
                 (fill_point.Placement.Base.y - fill_limits.Placement.Base.y) / DIVIDER,
@@ -106,6 +109,11 @@ class ObjectsRenderer():
                 fill_limits.Height.Value / DIVIDER,
             ]
         }
+
+        # Decide if reset matrix or not
+        formatter.update({
+            "matrixreset_template": get_template_text(cls.OBJECTS_MATRIXRESET_XML) if formatter["move_template"] or formatter["rotation_template"] else ""
+        })
 
         return get_template_text(cls.OBJECT_FILLBOX_XML).format(**formatter)
 
