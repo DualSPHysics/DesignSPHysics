@@ -148,7 +148,7 @@ class MoorDynParametersDialog(QtGui.QDialog):
         self.solver_options_groupbox_layout.addRow(self.dtIC_label, self.dtIC_line_edit)
         self.solver_options_groupbox_layout.addRow(self.cdScaleIC_label, self.cdScaleIC_line_edit)
         self.solver_options_groupbox_layout.addRow(self.tmaxIC_label, self.tmaxIC_line_edit)
-        self.solver_options_groupbox_layout.addRow(self.timeMax_label, self.timeMax_line_edit)
+        # self.solver_options_groupbox_layout.addRow(self.timeMax_label, self.timeMax_line_edit)
         self.solver_options_groupbox.setLayout(self.solver_options_groupbox_layout)
 
         # Body configuration groupbox
