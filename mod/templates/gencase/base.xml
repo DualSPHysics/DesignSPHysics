@@ -25,6 +25,7 @@
             <commands>
                 <mainlist>
 {objects_template}
+                <shapeout file="" />
                 </mainlist>
             </commands>
         </geometry>
