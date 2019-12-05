@@ -916,5 +916,7 @@
     "Auto": "Auto",
     "Stiffness (Pa/m). (default=3.0e6)": "Stiffness (Pa/m). (default=3.0e6)",
     "Damping Pa/m/s). (default=3.0e5)": "Damping Pa/m/s). (default=3.0e5)",
-    "<b>[fricDamp]</b> Damping:": "<b>[fricDamp]</b> Damping:"
+    "<b>[fricDamp]</b> Damping:": "<b>[fricDamp]</b> Damping:",
+    "Changing MK value": "Changing MK value",
+    "By doing this you will loose all MK configuration for the previous MK: {}. Are you sure you want to do this?": "By doing this you will loose all MK configuration for the previous MK: {}. Are you sure you want to do this?"
 }
