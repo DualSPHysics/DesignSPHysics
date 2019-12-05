@@ -13,6 +13,7 @@ from mod.constants import MKFLUID_LIMIT
 from mod.enums import MooringsConfigurationMethod, ObjectType
 
 from mod.dataobjects.case import Case
+from mod.dataobjects.moorings.moorings_configuration import MooringsConfiguration
 from mod.dataobjects.moorings.moordyn.moordyn_body import MoorDynBody
 from mod.dataobjects.moorings.moordyn.moordyn_configuration import MoorDynConfiguration
 
@@ -215,20 +216,23 @@ class MooringsConfigurationDialog(QtGui.QDialog):
 
     def _on_ok(self) -> None:
         """ Reacts to the ok button being pressed. """
-        Case.the().moorings.enabled = self.enabled_selector_combobox.currentIndex() == 1
-        Case.the().moorings.saveoptions.savecsv_points = self.savepointscsv_combo.currentIndex() == 0
-        Case.the().moorings.saveoptions.savevtk_moorings = self.savevtk_combo.currentIndex() == 0
-        Case.the().moorings.saveoptions.savevtk_points = self.savepointsvtk_combo.currentIndex() == 0
-        Case.the().moorings.configuration_method = {0: MooringsConfigurationMethod.EMBEDDED, 1: MooringsConfigurationMethod.FROM_XML}[self.configuration_method_combo.currentIndex()]
-        Case.the().moorings.moordyn_xml = self.xml_file_selection_edit.text()
-        moored_floatings = Case.the().moorings.moored_floatings
-        for row_num in range(0, self.floating_selection_table.rowCount()):
-            target_widget: MooringsCompatibleFloatingWidget = self.floating_selection_table.cellWidget(row_num, 0)
-            if target_widget.use_checkbox.isChecked() and target_widget.mkbound not in moored_floatings:
-                moored_floatings.append(target_widget.mkbound)
-            if not target_widget.use_checkbox.isChecked() and target_widget.mkbound in moored_floatings:
-                moored_floatings.remove(target_widget.mkbound)
-        Case.the().moorings.moordyn_configuration = deepcopy(self.moordyn_parameters_data)
+        if self.enabled_selector_combobox.currentIndex() == 1:
+            Case.the().moorings.enabled = True
+            Case.the().moorings.saveoptions.savecsv_points = self.savepointscsv_combo.currentIndex() == 0
+            Case.the().moorings.saveoptions.savevtk_moorings = self.savevtk_combo.currentIndex() == 0
+            Case.the().moorings.saveoptions.savevtk_points = self.savepointsvtk_combo.currentIndex() == 0
+            Case.the().moorings.configuration_method = {0: MooringsConfigurationMethod.EMBEDDED, 1: MooringsConfigurationMethod.FROM_XML}[self.configuration_method_combo.currentIndex()]
+            Case.the().moorings.moordyn_xml = self.xml_file_selection_edit.text()
+            moored_floatings = Case.the().moorings.moored_floatings
+            for row_num in range(0, self.floating_selection_table.rowCount()):
+                target_widget: MooringsCompatibleFloatingWidget = self.floating_selection_table.cellWidget(row_num, 0)
+                if target_widget.use_checkbox.isChecked() and target_widget.mkbound not in moored_floatings:
+                    moored_floatings.append(target_widget.mkbound)
+                if not target_widget.use_checkbox.isChecked() and target_widget.mkbound in moored_floatings:
+                    moored_floatings.remove(target_widget.mkbound)
+            Case.the().moorings.moordyn_configuration = deepcopy(self.moordyn_parameters_data)
+        else:
+            Case.the().moorings = MooringsConfiguration()
         self.accept()
 
     def _on_cancel(self) -> None:

@@ -7,16 +7,16 @@ from PySide import QtGui
 from mod.translation_tools import __
 from mod.gui_tools import h_line_generator
 
-from mod.dataobjects.case import Case
 from mod.dataobjects.moorings.moordyn.moordyn_line import MoorDynLine
 
 
 class MoorDynLineConfigurationDialog(QtGui.QDialog):
     """ DesignSPHysics MoorDyn Line Configuration Dialog. """
 
-    def __init__(self, line):
+    def __init__(self, line, stored_configuration):
         super().__init__()
         self.line: MoorDynLine = line
+        self.stored_configuration = stored_configuration
 
         self.setWindowTitle(__("MoorDyn Line Configuration"))
         self.setMinimumWidth(440)
@@ -150,8 +150,8 @@ class MoorDynLineConfigurationDialog(QtGui.QDialog):
         self.ba_input.setText(str(self.line.ba) if self.line.ba else "")
         self.ba_input_check.setChecked(bool(self.line.ba))
 
-        self.vessel_connection_body_combo.addItems(["None"] + list(map(lambda body: "MKBound: {}".format(body.ref), Case.the().moorings.moordyn_configuration.bodies)))
-        current_body_enumerated_tuple: tuple = next(filter(lambda index_body_tuple: index_body_tuple[1].ref == self.line.vessel_connection.bodyref, enumerate(Case.the().moorings.moordyn_configuration.bodies)), None)
+        self.vessel_connection_body_combo.addItems(["None"] + list(map(lambda body: "MKBound: {}".format(body.ref), self.stored_configuration.bodies)))
+        current_body_enumerated_tuple: tuple = next(filter(lambda index_body_tuple: index_body_tuple[1].ref == self.line.vessel_connection.bodyref, enumerate(self.stored_configuration.bodies)), None)
         self.vessel_connection_body_combo.setCurrentIndex(current_body_enumerated_tuple[0] + 1 if current_body_enumerated_tuple else 0)
 
     def _on_ea_check(self):

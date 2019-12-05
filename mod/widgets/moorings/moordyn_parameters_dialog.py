@@ -369,7 +369,7 @@ class MoorDynParametersDialog(QtGui.QDialog):
         selected_line = next(filter(lambda line: line.line_id == line_id, self.stored_configuration.lines), None)
         if not selected_line:
             raise RuntimeError("The specified line to configure does not exist in the list of liness.")
-        MoorDynLineConfigurationDialog(selected_line)
+        MoorDynLineConfigurationDialog(selected_line, self.stored_configuration)
 
     def _on_configure_body(self, mkbound):
         selected_body = next(filter(lambda body: body.ref == mkbound, self.stored_configuration.bodies), None)
