@@ -53,12 +53,12 @@ class MoorDynLineConfigurationDialog(QtGui.QDialog):
         self.fix_connection_layout.addWidget(self.fix_connection_point_y)
         self.fix_connection_layout.addWidget(self.fix_connection_point_z)
 
-        self.lenght_input: QtGui.QLineEdit = QtGui.QLineEdit()
+        self.length_input: QtGui.QLineEdit = QtGui.QLineEdit()
         self.segments_input: QtGui.QLineEdit = QtGui.QLineEdit()
 
         self.basic_configuration_groupbox_layout.addRow(__("Vessel Connection: "), self.vessel_connection_layout)
         self.basic_configuration_groupbox_layout.addRow(__("Fix Connection: "), self.fix_connection_layout)
-        self.basic_configuration_groupbox_layout.addRow(__("Line Lenght:"), self.lenght_input)
+        self.basic_configuration_groupbox_layout.addRow(__("Line Length (m):"), self.length_input)
         self.basic_configuration_groupbox_layout.addRow(__("Number of Segments:"), self.segments_input)
         self.basic_configuration_groupbox.setLayout(self.basic_configuration_groupbox_layout)
 
@@ -131,7 +131,7 @@ class MoorDynLineConfigurationDialog(QtGui.QDialog):
         self.vessel_connection_point_y.setText(str(self.line.vessel_connection.point[1]))
         self.vessel_connection_point_z.setText(str(self.line.vessel_connection.point[2]))
 
-        self.lenght_input.setText(str(self.line.length))
+        self.length_input.setText(str(self.line.length))
         self.segments_input.setText(str(self.line.segments))
 
         self.ea_input.setEnabled(bool(self.line.ea))
@@ -167,7 +167,7 @@ class MoorDynLineConfigurationDialog(QtGui.QDialog):
         self.ba_input.setEnabled(self.ba_input_check.isChecked())
 
     def _on_ok(self):
-        self.line.length = float(self.lenght_input.text())
+        self.line.length = float(self.length_input.text())
         self.line.segments = int(self.segments_input.text())
 
         self.line.ea = str(self.ea_input.text()) if self.ea_input_check.isChecked() else None

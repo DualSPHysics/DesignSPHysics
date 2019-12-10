@@ -39,7 +39,10 @@ class WavePaddlesRenderer():
     @classmethod
     def get_awas_template(cls, awas: dict) -> str:
         """ Renders the <awas_zsurf> tag for a piston generator. """
-        awas["correction_template"] = get_template_text(cls.WAVEPADDLES_PISTON_AWAS_CORRECTION).format(**awas["correction"]) if awas["correction"]["enabled"] else ""
+
+        awas["correction"]["correction_enabled"] = "" if awas["correction"]["enabled"] == "true" else "_"
+
+        awas["correction_template"] = get_template_text(cls.WAVEPADDLES_PISTON_AWAS_CORRECTION).format(**awas["correction"])
 
         return get_template_text(cls.WAVEPADDLES_PISTON_AWAS).format(**awas)
 

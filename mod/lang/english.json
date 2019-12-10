@@ -846,7 +846,7 @@
     "outputFlags:": "outputFlags:",
     "Point (X, Y, Z):": "Point (X, Y, Z):",
     "Vessel Connection: ": "Vessel Connection: ",
-    "Line Lenght:": "Line Lenght:",
+    "Line Length:": "Line Length:",
     "Number of Segments:": "Number of Segments:",
     "Fix Connection: ": "Fix Connection: ",
     "Load defaults": "Load defaults",
@@ -918,5 +918,6 @@
     "Damping Pa/m/s). (default=3.0e5)": "Damping Pa/m/s). (default=3.0e5)",
     "<b>[fricDamp]</b> Damping:": "<b>[fricDamp]</b> Damping:",
     "Changing MK value": "Changing MK value",
-    "By doing this you will loose all MK configuration for the previous MK: {}. Are you sure you want to do this?": "By doing this you will loose all MK configuration for the previous MK: {}. Are you sure you want to do this?"
+    "By doing this you will loose all MK configuration for the previous MK: {}. Are you sure you want to do this?": "By doing this you will loose all MK configuration for the previous MK: {}. Are you sure you want to do this?",
+    "Line Lenght:": "Line Lenght:"
 }

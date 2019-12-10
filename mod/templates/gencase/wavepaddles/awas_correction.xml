@@ -1,1 +1,1 @@
-                        <correction coefstroke="{coefstroke}" coefperiod="{coefperiod}" powerfunc="{powerfunc}" comment="Drift correction configuration (default=no applied)" />
+                        <{correction_enabled}correction coefstroke="{coefstroke}" coefperiod="{coefperiod}" powerfunc="{powerfunc}" comment="Drift correction configuration (default=no applied)" />
