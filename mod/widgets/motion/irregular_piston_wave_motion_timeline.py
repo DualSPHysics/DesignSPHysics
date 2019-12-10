@@ -8,7 +8,7 @@ from mod.translation_tools import __
 from mod.gui_tools import h_line_generator
 from mod.stdout_tools import debug
 
-from mod.enums import AWASWaveOrder, AWASSaveMethod
+from mod.enums import AWASWaveOrder, AWASSaveMethod, IrregularSpectrum, IrregularDiscretization
 
 from mod.dataobjects.motion.irregular_piston_wave_gen import IrregularPistonWaveGen
 from mod.dataobjects.awas import AWAS
@@ -268,9 +268,11 @@ class IrregularPistonWaveMotionTimeline(QtGui.QWidget):
         self.piston_dir_z.setText(str(irreg_wave_gen.piston_dir[2]))
         self.wave_height_input.setText(str(irreg_wave_gen.wave_height))
         self.wave_period_input.setText(str(irreg_wave_gen.wave_period))
-        self.spectrum_selector.setCurrentIndex(int(irreg_wave_gen.spectrum))
-        self.discretization_selector.setCurrentIndex(
-            int(irreg_wave_gen.discretization))
+        self.spectrum_selector.setCurrentIndex({IrregularSpectrum.JONSWAP: 0, IrregularSpectrum.PIERSON_MOSKOWITZ: 1}[irreg_wave_gen.spectrum])
+        self.discretization_selector.setCurrentIndex({IrregularDiscretization.REGULAR: 0,
+                                                      IrregularDiscretization.RANDOM: 1,
+                                                      IrregularDiscretization.STRETCHED: 2,
+                                                      IrregularDiscretization.COSSTRETCHED: 3}[irreg_wave_gen.discretization])
         self.peak_coef_input.setText(str(irreg_wave_gen.peak_coef))
         self.waves_input.setText(str(irreg_wave_gen.waves))
         self.randomseed_input.setText(str(irreg_wave_gen.randomseed))
