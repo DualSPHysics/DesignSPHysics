@@ -7,7 +7,6 @@ class MoorDynSolverOptions():
     """ MoorDyn general solver options dataobject. """
 
     def __init__(self):
-        super().__init__()
         self.gravity: float = 9.81
         self.water_depth: float = 0.5
         self.kBot: str = "3.0e6"

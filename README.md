@@ -1,5 +1,8 @@
 # DesignSPHysics
 
+[![Total alerts](https://img.shields.io/lgtm/alerts/g/DualSPHysics/DesignSPHysics.svg?logo=lgtm&logoWidth=18)](https://lgtm.com/projects/g/DualSPHysics/DesignSPHysics/alerts/)
+[![Language grade: Python](https://img.shields.io/lgtm/grade/python/g/DualSPHysics/DesignSPHysics.svg?logo=lgtm&logoWidth=18)](https://lgtm.com/projects/g/DualSPHysics/DesignSPHysics/context:python)
+
 DesignSPHysics is a software module built into [FreeCAD](http://www.freecadweb.org/) that provides a Graphical User Interface for [DualSPHysics](http://dual.sphysics.org/). It is under development since September 2016 and in Beta stage.
 
 Check the [Official Webpage](http://design.sphysics.org) for downloads and more information.

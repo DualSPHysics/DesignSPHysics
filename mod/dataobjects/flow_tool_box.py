@@ -11,7 +11,6 @@ class FlowToolBox():
     DEFAULT_NAME: str = "BOX"
 
     def __init__(self):
-        super().__init__()
         self.id: UUID = uuid4()
         self.name: str = self.DEFAULT_NAME
         self.point1: list() = [0.0, 0.0, 0.0]

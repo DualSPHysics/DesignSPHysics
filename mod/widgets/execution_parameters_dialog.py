@@ -24,7 +24,7 @@ class ExecutionParametersDialog(QtGui.QDialog):
     LABEL_DEFAULT_TEXT = "<i>{}</i>".format(__("Select an input to show help about it."))
 
     def __init__(self, parent=None):
-        super(ExecutionParametersDialog, self).__init__(parent=parent)
+        super().__init__(parent=parent)
 
         # Creates a dialog and 2 main buttons
         self.setWindowTitle("DSPH Execution Parameters")

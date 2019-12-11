@@ -15,7 +15,7 @@ class FacesDialog(QtGui.QDialog):
     """ Defines a window with faces  """
 
     def __init__(self, selection_name, parent=None):
-        super(FacesDialog, self).__init__(parent=parent)
+        super().__init__(parent=parent)
 
         self.setWindowTitle(__("Faces configuration"))
         self.ok_button = QtGui.QPushButton(__("Ok"))

@@ -22,7 +22,7 @@ class ConstantsDialog(QtGui.QDialog):
     LABEL_DEFAULT_TEXT = "<i>{}</i>".format(__("Select an input to show help about it."))
 
     def __init__(self, parent=None):
-        super(ConstantsDialog, self).__init__(parent=parent)
+        super().__init__(parent=parent)
 
         self.setWindowTitle("DSPH Constant definition")
         self.help_label: QtGui.QLabel = QtGui.QLabel(self.LABEL_DEFAULT_TEXT)

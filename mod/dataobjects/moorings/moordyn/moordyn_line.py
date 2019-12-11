@@ -11,7 +11,6 @@ class MoorDynLine():
     """ MoorDyn line representation. """
 
     def __init__(self, line_id=-1):
-        super().__init__()
         self.line_id: int = line_id
 
         # Not more than 2 connections allowed.

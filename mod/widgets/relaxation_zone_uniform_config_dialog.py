@@ -15,7 +15,7 @@ from mod.dataobjects.relaxation_zone_uniform import RelaxationZoneUniform
 class RelaxationZoneUniformConfigDialog(QtGui.QDialog):
     """ A configuration dialog for a uniform relaxation zone. """
     def __init__(self, relaxationzone=None, parent=None):
-        super(RelaxationZoneUniformConfigDialog, self).__init__(parent=parent)
+        super().__init__(parent=parent)
         self.temp_relaxationzone = relaxationzone if relaxationzone is not None else RelaxationZoneUniform()
         self.relaxationzone = relaxationzone
         self.velocity_times = list()

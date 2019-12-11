@@ -17,7 +17,6 @@ class ChronoConfig:
     """ Dataobject to store Chrono related configuration and utilities. """
 
     def __init__(self):
-        super().__init__()
         self.csv_intervals: ChronoCSVIntervals = ChronoCSVIntervals()
         self.scale_scheme: ChronoScaleScheme = ChronoScaleScheme()
         self.collisiondp: ChronoCollisionDP = ChronoCollisionDP()

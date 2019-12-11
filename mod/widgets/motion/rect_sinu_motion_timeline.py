@@ -24,7 +24,7 @@ class RectSinuMotionTimeline(QtGui.QWidget):
             raise TypeError("You tried to spawn an accelerated circular motion widget in the timeline with a wrong object")
         if rect_sinu_motion is None:
             raise TypeError("You tried to spawn an accelerated circular motion widget in the timeline without a motion object")
-        super(RectSinuMotionTimeline, self).__init__(parent=parent)
+        super().__init__(parent=parent)
 
         self.index = index
 

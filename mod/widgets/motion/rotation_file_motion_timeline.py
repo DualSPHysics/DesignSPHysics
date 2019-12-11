@@ -23,7 +23,7 @@ class RotationFileMotionTimeline(QtGui.QWidget):
         if rot_file_gen is None:
             raise TypeError("You tried to spawn a rotation file generator "
                             "motion widget in the timeline without a motion object")
-        super(RotationFileMotionTimeline, self).__init__(parent=parent)
+        super().__init__(parent=parent)
 
         # Needed for copying movement file to root of the case.
         self.project_folder_path = project_folder_path

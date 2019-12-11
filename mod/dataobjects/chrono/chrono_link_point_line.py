@@ -9,7 +9,6 @@ class ChronoLinkPointLine:
     """ Chrono Link PointLine. """
 
     def __init__(self):
-        super().__init__()
         self.id: UUID = uuid4()
         self.idbody1: str = ""
         self.slidingvector: list = [0.0, 0.0, 0.0]

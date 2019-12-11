@@ -14,7 +14,6 @@ class InletOutletZone:
     """ Inlet/Outlet Zone definition. """
 
     def __init__(self):
-        super().__init__()
         self.id: UUID = uuid4()
         self.convertfluid: bool = True
         self.layers: int = 0

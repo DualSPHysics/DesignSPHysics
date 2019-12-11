@@ -21,7 +21,7 @@ class FileGen(WaveGen):
     """
 
     def __init__(self, duration=0, filename="", fields=0, fieldtime=0, fieldx=0, fieldy=0, fieldz=0):
-        super(FileGen, self).__init__()
+        WaveGen.__init__(self)
         self.duration = duration
         self.type = MotionType.FILE_GENERATOR
         self.filename = filename

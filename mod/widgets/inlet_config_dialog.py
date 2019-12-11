@@ -21,7 +21,7 @@ class InletConfigDialog(QtGui.QDialog):
        Modifies data dictionary passed as parameter. """
 
     def __init__(self, parent=None):
-        super(InletConfigDialog, self).__init__(parent=parent)
+        super().__init__(parent=parent)
 
         # Reference to the inlet outlet configuration on the case data
         self.inlet_outlet: InletOutletConfig = Case.the().inlet_outlet

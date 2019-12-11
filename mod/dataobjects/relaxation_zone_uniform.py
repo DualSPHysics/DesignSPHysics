@@ -12,7 +12,6 @@ class RelaxationZoneUniform(RelaxationZone):
     def __init__(self, start=0, duration=0, domainbox_point=None, domainbox_size=None, domainbox_direction=None,
                  domainbox_rotateaxis_angle=0, domainbox_rotateaxis_point1=None, domainbox_rotateaxis_point2=None,
                  use_velocity=True, velocity=0, velocity_times=None, coefdt=1000, function_psi=0.9, function_beta=1):
-        super().__init__()
         self.start = start
         self.duration = duration
         self.domainbox_point = domainbox_point or [0, 0, 0]

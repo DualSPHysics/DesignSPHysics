@@ -26,7 +26,7 @@ class IrregularPistonWaveMotionTimeline(QtGui.QWidget):
         if irreg_wave_gen is None:
             raise TypeError("You tried to spawn an irregular wave generator "
                             "motion widget in the timeline without a motion object")
-        super(IrregularPistonWaveMotionTimeline, self).__init__(parent=parent)
+        super().__init__(parent=parent)
 
         self.main_layout = QtGui.QVBoxLayout()
         self.main_layout.setContentsMargins(10, 10, 10, 10)

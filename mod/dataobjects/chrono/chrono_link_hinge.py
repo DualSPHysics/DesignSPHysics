@@ -9,7 +9,6 @@ class ChronoLinkHinge:
     """ Chrono Link Hinge. """
 
     def __init__(self):
-        super().__init__()
         self.id: UUID = uuid4()
         self.idbody1: str = ""
         self.idbody2: str = ""

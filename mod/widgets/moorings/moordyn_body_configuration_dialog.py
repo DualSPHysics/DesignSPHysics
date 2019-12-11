@@ -14,7 +14,6 @@ class MoorDynBodyConfigurationDialog(QtGui.QDialog):
     """ DesignSPHysics MoorDyn Body Configuration Dialog. """
 
     def __init__(self, body):
-        super().__init__()
         self.body: MoorDynBody = body
 
         self.setWindowTitle(__("MoorDyn Body Configuration"))

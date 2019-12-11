@@ -23,7 +23,7 @@ class FileMotionTimeline(QtGui.QWidget):
         if file_wave_gen is None:
             raise TypeError("You tried to spawn a regular wave generator "
                             "motion widget in the timeline without a motion object")
-        super(FileMotionTimeline, self).__init__(parent=parent)
+        super().__init__(parent=parent)
 
         # Needed for copying movement file to root of the case.
         self.project_folder_path = project_folder_path

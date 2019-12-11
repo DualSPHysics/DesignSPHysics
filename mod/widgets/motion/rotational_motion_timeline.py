@@ -24,7 +24,7 @@ class RotationalMotionTimeline(QtGui.QWidget):
             raise TypeError("You tried to spawn a rotational motion widget in the timeline with a wrong object")
         if rot_motion is None:
             raise TypeError("You tried to spawn a rotational motion widget in the timeline without a motion object")
-        super(RotationalMotionTimeline, self).__init__(parent=parent)
+        super().__init__(parent=parent)
 
         self.index = index
 

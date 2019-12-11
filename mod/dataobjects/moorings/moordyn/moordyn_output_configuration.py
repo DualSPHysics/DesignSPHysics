@@ -7,7 +7,6 @@ class MoorDynOutputConfiguration():
     """ MoorDyn output configuration dataobject. """
 
     def __init__(self):
-        super().__init__()
         self.startTime: float = 0
         self.endTime: float = 10
         self.dtOut: float = 0.01

@@ -6,7 +6,7 @@ from PySide import QtGui
 
 from mod.translation_tools import __
 from mod.executable_tools import executable_contains_string
-from mod.dialog_tools import warning_dialog, error_dialog
+from mod.dialog_tools import error_dialog
 from mod.file_tools import get_default_config_file
 
 from mod.dataobjects.case import Case
@@ -16,7 +16,7 @@ class SetupPluginDialog(QtGui.QDialog):
     """ A configuration dialog to set up the DesignSPHysics plugin for FreeCAD. """
 
     def __init__(self, parent=None):
-        super(SetupPluginDialog, self).__init__(parent=parent)
+        super().__init__(parent=parent)
 
         self.setWindowTitle("DesignSPHysics Setup")
         self.ok_button = QtGui.QPushButton("Ok")

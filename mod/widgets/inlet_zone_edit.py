@@ -25,7 +25,7 @@ class InletZoneEdit(QtGui.QDialog):
     }
 
     def __init__(self, inlet_object_id, parent=None):
-        super(InletZoneEdit, self).__init__(parent=parent)
+        super().__init__(parent=parent)
 
         # Find the zone for which button was pressed
         self.target_io_zone: InletOutletZone = Case.the().inlet_outlet.get_io_zone_for_id(inlet_object_id)

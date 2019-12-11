@@ -26,7 +26,7 @@ class WaitMotionTimeline(QtGui.QWidget):
         if wait_motion is None:
             raise TypeError(
                 "You tried to spawn a rectilinear motion widget in the timeline without a motion object")
-        super(WaitMotionTimeline, self).__init__(parent=parent)
+        super().__init__(parent=parent)
 
         self.index = index
         self.main_layout = QtGui.QHBoxLayout()

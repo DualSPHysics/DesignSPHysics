@@ -28,7 +28,7 @@ class ChronoConfigDialog(QtGui.QDialog):
     Modifies data dictionary passed as parameter. """
 
     def __init__(self, parent=None):
-        super(ChronoConfigDialog, self).__init__(parent=parent)
+        super().__init__(parent=parent)
 
         # Reference to avoid calling instance every time
         self.case = Case.the()

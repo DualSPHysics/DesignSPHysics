@@ -36,7 +36,6 @@ class Case():
         """ Virtually private constructor. """
         if Case.__instance is not None and not reset:
             raise Exception("Case class is a singleton and should not be initialized twice")
-        super()
         Case.__instance = self
         self.version: str = VERSION
         self.name: str = ""

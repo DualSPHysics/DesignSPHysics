@@ -3,14 +3,13 @@
 """DesignSPHysics Dock Execution Widget """
 
 import os
-from traceback import print_exc
 
 from PySide import QtGui, QtCore
 
 from mod.translation_tools import __
 from mod.gui_tools import get_icon
 from mod.freecad_tools import get_fc_main_window
-from mod.stdout_tools import log, error
+from mod.stdout_tools import log
 from mod.dialog_tools import error_dialog, warning_dialog
 from mod.executable_tools import refocus_cwd
 

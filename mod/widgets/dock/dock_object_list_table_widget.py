@@ -4,7 +4,7 @@
 
 from PySide import QtGui
 
-from mod.freecad_tools import get_fc_object, get_fc_main_window
+from mod.freecad_tools import get_fc_object
 from mod.translation_tools import __
 
 from mod.constants import CASE_LIMITS_OBJ_NAME

@@ -4,6 +4,7 @@
 
 from mod.enums import MotionType
 
+
 class WaveGen():
     """ Base Wave Generator. It holds properties common to Regular and Irregular waves.
 
@@ -19,7 +20,6 @@ class WaveGen():
     """
 
     def __init__(self, wave_order=1, start=0, duration=0, depth=0, wave_height=0.5, wave_period=1):
-        super(WaveGen, self).__init__()
         self.type = MotionType.BASE_WAVE_GENERATOR
         self.wave_order = wave_order
         self.start = start

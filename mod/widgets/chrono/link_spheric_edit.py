@@ -14,7 +14,7 @@ class LinkSphericEdit(QtGui.QDialog):
     """ Defines Link spheric window dialog """
 
     def __init__(self, link_spheric_id, bodies_widgets, parent=None):
-        super(LinkSphericEdit, self).__init__(parent=parent)
+        super().__init__(parent=parent)
 
         self.case = Case.the()
         self.link_spheric_id = link_spheric_id

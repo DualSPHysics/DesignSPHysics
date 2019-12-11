@@ -13,7 +13,7 @@ class LinkPointlineEdit(QtGui.QDialog):
     """ Defines Link pontline window dialog """
 
     def __init__(self, link_pointline_id, bodies_widgets, parent=None):
-        super(LinkPointlineEdit, self).__init__(parent=parent)
+        super().__init__(parent=parent)
 
         self.case = Case.the()
         self.link_pointline_id = link_pointline_id

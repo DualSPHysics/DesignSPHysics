@@ -7,7 +7,6 @@ class MooringsSaveOptions():
     """ DesignSPHysics save options for moorings configuration. """
 
     def __init__(self):
-        super().__init__()
         self.savevtk_moorings: bool = True
         self.savecsv_points: bool = True
         self.savevtk_points: bool = False

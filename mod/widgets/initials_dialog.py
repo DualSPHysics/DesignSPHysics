@@ -19,7 +19,7 @@ class InitialsDialog(QtGui.QDialog):
     """ Defines a window with initials  """
 
     def __init__(self, parent=None):
-        super(InitialsDialog, self).__init__(parent=parent)
+        super().__init__(parent=parent)
 
         self.setWindowTitle(__("Initials configuration"))
         self.ok_button = QtGui.QPushButton(__("Ok"))

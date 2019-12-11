@@ -24,7 +24,6 @@ class MooringsCompatibleFloatingWidget(QtGui.QWidget):
     """ Widget to embed in each element of the floating list for the Moorings Configuration Dialog. """
 
     def __init__(self, checked: bool, obj_type: ObjectType, mkbound: int):
-        super().__init__()
         self.setContentsMargins(0, 0, 0, 0)
         self.root_layout: QtGui.QHBoxLayout = QtGui.QHBoxLayout()
         self.root_layout.setContentsMargins(5, 1, 5, 1)

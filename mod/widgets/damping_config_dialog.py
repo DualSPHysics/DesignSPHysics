@@ -16,7 +16,7 @@ class DampingConfigDialog(QtGui.QDialog):
     Modifies data dictionary passed as parameter."""
 
     def __init__(self, object_key, case, parent=None):
-        super(DampingConfigDialog, self).__init__(parent=parent)
+        super().__init__(parent=parent)
 
         self.case = case
         self.object_key = object_key

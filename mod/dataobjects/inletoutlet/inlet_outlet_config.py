@@ -11,7 +11,6 @@ class InletOutletConfig():
     """ Configuration for Inlet/Oulet Zones. """
 
     def __init__(self):
-        super().__init__()
         self.reuseids: bool = False
         self.resizetime: float = 0.5
         self.userefilling: bool = False
