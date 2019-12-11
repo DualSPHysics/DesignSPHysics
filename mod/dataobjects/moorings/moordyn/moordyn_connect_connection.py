@@ -7,5 +7,4 @@ class MoorDynConnectConnection():
     """ MoorDyn Connect Connection representation. """
 
     def __init__(self, conref=-1):
-        super().__init__()
         self.conref = conref

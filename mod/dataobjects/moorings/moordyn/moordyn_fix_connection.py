@@ -7,5 +7,4 @@ class MoorDynFixConnection():
     """ MoorDyn Fix Connection representation. """
 
     def __init__(self, point=None):
-        super().__init__()
         self.point: list = point or [0.0, 0.0, 0.0]

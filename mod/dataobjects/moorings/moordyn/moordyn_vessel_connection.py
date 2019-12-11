@@ -7,6 +7,5 @@ class MoorDynVesselConnection():
     """ MoorDyn Vessel Connection representation. """
 
     def __init__(self, bodyref=-1, point=None):
-        super().__init__()
         self.bodyref: int = bodyref
         self.point: list = point or [0.0, 0.0, 0.0]

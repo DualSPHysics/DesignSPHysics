@@ -9,7 +9,6 @@ class ChronoObject:
     """ Chrono Object. """
 
     def __init__(self):
-        super().__init__()
         self.id: str = ""  # FreeCAD Object Name
         self.name: str = ""
         self.mkbound: int = 0

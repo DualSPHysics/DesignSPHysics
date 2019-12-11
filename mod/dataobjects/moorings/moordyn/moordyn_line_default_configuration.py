@@ -7,7 +7,6 @@ class MoorDynLineDefaultConfiguration():
     """ MoorDyn LineDefault configuration object. """
 
     def __init__(self):
-        super().__init__()
         self.ea: str = "2.9e3"
         self.diameter: str = "3.656E-3"
         self.massDenInAir: float = 0.0607

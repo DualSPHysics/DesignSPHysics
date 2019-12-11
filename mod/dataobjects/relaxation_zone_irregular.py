@@ -19,7 +19,6 @@ class RelaxationZoneIrregular(RelaxationZone):
                  saveserie_timemin=0, saveserie_timemax=100, saveserie_timedt=0.1, saveserie_xpos=0,
                  saveseriewaves_timemin=0, saveseriewaves_timemax=1000, saveseriewaves_xpos=0,
                  coefdir=None, coefdt=1000, function_psi=0.9, function_beta=1, driftcorrection=0):
-        super().__init__()
         self.start = start
         self.duration = duration
         self.peakcoef = peakcoef

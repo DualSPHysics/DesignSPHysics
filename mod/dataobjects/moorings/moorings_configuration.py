@@ -12,7 +12,6 @@ class MooringsConfiguration():
     """ A moorings configuration structure to use with MoorDyn under DualSPHysics. """
 
     def __init__(self):
-        super().__init__()
         self.enabled = False
         self.saveoptions: MooringsSaveOptions = MooringsSaveOptions()
         self.moored_floatings: list = list()  # MKBound (int)

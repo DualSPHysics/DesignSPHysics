@@ -9,6 +9,5 @@ class InletOutletDensityInfo():
     """ Stores Inlet/Outlet density information and parameters. """
 
     def __init__(self):
-        super().__init__()
         self.density_type: InletOutletDensityType = InletOutletDensityType.FIXED
         self.value: float = 0.0

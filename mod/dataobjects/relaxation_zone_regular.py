@@ -11,7 +11,6 @@ class RelaxationZoneRegular(RelaxationZone):
                  width=0.5, phase=0, ramp=0,
                  savemotion_periods=24, savemotion_periodsteps=20, savemotion_xpos=0, savemotion_zpos=0,
                  coefdir=None, coefdt=1000, function_psi=0.9, function_beta=1, driftcorrection=0):
-        super().__init__()
         self.start = start
         self.duration = duration
         self.waveorder = waveorder

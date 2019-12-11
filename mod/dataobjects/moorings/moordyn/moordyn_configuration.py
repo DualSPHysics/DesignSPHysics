@@ -11,7 +11,6 @@ class MoorDynConfiguration():
     """ A MoorDyn specific configuration object to couple with the already existing solver. """
 
     def __init__(self):
-        super().__init__()
         self.solver_options: MoorDynSolverOptions = MoorDynSolverOptions()
         self.bodies: list = list()  # MoorDynBody
         self.connects: list = list()  # MoorDynConnect

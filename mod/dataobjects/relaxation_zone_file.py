@@ -12,7 +12,6 @@ class RelaxationZoneFile(RelaxationZone):
                  filesvelx_count=5, usevelz=False, movedata=None, dpz=2, smooth=0, center=None, width=0.5,
                  coefdir=None, coefdt=1000, function_psi=0.9, function_beta=1, driftcorrection=0,
                  driftinitialramp=0):
-        super().__init__()
         self.driftinitialramp = driftinitialramp
         self.smooth = smooth
         self.dpz = dpz
