@@ -7,6 +7,7 @@ from PySide import QtCore, QtGui
 from mod.translation_tools import __
 from mod.gui_tools import h_line_generator
 from mod.stdout_tools import debug
+from mod.enums import IrregularDiscretization, IrregularSpectrum
 
 from mod.dataobjects.motion.irregular_flap_wave_gen import IrregularFlapWaveGen
 
@@ -197,9 +198,11 @@ class IrregularFlapWaveMotionTimeline(QtGui.QWidget):
         self.wave_height_input.setText(str(irreg_wave_gen.wave_height))
         self.wave_period_input.setText(str(irreg_wave_gen.wave_period))
         self.variable_draft_input.setText(str(irreg_wave_gen.variable_draft))
-        self.spectrum_selector.setCurrentIndex(int(irreg_wave_gen.spectrum))
-        self.discretization_selector.setCurrentIndex(
-            int(irreg_wave_gen.discretization))
+        self.spectrum_selector.setCurrentIndex({IrregularSpectrum.JONSWAP: 0, IrregularSpectrum.PIERSON_MOSKOWITZ: 1}[irreg_wave_gen.spectrum])
+        self.discretization_selector.setCurrentIndex({IrregularDiscretization.REGULAR: 0,
+                                                      IrregularDiscretization.RANDOM: 1,
+                                                      IrregularDiscretization.STRETCHED: 2,
+                                                      IrregularDiscretization.COSSTRETCHED: 3}[irreg_wave_gen.discretization])
         self.peak_coef_input.setText(str(irreg_wave_gen.peak_coef))
         self.waves_input.setText(str(irreg_wave_gen.waves))
         self.randomseed_input.setText(str(irreg_wave_gen.randomseed))
@@ -273,8 +276,8 @@ class IrregularFlapWaveMotionTimeline(QtGui.QWidget):
                                         self.wave_period_input.text()),
                                     variable_draft=float(
                                         self.variable_draft_input.text()),
-                                    spectrum=self.spectrum_selector.currentIndex(),
-                                    discretization=self.discretization_selector.currentIndex(),
+                                    spectrum={0: IrregularSpectrum.JONSWAP, 1: IrregularSpectrum.PIERSON_MOSKOWITZ}[self.spectrum_selector.currentIndex()],
+                                    discretization={0: IrregularDiscretization.REGULAR, 1: IrregularDiscretization.RANDOM, 2: IrregularDiscretization.STRETCHED, 3: IrregularDiscretization.COSSTRETCHED}[self.discretization_selector.currentIndex()],
                                     peak_coef=float(
                                         self.peak_coef_input.text()),
                                     waves=float(self.waves_input.text()),
