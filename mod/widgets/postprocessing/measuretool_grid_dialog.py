@@ -14,7 +14,7 @@ class MeasureToolGridDialog(QtGui.QDialog):
     """ Defines grid point button behaviour."""
 
     def __init__(self, parent=None):
-        super(MeasureToolGridDialog, self).__init__(parent=parent)
+        super().__init__(parent=parent)
 
         self.current_grid = []
 

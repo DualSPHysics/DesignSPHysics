@@ -26,7 +26,7 @@ class CirSinuMotionTimeline(QtGui.QWidget):
         if cir_sinu_motion is None:
             raise TypeError("You tried to spawn a sinusoidal circular "
                             "motion widget in the timeline without a motion object")
-        super(CirSinuMotionTimeline, self).__init__(parent=parent)
+        super().__init__(parent=parent)
 
         self.index = index
         self.main_layout = QtGui.QHBoxLayout()

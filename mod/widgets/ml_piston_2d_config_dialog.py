@@ -20,7 +20,7 @@ class MLPiston2DConfigDialog(QtGui.QDialog):
     """ A Dialog to configure an MLPiston2D configuration. """
 
     def __init__(self, mk=None, mlpiston2d=None, parent=None):
-        super(MLPiston2DConfigDialog, self).__init__(parent=parent)
+        super().__init__(parent=parent)
         self.mk = mk
         self.temp_mlpiston2d = mlpiston2d if mlpiston2d else MLPiston2D()
         self.mlpiston2d = mlpiston2d

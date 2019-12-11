@@ -54,7 +54,6 @@ class ExecutablePaths():
                 debug("Executable {} does not contain the word {}".format(executable, word))
                 execs_correct = False
                 bad_executables.append(executable)
-                executable = ""
 
         if not execs_correct:
             error_dialog("One or more of the executables set on the configuration is not correct. Please see the details below.",

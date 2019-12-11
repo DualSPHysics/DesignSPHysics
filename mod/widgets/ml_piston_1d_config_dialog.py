@@ -15,7 +15,7 @@ class MLPiston1DConfigDialog(QtGui.QDialog):
     """ DesignSPHysics MLPiston1D Configuration Dialog. """
 
     def __init__(self, mk=None, mlpiston1d=None, parent=None):
-        super(MLPiston1DConfigDialog, self).__init__(parent=parent)
+        super().__init__(parent=parent)
         self.mk = mk
         self.temp_mlpiston1d = mlpiston1d if mlpiston1d is not None else MLPiston1D()
         self.mlpiston1d = mlpiston1d

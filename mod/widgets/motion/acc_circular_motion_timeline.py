@@ -26,7 +26,7 @@ class AccCircularMotionTimeline(QtGui.QWidget):
         if acc_cir_motion is None:
             raise TypeError("You tried to spawn an accelerated circular "
                             "motion widget in the timeline without a motion object")
-        super(AccCircularMotionTimeline, self).__init__(parent=parent)
+        super().__init__(parent=parent)
 
         self.index = index
         self.main_layout = QtGui.QHBoxLayout()

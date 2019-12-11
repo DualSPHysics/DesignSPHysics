@@ -14,7 +14,7 @@ class LinkLinearspringEdit(QtGui.QDialog):
     """ Defines Link linearspring window dialog """
 
     def __init__(self, link_linearspring_id, bodies_widgets, parent=None):
-        super(LinkLinearspringEdit, self).__init__(parent=parent)
+        super().__init__(parent=parent)
 
         self.case = Case.the()
         self.link_linearspring_id = link_linearspring_id

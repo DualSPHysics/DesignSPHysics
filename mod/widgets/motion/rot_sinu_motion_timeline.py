@@ -24,7 +24,7 @@ class RotSinuMotionTimeline(QtGui.QWidget):
             raise TypeError("You tried to spawn a sinusoidal rotational motion widget in the timeline with a wrong object")
         if rot_sinu_motion is None:
             raise TypeError("You tried to spawn a sinusoidal rotational motion widget in the timeline without a motion object")
-        super(RotSinuMotionTimeline, self).__init__(parent=parent)
+        super().__init__(parent=parent)
 
         self.index = index
 

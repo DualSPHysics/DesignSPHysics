@@ -31,8 +31,7 @@ class IrregularPistonWaveGen(WaveGen):
                  savemotion_zpos=-0.15, saveserie_timemin=0, saveserie_timemax=1300, saveserie_timedt=0.05,
                  saveserie_xpos=0, saveseriewaves_timemin=0, saveseriewaves_timemax=1000, saveseriewaves_xpos=2,
                  piston_dir=None, awas=None):
-        super(IrregularPistonWaveGen, self).__init__(wave_order, start,
-                                                     duration, depth, wave_height, wave_period)
+        WaveGen.__init__(self, wave_order, start, duration, depth, wave_height, wave_period)
         self.type = MotionType.IRREGULAR_PISTON_WAVE_GENERATOR
         self.spectrum = spectrum
         self.discretization = discretization

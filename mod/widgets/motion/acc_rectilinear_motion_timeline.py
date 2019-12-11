@@ -26,7 +26,7 @@ class AccRectilinearMotionTimeline(QtGui.QWidget):
         if acc_rect_motion is None:
             raise TypeError("You tried to spawn an accelerated rectilinear "
                             "motion widget in the timeline without a motion object")
-        super(AccRectilinearMotionTimeline, self).__init__(parent=parent)
+        super().__init__(parent=parent)
 
         self.index = index
         self.setMinimumHeight(50)

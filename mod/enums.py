@@ -211,7 +211,6 @@ class HelpText:
     SPEEDSOUND = __("Speed of sound (by default speedofsound=coefsound*speedsystem). ")
     COEFH = __("Coefficient to calculate the smoothing length (h=coefh*sqrt(3*dp^2) in 3D).")
     CFLNUMBER = __("Coefficient to multiply variable dt.")
-    DOMAINFIXED = __("The domain is fixed with the specified values (xmin:ymin:zmin:xmax:ymax:zmax)")
     XMIN = __("The domain is fixed in the specified limit (default=not applied)")
     XMAX = __("The domain is fixed in the specified limit (default=not applied)")
     YMIN = __("The domain is fixed in the specified limit (default=not applied)")

@@ -22,7 +22,7 @@ class RegularFlapWaveMotionTimeline(QtGui.QWidget):
         if reg_wave_gen is None:
             raise TypeError("You tried to spawn a regular flap wave generator "
                             "motion widget in the timeline without a motion object")
-        super(RegularFlapWaveMotionTimeline, self).__init__(parent=parent)
+        super().__init__(parent=parent)
 
         self.main_layout = QtGui.QVBoxLayout()
         self.main_layout.setContentsMargins(10, 10, 10, 10)

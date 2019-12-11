@@ -107,5 +107,5 @@ class GencaseCompletedDialog(QtGui.QDialog):
             subprocess.Popen([Case.the().executable_paths.paraview, "--data={}\\{}".format(Case.the().path + "\\" + Case.the().name + "_out", action.text())], stdout=subprocess.PIPE)
             self.detail_text_dialog.hide()
             self.accept()
-        except:
+        except FileNotFoundError:
             error_dialog("There was an error executing paraview. Make sure the path for the paraview executable is set in the DesignSPHyisics configuration and that the executable is a correct paraview one.")

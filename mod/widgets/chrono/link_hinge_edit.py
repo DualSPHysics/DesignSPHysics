@@ -14,7 +14,7 @@ class LinkHingeEdit(QtGui.QDialog):
     """ Defines Link hinge window dialog """
 
     def __init__(self, link_hinge_id, bodies_widgets, parent=None):
-        super(LinkHingeEdit, self).__init__(parent=parent)
+        super().__init__(parent=parent)
 
         self.link_hinge_id = link_hinge_id
         self.case = Case.the()

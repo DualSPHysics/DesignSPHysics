@@ -13,7 +13,7 @@ class RelaxationZoneRegularConfigDialog(QtGui.QDialog):
     """ A configuration dialog for a regular relaxation zone. """
 
     def __init__(self, relaxationzone=None, parent=None):
-        super(RelaxationZoneRegularConfigDialog, self).__init__(parent=parent)
+        super().__init__(parent=parent)
         self.temp_relaxationzone = relaxationzone if relaxationzone is not None else RelaxationZoneRegular()
         self.relaxationzone = relaxationzone
 

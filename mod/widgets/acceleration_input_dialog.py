@@ -18,7 +18,7 @@ class AccelerationInputDialog(QtGui.QDialog):
     Returns: AccelerationInput object"""
 
     def __init__(self, accinput, parent=None):
-        super(AccelerationInputDialog, self).__init__(parent=parent)
+        super().__init__(parent=parent)
         self.accinput = accinput
         self.setWindowTitle(__("Acceleration Input List"))
 

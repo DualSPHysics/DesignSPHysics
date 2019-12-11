@@ -16,7 +16,7 @@ class RelaxationZoneFileConfigDialog(QtGui.QDialog):
     """ A dialog with configuration related to a relaxation zone with file. """
 
     def __init__(self, relaxationzone=None, parent=None):
-        super(RelaxationZoneFileConfigDialog, self).__init__(parent=parent)
+        super().__init__(parent=parent)
         self.temp_relaxationzone = relaxationzone if relaxationzone is not None else RelaxationZoneFile()
         self.relaxationzone = relaxationzone
 

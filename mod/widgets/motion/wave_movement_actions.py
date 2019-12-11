@@ -14,7 +14,7 @@ class WaveMovementActions(QtGui.QWidget):
     use = QtCore.Signal(int, bool)
 
     def __init__(self, index, use_checked, parent=None):
-        super(WaveMovementActions, self).__init__(parent=parent)
+        super().__init__(parent=parent)
         self.index = index
         self.use_checkbox = QtGui.QCheckBox(__("Use"))
         self.use_checkbox.setChecked(use_checked)
