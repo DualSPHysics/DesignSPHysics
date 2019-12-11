@@ -7,7 +7,7 @@ Renders the <motion> tag of the GenCase XML.
 from mod.template_tools import get_template_text
 
 from mod.enums import MotionType
-from mod.constants import LINE_END
+from mod.constants import LINE_END, MKFLUID_LIMIT
 
 
 class MotionRenderer():
@@ -43,7 +43,7 @@ class MotionRenderer():
                 continue
 
             formatter: dict = {
-                "ref": prop["mk"] - 11,
+                "ref": prop["mk"] - MKFLUID_LIMIT,
                 "movements_list": cls.get_movement_template_list(prop)
             }
 

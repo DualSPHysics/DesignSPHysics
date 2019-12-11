@@ -9,9 +9,10 @@ from PySide import QtCore, QtGui
 
 from mod.translation_tools import __
 from mod.enums import ObjectType, ObjectFillMode, FreeCADObjectType, HelpURL
-from mod.constants import PROP_WIDGET_INTERNAL_NAME
+from mod.constants import PROP_WIDGET_INTERNAL_NAME, MKFLUID_LIMIT, MKFLUID_OFFSET
 from mod.stdout_tools import debug
 from mod.freecad_tools import get_fc_main_window
+from mod.dialog_tools import ok_cancel_dialog
 
 from mod.widgets.damping_config_dialog import DampingConfigDialog
 from mod.widgets.initials_dialog import InitialsDialog
@@ -35,6 +36,8 @@ class PropertiesDockWidget(QtGui.QDockWidget):
 
     def __init__(self, parent=None):
         super().__init__(parent=parent)
+
+        self.last_mk_value: int = 0
 
         self.setObjectName(PROP_WIDGET_INTERNAL_NAME)
         self.setWindowTitle(__("DSPH Object Properties"))
@@ -214,7 +217,22 @@ class PropertiesDockWidget(QtGui.QDockWidget):
 
     def on_mkgroup_change(self, value):
         """ Defines what happens when MKGroup is changed. """
-        Case.the().get_simulation_object(FreeCADGui.Selection.getSelection()[0].Name).obj_mk = value
+        new_value: int = value
+        old_value: int = self.last_mk_value
+
+        # First we do what the user want
+        Case.the().get_simulation_object(FreeCADGui.Selection.getSelection()[0].Name).obj_mk = new_value
+        self.last_mk_value = new_value
+
+        # Then we check that it is sensible
+        orphan_mkbasedproperties: list = Case.the().get_orphan_mkbasedproperties()
+        if orphan_mkbasedproperties:
+            response = ok_cancel_dialog(__("Changing MK value"), __("By doing this you will loose all MK configuration for the previous MK: {}. Are you sure you want to do this?").format(old_value))
+            if response == QtGui.QMessageBox.Ok:
+                debug("Changing from mk {} to {} caused orphan mkbasedproperties. Deleting...".format(old_value, new_value))
+                Case.the().delete_orphan_mkbasedproperties()
+            else:
+                self.mkgroup_prop.setValue(old_value)
 
     def on_objtype_change(self, index):
         """ Defines what happens when type of object is changed """
@@ -237,7 +255,7 @@ class PropertiesDockWidget(QtGui.QDockWidget):
             self.initials_prop.setEnabled(False)
             self.set_mkgroup_text("{} <a href='{}'>?</a>".format(__("MKBound"), HelpURL.BASIC_CONCEPTS))
         elif self.objtype_prop.itemText(index).lower() == "fluid":
-            self.mkgroup_prop.setRange(0, 10)
+            self.mkgroup_prop.setRange(0, MKFLUID_LIMIT - MKFLUID_OFFSET - 1)
             if simulation_object.type != ObjectType.FLUID:
                 self.mkgroup_prop.setValue(int(Case.the().get_first_mk_not_used(ObjectType.FLUID)))
             try:
@@ -260,6 +278,7 @@ class PropertiesDockWidget(QtGui.QDockWidget):
 
         # Update simulation object type
         simulation_object.type = ObjectType.FLUID if index == 0 else ObjectType.BOUND
+        self.last_mk_value = int(self.mkgroup_prop.value())
 
         self.need_refresh.emit()
 
@@ -351,7 +370,7 @@ class PropertiesDockWidget(QtGui.QDockWidget):
 
     def set_mkgroup_range(self, obj_type: ObjectType) -> int:
         """ Sets the mkgroup range according to the object type specified. """
-        mk_range = {ObjectType.BOUND: 240, ObjectType.FLUID: 10}[obj_type]
+        mk_range = {ObjectType.BOUND: 240, ObjectType.FLUID: MKFLUID_LIMIT - MKFLUID_OFFSET}[obj_type]
         self.mkgroup_prop.setRange(0, mk_range)
         return mk_range
 
@@ -418,6 +437,8 @@ class PropertiesDockWidget(QtGui.QDockWidget):
         """ Adapts the contents of the property widget to the specifications of the simulation object passed as a parameter. """
 
         self.mkgroup_prop.setValue(sim_object.obj_mk)
+        self.last_mk_value = int(self.mkgroup_prop.value())
+
         self.autofill_prop.setChecked(bool(sim_object.autofill))
 
         debug("Object {} supports changing type? {}. Its type is {} with mk {}".format(sim_object.name, sim_object.supports_changing_type(), sim_object.type, sim_object.obj_mk))

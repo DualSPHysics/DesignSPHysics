@@ -218,8 +218,7 @@ class RegularPistonWaveMotionTimeline(QtGui.QWidget):
         self.phase_input.setText(str(reg_wave_gen.phase))
         self.ramp_input.setText(str(reg_wave_gen.ramp))
         self.disksave_periods.setText(str(reg_wave_gen.disksave_periods))
-        self.disksave_periodsteps.setText(
-            str(reg_wave_gen.disksave_periodsteps))
+        self.disksave_periodsteps.setText(str(reg_wave_gen.disksave_periodsteps))
         self.disksave_xpos.setText(str(reg_wave_gen.disksave_xpos))
         self.disksave_zpos.setText(str(reg_wave_gen.disksave_zpos))
         self.awas_enabled.setChecked(bool(reg_wave_gen.awas.enabled))
@@ -358,9 +357,9 @@ class RegularPistonWaveMotionTimeline(QtGui.QWidget):
                                         self.wave_period_input.text()),
                                     phase=float(self.phase_input.text()),
                                     ramp=float(self.ramp_input.text()),
-                                    disksave_periods=float(
+                                    disksave_periods=int(
                                         self.disksave_periods.text()),
-                                    disksave_periodsteps=float(
+                                    disksave_periodsteps=int(
                                         self.disksave_periodsteps.text()),
                                     disksave_xpos=float(
                                         self.disksave_xpos.text()),

@@ -11,8 +11,8 @@ from mod.translation_tools import __
 
 class IrregularSpectrum():
     """ Types of supported wave spectrums. """
-    JONSWAP = 0
-    PIERSON_MOSKOWITZ = 1
+    JONSWAP = "jonswap"
+    PIERSON_MOSKOWITZ = "pierson-moskowitz"
 
     def __init__(self):
         # Dummy init
@@ -21,10 +21,10 @@ class IrregularSpectrum():
 
 class IrregularDiscretization():
     """ Types of supported spectrum discretization. """
-    REGULAR = 0
-    RANDOM = 1
-    STRETCHED = 2
-    COSSTRETCHED = 3
+    REGULAR = "regular"
+    RANDOM = "random"
+    STRETCHED = "stretched"
+    COSSTRETCHED = "cosstretched"
 
     def __init__(self):
         # Dummy init

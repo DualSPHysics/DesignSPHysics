@@ -183,9 +183,9 @@ class RegularFlapWaveMotionTimeline(QtGui.QWidget):
                                       self.wave_period_input.text()),
                                   phase=float(self.phase_input.text()),
                                   ramp=float(self.ramp_input.text()),
-                                  disksave_periods=float(
+                                  disksave_periods=int(
                                       self.disksave_periods.text()),
-                                  disksave_periodsteps=float(
+                                  disksave_periodsteps=int(
                                       self.disksave_periodsteps.text()),
                                   disksave_xpos=float(
                                       self.disksave_xpos.text()),

@@ -4,160 +4,126 @@
 
 from PySide import QtGui
 
-# FIXME: Finish this when data is more consistent
+from mod.translation_tools import __
+from mod.template_tools import get_template_text, obj_to_dict
+from mod.freecad_tools import get_fc_object
+
+from mod.constants import CASE_LIMITS_OBJ_NAME, MKFLUID_LIMIT, MKFLUID_OFFSET
+from mod.enums import ObjectType
+
+from mod.dataobjects.case import Case
+from mod.dataobjects.simulation_object import SimulationObject
+from mod.dataobjects.motion.movement import Movement
+
+
 class CaseSummary(QtGui.QDialog):
     """ Dialog that shows summarized case details in html format. """
+
+    CASE_SUMMARY_TEMPLATE = "/templates/case_summary_template.html"
 
     def __init__(self, parent=None):
         super().__init__(parent=parent)
         self.main_layout = QtGui.QVBoxLayout()
         self.info = QtGui.QTextEdit()
+        self.close_button = QtGui.QPushButton(__("Close"))
+        self.close_button.clicked.connect(self.accept)
 
-        # self.summary_template = get_template(Template.CASE_SUMMARY)
-
-        # self.info_text = self.summary_template.format(obj_to_dict(Case.the()))
+        self.info_text = get_template_text(self.CASE_SUMMARY_TEMPLATE).format(**self.get_formatter())
 
         self.info.setText(self.info_text)
         self.info.setReadOnly(True)
 
         self.main_layout.addWidget(self.info)
+        self.main_layout.addWidget(self.close_button)
         self.setLayout(self.main_layout)
         self.setModal(True)
-        self.setMinimumSize(500, 650)
+        self.setMinimumSize(700, 650)
         self.exec_()
 
+    def get_formatter(self) -> dict:
+        """ Returns a dictionary to format the summary template. """
+        case_dict = obj_to_dict(Case.the())
 
-# def case_summary(orig_data):
-#     """ Displays a dialog with a summary of the current opened case. """
-#     if not mod.file_tools.valid_document_environment():
-#         return
+        # FIXME: Add domainfixed on parameters
+        # FIXME: Add periodicity in template
+        # FIXME: Add meaningful values to enumerated types
 
-#     # Data copy to avoid referencing issues
-#     data = dict(orig_data)
+        case_dict.update({
+            "_mode3d": "3D" if case_dict["mode3d"] else "2D",
+            "_gravity": "({}, {}, {})".format(*case_dict["constants"]["gravity"]),
+            "_hswl": "Automatic" if case_dict["constants"]["hswl_auto"] else "{} meters".format(case_dict["constants"]["hswl"]),
+            "_speedsystem": "Automatic" if case_dict["constants"]["speedsystem_auto"] else "{} m/s".format(case_dict["constants"]["speedsystem"]),
+            "_h": "Automatic" if case_dict["constants"]["h_auto"] else "{} meters".format(case_dict["constants"]["h"]),
+            "_b": "Automatic" if case_dict["constants"]["b_auto"] else "{} meters".format(case_dict["constants"]["b"]),
+            "_massbound": "Automatic" if case_dict["constants"]["massbound_auto"] else "{} Kg".format(case_dict["constants"]["massbound"]),
+            "_massfluid": "Automatic" if case_dict["constants"]["massfluid_auto"] else "{} Kg".format(case_dict["constants"]["massfluid"]),
+            "_dtini": "Automatic" if case_dict["execution_parameters"]["dtini_auto"] else "{}".format(case_dict["execution_parameters"]["dtini"]),
+            "_dtmin": "Automatic" if case_dict["execution_parameters"]["dtmin_auto"] else "{}".format(case_dict["execution_parameters"]["dtmin"]),
+            "_mkfluidused": ", ".join(self.get_used_mkfluids()) if self.get_used_mkfluids() else "None",
+            "_mkboundused": ", ".join(self.get_used_mkbounds()) if self.get_used_mkbounds() else "None",
+            "_objects_info": self.get_objects_info(),
+            "_movement_info": self.get_movements_info(),
+        })
 
-#     # Preprocess data to show in data copy
-#     data["gravity"] = "({}, {}, {})".format(*data["gravity"])
-#     if data["project_name"] == "":
-#         data["project_name"] = "<i>{}</i>".format(mod.file_tools.__("Not yet saved"))
+        return case_dict
 
-#     if data["project_path"] == "":
-#         data["project_path"] = "<i>{}</i>".format(mod.file_tools.__("Not yet saved"))
+    def get_used_mkfluids(self) -> list:
+        "Retrurns a list with all the MKFluid numbers used on the case."
+        to_ret = list()
+        for obj in Case.the().get_all_fluid_objects():
+            if str(obj.obj_mk) not in to_ret:
+                to_ret.append(str(obj.obj_mk))
+        return to_ret
 
-#     for k in ["gencase_path", "dsphysics_path", "partvtk4_path"]:
-#         if data[k] == "":
-#             data[k] = "<i>{}</i>".format(
-#                 mod.file_tools.__("Executable not correctly set"))
+    def get_used_mkbounds(self) -> list:
+        "Retrurns a list with all the MKBound numbers used on the case."
+        to_ret = list()
+        for obj in Case.the().get_all_bound_objects():
+            if str(obj.obj_mk) not in to_ret:
+                to_ret.append(str(obj.obj_mk))
+        return to_ret
 
-#     data["stepalgorithm"] = {
-#         "1": "Verlet",
-#         "2": "Symplectic"
-#     }[str(data["stepalgorithm"])]
-#     data["project_mode"] = "3D" if data["3dmode"] else "2D"
+    def get_objects_info(self) -> str:
+        """ Returns an HTML string with information about the objects in the case. """
+        each_object_info: list = list()
 
-#     #data["incz"] = float(data["incz"]) * 100
-#     data["partsoutmax"] = float(data["partsoutmax"]) * 100
+        obj: SimulationObject = None
+        for obj in Case.the().objects:
+            if obj.name == CASE_LIMITS_OBJ_NAME:
+                continue
 
-#     # Setting certain values to automatic
-#     for x in ["hswl", "speedsystem", "speedsound", "h", "b", "massfluid", "massbound"]:
-#         data[x] = "<u>Automatic</u>" if data[x + "_auto"] else data[x]
+            is_floating_text: str = "Yes" if Case.the().get_mk_based_properties(obj.type, obj.obj_mk).float_property else "No"
+            has_initials_text: str = "Yes" if Case.the().get_mk_based_properties(obj.type, obj.obj_mk).initials else "No"
 
-#     # region Formatting objects info
-#     data["objects_info"] = ""
-#     if len(data["simobjects"]) > 1:
-#         data["objects_info"] += "<ul>"
-#         # data["simobjects"] is a dict with format
-#         # {"key": ["mk", "type", "fill"]} where key is an internal name.
-#         for key, value in data["simobjects"].items():
-#             if key.lower() == "case_limits":
-#                 continue
-#             fc_object = mod.file_tools.get_fc_object(key)
-#             is_floating = mod.file_tools.__("Yes") if str(
-#                 value[0]) in data["floating_mks"].keys() else mod.file_tools.__("No")
-#             is_floating = mod.file_tools.__("No") if value[
-#                 1].lower() == "fluid" else is_floating
-#             has_initials = mod.file_tools.__("Yes") if str(
-#                 value[0]) in data["initials_mks"].keys() else mod.file_tools.__("No")
-#             has_initials = mod.file_tools.__("No") if value[
-#                 1].lower() == "bound" else has_initials
-#             real_mk = value[0] + 11 if value[
-#                 1].lower() == "bound" else value[0] + 1
-#             data["objects_info"] += "<li><b>{label}</b> (<i>{iname}</i>): <br/>" \
-#                                     "Type: {type} (MK{type}: <b>{mk}</b> ; MK: <b>{real_mk}</b>)<br/>" \
-#                                     "Fill mode: {fillmode}<br/>" \
-#                                     "Floating: {floats}<br/>" \
-#                                     "Initials: {initials}</li><br/>".format(label=fc_object.Label, iname=key,
-#                                                                             type=value[1].title(), mk=value[0],
-#                                                                             real_mk=str(
-#                                                                                 real_mk),
-#                                                                             fillmode=value[2].title(
-#                                                                             ),
-#                                                                             floats=is_floating,
-#                                                                             initials=has_initials)
-#         data["objects_info"] += "</ul>"
-#     else:
-#         data["objects_info"] += mod.file_tools.__(
-#             "No objects were added to the simulation yet.")
-#     # endregion Formatting objects info
+            to_append = "<li>"
+            to_append += "<b>{}</b> ({})<br>".format(get_fc_object(obj.name).Label, obj.name)
+            to_append += "Type: {type} (MK{type}: <b>{mk}</b> ; MK: <b>{real_mk}</b>)<br/>".format(type=str(obj.type).capitalize(),
+                                                                                                   mk=str(obj.obj_mk),
+                                                                                                   real_mk=str(obj.obj_mk + MKFLUID_OFFSET if obj.type == ObjectType.FLUID else obj.obj_mk + MKFLUID_LIMIT))
+            to_append += "Fill mode: {}<br/>".format(str(obj.fillmode).capitalize())
+            to_append += "Floating: {}<br/>".format(is_floating_text)
+            to_append += "Initials: {}</li><br/>".format(has_initials_text)
+            to_append += "</li>"
 
-#     # region Formatting movement info
-#     data["movement_info"] = ""
-#     if len(data["simobjects"]) > 1:
-#         data["movement_info"] += "<ul>"
-#         for mov in data["global_movements"]:
-#             try:
-#                 movtype = mov.type
-#             except AttributeError:
-#                 movtype = mov.__class__.__name__
+            each_object_info.append(to_append)
 
-#             mklist = list()
-#             for key, value in data["motion_mks"].items():
-#                 if mov in value:
-#                     mklist.append(str(key))
+        return "<ul>{}</ul>".format("".join(each_object_info) if each_object_info else "No objects were added to the case.")
 
-#             data["movement_info"] += "<li>{movtype} <u>{movname}</u><br/>" \
-#                                      "Applied to MKBound: {mklist}</li><br/>".format(movtype=movtype, movname=mov.name, mklist=", ".join(mklist))
+    def get_movements_info(self) -> str:
+        """ Returns an HTML string with information about the movements in the case. """
+        each_movement_info: list = list()
 
-#         data["movement_info"] += "</ul>"
-#     else:
-#         data["movement_info"] += "No movements were defined in this case."
+        movement: Movement = None
+        for movement in Case.the().info.global_movements:
+            mklist = list()
+            for mkbasedproperties in Case.the().mkbasedproperties.values():
+                if movement in mkbasedproperties.movements:
+                    mklist.append(str(mkbasedproperties.mk - MKFLUID_LIMIT))
 
-#     # Create a string with MK used (of each type)
-#     data["mkboundused"] = list()
-#     data["mkfluidused"] = list()
-#     for element in data["simobjects"].values():
-#         if element[1].lower() == "bound":
-#             data["mkboundused"].append(str(element[0]))
-#         elif element[1].lower() == "fluid":
-#             data["mkfluidused"].append(str(element[0]))
+            to_append = "<li>"
+            to_append += "{}: <u>{}</u><br>".format(movement.type, movement.name)
+            to_append += "Applied to MKBound: {}".format(", ".join(mklist) if mklist else "None")
+            to_append += "</li><br>"
+            each_movement_info.append(to_append)
 
-#     data["mkboundused"] = ", ".join(
-#         data["mkboundused"]) if data["mkboundused"] else "None"
-#     data["mkfluidused"] = ", ".join(
-#         data["mkfluidused"]) if data["mkfluidused"] else "None"
-
-#     data["last_number_particles"] = data["last_number_particles"] if data["last_number_particles"] >= 0 else "GenCase wasn't executed"
-
-#     # endregion Formatting movement info
-#     # Dialog creation and template filling
-#     main_window = QtGui.QDialog()
-#     main_layout = QtGui.QVBoxLayout()
-#     info = QtGui.QTextEdit()
-
-#     lib_folder = os.path.dirname(os.path.realpath(__file__))
-
-#     try:
-#         with open("{}/templates/case_summary_template.html".format(lib_folder),
-#                   "r") as input_template:
-#             info_text = input_template.read().format(**data)
-#     except:
-#         error_dialog("An error occurred trying to load the template file and format it.")
-#         return
-
-#     info.setText(info_text)
-#     info.setReadOnly(True)
-
-#     main_layout.addWidget(info)
-#     main_window.setLayout(main_layout)
-#     main_window.setModal(True)
-#     main_window.setMinimumSize(500, 650)
-#     main_window.exec_()
+        return "<ul>{}</ul>".format("".join(each_movement_info) if each_movement_info else "No movements were defined in the case.")

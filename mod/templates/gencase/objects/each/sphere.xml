@@ -5,5 +5,4 @@
                 <drawsphere radius="{radius}" objname="{label}">
                     <point x="{pos[0]}" y="{pos[1]}" z="{pos[2]}" />
                 </drawsphere>
-                <shapeout file="" />
 {matrixreset_template}

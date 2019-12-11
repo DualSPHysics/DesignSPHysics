@@ -7,16 +7,16 @@ from PySide import QtGui
 from mod.translation_tools import __
 from mod.gui_tools import h_line_generator
 
-from mod.dataobjects.case import Case
 from mod.dataobjects.moorings.moordyn.moordyn_line import MoorDynLine
 
 
 class MoorDynLineConfigurationDialog(QtGui.QDialog):
     """ DesignSPHysics MoorDyn Line Configuration Dialog. """
 
-    def __init__(self, line):
+    def __init__(self, line, stored_configuration):
         super().__init__()
         self.line: MoorDynLine = line
+        self.stored_configuration = stored_configuration
 
         self.setWindowTitle(__("MoorDyn Line Configuration"))
         self.setMinimumWidth(440)
@@ -53,12 +53,12 @@ class MoorDynLineConfigurationDialog(QtGui.QDialog):
         self.fix_connection_layout.addWidget(self.fix_connection_point_y)
         self.fix_connection_layout.addWidget(self.fix_connection_point_z)
 
-        self.lenght_input: QtGui.QLineEdit = QtGui.QLineEdit()
+        self.length_input: QtGui.QLineEdit = QtGui.QLineEdit()
         self.segments_input: QtGui.QLineEdit = QtGui.QLineEdit()
 
         self.basic_configuration_groupbox_layout.addRow(__("Vessel Connection: "), self.vessel_connection_layout)
         self.basic_configuration_groupbox_layout.addRow(__("Fix Connection: "), self.fix_connection_layout)
-        self.basic_configuration_groupbox_layout.addRow(__("Line Lenght:"), self.lenght_input)
+        self.basic_configuration_groupbox_layout.addRow(__("Line Length (m):"), self.length_input)
         self.basic_configuration_groupbox_layout.addRow(__("Number of Segments:"), self.segments_input)
         self.basic_configuration_groupbox.setLayout(self.basic_configuration_groupbox_layout)
 
@@ -107,7 +107,7 @@ class MoorDynLineConfigurationDialog(QtGui.QDialog):
         self.root_layout.addWidget(self.reference_label)
         self.root_layout.addWidget(h_line_generator())
         self.root_layout.addWidget(self.basic_configuration_groupbox)
-        self.root_layout.addWidget(self.override_configuration_groupbox)
+        # self.root_layout.addWidget(self.override_configuration_groupbox)
         self.root_layout.addStretch(1)
         self.root_layout.addLayout(self.button_layout)
         self.setLayout(self.root_layout)
@@ -131,7 +131,7 @@ class MoorDynLineConfigurationDialog(QtGui.QDialog):
         self.vessel_connection_point_y.setText(str(self.line.vessel_connection.point[1]))
         self.vessel_connection_point_z.setText(str(self.line.vessel_connection.point[2]))
 
-        self.lenght_input.setText(str(self.line.length))
+        self.length_input.setText(str(self.line.length))
         self.segments_input.setText(str(self.line.segments))
 
         self.ea_input.setEnabled(bool(self.line.ea))
@@ -150,8 +150,8 @@ class MoorDynLineConfigurationDialog(QtGui.QDialog):
         self.ba_input.setText(str(self.line.ba) if self.line.ba else "")
         self.ba_input_check.setChecked(bool(self.line.ba))
 
-        self.vessel_connection_body_combo.addItems(["None"] + list(map(lambda body: "MKBound: {}".format(body.ref), Case.the().moorings.moordyn_configuration.bodies)))
-        current_body_enumerated_tuple: tuple = next(filter(lambda index_body_tuple: index_body_tuple[1].ref == self.line.vessel_connection.bodyref, enumerate(Case.the().moorings.moordyn_configuration.bodies)), None)
+        self.vessel_connection_body_combo.addItems(["None"] + list(map(lambda body: "MKBound: {}".format(body.ref), self.stored_configuration.bodies)))
+        current_body_enumerated_tuple: tuple = next(filter(lambda index_body_tuple: index_body_tuple[1].ref == self.line.vessel_connection.bodyref, enumerate(self.stored_configuration.bodies)), None)
         self.vessel_connection_body_combo.setCurrentIndex(current_body_enumerated_tuple[0] + 1 if current_body_enumerated_tuple else 0)
 
     def _on_ea_check(self):
@@ -167,7 +167,7 @@ class MoorDynLineConfigurationDialog(QtGui.QDialog):
         self.ba_input.setEnabled(self.ba_input_check.isChecked())
 
     def _on_ok(self):
-        self.line.length = float(self.lenght_input.text())
+        self.line.length = float(self.length_input.text())
         self.line.segments = int(self.segments_input.text())
 
         self.line.ea = str(self.ea_input.text()) if self.ea_input_check.isChecked() else None
