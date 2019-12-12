@@ -87,7 +87,7 @@ class RegularPistonWaveMotionTimeline(QtGui.QWidget):
         self.awas_elevation_selector.insertItems(
             0, [__("1st Order"), __("2nd Order")])
 
-        self.awas_gaugex_label = QtGui.QLabel(__("Gauge X (coef*h): "))
+        self.awas_gaugex_label = QtGui.QLabel(__("Gauge X (value*h): "))
         self.awas_gaugex_input = QtGui.QLineEdit()
 
         self.awas_gaugey_label = QtGui.QLabel(__("Gauge Y (m): "))
