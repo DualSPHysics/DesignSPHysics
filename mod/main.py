@@ -10,6 +10,7 @@ More info in http://design.sphysics.org/
 
 import time
 import threading
+from urllib.request import urlopen
 
 import FreeCAD
 import FreeCADGui
@@ -19,9 +20,10 @@ from PySide import QtGui, QtCore
 from mod.translation_tools import __
 from mod.freecad_tools import check_compatibility, document_count, prompt_close_all_documents, get_fc_main_window, get_fc_object
 from mod.freecad_tools import delete_existing_docks, valid_document_environment, enforce_case_limits_restrictions, enforce_fillbox_restrictions
+from mod.dialog_tools import info_dialog
 from mod.stdout_tools import print_license, log, debug
 
-from mod.constants import APP_NAME, VERSION, DEFAULT_WORKBENCH, DIVIDER
+from mod.constants import APP_NAME, VERSION, DEFAULT_WORKBENCH, DIVIDER, GITHUB_MASTER_CONSTANTS_URL
 
 from mod.dataobjects.case import Case
 
@@ -114,6 +116,13 @@ def boot():
     """ Boots the application. """
     print_license()
     check_compatibility()
+
+    master_branch_version = str(urlopen(GITHUB_MASTER_CONSTANTS_URL).read()).split("VERSION = \"")[-1].split("\"")[0]
+    if VERSION < master_branch_version:
+        info_dialog(
+            __("Your version of DesignSPHyiscs is outdated. Please go to the Addon Manager and update it. New versions include bug fixes, new features and new DualSPHysics executables, among other things."),
+            __("The version you're using is {} while the version that you can update to is {}").format(VERSION, master_branch_version)
+        )
 
     if document_count() > 0:
         success = prompt_close_all_documents()
