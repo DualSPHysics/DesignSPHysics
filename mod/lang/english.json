@@ -929,5 +929,6 @@
     "None": "None",
     "No material was selected.": "No material was selected.",
     "Select a material:": "Select a material:",
-    "Target MKBound: <b>{}</b>": "Target MKBound: <b>{}</b>"
+    "Target MKBound: <b>{}</b>": "Target MKBound: <b>{}</b>",
+    "Line Length (m):": "Line Length (m):"
 }

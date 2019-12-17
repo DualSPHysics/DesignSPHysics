@@ -14,6 +14,7 @@ class MoorDynLineConfigurationDialog(QtGui.QDialog):
     """ DesignSPHysics MoorDyn Line Configuration Dialog. """
 
     def __init__(self, line, stored_configuration):
+        super().__init__()
         self.line: MoorDynLine = line
         self.stored_configuration = stored_configuration
 
