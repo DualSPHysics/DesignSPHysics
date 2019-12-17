@@ -49,7 +49,7 @@ class ExecutionParametersDialog(QtGui.QDialog):
         self.stepalgorithm_layout = QtGui.QHBoxLayout()
         self.stepalgorithm_label = QtGui.QLabel("Step Algorithm: ")
         self.stepalgorithm_input = FocusableComboBox()
-        self.stepalgorithm_input.insertItems(0, ["Symplectic", "Verlet"])
+        self.stepalgorithm_input.insertItems(0, ["Verlet", "Symplectic"])
         self.stepalgorithm_input.setCurrentIndex(int(Case.the().execution_parameters.stepalgorithm) - 1)
         self.stepalgorithm_input.set_help_text(HelpText.STEPALGORITHM)
 
