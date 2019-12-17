@@ -26,6 +26,7 @@ class MoorDynBodyWidget(QtGui.QWidget):
     configure_clicked = QtCore.Signal(int)
 
     def __init__(self, obj_type: ObjectType, mk: int):
+        super().__init__()
         self.setContentsMargins(0, 0, 0, 0)
         self.root_layout: QtGui.QHBoxLayout = QtGui.QHBoxLayout()
         self.root_layout.setContentsMargins(5, 1, 5, 1)
@@ -51,6 +52,7 @@ class MoorDynLineWidget(QtGui.QWidget):
     delete_clicked = QtCore.Signal(UUID)
 
     def __init__(self, line_id, row):
+        super().__init__()
         self.setContentsMargins(0, 0, 0, 0)
         self.root_layout: QtGui.QHBoxLayout = QtGui.QHBoxLayout()
         self.root_layout.setContentsMargins(5, 1, 5, 1)
@@ -78,6 +80,7 @@ class MoorDynParametersDialog(QtGui.QDialog):
     """ DesignSPHysics MoorDyn Parameters Configuration Dialog. """
 
     def __init__(self, moordyn_parameters_data: MoorDynConfiguration):
+        super().__init__()
         self.setWindowTitle(__("Moordyn Parameters Configuration"))
 
         self.stored_configuration: MoorDynConfiguration = moordyn_parameters_data  # Can be None
