@@ -5,6 +5,7 @@
 from mod.dataobjects.float_property import FloatProperty
 from mod.dataobjects.initials_property import InitialsProperty
 from mod.dataobjects.ml_piston import MLPiston
+from mod.dataobjects.properties.property import Property
 
 
 class MKBasedProperties():
@@ -16,7 +17,7 @@ class MKBasedProperties():
         self.float_property: FloatProperty = None
         self.initials: InitialsProperty = None
         self.mlayerpiston: MLPiston = None
-        self.properties: list = list()  # [Property]
+        self.property: Property = None
 
     def has_movements(self) -> bool:
         """ Returns whether this mk contains definition for movements or not """

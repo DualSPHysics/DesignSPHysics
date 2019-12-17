@@ -16,10 +16,20 @@ class MaterialProperty(Property):
         self.kfric: float = 1.0
 
     def __str__(self):
-        return """
-        Name: {name}
-            Young Modulus: {young_modulus}
-            Poisson Ratio: {poisson_ratio}
-            Restitution Coefficient: {restitution_coefficient}
-            KFric: {kfric}
-        """.format(**self.__dict__)
+        to_ret = "Name: {name}\n"
+        to_ret += "Young Modulus: {young_modulus}\n"
+        to_ret += "Poisson Ratio: {poisson_ratio}\n"
+        to_ret += "Restitution Coefficient: {restitution_coefficient}\n"
+        to_ret += "KFric: {kfric}"
+
+        return to_ret.format(**self.__dict__)
+
+    def html_str(self):
+        """ Returns the object details as an HTML string. """
+        to_ret = "<b>Name:</b> {name}<br>"
+        to_ret += "<b>Young Modulus:</b> {young_modulus}<br>"
+        to_ret += "<b>Poisson Ratio:</b> {poisson_ratio}<br>"
+        to_ret += "<b>Restitution Coefficient:</b> {restitution_coefficient}<br>"
+        to_ret += "<b>KFric:</b> {kfric}"
+
+        return to_ret.format(**self.__dict__)
