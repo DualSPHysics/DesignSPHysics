@@ -11,11 +11,12 @@ class MKBasedProperties():
     """ Stores data related with an mk number on the case. """
 
     def __init__(self, mk=None):
-        self.mk: int = mk # This is a realmk (bound + MKFLUID_LIMIT)
+        self.mk: int = mk  # This is a realmk (bound + MKFLUID_LIMIT)
         self.movements: list = list()  # [Movement]
         self.float_property: FloatProperty = None
         self.initials: InitialsProperty = None
         self.mlayerpiston: MLPiston = None
+        self.properties: list = list()  # [Property]
 
     def has_movements(self) -> bool:
         """ Returns whether this mk contains definition for movements or not """

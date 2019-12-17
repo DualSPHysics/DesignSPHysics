@@ -921,5 +921,7 @@
     "By doing this you will loose all MK configuration for the previous MK: {}. Are you sure you want to do this?": "By doing this you will loose all MK configuration for the previous MK: {}. Are you sure you want to do this?",
     "Line Lenght:": "Line Lenght:",
     "Your version of DesignSPHyiscs is outdated. Please go to the Addon Manager and update it. New versions include bug fixes, new features and new DualSPHysics executables, among other things.": "Your version of DesignSPHyiscs is outdated. Please go to the Addon Manager and update it. New versions include bug fixes, new features and new DualSPHysics executables, among other things.",
-    "The version you're using is {} while the version that you can update to is {}": "The version you're using is {} while the version that you can update to is {}"
+    "The version you're using is {} while the version that you can update to is {}": "The version you're using is {} while the version that you can update to is {}",
+    "Configures the selected object material": "Configures the selected object material",
+    "Material configuration": "Material configuration"
 }
