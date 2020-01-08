@@ -49,7 +49,7 @@ class ExecutionParametersDialog(QtGui.QDialog):
         self.stepalgorithm_layout = QtGui.QHBoxLayout()
         self.stepalgorithm_label = QtGui.QLabel("Step Algorithm: ")
         self.stepalgorithm_input = FocusableComboBox()
-        self.stepalgorithm_input.insertItems(0, ["Symplectic", "Verlet"])
+        self.stepalgorithm_input.insertItems(0, ["Verlet", "Symplectic"])
         self.stepalgorithm_input.setCurrentIndex(int(Case.the().execution_parameters.stepalgorithm) - 1)
         self.stepalgorithm_input.set_help_text(HelpText.STEPALGORITHM)
 
@@ -660,10 +660,7 @@ class ExecutionParametersDialog(QtGui.QDialog):
 
     def on_step_change(self, index):
         """ Reacts to step algorithm changing enabling/disabling the verletsteps option. """
-        if index == 1:
-            self.verletsteps_input.setEnabled(True)
-        else:
-            self.verletsteps_input.setEnabled(False)
+        self.verletsteps_input.setEnabled(index == 0)
 
     def on_viscotreatment_change(self, index):
         """ Reacts to viscotreatment change. """

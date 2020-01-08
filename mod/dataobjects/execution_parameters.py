@@ -11,8 +11,8 @@ class ExecutionParameters():
     """ Execution parameters for the case """
 
     def __init__(self):
-        self.posdouble: int = 0
-        self.stepalgorithm: int = 1
+        self.posdouble: int = 1
+        self.stepalgorithm: int = 2
         self.verletsteps: int = 40
         self.kernel: int = 2
         self.viscotreatment: int = 1

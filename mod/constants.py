@@ -13,12 +13,13 @@ VERBOSE = False
 DIVIDER = 1000
 LINE_END = "\n"
 PICKLE_PROTOCOL = 1  # Binary mode
-VERSION = "0.6.0.1912-12-3"
+VERSION = "0.6.0.2001-08-1"
 WIDTH_2D = 0.001
 MAX_PARTICLE_WARNING = 2000000
 DISK_DUMP_FILE_NAME = "designsphysics-{}.log".format(VERSION)
 MKFLUID_LIMIT = 10
 MKFLUID_OFFSET = 1
+GITHUB_MASTER_CONSTANTS_URL = "https://raw.githubusercontent.com/DualSPHysics/DesignSPHysics/master/mod/constants.py"
 
 # FreeCAD Related Constants
 SINGLETON_DOCUMENT_NAME = "DSPH_Case"

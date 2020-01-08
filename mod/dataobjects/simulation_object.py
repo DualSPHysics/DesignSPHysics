@@ -5,7 +5,7 @@
 from mod.freecad_tools import get_fc_object
 
 from mod.enums import ObjectType, ObjectFillMode, FreeCADObjectType
-from mod.constants import SUPPORTED_TYPES
+from mod.constants import SUPPORTED_TYPES, MKFLUID_LIMIT, MKFLUID_OFFSET
 
 from mod.dataobjects.faces_property import FacesProperty
 
@@ -18,8 +18,12 @@ class SimulationObject():
         self.obj_mk: int = obj_mk
         self.type: ObjectType = obj_type
         self.fillmode: ObjectFillMode = fillmode
-        self.autofill: bool = None # Only set for imported objects
+        self.autofill: bool = None  # Only set for imported objects
         self.faces_configuration: FacesProperty = None
+
+    def real_mk(self) -> int:
+        """ Returns the object real MK. """
+        return self.obj_mk + MKFLUID_OFFSET if self.type == ObjectType.FLUID else self.obj_mk + MKFLUID_LIMIT
 
     def clean_faces(self):
         """ Deletes face rendering information from this object """

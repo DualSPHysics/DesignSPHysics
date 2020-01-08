@@ -20,6 +20,8 @@ from traceback import print_exc
 from glob import glob
 from os import path, chdir, makedirs
 
+import xml.etree.ElementTree as ET
+
 import FreeCAD
 import FreeCADGui
 import Mesh
@@ -44,6 +46,7 @@ from mod.dataobjects.ml_piston_1d import MLPiston1D
 from mod.dataobjects.ml_piston_2d import MLPiston2D
 from mod.dataobjects.relaxation_zone_file import RelaxationZoneFile
 from mod.dataobjects.simulation_object import SimulationObject
+from mod.dataobjects.properties.material_property import MaterialProperty
 
 
 def get_total_exported_parts_from_disk(out_folder_path) -> int:
@@ -357,3 +360,21 @@ def save_measuretool_info(case_path: str, points: list, grid: list) -> None:
                 f.write("{}  {}  {}\n{}  {}  {}\n{}  {}  {}\n".format(*curr_point))
     else:
         raise RuntimeError("Attempting to save measuretool info with no points or grid setup.")
+
+
+def load_default_materials() -> list:
+    """ Loads and returns a list with the default materials on the project root. """
+    with open("{}/default-materials.xml".format(get_designsphysics_path())) as default_config:
+        default_materials = json.load(default_config)
+
+    to_ret = list()
+    for element in default_materials:
+        material: MaterialProperty = MaterialProperty()
+        material.name = str(element["name"])
+        material.young_modulus = float(element["Young_Modulus"]["value"])
+        material.poisson_ratio = float(element["PoissonRatio"]["value"])
+        material.restitution_coefficient = float(element["Restitution_Coefficient"]["value"])
+        material.kfric = float(element["Kfric"]["value"])
+        to_ret.append(material)
+
+    return to_ret

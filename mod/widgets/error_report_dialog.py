@@ -18,6 +18,7 @@ class ErrorReportDialog(QtGui.QDialog):
     """ Defines an error report dialog  """
 
     def __init__(self, exception_type, value, traceback_str):
+        super().__init__()
         self.main_layout = QtGui.QVBoxLayout()
 
         self.message_label = QtGui.QLabel("DesignSPHysics encountered an error. Please report the developer the following details.")

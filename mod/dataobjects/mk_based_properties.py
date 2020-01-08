@@ -5,17 +5,19 @@
 from mod.dataobjects.float_property import FloatProperty
 from mod.dataobjects.initials_property import InitialsProperty
 from mod.dataobjects.ml_piston import MLPiston
+from mod.dataobjects.properties.property import Property
 
 
 class MKBasedProperties():
     """ Stores data related with an mk number on the case. """
 
     def __init__(self, mk=None):
-        self.mk: int = mk # This is a realmk (bound + MKFLUID_LIMIT)
+        self.mk: int = mk  # This is a realmk (bound + MKFLUID_LIMIT)
         self.movements: list = list()  # [Movement]
         self.float_property: FloatProperty = None
         self.initials: InitialsProperty = None
         self.mlayerpiston: MLPiston = None
+        self.property: Property = None
 
     def has_movements(self) -> bool:
         """ Returns whether this mk contains definition for movements or not """
