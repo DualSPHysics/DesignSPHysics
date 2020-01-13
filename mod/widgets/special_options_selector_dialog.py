@@ -223,7 +223,9 @@ class SpecialOptionsSelectorDialog(QtGui.QDialog):
 
         if result == QtGui.QDialog.Accepted:
             Case.the().acceleration_input = accinput_dialog.get_result()
+        self.accept()
 
     def on_moorings_button(self):
         """ Moorings button behaviour."""
         MooringsConfigurationDialog(parent=get_fc_main_window())
+        self.accept()
