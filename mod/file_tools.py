@@ -364,7 +364,7 @@ def save_measuretool_info(case_path: str, points: list, grid: list) -> None:
 
 def load_default_materials() -> list:
     """ Loads and returns a list with the default materials on the project root. """
-    with open("{}/default-materials.xml".format(get_designsphysics_path())) as default_config:
+    with open("{}/default-materials.json".format(get_designsphysics_path())) as default_config:
         default_materials = json.load(default_config)
 
     to_ret = list()
