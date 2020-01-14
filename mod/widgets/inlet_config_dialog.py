@@ -102,7 +102,8 @@ class InletConfigDialog(QtGui.QDialog):
         self.zones_groupbox.setLayout(self.zones_groupbox_layout)
 
         # Adds options to option layout
-        self.io_options_layout.addLayout(self.reuseids_layout)
+        # TODO: Re-enable this when it is implemented
+        # self.io_options_layout.addLayout(self.reuseids_layout)
         self.io_options_layout.addLayout(self.resizetime_layout)
         self.io_options_layout.addLayout(self.refilling_layout)
         self.io_options_layout.addLayout(self.determlimit_layout)
