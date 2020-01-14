@@ -127,6 +127,7 @@ class LinkLinearspringEdit(QtGui.QDialog):
         self.link_linearspring_edit_layout.addLayout(self.rest_layout)
 
         # vtk
+        self.visualization_options_groupbox = QtGui.QGroupBox(__("Visualization Options"))
         self.vtk_layout = QtGui.QHBoxLayout()
         self.vtk_nside_label = QtGui.QLabel(__("Number of sections: "))
         self.vtk_nside_line_edit = QtGui.QLineEdit(str(target_link_linearspring.number_of_sections))
@@ -142,7 +143,8 @@ class LinkLinearspringEdit(QtGui.QDialog):
         self.vtk_layout.addWidget(self.vtk_length_label)
         self.vtk_layout.addWidget(self.vtk_length_line_edit)
 
-        self.link_linearspring_edit_layout.addLayout(self.vtk_layout)
+        self.visualization_options_groupbox.setLayout(self.vtk_layout)
+        self.link_linearspring_edit_layout.addWidget(self.visualization_options_groupbox)
 
         # Buttons
         self.ok_button = QtGui.QPushButton("Save")
