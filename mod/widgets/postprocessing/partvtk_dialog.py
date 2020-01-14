@@ -13,6 +13,8 @@ from mod.dataobjects.case import Case
 class PartVTKDialog(QtGui.QDialog):
     """ A PartVTK Configuration and Exeuction Dialog. """
 
+    DEFAULT_NAMES = ["PartAll", "PartBound", "PartFluid", "PartFixed", "PartMoving", "PartFloating"]
+
     def __init__(self, post_processing_widget, parent=None):
         super().__init__(parent=parent)
 
@@ -56,7 +58,7 @@ class PartVTKDialog(QtGui.QDialog):
 
         self.pvtk_file_name_label = QtGui.QLabel(__("File name"))
         self.pvtk_file_name_text = QtGui.QLineEdit()
-        self.pvtk_file_name_text.setText("ExportPart")
+        self.pvtk_file_name_text.setText(self.DEFAULT_NAMES[0])
         self.pvtk_filename_layout.addWidget(self.pvtk_file_name_label)
         self.pvtk_filename_layout.addWidget(self.pvtk_file_name_text)
 
@@ -145,31 +147,43 @@ class PartVTKDialog(QtGui.QDialog):
                         self.pvtk_types_chk_moving,
                         self.pvtk_types_chk_floating]:
                 chk.setCheckState(QtCore.Qt.Unchecked)
+        if self.pvtk_file_name_text.text() in self.DEFAULT_NAMES:
+            self.pvtk_file_name_text.setText(self.DEFAULT_NAMES[0])
 
     def on_pvtk_type_bound_change(self, state):
         """ "Bound" type selection handler """
         if state == QtCore.Qt.Checked:
             self.pvtk_types_chk_all.setCheckState(QtCore.Qt.Unchecked)
+        if self.pvtk_file_name_text.text() in self.DEFAULT_NAMES:
+            self.pvtk_file_name_text.setText(self.DEFAULT_NAMES[1])
 
     def on_pvtk_type_fluid_change(self, state):
         """ "Fluid" type selection handler """
         if state == QtCore.Qt.Checked:
             self.pvtk_types_chk_all.setCheckState(QtCore.Qt.Unchecked)
+        if self.pvtk_file_name_text.text() in self.DEFAULT_NAMES:
+            self.pvtk_file_name_text.setText(self.DEFAULT_NAMES[2])
 
     def on_pvtk_type_fixed_change(self, state):
         """ "Fixed" type selection handler """
         if state == QtCore.Qt.Checked:
             self.pvtk_types_chk_all.setCheckState(QtCore.Qt.Unchecked)
+        if self.pvtk_file_name_text.text() in self.DEFAULT_NAMES:
+            self.pvtk_file_name_text.setText(self.DEFAULT_NAMES[3])
 
     def on_pvtk_type_moving_change(self, state):
         """ "Moving" type selection handler """
         if state == QtCore.Qt.Checked:
             self.pvtk_types_chk_all.setCheckState(QtCore.Qt.Unchecked)
+        if self.pvtk_file_name_text.text() in self.DEFAULT_NAMES:
+            self.pvtk_file_name_text.setText(self.DEFAULT_NAMES[4])
 
     def on_pvtk_type_floating_change(self, state):
         """ "Floating" type selection handler """
         if state == QtCore.Qt.Checked:
             self.pvtk_types_chk_all.setCheckState(QtCore.Qt.Unchecked)
+        if self.pvtk_file_name_text.text() in self.DEFAULT_NAMES:
+            self.pvtk_file_name_text.setText(self.DEFAULT_NAMES[5])
 
     def on_pvtk_export_format_change(self, _):
         """ Export format combobox handler"""
