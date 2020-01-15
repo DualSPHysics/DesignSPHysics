@@ -991,5 +991,9 @@
     "Transverse drag coefficient (with respect to frontal area, d*l). (default=1.6)\nXML Name: cdn": "Transverse drag coefficient (with respect to frontal area, d*l). (default=1.6)\nXML Name: cdn",
     "Tangential drag coefficient:": "Tangential drag coefficient:",
     "Tangential drag coefficient (with respect to surface area, \u03c0*d*l). (default=0.05)\nXML Name: cdt": "Tangential drag coefficient (with respect to surface area, \u03c0*d*l). (default=0.05)\nXML Name: cdt",
-    "Visualization Options": "Visualization Options"
+    "Visualization Options": "Visualization Options",
+    "Translation DOF: ": "Translation DOF: ",
+    "Use No for translation restriction in the movement (default=(Yes, Yes, Yes))": "Use No for translation restriction in the movement (default=(Yes, Yes, Yes))",
+    "Rotation DOF: ": "Rotation DOF: ",
+    "Use No for rotation restriction in the movement (default=(Yes , Yes, Yes))": "Use No for rotation restriction in the movement (default=(Yes , Yes, Yes))"
 }
