@@ -267,18 +267,18 @@ class FloatStateDialog(QtGui.QDialog):
                 self.floating_omegaini_input_z.setText(str(float_property.initial_angular_velocity[2]))
 
             if not float_property.translation_restriction:
-                self.floating_translation_input_x.setCurrentIndex(1)
-                self.floating_translation_input_y.setCurrentIndex(1)
-                self.floating_translation_input_z.setCurrentIndex(1)
+                self.floating_translation_input_x.setCurrentIndex(0)
+                self.floating_translation_input_y.setCurrentIndex(0)
+                self.floating_translation_input_z.setCurrentIndex(0)
             else:
                 self.floating_translation_input_x.setCurrentIndex(float_property.translation_restriction[0])
                 self.floating_translation_input_y.setCurrentIndex(float_property.translation_restriction[1])
                 self.floating_translation_input_z.setCurrentIndex(float_property.translation_restriction[2])
 
             if not float_property.rotation_restriction:
-                self.floating_rotation_input_x.setCurrentIndex(1)
-                self.floating_rotation_input_y.setCurrentIndex(1)
-                self.floating_rotation_input_z.setCurrentIndex(1)
+                self.floating_rotation_input_x.setCurrentIndex(0)
+                self.floating_rotation_input_y.setCurrentIndex(0)
+                self.floating_rotation_input_z.setCurrentIndex(0)
             else:
                 self.floating_rotation_input_x.setCurrentIndex(float_property.rotation_restriction[0])
                 self.floating_rotation_input_y.setCurrentIndex(float_property.rotation_restriction[1])
@@ -315,12 +315,12 @@ class FloatStateDialog(QtGui.QDialog):
             self.floating_omegaini_input_x.setText("0")
             self.floating_omegaini_input_y.setText("0")
             self.floating_omegaini_input_z.setText("0")
-            self.floating_translation_input_x.setCurrentIndex(1)
-            self.floating_translation_input_y.setCurrentIndex(1)
-            self.floating_translation_input_z.setCurrentIndex(1)
-            self.floating_rotation_input_x.setCurrentIndex(1)
-            self.floating_rotation_input_y.setCurrentIndex(1)
-            self.floating_rotation_input_z.setCurrentIndex(1)
+            self.floating_translation_input_x.setCurrentIndex(0)
+            self.floating_translation_input_y.setCurrentIndex(0)
+            self.floating_translation_input_z.setCurrentIndex(0)
+            self.floating_rotation_input_x.setCurrentIndex(0)
+            self.floating_rotation_input_y.setCurrentIndex(0)
+            self.floating_rotation_input_z.setCurrentIndex(0)
             self.floating_material_line_edit.setText("")
 
             self.floating_center_auto.setCheckState(QtCore.Qt.Checked)
