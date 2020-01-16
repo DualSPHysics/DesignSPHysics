@@ -71,7 +71,7 @@ class ObjectsRenderer():
         if fc_object.TypeId == FreeCADObjectType.CYLINDER:
             obj_formatter.update({
                 "radius": fc_object.Radius.Value / DIVIDER,
-                "height": fc_object.Height.Value / DIVIDER
+                "z2": (fc_object.Height.Value / DIVIDER) + (fc_object.Placement.Base.z / DIVIDER)
             })
 
         return get_template_text(template).format(**obj_formatter)
