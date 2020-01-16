@@ -114,17 +114,17 @@ class FileMotionTimeline(QtGui.QWidget):
         try:
             self.changed.emit(0, self.construct_motion_object())
         except ValueError:
-            debug("Introduced an invalid value for a float number.")
+            debug("Introduced an invalid value for a number.")
 
     def construct_motion_object(self):
         """ Constructs an FileGen object based on the widget data. """
         return FileGen(duration=float(self.duration_input.text()),
                        filename=str(self.filename_input.text()),
-                       fields=str(self.fields_input.text()),
-                       fieldtime=str(self.fieldtime_input.text()),
-                       fieldx=str(self.fieldx_input.text()),
-                       fieldy=str(self.fieldy_input.text()),
-                       fieldz=str(self.fieldz_input.text()))
+                       fields=int(self.fields_input.text()),
+                       fieldtime=int(self.fieldtime_input.text()),
+                       fieldx=int(self.fieldx_input.text()),
+                       fieldy=int(self.fieldy_input.text()),
+                       fieldz=int(self.fieldz_input.text()))
 
     def on_delete(self):
         """ Deletes the currently defined object. """
@@ -132,4 +132,4 @@ class FileMotionTimeline(QtGui.QWidget):
 
     def _sanitize_input(self):
         for x in [self.duration_input, self.fields_input, self.fieldtime_input, self.fieldx_input, self.fieldy_input, self.fieldz_input]:
-            x.setText("0" if x.text() else x.text().replace(",", "."))
+            x.setText("0" if not x.text() else x.text().replace(",", "."))
