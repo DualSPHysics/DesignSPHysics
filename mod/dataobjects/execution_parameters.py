@@ -21,8 +21,8 @@ class ExecutionParameters():
         self.densitydt_type: DensityDTType = DensityDTType.NONE
         self.densitydt_value: float = 0.1
         self.shifting: int = 0
-        self.shiftcoef: int = -2
-        self.shifttfs: int = 0
+        self.shiftcoef: float = -2
+        self.shifttfs: float = 0
         self.rigidalgorithm: int = 1
         self.ftpause: float = 0.0
         self.coefdtmin: float = 0.05
