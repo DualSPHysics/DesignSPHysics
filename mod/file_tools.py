@@ -137,7 +137,7 @@ def save_case(save_name: str, case: "Case") -> None:
                         # Probably already copied the file.
                         pass
                     except IOError:
-                        error("Unable to copy {} into {}".format(filename, save_name))
+                        error("Unable to copy {} into {}".format(filename, save_name + "/" + project_name + "_out"))
 
     # Copy files from Acceleration input and change paths to be inside the project folder.
     for aid in case.acceleration_input.acclist:

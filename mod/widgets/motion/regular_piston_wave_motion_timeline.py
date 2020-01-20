@@ -260,7 +260,7 @@ class RegularPistonWaveMotionTimeline(QtGui.QWidget):
                   self.ramp_input, self.phase_input, self.disksave_periods,
                   self.disksave_periodsteps, self.disksave_xpos,
                   self.disksave_zpos, self.awas_startawas_input,
-                  self.awas_swl_input, self.awas_gaugex_input,
+                  self.awas_swl_input, self.awas_gaugex_input, self.awas_gaugedp_input,
                   self.awas_gaugey_input, self.awas_gaugezmin_input,
                   self.awas_gaugezmax_input, self.awas_coefmasslimit_input,
                   self.awas_limitace_input,

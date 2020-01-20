@@ -995,5 +995,6 @@
     "Translation DOF: ": "Translation DOF: ",
     "Use No for translation restriction in the movement (default=(Yes, Yes, Yes))": "Use No for translation restriction in the movement (default=(Yes, Yes, Yes))",
     "Rotation DOF: ": "Rotation DOF: ",
-    "Use No for rotation restriction in the movement (default=(Yes , Yes, Yes))": "Use No for rotation restriction in the movement (default=(Yes , Yes, Yes))"
+    "Use No for rotation restriction in the movement (default=(Yes , Yes, Yes))": "Use No for rotation restriction in the movement (default=(Yes , Yes, Yes))",
+    "Gauge X (value*h): ": "Gauge X (value*h): "
 }
