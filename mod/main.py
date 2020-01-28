@@ -11,6 +11,7 @@ More info in http://design.sphysics.org/
 import time
 import threading
 from urllib.request import urlopen
+from urllib.error import URLError
 
 import FreeCAD
 import FreeCADGui
@@ -117,12 +118,15 @@ def boot():
     print_license()
     check_compatibility()
 
-    master_branch_version = str(urlopen(GITHUB_MASTER_CONSTANTS_URL).read()).split("VERSION = \"")[-1].split("\"")[0]
-    if VERSION < master_branch_version and NOTIFY_ON_OUTDATED_VERSION:
-        info_dialog(
-            __("Your version of DesignSPHyiscs is outdated. Please go to the Addon Manager and update it. New versions include bug fixes, new features and new DualSPHysics executables, among other things."),
-            __("The version you're using is {} while the version that you can update to is {}").format(VERSION, master_branch_version)
-        )
+    try:
+        master_branch_version = str(urlopen(GITHUB_MASTER_CONSTANTS_URL).read()).split("VERSION = \"")[-1].split("\"")[0]
+        if VERSION < master_branch_version and NOTIFY_ON_OUTDATED_VERSION:
+            info_dialog(
+                __("Your version of DesignSPHyiscs is outdated. Please go to the Addon Manager and update it. New versions include bug fixes, new features and new DualSPHysics executables, among other things."),
+                __("The version you're using is {} while the version that you can update to is {}").format(VERSION, master_branch_version)
+            )
+    except URLError:
+        log("No network connection or Git repo is down. Skipping version check.")
 
     if document_count() > 0:
         success = prompt_close_all_documents()
