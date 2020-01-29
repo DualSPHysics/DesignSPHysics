@@ -166,7 +166,7 @@ class DockSimulationWidget(QtGui.QWidget):
             # Update execution metrics
             last_part_lines = list(filter(lambda x: "Part_" in x and "stored" not in x and "      " in x, run_file_data))
             if last_part_lines:
-                current_value = (float(last_part_lines[-1].split("      ")[1]) * float(100)) / float(Case.the().execution_parameters.timemax)
+                current_value = (float(last_part_lines[-1].split(None)[1]) * float(100)) / float(Case.the().execution_parameters.timemax)
             else:
                 current_value = None
 
@@ -176,7 +176,7 @@ class DockSimulationWidget(QtGui.QWidget):
                 totalpartsout = int(last_particles_out_lines[-1].split("(total: ")[1].split(")")[0])
 
             try:
-                last_estimated_time = str(last_part_lines[-1].split("  ")[-1])
+                last_estimated_time = str(" ".join(last_part_lines[-1].split(None)[-2:]))
             except IndexError:
                 last_estimated_time = None
 
