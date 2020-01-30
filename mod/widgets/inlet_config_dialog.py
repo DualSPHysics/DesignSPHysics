@@ -184,8 +184,8 @@ class InletConfigDialog(QtGui.QDialog):
         if not self.inlet_outlet:
             self.inlet_outlet = InletOutletConfig
 
-        self.inlet_outlet.reuseids = self.reuseids_combobox.currentText()
-        self.inlet_outlet.resizetime = self.resizetime_line_edit.text()
-        self.inlet_outlet.userefilling = self.refilling_combobox.currentText()
+        self.inlet_outlet.reuseids = self.reuseids_combobox.currentIndex() == 1
+        self.inlet_outlet.resizetime = float(self.resizetime_line_edit.text())
+        self.inlet_outlet.userefilling = self.refilling_combobox.currentIndex() == 1
         self.inlet_outlet.determlimit = self.determlimit_combobox.currentText()
         InletConfigDialog.accept(self)
