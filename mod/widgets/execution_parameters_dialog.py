@@ -611,7 +611,7 @@ class ExecutionParametersDialog(QtGui.QDialog):
         self.ep_main_layout_scroll = QtGui.QScrollArea()
         self.ep_main_layout_scroll_widget = QtGui.QWidget()
         self.ep_main_layout = QtGui.QVBoxLayout()
-        self.ep_main_layout.addLayout(self.posdouble_layout)
+        # self.ep_main_layout.addLayout(self.posdouble_layout)
         self.ep_main_layout.addLayout(self.stepalgorithm_layout)
         self.ep_main_layout.addLayout(self.verletsteps_layout)
         self.ep_main_layout.addLayout(self.kernel_layout)

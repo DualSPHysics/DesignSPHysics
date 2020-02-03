@@ -45,7 +45,6 @@
 {moorings_template}
         </special>
         <parameters>
-            <parameter key="PosDouble" value="{execution_parameters[posdouble]}" comment="Precision in particle interaction 0:Simple, 1:Double, 2:Uses and saves double (default=0)" />
             <parameter key="StepAlgorithm" value="{execution_parameters[stepalgorithm]}" comment="Step Algorithm 1:Verlet, 2:Symplectic (default=1)" />
             <parameter key="VerletSteps" value="{execution_parameters[verletsteps]}" comment="Verlet only: Number of steps to apply Euler timestepping (default=40)" />
             <parameter key="Kernel" value="{execution_parameters[kernel]}" comment="Interaction Kernel 1:Cubic Spline, 2:Wendland (default=2)" />
