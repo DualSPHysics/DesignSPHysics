@@ -26,6 +26,8 @@ class InletConfigDialog(QtGui.QDialog):
         # Reference to the inlet outlet configuration on the case data
         self.inlet_outlet: InletOutletConfig = Case.the().inlet_outlet
 
+        # TODO: Redo this dialog with new inlet options
+
         # Creates a dialog
         self.setWindowTitle("Inlet/Outlet configuration")
         self.setModal(False)
@@ -102,10 +104,9 @@ class InletConfigDialog(QtGui.QDialog):
         self.zones_groupbox.setLayout(self.zones_groupbox_layout)
 
         # Adds options to option layout
-        # TODO: Re-enable this when it is implemented
         # self.io_options_layout.addLayout(self.reuseids_layout)
         self.io_options_layout.addLayout(self.resizetime_layout)
-        self.io_options_layout.addLayout(self.refilling_layout)
+        # self.io_options_layout.addLayout(self.refilling_layout)
         self.io_options_layout.addLayout(self.determlimit_layout)
 
         # Adds options to main

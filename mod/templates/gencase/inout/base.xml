@@ -1,5 +1,5 @@
-            <inout reuseids="{reuseids}" resizetime="{resizetime}">
-                <userefilling value="{userefilling}" comment="Use advanced refilling algorithm but slower. It is necessary when outflow becomes inflow (default=false)" />
-                <determlimit value="{determlimit}" comment="Use 1e-3 for first_order or 1e+3 for zeroth_order (default=1e+3)" />    
+            <inout resizetime="{resizetime}">
+                <determlimit value="{determlimit}" comment="Use 1e-3 for first_order or 1e+3 for zeroth_order (default=1e+3)" />
+                <extrapolatemode value="1" comment="Calculation mode for rhop and velocity extrapolation from ghost nodes 1:fast-single, 2:single, 3:double (default=1)" />
 {each_zone}
             </inout>

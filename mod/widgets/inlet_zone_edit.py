@@ -198,11 +198,11 @@ class InletZoneEdit(QtGui.QDialog):
         self.button_layout.addWidget(self.ok_button)
         self.button_layout.addWidget(self.cancel_button)
 
-        self.main_layout.addLayout(self.convertfluid_layout)
+        # self.main_layout.addLayout(self.convertfluid_layout)
         self.main_layout.addLayout(self.layers_layout)
         self.main_layout.addWidget(self.zone2d3d_main_layout)
         self.main_layout.addWidget(self.imposevelocity_layout)
-        self.main_layout.addWidget(self.imposerhop_layout)
+        # self.main_layout.addWidget(self.imposerhop_layout)
         self.main_layout.addWidget(self.imposezsurf_layout)
         self.main_layout.addLayout(self.button_layout)
 
