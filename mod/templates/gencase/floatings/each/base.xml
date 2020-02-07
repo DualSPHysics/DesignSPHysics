@@ -1,3 +1,4 @@
-            <floating mkbound="{floating_mk}" {floating_density_type}="{floating_density_value}">
+            <floating mkbound="{floating_mk}" {rhopbody}>
+{massbody}
 {float_property_attributes}
             </floating>

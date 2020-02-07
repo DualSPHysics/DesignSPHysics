@@ -22,6 +22,8 @@ class FloatingsRenderer():
     FLOATINGS_ROTATION_XML = "/templates/gencase/floatings/each/rotation.xml"
     FLOATINGS_TRANSLATION_XML = "/templates/gencase/floatings/each/translation.xml"
     FLOATINGS_MATERIAL_XML = "/templates/gencase/floatings/each/material.xml"
+    FLOATINGS_MASSBODY_XML = "/templates/gencase/floatings/each/massbody_prop.xml"
+    FLOATINGS_RHOPBODY_XML = "/templates/gencase/floatings/each/rhopbody_attr.xml"
 
     @classmethod
     def render(cls, data):
@@ -50,10 +52,16 @@ class FloatingsRenderer():
 
             formatter = {
                 "floating_mk": fp["mk"],
-                "floating_density_type": {FloatingDensityType.MASSBODY: "massbody", FloatingDensityType.RHOPBODY: "rhopbody"}[fp["mass_density_type"]],
-                "floating_density_value": fp["mass_density_value"],
+                "rhopbody": "",
+                "massbody": "",
                 "float_property_attributes": LINE_END.join(float_property_attributes)
             }
+
+            if fp["mass_density_type"] == FloatingDensityType.MASSBODY:
+                formatter["massbody"] = get_template_text(cls.FLOATINGS_MASSBODY_XML).format(floating_density_value=fp["mass_density_value"])
+            elif fp["mass_density_type"] == FloatingDensityType.RHOPBODY:
+                formatter["rhopbody"] = get_template_text(cls.FLOATINGS_RHOPBODY_XML).format(floating_density_value=fp["mass_density_value"])
+
             float_properties_xmls.append(get_template_text(cls.FLOATINGS_EACH_XML).format(**formatter))
 
         formatter = {"floatings_each": LINE_END.join(float_properties_xmls) if float_properties_xmls else ""}
