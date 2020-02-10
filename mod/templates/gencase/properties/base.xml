@@ -1,0 +1,6 @@
+        <properties>
+            <propertyfile file="materials.xml" path="materials" />
+            <links>
+{each_link}
+            </links>
+        </properties>

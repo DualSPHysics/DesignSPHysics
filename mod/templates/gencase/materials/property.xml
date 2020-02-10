@@ -1,0 +1,6 @@
+    <property name="{name}">
+        <Young_Modulus value="{young_modulus}" comment="Young Modulus (N/m2)"/>
+        <PoissonRatio value="{poisson_ratio}" comment="Poisson Ratio (-)"/>
+        <Restitution_Coefficient value="{restitution_coefficient}" comment="Restitution Coefficient (-)"/>
+        <Kfric value="{kfric}" comment="Kinetic friction coefficient"/>
+    </property>

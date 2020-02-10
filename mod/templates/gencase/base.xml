@@ -29,6 +29,7 @@
                 </mainlist>
             </commands>
         </geometry>
+{properties_template}
 {initials_template}
 {floatings_template}
 {motion_template}

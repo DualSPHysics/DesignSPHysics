@@ -8,7 +8,7 @@ The utilities on this module creates
 import os
 from datetime import datetime
 
-from mod.constants import APP_NAME
+from mod.constants import APP_NAME, LINE_END
 from mod.template_tools import obj_to_dict, get_template_text
 
 from mod.xml.renderers.definition_renderer import DefinitionRenderer
@@ -26,6 +26,7 @@ from mod.xml.renderers.inout_renderer import InoutRenderer
 from mod.xml.renderers.chrono_renderer import ChronoRenderer
 from mod.xml.renderers.periodicity_renderer import PeriodicityRenderer
 from mod.xml.renderers.moorings_renderer import MooringsRenderer
+from mod.xml.renderers.properties_renderer import PropertiesRenderer
 
 
 class XMLExporter():
@@ -33,7 +34,10 @@ class XMLExporter():
     preprocessing tools """
 
     BASE_XML = "/templates/gencase/base.xml"
+    BASE_MATERIALS_XML = "/templates/gencase/materials/base.xml"
+    PROPERTY_MATERIALS_XML = "/templates/gencase/materials/property.xml"
     GENCASE_XML_SUFFIX = "_Def.xml"
+    MATERIAL_FILE_NAME = "materials.xml"
 
     def __init__(self):
         self.mod_folder = "{}/..".format(os.path.dirname(os.path.realpath(__file__)))
@@ -68,6 +72,7 @@ class XMLExporter():
         data["inout_template"] = InoutRenderer.render(data)
         data["chrono_template"] = ChronoRenderer.render(data)
         data["moorings_template"] = MooringsRenderer.render(data)
+        data["properties_template"] = PropertiesRenderer.render(data)
         data["application"] = APP_NAME
         data["current_date"] = datetime.now().strftime("%d-%m-%Y %H:%M:%S")
         return data
@@ -82,7 +87,24 @@ class XMLExporter():
 
         return final_xml
 
+    def generate_material(self, case) -> str:
+        """ Returns a material XML definition for DualSPHysics from the data available on the given case. """
+
+        properties_list: list = list()
+        for mkbasedproperty in case.mkbasedproperties.values():
+            if mkbasedproperty.property:
+                properties_list.append(get_template_text(self.PROPERTY_MATERIALS_XML).format(**mkbasedproperty.property.__dict__))
+
+        formatter: dict = {
+            "each_property": LINE_END.join(properties_list)
+        }
+
+        return get_template_text(self.BASE_MATERIALS_XML).format(**formatter)
+
     def save_to_disk(self, path, case: "Case") -> None:
         """ Creates a file on disk with the contents of the GenCase generated XML. """
+        with open("{}/{}".format(path, self.MATERIAL_FILE_NAME), "w", encoding="utf-8") as file:
+            # TODO: If mode is not DEM or CHRONO don't generate this file
+            file.write(self.generate_material(case))
         with open("{}/{}{}".format(path, case.name, self.GENCASE_XML_SUFFIX), "w", encoding="utf-8") as file:
             file.write(self.generate(case))
