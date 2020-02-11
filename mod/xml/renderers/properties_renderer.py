@@ -18,9 +18,6 @@ class PropertiesRenderer():
     @classmethod
     def render(cls, data):
         """ Returns the rendered string. """
-        # TODO: If no active properties are found in the data, return empty string
-        # TODO: If DEM or CHRONO mode is not selected, return empty string
-
         each_link_templates: list = list()
 
         for mkreal, mkbasedproperty in data["mkbasedproperties"].items():
@@ -30,6 +27,12 @@ class PropertiesRenderer():
                     "property_name": mkbasedproperty["property"]["name"],
                 }
                 each_link_templates.append(get_template_text(cls.EACH_LINK_XML).format(**each_formatter))
+
+        if not each_link_templates:
+            return ""
+
+        if data["execution_parameters"]["rigidalgorithm"] not in (2, 3):
+            return ""
 
         formatter: dict = {
             "each_link": LINE_END.join(each_link_templates)

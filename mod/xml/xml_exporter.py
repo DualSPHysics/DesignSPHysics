@@ -104,7 +104,6 @@ class XMLExporter():
     def save_to_disk(self, path, case: "Case") -> None:
         """ Creates a file on disk with the contents of the GenCase generated XML. """
         with open("{}/{}".format(path, self.MATERIAL_FILE_NAME), "w", encoding="utf-8") as file:
-            # TODO: If mode is not DEM or CHRONO don't generate this file
             file.write(self.generate_material(case))
         with open("{}/{}{}".format(path, case.name, self.GENCASE_XML_SUFFIX), "w", encoding="utf-8") as file:
             file.write(self.generate(case))
