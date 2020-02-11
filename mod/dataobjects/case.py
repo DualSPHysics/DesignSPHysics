@@ -215,3 +215,10 @@ class Case():
     def get_out_folder_path(self) -> str:
         """ Constructs the path for the output folder of the case. """
         return "{path}/{name}_out/".format(path=self.path, name=self.name)
+
+    def has_materials(self) -> bool:
+        """ Returns whether this case contains defined materials or not. """
+        for mkbasedproperty in self.mkbasedproperties.values():
+            if mkbasedproperty.property:
+                return True
+        return False

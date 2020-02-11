@@ -996,5 +996,7 @@
     "Use No for translation restriction in the movement (default=(Yes, Yes, Yes))": "Use No for translation restriction in the movement (default=(Yes, Yes, Yes))",
     "Rotation DOF: ": "Rotation DOF: ",
     "Use No for rotation restriction in the movement (default=(Yes , Yes, Yes))": "Use No for rotation restriction in the movement (default=(Yes , Yes, Yes))",
-    "Gauge X (value*h): ": "Gauge X (value*h): "
+    "Gauge X (value*h): ": "Gauge X (value*h): ",
+    "Properties and Material information wasn't written. See details for more info.": "Properties and Material information wasn't written. See details for more info.",
+    "The case being saved has some properties/materials defined in one of its MKs. However, the solid-solid interaction on the execution parameters must be set to DEM or CHRONO for this feature to work.": "The case being saved has some properties/materials defined in one of its MKs. However, the solid-solid interaction on the execution parameters must be set to DEM or CHRONO for this feature to work."
 }

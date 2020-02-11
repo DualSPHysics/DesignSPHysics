@@ -188,6 +188,12 @@ class DockPreProcessingWidget(QtGui.QWidget):
         Case.the().info.needs_to_run_gencase = True
         save_case(save_name, Case.the())
         save_current_freecad_document(Case.the().path)
+        if Case.the().has_materials() and Case.the().execution_parameters.rigidalgorithm not in (2, 3):
+            warning_dialog(
+                __("Properties and Material information wasn't written. See details for more info."),
+                __("The case being saved has some properties/materials defined in one of its MKs.\n"
+                   "However, the solid-solid interaction on the execution parameters must be set to DEM or CHRONO for this feature to work.")
+            )
 
     def on_execute_gencase(self):
         """ Saves data into disk and uses GenCase to generate the case files."""
