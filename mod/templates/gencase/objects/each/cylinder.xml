@@ -2,8 +2,10 @@
 {rotation_template}
 {mktype_template}
                 <setdrawmode mode="{obj[fillmode]}"/>
+{frdrawmode_template_enable}
                 <drawcylinder radius="{radius}" objname="{label}">
                     <point x="{pos[0]}" y="{pos[1]}" z="{pos[2]}" />
                     <point x="{pos[0]}" y="{pos[1]}" z="{z2}" />
                 </drawcylinder>
+{frdrawmode_template_disable}
 {matrixreset_template}

@@ -2,7 +2,9 @@
 {rotation_template}
 {mktype_template}
                 <setdrawmode mode="{obj[fillmode]}"/>
+{frdrawmode_template_enable}
                 <drawsphere radius="{radius}" objname="{label}">
                     <point x="{pos[0]}" y="{pos[1]}" z="{pos[2]}" />
                 </drawsphere>
+{frdrawmode_template_disable}
 {matrixreset_template}

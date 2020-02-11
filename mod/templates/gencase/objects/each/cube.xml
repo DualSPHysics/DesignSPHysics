@@ -2,9 +2,11 @@
 {rotation_template}
 {mktype_template}
                 <setdrawmode mode="{obj[fillmode]}"/>
+{frdrawmode_template_enable}
                 <drawbox objname="{label}">
                     <boxfill>{boxfill}</boxfill>
                     <point x="{pos[0]}" y="{pos[1]}" z="{pos[2]}" />
                     <size x="{size[0]}" y="{size[1]}" z="{size[2]}" />
                 </drawbox>
+{frdrawmode_template_disable}
 {matrixreset_template}

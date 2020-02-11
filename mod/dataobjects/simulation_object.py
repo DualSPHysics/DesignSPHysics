@@ -3,6 +3,7 @@
 """ DesignSPHysics Simulation Object data. """
 
 from mod.freecad_tools import get_fc_object
+from mod.stdout_tools import debug
 
 from mod.enums import ObjectType, ObjectFillMode, FreeCADObjectType
 from mod.constants import SUPPORTED_TYPES, MKFLUID_LIMIT, MKFLUID_OFFSET
@@ -19,7 +20,15 @@ class SimulationObject():
         self.type: ObjectType = obj_type
         self.fillmode: ObjectFillMode = fillmode
         self.autofill: bool = None  # Only set for imported objects
+        self.frdrawmode: bool = False
         self.faces_configuration: FacesProperty = None
+
+    def __getattr__(self, attr):
+        if attr == "frdrawmode":
+            debug("frdrawmode property in simulation object <{}> nonexistent: Creating one".format(self.name))
+            self.frdrawmode: bool = False
+            return self.frdrawmode
+        raise AttributeError()
 
     def real_mk(self) -> int:
         """ Returns the object real MK. """

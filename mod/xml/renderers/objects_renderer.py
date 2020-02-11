@@ -20,6 +20,8 @@ class ObjectsRenderer():
     OBJECTS_MKFLUID_XML = "/templates/gencase/objects/each/mkfluid.xml"
     OBJECTS_MKBOUND_XML = "/templates/gencase/objects/each/mkbound.xml"
     OBJECTS_ROTATION_XML = "/templates/gencase/objects/each/rotation.xml"
+    OBJECT_FRDRAWMODE_ENABLE = "/templates/gencase/objects/each/frdrawmode_enable.xml" 
+    OBJECT_FRDRAWMODE_DISABLE = "/templates/gencase/objects/each/frdrawmode_disable.xml" 
     OBJECTS_MATRIXRESET_XML = "/templates/gencase/objects/each/matrixreset.xml"
     OBJECTS_MOVE_XML = "/templates/gencase/objects/each/move.xml"
     OBJECT_BOX_XML = "/templates/gencase/objects/each/cube.xml"
@@ -51,6 +53,8 @@ class ObjectsRenderer():
                 "ang": math.degrees(fc_object.Placement.Rotation.Angle),
                 "vec": [-fc_object.Placement.Rotation.Axis.x, -fc_object.Placement.Rotation.Axis.y, -fc_object.Placement.Rotation.Axis.z]
             }) if fc_object.Placement.Rotation.Angle else "",
+            "frdrawmode_template_enable": get_template_text(cls.OBJECT_FRDRAWMODE_ENABLE) if fc_object.TypeId in (FreeCADObjectType.BOX, FreeCADObjectType.CYLINDER, FreeCADObjectType.SPHERE) and "frdrawmode" in obj.keys() and obj["frdrawmode"] == "true" else "",
+            "frdrawmode_template_disable": get_template_text(cls.OBJECT_FRDRAWMODE_DISABLE) if fc_object.TypeId in (FreeCADObjectType.BOX, FreeCADObjectType.CYLINDER, FreeCADObjectType.SPHERE) and "frdrawmode" in obj.keys() and obj["frdrawmode"] == "true" else "",
         }
 
         # Decide if reset matrix or not

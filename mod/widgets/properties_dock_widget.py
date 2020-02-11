@@ -28,7 +28,7 @@ from mod.dataobjects.simulation_object import SimulationObject
 class PropertiesDockWidget(QtGui.QDockWidget):
     """ DesignSPHysics object properties widget. """
 
-    NUMBER_OF_ROWS = 9
+    NUMBER_OF_ROWS = 10
     NUMBER_OF_COLUMNS = 2
 
     MIN_HEIGHT = 220
@@ -121,6 +121,10 @@ class PropertiesDockWidget(QtGui.QDockWidget):
         self.autofill_label.setText("&nbsp;<span>{}</span>".format(__("Autofill")))
         self.autofill_label.setToolTip(__("Controls geometry autofill"))
 
+        self.frdrawmode_label = QtGui.QLabel()
+        self.frdrawmode_label.setText("&nbsp;<span>{}</span>".format(__("FreeDraw Mode")))
+        self.frdrawmode_label.setToolTip(__("Controls geometry frdrawmode"))
+
         self.mkgroup_label.setAlignment(QtCore.Qt.AlignLeft)
         self.material_label.setAlignment(QtCore.Qt.AlignLeft)
         self.objtype_label.setAlignment(QtCore.Qt.AlignLeft)
@@ -129,6 +133,7 @@ class PropertiesDockWidget(QtGui.QDockWidget):
         self.initials_label.setAlignment(QtCore.Qt.AlignLeft)
         self.motion_label.setAlignment(QtCore.Qt.AlignLeft)
         self.autofill_label.setAlignment(QtCore.Qt.AlignLeft)
+        self.frdrawmode_label.setAlignment(QtCore.Qt.AlignLeft)
         self.material_label.setAlignment(QtCore.Qt.AlignLeft)
 
         # Property change labels insertion
@@ -141,6 +146,7 @@ class PropertiesDockWidget(QtGui.QDockWidget):
         self.object_property_table.setCellWidget(6, 0, self.faces_label)
         self.object_property_table.setCellWidget(7, 0, self.material_label)
         self.object_property_table.setCellWidget(8, 0, self.autofill_label)
+        self.object_property_table.setCellWidget(9, 0, self.frdrawmode_label)
 
         # Property change widgets
         self.mkgroup_prop = QtGui.QSpinBox()
@@ -152,6 +158,7 @@ class PropertiesDockWidget(QtGui.QDockWidget):
         self.faces_prop = QtGui.QPushButton(__("Configure"))
         self.material_prop = QtGui.QPushButton(__("Configure"))
         self.autofill_prop = QtGui.QCheckBox("Enabled")
+        self.frdrawmode_prop = QtGui.QCheckBox("Enabled")
 
         self.faces_prop.setEnabled(False)
         self.mkgroup_prop.setRange(0, 240)
@@ -168,6 +175,7 @@ class PropertiesDockWidget(QtGui.QDockWidget):
         self.faces_prop.clicked.connect(self.on_faces_clicked)
         self.material_prop.clicked.connect(self.on_material_clicked)
         self.autofill_prop.stateChanged.connect(self.on_autofill_check)
+        self.frdrawmode_prop.stateChanged.connect(self.on_frdrawmode_check)
 
         # Property change widget insertion
         self.object_property_table.setCellWidget(0, 1, self.objtype_prop)
@@ -179,6 +187,7 @@ class PropertiesDockWidget(QtGui.QDockWidget):
         self.object_property_table.setCellWidget(6, 1, self.faces_prop)
         self.object_property_table.setCellWidget(7, 1, self.material_prop)
         self.object_property_table.setCellWidget(8, 1, self.autofill_prop)
+        self.object_property_table.setCellWidget(9, 1, self.frdrawmode_prop)
 
         # By default all is hidden in the widget
         self.object_property_table.hide()
@@ -318,6 +327,10 @@ class PropertiesDockWidget(QtGui.QDockWidget):
         """ Autofill checkbox behaviour. """
         Case.the().get_simulation_object(FreeCADGui.Selection.getSelection()[0].Name).autofill = self.autofill_prop.isChecked()
 
+    def on_frdrawmode_check(self):
+        """ FrDrawMode checkbox behaviour. """
+        Case.the().get_simulation_object(FreeCADGui.Selection.getSelection()[0].Name).frdrawmode = self.frdrawmode_prop.isChecked()
+
     def on_initials_change(self):
         """ Initials configuration button behaviour. """
         InitialsDialog(parent=get_fc_main_window())
@@ -454,6 +467,7 @@ class PropertiesDockWidget(QtGui.QDockWidget):
         self.last_mk_value = int(self.mkgroup_prop.value())
 
         self.autofill_prop.setChecked(bool(sim_object.autofill))
+        self.frdrawmode_prop.setChecked(bool(sim_object.frdrawmode))
 
         debug("Object {} supports changing type? {}. Its type is {} with mk {}".format(sim_object.name, sim_object.supports_changing_type(), sim_object.type, sim_object.obj_mk))
 
@@ -496,3 +510,6 @@ class PropertiesDockWidget(QtGui.QDockWidget):
 
         # Is an external object that supports autofill
         self.autofill_prop.setEnabled(sim_object.autofill is not None)
+
+        # Is an object that supports frdrawmode
+        self.frdrawmode_prop.setEnabled(fc_object.TypeId in (FreeCADObjectType.BOX, FreeCADObjectType.CYLINDER, FreeCADObjectType.SPHERE))

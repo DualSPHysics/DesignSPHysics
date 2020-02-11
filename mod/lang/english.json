@@ -1000,5 +1000,7 @@
     "Properties and Material information wasn't written. See details for more info.": "Properties and Material information wasn't written. See details for more info.",
     "The case being saved has some properties/materials defined in one of its MKs. However, the solid-solid interaction on the execution parameters must be set to DEM or CHRONO for this feature to work.": "The case being saved has some properties/materials defined in one of its MKs. However, the solid-solid interaction on the execution parameters must be set to DEM or CHRONO for this feature to work.",
     "Saves particle position using double precision (default=0).": "Saves particle position using double precision (default=0).",
-    "The case being saved has some properties/materials defined in one of its MKs.\nHowever, the solid-solid interaction on the execution parameters must be set to DEM or CHRONO for this feature to work.": "The case being saved has some properties/materials defined in one of its MKs.\nHowever, the solid-solid interaction on the execution parameters must be set to DEM or CHRONO for this feature to work."
+    "The case being saved has some properties/materials defined in one of its MKs.\nHowever, the solid-solid interaction on the execution parameters must be set to DEM or CHRONO for this feature to work.": "The case being saved has some properties/materials defined in one of its MKs.\nHowever, the solid-solid interaction on the execution parameters must be set to DEM or CHRONO for this feature to work.",
+    "FR Draw Mode": "FR Draw Mode",
+    "Controls geometry frdrawmode": "Controls geometry frdrawmode"
 }
