@@ -12,6 +12,7 @@ class ExecutionParameters():
 
     def __init__(self):
         self.posdouble: int = 1
+        self.saveposdouble: int = 0
         self.stepalgorithm: int = 2
         self.verletsteps: int = 40
         self.kernel: int = 2

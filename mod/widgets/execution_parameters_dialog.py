@@ -32,19 +32,18 @@ class ExecutionParametersDialog(QtGui.QDialog):
         self.ok_button = QtGui.QPushButton("Ok")
         self.cancel_button = QtGui.QPushButton("Cancel")
 
-        # Precision in particle interaction
-        self.posdouble_layout = QtGui.QHBoxLayout()
-        self.posdouble_label = QtGui.QLabel("Precision in particle interaction: ")
-        self.posdouble_input = FocusableComboBox()
-        self.posdouble_input.insertItems(0, ["Simple", "Double", "Uses and saves double"])
-        self.posdouble_input.setCurrentIndex(int(Case.the().execution_parameters.posdouble))
-        self.posdouble_input.set_help_text(HelpText.POSDOUBLE)
+        self.saveposdouble_layout = QtGui.QHBoxLayout()
+        self.saveposdouble_label = QtGui.QLabel("Save particle position with double precision: ")
+        self.saveposdouble_input = FocusableComboBox()
+        self.saveposdouble_input.insertItems(0, ["No", "Yes"])
+        self.saveposdouble_input.setCurrentIndex(int(Case.the().execution_parameters.saveposdouble))
+        self.saveposdouble_input.set_help_text(HelpText.SAVEPOSDOUBLE)
 
-        self.posdouble_input.focus.connect(self.on_help_focus)
+        self.saveposdouble_input.focus.connect(self.on_help_focus)
 
-        self.posdouble_layout.addWidget(self.posdouble_label)
-        self.posdouble_layout.addWidget(self.posdouble_input)
-        self.posdouble_layout.addStretch(1)
+        self.saveposdouble_layout.addWidget(self.saveposdouble_label)
+        self.saveposdouble_layout.addWidget(self.saveposdouble_input)
+        self.saveposdouble_layout.addStretch(1)
 
         self.stepalgorithm_layout = QtGui.QHBoxLayout()
         self.stepalgorithm_label = QtGui.QLabel("Step Algorithm: ")
@@ -611,7 +610,7 @@ class ExecutionParametersDialog(QtGui.QDialog):
         self.ep_main_layout_scroll = QtGui.QScrollArea()
         self.ep_main_layout_scroll_widget = QtGui.QWidget()
         self.ep_main_layout = QtGui.QVBoxLayout()
-        # self.ep_main_layout.addLayout(self.posdouble_layout)
+        self.ep_main_layout.addLayout(self.saveposdouble_layout)
         self.ep_main_layout.addLayout(self.stepalgorithm_layout)
         self.ep_main_layout.addLayout(self.verletsteps_layout)
         self.ep_main_layout.addLayout(self.kernel_layout)
@@ -829,7 +828,7 @@ class ExecutionParametersDialog(QtGui.QDialog):
     # ------------ Button behaviour definition --------------
     def on_ok(self):
         """ Applies the data from the dialog onto the main data structure. """
-        Case.the().execution_parameters.posdouble = int(self.posdouble_input.currentIndex())
+        Case.the().execution_parameters.saveposdouble = int(self.saveposdouble_input.currentIndex())
         Case.the().execution_parameters.stepalgorithm = int(self.stepalgorithm_input.currentIndex() + 1)
         Case.the().execution_parameters.verletsteps = int(self.verletsteps_input.text())
         Case.the().execution_parameters.kernel = int(self.kernel_input.currentIndex() + 1)
