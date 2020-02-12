@@ -6,13 +6,14 @@
 """
 
 import sys
+import os
 from html import escape
 from traceback import format_tb
 
-from mod.main import boot
+sys.path.append(os.path.dirname(os.path.abspath(__file__)))
 
-from mod.widgets.error_report_dialog import ErrorReportDialog
-
+from mod.widgets.error_report_dialog import ErrorReportDialog  # pylint: disable=wrong-import-position
+from mod.main import boot  # pylint: disable=wrong-import-position
 
 def report_error(exctype, value, tb):
     """ Displays a dialog with options about the sudden crash. """
