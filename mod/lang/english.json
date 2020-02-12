@@ -1002,5 +1002,9 @@
     "Saves particle position using double precision (default=0).": "Saves particle position using double precision (default=0).",
     "The case being saved has some properties/materials defined in one of its MKs.\nHowever, the solid-solid interaction on the execution parameters must be set to DEM or CHRONO for this feature to work.": "The case being saved has some properties/materials defined in one of its MKs.\nHowever, the solid-solid interaction on the execution parameters must be set to DEM or CHRONO for this feature to work.",
     "FR Draw Mode": "FR Draw Mode",
-    "Controls geometry frdrawmode": "Controls geometry frdrawmode"
+    "Controls geometry frdrawmode": "Controls geometry frdrawmode",
+    "FreeDraw Mode": "FreeDraw Mode",
+    "No points or grid is defined to execute MeasureTool": "No points or grid is defined to execute MeasureTool",
+    "Please define either list of points or a grid of points to continue. MeasureTool won't be executed.": "Please define either list of points or a grid of points to continue. MeasureTool won't be executed.",
+    "No points or grid are defined to execute MeasureTool": "No points or grid are defined to execute MeasureTool"
 }

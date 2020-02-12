@@ -7,6 +7,7 @@ from PySide import QtGui, QtCore
 from mod.translation_tools import __
 from mod.post_processing_tools import measuretool_export
 from mod.freecad_tools import get_fc_main_window
+from mod.dialog_tools import error_dialog
 
 from mod.dataobjects.case import Case
 
@@ -163,8 +164,14 @@ class MeasureToolDialog(QtGui.QDialog):
         else:
             export_parameters["additional_parameters"] = ""
 
-        measuretool_export(export_parameters, Case.the(), self.post_processing_widget)
-        self.accept()
+        if not Case.the().info.measuretool_points and not Case.the().info.measuretool_grid:
+            error_dialog(
+                __("No points or grid are defined to execute MeasureTool"),
+                __("Please define either list of points or a grid of points to continue. MeasureTool won't be executed.")
+            )
+        else:
+            measuretool_export(export_parameters, Case.the(), self.post_processing_widget)
+            self.accept()
 
     def on_mtool_measure_all_change(self, state):
         """ "All" checkbox behaviour"""
