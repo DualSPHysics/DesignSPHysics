@@ -12,6 +12,7 @@ from mod.freecad_tools import get_fc_main_window
 from mod.stdout_tools import log
 from mod.dialog_tools import error_dialog, warning_dialog
 from mod.executable_tools import refocus_cwd
+from mod.file_tools import save_case
 
 from mod.dataobjects.case import Case
 
@@ -137,6 +138,7 @@ class DockSimulationWidget(QtGui.QWidget):
                     self.simulation_complete.emit(False)
                     error_dialog(__("An error occurred during execution. Make sure that parameters exist and are properly defined. "
                                     "You can also check your execution device (update the driver of your GPU). Read the details for more information."), str(output))
+            save_case(Case.the().path, Case.the())
 
         # Launches a QProcess in background
         process = QtCore.QProcess(get_fc_main_window())
