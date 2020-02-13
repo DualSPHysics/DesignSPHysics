@@ -63,7 +63,7 @@ class AddGEODialog(QtGui.QDialog):
         # Import object name
         self.geo_objname_layout = QtGui.QHBoxLayout()
         self.geo_objname_label = QtGui.QLabel(__("Import object name: "))
-        self.geo_objname_text = QtGui.QLineEdit("GEO-{}".format(uuid4()))
+        self.geo_objname_text = QtGui.QLineEdit("GEO-{}".format(uuid4()).replace("-", "_"))
         for x in [self.geo_objname_label, self.geo_objname_text]:
             self.geo_objname_layout.addWidget(x)
         # End object name
