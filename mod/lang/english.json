@@ -1006,5 +1006,7 @@
     "FreeDraw Mode": "FreeDraw Mode",
     "No points or grid is defined to execute MeasureTool": "No points or grid is defined to execute MeasureTool",
     "Please define either list of points or a grid of points to continue. MeasureTool won't be executed.": "Please define either list of points or a grid of points to continue. MeasureTool won't be executed.",
-    "No points or grid are defined to execute MeasureTool": "No points or grid are defined to execute MeasureTool"
+    "No points or grid are defined to execute MeasureTool": "No points or grid are defined to execute MeasureTool",
+    "Force Enable": "Force Enable",
+    "Force Enable Panels": "Force Enable Panels"
 }

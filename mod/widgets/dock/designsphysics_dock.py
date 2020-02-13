@@ -63,6 +63,7 @@ class DesignSPHysicsDock(QtGui.QDockWidget):
         self.adapt_to_no_case()
 
         # Signal handling
+        self.pre_proccessing_widget.force_pressed.connect(self.on_preprocessing_force_pressed)
         self.pre_proccessing_widget.need_refresh.connect(self.need_refresh.emit)
         self.pre_proccessing_widget.update_dp.connect(self.on_signal_update_dp)
         self.pre_proccessing_widget.case_created.connect(self.adapt_to_new_case)
@@ -114,3 +115,8 @@ class DesignSPHysicsDock(QtGui.QDockWidget):
         """ Adapts the dock to an environment in which a simulation has been canceled. """
         self.simulation_widget.setEnabled(True)
         self.post_processing_widget.setEnabled(Case.the().info.is_simulation_done)
+
+    def on_preprocessing_force_pressed(self):
+        """ Receives the force_pressed signal from th preprocessing widget and forcefully enables all widgets. """
+        self.simulation_widget.setEnabled(True)
+        self.post_processing_widget.setEnabled(True)

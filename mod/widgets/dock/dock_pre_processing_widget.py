@@ -37,6 +37,7 @@ class DockPreProcessingWidget(QtGui.QWidget):
     case_created = QtCore.Signal()
     gencase_completed = QtCore.Signal(bool)
     simulation_completed = QtCore.Signal(bool)
+    force_pressed = QtCore.Signal()
 
     def __init__(self, parent=None):
         super().__init__(parent=parent)
@@ -51,6 +52,8 @@ class DockPreProcessingWidget(QtGui.QWidget):
         self.fourth_row_layout = QtGui.QHBoxLayout()
 
         self.casecontrols_label = QtGui.QLabel("<b>{}</b>".format(__("Pre-processing")))
+        self.force_button = QtGui.QPushButton(__("Force Enable Panels"))
+        self.force_button.setStyleSheet("font-size: 8px; max-height: 10px; padding-bottom: 0; padding-top: 0; padding-left:2px; padding-right: 2px")
 
         self.new_case_button = QtGui.QToolButton()
         self.new_case_button.setPopupMode(QtGui.QToolButton.MenuButtonPopup)
@@ -109,6 +112,7 @@ class DockPreProcessingWidget(QtGui.QWidget):
         self.gencase_button.setIcon(get_icon("run_gencase.png"))
         self.gencase_button.setIconSize(QtCore.QSize(12, 12))
 
+        self.force_button.clicked.connect(self.on_force_button)
         self.new_case_button.clicked.connect(lambda: self.on_new_case(True))
         self.save_button.clicked.connect(self.on_save_case)
         self.gencase_button.clicked.connect(self.on_execute_gencase)
@@ -123,6 +127,8 @@ class DockPreProcessingWidget(QtGui.QWidget):
         self.special_button.clicked.connect(SpecialOptionsSelectorDialog)
 
         self.label_layout.addWidget(self.casecontrols_label)
+        self.label_layout.addStretch(1)
+        self.label_layout.addWidget(self.force_button)
         self.first_row_layout.addWidget(self.new_case_button)
         self.first_row_layout.addWidget(self.save_button)
         self.first_row_layout.addWidget(self.load_button)
@@ -333,11 +339,15 @@ class DockPreProcessingWidget(QtGui.QWidget):
     def adapt_to_no_case(self):
         """ Adapts the widget to an environment with no case opened. """
         for x in [self.save_button, self.add_fillbox_button, self.add_geometry_button, self.import_xml_button,
-                  self.case_summary_button, self.toggle_2d_mode_button, self.special_button, self.gencase_button]:
+                  self.case_summary_button, self.toggle_2d_mode_button, self.special_button, self.gencase_button, self.force_button]:
             x.setEnabled(False)
 
     def adapt_to_new_case(self):
         """ Adapts the widget to an environment when a case is opened. """
         for x in [self.save_button, self.add_fillbox_button, self.add_geometry_button, self.import_xml_button,
-                  self.case_summary_button, self.toggle_2d_mode_button, self.special_button, self.gencase_button]:
+                  self.case_summary_button, self.toggle_2d_mode_button, self.special_button, self.gencase_button, self.force_button]:
             x.setEnabled(True)
+
+    def on_force_button(self):
+        """ Triggers a signal implying that the force button was pressed. """
+        self.force_pressed.emit()
