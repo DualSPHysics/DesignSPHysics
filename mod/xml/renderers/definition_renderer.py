@@ -26,7 +26,7 @@ class DefinitionRenderer():
             "pointmin": [min_point.x / DIVIDER, min_point.y / DIVIDER, min_point.z / DIVIDER],
             "pointmax": [
                 min_point.x / DIVIDER + fc_object.Length.Value / DIVIDER,
-                min_point.y / DIVIDER + fc_object.Width.Value / DIVIDER if data["mode3d"] else min_point.y / DIVIDER,
+                min_point.y / DIVIDER + fc_object.Width.Value / DIVIDER if data["mode3d"] == "true" else min_point.y / DIVIDER,
                 min_point.z / DIVIDER + fc_object.Height.Value / DIVIDER
             ]
         }
