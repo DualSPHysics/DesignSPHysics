@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 """ DesignSPHysics Inlet/Outlet configuration. """
 
-from mod.enums import InletOutletDetermLimit
+from mod.enums import InletOutletDetermLimit, InletOutletExtrapolateMode
 
 from mod.dataobjects.inletoutlet.inlet_outlet_zone import InletOutletZone
 
@@ -15,6 +15,7 @@ class InletOutletConfig():
         self.resizetime: float = 0.5
         self.userefilling: bool = False
         self.determlimit: InletOutletDetermLimit = InletOutletDetermLimit.ZEROTH_ORDER
+        self.extrapolatemode: InletOutletExtrapolateMode = InletOutletExtrapolateMode.FAST_SINGLE
         self.zones: list = list()  # [InletOutletZone]
 
     def get_io_zone_for_id(self, search_id) -> InletOutletZone:

@@ -133,6 +133,27 @@ class InletOutletElevationType:
     AUTOMATIC = 2
 
 
+class InletOutletExtrapolateMode:
+    """ Types of extrapolatemode for Inlet/Outlet configuration. """
+    FAST_SINGLE = 1
+    SINGLE = 2
+    DOUBLE = 3
+
+
+class InletOutletRefillingMode:
+    """ Types of refilling for Inlet/Outlet configuration. """
+    SIMPLE_FULL = 0
+    SIMPLE_BELOW_ZSURF = 1
+    ADVANCED_FOR_REVERSE_FLOWS = 2
+
+
+class InletOutletInputTreatment:
+    """ Types of inputtreatment for Inlet/Outlet configuration. """
+    NO_CHANGES = 0
+    CONVERT_FLUID = 1
+    REMOVE_FLUID = 2
+
+
 class ChronoModelNormalType:
     """ Chrono ModelNormal types. """
     ORIGINAL = "original"

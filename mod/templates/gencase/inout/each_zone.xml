@@ -1,6 +1,6 @@
                 <inoutzone>
-                    <refilling value="0" comment="Refilling mode. 0:Simple full, 1:Simple below zsurf, 2:Advanced for reverse flows (very slow) (default=1)" />
-                    <inputtreatment value="0" comment="Treatment of fluid entering the zone. 0:No changes, 1:Convert fluid (necessary for outlet), 2:Remove fluid (recommended for inlet)" />
+                    <refilling value="{refilling}" comment="Refilling mode. 0:Simple full, 1:Simple below zsurf, 2:Advanced for reverse flows (very slow) (default=1)" />
+                    <inputtreatment value="{inputtreatment}" comment="Treatment of fluid entering the zone. 0:No changes, 1:Convert fluid (necessary for outlet), 2:Remove fluid (recommended for inlet)" />
                     <layers value="{layers}" comment="Number of inlet/outlet particle layers" />
 {zone}
                     <imposevelocity mode="{velocity_info[velocity_type]}" comment="Imposed velocity 0:fixed value, 1:variable value, 2:Extrapolated value (default=0)">
