@@ -36,7 +36,7 @@ class ComputeForcesDialog(QtGui.QDialog):
         self.cfces_format_layout.addWidget(self.outformat_combobox)
 
         self.cfces_onlyprocess_selector = QtGui.QComboBox()
-        self.cfces_onlyprocess_selector.insertItems(0, ["mk", "id", "position"])
+        self.cfces_onlyprocess_selector.insertItems(0, ["MK", "id", "position"])
         self.cfces_onlyprocess_label = QtGui.QLabel(__("to process (empty for all)"))
         self.cfces_onlyprocess_text = QtGui.QLineEdit()
         self.cfces_onlyprocess_text.setPlaceholderText("1,2,3 or 1-30")
