@@ -44,6 +44,16 @@ class InletConfigDialog(QtGui.QDialog):
         self.resizetime_layout.addWidget(self.resizetime_option)
         self.resizetime_layout.addWidget(self.resizetime_line_edit)
 
+         # Creates extrapolate mode selector
+        self.extrapolatemode_layout = QtGui.QHBoxLayout()
+        self.extrapolatemode_option = QtGui.QLabel(__("Extrapolate mode: "))
+        self.extrapolatemode_combobox = QtGui.QComboBox()
+        self.extrapolatemode_combobox.insertItems(0, [__("Fast-Single"), __("Single"), __("Double")])
+        self.extrapolatemode_combobox.setCurrentIndex(self.inlet_outlet.extrapolatemode - 1)
+
+        self.extrapolatemode_layout.addWidget(self.extrapolatemode_option)
+        self.extrapolatemode_layout.addWidget(self.extrapolatemode_combobox)
+
         # Creates use determlimit option
         self.determlimit_layout = QtGui.QHBoxLayout()
         self.determlimit_option = QtGui.QLabel(__("Determlimit: "))
@@ -82,6 +92,7 @@ class InletConfigDialog(QtGui.QDialog):
 
         # Adds options to option layout
         self.io_options_layout.addLayout(self.resizetime_layout)
+        self.io_options_layout.addLayout(self.extrapolatemode_layout)
         self.io_options_layout.addLayout(self.determlimit_layout)
 
         # Adds options to main
@@ -162,4 +173,5 @@ class InletConfigDialog(QtGui.QDialog):
 
         self.inlet_outlet.resizetime = float(self.resizetime_line_edit.text())
         self.inlet_outlet.determlimit = self.determlimit_combobox.currentText()
+        self.inlet_outlet.extrapolatemode = self.extrapolatemode_combobox.currentIndex() + 1
         InletConfigDialog.accept(self)
