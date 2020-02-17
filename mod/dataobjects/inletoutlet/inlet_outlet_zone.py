@@ -18,7 +18,6 @@ class InletOutletZone:
 
     def __init__(self):
         self.id: UUID = uuid4()
-        self.convertfluid: bool = True
         self.refilling: InletOutletRefillingMode = InletOutletRefillingMode.SIMPLE_FULL
         self.inputtreatment: InletOutletInputTreatment = InletOutletInputTreatment.NO_CHANGES
         self.layers: int = 0

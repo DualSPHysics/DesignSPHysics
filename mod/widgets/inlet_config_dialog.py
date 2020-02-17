@@ -26,8 +26,6 @@ class InletConfigDialog(QtGui.QDialog):
         # Reference to the inlet outlet configuration on the case data
         self.inlet_outlet: InletOutletConfig = Case.the().inlet_outlet
 
-        # TODO: Redo this dialog with new inlet options
-
         # Creates a dialog
         self.setWindowTitle("Inlet/Outlet configuration")
         self.setModal(False)
@@ -38,17 +36,6 @@ class InletConfigDialog(QtGui.QDialog):
         # Creates layout for content first options
         self.io_options_layout = QtGui.QHBoxLayout()
 
-        # Creates reuseids option
-        self.reuseids_layout = QtGui.QHBoxLayout()
-        self.reuseids_option = QtGui.QLabel(__("Reuseids: "))
-        self.reuseids_combobox = QtGui.QComboBox()
-        self.reuseids_combobox.insertItems(0, [__("False"), __("True")])
-
-        self.reuseids_combobox.setCurrentIndex(1 if self.inlet_outlet.reuseids else 0)
-
-        self.reuseids_layout.addWidget(self.reuseids_option)
-        self.reuseids_layout.addWidget(self.reuseids_combobox)
-
         # Creates resizetime option
         self.resizetime_layout = QtGui.QHBoxLayout()
         self.resizetime_option = QtGui.QLabel(__("Resizetime: "))
@@ -56,16 +43,6 @@ class InletConfigDialog(QtGui.QDialog):
 
         self.resizetime_layout.addWidget(self.resizetime_option)
         self.resizetime_layout.addWidget(self.resizetime_line_edit)
-
-        # Creates use refilling option
-        self.refilling_layout = QtGui.QHBoxLayout()
-        self.refilling_option = QtGui.QLabel(__("Refilling: "))
-        self.refilling_combobox = QtGui.QComboBox()
-        self.refilling_combobox.insertItems(0, [__("False"), __("True")])
-        self.refilling_combobox.setCurrentIndex(1 if self.inlet_outlet.userefilling else 0)
-
-        self.refilling_layout.addWidget(self.refilling_option)
-        self.refilling_layout.addWidget(self.refilling_combobox)
 
         # Creates use determlimit option
         self.determlimit_layout = QtGui.QHBoxLayout()
@@ -104,9 +81,7 @@ class InletConfigDialog(QtGui.QDialog):
         self.zones_groupbox.setLayout(self.zones_groupbox_layout)
 
         # Adds options to option layout
-        # self.io_options_layout.addLayout(self.reuseids_layout)
         self.io_options_layout.addLayout(self.resizetime_layout)
-        # self.io_options_layout.addLayout(self.refilling_layout)
         self.io_options_layout.addLayout(self.determlimit_layout)
 
         # Adds options to main
@@ -185,8 +160,6 @@ class InletConfigDialog(QtGui.QDialog):
         if not self.inlet_outlet:
             self.inlet_outlet = InletOutletConfig
 
-        self.inlet_outlet.reuseids = self.reuseids_combobox.currentIndex() == 1
         self.inlet_outlet.resizetime = float(self.resizetime_line_edit.text())
-        self.inlet_outlet.userefilling = self.refilling_combobox.currentIndex() == 1
         self.inlet_outlet.determlimit = self.determlimit_combobox.currentText()
         InletConfigDialog.accept(self)

@@ -34,17 +34,6 @@ class InletZoneEdit(QtGui.QDialog):
         self.setWindowTitle("Inlet/Outlet object edit")
         self.main_layout = QtGui.QVBoxLayout()
 
-        # Add Convert Fluid option
-        self.convertfluid_layout = QtGui.QHBoxLayout()
-        self.convertfluid_option = QtGui.QLabel(__("Convertfluid: "))
-        self.convertfluid_combobox = QtGui.QComboBox()
-        self.convertfluid_combobox.insertItems(0, [__("True"), __("False")])
-        self.convertfluid_combobox.setCurrentIndex(1 if self.target_io_zone.convertfluid else 0)
-
-        self.convertfluid_layout.addWidget(self.convertfluid_option)
-        self.convertfluid_layout.addWidget(self.convertfluid_combobox)
-        self.convertfluid_layout.addStretch(1)
-
         # Add Layers option
         self.layers_layout = QtGui.QHBoxLayout()
         self.layers_option = QtGui.QLabel(__("Layers: "))
@@ -124,30 +113,6 @@ class InletZoneEdit(QtGui.QDialog):
         self.imposevelocity_options_layout.addLayout(self.imposevelocity_value_layout)
         self.imposevelocity_layout.setLayout(self.imposevelocity_options_layout)
 
-        # Add Outlet rhop option
-        self.imposerhop_layout = QtGui.QGroupBox("Density")
-        self.imposerhop_combobox_layout = QtGui.QHBoxLayout()
-        self.imposerhop_value_layout = QtGui.QHBoxLayout()
-        self.imposerhop_options_layout = QtGui.QVBoxLayout()
-        self.imposerhop_label = QtGui.QLabel(__("Density: "))
-        self.imposerhop_combobox = QtGui.QComboBox()
-        self.imposerhop_combobox.insertItems(0, [__("Fixed"), __("Hydrostatic"), __("Extrapolated")])
-        self.imposerhop_value_label = QtGui.QLabel("Value: ")
-        self.imposerhop_value_line_edit = QtGui.QLineEdit(str(self.target_io_zone.density_info.value))
-
-        self.imposerhop_combobox.currentIndexChanged.connect(self.on_imposerhop_change)
-        self.imposerhop_combobox.setCurrentIndex(self.target_io_zone.density_info.density_type)
-
-        self.imposerhop_combobox_layout.addWidget(self.imposerhop_label)
-        self.imposerhop_combobox_layout.addWidget(self.imposerhop_combobox)
-        self.imposerhop_combobox_layout.addStretch(1)
-        self.imposerhop_value_layout.addWidget(self.imposerhop_value_label)
-        self.imposerhop_value_layout.addWidget(self.imposerhop_value_line_edit)
-
-        self.imposerhop_options_layout.addLayout(self.imposerhop_combobox_layout)
-        self.imposerhop_options_layout.addLayout(self.imposerhop_value_layout)
-        self.imposerhop_layout.setLayout(self.imposerhop_options_layout)
-
         # Add Inlet Z-surface option
         self.imposezsurf_layout = QtGui.QGroupBox("Elevation")
         self.imposezsurf_options_layout = QtGui.QVBoxLayout()
@@ -198,11 +163,9 @@ class InletZoneEdit(QtGui.QDialog):
         self.button_layout.addWidget(self.ok_button)
         self.button_layout.addWidget(self.cancel_button)
 
-        # self.main_layout.addLayout(self.convertfluid_layout)
         self.main_layout.addLayout(self.layers_layout)
         self.main_layout.addWidget(self.zone2d3d_main_layout)
         self.main_layout.addWidget(self.imposevelocity_layout)
-        # self.main_layout.addWidget(self.imposerhop_layout)
         self.main_layout.addWidget(self.imposezsurf_layout)
         self.main_layout.addLayout(self.button_layout)
 
@@ -266,7 +229,6 @@ class InletZoneEdit(QtGui.QDialog):
 
     def on_ok(self):
         """ Save data """
-        self.target_io_zone.convertfluid = self.convertfluid_combobox.currentIndex() == 0
         self.target_io_zone.layers = int(self.layers_line_edit.text())
 
         self.target_io_zone.zone_info.zone_type = InletOutletZoneType.ZONE_2D if self.zone2d_option.isChecked() else InletOutletZoneType.ZONE_3D
@@ -276,9 +238,6 @@ class InletZoneEdit(QtGui.QDialog):
 
         self.target_io_zone.velocity_info.type = self.imposevelocity_combobox.currentIndex()
         self.target_io_zone.velocity_info.value = float(self.imposevelocity_velocity_line_edit.text())
-
-        self.target_io_zone.density_info.density_type = self.imposerhop_combobox.currentIndex()
-        self.target_io_zone.density_info.value = float(self.imposerhop_value_line_edit.text())
 
         self.target_io_zone.elevation_info.elevation_type = self.imposezsurf_combobox.currentIndex()
         self.target_io_zone.elevation_info.zbottom = float(self.imposezsurf_fixed_zbottom.text())
