@@ -122,7 +122,7 @@ class PropertiesDockWidget(QtGui.QDockWidget):
         self.autofill_label.setToolTip(__("Controls geometry autofill"))
 
         self.frdrawmode_label = QtGui.QLabel()
-        self.frdrawmode_label.setText("&nbsp;<span>{}</span>".format(__("FreeDraw Mode")))
+        self.frdrawmode_label.setText("&nbsp;<span>{}</span>".format(__("FreeDraw")))
         self.frdrawmode_label.setToolTip(__("Controls geometry frdrawmode"))
 
         self.mkgroup_label.setAlignment(QtCore.Qt.AlignLeft)
