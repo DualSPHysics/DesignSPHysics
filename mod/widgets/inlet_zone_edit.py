@@ -42,6 +42,26 @@ class InletZoneEdit(QtGui.QDialog):
         self.layers_layout.addWidget(self.layers_option)
         self.layers_layout.addWidget(self.layers_line_edit)
 
+        # Add refilling option selector
+        self.refilling_layout = QtGui.QHBoxLayout()
+        self.refilling_label = QtGui.QLabel(__("Refilling mode:"))
+        self.refilling_selector = QtGui.QComboBox()
+        self.refilling_selector.insertItems(0, [__("Simple full"), __("Simple below Z Surface"), __("Advanced for reverse flows")])
+        self.refilling_selector.setCurrentIndex(self.target_io_zone.refilling)
+
+        self.refilling_layout.addWidget(self.refilling_label)
+        self.refilling_layout.addWidget(self.refilling_selector)
+
+        # Add inputtreatment option selector
+        self.inputtreatment_layout = QtGui.QHBoxLayout()
+        self.inputtreatment_label = QtGui.QLabel(__("Input Treatment mode:"))
+        self.inputtreatment_selector = QtGui.QComboBox()
+        self.inputtreatment_selector.insertItems(0, [__("No changes"), __("Convert Fluid"), __("Remove fluid")])
+        self.inputtreatment_selector.setCurrentIndex(self.target_io_zone.inputtreatment)
+
+        self.inputtreatment_layout.addWidget(self.inputtreatment_label)
+        self.inputtreatment_layout.addWidget(self.inputtreatment_selector)
+
         # Add Zone 2d or 3d
         self.zone2d3d_main_layout = QtGui.QGroupBox("Zone 2D/3D")
         self.zone2d3d_layout = QtGui.QVBoxLayout()
@@ -164,6 +184,8 @@ class InletZoneEdit(QtGui.QDialog):
         self.button_layout.addWidget(self.cancel_button)
 
         self.main_layout.addLayout(self.layers_layout)
+        self.main_layout.addLayout(self.refilling_layout)
+        self.main_layout.addLayout(self.inputtreatment_layout)
         self.main_layout.addWidget(self.zone2d3d_main_layout)
         self.main_layout.addWidget(self.imposevelocity_layout)
         self.main_layout.addWidget(self.imposezsurf_layout)
@@ -230,6 +252,8 @@ class InletZoneEdit(QtGui.QDialog):
     def on_ok(self):
         """ Save data """
         self.target_io_zone.layers = int(self.layers_line_edit.text())
+        self.target_io_zone.refilling = int(self.refilling_selector.currentIndex())
+        self.target_io_zone.inputtreatment = int(self.inputtreatment_selector.currentIndex())
 
         self.target_io_zone.zone_info.zone_type = InletOutletZoneType.ZONE_2D if self.zone2d_option.isChecked() else InletOutletZoneType.ZONE_3D
         self.target_io_zone.zone_info.mkfluid = int(self.zone2d3d_mk_line_edit.text())

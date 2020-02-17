@@ -1012,5 +1012,13 @@
     "Extrapolate mode: ": "Extrapolate mode: ",
     "Fast-Single": "Fast-Single",
     "Single": "Single",
-    "Double": "Double"
+    "Double": "Double",
+    "Refilling mode:": "Refilling mode:",
+    "Simple full": "Simple full",
+    "Simple below Z Surface": "Simple below Z Surface",
+    "Advanced for reverse flows": "Advanced for reverse flows",
+    "Input Treatment mode:": "Input Treatment mode:",
+    "No changes": "No changes",
+    "Convert Fluid": "Convert Fluid",
+    "Remove fluid": "Remove fluid"
 }
