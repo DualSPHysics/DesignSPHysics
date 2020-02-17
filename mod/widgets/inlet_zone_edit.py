@@ -62,6 +62,16 @@ class InletZoneEdit(QtGui.QDialog):
         self.inputtreatment_layout.addWidget(self.inputtreatment_label)
         self.inputtreatment_layout.addWidget(self.inputtreatment_selector)
 
+        # Add imposerhop option selector
+        self.imposerhop_layout = QtGui.QHBoxLayout()
+        self.imposerhop_label = QtGui.QLabel(__("Density mode:"))
+        self.imposerhop_selector = QtGui.QComboBox()
+        self.imposerhop_selector.insertItems(0, [__("Fixed value"), __("Hydrostatic"), __("Extrapolated from ghost nodes")])
+        self.imposerhop_selector.setCurrentIndex(self.target_io_zone.density_info.density_type)
+
+        self.imposerhop_layout.addWidget(self.imposerhop_label)
+        self.imposerhop_layout.addWidget(self.imposerhop_selector)
+
         # Add Zone 2d or 3d
         self.zone2d3d_main_layout = QtGui.QGroupBox("Zone 2D/3D")
         self.zone2d3d_layout = QtGui.QVBoxLayout()
@@ -186,6 +196,7 @@ class InletZoneEdit(QtGui.QDialog):
         self.main_layout.addLayout(self.layers_layout)
         self.main_layout.addLayout(self.refilling_layout)
         self.main_layout.addLayout(self.inputtreatment_layout)
+        self.main_layout.addLayout(self.imposerhop_layout)
         self.main_layout.addWidget(self.zone2d3d_main_layout)
         self.main_layout.addWidget(self.imposevelocity_layout)
         self.main_layout.addWidget(self.imposezsurf_layout)
@@ -254,6 +265,7 @@ class InletZoneEdit(QtGui.QDialog):
         self.target_io_zone.layers = int(self.layers_line_edit.text())
         self.target_io_zone.refilling = int(self.refilling_selector.currentIndex())
         self.target_io_zone.inputtreatment = int(self.inputtreatment_selector.currentIndex())
+        self.target_io_zone.density_info.density_type = int(self.imposerhop_selector.currentIndex())
 
         self.target_io_zone.zone_info.zone_type = InletOutletZoneType.ZONE_2D if self.zone2d_option.isChecked() else InletOutletZoneType.ZONE_3D
         self.target_io_zone.zone_info.mkfluid = int(self.zone2d3d_mk_line_edit.text())

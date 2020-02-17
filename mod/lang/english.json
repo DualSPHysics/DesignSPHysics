@@ -1020,5 +1020,8 @@
     "Input Treatment mode:": "Input Treatment mode:",
     "No changes": "No changes",
     "Convert Fluid": "Convert Fluid",
-    "Remove fluid": "Remove fluid"
+    "Remove fluid": "Remove fluid",
+    "Density mode:": "Density mode:",
+    "Fixed value": "Fixed value",
+    "Extrapolated from ghost nodes": "Extrapolated from ghost nodes"
 }
