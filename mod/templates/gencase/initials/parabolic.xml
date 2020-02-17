@@ -1,0 +1,6 @@
+        <initials>
+            <velocity mkfluid="{mk}">
+                <direction x="{force[0]}" y="{force[1]}" z="{force[2]}" />
+                <velocity3 v="{v1}" v2="{v2}" v3="{v3}" z="{z1}" z2="{z2}" z3="{z3}" comment="Parabolic profile velocity" units_comment="m/s" />
+            </velocity>
+        </initials>

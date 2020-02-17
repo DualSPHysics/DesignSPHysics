@@ -1,0 +1,6 @@
+        <initials>
+            <velocity mkfluid="{mk}">
+                <direction x="{force[0]}" y="{force[1]}" z="{force[2]}" />
+                <velocity v="{v1}" comment="Uniform profile velocity" units_comment="m/s" />
+            </velocity>
+        </initials>

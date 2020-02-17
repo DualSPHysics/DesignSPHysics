@@ -219,6 +219,13 @@ class MooringsConfigurationMethod:
     FROM_XML = 1
 
 
+class InitialsType:
+    """ Types of initials velocity """
+    UNIFORM = 0
+    LINEAR = 1
+    PARABOLIC = 2
+
+
 class HelpText:
     """ Help strings for different zones of the application GUIs. """
     GRAVITYX = __("Gravitational acceleration in X direction.")

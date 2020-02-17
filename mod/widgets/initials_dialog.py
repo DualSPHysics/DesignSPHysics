@@ -35,9 +35,19 @@ class InitialsDialog(QtGui.QDialog):
         self.has_initials_selector = QtGui.QComboBox()
         self.has_initials_selector.insertItems(0, ["True", "False"])
         self.has_initials_selector.currentIndexChanged.connect(self.on_initials_change)
+
+        self.initials_type_label = QtGui.QLabel(__("Initials Type: "))
+        self.initials_type_label.setToolTip(__("Chooses the type of the initial velocity."))
+        self.initials_type_selector = QtGui.QComboBox()
+        self.initials_type_selector.insertItems(0, ['Uniform', 'Linear', 'Parabolic'])
+        self.initials_type_selector.currentIndexChanged.connect(self.on_initials_type_change)
+
         self.has_initials_targetlabel = QtGui.QLabel(__("Target MKFluid: ") + str(self.target_mk))
+
         self.has_initials_layout.addWidget(self.has_initials_label)
         self.has_initials_layout.addWidget(self.has_initials_selector)
+        self.has_initials_layout.addWidget(self.initials_type_label)
+        self.has_initials_layout.addWidget(self.initials_type_selector)
         self.has_initials_layout.addStretch(1)
         self.has_initials_layout.addWidget(self.has_initials_targetlabel)
 
@@ -61,7 +71,43 @@ class InitialsDialog(QtGui.QDialog):
         self.initials_vector_layout.addWidget(self.initials_vector_label_z)
         self.initials_vector_layout.addWidget(self.initials_vector_input_z)
 
+        self.initials_velocities_layout = QtGui.QVBoxLayout()
+        self.initials_velocities_order1_layout = QtGui.QHBoxLayout()
+        self.initials_velocities_v1_label = QtGui.QLabel('V1: ')
+        self.initials_velocities_v1_input = QtGui.QLineEdit()
+        self.initials_velocities_z1_label = QtGui.QLabel('Z1: ')
+        self.initials_velocities_z1_input = QtGui.QLineEdit()
+        self.initials_velocities_order1_layout.addWidget(self.initials_velocities_v1_label)
+        self.initials_velocities_order1_layout.addWidget(self.initials_velocities_v1_input)
+        self.initials_velocities_order1_layout.addWidget(self.initials_velocities_z1_label)
+        self.initials_velocities_order1_layout.addWidget(self.initials_velocities_z1_input)
+
+        self.initials_velocities_order2_layout = QtGui.QHBoxLayout()
+        self.initials_velocities_v2_label = QtGui.QLabel('V2: ')
+        self.initials_velocities_v2_input = QtGui.QLineEdit()
+        self.initials_velocities_z2_label = QtGui.QLabel('Z2: ')
+        self.initials_velocities_z2_input = QtGui.QLineEdit()
+        self.initials_velocities_order2_layout.addWidget(self.initials_velocities_v2_label)
+        self.initials_velocities_order2_layout.addWidget(self.initials_velocities_v2_input)
+        self.initials_velocities_order2_layout.addWidget(self.initials_velocities_z2_label)
+        self.initials_velocities_order2_layout.addWidget(self.initials_velocities_z2_input)
+
+        self.initials_velocities_order3_layout = QtGui.QHBoxLayout()
+        self.initials_velocities_v3_label = QtGui.QLabel('V3: ')
+        self.initials_velocities_v3_input = QtGui.QLineEdit()
+        self.initials_velocities_z3_label = QtGui.QLabel('Z3: ')
+        self.initials_velocities_z3_input = QtGui.QLineEdit()
+        self.initials_velocities_order3_layout.addWidget(self.initials_velocities_v3_label)
+        self.initials_velocities_order3_layout.addWidget(self.initials_velocities_v3_input)
+        self.initials_velocities_order3_layout.addWidget(self.initials_velocities_z3_label)
+        self.initials_velocities_order3_layout.addWidget(self.initials_velocities_z3_input)
+
+        self.initials_velocities_layout.addLayout(self.initials_velocities_order1_layout)
+        self.initials_velocities_layout.addLayout(self.initials_velocities_order2_layout)
+        self.initials_velocities_layout.addLayout(self.initials_velocities_order3_layout)
+
         self.initials_props_layout.addLayout(self.initials_vector_layout)
+        self.initials_props_layout.addLayout(self.initials_velocities_layout)
         self.initials_props_layout.addStretch(1)
         self.initials_props_group.setLayout(self.initials_props_layout)
 
@@ -85,14 +131,28 @@ class InitialsDialog(QtGui.QDialog):
             self.initials_vector_input_x.setText(str(initials_object.force[0]))
             self.initials_vector_input_y.setText(str(initials_object.force[1]))
             self.initials_vector_input_z.setText(str(initials_object.force[2]))
+            self.initials_type_selector.setCurrentIndex(initials_object.initials_type)
+            self.initials_velocities_v1_input.setText(str(initials_object.v1))
+            self.initials_velocities_v2_input.setText(str(initials_object.v2))
+            self.initials_velocities_v3_input.setText(str(initials_object.v3))
+            self.initials_velocities_z1_input.setText(str(initials_object.z1))
+            self.initials_velocities_z2_input.setText(str(initials_object.z2))
+            self.initials_velocities_z3_input.setText(str(initials_object.z3))
         else:
             self.has_initials_selector.setCurrentIndex(1)
             self.on_initials_change(1)
             self.initials_props_group.setEnabled(False)
             self.has_initials_selector.setCurrentIndex(1)
-            self.initials_vector_input_x.setText("0")
-            self.initials_vector_input_y.setText("0")
-            self.initials_vector_input_z.setText("0")
+            self.initials_type_selector.setCurrentIndex(0)
+            self.initials_vector_input_x.setText("0.0")
+            self.initials_vector_input_y.setText("0.0")
+            self.initials_vector_input_z.setText("0.0")
+            self.initials_velocities_v1_input.setText("0.0")
+            self.initials_velocities_v2_input.setText("0.0")
+            self.initials_velocities_v3_input.setText("0.0")
+            self.initials_velocities_z1_input.setText("0.0")
+            self.initials_velocities_z2_input.setText("0.0")
+            self.initials_velocities_z3_input.setText("0.0")
 
         self.exec_()
 
@@ -106,7 +166,17 @@ class InitialsDialog(QtGui.QDialog):
             # Initials true
             # Structure: InitialsProperty Object
             force_vector: list = [float(self.initials_vector_input_x.text()), float(self.initials_vector_input_y.text()), float(self.initials_vector_input_z.text())]
-            Case.the().get_mk_based_properties(ObjectType.FLUID, self.target_mk).initials = InitialsProperty(mk=self.target_mk, force=force_vector)
+            Case.the().get_mk_based_properties(ObjectType.FLUID, self.target_mk).initials = InitialsProperty(
+                mk=self.target_mk,
+                force=force_vector,
+                initials_type=self.initials_type_selector.currentIndex(),
+                v1=float(self.initials_velocities_v1_input.text()),
+                v2=float(self.initials_velocities_v2_input.text()),
+                v3=float(self.initials_velocities_v3_input.text()),
+                z1=float(self.initials_velocities_z1_input.text()),
+                z2=float(self.initials_velocities_z2_input.text()),
+                z3=float(self.initials_velocities_z3_input.text())
+            )
         self.accept()
 
     def on_cancel(self):
@@ -117,5 +187,30 @@ class InitialsDialog(QtGui.QDialog):
         """ Reacts to the initials enabled combobox enabling/disabling the properties configuration widget. """
         if index == 0:
             self.initials_props_group.setEnabled(True)
+            self.on_initials_type_change(self.initials_type_selector.currentIndex())
         else:
             self.initials_props_group.setEnabled(False)
+
+    def on_initials_type_change(self, index):
+        """ Reacts to the initials type combobox enabling/disabling the appropriate properties. """
+        if index == 0:
+            self.initials_velocities_v1_input.setEnabled(True)
+            self.initials_velocities_z1_input.setEnabled(False)
+            self.initials_velocities_v2_input.setEnabled(False)
+            self.initials_velocities_z2_input.setEnabled(False)
+            self.initials_velocities_v3_input.setEnabled(False)
+            self.initials_velocities_z3_input.setEnabled(False)
+        elif index == 1:
+            self.initials_velocities_v1_input.setEnabled(True)
+            self.initials_velocities_z1_input.setEnabled(True)
+            self.initials_velocities_v2_input.setEnabled(True)
+            self.initials_velocities_z2_input.setEnabled(True)
+            self.initials_velocities_v3_input.setEnabled(False)
+            self.initials_velocities_z3_input.setEnabled(False)
+        elif index == 2:
+            self.initials_velocities_v1_input.setEnabled(True)
+            self.initials_velocities_z1_input.setEnabled(True)
+            self.initials_velocities_v2_input.setEnabled(True)
+            self.initials_velocities_z2_input.setEnabled(True)
+            self.initials_velocities_v3_input.setEnabled(True)
+            self.initials_velocities_z3_input.setEnabled(True)

@@ -1023,5 +1023,8 @@
     "Remove fluid": "Remove fluid",
     "Density mode:": "Density mode:",
     "Fixed value": "Fixed value",
-    "Extrapolated from ghost nodes": "Extrapolated from ghost nodes"
+    "Extrapolated from ghost nodes": "Extrapolated from ghost nodes",
+    "FreeDraw": "FreeDraw",
+    "Initials Type: ": "Initials Type: ",
+    "Chooses the type of the initial velocity.": "Chooses the type of the initial velocity."
 }
