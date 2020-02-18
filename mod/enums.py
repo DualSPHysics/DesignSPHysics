@@ -226,6 +226,12 @@ class InitialsType:
     PARABOLIC = 2
 
 
+class InformationDetailsMode:
+    """ Types of detailed text for the information dialog. """
+    PLAIN = 0
+    HTML = 1
+
+
 class HelpText:
     """ Help strings for different zones of the application GUIs. """
     GRAVITYX = __("Gravitational acceleration in X direction.")

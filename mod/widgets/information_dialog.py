@@ -7,6 +7,8 @@ from PySide import QtGui
 from mod.gui_tools import h_line_generator
 from mod.translation_tools import __
 
+from mod.enums import InformationDetailsMode
+
 
 class InformationDialog(QtGui.QDialog):
     """ A resizable information report dialog  """
@@ -15,13 +17,14 @@ class InformationDialog(QtGui.QDialog):
     SHOW_DETAILS_TEXT = __("Show details")
     HIDE_DETAILS_TEXT = __("Hide details")
 
-    def __init__(self, title: str, message: str, detailed_text: str = None):
+    def __init__(self, title: str, message: str, detailed_text: str = None, details_lang=InformationDetailsMode.PLAIN):
         super().__init__()
         self.main_layout = QtGui.QVBoxLayout()
 
         self.setWindowTitle(str(title))
         self.setMinimumWidth(self.MINIMUM_WIDTH)
         self.message_label = QtGui.QLabel(str(message))
+        self.message_label.setWordWrap(True)
         self.button_layout = QtGui.QHBoxLayout()
         self.details_widget = QtGui.QWidget()
 
@@ -32,7 +35,13 @@ class InformationDialog(QtGui.QDialog):
         self.button_layout.addWidget(self.show_details_button)
         self.button_layout.addWidget(self.ok_button)
 
-        self.details_textarea = QtGui.QTextEdit(str(detailed_text).replace("\\n", "\n"))
+        self.details_textarea = QtGui.QTextEdit()
+
+        if details_lang == InformationDetailsMode.PLAIN:
+            self.details_textarea.insertPlainText(str(detailed_text).replace("\\n", "\n"))
+        elif details_lang == InformationDetailsMode.HTML:
+            self.details_textarea.insertHtml(str(detailed_text).replace("\\n", "\n"))
+
         self.details_textarea.setReadOnly(True)
 
         self.details_widget_layout = QtGui.QVBoxLayout()
