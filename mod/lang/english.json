@@ -1026,5 +1026,8 @@
     "Extrapolated from ghost nodes": "Extrapolated from ghost nodes",
     "FreeDraw": "FreeDraw",
     "Initials Type: ": "Initials Type: ",
-    "Chooses the type of the initial velocity.": "Chooses the type of the initial velocity."
+    "Chooses the type of the initial velocity.": "Chooses the type of the initial velocity.",
+    "Show details...": "Show details...",
+    "Show details": "Show details",
+    "Hide details": "Hide details"
 }
