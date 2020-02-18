@@ -62,16 +62,6 @@ class InletZoneEdit(QtGui.QDialog):
         self.inputtreatment_layout.addWidget(self.inputtreatment_label)
         self.inputtreatment_layout.addWidget(self.inputtreatment_selector)
 
-        # Add imposerhop option selector
-        self.imposerhop_layout = QtGui.QHBoxLayout()
-        self.imposerhop_label = QtGui.QLabel(__("Density mode:"))
-        self.imposerhop_selector = QtGui.QComboBox()
-        self.imposerhop_selector.insertItems(0, [__("Fixed value"), __("Hydrostatic"), __("Extrapolated from ghost nodes")])
-        self.imposerhop_selector.setCurrentIndex(self.target_io_zone.density_info.density_type)
-
-        self.imposerhop_layout.addWidget(self.imposerhop_label)
-        self.imposerhop_layout.addWidget(self.imposerhop_selector)
-
         # Add Zone 2d or 3d
         self.zone2d3d_main_layout = QtGui.QGroupBox("Zone 2D/3D")
         self.zone2d3d_layout = QtGui.QVBoxLayout()
@@ -143,6 +133,23 @@ class InletZoneEdit(QtGui.QDialog):
         self.imposevelocity_options_layout.addLayout(self.imposevelocity_value_layout)
         self.imposevelocity_layout.setLayout(self.imposevelocity_options_layout)
 
+        # Add Inlet density option
+        self.density_groupbox = QtGui.QGroupBox("Density")
+        self.density_options_layout = QtGui.QVBoxLayout()
+
+        self.imposerhop_layout = QtGui.QHBoxLayout()
+        self.imposerhop_label = QtGui.QLabel(__("Density mode:"))
+        self.imposerhop_selector = QtGui.QComboBox()
+        self.imposerhop_selector.insertItems(0, [__("Fixed value"), __("Hydrostatic"), __("Extrapolated from ghost nodes")])
+        self.imposerhop_selector.setCurrentIndex(self.target_io_zone.density_info.density_type)
+
+        self.imposerhop_layout.addWidget(self.imposerhop_label)
+        self.imposerhop_layout.addWidget(self.imposerhop_selector)
+
+        self.density_options_layout.addLayout(self.imposerhop_layout)
+
+        self.density_groupbox.setLayout(self.density_options_layout)
+
         # Add Inlet Z-surface option
         self.imposezsurf_layout = QtGui.QGroupBox("Elevation")
         self.imposezsurf_options_layout = QtGui.QVBoxLayout()
@@ -196,9 +203,9 @@ class InletZoneEdit(QtGui.QDialog):
         self.main_layout.addLayout(self.layers_layout)
         self.main_layout.addLayout(self.refilling_layout)
         self.main_layout.addLayout(self.inputtreatment_layout)
-        self.main_layout.addLayout(self.imposerhop_layout)
         self.main_layout.addWidget(self.zone2d3d_main_layout)
         self.main_layout.addWidget(self.imposevelocity_layout)
+        self.main_layout.addWidget(self.density_groupbox)
         self.main_layout.addWidget(self.imposezsurf_layout)
         self.main_layout.addLayout(self.button_layout)
 
