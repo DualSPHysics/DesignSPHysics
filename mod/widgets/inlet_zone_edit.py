@@ -161,10 +161,10 @@ class InletZoneEdit(QtGui.QDialog):
 
         self.imposezsurf_fixed_zbottom_label = QtGui.QLabel("Zbottom: ")
         self.imposezsurf_fixed_zbottom = QtGui.QLineEdit(str(self.target_io_zone.elevation_info.zbottom))
-        self.imposezsurf_fixed_zbottom_units = QtGui.QLabel("metres")
+        self.imposezsurf_fixed_zbottom_units = QtGui.QLabel("m")
         self.imposezsurf_fixed_zsurf_label = QtGui.QLabel("Zsurf: ")
         self.imposezsurf_fixed_zsurf = QtGui.QLineEdit(str(self.target_io_zone.elevation_info.zsurf))
-        self.imposezsurf_fixed_zsurf_units = QtGui.QLabel("metres")
+        self.imposezsurf_fixed_zsurf_units = QtGui.QLabel("m")
 
         self.imposezsurf_fixed_zbottom.setEnabled(True)
         self.imposezsurf_fixed_zsurf.setEnabled(True)
