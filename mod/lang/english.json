@@ -1029,5 +1029,7 @@
     "Chooses the type of the initial velocity.": "Chooses the type of the initial velocity.",
     "Show details...": "Show details...",
     "Show details": "Show details",
-    "Hide details": "Hide details"
+    "Hide details": "Hide details",
+    "WARNING": "WARNING",
+    "Information": "Information"
 }
