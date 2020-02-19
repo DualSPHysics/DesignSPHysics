@@ -7,6 +7,7 @@ from PySide import QtCore, QtGui
 from mod.translation_tools import __
 from mod.constants import LINE_END
 from mod.dialog_tools import warning_dialog
+from mod.gui_tools import h_line_generator
 
 
 class RunDialog(QtGui.QDialog):
@@ -15,6 +16,8 @@ class RunDialog(QtGui.QDialog):
     WINDOW_TITLE_TEMPLATE = __("DualSPHysics Simulation: {}%")
     PARTICLES_OUT_TEMPLATE = __("Total particles out: {}")
     ETA_TEMPLATE = __("Estimated time to complete simulation: {}")
+
+    MIN_WIDTH = 600
 
     cancelled = QtCore.Signal()
 
@@ -69,27 +72,31 @@ class RunDialog(QtGui.QDialog):
         self.run_button_layout.addWidget(self.run_button_details)
         self.run_button_layout.addWidget(self.run_button_cancel)
 
-        self.run_dialog_layout.addWidget(self.run_group)
-        self.run_dialog_layout.addLayout(self.run_progbar_layout)
-        self.run_dialog_layout.addLayout(self.run_button_layout)
-
-        self.setLayout(self.run_dialog_layout)
-
         # Defines run details
-        self.run_details = QtGui.QDialog()
-        self.run_details.setMinimumWidth(650)
-        self.run_details.setModal(False)
+        self.run_details = QtGui.QWidget()
         self.run_details.setWindowTitle(__("Simulation details"))
         self.run_details_layout = QtGui.QVBoxLayout()
+        self.run_details_layout.setContentsMargins(0, 0, 0, 0)
 
         self.run_details_text = QtGui.QTextEdit()
         self.run_details_text.setReadOnly(True)
+        self.run_details_layout.addWidget(h_line_generator())
         self.run_details_layout.addWidget(self.run_details_text)
+        self.run_details.hide()
 
         self.run_button_cancel.clicked.connect(self.cancelled.emit)
         self.run_button_details.clicked.connect(self.toggle_run_details)
 
         self.run_details.setLayout(self.run_details_layout)
+
+        self.run_dialog_layout.addWidget(self.run_group)
+        self.run_dialog_layout.addLayout(self.run_progbar_layout)
+        self.run_dialog_layout.addLayout(self.run_button_layout)
+        self.run_dialog_layout.addWidget(self.run_details)
+
+        self.setLayout(self.run_dialog_layout)
+        self.setMinimumWidth(self.MIN_WIDTH)
+        self.adjustSize()
 
     def hide_all(self) -> None:
         """ Hides both the run details and this dialog. """
@@ -136,7 +143,7 @@ class RunDialog(QtGui.QDialog):
     def toggle_run_details(self) -> None:
         """ Toggles the run details dialog panel. """
         self.run_details.setVisible(not self.run_details.isVisible())
-        self.run_details.move(self.x() - self.run_details.width() - 15, self.y())
+        self.adjustSize()
 
     def set_detail_text(self, details: str) -> None:
         """ Sets the details text contents and scrolls it to the bottom. """
