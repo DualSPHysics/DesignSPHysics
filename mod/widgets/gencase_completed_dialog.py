@@ -8,6 +8,7 @@ from PySide import QtCore, QtGui
 
 from mod.translation_tools import __
 from mod.dialog_tools import error_dialog
+from mod.gui_tools import h_line_generator
 
 from mod.dataobjects.case import Case
 
@@ -16,7 +17,7 @@ class GencaseCompletedDialog(QtGui.QDialog):
     """ Gencase Save Dialog with different options, like open the results
         with paraview, show details, or dismiss. """
 
-    DETAILS_MIN_WIDTH: int = 650
+    DETAILS_MIN_WIDTH: int = 600
     DIALOG_IS_MODAL: bool = False
 
     def __init__(self, particle_count=0, detail_text="No details", cmd_string="", parent=None):
@@ -56,25 +57,27 @@ class GencaseCompletedDialog(QtGui.QDialog):
         self.button_layout.addWidget(self.bt_details)
         self.button_layout.addWidget(self.bt_ok)
 
-        # Details popup window
-        self.detail_text_dialog = QtGui.QDialog()
-        self.detail_text_dialog.setMinimumWidth(self.DETAILS_MIN_WIDTH)
-        self.detail_text_dialog.setModal(self.DIALOG_IS_MODAL)
-        self.detail_text_dialog_layout = QtGui.QVBoxLayout()
+        # Details widget
+        self.detail_text_widget = QtGui.QWidget()
+        self.detail_text_widget.setContentsMargins(0, 0, 0, 0)
+        self.detail_text_widget_layout = QtGui.QVBoxLayout()
+        self.detail_text_widget_layout.setContentsMargins(0, 0, 0, 0)
 
         self.detail_text_area = QtGui.QTextEdit()
         self.detail_text_area.setText("<b>{}:</b> <tt>{}</tt><br><pre>{}</pre>".format(__("The executed command line was"), cmd_string, detail_text))
 
-        self.detail_text_dialog_layout.addWidget(self.detail_text_area)
-        self.detail_text_dialog.setLayout(self.detail_text_dialog_layout)
+        self.detail_text_widget_layout.addWidget(h_line_generator())
+        self.detail_text_widget_layout.addWidget(self.detail_text_area)
+        self.detail_text_widget.setLayout(self.detail_text_widget_layout)
 
         # Main Layout scaffolding
         self.main_layout.addWidget(self.info_message)
         self.main_layout.addStretch(1)
         self.main_layout.addLayout(self.button_layout)
+        self.main_layout.addWidget(self.detail_text_widget)
 
         # Window logic
-        self.detail_text_dialog.hide()
+        self.detail_text_widget.hide()
 
         if Case.the().executable_paths.paraview:
             self.bt_open_with_paraview.show()
@@ -87,25 +90,21 @@ class GencaseCompletedDialog(QtGui.QDialog):
 
         # Window scaffolding and execution
         self.setLayout(self.main_layout)
+        self.setMinimumWidth(self.DETAILS_MIN_WIDTH)
 
     def on_ok(self):
         """ Hides the detail panel and closes the window. """
-        self.detail_text_dialog.hide()
         self.accept()
 
     def on_view_details(self):
         """ Toggles the visibility of the detail pane. """
-        if self.detail_text_dialog.isVisible():
-            self.detail_text_dialog.hide()
-        else:
-            self.detail_text_dialog.show()
-            self.detail_text_dialog.move(self.x() - self.detail_text_dialog.width() - 15, self.y() - abs(self.height() - self.detail_text_dialog.height()) / 2)
+        self.detail_text_widget.setVisible(not self.detail_text_widget.isVisible())
+        self.adjustSize()
 
     def on_open_paraview_menu(self, action):
         """ Tries to open Paraview with the selected option. """
         try:
             subprocess.Popen([Case.the().executable_paths.paraview, "--data={}\\{}".format(Case.the().path + "\\" + Case.the().name + "_out", action.text())], stdout=subprocess.PIPE)
-            self.detail_text_dialog.hide()
             self.accept()
         except FileNotFoundError:
             error_dialog("There was an error executing paraview. Make sure the path for the paraview executable is set in the DesignSPHyisics configuration and that the executable is a correct paraview one.")
