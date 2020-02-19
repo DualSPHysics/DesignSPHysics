@@ -5,7 +5,7 @@
 import pickle
 import os
 
-from mod.executable_tools import executable_contains_string
+from mod.executable_tools import executable_contains_string, get_executable_info_flag
 from mod.file_tools import get_saved_config_file, get_default_config_file
 from mod.dialog_tools import error_dialog
 from mod.stdout_tools import debug
@@ -61,6 +61,18 @@ class ExecutablePaths():
 
         self.persist()
         return execs_correct
+
+    def supports_moorings(self) -> bool:
+        """ Returns whether this package supports Moorings + MoorDyn or not. """
+        return bool(get_executable_info_flag(self.dsphysics)["Features"]["MoorDyn_Coupling"])
+
+    def supports_chrono(self) -> bool:
+        """ Returns whether this package supports CHRONO or not. """
+        return bool(get_executable_info_flag(self.dsphysics)["Features"]["CHRONO_Coupling"])
+
+    def supports_ddt_fourtakas(self) -> bool:
+        """ Returns whether this package supports Fourtakas DDT or not. """
+        return bool(get_executable_info_flag(self.dsphysics)["Features"]["DDT_Fourtakas"])
 
     def load_defaults(self) -> None:
         """ Load the default executables if they're bundled with DesignSPHysics. """
