@@ -83,6 +83,13 @@ class SpecialOptionsSelectorDialog(QtGui.QDialog):
         self.sp_window_layout.addWidget(self.sp_moorings_button)
 
         self.setLayout(self.sp_window_layout)
+
+        if not Case.the().executable_paths.supports_chrono():
+            self.sp_chrono_button.hide()
+
+        if not Case.the().executable_paths.supports_moorings():
+            self.sp_moorings_button.hide()
+
         self.exec_()
 
     def on_damping_option(self):
