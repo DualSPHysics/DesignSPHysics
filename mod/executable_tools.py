@@ -3,13 +3,17 @@
 
 """ Executable related tools. """
 
-from os import path, environ, chdir
+from os import path, environ, chdir, stat, chmod, access, X_OK
+import stat as unix_stat
 from sys import platform
 import json
 
 from PySide import QtCore
 
 import FreeCADGui
+
+from mod.translation_tools import __
+from mod.constants import APP_NAME
 
 
 def executable_contains_string(executable: str, string: str) -> bool:
@@ -22,6 +26,7 @@ def executable_contains_string(executable: str, string: str) -> bool:
         if platform in ("linux", "linux2"):
             environ["LD_LIBRARY_PATH"] = path.dirname(executable)
 
+        ensure_process_is_executable_or_fail(executable)
         process.start("\"{}\" -ver".format(executable))
         process.waitForFinished()
         output = str(process.readAllStandardOutput().data(), encoding='utf-8')
@@ -41,7 +46,9 @@ def get_executable_info_flag(executable: str) -> dict:
         if platform in ("linux", "linux2"):
             environ["LD_LIBRARY_PATH"] = path.dirname(executable)
 
-        process.start("\"{}\" -info".format(executable))
+        executable_cli = "\"{}\" -info".format(executable)
+        ensure_process_is_executable_or_fail(executable)
+        process.start(executable_cli)
         process.waitForFinished()
         output = str(process.readAllStandardOutput().data(), encoding='utf-8')
 
@@ -59,3 +66,12 @@ def are_executables_bundled():
     """ Returns if the DualSPHysics executable directory exists"""
     dsph_execs_path = "{}/../dualsphysics/bin/".format(path.dirname(path.realpath(__file__)))
     return path.isdir(dsph_execs_path)
+
+
+def ensure_process_is_executable_or_fail(cli_path: str) -> None:
+    """ Ensures and asserts a process is executable or fails and raises an exception. """
+    if platform in ("linux", "linux2"):
+        st = stat(cli_path)
+        chmod(cli_path, st.st_mode | unix_stat.S_IEXEC)
+    if not access(cli_path, X_OK):
+        raise RuntimeError(__("The executable {} doesn't have executable permissions and {} cant provide it for you. Please give execution permissions to that file.").format(cli_path, APP_NAME))

@@ -11,7 +11,7 @@ from mod.gui_tools import get_icon
 from mod.freecad_tools import get_fc_main_window
 from mod.stdout_tools import log
 from mod.dialog_tools import error_dialog, warning_dialog
-from mod.executable_tools import refocus_cwd
+from mod.executable_tools import refocus_cwd, ensure_process_is_executable_or_fail
 from mod.file_tools import save_case
 
 from mod.dataobjects.case import Case
@@ -144,6 +144,7 @@ class DockSimulationWidget(QtGui.QWidget):
         process = QtCore.QProcess(get_fc_main_window())
         process.finished.connect(on_dsph_sim_finished)
 
+        ensure_process_is_executable_or_fail(Case.the().executable_paths.dsphysics)
         process.start(Case.the().executable_paths.dsphysics, final_params_ex)
 
         def on_fs_change():

@@ -11,7 +11,7 @@ from mod.translation_tools import __
 from mod.gui_tools import get_icon
 from mod.stdout_tools import error, debug
 from mod.dialog_tools import error_dialog, warning_dialog
-from mod.executable_tools import refocus_cwd
+from mod.executable_tools import refocus_cwd, ensure_process_is_executable_or_fail
 from mod.file_tools import save_case, load_case
 from mod.freecad_tools import document_count, prompt_close_all_documents, create_dsph_document, create_dsph_document_from_fcstd, add_fillbox_objects
 from mod.freecad_tools import get_fc_main_window, valid_document_environment, save_current_freecad_document, get_fc_object
@@ -217,6 +217,7 @@ class DockPreProcessingWidget(QtGui.QWidget):
         refocus_cwd()
         process = QtCore.QProcess(get_fc_main_window())
         process.setWorkingDirectory(Case.the().path)
+        ensure_process_is_executable_or_fail(gencase_full_path)
         process.start(gencase_full_path, arguments)
         debug("Executing -> {}".format(cmd_string))
         process.waitForFinished()

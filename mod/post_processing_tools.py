@@ -10,6 +10,7 @@ from mod.translation_tools import __
 from mod.dialog_tools import error_dialog, info_dialog
 from mod.freecad_tools import get_fc_main_window
 from mod.file_tools import get_total_exported_parts_from_disk, save_measuretool_info
+from mod.executable_tools import ensure_process_is_executable_or_fail
 
 from mod.widgets.postprocessing.export_progress_dialog import ExportProgressDialog
 
@@ -71,6 +72,7 @@ def partvtk_export(options, case, post_processing_widget) -> None:
     export_process = QtCore.QProcess(get_fc_main_window())
     export_process.finished.connect(on_export_finished)
     export_process.readyReadStandardOutput.connect(on_stdout_ready)
+    ensure_process_is_executable_or_fail(case.executable_paths.partvtk4)
     export_process.start(case.executable_paths.partvtk4, executable_parameters)
 
 
@@ -124,6 +126,7 @@ def floatinginfo_export(options, case, post_processing_widget) -> None:
     export_process = QtCore.QProcess(get_fc_main_window())
     export_process.finished.connect(on_export_finished)
     export_process.readyReadStandardOutput.connect(on_stdout_ready)
+    ensure_process_is_executable_or_fail(case.executable_paths.floatinginfo)
     export_process.start(case.executable_paths.floatinginfo, executable_parameters)
 
 
@@ -179,6 +182,7 @@ def computeforces_export(options, case, post_processing_widget) -> None:
     export_process = QtCore.QProcess(get_fc_main_window())
     export_process.finished.connect(on_export_finished)
     export_process.readyReadStandardOutput.connect(on_stdout_ready)
+    ensure_process_is_executable_or_fail(case.executable_paths.computeforces)
     export_process.start(case.executable_paths.computeforces, executable_parameters)
 
 
@@ -235,6 +239,7 @@ def measuretool_export(options, case, post_processing_widget) -> None:
     export_process = QtCore.QProcess(get_fc_main_window())
     export_process.finished.connect(on_export_finished)
     export_process.readyReadStandardOutput.connect(on_stdout_ready)
+    ensure_process_is_executable_or_fail(case.executable_paths.measuretool)
     export_process.start(case.executable_paths.measuretool, executable_parameters)
 
 
@@ -288,6 +293,7 @@ def isosurface_export(options, case, post_processing_widget) -> None:
     export_process = QtCore.QProcess(get_fc_main_window())
     export_process.finished.connect(on_export_finished)
     export_process.readyReadStandardOutput.connect(on_stdout_ready)
+    ensure_process_is_executable_or_fail(case.executable_paths.isosurface)
     export_process.start(case.executable_paths.isosurface, executable_parameters)
 
 
@@ -339,4 +345,5 @@ def flowtool_export(options, case, post_processing_widget) -> None:
     export_process = QtCore.QProcess(get_fc_main_window())
     export_process.finished.connect(on_export_finished)
     export_process.readyReadStandardOutput.connect(on_stdout_ready)
+    ensure_process_is_executable_or_fail(case.executable_paths.flowtool)
     export_process.start(case.executable_paths.flowtool, executable_parameters)
