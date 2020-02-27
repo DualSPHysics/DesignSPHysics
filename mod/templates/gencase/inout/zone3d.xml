@@ -1,2 +1,3 @@
-                    <zone3d comment="">
+                    <zone3d comment="Input zone for 3D simulations">
+                        <particles mkfluid="{mkfluid}" direction="{direction}" />
                     </zone3d>
