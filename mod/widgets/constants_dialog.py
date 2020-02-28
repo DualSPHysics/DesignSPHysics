@@ -20,21 +20,23 @@ class ConstantsDialog(QtGui.QDialog):
         in the DualSPHysics simulator. """
 
     LABEL_DEFAULT_TEXT = "<i>{}</i>".format(__("Select an input to show help about it."))
+    MINIMUM_WIDTH = 415
+    MINIMUM_HEIGHT = 500
 
     def __init__(self, parent=None):
         super().__init__(parent=parent)
 
-        self.setWindowTitle("DSPH Constant definition")
+        self.setWindowTitle(__("Constants definition"))
         self.help_label: QtGui.QLabel = QtGui.QLabel(self.LABEL_DEFAULT_TEXT)
 
-        self.ok_button = QtGui.QPushButton("Ok")
-        self.cancel_button = QtGui.QPushButton("Cancel")
+        self.ok_button = QtGui.QPushButton(__("OK"))
+        self.cancel_button = QtGui.QPushButton(__("Cancel"))
 
         # Lattice for boundaries layout and components
         self.lattice_layout = QtGui.QHBoxLayout()
-        self.lattice_label = QtGui.QLabel("Lattice for Boundaries: ")
+        self.lattice_label = QtGui.QLabel(__("Lattice for Boundaries:"))
         self.lattice_input = QtGui.QComboBox()
-        self.lattice_input.insertItems(0, ["Lattice 1", "Lattice 2"])
+        self.lattice_input.insertItems(0, [__("Lattice 1"), __("Lattice 2")])
         self.lattice_input.setCurrentIndex(Case.the().constants.lattice_bound - 1)
 
         self.lattice_layout.addWidget(self.lattice_label)
@@ -43,9 +45,9 @@ class ConstantsDialog(QtGui.QDialog):
 
         # Lattice for fluids layout and components
         self.lattice2_layout = QtGui.QHBoxLayout()
-        self.lattice2_label = QtGui.QLabel("Lattice for Fluids: ")
+        self.lattice2_label = QtGui.QLabel(__("Lattice for Fluids: "))
         self.lattice2_input = QtGui.QComboBox()
-        self.lattice2_input.insertItems(0, ["Lattice 1", "Lattice 2"])
+        self.lattice2_input.insertItems(0, [__("Lattice 1"), __("Lattice 2")])
         self.lattice2_input.setCurrentIndex(Case.the().constants.lattice_fluid - 1)
 
         self.lattice2_layout.addWidget(self.lattice2_label)
@@ -54,7 +56,7 @@ class ConstantsDialog(QtGui.QDialog):
 
         # Gravity
         self.gravity_layout = QtGui.QHBoxLayout()
-        self.gravity_label = HoverableLabel("Gravity [X, Y, Z]: ")
+        self.gravity_label = HoverableLabel(__("Gravity [X, Y, Z]:"))
 
         self.gravityx_input = QtGui.QLineEdit()
         self.gravityx_input = FocusableLineEdit()
@@ -99,7 +101,7 @@ class ConstantsDialog(QtGui.QDialog):
 
         # Reference density of the fluid: layout and components
         self.rhop0_layout = QtGui.QHBoxLayout()
-        self.rhop0_label = QtGui.QLabel("Fluid reference density: ")
+        self.rhop0_label = QtGui.QLabel(__("Fluid reference density:"))
 
         self.rhop0_input = QtGui.QLineEdit()
         self.rhop0_input = FocusableLineEdit()
@@ -120,7 +122,7 @@ class ConstantsDialog(QtGui.QDialog):
         # Maximum still water level to calc.  spdofsound using coefsound: layout and
         # components
         self.hswlauto_layout = QtGui.QHBoxLayout()
-        self.hswlauto_chk = QtGui.QCheckBox("Auto HSWL ")
+        self.hswlauto_chk = QtGui.QCheckBox(__("Auto HSWL"))
         if Case.the().constants.hswl_auto:
             self.hswlauto_chk.setCheckState(QtCore.Qt.Checked)
         else:
@@ -130,7 +132,7 @@ class ConstantsDialog(QtGui.QDialog):
         self.hswlauto_layout.addWidget(self.hswlauto_chk)
 
         self.hswl_layout = QtGui.QHBoxLayout()
-        self.hswl_label = QtGui.QLabel("HSWL: ")
+        self.hswl_label = QtGui.QLabel(__("HSWL:"))
         self.hswl_input = QtGui.QLineEdit()
         self.hswl_input = FocusableLineEdit()
         self.hswl_input.set_help_text(HelpText.HSWL)
@@ -141,7 +143,7 @@ class ConstantsDialog(QtGui.QDialog):
         self.hswl_validator = QtGui.QIntValidator(0, 10000, self.hswl_input)
         self.hswl_input.setText(str(Case.the().constants.hswl))
         self.hswl_input.setValidator(self.hswl_validator)
-        self.hswl_label2 = QtGui.QLabel("metres")
+        self.hswl_label2 = QtGui.QLabel(__("metres"))
 
         self.hswl_layout.addWidget(self.hswl_label)
         self.hswl_layout.addWidget(self.hswl_input)
@@ -152,7 +154,7 @@ class ConstantsDialog(QtGui.QDialog):
 
         # gamma: layout and components
         self.gamma_layout = QtGui.QHBoxLayout()
-        self.gamma_label = QtGui.QLabel("Gamma: ")
+        self.gamma_label = QtGui.QLabel(__("Gamma:"))
         self.gamma_input = QtGui.QLineEdit()
         self.gamma_input = FocusableLineEdit()
         self.gamma_input.set_help_text(HelpText.GAMMA)
@@ -171,7 +173,7 @@ class ConstantsDialog(QtGui.QDialog):
 
         # Speedsystem: layout and components
         self.speedsystemauto_layout = QtGui.QHBoxLayout()
-        self.speedsystemauto_chk = QtGui.QCheckBox("Auto Speedsystem ")
+        self.speedsystemauto_chk = QtGui.QCheckBox(__("Auto Speedsystem"))
         if Case.the().constants.speedsystem_auto:
             self.speedsystemauto_chk.setCheckState(QtCore.Qt.Checked)
         else:
@@ -181,7 +183,7 @@ class ConstantsDialog(QtGui.QDialog):
         self.speedsystemauto_layout.addWidget(self.speedsystemauto_chk)
 
         self.speedsystem_layout = QtGui.QHBoxLayout()
-        self.speedsystem_label = QtGui.QLabel("Speedsystem: ")
+        self.speedsystem_label = QtGui.QLabel(__("Speedsystem:"))
         self.speedsystem_input = QtGui.QLineEdit()
         self.speedsystem_input = FocusableLineEdit()
         self.speedsystem_input.set_help_text(HelpText.SPEEDSYSTEM)
@@ -203,7 +205,7 @@ class ConstantsDialog(QtGui.QDialog):
 
         # coefsound: layout and components
         self.coefsound_layout = QtGui.QHBoxLayout()
-        self.coefsound_label = QtGui.QLabel("Coefsound: ")
+        self.coefsound_label = QtGui.QLabel(__("Coefsound:"))
         self.coefsound_input = QtGui.QLineEdit()
         self.coefsound_input = FocusableLineEdit()
         self.coefsound_input.set_help_text(HelpText.COEFSOUND)
@@ -222,7 +224,7 @@ class ConstantsDialog(QtGui.QDialog):
 
         # Speedsound: layout and components
         self.speedsoundauto_layout = QtGui.QHBoxLayout()
-        self.speedsoundauto_chk = QtGui.QCheckBox("Auto Speedsound ")
+        self.speedsoundauto_chk = QtGui.QCheckBox(__("Auto Speedsound "))
         if Case.the().constants.speedsound_auto:
             self.speedsoundauto_chk.setCheckState(QtCore.Qt.Checked)
         else:
@@ -232,7 +234,7 @@ class ConstantsDialog(QtGui.QDialog):
         self.speedsoundauto_layout.addWidget(self.speedsoundauto_chk)
 
         self.speedsound_layout = QtGui.QHBoxLayout()
-        self.speedsound_label = QtGui.QLabel("Speedsound: ")
+        self.speedsound_label = QtGui.QLabel(__("Speedsound:"))
         self.speedsound_input = QtGui.QLineEdit()
         self.speedsound_input = FocusableLineEdit()
         self.speedsound_input.set_help_text(HelpText.SPEEDSOUND)
@@ -254,7 +256,7 @@ class ConstantsDialog(QtGui.QDialog):
 
         # coefh: layout and components
         self.coefh_layout = QtGui.QHBoxLayout()
-        self.coefh_label = QtGui.QLabel("CoefH: ")
+        self.coefh_label = QtGui.QLabel(__("CoefH:"))
         self.coefh_input = QtGui.QLineEdit()
         self.coefh_input = FocusableLineEdit()
         self.coefh_input.set_help_text(HelpText.COEFH)
@@ -265,7 +267,7 @@ class ConstantsDialog(QtGui.QDialog):
         self.coefh_validator = QtGui.QDoubleValidator(0, 10, 8, self.coefh_input)
         self.coefh_input.setText(str(Case.the().constants.coefh))
         self.coefh_input.setValidator(self.coefh_validator)
-        self.coefh_label2 = QtGui.QLabel("units")
+        self.coefh_label2 = QtGui.QLabel(__("units"))
 
         self.coefh_layout.addWidget(self.coefh_label)
         self.coefh_layout.addWidget(self.coefh_input)
@@ -273,7 +275,7 @@ class ConstantsDialog(QtGui.QDialog):
 
         # cflnumber: layout and components
         self.cflnumber_layout = QtGui.QHBoxLayout()
-        self.cflnumber_label = QtGui.QLabel("cflnumber: ")
+        self.cflnumber_label = QtGui.QLabel(__("cflnumber: "))
         self.cflnumber_input = QtGui.QLineEdit()
         self.cflnumber_input = FocusableLineEdit()
         self.cflnumber_input.set_help_text(HelpText.CFLNUMBER)
@@ -284,7 +286,7 @@ class ConstantsDialog(QtGui.QDialog):
         self.cflnumber_validator = QtGui.QDoubleValidator(0, 10, 8, self.coefh_input)
         self.cflnumber_input.setText(str(Case.the().constants.cflnumber))
         self.cflnumber_input.setValidator(self.cflnumber_validator)
-        self.cflnumber_label2 = QtGui.QLabel("units")
+        self.cflnumber_label2 = QtGui.QLabel(__("units"))
 
         self.cflnumber_layout.addWidget(self.cflnumber_label)
         self.cflnumber_layout.addWidget(self.cflnumber_input)
@@ -292,7 +294,7 @@ class ConstantsDialog(QtGui.QDialog):
 
         # h: layout and components
         self.hauto_layout = QtGui.QHBoxLayout()
-        self.hauto_chk = QtGui.QCheckBox("Auto Smoothing length ")
+        self.hauto_chk = QtGui.QCheckBox(__("Auto Smoothing length"))
         if Case.the().constants.h_auto:
             self.hauto_chk.setCheckState(QtCore.Qt.Checked)
         else:
@@ -302,10 +304,10 @@ class ConstantsDialog(QtGui.QDialog):
         self.hauto_layout.addWidget(self.hauto_chk)
 
         self.h_layout = QtGui.QHBoxLayout()
-        self.h_label = QtGui.QLabel("Smoothing Length: ")
+        self.h_label = QtGui.QLabel(__("Smoothing Length:"))
         self.h_input = QtGui.QLineEdit()
         self.h_input = FocusableLineEdit()
-        self.h_input.set_help_text("Smoothing Length")
+        self.h_input.set_help_text(__("Smoothing Length"))
         self.h_input.setMaxLength(10)
 
         self.h_input.focus.connect(self.on_help_focus)
@@ -313,7 +315,7 @@ class ConstantsDialog(QtGui.QDialog):
         self.h_validator = QtGui.QDoubleValidator(0, 100, 8, self.h_input)
         self.h_input.setText(str(Case.the().constants.h))
         self.h_input.setValidator(self.h_validator)
-        self.h_label2 = QtGui.QLabel("metres")
+        self.h_label2 = QtGui.QLabel(__("metres"))
 
         self.h_layout.addWidget(self.h_label)
         self.h_layout.addWidget(self.h_input)
@@ -324,7 +326,7 @@ class ConstantsDialog(QtGui.QDialog):
 
         # b: layout and components
         self.bauto_layout = QtGui.QHBoxLayout()
-        self.bauto_chk = QtGui.QCheckBox("Auto b constant for EOS ")
+        self.bauto_chk = QtGui.QCheckBox(__("Auto b constant for EOS"))
         if Case.the().constants.b_auto:
             self.bauto_chk.setCheckState(QtCore.Qt.Checked)
         else:
@@ -334,10 +336,10 @@ class ConstantsDialog(QtGui.QDialog):
         self.bauto_layout.addWidget(self.bauto_chk)
 
         self.b_layout = QtGui.QHBoxLayout()
-        self.b_label = QtGui.QLabel("B constant: ")
+        self.b_label = QtGui.QLabel(__("B constant:"))
         self.b_input = QtGui.QLineEdit()
         self.b_input = FocusableLineEdit()
-        self.b_input.set_help_text("B constant")
+        self.b_input.set_help_text(__("B constant"))
         self.b_input.setMaxLength(10)
 
         self.b_input.focus.connect(self.on_help_focus)
@@ -345,7 +347,7 @@ class ConstantsDialog(QtGui.QDialog):
         self.b_validator = QtGui.QDoubleValidator(0, 100, 8, self.b_input)
         self.b_input.setText(str(Case.the().constants.b))
         self.b_input.setValidator(self.b_validator)
-        self.b_label2 = QtGui.QLabel("Pascal")
+        self.b_label2 = QtGui.QLabel(__("Pascal"))
 
         self.b_layout.addWidget(self.b_label)
         self.b_layout.addWidget(self.b_input)
@@ -365,6 +367,7 @@ class ConstantsDialog(QtGui.QDialog):
 
         # START Main layout definition and composition.
         self.cw_main_layout_scroll = QtGui.QScrollArea()
+        self.cw_main_layout_scroll.setWidgetResizable(True)
         self.cw_main_layout_scroll_widget = QtGui.QWidget()
         self.cw_main_layout = QtGui.QVBoxLayout()
 
@@ -387,7 +390,6 @@ class ConstantsDialog(QtGui.QDialog):
         self.cw_main_layout.addLayout(self.h_layout)
         self.cw_main_layout.addLayout(self.bauto_layout)
         self.cw_main_layout.addLayout(self.b_layout)
-
         self.cw_main_layout.addStretch(1)
 
         self.cw_main_layout_scroll_widget.setLayout(self.cw_main_layout)
@@ -398,10 +400,12 @@ class ConstantsDialog(QtGui.QDialog):
         self.constants_window_layout.addWidget(self.cw_main_layout_scroll)
         self.constants_window_layout.addWidget(self.help_label)
         self.constants_window_layout.addLayout(self.cw_button_layout)
-        self.setLayout(self.constants_window_layout)
-        self.setMaximumHeight(550)
 
-        self.resize(600, 400)
+        self.setLayout(self.constants_window_layout)
+        self.setMinimumWidth(self.MINIMUM_WIDTH)
+        self.setMinimumHeight(self.MINIMUM_HEIGHT)
+        self.resize(self.MINIMUM_WIDTH, self.MINIMUM_HEIGHT)
+
         self.exec_()
 
     def on_hswlauto_check(self):
