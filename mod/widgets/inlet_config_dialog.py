@@ -20,6 +20,9 @@ class InletConfigDialog(QtGui.QDialog):
     """ Defines the Inlet/Outlet dialog window.
        Modifies data dictionary passed as parameter. """
 
+    MINIMUM_WIDTH = 570
+    MINIMUM_HEIGHT = 630
+
     def __init__(self, parent=None):
         super().__init__(parent=parent)
 
@@ -29,8 +32,8 @@ class InletConfigDialog(QtGui.QDialog):
         # Creates a dialog
         self.setWindowTitle("Inlet/Outlet configuration")
         self.setModal(False)
-        self.setMinimumWidth(800)
-        self.setMinimumHeight(600)
+        self.setMinimumWidth(self.MINIMUM_WIDTH)
+        self.setMinimumHeight(self.MINIMUM_HEIGHT)
         self.main_layout = QtGui.QVBoxLayout()
 
         # Creates layout for content first options
@@ -102,10 +105,8 @@ class InletConfigDialog(QtGui.QDialog):
         # Adds scroll area
         self.main_layout_dialog = QtGui.QVBoxLayout()
         self.main_layout_scroll = QtGui.QScrollArea()
-        self.main_layout_scroll.setMinimumWidth(400)
         self.main_layout_scroll.setWidgetResizable(True)
         self.main_layout_scroll_widget = QtGui.QWidget()
-        self.main_layout_scroll_widget.setMinimumWidth(400)
 
         self.main_layout_scroll_widget.setLayout(self.main_layout)
         self.main_layout_scroll.setWidget(self.main_layout_scroll_widget)
