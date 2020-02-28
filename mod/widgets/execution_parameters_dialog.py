@@ -22,20 +22,22 @@ class ExecutionParametersDialog(QtGui.QDialog):
     Modifies the data dictionary passed as parameter."""
 
     LABEL_DEFAULT_TEXT = "<i>{}</i>".format(__("Select an input to show help about it."))
+    MINIMUM_WIDTH = 560
+    MINIMUM_HEIGHT = 600
 
     def __init__(self, parent=None):
         super().__init__(parent=parent)
 
         # Creates a dialog and 2 main buttons
-        self.setWindowTitle("DSPH Execution Parameters")
+        self.setWindowTitle(__("Execution Parameters"))
         self.help_label = QtGui.QLabel(self.LABEL_DEFAULT_TEXT)
-        self.ok_button = QtGui.QPushButton("OK")
-        self.cancel_button = QtGui.QPushButton("Cancel")
+        self.ok_button = QtGui.QPushButton(__("OK"))
+        self.cancel_button = QtGui.QPushButton(__("Cancel"))
 
         self.saveposdouble_layout = QtGui.QHBoxLayout()
-        self.saveposdouble_label = QtGui.QLabel("Save particle position with double precision: ")
+        self.saveposdouble_label = QtGui.QLabel(__("Save particle position with double precision:"))
         self.saveposdouble_input = FocusableComboBox()
-        self.saveposdouble_input.insertItems(0, ["No", "Yes"])
+        self.saveposdouble_input.insertItems(0, [__("No"), __("Yes")])
         self.saveposdouble_input.setCurrentIndex(int(Case.the().execution_parameters.saveposdouble))
         self.saveposdouble_input.set_help_text(HelpText.SAVEPOSDOUBLE)
 
@@ -46,9 +48,9 @@ class ExecutionParametersDialog(QtGui.QDialog):
         self.saveposdouble_layout.addStretch(1)
 
         self.stepalgorithm_layout = QtGui.QHBoxLayout()
-        self.stepalgorithm_label = QtGui.QLabel("Step Algorithm: ")
+        self.stepalgorithm_label = QtGui.QLabel(__("Step Algorithm:"))
         self.stepalgorithm_input = FocusableComboBox()
-        self.stepalgorithm_input.insertItems(0, ["Verlet", "Symplectic"])
+        self.stepalgorithm_input.insertItems(0, [__("Verlet"), __("Symplectic")])
         self.stepalgorithm_input.setCurrentIndex(int(Case.the().execution_parameters.stepalgorithm) - 1)
         self.stepalgorithm_input.set_help_text(HelpText.STEPALGORITHM)
 
@@ -62,7 +64,7 @@ class ExecutionParametersDialog(QtGui.QDialog):
 
         # Verlet steps
         self.verletsteps_layout = QtGui.QHBoxLayout()
-        self.verletsteps_label = QtGui.QLabel("Verlet Steps: ")
+        self.verletsteps_label = QtGui.QLabel(__("Verlet Steps:"))
         self.verletsteps_input = QtGui.QLineEdit()
         self.verletsteps_input = FocusableLineEdit()
         self.verletsteps_input.set_help_text(HelpText.VERLETSTEPS)
@@ -82,9 +84,9 @@ class ExecutionParametersDialog(QtGui.QDialog):
 
         # Kernel
         self.kernel_layout = QtGui.QHBoxLayout()
-        self.kernel_label = QtGui.QLabel("Interaction kernel: ")
+        self.kernel_label = QtGui.QLabel(__("Interaction kernel:"))
         self.kernel_input = FocusableComboBox()
-        self.kernel_input.insertItems(0, ["Cubic spline", "Wendland"])
+        self.kernel_input.insertItems(0, [__("Cubic spline"), __("Wendland")])
         self.kernel_input.set_help_text(HelpText.KERNEL)
         self.kernel_input.setCurrentIndex(int(Case.the().execution_parameters.kernel) - 1)
 
@@ -96,9 +98,9 @@ class ExecutionParametersDialog(QtGui.QDialog):
 
         # Viscosity formulation
         self.viscotreatment_layout = QtGui.QHBoxLayout()
-        self.viscotreatment_label = QtGui.QLabel("Viscosity Formulation: ")
+        self.viscotreatment_label = QtGui.QLabel(__("Viscosity Formulation:"))
         self.viscotreatment_input = FocusableComboBox()
-        self.viscotreatment_input.insertItems(0, ["Artificial", "Laminar + SPS"])
+        self.viscotreatment_input.insertItems(0, [__("Artificial"), __("Laminar + SPS")])
         self.viscotreatment_input.set_help_text(HelpText.VISCOTREATMENT)
         self.viscotreatment_input.setCurrentIndex(int(Case.the().execution_parameters.viscotreatment) - 1)
 
@@ -110,14 +112,14 @@ class ExecutionParametersDialog(QtGui.QDialog):
 
         # Viscosity value
         self.visco_layout = QtGui.QHBoxLayout()
-        self.visco_label = QtGui.QLabel("Viscosity value: ")
+        self.visco_label = QtGui.QLabel(__("Viscosity value:"))
         self.visco_input = FocusableLineEdit()
         self.visco_input.set_help_text(HelpText.VISCO)
         self.visco_input.setMaxLength(10)
 
         self.visco_input.focus.connect(self.on_help_focus)
 
-        self.visco_units_label = QtGui.QLabel("")
+        self.visco_units_label = QtGui.QLabel(__(""))
         self.visco_layout.addWidget(self.visco_label)
         self.visco_layout.addWidget(self.visco_input)
         self.visco_layout.addWidget(self.visco_units_label)
@@ -129,7 +131,7 @@ class ExecutionParametersDialog(QtGui.QDialog):
 
         # Viscosity with boundary
         self.viscoboundfactor_layout = QtGui.QHBoxLayout()
-        self.viscoboundfactor_label = QtGui.QLabel("Viscosity factor with boundary: ")
+        self.viscoboundfactor_label = QtGui.QLabel(__("Viscosity factor with boundary: "))
         self.viscoboundfactor_input = FocusableLineEdit()
 
         self.viscoboundfactor_input.set_help_text(HelpText.VISCOBOUNDFACTOR)
@@ -144,9 +146,9 @@ class ExecutionParametersDialog(QtGui.QDialog):
         self.viscoboundfactor_layout.addWidget(self.viscoboundfactor_input)
 
         self.densitydt_type_layout = QtGui.QHBoxLayout()
-        self.densitydt_type_label = QtGui.QLabel("Density Diffusion Term: ")
+        self.densitydt_type_label = QtGui.QLabel(__("Density Diffusion Term:"))
         self.densitydt_type_input = QtGui.QComboBox()
-        densitydt_option_list = ['None', 'Molteni', 'Fourtakas', 'Fourtakas (Full)'] if Case.the().executable_paths.supports_ddt_fourtakas() else ['None', 'Molteni']
+        densitydt_option_list = [__('None'), __('Molteni'), __('Fourtakas'), __('Fourtakas (Full)')] if Case.the().executable_paths.supports_ddt_fourtakas() else ['None', 'Molteni']
         self.densitydt_type_input.insertItems(0, densitydt_option_list)
         self.densitydt_type_input.setCurrentIndex(Case.the().execution_parameters.densitydt_type)
         self.densitydt_type_input.currentIndexChanged.connect(self.on_densitydt_type_change)
@@ -157,7 +159,7 @@ class ExecutionParametersDialog(QtGui.QDialog):
 
         # densitydt value
         self.densitydt_layout = QtGui.QHBoxLayout()
-        self.densitydt_label = QtGui.QLabel("DDT value: ")
+        self.densitydt_label = QtGui.QLabel(__("DDT value:"))
         self.densitydt_input = FocusableLineEdit()
         self.densitydt_input.set_help_text(HelpText.DENSITYDT)
         self.densitydt_input.setMaxLength(10)
@@ -174,10 +176,9 @@ class ExecutionParametersDialog(QtGui.QDialog):
             self.densitydt_input.setEnabled(True)
 
         self.shifting_layout = QtGui.QHBoxLayout()
-        self.shifting_label = QtGui.QLabel("Shifting mode: ")
+        self.shifting_label = QtGui.QLabel(__("Shifting mode:"))
         self.shifting_input = FocusableComboBox()
-        self.shifting_input.insertItems(
-            0, ["None", "Ignore bound", "Ignore fixed", "Full"])
+        self.shifting_input.insertItems(0, [__("None"), __("Ignore bound"), __("Ignore fixed"), __("Full")])
         self.shifting_input.set_help_text(HelpText.SHIFTING)
 
         self.shifting_input.focus.connect(self.on_help_focus)
@@ -191,7 +192,7 @@ class ExecutionParametersDialog(QtGui.QDialog):
 
         # Coefficient for shifting
         self.shiftcoef_layout = QtGui.QHBoxLayout()
-        self.shiftcoef_label = QtGui.QLabel("Coefficient for shifting: ")
+        self.shiftcoef_label = QtGui.QLabel(__("Coefficient for shifting:"))
         self.shiftcoef_input = FocusableLineEdit()
         self.shiftcoef_input.set_help_text(HelpText.SHIFTINGCOEF)
         self.shiftcoef_input.setMaxLength(10)
@@ -204,7 +205,7 @@ class ExecutionParametersDialog(QtGui.QDialog):
 
         # Free surface detection threshold
         self.shifttfs_layout = QtGui.QHBoxLayout()
-        self.shifttfs_label = QtGui.QLabel("Free surface detection threshold: ")
+        self.shifttfs_label = QtGui.QLabel(__("Free surface detection threshold:"))
         self.shifttfs_input = FocusableLineEdit()
         self.shifttfs_input.set_help_text(HelpText.SHIFTINGTFS)
         self.shifttfs_input.setMaxLength(10)
@@ -220,7 +221,7 @@ class ExecutionParametersDialog(QtGui.QDialog):
 
         # Rigid algorithm
         self.rigidalgorithm_layout = QtGui.QHBoxLayout()
-        self.rigidalgorithm_label = QtGui.QLabel("Solid-solid interaction: ")
+        self.rigidalgorithm_label = QtGui.QLabel(__("Solid-solid interaction:"))
         self.rigidalgorithm_input = FocusableComboBox()
         self.rigidalgorithm_input.insertItems(0, ["SPH", "DEM", "CHRONO"])
         self.rigidalgorithm_input.set_help_text(HelpText.RIGIDALGORITHM)
@@ -234,7 +235,7 @@ class ExecutionParametersDialog(QtGui.QDialog):
 
         # Sim start freeze time
         self.ftpause_layout = QtGui.QHBoxLayout()
-        self.ftpause_label = QtGui.QLabel("Floating freeze time: ")
+        self.ftpause_label = QtGui.QLabel(__("Floating freeze time:"))
         self.ftpause_input = FocusableLineEdit()
         self.ftpause_input.set_help_text(HelpText.FTPAUSE)
         self.ftpause_input.setMaxLength(10)
@@ -242,14 +243,14 @@ class ExecutionParametersDialog(QtGui.QDialog):
         self.ftpause_input.focus.connect(self.on_help_focus)
 
         self.ftpause_input.setText(str(Case.the().execution_parameters.ftpause))
-        self.ftpause_label2 = QtGui.QLabel("seconds")
+        self.ftpause_label2 = QtGui.QLabel(__("seconds"))
         self.ftpause_layout.addWidget(self.ftpause_label)
         self.ftpause_layout.addWidget(self.ftpause_input)
         self.ftpause_layout.addWidget(self.ftpause_label2)
 
         # Coefficient to calculate DT
         self.coefdtmin_layout = QtGui.QHBoxLayout()
-        self.coefdtmin_label = QtGui.QLabel("Coefficient for minimum time step: ")
+        self.coefdtmin_label = QtGui.QLabel(__("Coefficient for minimum time step:"))
         self.coefdtmin_input = FocusableLineEdit()
         self.coefdtmin_input.set_help_text(HelpText.COEFDTMIN)
         self.coefdtmin_input.setMaxLength(10)
@@ -262,7 +263,7 @@ class ExecutionParametersDialog(QtGui.QDialog):
 
         # Initial time step
         self.dtiniauto_layout = QtGui.QHBoxLayout()
-        self.dtiniauto_chk = QtGui.QCheckBox("Initial time step auto")
+        self.dtiniauto_chk = QtGui.QCheckBox(__("Initial time step auto"))
         if Case.the().execution_parameters.dtini_auto:
             self.dtiniauto_chk.setCheckState(QtCore.Qt.Checked)
         else:
@@ -271,7 +272,7 @@ class ExecutionParametersDialog(QtGui.QDialog):
         self.dtiniauto_chk.toggled.connect(self.on_dtiniauto_check)
         self.dtiniauto_layout.addWidget(self.dtiniauto_chk)
         self.dtini_layout = QtGui.QHBoxLayout()
-        self.dtini_label = QtGui.QLabel("Initial time step: ")
+        self.dtini_label = QtGui.QLabel(__("Initial time step:"))
         self.dtini_input = FocusableLineEdit()
         self.dtini_input.set_help_text(HelpText.DTINI)
         self.dtini_input.setMaxLength(10)
@@ -279,7 +280,7 @@ class ExecutionParametersDialog(QtGui.QDialog):
         self.dtini_input.focus.connect(self.on_help_focus)
 
         self.dtini_input.setText(str(Case.the().execution_parameters.dtini))
-        self.dtini_label2 = QtGui.QLabel("seconds")
+        self.dtini_label2 = QtGui.QLabel(__("seconds"))
         self.dtini_layout.addWidget(self.dtini_label)
         self.dtini_layout.addWidget(self.dtini_input)
         self.dtini_layout.addWidget(self.dtini_label2)
@@ -287,7 +288,7 @@ class ExecutionParametersDialog(QtGui.QDialog):
 
         # Minimum time step
         self.dtminauto_layout = QtGui.QHBoxLayout()
-        self.dtminauto_chk = QtGui.QCheckBox("Minimum time step: ")
+        self.dtminauto_chk = QtGui.QCheckBox(__("Minimum time step:"))
         if Case.the().execution_parameters.dtmin_auto:
             self.dtminauto_chk.setCheckState(QtCore.Qt.Checked)
         else:
@@ -296,7 +297,7 @@ class ExecutionParametersDialog(QtGui.QDialog):
         self.dtminauto_chk.toggled.connect(self.on_dtminauto_check)
         self.dtminauto_layout.addWidget(self.dtminauto_chk)
         self.dtmin_layout = QtGui.QHBoxLayout()
-        self.dtmin_label = QtGui.QLabel("Minimum time step: ")
+        self.dtmin_label = QtGui.QLabel(__("Minimum time step:"))
         self.dtmin_input = FocusableLineEdit()
         self.dtmin_input.set_help_text(HelpText.DTMIN)
         self.dtmin_input.setMaxLength(10)
@@ -304,7 +305,7 @@ class ExecutionParametersDialog(QtGui.QDialog):
         self.dtmin_input.focus.connect(self.on_help_focus)
 
         self.dtmin_input.setText(str(Case.the().execution_parameters.dtmin))
-        self.dtmin_label2 = QtGui.QLabel("seconds")
+        self.dtmin_label2 = QtGui.QLabel(__("seconds"))
         self.dtmin_layout.addWidget(self.dtmin_label)
         self.dtmin_layout.addWidget(self.dtmin_input)
         self.dtmin_layout.addWidget(self.dtmin_label2)
@@ -312,30 +313,30 @@ class ExecutionParametersDialog(QtGui.QDialog):
 
         # Fixed DT file
         self.dtfixed_layout = QtGui.QHBoxLayout()
-        self.dtfixed_label = QtGui.QLabel("Fixed DT file: ")
+        self.dtfixed_label = QtGui.QLabel(__("Fixed DT file: "))
         self.dtfixed_input = QtGui.QLineEdit()
         self.dtfixed_input.setText(str(Case.the().execution_parameters.dtfixed))
-        self.dtfixed_label2 = QtGui.QLabel("file")
+        self.dtfixed_label2 = QtGui.QLabel(__("file"))
         self.dtfixed_layout.addWidget(self.dtfixed_label)
         self.dtfixed_layout.addWidget(self.dtfixed_input)
         self.dtfixed_layout.addWidget(self.dtfixed_label2)
 
         # Velocity of particles
         self.dtallparticles_layout = QtGui.QHBoxLayout()
-        self.dtallparticles_label = QtGui.QLabel("Velocity of particles: ")
+        self.dtallparticles_label = QtGui.QLabel(__("Velocity of particles: "))
         self.dtallparticles_input = QtGui.QLineEdit()
         self.dtallparticles_input.setMaxLength(1)
         self.dtallparticles_validator = QtGui.QIntValidator(0, 1, self.dtallparticles_input)
         self.dtallparticles_input.setText(str(Case.the().execution_parameters.dtallparticles))
         self.dtallparticles_input.setValidator(self.dtallparticles_validator)
-        self.dtallparticles_label2 = QtGui.QLabel("[0,1]")
+        self.dtallparticles_label2 = QtGui.QLabel("[0, 1]")
         self.dtallparticles_layout.addWidget(self.dtallparticles_label)
         self.dtallparticles_layout.addWidget(self.dtallparticles_input)
         self.dtallparticles_layout.addWidget(self.dtallparticles_label2)
 
         # Time of simulation
         self.timemax_layout = QtGui.QHBoxLayout()
-        self.timemax_label = QtGui.QLabel("Time of simulation: ")
+        self.timemax_label = QtGui.QLabel(__("Time of simulation: "))
         self.timemax_input = FocusableLineEdit()
         self.timemax_input.set_help_text(HelpText.TIMEMAX)
         self.timemax_input.setMaxLength(10)
@@ -343,14 +344,14 @@ class ExecutionParametersDialog(QtGui.QDialog):
         self.timemax_input.focus.connect(self.on_help_focus)
 
         self.timemax_input.setText(str(Case.the().execution_parameters.timemax))
-        self.timemax_label2 = QtGui.QLabel("seconds")
+        self.timemax_label2 = QtGui.QLabel(__("seconds"))
         self.timemax_layout.addWidget(self.timemax_label)
         self.timemax_layout.addWidget(self.timemax_input)
         self.timemax_layout.addWidget(self.timemax_label2)
 
         # Time out data
         self.timeout_layout = QtGui.QHBoxLayout()
-        self.timeout_label = QtGui.QLabel("Time out data: ")
+        self.timeout_label = QtGui.QLabel(__("Time out data: "))
         self.timeout_input = FocusableLineEdit()
         self.timeout_input.set_help_text(HelpText.TIMEOUT)
         self.timeout_input.setMaxLength(10)
@@ -358,14 +359,14 @@ class ExecutionParametersDialog(QtGui.QDialog):
         self.timeout_input.focus.connect(self.on_help_focus)
 
         self.timeout_input.setText(str(Case.the().execution_parameters.timeout))
-        self.timeout_label2 = QtGui.QLabel("seconds")
+        self.timeout_label2 = QtGui.QLabel(__("seconds"))
         self.timeout_layout.addWidget(self.timeout_label)
         self.timeout_layout.addWidget(self.timeout_input)
         self.timeout_layout.addWidget(self.timeout_label2)
 
         # Max parts out allowed
         self.partsoutmax_layout = QtGui.QHBoxLayout()
-        self.partsoutmax_label = QtGui.QLabel("Max parts out allowed (%): ")
+        self.partsoutmax_label = QtGui.QLabel(__("Max parts out allowed (%):"))
         self.partsoutmax_input = FocusableLineEdit()
         self.partsoutmax_input.set_help_text(HelpText.PARTSOUTMAX)
         self.partsoutmax_input.setMaxLength(10)
@@ -378,7 +379,7 @@ class ExecutionParametersDialog(QtGui.QDialog):
 
         # Minimum rhop valid
         self.rhopoutmin_layout = QtGui.QHBoxLayout()
-        self.rhopoutmin_label = QtGui.QLabel("Minimum rhop valid: ")
+        self.rhopoutmin_label = QtGui.QLabel(__("Minimum rhop valid:"))
         self.rhopoutmin_input = FocusableLineEdit()
         self.rhopoutmin_input.set_help_text(HelpText.RHOPOUTMIN)
         self.rhopoutmin_input.setMaxLength(10)
@@ -393,7 +394,7 @@ class ExecutionParametersDialog(QtGui.QDialog):
 
         # Maximum rhop valid
         self.rhopoutmax_layout = QtGui.QHBoxLayout()
-        self.rhopoutmax_label = QtGui.QLabel("Maximum rhop valid: ")
+        self.rhopoutmax_label = QtGui.QLabel(__("Maximum rhop valid:"))
         self.rhopoutmax_input = FocusableLineEdit()
         self.rhopoutmax_input.set_help_text(HelpText.RHOPOUTMAX)
         self.rhopoutmax_input.setMaxLength(10)
@@ -407,15 +408,15 @@ class ExecutionParametersDialog(QtGui.QDialog):
         self.rhopoutmax_layout.addWidget(self.rhopoutmax_label2)
 
         self.period_x_layout = QtGui.QVBoxLayout()
-        self.period_x_chk = QtGui.QCheckBox("X periodicity")
+        self.period_x_chk = QtGui.QCheckBox(__("X periodicity"))
         self.period_x_inc_layout = QtGui.QHBoxLayout()
-        self.period_x_inc_x_label = QtGui.QLabel("X Increment")
+        self.period_x_inc_x_label = QtGui.QLabel(__("X Increment"))
         self.period_x_inc_x_input = FocusableLineEdit()
-        self.period_x_inc_y_label = QtGui.QLabel("Y Increment")
+        self.period_x_inc_y_label = QtGui.QLabel(__("Y Increment"))
         self.period_x_inc_y_input = FocusableLineEdit()
         self.period_x_inc_y_input.set_help_text(HelpText.YINCREMENTX)
         self.period_x_inc_y_input.focus.connect(self.on_help_focus)
-        self.period_x_inc_z_label = QtGui.QLabel("Z Increment")
+        self.period_x_inc_z_label = QtGui.QLabel(__("Z Increment"))
         self.period_x_inc_z_input = FocusableLineEdit()
         self.period_x_inc_z_input.set_help_text(HelpText.ZINCREMENTX)
         self.period_x_inc_z_input.focus.connect(self.on_help_focus)
@@ -438,15 +439,15 @@ class ExecutionParametersDialog(QtGui.QDialog):
         self.on_period_x_chk()
 
         self.period_y_layout = QtGui.QVBoxLayout()
-        self.period_y_chk = QtGui.QCheckBox("Y periodicity")
+        self.period_y_chk = QtGui.QCheckBox(__("Y periodicity"))
         self.period_y_inc_layout = QtGui.QHBoxLayout()
-        self.period_y_inc_x_label = QtGui.QLabel("X Increment")
+        self.period_y_inc_x_label = QtGui.QLabel(__("X Increment"))
         self.period_y_inc_x_input = FocusableLineEdit()
         self.period_y_inc_x_input.set_help_text(HelpText.XINCREMENTY)
         self.period_y_inc_x_input.focus.connect(self.on_help_focus)
-        self.period_y_inc_y_label = QtGui.QLabel("Y Increment")
+        self.period_y_inc_y_label = QtGui.QLabel(__("Y Increment"))
         self.period_y_inc_y_input = FocusableLineEdit()
-        self.period_y_inc_z_label = QtGui.QLabel("Z Increment")
+        self.period_y_inc_z_label = QtGui.QLabel(__("Z Increment"))
         self.period_y_inc_z_input = FocusableLineEdit()
         self.period_y_inc_z_input.set_help_text(HelpText.ZINCREMENTY)
         self.period_y_inc_z_input.focus.connect(self.on_help_focus)
@@ -469,17 +470,17 @@ class ExecutionParametersDialog(QtGui.QDialog):
         self.on_period_y_chk()
 
         self.period_z_layout = QtGui.QVBoxLayout()
-        self.period_z_chk = QtGui.QCheckBox("Z periodicity")
+        self.period_z_chk = QtGui.QCheckBox(__("Z periodicity"))
         self.period_z_inc_layout = QtGui.QHBoxLayout()
-        self.period_z_inc_x_label = QtGui.QLabel("X Increment")
+        self.period_z_inc_x_label = QtGui.QLabel(__("X Increment"))
         self.period_z_inc_x_input = FocusableLineEdit()
         self.period_z_inc_x_input.set_help_text(HelpText.XINCREMENTZ)
         self.period_z_inc_x_input.focus.connect(self.on_help_focus)
-        self.period_z_inc_y_label = QtGui.QLabel("Y Increment")
+        self.period_z_inc_y_label = QtGui.QLabel(__("Y Increment"))
         self.period_z_inc_y_input = FocusableLineEdit()
         self.period_z_inc_y_input.set_help_text(HelpText.YINCREMENTZ)
         self.period_z_inc_y_input.focus.connect(self.on_help_focus)
-        self.period_z_inc_z_label = QtGui.QLabel("Z Increment")
+        self.period_z_inc_z_label = QtGui.QLabel(__("Z Increment"))
         self.period_z_inc_z_input = FocusableLineEdit()
         self.period_z_inc_layout.addWidget(self.period_z_inc_x_label)
         self.period_z_inc_layout.addWidget(self.period_z_inc_x_input)
@@ -501,7 +502,7 @@ class ExecutionParametersDialog(QtGui.QDialog):
 
         # Simulation domain
         self.simdomain_layout = QtGui.QVBoxLayout()
-        self.simdomain_chk = QtGui.QCheckBox("Simulation Domain")
+        self.simdomain_chk = QtGui.QCheckBox(__("Simulation Domain"))
 
         self.simdomain_chk.setChecked(Case.the().domain.enabled)
 
@@ -513,21 +514,21 @@ class ExecutionParametersDialog(QtGui.QDialog):
         self.simdomain_posmaxx_layout = QtGui.QVBoxLayout()
         self.simdomain_posmaxy_layout = QtGui.QVBoxLayout()
         self.simdomain_posmaxz_layout = QtGui.QVBoxLayout()
-        self.simdomain_posmin_label = QtGui.QLabel("Minimum position(x, y, z): ")
+        self.simdomain_posmin_label = QtGui.QLabel(__("Minimum position(x, y, z):"))
         self.simdomain_posminx_combobox = QtGui.QComboBox()
-        self.simdomain_posminx_combobox.insertItems(0, ["Default", "Value", "Default - value", "Default + %"])
+        self.simdomain_posminx_combobox.insertItems(0, [__("Default"), __("Value"), __("Default - value"), __("Default + %")])
         self.simdomain_posminx_line_edit = FocusableLineEdit()
         self.simdomain_posminx_line_edit.set_help_text(HelpText.POSMINX)
         self.simdomain_posminx_line_edit.focus.connect(self.on_help_focus)
         self.simdomain_posminx_line_edit.setText(str(Case.the().domain.posmin_x.value))
         self.simdomain_posminy_combobox = QtGui.QComboBox()
-        self.simdomain_posminy_combobox.insertItems(0, ["Default", "Value", "Default - value", "Default + %"])
+        self.simdomain_posminy_combobox.insertItems(0, [__("Default"), __("Value"), __("Default - value"), __("Default + %")])
         self.simdomain_posminy_line_edit = FocusableLineEdit()
         self.simdomain_posminy_line_edit.set_help_text(HelpText.POSMINY)
         self.simdomain_posminy_line_edit.focus.connect(self.on_help_focus)
         self.simdomain_posminy_line_edit.setText(str(Case.the().domain.posmin_y.value))
         self.simdomain_posminz_combobox = QtGui.QComboBox()
-        self.simdomain_posminz_combobox.insertItems(0, ["Default", "Value", "Default - value", "Default + %"])
+        self.simdomain_posminz_combobox.insertItems(0, [__("Default"), __("Value"), __("Default - value"), __("Default + %")])
         self.simdomain_posminz_line_edit = FocusableLineEdit()
         self.simdomain_posminz_line_edit.set_help_text(HelpText.POSMINZ)
         self.simdomain_posminz_line_edit.focus.connect(self.on_help_focus)
@@ -542,21 +543,21 @@ class ExecutionParametersDialog(QtGui.QDialog):
         self.simdomain_posmin_layout.addLayout(self.simdomain_posminx_layout)
         self.simdomain_posmin_layout.addLayout(self.simdomain_posminy_layout)
         self.simdomain_posmin_layout.addLayout(self.simdomain_posminz_layout)
-        self.simdomain_posmax_label = QtGui.QLabel("Maximum position(x, y, z): ")
+        self.simdomain_posmax_label = QtGui.QLabel(__("Maximum position(x, y, z):"))
         self.simdomain_posmaxx_combobox = QtGui.QComboBox()
-        self.simdomain_posmaxx_combobox.insertItems(0, ["Default", "Value", "Default + value", "Default + %"])
+        self.simdomain_posmaxx_combobox.insertItems(0, [__("Default"), __("Value"), __("Default + value"), __("Default + %")])
         self.simdomain_posmaxx_line_edit = FocusableLineEdit()
         self.simdomain_posmaxx_line_edit.set_help_text(HelpText.POSMAXX)
         self.simdomain_posmaxx_line_edit.focus.connect(self.on_help_focus)
         self.simdomain_posmaxx_line_edit.setText(str(Case.the().domain.posmax_x.value))
         self.simdomain_posmaxy_combobox = QtGui.QComboBox()
-        self.simdomain_posmaxy_combobox.insertItems(0, ["Default", "Value", "Default + value", "Default + %"])
+        self.simdomain_posmaxy_combobox.insertItems(0, [__("Default"), __("Value"), __("Default + value"), __("Default + %")])
         self.simdomain_posmaxy_line_edit = FocusableLineEdit()
         self.simdomain_posmaxy_line_edit.set_help_text(HelpText.POSMAXY)
         self.simdomain_posmaxy_line_edit.focus.connect(self.on_help_focus)
         self.simdomain_posmaxy_line_edit.setText(str(Case.the().domain.posmax_y.value))
         self.simdomain_posmaxz_combobox = QtGui.QComboBox()
-        self.simdomain_posmaxz_combobox.insertItems(0, ["Default", "Value", "Default + value", "Default + %"])
+        self.simdomain_posmaxz_combobox.insertItems(0, [__("Default"), __("Value"), __("Default + value"), __("Default + %")])
         self.simdomain_posmaxz_line_edit = FocusableLineEdit()
         self.simdomain_posmaxz_line_edit.set_help_text(HelpText.POSMAXZ)
         self.simdomain_posmaxz_line_edit.focus.connect(self.on_help_focus)
@@ -609,8 +610,11 @@ class ExecutionParametersDialog(QtGui.QDialog):
 
         # START Main layout definition and composition.
         self.ep_main_layout_scroll = QtGui.QScrollArea()
+        self.ep_main_layout_scroll.setWidgetResizable(True)
         self.ep_main_layout_scroll_widget = QtGui.QWidget()
+
         self.ep_main_layout = QtGui.QVBoxLayout()
+
         self.ep_main_layout.addLayout(self.saveposdouble_layout)
         self.ep_main_layout.addLayout(self.stepalgorithm_layout)
         self.ep_main_layout.addLayout(self.verletsteps_layout)
@@ -642,8 +646,7 @@ class ExecutionParametersDialog(QtGui.QDialog):
 
         self.ep_main_layout_scroll_widget.setLayout(self.ep_main_layout)
         self.ep_main_layout_scroll.setWidget(self.ep_main_layout_scroll_widget)
-        self.ep_main_layout_scroll.setHorizontalScrollBarPolicy(
-            QtCore.Qt.ScrollBarAlwaysOff)
+        self.ep_main_layout_scroll.setHorizontalScrollBarPolicy(QtCore.Qt.ScrollBarAlwaysOff)
 
         self.execparams_window_layout = QtGui.QVBoxLayout()
         self.execparams_window_layout.addWidget(self.ep_main_layout_scroll)
@@ -651,7 +654,9 @@ class ExecutionParametersDialog(QtGui.QDialog):
         self.execparams_window_layout.addLayout(self.ep_button_layout)
         self.setLayout(self.execparams_window_layout)
 
-        self.resize(800, 600)
+        self.setMinimumWidth(self.MINIMUM_WIDTH)
+        self.setMinimumHeight(self.MINIMUM_HEIGHT)
+        self.resize(self.MINIMUM_WIDTH, self.MINIMUM_HEIGHT)
         self.exec_()
 
     def on_help_focus(self, help_text):
@@ -665,7 +670,7 @@ class ExecutionParametersDialog(QtGui.QDialog):
     def on_viscotreatment_change(self, index):
         """ Reacts to viscotreatment change. """
         self.visco_input.setText("0.01" if index == 0 else "0.000001")
-        self.visco_label.setText("Viscosity value (alpha): " if index == 0 else "Kinematic viscosity: ")
+        self.visco_label.setText(__("Viscosity value (alpha):") if index == 0 else __("Kinematic viscosity:"))
         self.visco_units_label.setText("" if index == 0 else "m<span style='vertical-align:super'>2</span>/s")
 
     def on_densitydt_type_change(self, index):
