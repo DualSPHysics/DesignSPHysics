@@ -94,7 +94,7 @@ class InletConfigDialog(QtGui.QDialog):
         self.determlimit_layout.addWidget(self.determlimit_combobox)
 
         # Creates 2 main buttons
-        self.finish_button = QtGui.QPushButton("Finish")
+        self.finish_button = QtGui.QPushButton(__("Close"))
         self.button_layout = QtGui.QHBoxLayout()
 
         self.finish_button.clicked.connect(self.on_finish)
@@ -103,7 +103,7 @@ class InletConfigDialog(QtGui.QDialog):
         self.button_layout.addWidget(self.finish_button)
 
         # Create the list for zones
-        self.zones_groupbox = QtGui.QGroupBox("Inlet/Outlet zones")
+        self.zones_groupbox = QtGui.QGroupBox(__("Inlet/Outlet zones"))
         self.zones_groupbox_layout = QtGui.QVBoxLayout()
         self.io_zones_table = QtGui.QTableWidget()
         self.io_zones_table.setColumnCount(1)
@@ -114,7 +114,7 @@ class InletConfigDialog(QtGui.QDialog):
 
         # Add button
         self.add_button_layout = QtGui.QHBoxLayout()
-        self.add_zone_button = QtGui.QPushButton("Add Zone")
+        self.add_zone_button = QtGui.QPushButton(__("Add a new zone..."))
         self.add_button_layout.addStretch(1)
         self.add_button_layout.addWidget(self.add_zone_button)
         self.add_zone_button.clicked.connect(self.on_add_zone)
@@ -132,21 +132,9 @@ class InletConfigDialog(QtGui.QDialog):
         # Adds options to main
         self.main_layout.addLayout(self.io_options_layout)
         self.main_layout.addWidget(self.zones_groupbox)
+        self.main_layout.addLayout(self.button_layout)
 
-        # Adds scroll area
-        self.main_layout_dialog = QtGui.QVBoxLayout()
-        self.main_layout_scroll = QtGui.QScrollArea()
-        self.main_layout_scroll.setWidgetResizable(True)
-        self.main_layout_scroll_widget = QtGui.QWidget()
-
-        self.main_layout_scroll_widget.setLayout(self.main_layout)
-        self.main_layout_scroll.setWidget(self.main_layout_scroll_widget)
-        self.main_layout_scroll.setHorizontalScrollBarPolicy(QtCore.Qt.ScrollBarAlwaysOff)
-
-        self.main_layout_dialog.addWidget(self.main_layout_scroll)
-        self.main_layout_dialog.addLayout(self.button_layout)
-
-        self.setLayout(self.main_layout_dialog)
+        self.setLayout(self.main_layout)
 
         self.refresh_zones()
 
@@ -158,6 +146,7 @@ class InletConfigDialog(QtGui.QDialog):
         """ Adds Inlet/Outlet zone """
         new_io_zone = InletOutletZone()
         self.inlet_outlet.zones.append(new_io_zone)
+        self.refresh_zones()
         self.zone_edit(new_io_zone.id)
 
     def refresh_zones(self):
@@ -180,7 +169,7 @@ class InletConfigDialog(QtGui.QDialog):
 
     def zone_edit(self, io_id):
         """ Calls a window for edit zones """
-        debug("Tring to open a zone edit for zone UUID {}".format(io_id))
+        debug("Trying to open a zone edit for zone UUID {}".format(io_id))
         InletZoneEdit(io_id, parent=get_fc_main_window())
         self.refresh_zones()
 

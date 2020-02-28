@@ -1036,5 +1036,7 @@
     "The executable {} doesn't have executable permissions and {} cant provide it for you. Please give execution permissions to that file.": "The executable {} doesn't have executable permissions and {} cant provide it for you. Please give execution permissions to that file.",
     "Edit": "Edit",
     "Delete": "Delete",
-    "Inlet/Outlet Zone {}": "Inlet/Outlet Zone {}"
+    "Inlet/Outlet Zone {}": "Inlet/Outlet Zone {}",
+    "Inlet/Outlet zones": "Inlet/Outlet zones",
+    "Add a new zone...": "Add a new zone..."
 }
