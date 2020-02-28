@@ -2,10 +2,12 @@
 # -*- coding: utf-8 -*-
 """DesignSPHysics Inlet/Oulet Configuration Dialog """
 
+from uuid import UUID
 from PySide import QtCore, QtGui
 
 from mod.translation_tools import __
 from mod.freecad_tools import get_fc_main_window
+from mod.stdout_tools import debug
 
 from mod.enums import InletOutletDetermLimit
 
@@ -16,12 +18,36 @@ from mod.dataobjects.inletoutlet.inlet_outlet_config import InletOutletConfig
 from mod.dataobjects.inletoutlet.inlet_outlet_zone import InletOutletZone
 
 
+class InletZoneWidget(QtGui.QWidget):
+    """ A widget representing a zone to embed in the zones table. """
+
+    on_edit = QtCore.Signal(UUID)
+    on_delete = QtCore.Signal(InletOutletZone)
+
+    def __init__(self, index, io_object):
+        super().__init__()
+        self.layout = QtGui.QHBoxLayout()
+        self.label = QtGui.QLabel(__("Inlet/Outlet Zone {}").format(str(index + 1)))
+        self.edit_button = QtGui.QPushButton(__("Edit"))
+        self.delete_button = QtGui.QPushButton(__("Delete"))
+
+        self.edit_button.clicked.connect(lambda _=False, i=io_object.id: self.on_edit.emit(i))
+        self.delete_button.clicked.connect(lambda _=False, obj=io_object: self.on_delete.emit(obj))
+
+        self.layout.addWidget(self.label)
+        self.layout.addStretch(1)
+        self.layout.addWidget(self.edit_button)
+        self.layout.addWidget(self.delete_button)
+        self.setLayout(self.layout)
+
+
 class InletConfigDialog(QtGui.QDialog):
     """ Defines the Inlet/Outlet dialog window.
        Modifies data dictionary passed as parameter. """
 
     MINIMUM_WIDTH = 570
     MINIMUM_HEIGHT = 630
+    MINIMUM_TABLE_SECTION_HEIGHT = 40
 
     def __init__(self, parent=None):
         super().__init__(parent=parent)
@@ -47,7 +73,7 @@ class InletConfigDialog(QtGui.QDialog):
         self.resizetime_layout.addWidget(self.resizetime_option)
         self.resizetime_layout.addWidget(self.resizetime_line_edit)
 
-         # Creates extrapolate mode selector
+        # Creates extrapolate mode selector
         self.extrapolatemode_layout = QtGui.QHBoxLayout()
         self.extrapolatemode_option = QtGui.QLabel(__("Extrapolate mode: "))
         self.extrapolatemode_combobox = QtGui.QComboBox()
@@ -79,7 +105,12 @@ class InletConfigDialog(QtGui.QDialog):
         # Create the list for zones
         self.zones_groupbox = QtGui.QGroupBox("Inlet/Outlet zones")
         self.zones_groupbox_layout = QtGui.QVBoxLayout()
-        self.io_zones_list_layout = QtGui.QVBoxLayout()
+        self.io_zones_table = QtGui.QTableWidget()
+        self.io_zones_table.setColumnCount(1)
+        self.io_zones_table.horizontalHeader().setResizeMode(QtGui.QHeaderView.Stretch)
+        self.io_zones_table.verticalHeader().setDefaultSectionSize(self.MINIMUM_TABLE_SECTION_HEIGHT)
+        self.io_zones_table.horizontalHeader().setVisible(False)
+        self.io_zones_table.verticalHeader().setVisible(False)
 
         # Add button
         self.add_button_layout = QtGui.QHBoxLayout()
@@ -89,7 +120,7 @@ class InletConfigDialog(QtGui.QDialog):
         self.add_zone_button.clicked.connect(self.on_add_zone)
 
         self.zones_groupbox_layout.addLayout(self.add_button_layout)
-        self.zones_groupbox_layout.addLayout(self.io_zones_list_layout)
+        self.zones_groupbox_layout.addWidget(self.io_zones_table)
 
         self.zones_groupbox.setLayout(self.zones_groupbox_layout)
 
@@ -131,35 +162,26 @@ class InletConfigDialog(QtGui.QDialog):
 
     def refresh_zones(self):
         """ Refreshes the zones list """
-        while self.io_zones_list_layout.count() > 0:
-            target = self.io_zones_list_layout.takeAt(0)
-            self.io_zones_list_layout.removeItem(target)
-            del target
+        self.io_zones_table.clear()
+        self.io_zones_table.setRowCount(len(self.inlet_outlet.zones))
 
         count = 0
         for io_object in self.inlet_outlet.zones:
+            io_zone_widget = InletZoneWidget(count, io_object)
+            io_zone_widget.on_edit.connect(self.zone_edit)
+            io_zone_widget.on_delete.connect(self.zone_delete)
+            self.io_zones_table.setCellWidget(count, 0, io_zone_widget)
             count += 1
-            to_add_layout = QtGui.QHBoxLayout()
-            to_add_label = QtGui.QLabel("I/O Zone " + str(count))
-            to_add_layout.addWidget(to_add_label)
-            to_add_layout.addStretch(1)
-            to_add_editbutton = QtGui.QPushButton("Edit")
-            to_add_deletebutton = QtGui.QPushButton("Delete")
-            to_add_layout.addWidget(to_add_editbutton)
-            to_add_layout.addWidget(to_add_deletebutton)
-            to_add_editbutton.clicked.connect(lambda _=False, io_object=io_object: self.zone_edit(io_object.id))
-            to_add_deletebutton.clicked.connect(lambda _=False, io_object=io_object: self.zone_delete(io_object))
-            self.io_zones_list_layout.addLayout(to_add_layout)
-        self.io_zones_list_layout.addStretch(1)
 
     def zone_delete(self, io):
         """ Delete one zone from the list """
         self.inlet_outlet.zones.remove(io)
         self.refresh_zones()
 
-    def zone_edit(self, io):
+    def zone_edit(self, io_id):
         """ Calls a window for edit zones """
-        InletZoneEdit(io, parent=get_fc_main_window())
+        debug("Tring to open a zone edit for zone UUID {}".format(io_id))
+        InletZoneEdit(io_id, parent=get_fc_main_window())
         self.refresh_zones()
 
     def on_cancel(self):

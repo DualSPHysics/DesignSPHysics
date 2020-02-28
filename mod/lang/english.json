@@ -1033,5 +1033,8 @@
     "WARNING": "WARNING",
     "Information": "Information",
     "ERROR": "ERROR",
-    "The executable {} doesn't have executable permissions and {} cant provide it for you. Please give execution permissions to that file.": "The executable {} doesn't have executable permissions and {} cant provide it for you. Please give execution permissions to that file."
+    "The executable {} doesn't have executable permissions and {} cant provide it for you. Please give execution permissions to that file.": "The executable {} doesn't have executable permissions and {} cant provide it for you. Please give execution permissions to that file.",
+    "Edit": "Edit",
+    "Delete": "Delete",
+    "Inlet/Outlet Zone {}": "Inlet/Outlet Zone {}"
 }
