@@ -279,7 +279,7 @@ class InletZoneEdit(QtGui.QDialog):
 
         self.target_io_zone.zone_info.direction = self.DIRECTION_MAPPING[self.zone2d3d_combobox.currentIndex()]
 
-        self.target_io_zone.velocity_info.type = self.imposevelocity_combobox.currentIndex()
+        self.target_io_zone.velocity_info.velocity_type = self.imposevelocity_combobox.currentIndex()
         self.target_io_zone.velocity_info.value = float(self.imposevelocity_velocity_line_edit.text())
 
         self.target_io_zone.elevation_info.elevation_type = self.imposezsurf_combobox.currentIndex()
