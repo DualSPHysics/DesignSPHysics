@@ -60,12 +60,12 @@ class DockPreProcessingWidget(QtGui.QWidget):
         self.new_case_button.setToolButtonStyle(QtCore.Qt.ToolButtonTextBesideIcon)
         self.new_case_button.setText("  {}".format(__("New\n  Case")))
         self.new_case_button.setToolTip(__("Creates a new case. \nThe opened documents will be closed."))
-        self.new_case_button.setIcon(get_icon("new.png"))
+        self.new_case_button.setIcon(QtGui.QIcon.fromTheme("document-new"))
         self.new_case_button.setIconSize(QtCore.QSize(28, 28))
 
         self.new_case_menu = QtGui.QMenu()
-        self.new_case_menu.addAction(get_icon("new.png"), __("New"))
-        self.new_case_menu.addAction(get_icon("new.png"), __("Import FreeCAD Document"))
+        self.new_case_menu.addAction(QtGui.QIcon.fromTheme("document-new"), __("New"))
+        self.new_case_menu.addAction(QtGui.QIcon.fromTheme("document-new"), __("Import FreeCAD Document"))
 
         self.new_case_button.setMenu(self.new_case_menu)
         self.new_case_menu.resize(60, 60)
@@ -75,36 +75,43 @@ class DockPreProcessingWidget(QtGui.QWidget):
         self.save_button.setToolButtonStyle(QtCore.Qt.ToolButtonTextBesideIcon)
         self.save_button.setText("  {}".format(__("Save\n  Case")))
         self.save_button.setToolTip(__("Saves the case."))
-        self.save_button.setIcon(get_icon("save.png"))
+        self.save_button.setIcon(QtGui.QIcon.fromTheme("document-save"))
         self.save_button.setIconSize(QtCore.QSize(28, 28))
         self.save_menu = QtGui.QMenu()
-        self.save_menu.addAction(get_icon("save.png"), __("Save as..."))
+        self.save_menu.addAction(QtGui.QIcon.fromTheme("document-save-as"), __("Save as..."))
         self.save_button.setMenu(self.save_menu)
 
         self.load_button = QtGui.QToolButton()
         self.load_button.setToolButtonStyle(QtCore.Qt.ToolButtonTextBesideIcon)
         self.load_button.setText("  {}".format(__("Load\n  Case")))
         self.load_button.setToolTip(__("Loads a case from disk. All the current documents\nwill be closed."))
-        self.load_button.setIcon(get_icon("load.png"))
+        self.load_button.setIcon(QtGui.QIcon.fromTheme("document-open"))
         self.load_button.setIconSize(QtCore.QSize(28, 28))
 
         self.add_fillbox_button = QtGui.QPushButton(__("Add fillbox"))
         self.add_fillbox_button.setToolTip(__("Adds a FillBox. A FillBox is able to fill an empty space\nwithin limits of geometry and a maximum bounding\nbox placed by the user."))
+        self.add_fillbox_button.setIcon(QtGui.QIcon.fromTheme("list-add"))
 
         self.add_geometry_button = QtGui.QPushButton("Import GEO")
         self.add_geometry_button.setToolTip(__("Imports a GEO object with postprocessing. This way you can set the scale of the imported object."))
+        self.add_geometry_button.setIcon(QtGui.QIcon.fromTheme("list-add"))
 
         self.import_xml_button = QtGui.QPushButton(__("Import XML"))
         self.import_xml_button.setToolTip(__("Imports an already created XML case from disk."))
 
         self.case_summary_button = QtGui.QPushButton(__("Case summary"))
         self.case_summary_button.setToolTip(__("Shows a complete case summary with objects, configurations and settings in a brief view."))
+        self.case_summary_button.setIcon(QtGui.QIcon.fromTheme("document-properties"))
 
         self.toggle_2d_mode_button = QtGui.QPushButton(__("Change 3D/2D"))
         self.toggle_2d_mode_button.setToolTip(__("Changes the case mode between 2D and 3D mode, switching the Case Limits between a plane or a cube"))
+        self.toggle_2d_mode_button.setIcon(QtGui.QIcon.fromTheme("object-flip-horizontal"))
+
 
         self.special_button = QtGui.QPushButton(__("Special"))
         self.special_button.setToolTip(__("Special actions for the case."))
+        self.special_button.setIcon(QtGui.QIcon.fromTheme("window-new"))
+
 
         self.gencase_button = QtGui.QPushButton(__("Run GenCase"))
         self.gencase_button.setStyleSheet("QPushButton {font-weight: bold; }")
@@ -136,7 +143,7 @@ class DockPreProcessingWidget(QtGui.QWidget):
         self.second_row_layout.addWidget(self.toggle_2d_mode_button)
         self.third_row_layout.addWidget(self.add_fillbox_button)
         self.third_row_layout.addWidget(self.add_geometry_button)
-        self.third_row_layout.addWidget(self.import_xml_button)
+        # self.third_row_layout.addWidget(self.import_xml_button)
         self.fourth_row_layout.addWidget(self.special_button)
         self.fourth_row_layout.addWidget(self.gencase_button)
 
