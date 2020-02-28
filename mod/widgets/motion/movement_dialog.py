@@ -62,7 +62,7 @@ class MovementDialog(QtGui.QDialog):
 
         self.setMinimumSize(1400, 650)
         self.setWindowTitle(__("Motion configuration"))
-        self.ok_button = QtGui.QPushButton(__("Ok"))
+        self.ok_button = QtGui.QPushButton(__("OK"))
         self.cancel_button = QtGui.QPushButton(__("Cancel"))
         self.notice_label = QtGui.QLabel("")
         self.notice_label.setStyleSheet("QLabel { color : red; }")

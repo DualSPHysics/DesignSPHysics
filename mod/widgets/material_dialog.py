@@ -24,7 +24,7 @@ class MaterialDialog(QtGui.QDialog):
         self.setMinimumSize(400, 240)
 
         self.setWindowTitle(__("Material configuration"))
-        self.ok_button = QtGui.QPushButton(__("Ok"))
+        self.ok_button = QtGui.QPushButton(__("OK"))
         self.cancel_button = QtGui.QPushButton(__("Cancel"))
         self.root_layout = QtGui.QVBoxLayout()
 

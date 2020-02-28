@@ -21,7 +21,7 @@ class VelocityTimesDialog(QtGui.QDialog):
 
         self.button_layout = QtGui.QHBoxLayout()
         self.cancel_button = QtGui.QPushButton(__("Cancel"))
-        self.ok_button = QtGui.QPushButton(__("Ok"))
+        self.ok_button = QtGui.QPushButton(__("OK"))
         self.button_layout.addStretch(1)
         self.button_layout.addWidget(self.cancel_button)
         self.button_layout.addWidget(self.ok_button)

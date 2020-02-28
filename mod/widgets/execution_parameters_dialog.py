@@ -29,7 +29,7 @@ class ExecutionParametersDialog(QtGui.QDialog):
         # Creates a dialog and 2 main buttons
         self.setWindowTitle("DSPH Execution Parameters")
         self.help_label = QtGui.QLabel(self.LABEL_DEFAULT_TEXT)
-        self.ok_button = QtGui.QPushButton("Ok")
+        self.ok_button = QtGui.QPushButton("OK")
         self.cancel_button = QtGui.QPushButton("Cancel")
 
         self.saveposdouble_layout = QtGui.QHBoxLayout()

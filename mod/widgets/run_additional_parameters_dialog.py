@@ -19,7 +19,7 @@ class RunAdditionalParametersDialog(QtGui.QDialog):
         self.additional_parameters_window = QtGui.QDialog()
         self.additional_parameters_window.setWindowTitle(__("Additional parameters"))
 
-        self.ok_button = QtGui.QPushButton(__("Ok"))
+        self.ok_button = QtGui.QPushButton(__("OK"))
         self.cancel_button = QtGui.QPushButton(__("Cancel"))
 
         self.ok_button.clicked.connect(self.on_ok)

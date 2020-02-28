@@ -18,7 +18,7 @@ class FacesDialog(QtGui.QDialog):
         super().__init__(parent=parent)
 
         self.setWindowTitle(__("Faces configuration"))
-        self.ok_button = QtGui.QPushButton(__("Ok"))
+        self.ok_button = QtGui.QPushButton(__("OK"))
         self.cancel_button = QtGui.QPushButton(__("Cancel"))
         self.main_faces_layout = QtGui.QVBoxLayout()
 

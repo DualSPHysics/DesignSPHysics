@@ -19,7 +19,7 @@ class SetupPluginDialog(QtGui.QDialog):
         super().__init__(parent=parent)
 
         self.setWindowTitle("DesignSPHysics Setup")
-        self.ok_button = QtGui.QPushButton("Ok")
+        self.ok_button = QtGui.QPushButton("OK")
         self.cancel_button = QtGui.QPushButton("Cancel")
         self.defaults_button = QtGui.QPushButton(__("Load defaults"))
 

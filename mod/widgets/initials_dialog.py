@@ -22,7 +22,7 @@ class InitialsDialog(QtGui.QDialog):
         super().__init__(parent=parent)
 
         self.setWindowTitle(__("Initials configuration"))
-        self.ok_button = QtGui.QPushButton(__("Ok"))
+        self.ok_button = QtGui.QPushButton(__("OK"))
         self.cancel_button = QtGui.QPushButton(__("Cancel"))
         self.target_mk = Case.the().get_simulation_object(FreeCADGui.Selection.getSelection()[0].Name).obj_mk
 

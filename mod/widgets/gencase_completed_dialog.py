@@ -50,7 +50,7 @@ class GencaseCompletedDialog(QtGui.QDialog):
         self.bt_open_with_paraview.setMenu(self.open_menu)
 
         self.bt_details = QtGui.QPushButton(__("Details"))
-        self.bt_ok = QtGui.QPushButton(__("Ok"))
+        self.bt_ok = QtGui.QPushButton(__("OK"))
 
         self.button_layout.addWidget(self.bt_open_with_paraview)
         self.button_layout.addStretch(1)
