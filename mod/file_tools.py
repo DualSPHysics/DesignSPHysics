@@ -20,8 +20,6 @@ from traceback import print_exc
 from glob import glob
 from os import path, chdir, makedirs
 
-import xml.etree.ElementTree as ET
-
 import FreeCAD
 import FreeCADGui
 import Mesh
