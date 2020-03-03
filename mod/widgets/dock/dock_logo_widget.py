@@ -27,6 +27,7 @@ class DockLogoWidget(QtGui.QWidget):
 
         self.help_button = QtGui.QPushButton("Help")
         self.help_button.setToolTip(__("Push this button to open a browser with help\non how to use this tool."))
+        self.help_button.setIcon(QtGui.QIcon.fromTheme("system-help"))
         self.help_button.clicked.connect(lambda: webbrowser.open(HelpURL.WIKI_HOME))
 
         self.main_layout.addStretch(0.5)
