@@ -64,7 +64,7 @@ class DesignSPHysicsDock(QtGui.QDockWidget):
 
         # Signal handling
         self.pre_proccessing_widget.force_pressed.connect(self.on_preprocessing_force_pressed)
-        self.pre_proccessing_widget.need_refresh.connect(self.need_refresh.emit)
+        self.pre_proccessing_widget.need_refresh.connect(self.on_refresh)
         self.pre_proccessing_widget.update_dp.connect(self.on_signal_update_dp)
         self.pre_proccessing_widget.case_created.connect(self.adapt_to_new_case)
         self.pre_proccessing_widget.gencase_completed.connect(self.adapt_to_gencase_done)
@@ -72,6 +72,11 @@ class DesignSPHysicsDock(QtGui.QDockWidget):
         self.simulation_widget.simulation_complete.connect(self.adapt_to_simulation_done)
         self.simulation_widget.simulation_started.connect(self.adapt_to_simulation_start)
         self.simulation_widget.simulation_cancelled.connect(self.adapt_to_simulation_cancel)
+
+    def on_refresh(self):
+        """ Reacts to a refresh signal emmited by the pre processing widget. """
+        self.need_refresh.emit()
+        self.dock_configuration_widget.update_case_name(Case.the().name)
 
     def on_signal_update_dp(self):
         """ Defines the behaviour on DP update request. """

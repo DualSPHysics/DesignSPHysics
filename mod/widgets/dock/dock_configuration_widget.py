@@ -11,18 +11,33 @@ from mod.widgets.constants_dialog import ConstantsDialog
 from mod.widgets.setup_plugin_dialog import SetupPluginDialog
 from mod.widgets.execution_parameters_dialog import ExecutionParametersDialog
 
+from mod.dataobjects.case import Case
+
 
 class DockConfigurationWidget(QtGui.QWidget):
     """DesignSPHysics Dock Configuration Widget. """
 
+    CASE_TITLE_TEMPLATE = "- <i>{}</i>"
+
     def __init__(self, parent=None):
         super().__init__(parent=parent)
+
+        self.case_name = None
 
         self.main_layout = QtGui.QVBoxLayout()
         self.main_layout.setContentsMargins(0, 0, 0, 0)
 
+        self.title_layout: QtGui.QHBoxLayout = QtGui.QHBoxLayout()
+
         self.title_label = QtGui.QLabel("<b>{}</b>".format(__("Configuration")))
         self.title_label.setWordWrap(True)
+
+        self.case_title_label = QtGui.QLabel(self.CASE_TITLE_TEMPLATE.format(Case.the().name))
+        self.case_title_label.setWordWrap(True)
+
+        self.title_layout.addWidget(self.title_label)
+        self.title_layout.addWidget(self.case_title_label)
+        self.title_layout.addStretch(1)
 
         self.constants_button = QtGui.QPushButton(__("Define\nConstants"))
         self.constants_button.setToolTip(__("Use this button to define case constants,\nsuch as gravity or fluid reference density."))
@@ -37,7 +52,7 @@ class DockConfigurationWidget(QtGui.QWidget):
         self.execparams_button.clicked.connect(self.on_execparams_button_presed)
         self.constants_button.clicked.connect(self.on_constants_button_pressed)
 
-        self.main_layout.addWidget(self.title_label)
+        self.main_layout.addLayout(self.title_layout)
 
         self.button_layout = QtGui.QHBoxLayout()
         self.button_layout.addWidget(self.constants_button)
@@ -47,6 +62,14 @@ class DockConfigurationWidget(QtGui.QWidget):
         self.main_layout.addLayout(self.button_layout)
 
         self.setLayout(self.main_layout)
+
+        self.update_case_name()
+
+    def update_case_name(self, new_name=None):
+        """ Reacts to a case name change and shows it in the label layout if its set to something. """
+        self.case_name = new_name
+        self.case_title_label.setText(self.CASE_TITLE_TEMPLATE.format(self.case_name))
+        self.case_title_label.setVisible(bool(self.case_name))
 
     def on_constants_button_pressed(self):
         """ Opens constant definition window on button click. """

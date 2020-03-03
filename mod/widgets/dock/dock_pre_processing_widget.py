@@ -107,11 +107,9 @@ class DockPreProcessingWidget(QtGui.QWidget):
         self.toggle_2d_mode_button.setToolTip(__("Changes the case mode between 2D and 3D mode, switching the Case Limits between a plane or a cube"))
         self.toggle_2d_mode_button.setIcon(QtGui.QIcon.fromTheme("object-flip-horizontal"))
 
-
         self.special_button = QtGui.QPushButton(__("Special"))
         self.special_button.setToolTip(__("Special actions for the case."))
         self.special_button.setIcon(QtGui.QIcon.fromTheme("window-new"))
-
 
         self.gencase_button = QtGui.QPushButton(__("Run GenCase"))
         self.gencase_button.setStyleSheet("QPushButton {font-weight: bold; }")
@@ -188,7 +186,6 @@ class DockPreProcessingWidget(QtGui.QWidget):
     def on_save_case(self, save_as=None):
         """ Defines what happens when save case button is clicked.
         Saves a freecad scene definition, and a dump of dsph data for the case."""
-        self.need_refresh.emit()
         if Case.the().was_not_saved() or save_as:
             save_name, _ = QtGui.QFileDialog.getSaveFileName(self, __("Save Case"), Case.the().info.last_used_directory)
             Case.the().info.update_last_used_directory(save_name)
@@ -207,6 +204,7 @@ class DockPreProcessingWidget(QtGui.QWidget):
                 __("The case being saved has some properties/materials defined in one of its MKs.\n"
                    "However, the solid-solid interaction on the execution parameters must be set to DEM or CHRONO for this feature to work.")
             )
+        self.need_refresh.emit()
 
     def on_execute_gencase(self):
         """ Saves data into disk and uses GenCase to generate the case files."""
