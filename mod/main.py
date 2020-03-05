@@ -27,7 +27,7 @@ from mod.stdout_tools import print_license, log, debug
 from mod.constants import APP_NAME, VERSION, DEFAULT_WORKBENCH, DIVIDER, GITHUB_MASTER_CONSTANTS_URL
 
 from mod.dataobjects.case import Case
-from mod.dataobjects.application_settigns import ApplicationSettings
+from mod.dataobjects.application_settings import ApplicationSettings
 
 from mod.widgets.dock.designsphysics_dock import DesignSPHysicsDock
 from mod.widgets.properties_dock_widget import PropertiesDockWidget

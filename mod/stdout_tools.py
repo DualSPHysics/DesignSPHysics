@@ -10,7 +10,7 @@ import FreeCAD
 
 from mod.constants import APP_NAME, DISK_DUMP_FILE_NAME
 
-from mod.dataobjects.application_settigns import ApplicationSettings
+from mod.dataobjects.application_settings import ApplicationSettings
 
 
 def log(message):

@@ -287,7 +287,7 @@ def get_default_config_file():
 
 def get_saved_config_file() -> str:
     """ Returns the path of the configuration file saved in the FreeCAD user directory. """
-    return "{datadir}/designsphysics-{version}.data".format(datadir=FreeCAD.getUserAppDataDir(), version=VERSION)
+    return "{datadir}/designsphysics-executables-{version}.data".format(datadir=FreeCAD.getUserAppDataDir(), version=VERSION)
 
 
 def get_designsphysics_path() -> str:

@@ -10,6 +10,7 @@ from mod.dialog_tools import error_dialog
 from mod.file_tools import get_default_config_file
 
 from mod.dataobjects.case import Case
+from mod.dataobjects.application_settings import ApplicationSettings
 
 
 class SetupPluginDialog(QtGui.QDialog):
@@ -157,35 +158,57 @@ class SetupPluginDialog(QtGui.QDialog):
         self.isosurface_browse.clicked.connect(lambda: self.browse("IsoSurface", self.isosurface_input))
         self.paraview_browse.clicked.connect(self.on_paraview_browse)
 
+        # Executables definition and composition.
+        self.executables_layout = QtGui.QVBoxLayout()
+        self.executables_layout.addLayout(self.gencasepath_layout)
+        self.executables_layout.addLayout(self.dsphpath_layout)
+        self.executables_layout.addLayout(self.partvtk4path_layout)
+        self.executables_layout.addLayout(self.computeforces_layout)
+        self.executables_layout.addLayout(self.floatinginfo_layout)
+        self.executables_layout.addLayout(self.measuretool_layout)
+        self.executables_layout.addLayout(self.isosurface_layout)
+        self.executables_layout.addLayout(self.boundaryvtk_layout)
+        self.executables_layout.addLayout(self.flowtool_layout)
+        self.executables_layout.addLayout(self.paraview_layout)
+        self.executables_layout.addStretch(1)
+
+        # General settings
+        self.settings_layout = QtGui.QFormLayout()
+
+        self.use_debug_check = QtGui.QCheckBox("Show debug messages")
+        self.use_debug_check.setChecked(ApplicationSettings.the().debug_enabled)
+        self.use_verbose_check = QtGui.QCheckBox("Show verbose log messages")
+        self.use_verbose_check.setChecked(ApplicationSettings.the().verbose_enabled)
+        self.use_version_check = QtGui.QCheckBox("Look for updates at startup")
+        self.use_version_check.setChecked(ApplicationSettings.the().notify_on_outdated_version_enabled)
+        self.settings_layout.addRow(self.use_debug_check)
+        self.settings_layout.addRow(self.use_verbose_check)
+        self.settings_layout.addRow(self.use_version_check)
+
+        # Tab widget composition
+        self.tab_widget = QtGui.QTabWidget()
+
+        self.executable_setup_widget = QtGui.QWidget()
+        self.executable_setup_widget.setLayout(self.executables_layout)
+
+        self.settings_setup_widget = QtGui.QWidget()
+        self.settings_setup_widget.setLayout(self.settings_layout)
+
+        self.tab_widget.addTab(self.executable_setup_widget, "Executables")
+        self.tab_widget.addTab(self.settings_setup_widget, "Settings")
+
         # Button layout definition
-        self.stp_button_layout = QtGui.QHBoxLayout()
-        self.stp_button_layout.addWidget(self.defaults_button)
-        self.stp_button_layout.addStretch(1)
-        self.stp_button_layout.addWidget(self.ok_button)
-        self.stp_button_layout.addWidget(self.cancel_button)
+        self.button_layout = QtGui.QHBoxLayout()
+        self.button_layout.addWidget(self.defaults_button)
+        self.button_layout.addStretch(1)
+        self.button_layout.addWidget(self.ok_button)
+        self.button_layout.addWidget(self.cancel_button)
 
-        # START Main layout definition and composition.
-        self.stp_main_layout = QtGui.QVBoxLayout()
-        self.stp_main_layout.addLayout(self.gencasepath_layout)
-        self.stp_main_layout.addLayout(self.dsphpath_layout)
-        self.stp_main_layout.addLayout(self.partvtk4path_layout)
-        self.stp_main_layout.addLayout(self.computeforces_layout)
-        self.stp_main_layout.addLayout(self.floatinginfo_layout)
-        self.stp_main_layout.addLayout(self.measuretool_layout)
-        self.stp_main_layout.addLayout(self.isosurface_layout)
-        self.stp_main_layout.addLayout(self.boundaryvtk_layout)
-        self.stp_main_layout.addLayout(self.flowtool_layout)
-        self.stp_main_layout.addLayout(self.paraview_layout)
-        self.stp_main_layout.addStretch(1)
-
-        self.stp_groupbox = QtGui.QGroupBox("Setup parameters")
-        self.stp_groupbox.setLayout(self.stp_main_layout)
         self.main_layout = QtGui.QVBoxLayout()
-        self.main_layout.addWidget(self.stp_groupbox)
-        self.main_layout.addLayout(self.stp_button_layout)
-        self.setLayout(self.main_layout)
-        # END Main layout definition and composition.
+        self.main_layout.addWidget(self.tab_widget)
+        self.main_layout.addLayout(self.button_layout)
 
+        self.setLayout(self.main_layout)
         self.ok_button.setFocus()
 
         self.resize(600, 400)
@@ -204,6 +227,11 @@ class SetupPluginDialog(QtGui.QDialog):
         Case.the().executable_paths.flowtool = self.flowtool_input.text()
         Case.the().executable_paths.paraview = self.paraview_input.text()
         Case.the().executable_paths.check_and_filter()
+
+        ApplicationSettings.the().debug_enabled = self.use_debug_check.isChecked()
+        ApplicationSettings.the().verbose_enabled = self.use_verbose_check.isChecked()
+        ApplicationSettings.the().notify_on_outdated_version_enabled = self.use_version_check.isChecked()
+        ApplicationSettings.the().persist()
         self.accept()
 
     def on_set_defaults(self):
@@ -218,6 +246,9 @@ class SetupPluginDialog(QtGui.QDialog):
         self.isosurface_input.setText(default_config["isosurface"])
         self.boundaryvtk_input.setText(default_config["boundaryvtk"])
         self.flowtool_input.setText(default_config["flowtool"])
+        self.use_debug_check.setChecked(True)
+        self.use_verbose_check.setChecked(True)
+        self.use_version_check.setChecked(True)
 
     def on_cancel(self):
         """ Closes the dialog rejecting it. """
