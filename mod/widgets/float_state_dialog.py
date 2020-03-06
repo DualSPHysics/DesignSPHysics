@@ -336,58 +336,27 @@ class FloatStateDialog(QtGui.QDialog):
     def on_ok(self):
         """ Composes floating options and saves them into the appropriate data structure. """
         info_dialog(__("This will apply the floating properties to all objects with mkbound = ") + str(self.target_mk))
+
         if self.is_floating_selector.currentIndex() == 1:
             # Remove Floating
             Case.the().get_mk_based_properties(ObjectType.BOUND, self.target_mk).float_property = None
-        else:
-            # Floating true
-            fp = FloatProperty()  # FloatProperty to be inserted
-            fp.mk = self.target_mk
-            fp.mass_density_type = self.floating_props_massrhop_selector.currentIndex()
-            fp.mass_density_value = float(self.floating_props_massrhop_input.text())
+            self.accept()
+            return
 
-            # TODO: This could be refactored and cleaned
-            if self.floating_center_auto.isChecked():
-                fp.gravity_center = list()
-            else:
-                fp.gravity_center = [float(self.floating_center_input_x.text()), float(self.floating_center_input_y.text()), float(self.floating_center_input_z.text())]
+        # Floating is true
+        fp = FloatProperty()  # FloatProperty to be inserted
+        fp.mk = self.target_mk
+        fp.mass_density_type = self.floating_props_massrhop_selector.currentIndex()
+        fp.mass_density_value = float(self.floating_props_massrhop_input.text())
 
-            if self.floating_center_auto.isChecked():
-                fp.gravity_center = list()
-            else:
-                fp.gravity_center = [float(self.floating_center_input_x.text()), float(self.floating_center_input_y.text()), float(self.floating_center_input_z.text())]
-
-            if self.floating_inertia_auto.isChecked():
-                fp.inertia = list()
-            else:
-                fp.inertia = [float(self.floating_inertia_input_x.text()), float(self.floating_inertia_input_y.text()), float(self.floating_inertia_input_z.text())]
-
-            if self.floating_velini_auto.isChecked():
-                fp.initial_linear_velocity = list()
-            else:
-                fp.initial_linear_velocity = [float(self.floating_velini_input_x.text()), float(self.floating_velini_input_y.text()), float(self.floating_velini_input_z.text())]
-
-            if self.floating_omegaini_auto.isChecked():
-                fp.initial_angular_velocity = list()
-            else:
-                fp.initial_angular_velocity = [float(self.floating_omegaini_input_x.text()), float(self.floating_omegaini_input_y.text()), float(self.floating_omegaini_input_z.text())]
-
-            if self.floating_translation_auto.isChecked():
-                fp.translation_restriction = list()
-            else:
-                fp.translation_restriction = [int(self.floating_translation_input_x.currentIndex()), int(self.floating_translation_input_y.currentIndex()), int(self.floating_translation_input_z.currentIndex())]
-
-            if self.floating_rotation_auto.isChecked():
-                fp.rotation_restriction = list()
-            else:
-                fp.rotation_restriction = [int(self.floating_rotation_input_x.currentIndex()), int(self.floating_rotation_input_y.currentIndex()), int(self.floating_rotation_input_z.currentIndex())]
-
-            if self.floating_material_auto.isChecked():
-                fp.material = ""
-            else:
-                fp.material = str(self.floating_material_line_edit.text())
-
-            Case.the().get_mk_based_properties(ObjectType.BOUND, self.target_mk).float_property = fp
+        fp.gravity_center = list() if self.floating_center_auto.isChecked() else [float(self.floating_center_input_x.text()), float(self.floating_center_input_y.text()), float(self.floating_center_input_z.text())]
+        fp.inertia = list() if self.floating_inertia_auto.isChecked() else [float(self.floating_inertia_input_x.text()), float(self.floating_inertia_input_y.text()), float(self.floating_inertia_input_z.text())]
+        fp.initial_linear_velocity = list() if self.floating_velini_auto.isChecked() else [float(self.floating_velini_input_x.text()), float(self.floating_velini_input_y.text()), float(self.floating_velini_input_z.text())]
+        fp.initial_angular_velocity = list() if self.floating_omegaini_auto.isChecked() else [float(self.floating_omegaini_input_x.text()), float(self.floating_omegaini_input_y.text()), float(self.floating_omegaini_input_z.text())]
+        fp.translation_restriction = list() if self.floating_translation_auto.isChecked() else [int(self.floating_translation_input_x.currentIndex()), int(self.floating_translation_input_y.currentIndex()), int(self.floating_translation_input_z.currentIndex())]
+        fp.rotation_restriction = list() if self.floating_rotation_auto.isChecked() else [int(self.floating_rotation_input_x.currentIndex()), int(self.floating_rotation_input_y.currentIndex()), int(self.floating_rotation_input_z.currentIndex())]
+        fp.material = "" if self.floating_material_auto.isChecked() else str(self.floating_material_line_edit.text())
+        Case.the().get_mk_based_properties(ObjectType.BOUND, self.target_mk).float_property = fp
 
         self.accept()
 
@@ -397,87 +366,48 @@ class FloatStateDialog(QtGui.QDialog):
 
     def on_floating_change(self, index):
         """ Reacts to the floating index changing enabling/disabling the floating properties. """
-        if index == 0:
-            self.floating_props_group.setEnabled(True)
-        else:
-            self.floating_props_group.setEnabled(False)
+        self.floating_props_group.setEnabled(index == 0)
 
-    def on_massrhop_change(self, index):
+    def on_massrhop_change(self, _):
         """ Reacts to the massrhop checkbox change enabling disabling its input. """
-        if index == 0:
-            self.floating_props_massrhop_input.setText("0.0")
-        else:
-            self.floating_props_massrhop_input.setText("0.0")
+        self.floating_props_massrhop_input.setText("0.0")
 
     def on_gravity_auto(self):
         """ Reacts to the gravity auto check enabling/disabling its inputs. """
-        if self.floating_center_auto.isChecked():
-            self.floating_center_input_x.setEnabled(False)
-            self.floating_center_input_y.setEnabled(False)
-            self.floating_center_input_z.setEnabled(False)
-        else:
-            self.floating_center_input_x.setEnabled(True)
-            self.floating_center_input_y.setEnabled(True)
-            self.floating_center_input_z.setEnabled(True)
+        self.floating_center_input_x.setEnabled(not self.floating_center_auto.isChecked())
+        self.floating_center_input_y.setEnabled(not self.floating_center_auto.isChecked())
+        self.floating_center_input_z.setEnabled(not self.floating_center_auto.isChecked())
 
     def on_inertia_auto(self):
         """ Reacts to the inertia auto check enabling/disabling its inputs. """
-        if self.floating_inertia_auto.isChecked():
-            self.floating_inertia_input_x.setEnabled(False)
-            self.floating_inertia_input_y.setEnabled(False)
-            self.floating_inertia_input_z.setEnabled(False)
-        else:
-            self.floating_inertia_input_x.setEnabled(True)
-            self.floating_inertia_input_y.setEnabled(True)
-            self.floating_inertia_input_z.setEnabled(True)
+        self.floating_inertia_input_x.setEnabled(not self.floating_inertia_auto.isChecked())
+        self.floating_inertia_input_y.setEnabled(not self.floating_inertia_auto.isChecked())
+        self.floating_inertia_input_z.setEnabled(not self.floating_inertia_auto.isChecked())
 
     def on_velini_auto(self):
         """ Reacts to the velini auto check enabling/disabling its inputs. """
-        if self.floating_velini_auto.isChecked():
-            self.floating_velini_input_x.setEnabled(False)
-            self.floating_velini_input_y.setEnabled(False)
-            self.floating_velini_input_z.setEnabled(False)
-        else:
-            self.floating_velini_input_x.setEnabled(True)
-            self.floating_velini_input_y.setEnabled(True)
-            self.floating_velini_input_z.setEnabled(True)
+        self.floating_velini_input_x.setEnabled(not self.floating_velini_auto.isChecked())
+        self.floating_velini_input_y.setEnabled(not self.floating_velini_auto.isChecked())
+        self.floating_velini_input_z.setEnabled(not self.floating_velini_auto.isChecked())
 
     def on_omegaini_auto(self):
         """ Reacts to the omegaini auto check enabling/disabling its inputs. """
-        if self.floating_omegaini_auto.isChecked():
-            self.floating_omegaini_input_x.setEnabled(False)
-            self.floating_omegaini_input_y.setEnabled(False)
-            self.floating_omegaini_input_z.setEnabled(False)
-        else:
-            self.floating_omegaini_input_x.setEnabled(True)
-            self.floating_omegaini_input_y.setEnabled(True)
-            self.floating_omegaini_input_z.setEnabled(True)
+        self.floating_omegaini_input_x.setEnabled(not self.floating_omegaini_auto.isChecked())
+        self.floating_omegaini_input_y.setEnabled(not self.floating_omegaini_auto.isChecked())
+        self.floating_omegaini_input_z.setEnabled(not self.floating_omegaini_auto.isChecked())
 
     def on_translation_auto(self):
         """ Reacts to the translation auto check enabling disabling its inputs. """
-        if self.floating_translation_auto.isChecked():
-            self.floating_translation_input_x.setEnabled(False)
-            self.floating_translation_input_y.setEnabled(False)
-            self.floating_translation_input_z.setEnabled(False)
-        else:
-            self.floating_translation_input_x.setEnabled(True)
-            self.floating_translation_input_y.setEnabled(True)
-            self.floating_translation_input_z.setEnabled(True)
+        self.floating_translation_input_x.setEnabled(not self.floating_translation_auto.isChecked())
+        self.floating_translation_input_y.setEnabled(not self.floating_translation_auto.isChecked())
+        self.floating_translation_input_z.setEnabled(not self.floating_translation_auto.isChecked())
 
     def on_rotation_auto(self):
         """ Reacts to the rotation checkbox being pressed enabling/disabling its inputs. """
-        if self.floating_rotation_auto.isChecked():
-            self.floating_rotation_input_x.setEnabled(False)
-            self.floating_rotation_input_y.setEnabled(False)
-            self.floating_rotation_input_z.setEnabled(False)
-        else:
-            self.floating_rotation_input_x.setEnabled(True)
-            self.floating_rotation_input_y.setEnabled(True)
-            self.floating_rotation_input_z.setEnabled(True)
+        self.floating_rotation_input_x.setEnabled(not self.floating_rotation_auto.isChecked())
+        self.floating_rotation_input_y.setEnabled(not self.floating_rotation_auto.isChecked())
+        self.floating_rotation_input_z.setEnabled(not self.floating_rotation_auto.isChecked())
 
     def on_material_auto(self):
         """ Reacts to the material auto checkbox being pressed enabling/disabling its input. """
-        if self.floating_material_auto.isChecked():
-            self.floating_material_line_edit.setEnabled(False)
-        else:
-            self.floating_material_line_edit.setEnabled(True)
+        self.floating_material_line_edit.setEnabled(not self.floating_material_auto.isChecked())

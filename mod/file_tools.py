@@ -310,7 +310,6 @@ def import_geo(filename=None, scale_x=1, scale_y=1, scale_z=1, name=None, autofi
     if scale_z <= 0:
         scale_z = 1
 
-    # TODO: Adapt to VTL (FEM lib, convert to other format)
     if file_type == ".vtk":
         loaded_mesh = Mesh.Mesh(femmesh_2_mesh(Fem.read(filename)))
     else:
