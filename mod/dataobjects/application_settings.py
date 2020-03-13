@@ -22,6 +22,7 @@ class ApplicationSettings():
         self.debug_enabled: bool = False
         self.verbose_enabled: bool = False
         self.notify_on_outdated_version_enabled: bool = True
+        self.force_moordyn_support_enabled: bool = False
         self.restore_from_disk()
 
     @staticmethod
@@ -45,6 +46,7 @@ class ApplicationSettings():
             self.debug_enabled = obj.debug_enabled
             self.verbose_enabled = obj.verbose_enabled
             self.notify_on_outdated_version_enabled = obj.notify_on_outdated_version_enabled
+            self.force_moordyn_support_enabled = obj.force_moordyn_support_enabled
 
     def persist(self) -> None:
         """ Persists the current settings to disk for next instantiations to load. """
