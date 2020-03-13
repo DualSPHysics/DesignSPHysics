@@ -25,6 +25,7 @@ from mod.widgets.chrono.chrono_config_dialog import ChronoConfigDialog
 from mod.widgets.moorings.moorings_configuration_dialog import MooringsConfigurationDialog
 
 from mod.dataobjects.case import Case
+from mod.dataobjects.application_settings import ApplicationSettings
 from mod.dataobjects.mk_based_properties import MKBasedProperties
 from mod.dataobjects.ml_piston_1d import MLPiston1D
 from mod.dataobjects.ml_piston_2d import MLPiston2D
@@ -87,7 +88,7 @@ class SpecialOptionsSelectorDialog(QtGui.QDialog):
         if not Case.the().executable_paths.supports_chrono():
             self.sp_chrono_button.hide()
 
-        if not Case.the().executable_paths.supports_moorings():
+        if not Case.the().executable_paths.supports_moorings() and not ApplicationSettings.the().force_moordyn_support_enabled:
             self.sp_moorings_button.hide()
 
         self.exec_()
