@@ -175,15 +175,18 @@ class SetupPluginDialog(QtGui.QDialog):
         # General settings
         self.settings_layout = QtGui.QFormLayout()
 
-        self.use_debug_check = QtGui.QCheckBox("Show debug messages")
+        self.use_debug_check = QtGui.QCheckBox(__("Show debug messages"))
         self.use_debug_check.setChecked(ApplicationSettings.the().debug_enabled)
-        self.use_verbose_check = QtGui.QCheckBox("Show verbose log messages")
+        self.use_verbose_check = QtGui.QCheckBox(__("Show verbose log messages"))
         self.use_verbose_check.setChecked(ApplicationSettings.the().verbose_enabled)
-        self.use_version_check = QtGui.QCheckBox("Look for updates at startup")
+        self.use_version_check = QtGui.QCheckBox(__("Look for updates at startup"))
         self.use_version_check.setChecked(ApplicationSettings.the().notify_on_outdated_version_enabled)
+        self.force_moordyn_support_check = QtGui.QCheckBox("Force MoorDyn Support")
+        self.force_moordyn_support_check.setChecked(ApplicationSettings.the().force_moordyn_support_enabled)
         self.settings_layout.addRow(self.use_debug_check)
         self.settings_layout.addRow(self.use_verbose_check)
         self.settings_layout.addRow(self.use_version_check)
+        self.settings_layout.addRow(self.force_moordyn_support_check)
 
         # Tab widget composition
         self.tab_widget = QtGui.QTabWidget()
@@ -231,6 +234,7 @@ class SetupPluginDialog(QtGui.QDialog):
         ApplicationSettings.the().debug_enabled = self.use_debug_check.isChecked()
         ApplicationSettings.the().verbose_enabled = self.use_verbose_check.isChecked()
         ApplicationSettings.the().notify_on_outdated_version_enabled = self.use_version_check.isChecked()
+        ApplicationSettings.the().force_moordyn_support_enabled = self.force_moordyn_support_check.isChecked()
         ApplicationSettings.the().persist()
         self.accept()
 
