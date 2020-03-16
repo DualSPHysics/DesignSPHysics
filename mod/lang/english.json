@@ -1114,5 +1114,8 @@
     "Default - value": "Default - value",
     "Default + %": "Default + %",
     "Maximum position(x, y, z):": "Maximum position(x, y, z):",
-    "Default + value": "Default + value"
+    "Default + value": "Default + value",
+    "Show debug messages": "Show debug messages",
+    "Show verbose log messages": "Show verbose log messages",
+    "Look for updates at startup": "Look for updates at startup"
 }
