@@ -1,1 +1,1 @@
-                            <massDenInAir value="{massDenInAir}" comment="massDenInAirDenInAir (kg/m)" />
+                            <massDenInAir value="{massDenInAir}" comment="Mass per unit length of the line." units_comment="kg/m" />

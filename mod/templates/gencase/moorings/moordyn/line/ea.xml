@@ -1,1 +1,1 @@
-                            <ea value="{ea}" comment="stiffness(N)" />
+                            <ea value="{ea}" comment="Line stiffness, product of elasticity modulus and cross-sectional area." units_comment="N" />

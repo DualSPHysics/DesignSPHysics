@@ -1,3 +1,3 @@
-                        <body ref="{ref}">
-                            <depth value="{depth}"/>
+                        <body ref="{ref}" comment="Fluid driven object to attach mooring lines." >
+                            <depth value="{depth}" comment="Water depth for current object. This value overwrites the global water depth only for its lines." units_comment="m"/>
                         </body>

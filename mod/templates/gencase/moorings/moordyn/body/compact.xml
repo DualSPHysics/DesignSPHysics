@@ -1,1 +1,1 @@
-                        <body ref="{ref}"/>
+                        <body ref="{ref}" comment="Fluid driven object to attach mooring lines."/>
