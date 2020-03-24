@@ -205,6 +205,13 @@ class MoorDynParametersDialog(QtGui.QDialog):
         self.cdt_line_edit_layout.addWidget(self.cdt_line_edit)
         self.cdt_line_edit_layout.addWidget(self.cdt_line_check)
 
+        self.breaktension_line_edit: QtGui.QLineEdit = QtGui.QLineEdit()
+        self.breaktension_line_check: QtGui.QCheckBox = QtGui.QCheckBox(__("Auto"))
+        self.breaktension_line_edit_layout: QtGui.QHBoxLayout = QtGui.QHBoxLayout()
+        self.breaktension_line_edit_layout.setContentsMargins(0, 0, 0, 0)
+        self.breaktension_line_edit_layout.addWidget(self.breaktension_line_edit)
+        self.breaktension_line_edit_layout.addWidget(self.breaktension_line_check)
+
         self.ea_label: QtGui.QLabel = QtGui.QLabel(__("Line Stiffness (N):"))
         self.ea_label.setToolTip(__("Line stiffness, product of elasticity modulus and cross-sectional area.\nXML Name: ea"))
         self.diameter_label: QtGui.QLabel = QtGui.QLabel(__("Diameter (m):"))
@@ -221,6 +228,8 @@ class MoorDynParametersDialog(QtGui.QDialog):
         self.cdn_label.setToolTip(__("Transverse drag coefficient (with respect to frontal area, d*l). (default=1.6)\nXML Name: cdn"))
         self.cdt_label: QtGui.QLabel = QtGui.QLabel(__("Tangential drag coefficient:"))
         self.cdt_label.setToolTip(__("Tangential drag coefficient (with respect to surface area, π*d*l). (default=0.05)\nXML Name: cdt"))
+        self.breaktension_label: QtGui.QLabel = QtGui.QLabel(__("Maximun tension for the lines:"))
+        self.breaktension_label.setToolTip(__("Maximum value of tension for the lines. value=0 Break Tension is not used. (default=0)\nXML Name: breaktension"))
 
         self.line_default_configuration_groupbox_layout.setLabelAlignment(QtCore.Qt.AlignLeft)
         self.line_default_configuration_groupbox_layout.addRow(self.ea_label, self.ea_line_edit)
@@ -231,6 +240,7 @@ class MoorDynParametersDialog(QtGui.QDialog):
         self.line_default_configuration_groupbox_layout.addRow(self.cat_label, self.cat_line_edit_layout)
         self.line_default_configuration_groupbox_layout.addRow(self.cdn_label, self.cdn_line_edit_layout)
         self.line_default_configuration_groupbox_layout.addRow(self.cdt_label, self.cdt_line_edit_layout)
+        self.line_default_configuration_groupbox_layout.addRow(self.breaktension_label, self.breaktension_line_edit_layout)
         self.line_default_configuration_groupbox.setLayout(self.line_default_configuration_groupbox_layout)
 
         # Lines groupbox
@@ -275,6 +285,7 @@ class MoorDynParametersDialog(QtGui.QDialog):
         self.cat_line_check.stateChanged.connect(self._on_cat_check)
         self.cdn_line_check.stateChanged.connect(self._on_cdn_check)
         self.cdt_line_check.stateChanged.connect(self._on_cdt_check)
+        self.breaktension_line_check.stateChanged.connect(self._on_breaktension_check)
         self.ok_button.clicked.connect(self._on_ok)
         self.add_line_button.clicked.connect(self._on_add_new_line)
 
@@ -305,6 +316,7 @@ class MoorDynParametersDialog(QtGui.QDialog):
         self.stored_configuration.line_default_configuration.cat = default_line_default_configuration.cat if self.cat_line_check.isChecked() else float(self.cat_line_edit.text())
         self.stored_configuration.line_default_configuration.cdn = default_line_default_configuration.cdn if self.cdn_line_check.isChecked() else float(self.cdn_line_edit.text())
         self.stored_configuration.line_default_configuration.cdt = default_line_default_configuration.cdt if self.cdt_line_check.isChecked() else float(self.cdt_line_edit.text())
+        self.stored_configuration.line_default_configuration.breaktension = default_line_default_configuration.breaktension if self.breaktension_line_check.isChecked() else float(self.breaktension_line_edit.text())
 
         # Bodies and lines are references to lists, so they're already modified in memory :)
         self.accept()
@@ -329,6 +341,9 @@ class MoorDynParametersDialog(QtGui.QDialog):
 
     def _on_cdt_check(self):
         self.cdt_line_edit.setEnabled(not self.cdt_line_check.isChecked())
+
+    def _on_breaktension_check(self):
+        self.breaktension_line_edit.setEnabled(not self.breaktension_line_check.isChecked())
 
     def _on_add_new_line(self):
         used_line_ids = list(map(lambda line: line.line_id, self.stored_configuration.lines))
@@ -414,6 +429,8 @@ class MoorDynParametersDialog(QtGui.QDialog):
         self.cdn_line_check.setChecked(self.stored_configuration.line_default_configuration.cdn == default_line_default_configuration.cdn)
         self.cdt_line_edit.setText(str(self.stored_configuration.line_default_configuration.cdt))
         self.cdt_line_check.setChecked(self.stored_configuration.line_default_configuration.cdt == default_line_default_configuration.cdt)
+        self.breaktension_line_edit.setText(str(self.stored_configuration.line_default_configuration.breaktension))
+        self.breaktension_line_check.setChecked(self.stored_configuration.line_default_configuration.breaktension == default_line_default_configuration.breaktension)
 
         # Lines
         self.lines_table.setRowCount(len(self.stored_configuration.lines))
@@ -431,3 +448,4 @@ class MoorDynParametersDialog(QtGui.QDialog):
         self._on_cat_check()
         self._on_cdn_check()
         self._on_cdt_check()
+        self._on_breaktension_check()

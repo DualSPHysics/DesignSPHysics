@@ -15,4 +15,5 @@ class MoorDynLineDefaultConfiguration():
         self.cat: float = 0.0
         self.cdn: float = 1.6
         self.cdt: float = 0.05
+        self.breaktension: float = 0.0
         self.outputFlags: str = "pvc"

@@ -1117,5 +1117,18 @@
     "Default + value": "Default + value",
     "Show debug messages": "Show debug messages",
     "Show verbose log messages": "Show verbose log messages",
-    "Look for updates at startup": "Look for updates at startup"
+    "Look for updates at startup": "Look for updates at startup",
+    "Ratio between static/dynamic friction:": "Ratio between static/dynamic friction:",
+    "Ratio between static and dynamic friction (mu_static/mu_dynamic). (default=1.0)\nXML Name: statDynFricScale": "Ratio between static and dynamic friction (mu_static/mu_dynamic). (default=1.0)\nXML Name: statDynFricScale",
+    "Period to analyze convergence of dynamic relaxation for initial conditions. (default=1.0)\nXML Name: dtIC": "Period to analyze convergence of dynamic relaxation for initial conditions. (default=1.0)\nXML Name: dtIC",
+    "Factor to scale drag coefficients during dynamic relaxation for initial conditions. (default=5)\nXML Name: cdScaleIC": "Factor to scale drag coefficients during dynamic relaxation for initial conditions. (default=5)\nXML Name: cdScaleIC",
+    "Max. time for initial conditions (s):": "Max. time for initial conditions (s):",
+    "Maximum time for initial conditions without convergence. (default=10)\nXML Name: tmaxIC": "Maximum time for initial conditions without convergence. (default=10)\nXML Name: tmaxIC",
+    "Line Stiffness (N):": "Line Stiffness (N):",
+    "Line stiffness, product of elasticity modulus and cross-sectional area.\nXML Name: ea": "Line stiffness, product of elasticity modulus and cross-sectional area.\nXML Name: ea",
+    "Volume-equivalent diameter of the line.\nXML Name: diameter": "Volume-equivalent diameter of the line.\nXML Name: diameter",
+    "Mass per unit length of the line.\nXML Name: massDenInAir": "Mass per unit length of the line.\nXML Name: massDenInAir",
+    "Line internal damping (BA/-zeta). (default=-0.8)\nXML Name: ba": "Line internal damping (BA/-zeta). (default=-0.8)\nXML Name: ba",
+    "Maximun tension for the lines:": "Maximun tension for the lines:",
+    "Maximum value of tension for the lines. value=0 Break Tension is not used. (default=0)\nXML Name: breaktension": "Maximum value of tension for the lines. value=0 Break Tension is not used. (default=0)\nXML Name: breaktension"
 }
