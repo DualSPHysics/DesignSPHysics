@@ -98,6 +98,7 @@ class MoorDynParametersDialog(QtGui.QDialog):
         self.solver_options_groupbox: QtGui.QGroupBox = QtGui.QGroupBox(__("Solver Options"))
         self.solver_options_groupbox_layout: QtGui.QFormLayout = QtGui.QFormLayout()
         self.water_depth_line_edit: QtGui.QLineEdit = QtGui.QLineEdit()
+        self.freesurface_line_edit: QtGui.QLineEdit = QtGui.QLineEdit()
 
         self.kBot_line_edit: QtGui.QLineEdit = QtGui.QLineEdit()
         self.kBot_line_check: QtGui.QCheckBox = QtGui.QCheckBox(__("Auto"))
@@ -122,6 +123,8 @@ class MoorDynParametersDialog(QtGui.QDialog):
 
         self.water_depth_label: QtGui.QLabel = QtGui.QLabel(__("Water Depth (m):"))
         self.water_depth_label.setToolTip(__("Gravitational constant. (default=9.81)\nXML Name: waterDepth"))
+        self.freesurface_label: QtGui.QLabel = QtGui.QLabel(__("Free Surface (m):"))
+        self.freesurface_label.setToolTip(__("Z position of the water free surface.(default=0\nXML Name: waterDepth"))
         self.kBot_label: QtGui.QLabel = QtGui.QLabel(__("Bottom stiffness constant (Pa/m):"))
         self.kBot_label.setToolTip(__("Bottom stiffness constant. (default=3.0e6)\nXML Name: kBot"))
         self.cBot_label: QtGui.QLabel = QtGui.QLabel(__("Bottom damping constant (Pa*s/m):"))
@@ -141,6 +144,7 @@ class MoorDynParametersDialog(QtGui.QDialog):
 
         self.solver_options_groupbox_layout.setLabelAlignment(QtCore.Qt.AlignLeft)
         self.solver_options_groupbox_layout.addRow(self.water_depth_label, self.water_depth_line_edit)
+        self.solver_options_groupbox_layout.addRow(self.freesurface_label, self.freesurface_line_edit)
         self.solver_options_groupbox_layout.addRow(self.kBot_label, self.kBot_line_edit_layout)
         self.solver_options_groupbox_layout.addRow(self.cBot_label, self.cBot_line_edit_layout)
         self.solver_options_groupbox_layout.addRow(self.fricdamp_label, self.fricdamp_line_edit)
@@ -299,6 +303,7 @@ class MoorDynParametersDialog(QtGui.QDialog):
         self.stored_configuration.solver_options.kBot = default_solver_options.kBot if self.kBot_line_check.isChecked() else str(self.kBot_line_edit.text())
         self.stored_configuration.solver_options.cBot = default_solver_options.cBot if self.cBot_line_check.isChecked() else str(self.cBot_line_edit.text())
         self.stored_configuration.solver_options.water_depth = float(self.water_depth_line_edit.text())
+        self.stored_configuration.solver_options.freesurface = float(self.freesurface_line_edit.text())
         self.stored_configuration.solver_options.fricDamp = float(self.fricdamp_line_edit.text())
         self.stored_configuration.solver_options.statDynFricScale = float(self.statdynfricscale_line_edit.text())
         self.stored_configuration.solver_options.dtIC = float(self.dtIC_line_edit.text())
@@ -400,6 +405,7 @@ class MoorDynParametersDialog(QtGui.QDialog):
         self.cBot_line_edit.setText(str(self.stored_configuration.solver_options.cBot))
         self.cBot_line_check.setChecked(self.stored_configuration.solver_options.cBot == default_solver_options.cBot)
         self.water_depth_line_edit.setText(str(self.stored_configuration.solver_options.water_depth))
+        self.freesurface_line_edit.setText(str(self.stored_configuration.solver_options.freesurface))
         self.fricdamp_line_edit.setText(str(self.stored_configuration.solver_options.fricDamp))
         self.statdynfricscale_line_edit.setText(str(self.stored_configuration.solver_options.statDynFricScale))
         self.dtIC_line_edit.setText(str(self.stored_configuration.solver_options.dtIC))

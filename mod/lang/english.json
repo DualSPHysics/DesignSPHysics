@@ -1130,5 +1130,7 @@
     "Mass per unit length of the line.\nXML Name: massDenInAir": "Mass per unit length of the line.\nXML Name: massDenInAir",
     "Line internal damping (BA/-zeta). (default=-0.8)\nXML Name: ba": "Line internal damping (BA/-zeta). (default=-0.8)\nXML Name: ba",
     "Maximun tension for the lines:": "Maximun tension for the lines:",
-    "Maximum value of tension for the lines. value=0 Break Tension is not used. (default=0)\nXML Name: breaktension": "Maximum value of tension for the lines. value=0 Break Tension is not used. (default=0)\nXML Name: breaktension"
+    "Maximum value of tension for the lines. value=0 Break Tension is not used. (default=0)\nXML Name: breaktension": "Maximum value of tension for the lines. value=0 Break Tension is not used. (default=0)\nXML Name: breaktension",
+    "Free Surface (m):": "Free Surface (m):",
+    "Z position of the water free surface.(default=0\nXML Name: waterDepth": "Z position of the water free surface.(default=0\nXML Name: waterDepth"
 }

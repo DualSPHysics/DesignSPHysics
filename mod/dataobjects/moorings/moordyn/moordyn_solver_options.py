@@ -9,6 +9,7 @@ class MoorDynSolverOptions():
     def __init__(self):
         self.gravity: float = 9.81
         self.water_depth: float = 0.5
+        self.freesurface: float = 0.0
         self.kBot: str = "3.0e6"
         self.cBot: str = "3.0e6"
         self.dtM: float = 0.0001
