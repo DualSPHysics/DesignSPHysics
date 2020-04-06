@@ -1,6 +1,7 @@
                         <line>
-                            <vesselconnection bodyref="{vessel_connection[bodyref]}" x="{vessel_connection[point][0]}" y="{vessel_connection[point][1]}" z="{vessel_connection[point][2]}" />
-                            <fixconnection x="{fix_connection[point][0]}" y="{fix_connection[point][1]}" z="{fix_connection[point][2]}" />
+{vessel1_template}
+{vessel2_template}
+{fix_template}
                             <length value="{length}" comment="(m)"/>
                             <segments value="{segments}" />
 {ea_template}

@@ -14,9 +14,11 @@ class MoorDynLine():
         self.line_id: int = line_id
 
         # Not more than 2 connections allowed.
-        self.vessel_connection: MoorDynVesselConnection = MoorDynVesselConnection()
-        self.fix_connection: MoorDynFixConnection = MoorDynFixConnection()
-        self.connect_connection: MoorDynConnectConnection = MoorDynConnectConnection()
+        self.vessel_connection: MoorDynVesselConnection = None
+        self.vessel2_connection: MoorDynVesselConnection = None
+        self.fix_connection: MoorDynFixConnection = None
+        self.connect_connection: MoorDynConnectConnection = None
+        self.connect2_connection: MoorDynConnectConnection = None
         self.length: float = 1.0
         self.segments: int = 20
 

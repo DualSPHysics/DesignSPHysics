@@ -1132,5 +1132,12 @@
     "Maximun tension for the lines:": "Maximun tension for the lines:",
     "Maximum value of tension for the lines. value=0 Break Tension is not used. (default=0)\nXML Name: breaktension": "Maximum value of tension for the lines. value=0 Break Tension is not used. (default=0)\nXML Name: breaktension",
     "Free Surface (m):": "Free Surface (m):",
-    "Z position of the water free surface.(default=0\nXML Name: waterDepth": "Z position of the water free surface.(default=0\nXML Name: waterDepth"
+    "Z position of the water free surface.(default=0\nXML Name: waterDepth": "Z position of the water free surface.(default=0\nXML Name: waterDepth",
+    "Type of connection: ": "Type of connection: ",
+    "2nd Vessel Connection: ": "2nd Vessel Connection: ",
+    "Vessel Connection (2nd): ": "Vessel Connection (2nd): ",
+    "Fix connection (X, Y, Z):": "Fix connection (X, Y, Z):",
+    "Line length (m): ": "Line length (m): ",
+    "Number of segments: ": "Number of segments: ",
+    "Fix Connection (X, Y, Z): ": "Fix Connection (X, Y, Z): "
 }

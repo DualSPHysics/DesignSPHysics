@@ -24,6 +24,8 @@ class MooringsRenderer():
     MOORDYN_LINE_DIAMETER_TEMPLATE = "/templates/gencase/moorings/moordyn/line/diameter.xml"
     MOORDYN_LINE_MASSDENINAIR_TEMPLATE = "/templates/gencase/moorings/moordyn/line/massdeninair.xml"
     MOORDYN_LINE_BA_TEMPLATE = "/templates/gencase/moorings/moordyn/line/ba.xml"
+    MOORDYN_LINE_VESSEL_CONNECTION_TEMPLATE = "/templates/gencase/moorings/moordyn/line/vessel_connection.xml"
+    MOORDYN_LINE_FIX_CONNECTION_TEMPLATE = "/templates/gencase/moorings/moordyn/line/fix_connection.xml"
 
     @classmethod
     def render(cls, data):
@@ -68,6 +70,9 @@ class MooringsRenderer():
 
         for line in data["moorings"]["moordyn_configuration"]["lines"]:
             line.update({
+                "vessel1_template": get_template_text(cls.MOORDYN_LINE_VESSEL_CONNECTION_TEMPLATE).format(**line["vessel_connection"]) if line["vessel_connection"] else "",
+                "vessel2_template": get_template_text(cls.MOORDYN_LINE_VESSEL_CONNECTION_TEMPLATE).format(**line["vessel2_connection"]) if line["vessel2_connection"] else "",
+                "fix_template": get_template_text(cls.MOORDYN_LINE_FIX_CONNECTION_TEMPLATE).format(**line["fix_connection"]) if line["fix_connection"] else "",
                 "ea_template": get_template_text(cls.MOORDYN_LINE_EA_TEMPLATE).format(**line) if line["ea"] else "",
                 "diameter_template": get_template_text(cls.MOORDYN_LINE_DIAMETER_TEMPLATE).format(**line) if line["diameter"] else "",
                 "massDenInAir_template": get_template_text(cls.MOORDYN_LINE_MASSDENINAIR_TEMPLATE).format(**line) if line["massDenInAir"] else "",
