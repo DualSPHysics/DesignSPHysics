@@ -274,7 +274,7 @@ def save_case(save_name: str, case: "Case") -> None:
 def get_default_config_file():
     """ Gets the default-config.json from disk """
     current_script_folder = path.dirname(path.realpath(__file__))
-    with open("{}/../default-config.json".format(current_script_folder)) as data_file:
+    with open("{}/../default-config.json".format(current_script_folder), encoding="utf-8") as data_file:
         loaded_data = json.load(data_file)
 
     if "win" in platform:
@@ -327,7 +327,7 @@ def import_geo(filename=None, scale_x=1, scale_y=1, scale_z=1, name=None, autofi
 
 def create_flowtool_boxes(file_path: str, boxes: list):
     """ Creates a file with flowtool box information """
-    with open(file_path, "w") as f:
+    with open(file_path, "w", encoding="utf-8") as f:
         box: FlowToolBox = None
         for box in boxes:
             f.write("BOX @{}\n".format(box.name))
@@ -346,12 +346,12 @@ def save_measuretool_info(case_path: str, points: list, grid: list) -> None:
     """ Creates a file with measuretool points/grid information.
         One of the parameters must be an empty list while the other must contain data. """
     if points:
-        with open("{}/points.txt".format(case_path), "w") as f:
+        with open("{}/points.txt".format(case_path), "w", encoding="utf-8") as f:
             f.write("POINTS\n")
             for curr_point in points:
                 f.write("{}  {}  {}\n".format(*curr_point))
     elif grid:
-        with open("{}/points.txt".format(case_path), "w") as f:
+        with open("{}/points.txt".format(case_path), "w", encoding="utf-8") as f:
             for curr_point in grid:
                 f.write("POINTSLIST\n")
                 f.write("{}  {}  {}\n{}  {}  {}\n{}  {}  {}\n".format(*curr_point))
@@ -361,7 +361,7 @@ def save_measuretool_info(case_path: str, points: list, grid: list) -> None:
 
 def load_default_materials() -> list:
     """ Loads and returns a list with the default materials on the project root. """
-    with open("{}/default-materials.json".format(get_designsphysics_path())) as default_config:
+    with open("{}/default-materials.json".format(get_designsphysics_path()), encoding="utf-8") as default_config:
         default_materials = json.load(default_config)
 
     to_ret = list()

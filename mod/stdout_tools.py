@@ -43,7 +43,7 @@ def debug(message):
 
 def dump_to_disk(text):
     """ Dumps text content into a file on disk """
-    with open("/tmp/{}".format(DISK_DUMP_FILE_NAME), "w") as error_dump:
+    with open("/tmp/{}".format(DISK_DUMP_FILE_NAME), "w", encoding="utf-8") as error_dump:
         error_dump.write(text)
 
 

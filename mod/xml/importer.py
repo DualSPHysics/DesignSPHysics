@@ -26,7 +26,7 @@ def import_xml_file(filename):
         in a GenCase/DSPH compatible XML file and a
        list of objects to add to simulation """
 
-    with open(filename, "rb") as target_file:
+    with open(filename, "r", encoding="utf-8") as target_file:
         target_xml = target_file.read().replace("\n", "")
 
     # Path to xml folder

@@ -24,7 +24,7 @@ def __(text):
     if not path.isfile(filename):
         filename = "{mod_directory}/lang/{locale}.json".format(mod_directory=mod_directory, locale="english")
 
-    with open(filename, "rb") as f:
+    with open(filename, "r", encoding="utf-8") as f:
         translation = json.load(f)
 
     # Tries to return the translation. It it does not exist, creates it
@@ -32,7 +32,7 @@ def __(text):
 
     if not to_ret:
         translation[text] = text
-        with open(filename, "w", encoding="utf8") as f:
+        with open(filename, "w", encoding="utf-8") as f:
             json.dump(translation, f, indent=4)
         return text
     return to_ret

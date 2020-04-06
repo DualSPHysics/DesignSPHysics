@@ -11,7 +11,7 @@ def get_template_text(template_path) -> str:
     template_data = ""
     mod_folder = path.dirname(path.realpath(__file__))
 
-    with open("{}{}".format(mod_folder, template_path), "r") as template:
+    with open("{}{}".format(mod_folder, template_path), "r", encoding="utf-8") as template:
         template_data = template.read()
     return template_data
 

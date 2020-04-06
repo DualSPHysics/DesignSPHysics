@@ -43,7 +43,7 @@ class ApplicationSettings():
         config_file: str = self.get_save_file()
         if not os.path.exists(config_file):
             return
-        with open(config_file, "r") as save_file:
+        with open(config_file, "r", encoding="utf-8") as save_file:
             disk_data: dict = json.load(save_file)
             if "debug_enabled" in disk_data.keys():
                 self.debug_enabled = disk_data["debug_enabled"]
@@ -56,5 +56,5 @@ class ApplicationSettings():
 
     def persist(self) -> None:
         """ Persists the current settings to disk for next instantiations to load. """
-        with open(self.get_save_file(), "w") as save_file:
+        with open(self.get_save_file(), "w", encoding="utf-8") as save_file:
             json.dump(self.__dict__, save_file, indent=4)
