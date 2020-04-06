@@ -51,6 +51,6 @@ def print_license():
     """ Prints this software license. """
     licpath = "{}{}".format(path.abspath(__file__).split("mod")[0], "LICENSE")
     if path.isfile(licpath) and ApplicationSettings.the().verbose_enabled:
-        with open(licpath) as licfile:
+        with open(licpath, encoding="utf-8") as licfile:
             FreeCAD.Console.PrintMessage(licfile.read())
             FreeCAD.Console.PrintMessage("\n\n")
