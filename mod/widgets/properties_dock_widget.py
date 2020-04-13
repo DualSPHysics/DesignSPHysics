@@ -502,8 +502,7 @@ class PropertiesDockWidget(QtGui.QDockWidget):
         self.initials_prop.setEnabled(sim_object.type == ObjectType.FLUID)
 
         # Object Motion button adaptation
-        if sim_object.supports_motion():
-            self.motion_prop.setEnabled(sim_object.type != ObjectType.FLUID)
+        self.motion_prop.setEnabled(sim_object.supports_motion())
 
         # Object Material button adaptation
         self.material_prop.setEnabled(sim_object.type == ObjectType.BOUND)
