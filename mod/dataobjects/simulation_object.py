@@ -59,7 +59,4 @@ class SimulationObject():
 
     def supports_motion(self) -> bool:
         """ Returns whether this object supports motion or not. """
-        fc_object = get_fc_object(self.name)
-        return fc_object.TypeId in SUPPORTED_TYPES \
-            or FreeCADObjectType.CUSTOM_MESH in str(fc_object.TypeId) or \
-            (fc_object.TypeId == FreeCADObjectType.FOLDER and "fillbox" in fc_object.Name.lower())
+        return self.type == ObjectType.BOUND
