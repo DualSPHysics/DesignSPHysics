@@ -110,3 +110,17 @@ class ExecutablePaths():
         """ Persists the current executable paths to disk for next Case instantiations to load. """
         with open(get_saved_config_file(), "wb") as picklefile:
             pickle.dump(self, picklefile, PICKLE_PROTOCOL)
+
+    def __str__(self):
+        return (
+            "Gencase: {gencase}\n"
+            "Dsphysics: {dsphysics}\n"
+            "Partvtk4: {partvtk4}\n"
+            "Floatinginfo: {floatinginfo}\n"
+            "Computeforces: {computeforces}\n"
+            "Measuretool: {measuretool}\n"
+            "Isosurface: {isosurface}\n"
+            "Boundaryvtk: {boundaryvtk}\n"
+            "Flowtool: {flowtool}\n"
+            "Paraview: {paraview}"
+        ).format(**self.__dict__)
