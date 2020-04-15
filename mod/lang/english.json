@@ -1139,5 +1139,11 @@
     "Fix connection (X, Y, Z):": "Fix connection (X, Y, Z):",
     "Line length (m): ": "Line length (m): ",
     "Number of segments: ": "Number of segments: ",
-    "Fix Connection (X, Y, Z): ": "Fix Connection (X, Y, Z): "
+    "Fix Connection (X, Y, Z): ": "Fix Connection (X, Y, Z): ",
+    "Feature support repot": "Feature support repot",
+    "Feature support report": "Feature support report",
+    "DualSPHysics Suite Feature Report": "DualSPHysics Suite Feature Report",
+    "Feature Report": "Feature Report",
+    "Supported": "Supported",
+    "Not supported": "Not supported"
 }

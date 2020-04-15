@@ -9,6 +9,8 @@ from mod.executable_tools import executable_contains_string
 from mod.dialog_tools import error_dialog
 from mod.file_tools import get_default_config_file
 
+from mod.widgets.feature_support_dialog import FeatureSupportDialog
+
 from mod.dataobjects.case import Case
 from mod.dataobjects.application_settings import ApplicationSettings
 
@@ -23,6 +25,7 @@ class SetupPluginDialog(QtGui.QDialog):
         self.ok_button = QtGui.QPushButton("OK")
         self.cancel_button = QtGui.QPushButton("Cancel")
         self.defaults_button = QtGui.QPushButton(__("Load defaults"))
+        self.feature_support_button = QtGui.QPushButton(__("Feature support report"))
 
         # GenCase path
         self.gencasepath_layout = QtGui.QHBoxLayout()
@@ -145,6 +148,7 @@ class SetupPluginDialog(QtGui.QDialog):
         self.paraview_layout.addWidget(self.paraview_browse)
 
         self.defaults_button.clicked.connect(self.on_set_defaults)
+        self.feature_support_button.clicked.connect(self.on_feature_support)
         self.ok_button.clicked.connect(self.on_ok)
         self.cancel_button.clicked.connect(self.on_cancel)
         self.gencasepath_browse.clicked.connect(lambda: self.browse("GenCase", self.gencasepath_input))
@@ -203,6 +207,7 @@ class SetupPluginDialog(QtGui.QDialog):
         # Button layout definition
         self.button_layout = QtGui.QHBoxLayout()
         self.button_layout.addWidget(self.defaults_button)
+        self.button_layout.addWidget(self.feature_support_button)
         self.button_layout.addStretch(1)
         self.button_layout.addWidget(self.ok_button)
         self.button_layout.addWidget(self.cancel_button)
@@ -237,6 +242,12 @@ class SetupPluginDialog(QtGui.QDialog):
         ApplicationSettings.the().force_moordyn_support_enabled = self.force_moordyn_support_check.isChecked()
         ApplicationSettings.the().persist()
         self.accept()
+
+    def on_feature_support(self):
+        """ Displays a dialog with the features currently supported by the currently configured executables. """
+        current_executables = Case.the().executable_paths
+
+        FeatureSupportDialog(current_executables).exec_()
 
     def on_set_defaults(self):
         """ Set the executable paths on the dialog to the defaults ones. """
