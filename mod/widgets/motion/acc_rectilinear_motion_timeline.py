@@ -63,9 +63,9 @@ class AccRectilinearMotionTimeline(QtGui.QWidget):
         self.data_velocity_layout.addWidget(self.z_input)
 
         self.data_acceleration_layout.addWidget(self.acceleration_label)
-        self.data_acceleration_layout.addWidget(self.x_input)
-        self.data_acceleration_layout.addWidget(self.y_input)
-        self.data_acceleration_layout.addWidget(self.z_input)
+        self.data_acceleration_layout.addWidget(self.xa_input)
+        self.data_acceleration_layout.addWidget(self.ya_input)
+        self.data_acceleration_layout.addWidget(self.za_input)
 
         self.data_layout.addLayout(self.data_velocity_layout)
         self.data_layout.addLayout(self.data_acceleration_layout)
