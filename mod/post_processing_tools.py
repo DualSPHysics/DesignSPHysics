@@ -58,7 +58,7 @@ def partvtk_export(options, case, post_processing_widget) -> None:
         """ Closes and displays info/error about the process. """
         post_processing_widget.adapt_to_export_finished()
         export_dialog.accept()
-        detailed_text = "The executed command line was: {} {}\n\n{}".format(case.executable_paths.partvtk4, " ".join(executable_parameters), case.info.current_output)
+        detailed_text = "The executed command line was: {} {}\n\n{}".format(case.executable_paths.partvtk, " ".join(executable_parameters), case.info.current_output)
 
         if not exit_code:
             info_dialog(info_text=__("PartVTK finished successfully"), detailed_text=detailed_text)
@@ -72,8 +72,8 @@ def partvtk_export(options, case, post_processing_widget) -> None:
     export_process = QtCore.QProcess(get_fc_main_window())
     export_process.finished.connect(on_export_finished)
     export_process.readyReadStandardOutput.connect(on_stdout_ready)
-    ensure_process_is_executable_or_fail(case.executable_paths.partvtk4)
-    export_process.start(case.executable_paths.partvtk4, executable_parameters)
+    ensure_process_is_executable_or_fail(case.executable_paths.partvtk)
+    export_process.start(case.executable_paths.partvtk, executable_parameters)
 
 
 def floatinginfo_export(options, case, post_processing_widget) -> None:

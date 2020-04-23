@@ -51,17 +51,17 @@ class SetupPluginDialog(QtGui.QDialog):
         self.dsphpath_layout.addWidget(self.dsphpath_input)
         self.dsphpath_layout.addWidget(self.dsphpath_browse)
 
-        # PartVTK4 path
-        self.partvtk4path_layout = QtGui.QHBoxLayout()
-        self.partvtk4path_label = QtGui.QLabel("PartVTK Path: ")
-        self.partvtk4path_input = QtGui.QLineEdit()
-        self.partvtk4path_input.setText(Case.the().executable_paths.partvtk4)
-        self.partvtk4path_input.setPlaceholderText("Put PartVTK4 path here")
-        self.partvtk4path_browse = QtGui.QPushButton("...")
+        # PartVTK path
+        self.partvtkpath_layout = QtGui.QHBoxLayout()
+        self.partvtkpath_label = QtGui.QLabel("PartVTK Path: ")
+        self.partvtkpath_input = QtGui.QLineEdit()
+        self.partvtkpath_input.setText(Case.the().executable_paths.partvtk)
+        self.partvtkpath_input.setPlaceholderText("Put PartVTK path here")
+        self.partvtkpath_browse = QtGui.QPushButton("...")
 
-        self.partvtk4path_layout.addWidget(self.partvtk4path_label)
-        self.partvtk4path_layout.addWidget(self.partvtk4path_input)
-        self.partvtk4path_layout.addWidget(self.partvtk4path_browse)
+        self.partvtkpath_layout.addWidget(self.partvtkpath_label)
+        self.partvtkpath_layout.addWidget(self.partvtkpath_input)
+        self.partvtkpath_layout.addWidget(self.partvtkpath_browse)
 
         # ComputeForces path
         self.computeforces_layout = QtGui.QHBoxLayout()
@@ -153,7 +153,7 @@ class SetupPluginDialog(QtGui.QDialog):
         self.cancel_button.clicked.connect(self.on_cancel)
         self.gencasepath_browse.clicked.connect(lambda: self.browse("GenCase", self.gencasepath_input))
         self.dsphpath_browse.clicked.connect(lambda: self.browse("DualSPHysics", self.dsphpath_input))
-        self.partvtk4path_browse.clicked.connect(lambda: self.browse("PartVTK4", self.partvtk4path_input))
+        self.partvtkpath_browse.clicked.connect(lambda: self.browse("PartVTK", self.partvtkpath_input))
         self.computeforces_browse.clicked.connect(lambda: self.browse("ComputeForces", self.computeforces_input))
         self.floatinginfo_browse.clicked.connect(lambda: self.browse("FloatingInfo", self.floatinginfo_input))
         self.measuretool_browse.clicked.connect(lambda: self.browse("MeasureTool", self.measuretool_input))
@@ -166,7 +166,7 @@ class SetupPluginDialog(QtGui.QDialog):
         self.executables_layout = QtGui.QVBoxLayout()
         self.executables_layout.addLayout(self.gencasepath_layout)
         self.executables_layout.addLayout(self.dsphpath_layout)
-        self.executables_layout.addLayout(self.partvtk4path_layout)
+        self.executables_layout.addLayout(self.partvtkpath_layout)
         self.executables_layout.addLayout(self.computeforces_layout)
         self.executables_layout.addLayout(self.floatinginfo_layout)
         self.executables_layout.addLayout(self.measuretool_layout)
@@ -226,7 +226,7 @@ class SetupPluginDialog(QtGui.QDialog):
         """ Dumps the data from the dialog onto the main case data structure. """
         Case.the().executable_paths.gencase = self.gencasepath_input.text()
         Case.the().executable_paths.dsphysics = self.dsphpath_input.text()
-        Case.the().executable_paths.partvtk4 = self.partvtk4path_input.text()
+        Case.the().executable_paths.partvtk = self.partvtkpath_input.text()
         Case.the().executable_paths.computeforces = self.computeforces_input.text()
         Case.the().executable_paths.floatinginfo = self.floatinginfo_input.text()
         Case.the().executable_paths.measuretool = self.measuretool_input.text()
@@ -254,7 +254,7 @@ class SetupPluginDialog(QtGui.QDialog):
         default_config: dict = get_default_config_file()
         self.gencasepath_input.setText(default_config["gencase"])
         self.dsphpath_input.setText(default_config["dsphysics"])
-        self.partvtk4path_input.setText(default_config["partvtk4"])
+        self.partvtkpath_input.setText(default_config["partvtk"])
         self.computeforces_input.setText(default_config["computeforces"])
         self.floatinginfo_input.setText(default_config["floatinginfo"])
         self.measuretool_input.setText(default_config["measuretool"])

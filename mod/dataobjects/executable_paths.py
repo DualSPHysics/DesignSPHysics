@@ -20,7 +20,7 @@ class ExecutablePaths():
     def __init__(self):
         self.gencase: str = ""
         self.dsphysics: str = ""
-        self.partvtk4: str = ""
+        self.partvtk: str = ""
         self.floatinginfo: str = ""
         self.computeforces: str = ""
         self.measuretool: str = ""
@@ -38,7 +38,7 @@ class ExecutablePaths():
         execs_to_check = {
             "gencase": self.gencase,
             "dualsphysics": self.dsphysics,
-            "partvtk4": self.partvtk4,
+            "partvtk": self.partvtk,
             "floatinginfo": self.floatinginfo,
             "computeforces": self.computeforces,
             "measuretool": self.measuretool,
@@ -79,7 +79,7 @@ class ExecutablePaths():
         default_data: dict = get_default_config_file()
         self.gencase = default_data["gencase"]
         self.dsphysics = default_data["dsphysics"]
-        self.partvtk4 = default_data["partvtk4"]
+        self.partvtk = default_data["partvtk"]
         self.floatinginfo = default_data["floatinginfo"]
         self.computeforces = default_data["computeforces"]
         self.measuretool = default_data["measuretool"]
@@ -97,7 +97,7 @@ class ExecutablePaths():
             obj: ExecutablePaths = pickle.load(picklefile)
             self.gencase = obj.gencase
             self.dsphysics = obj.dsphysics
-            self.partvtk4 = obj.partvtk4
+            self.partvtk = obj.partvtk
             self.floatinginfo = obj.floatinginfo
             self.computeforces = obj.computeforces
             self.measuretool = obj.measuretool
@@ -115,7 +115,7 @@ class ExecutablePaths():
         return (
             "Gencase: {gencase}\n"
             "Dsphysics: {dsphysics}\n"
-            "Partvtk4: {partvtk4}\n"
+            "PartVTK: {partvtk}\n"
             "Floatinginfo: {floatinginfo}\n"
             "Computeforces: {computeforces}\n"
             "Measuretool: {measuretool}\n"
