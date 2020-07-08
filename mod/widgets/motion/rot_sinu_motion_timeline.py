@@ -38,33 +38,23 @@ class RotSinuMotionTimeline(QtGui.QWidget):
         self.axis_first_row_layout = QtGui.QHBoxLayout()
         self.axis_second_row_layout = QtGui.QHBoxLayout()
         self.x1_input = QtGui.QLineEdit()
-        self.x1_input.setStyleSheet("width: 5px;")
         self.y1_input = QtGui.QLineEdit()
-        self.y1_input.setStyleSheet("width: 5px;")
         self.z1_input = QtGui.QLineEdit()
-        self.z1_input.setStyleSheet("width: 5px;")
         self.x2_input = QtGui.QLineEdit()
-        self.x2_input.setStyleSheet("width: 5px;")
         self.y2_input = QtGui.QLineEdit()
-        self.y2_input.setStyleSheet("width: 5px;")
         self.z2_input = QtGui.QLineEdit()
-        self.z2_input.setStyleSheet("width: 5px;")
 
         self.freq_label = QtGui.QLabel("Freq (hz)")
         self.freq_input = QtGui.QLineEdit()
-        self.freq_input.setStyleSheet("width: 5px;")
 
         self.ampl_label = QtGui.QLabel("Ampl (rad)")
         self.ampl_input = QtGui.QLineEdit()
-        self.ampl_input.setStyleSheet("width: 5px;")
 
         self.phase_label = QtGui.QLabel("Phase (rad)")
         self.phase_input = QtGui.QLineEdit()
-        self.phase_input.setStyleSheet("width: 5px;")
 
         self.time_label = QtGui.QLabel(__("Duration (s): "))
         self.time_input = QtGui.QLineEdit()
-        self.time_input.setStyleSheet("width: 5px;")
         self.delete_button = QtGui.QPushButton(
             get_icon("trash.png"), None)
         self.order_button_layout = QtGui.QVBoxLayout()

@@ -35,7 +35,6 @@ class WaitMotionTimeline(QtGui.QWidget):
         self.label.setMinimumWidth(75)
         self.time_label = QtGui.QLabel(__("Duration (s): "))
         self.time_input = QtGui.QLineEdit()
-        self.time_input.setStyleSheet("width: 5px;")
         self.delete_button = QtGui.QPushButton(
             get_icon("trash.png"), None)
         self.order_button_layout = QtGui.QVBoxLayout()

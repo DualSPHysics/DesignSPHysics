@@ -43,19 +43,13 @@ class AccRectilinearMotionTimeline(QtGui.QWidget):
 
         self.velocity_label = QtGui.QLabel("Vel (X, Y, Z): ")
         self.x_input = QtGui.QLineEdit()
-        self.x_input.setStyleSheet("width: 5px;")
         self.y_input = QtGui.QLineEdit()
-        self.y_input.setStyleSheet("width: 5px;")
         self.z_input = QtGui.QLineEdit()
-        self.z_input.setStyleSheet("width: 5px;")
 
         self.acceleration_label = QtGui.QLabel("Acc (X, Y, Z): ")
         self.xa_input = QtGui.QLineEdit()
-        self.xa_input.setStyleSheet("width: 5px;")
         self.ya_input = QtGui.QLineEdit()
-        self.ya_input.setStyleSheet("width: 5px;")
         self.za_input = QtGui.QLineEdit()
-        self.za_input.setStyleSheet("width: 5px;")
 
         self.data_velocity_layout.addWidget(self.velocity_label)
         self.data_velocity_layout.addWidget(self.x_input)
@@ -72,7 +66,6 @@ class AccRectilinearMotionTimeline(QtGui.QWidget):
 
         self.time_label = QtGui.QLabel(__("Duration (s): "))
         self.time_input = QtGui.QLineEdit()
-        self.time_input.setStyleSheet("width: 5px;")
         self.delete_button = QtGui.QPushButton(
             get_icon("trash.png"), None)
         self.order_button_layout = QtGui.QVBoxLayout()
