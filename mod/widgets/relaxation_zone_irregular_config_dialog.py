@@ -6,6 +6,8 @@ from PySide import QtGui
 
 from mod.translation_tools import __
 
+from mod.enums import IrregularSpectrum, IrregularDiscretization
+
 from mod.dataobjects.relaxation_zone_irregular import RelaxationZoneIrregular
 
 
@@ -262,8 +264,8 @@ class RelaxationZoneIrregularConfigDialog(QtGui.QDialog):
         self.temp_relaxationzone.start = float(self.start_input.text())
         self.temp_relaxationzone.duration = float(self.duration_input.text())
         self.temp_relaxationzone.peakcoef = float(self.peakcoef_input.text())
-        self.temp_relaxationzone.spectrum = self.spectrum_selector.currentIndex()
-        self.temp_relaxationzone.discretization = self.discretization_selector.currentIndex()
+        self.temp_relaxationzone.spectrum = {0: IrregularSpectrum.JONSWAP, 1: IrregularSpectrum.PIERSON_MOSKOWITZ}[self.spectrum_selector.currentIndex()]
+        self.temp_relaxationzone.discretization = {0: IrregularDiscretization.REGULAR, 1: IrregularDiscretization.RANDOM, 2: IrregularDiscretization.STRETCHED, 3: IrregularDiscretization.COSSTRETCHED}[self.discretization_selector.currentIndex()]
         self.temp_relaxationzone.waveorder = float(self.waveorder_input.text())
         self.temp_relaxationzone.waveheight = float(self.waveheight_input.text())
         self.temp_relaxationzone.waveperiod = float(self.waveperiod_input.text())
@@ -308,8 +310,8 @@ class RelaxationZoneIrregularConfigDialog(QtGui.QDialog):
         self.start_input.setText(str(self.temp_relaxationzone.start))
         self.duration_input.setText(str(self.temp_relaxationzone.duration))
         self.peakcoef_input.setText(str(self.temp_relaxationzone.peakcoef))
-        self.spectrum_selector.setCurrentIndex(self.temp_relaxationzone.spectrum)
-        self.discretization_selector.setCurrentIndex(self.temp_relaxationzone.discretization)
+        self.spectrum_selector.setCurrentIndex({IrregularSpectrum.JONSWAP: 0, IrregularSpectrum.PIERSON_MOSKOWITZ: 1}[self.temp_relaxationzone.spectrum])
+        self.discretization_selector.setCurrentIndex({IrregularDiscretization.REGULAR: 0, IrregularDiscretization.RANDOM: 1, IrregularDiscretization.STRETCHED: 2, IrregularDiscretization.COSSTRETCHED: 3}[self.temp_relaxationzone.discretization])
         self.waveorder_input.setText(str(self.temp_relaxationzone.waveorder))
         self.waveheight_input.setText(str(self.temp_relaxationzone.waveheight))
         self.waveperiod_input.setText(str(self.temp_relaxationzone.waveperiod))
