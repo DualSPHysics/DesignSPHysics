@@ -3,6 +3,7 @@
 """DesignSPHysics Dock Execution Widget """
 
 import os
+from sys import platform
 
 from PySide import QtGui, QtCore
 
@@ -148,6 +149,8 @@ class DockSimulationWidget(QtGui.QWidget):
         process.finished.connect(on_dsph_sim_finished)
 
         ensure_process_is_executable_or_fail(Case.the().executable_paths.dsphysics)
+        if platform in ("linux", "linux2"):
+            os.environ["LD_LIBRARY_PATH"] = os.path.dirname(Case.the().executable_paths.dsphysics)
         process.start(Case.the().executable_paths.dsphysics, final_params_ex)
 
         def on_fs_change():
