@@ -54,7 +54,7 @@ class DockSimulationWidget(QtGui.QWidget):
 
         # Additional parameters button
         self.additional_parameters_button = QtGui.QPushButton(__("Additional parameters"))
-        self.additional_parameters_button.setToolTip("__(Sets simulation additional parameters for execution.)")
+        self.additional_parameters_button.setToolTip(__("Sets simulation additional parameters for execution."))
         self.additional_parameters_button.clicked.connect(self.on_additional_parameters)
 
         self.button_layout = QtGui.QHBoxLayout()
