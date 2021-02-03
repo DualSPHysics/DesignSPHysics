@@ -1,24 +1,24 @@
 {
     "windows":{
-        "gencase": "./dualsphysics/bin/GenCase4_win64.exe",
-        "dsphysics": "./dualsphysics/bin/DualSPHysics4.4_win64.exe",
-        "partvtk": "./dualsphysics/bin/PartVTK4_win64.exe",
-        "computeforces": "./dualsphysics/bin/ComputeForces4_win64.exe",
-        "floatinginfo": "./dualsphysics/bin/FloatingInfo4_win64.exe",
-        "measuretool": "./dualsphysics/bin/MeasureTool4_win64.exe",
-        "isosurface": "./dualsphysics/bin/IsoSurface4_win64.exe",
-        "boundaryvtk": "./dualsphysics/bin/BoundaryVTK4_win64.exe",
-        "flowtool": "./dualsphysics/bin/FlowTool4_win64.exe"
+        "gencase": "./dualsphysics/bin/GenCase_win64.exe",
+        "dsphysics": "./dualsphysics/bin/DualSPHysics5.0_win64.exe",
+        "partvtk": "./dualsphysics/bin/PartVTK_win64.exe",
+        "computeforces": "./dualsphysics/bin/ComputeForces_win64.exe",
+        "floatinginfo": "./dualsphysics/bin/FloatingInfo_win64.exe",
+        "measuretool": "./dualsphysics/bin/MeasureTool_win64.exe",
+        "isosurface": "./dualsphysics/bin/IsoSurface_win64.exe",
+        "boundaryvtk": "./dualsphysics/bin/BoundaryVTK_win64.exe",
+        "flowtool": "./dualsphysics/bin/FlowTool_win64.exe"
     },
     "linux":{
-        "gencase": "./dualsphysics/bin/GenCase4_linux64",
-        "dsphysics": "./dualsphysics/bin/DualSPHysics4.4_linux64",
-        "partvtk": "./dualsphysics/bin/PartVTK4_linux64",
-        "computeforces": "./dualsphysics/bin/ComputeForces4_linux64",
-        "floatinginfo": "./dualsphysics/bin/FloatingInfo4_linux64",
-        "measuretool": "./dualsphysics/bin/MeasureTool4_linux64",
-        "isosurface": "./dualsphysics/bin/IsoSurface4_linux64",
-        "boundaryvtk": "./dualsphysics/bin/BoundaryVTK4_linux64",
-        "flowtool": "./dualsphysics/bin/FlowTool4_linux64"
+        "gencase": "./dualsphysics/bin/GenCase_linux64",
+        "dsphysics": "./dualsphysics/bin/DualSPHysics5.0_linux64",
+        "partvtk": "./dualsphysics/bin/PartVTK_linux64",
+        "computeforces": "./dualsphysics/bin/ComputeForces_linux64",
+        "floatinginfo": "./dualsphysics/bin/FloatingInfo_linux64",
+        "measuretool": "./dualsphysics/bin/MeasureTool_linux64",
+        "isosurface": "./dualsphysics/bin/IsoSurface_linux64",
+        "boundaryvtk": "./dualsphysics/bin/BoundaryVTK_linux64",
+        "flowtool": "./dualsphysics/bin/FlowTool_linux64"
     }
 }
