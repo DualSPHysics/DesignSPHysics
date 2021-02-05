@@ -45,9 +45,9 @@ class SpecialOptionsSelectorDialog(QtGui.QDialog):
         self.setMinimumWidth(200)
         self.sp_window_layout = QtGui.QVBoxLayout()
 
-        self.sp_damping_button = QtGui.QPushButton(__("New Damping Zone"))
+        self.sp_damping_button = QtGui.QPushButton(__("Damping Zone"))
         self.sp_inlet_button = QtGui.QPushButton(__("Inlet/Outlet"))
-        self.sp_chrono_button = QtGui.QPushButton(__("Coupling CHRONO"))
+        self.sp_chrono_button = QtGui.QPushButton(__("Project Chrono"))
         self.sp_multilayeredmb_button = QtGui.QPushButton(__("Multi-layered Piston"))
         self.sp_multilayeredmb_menu = QtGui.QMenu()
         self.sp_multilayeredmb_menu.addAction(__("1 Dimension"))
@@ -75,13 +75,13 @@ class SpecialOptionsSelectorDialog(QtGui.QDialog):
         self.sp_moorings_button.clicked.connect(self.on_moorings_button)
 
         # Add buttons to the special window
-        self.sp_window_layout.addWidget(self.sp_damping_button)
         self.sp_window_layout.addWidget(self.sp_inlet_button)
+        self.sp_window_layout.addWidget(self.sp_accinput_button)
         self.sp_window_layout.addWidget(self.sp_chrono_button)
+        self.sp_window_layout.addWidget(self.sp_moorings_button)
+        self.sp_window_layout.addWidget(self.sp_damping_button)
         self.sp_window_layout.addWidget(self.sp_multilayeredmb_button)
         self.sp_window_layout.addWidget(self.sp_relaxationzone_button)
-        self.sp_window_layout.addWidget(self.sp_accinput_button)
-        self.sp_window_layout.addWidget(self.sp_moorings_button)
 
         self.setLayout(self.sp_window_layout)
 

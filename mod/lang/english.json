@@ -1149,5 +1149,7 @@
     "Molteni": "Molteni",
     "Fourtakas": "Fourtakas",
     "Fourtakas (Full)": "Fourtakas (Full)",
-    "Sets simulation additional parameters for execution.": "Sets simulation additional parameters for execution."
+    "Sets simulation additional parameters for execution.": "Sets simulation additional parameters for execution.",
+    "Damping Zone": "Damping Zone",
+    "Project Chrono": "Project Chrono"
 }
