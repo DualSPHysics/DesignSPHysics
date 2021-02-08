@@ -179,9 +179,9 @@ class DockSimulationWidget(QtGui.QWidget):
                 current_value = None
 
             # Update particles out
-            last_particles_out_lines = list(filter(lambda x: "(total: " in x and "Particles out:" in x, run_file_data))
+            last_particles_out_lines = list(filter(lambda x: "total out: " in x, run_file_data))
             if last_particles_out_lines:
-                totalpartsout = int(last_particles_out_lines[-1].split("(total: ")[1].split(")")[0])
+                totalpartsout = int(last_particles_out_lines[-1].split("(total out: ")[1].split(")")[0])
 
             try:
                 last_estimated_time = str(" ".join(last_part_lines[-1].split(None)[-2:]))
