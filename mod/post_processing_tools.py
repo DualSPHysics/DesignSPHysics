@@ -103,8 +103,8 @@ def floatinginfo_export(options, case, post_processing_widget) -> None:
         current_output = str(export_process.readAllStandardOutput().data(), encoding='utf-8')
         case.info.current_output += current_output
         try:
-            current_part = int(current_output.split("Part_")[1].split("  ")[0])
-        except IndexError:
+            current_part = int(current_output.split("Part_")[-1].split(".bi4")[0])
+        except (IndexError, ValueError):
             current_part = export_dialog.get_value()
         export_dialog.update_data(current_part)
 
