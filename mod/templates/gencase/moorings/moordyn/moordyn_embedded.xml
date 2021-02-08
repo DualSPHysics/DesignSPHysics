@@ -1,6 +1,5 @@
                 <moordyn comment="MoorDyn configuration">
                     <solverOptions>
-                        <gravity value="{solver_options[gravity]}" comment="(m/s^2)"/>
                         <waterDepth value="{solver_options[water_depth]}" comment="Water depth" units_comment="(m)"/>
                         <freesurface value="{solver_options[freesurface]}" comment="Z position of the water free surface.(default=0)" />
                         <kBot value="{solver_options[kBot]}" comment="Bottom stiffness constant. (default=3.0e6)" units_comment="Pa/m" />
@@ -15,7 +14,6 @@
                         <cdScaleIC value="{solver_options[cdScaleIC]}" comment="Factor to scale drag coefficients during dynamic relaxation for initial conditions. (default=5)" />    
                         <threshIC value="{solver_options[threshIC]}" comment="Convergence threshold for for initial conditions. (default=0.001)" />
                         <tmaxIC value="{solver_options[tmaxIC]}" comment="Maximum time for initial conditions without convergence.(default=0)" units_comment="s" /> 
-                        <timeMax value="{solver_options[timeMax]}" comment="Time of simulation(s)" />
                     </solverOptions>
                     <bodies>
 {bodies_template}
