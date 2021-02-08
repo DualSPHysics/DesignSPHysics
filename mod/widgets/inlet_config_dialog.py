@@ -47,7 +47,7 @@ class InletConfigDialog(QtGui.QDialog):
 
     MINIMUM_WIDTH = 570
     MINIMUM_HEIGHT = 630
-    MINIMUM_TABLE_SECTION_HEIGHT = 40
+    MINIMUM_TABLE_SECTION_HEIGHT = 64
 
     def __init__(self, parent=None):
         super().__init__(parent=parent)
