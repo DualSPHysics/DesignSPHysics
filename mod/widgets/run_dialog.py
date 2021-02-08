@@ -122,7 +122,7 @@ class RunDialog(QtGui.QDialog):
         self.run_progbar_bar.setValue(100)
         self.run_button_cancel.setText(__("Close"))
         self.run_group_label_completed.setVisible(True)
-        self.run_details_text.setText("<b>{}:</b> <tt>{}</tt><br><pre>{}</pre>".format(__("The executed command line was"), self.cmd_string, self.run_details_text.toPlainText()))
+        self.run_details_text.setPlainText("{}: {}\n{}".format(__("The executed command line was"), self.cmd_string, self.run_details_text.toPlainText()))
         self.run_details_text.moveCursor(QtGui.QTextCursor.Start)
         self.compute_warnings()
 
@@ -131,7 +131,7 @@ class RunDialog(QtGui.QDialog):
         details_text: str = self.run_details_text.toPlainText()
         if "[WARNINGS]" not in details_text:
             return
-        warning_list: list = details_text.split("[WARNINGS]\n")[1].split("\n\n")[0].split("\n")
+        warning_list: list = details_text.split("[WARNINGS]\n")[-1].split("\n\n")[0].split("\n")
         self.run_group_label_completed.setText("<b style='color: #ABA400'>{}</b>".format(__("Simulation completed with warnings.")))
         try:
             self.run_button_warnings.clicked.disconnect()
@@ -147,5 +147,5 @@ class RunDialog(QtGui.QDialog):
 
     def set_detail_text(self, details: str) -> None:
         """ Sets the details text contents and scrolls it to the bottom. """
-        self.run_details_text.setText(details.replace("\\n", "\n"))
+        self.run_details_text.setPlainText(details.replace("\\n", "\n"))
         self.run_details_text.moveCursor(QtGui.QTextCursor.End)

@@ -117,11 +117,10 @@ class DockSimulationWidget(QtGui.QWidget):
         def on_dsph_sim_finished(exit_code):
             """ Simulation finish handler. Defines what happens when the process finishes."""
 
-            # Reads output and completes the progress bar
-            try:
-                output = str(process.readAllStandardOutput().data(), encoding='utf-8')
-            except UnicodeDecodeError:
-                output = str(process.readAllStandardOutput().data(), encoding='latin1')
+            # Reads output from the .out file and completes the progress bar
+            output = ""
+            with open(Case.the().path + "/" + Case.the().name + "_out/Run.out", "r", encoding="utf-8") as run_file:
+                output = "".join(run_file.readlines())
 
             run_dialog.set_detail_text(str(output))
             run_dialog.run_complete()
