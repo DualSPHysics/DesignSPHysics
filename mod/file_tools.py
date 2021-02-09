@@ -318,11 +318,13 @@ def import_geo(filename=None, scale_x=1, scale_y=1, scale_z=1, name=None, autofi
     scale_matrix = FreeCAD.Matrix()
     scale_matrix.scale(scale_x, scale_y, scale_z)
     loaded_mesh.transform(scale_matrix)
-    Mesh.show(loaded_mesh, name)
+    internal_name = "external_{}".format(name)
+    Mesh.show(loaded_mesh, internal_name)
     FreeCADGui.SendMsgToActiveView("ViewFit")
 
-    case.add_object(SimulationObject(name, case.get_first_mk_not_used(ObjectType.BOUND), ObjectType.BOUND, ObjectFillMode.SOLID))
-    case.get_simulation_object(name).autofill = autofill
+    case.add_object(SimulationObject(internal_name, case.get_first_mk_not_used(ObjectType.BOUND), ObjectType.BOUND, ObjectFillMode.SOLID))
+    case.get_simulation_object(internal_name).autofill = autofill
+    get_fc_object(internal_name).Label = name
 
 
 def create_flowtool_boxes(file_path: str, boxes: list):

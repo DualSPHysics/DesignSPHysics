@@ -19,7 +19,7 @@ class SimulationObject():
         self.obj_mk: int = obj_mk
         self.type: ObjectType = obj_type
         self.fillmode: ObjectFillMode = fillmode
-        self.autofill: bool = None  # Only set for imported objects
+        self.autofill: bool = False  # Only set for imported objects
         self.frdrawmode: bool = False
         self.faces_configuration: FacesProperty = None
 

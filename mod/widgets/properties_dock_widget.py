@@ -508,7 +508,7 @@ class PropertiesDockWidget(QtGui.QDockWidget):
         self.material_prop.setEnabled(sim_object.type == ObjectType.BOUND)
 
         # Is an external object that supports autofill
-        self.autofill_prop.setEnabled(sim_object.autofill is not None)
+        self.autofill_prop.setEnabled(sim_object.name.startswith("external_"))
 
         # Is an object that supports frdrawmode
         self.frdrawmode_prop.setEnabled(fc_object.TypeId in (FreeCADObjectType.BOX, FreeCADObjectType.CYLINDER, FreeCADObjectType.SPHERE))
