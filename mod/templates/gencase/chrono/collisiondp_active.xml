@@ -1,0 +1,5 @@
+                <collision activate="true">
+                    <distancedp value="{distancedp}" comment="Allowed collision overlap according Dp (default=0.5)" />
+                    <ompthreads value="{ompthreads}" comment="Number of threads by host for parallel execution. 0:Multi-Core, 1:Single-Core (default=1)" />
+                    <contactmethod value="{contactmethod}" comment="Contact method type. 0:NSC (Non Smooth Contacts), 1:SMC (SMooth Contacts). (default=0)" />
+                </collision>

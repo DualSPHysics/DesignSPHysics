@@ -1151,5 +1151,6 @@
     "Fourtakas (Full)": "Fourtakas (Full)",
     "Sets simulation additional parameters for execution.": "Sets simulation additional parameters for execution.",
     "Damping Zone": "Damping Zone",
-    "Project Chrono": "Project Chrono"
+    "Project Chrono": "Project Chrono",
+    "Enable/Disable Collision": "Enable/Disable Collision"
 }

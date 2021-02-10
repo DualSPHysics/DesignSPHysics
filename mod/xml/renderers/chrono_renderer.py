@@ -13,7 +13,8 @@ class ChronoRenderer():
     """ Renders the <chrono> tag of the GenCase XML. """
 
     CHRONO_BASE = "/templates/gencase/chrono/base.xml"
-    COLLISIONDP = "/templates/gencase/chrono/collisiondp.xml"
+    COLLISIONDP_ACTIVE = "/templates/gencase/chrono/collisiondp_active.xml"
+    COLLISIONDP_INACTIVE = "/templates/gencase/chrono/collisiondp_inactive.xml"
     SAVEDATA = "/templates/gencase/chrono/savedata.xml"
     SCHEMESCALE = "/templates/gencase/chrono/schemescale.xml"
     OBJECTS_BASE = "/templates/gencase/chrono/objects/base.xml"
@@ -60,8 +61,8 @@ class ChronoRenderer():
     def get_collisiondp_template(cls, chrono: dict) -> str:
         """ Renders the collisiondp part of the chrono template. """
         if chrono["collisiondp"]["enabled"] == "true":
-            return get_template_text(cls.COLLISIONDP).format(**chrono["collisiondp"])
-        return ""
+            return get_template_text(cls.COLLISIONDP_ACTIVE).format(**chrono["collisiondp"])
+        return get_template_text(cls.COLLISIONDP_INACTIVE)
 
     @classmethod
     def get_objects_each_template(cls, chrono: dict) -> str:

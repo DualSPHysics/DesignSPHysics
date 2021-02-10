@@ -231,6 +231,14 @@ class InformationDetailsMode:
     PLAIN = 0
     HTML = 1
 
+class OMPThreads:
+    """ Types of contact methods for CHRONO collisions. """
+    MULTI_CORE = 0
+    SINGLE_CORE = 1
+class ContactMethod:
+    """ Types of contact methods for CHRONO collisions. """
+    NSC = 0
+    SMC = 1
 
 class HelpText:
     """ Help strings for different zones of the application GUIs. """

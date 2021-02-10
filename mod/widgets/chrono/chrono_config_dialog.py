@@ -6,7 +6,7 @@ from PySide import QtCore, QtGui
 
 from mod.translation_tools import __
 from mod.stdout_tools import debug
-from mod.enums import ChronoModelNormalType
+from mod.enums import ChronoModelNormalType, ContactMethod, OMPThreads
 from mod.freecad_tools import get_fc_main_window, get_fc_object
 
 from mod.dataobjects.case import Case
@@ -69,12 +69,42 @@ class ChronoConfigDialog(QtGui.QDialog):
         else:
             self.collisiondp_checkbox.setCheckState(QtCore.Qt.Unchecked)
         self.collisiondp_checkbox.toggled.connect(self.on_collisiondp_checkbox)
-        self.collisiondp_option = QtGui.QLabel(__("Collision Dp:"))
-        self.collisiondp_line_edit = QtGui.QLineEdit(str(self.case.chrono.collisiondp.value))
+        self.collisiondp_option = QtGui.QLabel(__("Enable/Disable Collision"))
         self.collisiondp_option_layout.addWidget(self.collisiondp_checkbox)
         self.collisiondp_option_layout.addWidget(self.collisiondp_option)
-        self.collisiondp_option_layout.addWidget(self.collisiondp_line_edit)
+        self.collisiondp_option_layout.addStretch(1)
 
+        # Collision related fields
+        self.collision_fields_widget = QtGui.QWidget();
+        self.collision_fields_widget_layout = QtGui.QVBoxLayout()
+        
+        self.collision_fields_distancedp_layout = QtGui.QHBoxLayout()
+        self.collision_fields_distancedp_label = QtGui.QLabel("Allowed collision overlap:")
+        self.collision_fields_distancedp_edit = QtGui.QLineEdit(str(self.case.chrono.collisiondp.distancedp))
+        self.collision_fields_distancedp_layout.addWidget(self.collision_fields_distancedp_label)
+        self.collision_fields_distancedp_layout.addWidget(self.collision_fields_distancedp_edit)
+
+        self.collision_fields_ompthreads_layout = QtGui.QHBoxLayout()
+        self.collision_fields_ompthreads_label = QtGui.QLabel("Parallel execution type:")
+        self.collision_fields_ompthreads_combo = QtGui.QComboBox()
+        self.collision_fields_ompthreads_combo.insertItems(0, ["Multi-Core", "Single-Core"])
+        self.collision_fields_ompthreads_combo.setCurrentIndex(self.case.chrono.collisiondp.ompthreads)
+        self.collision_fields_ompthreads_layout.addWidget(self.collision_fields_ompthreads_label)
+        self.collision_fields_ompthreads_layout.addWidget(self.collision_fields_ompthreads_combo)
+
+        self.collision_fields_contactmethod_layout = QtGui.QHBoxLayout()
+        self.collision_fields_contactmethod_label = QtGui.QLabel("Contact method type:")
+        self.collision_fields_contactmethod_combo = QtGui.QComboBox()
+        self.collision_fields_contactmethod_combo.insertItems(0, ["Non Smooth Contacts (NSC)", "Smooth Contacts (SMC)"])
+        self.collision_fields_contactmethod_combo.setCurrentIndex(self.case.chrono.collisiondp.contactmethod)
+        self.collision_fields_contactmethod_layout.addWidget(self.collision_fields_contactmethod_label)
+        self.collision_fields_contactmethod_layout.addWidget(self.collision_fields_contactmethod_combo)
+
+        self.collision_fields_widget_layout.addLayout(self.collision_fields_distancedp_layout)
+        self.collision_fields_widget_layout.addLayout(self.collision_fields_ompthreads_layout)
+        self.collision_fields_widget_layout.addLayout(self.collision_fields_contactmethod_layout)
+        self.collision_fields_widget.setLayout(self.collision_fields_widget_layout)
+        
         # Create the list for chrono objects
         self.main_chrono = QtGui.QGroupBox("Chrono objects")
         self.main_chrono.setMinimumHeight(150)
@@ -211,6 +241,7 @@ class ChronoConfigDialog(QtGui.QDialog):
         self.main_layout.addLayout(self.csv_option_layout)
         self.main_layout.addLayout(self.scale_scheme_option_layout)
         self.main_layout.addLayout(self.collisiondp_option_layout)
+        self.main_layout.addWidget(self.collision_fields_widget)
         self.main_chrono.setLayout(self.chrono_layout)
         self.main_layout.addWidget(self.main_chrono)
         self.main_layout.addWidget(self.main_link_linearspring)
@@ -248,9 +279,9 @@ class ChronoConfigDialog(QtGui.QDialog):
     def on_collisiondp_checkbox(self):
         """ Checks the collisiondp state """
         if self.collisiondp_checkbox.isChecked():
-            self.collisiondp_line_edit.setEnabled(True)
+            self.collision_fields_widget.setVisible(True)
         else:
-            self.collisiondp_line_edit.setEnabled(False)
+            self.collision_fields_widget.setVisible(False)
 
     def on_scale_scheme_checkbox(self):
         """ Checks the scale scheme state """
@@ -491,14 +522,14 @@ class ChronoConfigDialog(QtGui.QDialog):
         if self.collisiondp_checkbox.isChecked():
             self.case.chrono.collisiondp.enabled = True
             try:
-                self.case.chrono.collisiondp.value = float(self.collisiondp_line_edit.text())
+                self.case.chrono.collisiondp.distancedp = float(self.collision_fields_distancedp_edit.text())
+                self.case.chrono.collisiondp.ompthreads = OMPThreads.MULTI_CORE if self.collision_fields_ompthreads_combo.currentIndex() == 0 else OMPThreads.SINGLE_CORE
+                self.case.chrono.collisiondp.contactmethod = ContactMethod.NSC if self.collision_fields_contactmethod_combo.currentIndex() == 0 else ContactMethod.SMC
             except ValueError:
                 self.case.chrono.collisiondp.enabled = False
-                self.case.chrono.collisiondp.value = ""
-                debug("Introduced an invalid value for a float number.")
+                debug("Introduced an invalid value in collision widgets.")
         else:
             self.case.chrono.collisiondp.enabled = False
-            self.case.chrono.collisiondp.value = ""
 
     def on_ok(self):
         """ Save data """
