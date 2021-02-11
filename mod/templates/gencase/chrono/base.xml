@@ -7,4 +7,6 @@
 {hinge_each}
 {spheric_each}
 {pointline_each}
+{coulombdamping_each}
+{pulley_each}
             </chrono>

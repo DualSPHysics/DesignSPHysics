@@ -1,0 +1,6 @@
+                <link_pulley idbody1="{idbody1}" idbody2="{idbody2}">
+                    <rotpoint x="{rotpoint[0]}" y="{rotpoint[1]}" z="{rotpoint[2]}" comment="Point for rotation" />
+                    <rotvector x="{rotvector[0]}" y="{rotvector[1]}" z="{rotvector[2]}" comment="Rotation axis of the body" />
+                    <radius value="{radius}" comment="Radius of idbody1"/>
+                    <radius2 value="{radius2}" comment="Radius of idbody2"/>
+                </link_pulley>

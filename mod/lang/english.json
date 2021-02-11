@@ -1152,5 +1152,10 @@
     "Sets simulation additional parameters for execution.": "Sets simulation additional parameters for execution.",
     "Damping Zone": "Damping Zone",
     "Project Chrono": "Project Chrono",
-    "Enable/Disable Collision": "Enable/Disable Collision"
+    "Enable/Disable Collision": "Enable/Disable Collision",
+    "Link coulombdamping configuration": "Link coulombdamping configuration",
+    "Rest_length: ": "Rest_length: ",
+    "Link pulley configuration": "Link pulley configuration",
+    "Radius: ": "Radius: ",
+    "Radius2: ": "Radius2: "
 }

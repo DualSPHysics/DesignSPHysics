@@ -15,12 +15,16 @@ from mod.dataobjects.chrono.chrono_link_hinge import ChronoLinkHinge
 from mod.dataobjects.chrono.chrono_link_linear_spring import ChronoLinkLinearSpring
 from mod.dataobjects.chrono.chrono_link_point_line import ChronoLinkPointLine
 from mod.dataobjects.chrono.chrono_link_spheric import ChronoLinkSpheric
+from mod.dataobjects.chrono.chrono_link_pulley import ChronoLinkPulley
+from mod.dataobjects.chrono.chrono_link_coulomb_damping import ChronoLinkCoulombDamping
 
 from mod.widgets.chrono.chrono_object_check_options import ChronoObjectCheckOptions
 from mod.widgets.chrono.link_hinge_edit import LinkHingeEdit
 from mod.widgets.chrono.link_linear_spring_edit import LinkLinearspringEdit
 from mod.widgets.chrono.link_spheric_edit import LinkSphericEdit
 from mod.widgets.chrono.link_point_line_edit import LinkPointlineEdit
+from mod.widgets.chrono.link_pulley_edit import LinkPulleyEdit
+from mod.widgets.chrono.link_coulombdamping_edit import LinkCoulombDampingEdit
 
 
 class ChronoConfigDialog(QtGui.QDialog):
@@ -237,6 +241,40 @@ class ChronoConfigDialog(QtGui.QDialog):
 
         self.refresh_link_pointline()
 
+        # Link Coulombdamping option list
+        self.main_link_coulombdamping = QtGui.QGroupBox("Coulombdamping")
+        self.link_coulombdamping_layout = QtGui.QVBoxLayout()
+        self.link_coulombdamping_layout2 = QtGui.QVBoxLayout()
+
+        self.link_coulombdamping_button_layout = QtGui.QHBoxLayout()
+        self.button_link_coulombdamping = QtGui.QPushButton("Add")
+        self.link_coulombdamping_button_layout.addStretch(1)
+        self.link_coulombdamping_button_layout.addWidget(self.button_link_coulombdamping)
+        self.button_link_coulombdamping.clicked.connect(self.on_link_coulombdamping_add)
+
+        self.link_coulombdamping_layout.addLayout(self.link_coulombdamping_button_layout)
+        self.link_coulombdamping_layout.addLayout(self.link_coulombdamping_layout2)
+        self.main_link_coulombdamping.setLayout(self.link_coulombdamping_layout)
+
+        self.refresh_link_coulombdamping()
+
+        # Link Pulley option list
+        self.main_link_pulley = QtGui.QGroupBox("Pulley")
+        self.link_pulley_layout = QtGui.QVBoxLayout()
+        self.link_pulley_layout2 = QtGui.QVBoxLayout()
+
+        self.link_pulley_button_layout = QtGui.QHBoxLayout()
+        self.button_link_pulley = QtGui.QPushButton("Add")
+        self.link_pulley_button_layout.addStretch(1)
+        self.link_pulley_button_layout.addWidget(self.button_link_pulley)
+        self.button_link_pulley.clicked.connect(self.on_link_pulley_add)
+
+        self.link_pulley_layout.addLayout(self.link_pulley_button_layout)
+        self.link_pulley_layout.addLayout(self.link_pulley_layout2)
+        self.main_link_pulley.setLayout(self.link_pulley_layout)
+
+        self.refresh_link_pulley()
+
         # Adds all layouts to main
         self.main_layout.addLayout(self.csv_option_layout)
         self.main_layout.addLayout(self.scale_scheme_option_layout)
@@ -248,6 +286,8 @@ class ChronoConfigDialog(QtGui.QDialog):
         self.main_layout.addWidget(self.main_link_hinge)
         self.main_layout.addWidget(self.main_link_spheric)
         self.main_layout.addWidget(self.main_link_pointline)
+        self.main_layout.addWidget(self.main_link_coulombdamping)
+        self.main_layout.addWidget(self.main_link_pulley)
 
         self.button_layout.addWidget(self.ok_button)
         self.button_layout.addWidget(self.cancel_button)
@@ -381,6 +421,48 @@ class ChronoConfigDialog(QtGui.QDialog):
             to_add_deletebutton.clicked.connect(lambda _=False, lp=linkPointline.id: self.link_pointline_delete(lp))
             self.link_pointline_layout2.addLayout(to_add_layout)
 
+    def refresh_link_coulombdamping(self):
+        """ Refreshes the link coulombdamping list """
+        count = 0
+        while self.link_coulombdamping_layout2.count() > 0:
+            target = self.link_coulombdamping_layout2.takeAt(0)
+            target.setParent(None)
+
+        for linkCoulombdamping in self.case.chrono.link_coulombdamping:
+            count += 1
+            to_add_layout = QtGui.QHBoxLayout()
+            to_add_label = QtGui.QLabel("Link coulombdamping" + str(count))
+            to_add_layout.addWidget(to_add_label)
+            to_add_layout.addStretch(1)
+            to_add_editbutton = QtGui.QPushButton("Edit")
+            to_add_deletebutton = QtGui.QPushButton("Delete")
+            to_add_layout.addWidget(to_add_editbutton)
+            to_add_layout.addWidget(to_add_deletebutton)
+            to_add_editbutton.clicked.connect(lambda _=False, lp=linkCoulombdamping.id: self.link_coulombdamping_edit(lp))
+            to_add_deletebutton.clicked.connect(lambda _=False, lp=linkCoulombdamping.id: self.link_coulombdamping_delete(lp))
+            self.link_coulombdamping_layout2.addLayout(to_add_layout)
+
+    def refresh_link_pulley(self):
+        """ Refreshes the link pulley list """
+        count = 0
+        while self.link_pulley_layout2.count() > 0:
+            target = self.link_pulley_layout2.takeAt(0)
+            target.setParent(None)
+
+        for linkPulley in self.case.chrono.link_pulley:
+            count += 1
+            to_add_layout = QtGui.QHBoxLayout()
+            to_add_label = QtGui.QLabel("Link pulley" + str(count))
+            to_add_layout.addWidget(to_add_label)
+            to_add_layout.addStretch(1)
+            to_add_editbutton = QtGui.QPushButton("Edit")
+            to_add_deletebutton = QtGui.QPushButton("Delete")
+            to_add_layout.addWidget(to_add_editbutton)
+            to_add_layout.addWidget(to_add_deletebutton)
+            to_add_editbutton.clicked.connect(lambda _=False, lp=linkPulley.id: self.link_pulley_edit(lp))
+            to_add_deletebutton.clicked.connect(lambda _=False, lp=linkPulley.id: self.link_pulley_delete(lp))
+            self.link_pulley_layout2.addLayout(to_add_layout)
+
     def on_link_hinge_add(self):
         """ Adds Link hinge option at list """
         link_hinge_to_add = ChronoLinkHinge()
@@ -468,6 +550,50 @@ class ChronoConfigDialog(QtGui.QDialog):
         selected_chrono_object_widgets = list(filter(lambda x: x.object_check.isChecked(), self.chrono_object_options_widgets))
         LinkPointlineEdit(link_pointline_id=link_pointline_id, bodies_widgets=selected_chrono_object_widgets, parent=get_fc_main_window())
         self.refresh_link_pointline()
+
+    def on_link_coulombdamping_add(self):
+        """ Adds Link coulombdamping option at list """
+        link_coulombdamping_to_add = ChronoLinkCoulombDamping()
+        self.case.chrono.link_coulombdamping.append(link_coulombdamping_to_add)
+        self.link_coulombdamping_edit(link_coulombdamping_to_add.id)
+
+    def link_coulombdamping_delete(self, link_coulombdamping_id):
+        """ Delete a link coulombdamping element """
+        link_coulombdamping_to_remove = None
+        for lp in self.case.chrono.link_coulombdamping:
+            if lp.id == link_coulombdamping_id:
+                link_coulombdamping_to_remove = lp
+        if link_coulombdamping_to_remove is not None:
+            self.case.chrono.link_coulombdamping.remove(link_coulombdamping_to_remove)
+            self.refresh_link_coulombdamping()
+
+    def link_coulombdamping_edit(self, link_coulombdamping_id):
+        """ Edit a link coulombdamping element """
+        selected_chrono_object_widgets = list(filter(lambda x: x.object_check.isChecked(), self.chrono_object_options_widgets))
+        LinkCoulombDampingEdit(link_coulombdamping_id=link_coulombdamping_id, bodies_widgets=selected_chrono_object_widgets, parent=get_fc_main_window())
+        self.refresh_link_coulombdamping()
+
+    def on_link_pulley_add(self):
+        """ Adds Link pulley option at list """
+        link_pulley_to_add = ChronoLinkPulley()
+        self.case.chrono.link_pulley.append(link_pulley_to_add)
+        self.link_pulley_edit(link_pulley_to_add.id)
+
+    def link_pulley_delete(self, link_pulley_id):
+        """ Delete a link pulley element """
+        link_pulley_to_remove = None
+        for lp in self.case.chrono.link_pulley:
+            if lp.id == link_pulley_id:
+                link_pulley_to_remove = lp
+        if link_pulley_to_remove is not None:
+            self.case.chrono.link_pulley.remove(link_pulley_to_remove)
+            self.refresh_link_pulley()
+
+    def link_pulley_edit(self, link_pulley_id):
+        """ Edit a link pulley element """
+        selected_chrono_object_widgets = list(filter(lambda x: x.object_check.isChecked(), self.chrono_object_options_widgets))
+        LinkPulleyEdit(link_pulley_id=link_pulley_id, bodies_widgets=selected_chrono_object_widgets, parent=get_fc_main_window())
+        self.refresh_link_pulley()
 
     def on_cancel(self):
         """ Defines cancel button behaviour. """

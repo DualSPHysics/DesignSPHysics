@@ -22,6 +22,8 @@ class ChronoRenderer():
     HINGE_BASE = "/templates/gencase/chrono/links/hinge/base.xml"
     LINEARSPRING_BASE = "/templates/gencase/chrono/links/linearspring/base.xml"
     POINTLINE_BASE = "/templates/gencase/chrono/links/pointline/base.xml"
+    COULOMBDAMPING_BASE = "/templates/gencase/chrono/links/coulombdamping/base.xml"
+    PULLEY_BASE = "/templates/gencase/chrono/links/pulley/base.xml"
     SPHERIC_BASE = "/templates/gencase/chrono/links/spheric/base.xml"
     SPHERIC_IDBODY2 = "/templates/gencase/chrono/links/spheric/idbody2.xml"
 
@@ -40,6 +42,8 @@ class ChronoRenderer():
         formatter["hinge_each"] = cls.get_hinge_each_template(data["chrono"])
         formatter["spheric_each"] = cls.get_spheric_each_template(data["chrono"])
         formatter["pointline_each"] = cls.get_pointline_each_template(data["chrono"])
+        formatter["coulombdamping_each"] = cls.get_coulombdamping_each_template(data["chrono"])
+        formatter["pulley_each"] = cls.get_pulley_each_template(data["chrono"])
 
         return get_template_text(cls.CHRONO_BASE).format(**formatter)
 
@@ -131,3 +135,23 @@ class ChronoRenderer():
             link_pointline_each_templates.append(get_template_text(cls.POINTLINE_BASE).format(**link))
 
         return LINE_END.join(link_pointline_each_templates)
+
+    @classmethod
+    def get_coulombdamping_each_template(cls, chrono: dict) -> str:
+        """ Renders the link_coulombdamping part of the chrono template. """
+        link_coulombdamping_each_templates: list = list()
+        
+        for link in chrono["link_coulombdamping"]:
+            link_coulombdamping_each_templates.append(get_template_text(cls.COULOMBDAMPING_BASE).format(**link))
+
+        return LINE_END.join(link_coulombdamping_each_templates)
+
+    @classmethod
+    def get_pulley_each_template(cls, chrono: dict) -> str:
+        """ Renders the link_pulley part of the chrono template. """
+        link_pulley_each_templates: list = list()
+
+        for link in chrono["link_pulley"]:
+            link_pulley_each_templates.append(get_template_text(cls.PULLEY_BASE).format(**link))
+
+        return LINE_END.join(link_pulley_each_templates)
