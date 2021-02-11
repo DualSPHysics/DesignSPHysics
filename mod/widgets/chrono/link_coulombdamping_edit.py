@@ -103,9 +103,9 @@ class LinkCoulombDampingEdit(QtGui.QDialog):
         # Torsion options
         self.rest_length_layout = QtGui.QHBoxLayout()
         self.damping_layout = QtGui.QHBoxLayout()
-        self.rest_length_label = QtGui.QLabel(__("Rest_length: "))
+        self.rest_length_label = QtGui.QLabel(__("Rest length (m):"))
         self.rest_length_line_edit = QtGui.QLineEdit(str(target_link_coulombdamping.rest_length))
-        self.damping_label = QtGui.QLabel(__("Damping: "))
+        self.damping_label = QtGui.QLabel(__("Damping (N):"))
         self.damping_line_edit = QtGui.QLineEdit(str(target_link_coulombdamping.damping))
 
         self.rest_length_layout.addWidget(self.rest_length_label)

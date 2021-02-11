@@ -103,9 +103,9 @@ class LinkHingeEdit(QtGui.QDialog):
         # Torsion options
         self.torsion_stiffness_layout = QtGui.QHBoxLayout()
         self.torsion_damping_layout = QtGui.QHBoxLayout()
-        self.stiffness_label = QtGui.QLabel(__("Stiffness: "))
+        self.stiffness_label = QtGui.QLabel(__("Stiffness (Nm/rad):"))
         self.stiffness_line_edit = QtGui.QLineEdit(str(target_link_hinge.stiffness))
-        self.damping_label = QtGui.QLabel(__("Damping: "))
+        self.damping_label = QtGui.QLabel(__("Damping (Nms/rad):"))
         self.damping_line_edit = QtGui.QLineEdit(str(target_link_hinge.damping))
 
         self.torsion_stiffness_layout.addWidget(self.stiffness_label)

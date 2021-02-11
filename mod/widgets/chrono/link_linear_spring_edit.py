@@ -103,9 +103,9 @@ class LinkLinearspringEdit(QtGui.QDialog):
         # Torsion options
         self.torsion_stiffness_layout = QtGui.QHBoxLayout()
         self.torsion_damping_layout = QtGui.QHBoxLayout()
-        self.stiffness_label = QtGui.QLabel(__("Stiffness: "))
+        self.stiffness_label = QtGui.QLabel(__("Stiffness (N/m):"))
         self.stiffness_line_edit = QtGui.QLineEdit(str(target_link_linearspring.stiffness))
-        self.damping_label = QtGui.QLabel(__("Damping: "))
+        self.damping_label = QtGui.QLabel(__("Damping (Ns/m):"))
         self.damping_line_edit = QtGui.QLineEdit(str(target_link_linearspring.damping))
 
         self.torsion_stiffness_layout.addWidget(self.stiffness_label)
@@ -118,7 +118,7 @@ class LinkLinearspringEdit(QtGui.QDialog):
 
         # Spring equilibrium length
         self.rest_layout = QtGui.QHBoxLayout()
-        self.rest_label = QtGui.QLabel(__("Rest length: "))
+        self.rest_label = QtGui.QLabel(__("Rest length (m):"))
         self.rest_line_edit = QtGui.QLineEdit(str(target_link_linearspring.rest_length))
 
         self.rest_layout.addWidget(self.rest_label)

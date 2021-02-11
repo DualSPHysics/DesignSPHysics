@@ -103,9 +103,9 @@ class LinkPulleyEdit(QtGui.QDialog):
         # Torsion options
         self.torsion_radius_layout = QtGui.QHBoxLayout()
         self.torsion_radius2_layout = QtGui.QHBoxLayout()
-        self.radius_label = QtGui.QLabel(__("Radius: "))
+        self.radius_label = QtGui.QLabel(__("Radius (m): "))
         self.radius_line_edit = QtGui.QLineEdit(str(target_link_pulley.radius))
-        self.radius2_label = QtGui.QLabel(__("Radius2: "))
+        self.radius2_label = QtGui.QLabel(__("Radius 2 (m): "))
         self.radius2_line_edit = QtGui.QLineEdit(str(target_link_pulley.radius2))
 
         self.torsion_radius_layout.addWidget(self.radius_label)
