@@ -124,6 +124,19 @@ class InletOutletVelocityType:
     EXTRAPOLATED = 2
     INTERPOLATED = 3
 
+class InletOutletVelocitySpecType:
+    """ Inlet/Outlet Velocity Specification Type """
+    FIXED_CONSTANT = 0
+    FIXED_LINEAR = 1
+    FIXED_PARABOLIC = 2
+    VARIABLE_UNIFORM = 3
+    VARIABLE_LINEAR = 4
+    VARIABLE_PARABOLIC = 5
+    FILE_UNIFORM = 6
+    FILE_LINEAR = 7
+    FILE_PARABOLIC = 8
+    FILE_INTERPOLATED = 9
+
 
 class InletOutletDensityType:
     """ Inlet/Outlet Density Type. """
