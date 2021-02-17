@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 """ DesignSPHysics Inlet/Outlet elevation info. """
 
-from mod.enums import InletOutletElevationType
+from mod.enums import InletOutletElevationType, InletOutletZSurfMode
 
 
 class InletOutletElevationInfo():
@@ -10,5 +10,10 @@ class InletOutletElevationInfo():
 
     def __init__(self):
         self.elevation_type: InletOutletElevationType = InletOutletElevationType.FIXED
+        self.savevtk: bool = False
+        self.remove: bool = False
         self.zbottom: float = 0.0
+        self.zsurf_mode: InletOutletZSurfMode = InletOutletZSurfMode.FIXED
         self.zsurf: float = 0.0
+        self.zsurftimes: list = []
+        self.zsurffile: str = ""

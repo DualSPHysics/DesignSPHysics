@@ -11,7 +11,11 @@ class InletOutletConfig():
     """ Configuration for Inlet/Oulet Zones. """
 
     def __init__(self):
-        self.resizetime: float = 0.5
+        self.memoryresize_size0: int = 2
+        self.memoryresize_size: int = 4
+        self.useboxlimit_enabled: bool = True
+        self.useboxlimit_freecentre_enabled: bool = False
+        self.useboxlimit_freecentre_values: bool = [0.0, 0.0, 0.0]
         self.determlimit: InletOutletDetermLimit = InletOutletDetermLimit.ZEROTH_ORDER
         self.extrapolatemode: InletOutletExtrapolateMode = InletOutletExtrapolateMode.FAST_SINGLE
         self.zones: list = list()  # [InletOutletZone]

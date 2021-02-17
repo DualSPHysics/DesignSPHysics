@@ -100,6 +100,12 @@ class InletOutletZoneType:
     ZONE_2D = "zone2d"
     ZONE_3D = "zone3d"
 
+class InletOutletZoneGeneratorType:
+    """ Inlet/Outlet Zone Generator Type. """
+    MK = 0
+    LINE = 1
+    BOX = 2
+    CIRCLE = 3
 
 class InletOutletDirection:
     """ Inlet/Outlet Zone Direction. """
@@ -127,11 +133,16 @@ class InletOutletDensityType:
 
 
 class InletOutletElevationType:
-    """ Inlet/Outler Elevation Type. """
+    """ Inlet/Outlet Elevation Type. """
     FIXED = 0
     VARIABLE = 1
     AUTOMATIC = 2
 
+class InletOutletZSurfMode:
+    """ Inlet/Outlet ZSurf Mode. """
+    FIXED = 0
+    TIMELIST = 1
+    FILE = 2
 
 class InletOutletExtrapolateMode:
     """ Types of extrapolatemode for Inlet/Outlet configuration. """

@@ -2,7 +2,8 @@
 # -*- coding: utf-8 -*-
 """ DesignSPHysics Inlet/Outlet zone info. """
 
-from mod.enums import InletOutletZoneType, InletOutletDirection
+from mod.dataobjects.inletoutlet.inlet_outlet_zone_mk_generator import InletOutletZoneMKGenerator
+from mod.enums import InletOutletZoneGeneratorType, InletOutletZoneType
 
 
 class InletOutletZoneInfo():
@@ -10,5 +11,5 @@ class InletOutletZoneInfo():
 
     def __init__(self):
         self.zone_type: InletOutletZoneType = InletOutletZoneType.ZONE_2D
-        self.mkfluid: int = 0
-        self.direction: InletOutletDirection = InletOutletDirection.LEFT
+        self.zone_generator_type: InletOutletZoneGeneratorType = InletOutletZoneGeneratorType.MK
+        self.zone_generator: InletOutletZoneMKGenerator = None
