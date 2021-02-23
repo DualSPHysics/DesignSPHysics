@@ -15,5 +15,5 @@ class InletOutletElevationInfo():
         self.zbottom: float = 0.0
         self.zsurf_mode: InletOutletZSurfMode = InletOutletZSurfMode.FIXED
         self.zsurf: float = 0.0
-        self.zsurftimes: list = []
+        self.zsurftimes: list = [] # [(float(time), float(value))]
         self.zsurffile: str = ""

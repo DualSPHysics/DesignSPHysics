@@ -1,4 +1,6 @@
-            <inout resizetime="{resizetime}">
+            <inout>
+                <memoryresize size0="{memoryresize_size0}" size="{memoryresize_size}" comment="Initial memory resize (size0) and the following memory resizes according to initial inlet/outlet particles (default=2 and 4)"/>
+{useboxlimit_template}
                 <determlimit value="{determlimit}" comment="Use 1e-3 for first_order or 1e+3 for zeroth_order (default=1e+3)" />
                 <extrapolatemode value="{extrapolatemode}" comment="Calculation mode for rhop and velocity extrapolation from ghost nodes 1:fast-single, 2:single, 3:double (default=1)" />
 {each_zone}

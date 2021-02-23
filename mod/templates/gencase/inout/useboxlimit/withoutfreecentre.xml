@@ -1,0 +1,1 @@
+                <useboxlimit value="{useboxlimit_enabled}" comment="In/out process is only applied to InOut zones delimited by BoxLimit (default=true)" />

@@ -1,0 +1,3 @@
+                        <zsurftimes comment="Characteristic inlet Z-Surf changes in time" units_comment="m/s">
+{timevalue_each}                        
+                        </zsurftimes>

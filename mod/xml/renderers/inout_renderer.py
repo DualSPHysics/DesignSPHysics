@@ -7,18 +7,35 @@ Renders the <inout> tag of the GenCase XML.
 from mod.template_tools import get_template_text
 
 from mod.constants import LINE_END
-from mod.enums import InletOutletZoneType, InletOutletVelocityType, InletOutletElevationType
+from mod.enums import InletOutletVelocitySpecType, InletOutletZSurfMode, InletOutletZoneType, InletOutletVelocityType, InletOutletElevationType
 
 
 class InoutRenderer():
     """ Renders the <inout> tag of the GenCase XML. """
 
     INOUT_BASE = "/templates/gencase/inout/base.xml"
+    INOUT_USEBOXLIMITWITHFREECENTRE = "/templates/gencase/inout/useboxlimit/withfreecentre.xml"
+    INOUT_USEBOXLIMITWITHOUTFREECENTRE = "/templates/gencase/inout/useboxlimit/withoutfreecentre.xml"
     INOUT_EACH = "/templates/gencase/inout/each_zone.xml"
     INOUT_ZONE2D = "/templates/gencase/inout/zone2d.xml"
     INOUT_ZONE3D = "/templates/gencase/inout/zone3d.xml"
-    INOUT_IMPOSEVELOCITY_PARAM = "/templates/gencase/inout/imposevelocity_param.xml"
-    INOUT_ZSURF_PARAM = "/templates/gencase/inout/zsurf_param.xml"
+    INOUT_IMPOSEVELOCITY_FIXED_CONSTANT = "/templates/gencase/inout/imposevelocity/fixed_constant.xml"
+    INOUT_IMPOSEVELOCITY_FIXED_LINEAR = "/templates/gencase/inout/imposevelocity/fixed_linear.xml"
+    INOUT_IMPOSEVELOCITY_FIXED_PARBOLIC = "/templates/gencase/inout/imposevelocity/fixed_parbolic.xml"
+    INOUT_IMPOSEVELOCITY_VARIABLE_UNIFORM = "/templates/gencase/inout/imposevelocity/variable_uniform.xml"
+    INOUT_IMPOSEVELOCITY_VARIABLE_UNIFORM_EACH = "/templates/gencase/inout/imposevelocity/variable_uniform_each.xml"
+    INOUT_IMPOSEVELOCITY_VARIABLE_LINEAR = "/templates/gencase/inout/imposevelocity/variable_linear.xml"
+    INOUT_IMPOSEVELOCITY_VARIABLE_LINEAR_EACH = "/templates/gencase/inout/imposevelocity/variable_linear_each.xml"
+    INOUT_IMPOSEVELOCITY_VARIABLE_PARABOLIC = "/templates/gencase/inout/imposevelocity/variable_parabolic.xml"
+    INOUT_IMPOSEVELOCITY_VARIABLE_PARABOLIC_EACH = "/templates/gencase/inout/imposevelocity/variable_parabolic_each.xml"
+    INOUT_IMPOSEVELOCITY_FILE_UNIFORM = "/templates/gencase/inout/imposevelocity/file_uniform.xml"
+    INOUT_IMPOSEVELOCITY_FILE_LINEAR = "/templates/gencase/inout/imposevelocity/file_linear.xml"
+    INOUT_IMPOSEVELOCITY_FILE_PARABOLIC = "/templates/gencase/inout/imposevelocity/file_parabolic.xml"
+    INOUT_ZSURF = "/templates/gencase/inout/zsurf/base.xml"
+    INOUT_ZSURF_FIXED = "/templates/gencase/inout/zsurf/zsurf_fixed.xml"
+    INOUT_ZSURF_TIMELIST = "/templates/gencase/inout/zsurf/zsurf_timelist.xml"
+    INOUT_ZSURF_TIMELIST_TIMEVALUE_EACH = "/templates/gencase/inout/zsurf/zsurf_timelist_timevalue_each.xml"
+    INOUT_ZSURF_FILE = "/templates/gencase/inout/zsurf/zsurf_file.xml"
 
     @classmethod
     def render(cls, data):
@@ -36,9 +53,17 @@ class InoutRenderer():
             inout_zone_template_list.append(get_template_text(cls.INOUT_EACH).format(**each_formatter))
 
         formatter: dict = data["inlet_outlet"]
+        formatter["useboxlimit_template"] = cls.get_useboxlimit_template(data["inlet_outlet"])
         formatter["each_zone"] = LINE_END.join(inout_zone_template_list)
 
         return get_template_text(cls.INOUT_BASE).format(**formatter)
+
+    @classmethod
+    def get_useboxlimit_template(cls, iodata: dict) -> str:
+        if iodata["useboxlimit_freecentre_enabled"] == "true":
+            return get_template_text(cls.INOUT_USEBOXLIMITWITHFREECENTRE).format(**iodata)
+        else:
+            return get_template_text(cls.INOUT_USEBOXLIMITWITHOUTFREECENTRE).format(**iodata)
 
     @classmethod
     def get_zone_template(cls, zone: dict) -> str:
@@ -50,13 +75,61 @@ class InoutRenderer():
     @classmethod
     def get_imposevelocity_param_template(cls, zone: dict) -> str:
         """ Returns the imposevelocity inner template. """
-        if zone["velocity_info"]["velocity_type"] == InletOutletVelocityType.FIXED:
-            return get_template_text(cls.INOUT_IMPOSEVELOCITY_PARAM).format(**zone["velocity_info"])
-        return ""
+        velocity_type = zone["velocity_info"]["velocity_type"]
+        if velocity_type == InletOutletVelocityType.EXTRAPOLATED:
+            return ""
+
+        if velocity_type == InletOutletVelocityType.INTERPOLATED:
+            raise Exception("Inlet/Outlet Velocity type INTERPOLATED is not implemented on the XML renderer")
+
+        spec_type = zone["velocity_info"]["velocity_specification_type"]
+
+        if velocity_type == InletOutletVelocityType.FIXED:
+            if spec_type == InletOutletVelocitySpecType.FIXED_CONSTANT:
+                return get_template_text(cls.INOUT_IMPOSEVELOCITY_FIXED_CONSTANT).format(zone["velocity_info"]["fixed_constant_value"])
+            elif spec_type == InletOutletVelocitySpecType.FIXED_LINEAR:
+                return get_template_text(cls.INOUT_IMPOSEVELOCITY_FIXED_LINEAR).format(**zone["velocity_info"]["fixed_linear_value"])
+            elif spec_type == InletOutletVelocitySpecType.FIXED_PARABOLIC:
+                return get_template_text(cls.INOUT_IMPOSEVELOCITY_FIXED_PARABOLIC).format(**zone["velocity_info"]["fixed_parabolic_value"])
+        elif velocity_type == InletOutletVelocityType.VARIABLE:
+            if spec_type == InletOutletVelocitySpecType.FILE_UNIFORM:
+                return get_template_text(cls.INOUT_IMPOSEVELOCITY_FILE_UNIFORM).format(zone["velocity_info"])
+            elif spec_type == InletOutletVelocitySpecType.FILE_LINEAR:
+                return get_template_text(cls.INOUT_IMPOSEVELOCITY_FILE_LINEAR).format(zone["velocity_info"])
+            elif spec_type == InletOutletVelocitySpecType.FILE_PARABOLIC:
+                return get_template_text(cls.INOUT_IMPOSEVELOCITY_FILE_PARABOLIC).format(zone["velocity_info"])
+            elif spec_type == InletOutletVelocitySpecType.VARIABLE_UNIFORM:
+                each_template = list()
+                for each in zone["velocity_info"]["variable_uniform_values"]:
+                    each_template.append(get_template_text(cls.INOUT_IMPOSEVELOCITY_VARIABLE_UNIFORM_EACH).format(time=each[0], v=each[1]))
+                return get_template_text(cls.INOUT_IMPOSEVELOCITY_VARIABLE_UNIFORM).format(variable_unifrom_each = LINE_END.join(each_template))
+            elif spec_type == InletOutletVelocitySpecType.VARIABLE_LINEAR:
+                each_template = list()
+                for each in zone["velocity_info"]["variable_linear_values"]:
+                    each_template.append(get_template_text(cls.INOUT_IMPOSEVELOCITY_VARIABLE_LINEAR_EACH).format(time=each[0], **each[1]))
+                return get_template_text(cls.INOUT_IMPOSEVELOCITY_VARIABLE_LINEAR).format(variable_linear_each = LINE_END.join(each_template))
+            elif spec_type == InletOutletVelocitySpecType.VARIABLE_PARABOLIC:
+                each_template = list()
+                for each in zone["velocity_info"]["variable_parabolic_values"]:
+                    each_template.append(get_template_text(cls.INOUT_IMPOSEVELOCITY_VARIABLE_PARABOLIC_EACH).format(time=each[0], **each[1]))
+                return get_template_text(cls.INOUT_IMPOSEVELOCITY_VARIABLE_PARABOLIC).format(variable_parbolic_each = LINE_END.join(each_template))
 
     @classmethod
     def get_zsurf_param_template(cls, zone: dict) -> str:
         """ Returns the imposezsurf inner template. """
-        if zone["elevation_info"]["elevation_type"] == InletOutletElevationType.FIXED or zone["elevation_info"]["elevation_type"] == InletOutletElevationType.AUTOMATIC:
-            return get_template_text(cls.INOUT_ZSURF_PARAM).format(**zone["elevation_info"])
-        return ""
+
+        formatter: dict = {}
+
+        if zone["elevation_info"]["zsurf_mode"] == InletOutletZSurfMode.FIXED:
+            formatter["zsurf_mode_template"] = get_template_text(cls.INOUT_ZSURF_FIXED).format(**zone["elevation_info"])
+        elif zone["elevation_info"]["zsurf_mode"] == InletOutletZSurfMode.FILE:
+            formatter["zsurf_mode_template"] = get_template_text(cls.INOUT_ZSURF_FILE).format(**zone["elevation_info"])
+        elif zone["elevation_info"]["zsurf_mode"] == InletOutletZSurfMode.TIMELIST:
+            inout_zsurf_timelist_formatter = zone["elevation_info"]
+            time_value_each = []
+            for zsurftimevalue in zone["elevation_info"]["zsurftimes"]:
+                time_value_each.append(get_template_text(cls.INOUT_ZSURF_TIMELIST_TIMEVALUE_EACH).format(zsurftimevalue[0], zsurftimevalue, [1]))
+            inout_zsurf_timelist_formatter["timevalue_each"] = LINE_END.join(time_value_each)
+            formatter["zsurf_mode_template"] = get_template_text(cls.INOUT_ZSURF_TIMELIST).format(**inout_zsurf_timelist_formatter)
+
+        return get_template_text(cls.INOUT_ZSURF_PARAM).format(**formatter)

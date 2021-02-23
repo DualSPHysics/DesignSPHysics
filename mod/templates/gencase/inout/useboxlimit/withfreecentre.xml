@@ -1,0 +1,3 @@
+                <useboxlimit value="{useboxlimit_enabled}" comment="In/out process is only applied to InOut zones delimited by BoxLimit (default=true)">
+                    <freecentre x="{useboxlimit_freecentre_values[0]}" y="{useboxlimit_freecentre_values[1]}" z="{useboxlimit_freecentre_values[2]}" comment="Centre of zone where InOut is not applied (default=centre of simulation domain)" units_comment="m" />
+                </useboxlimit>

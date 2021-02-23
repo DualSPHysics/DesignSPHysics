@@ -1,0 +1,4 @@
+                        <savevtk value="{savevtk}" comment="Creates VTK files with Zsurf for each PART (default=false)" />
+                        <remove value="{remove}" comment="Removes particles above the Zsurf limit (default=false)" />
+                        <zbottom value="{zbottom}" comment="Bottom level of water (only for Hydrostatic option)" units_comment="m" />
+{zsurf_mode_template}
