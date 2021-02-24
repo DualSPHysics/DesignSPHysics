@@ -1,0 +1,6 @@
+                        <line>
+                            <point x="{point[0]}" z="{point[2]}" />
+                            <point2 x="{point2[0]}" z="point2[2]" />
+                            <direction x="{direction[0]}" z="{direction[2]}" comment="Direction to input fluid" />
+{generator_line_rotation}
+                        </line>

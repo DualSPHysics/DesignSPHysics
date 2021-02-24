@@ -47,7 +47,7 @@ class LineZoneGeneratorWidget(QtGui.QWidget):
         self.setLayout(self.main_layout)
 
         self.point_layout = QtGui.QHBoxLayout()
-        self.point_label = QtGui.QLabel(__("Point 1 [X, Y, Z]"))
+        self.point_label = QtGui.QLabel(__("Point 1 [X, Z]"))
         self.point_value_x = QtGui.QLineEdit()
         self.point_value_y = QtGui.QLineEdit()
         self.point_value_z = QtGui.QLineEdit()
@@ -56,8 +56,10 @@ class LineZoneGeneratorWidget(QtGui.QWidget):
         self.point_layout.addWidget(self.point_value_y)
         self.point_layout.addWidget(self.point_value_z)
 
+        self.point_value_y.setVisible(False) # Lines are 2d only!
+
         self.point2_layout = QtGui.QHBoxLayout()
-        self.point2_label = QtGui.QLabel(__("Point 2 [X, Y, Z]"))
+        self.point2_label = QtGui.QLabel(__("Point 2 [X, Z]"))
         self.point2_value_x = QtGui.QLineEdit()
         self.point2_value_y = QtGui.QLineEdit()
         self.point2_value_z = QtGui.QLineEdit()
@@ -66,11 +68,13 @@ class LineZoneGeneratorWidget(QtGui.QWidget):
         self.point2_layout.addWidget(self.point2_value_y)
         self.point2_layout.addWidget(self.point2_value_z)
 
+        self.point2_value_y.setVisible(False) # Lines are 2d only!
+
         self.direction_enabled_checkbox = QtGui.QCheckBox(__("Enable direction"))
         self.direction_enabled_checkbox.stateChanged.connect(self.on_direction_enabled_checked)
 
         self.direction_layout = QtGui.QHBoxLayout()
-        self.direction_label = QtGui.QLabel(__("Direction [X, Y, Z]"))
+        self.direction_label = QtGui.QLabel(__("Direction [X, Z]"))
         self.direction_value_x = QtGui.QLineEdit()
         self.direction_value_y = QtGui.QLineEdit()
         self.direction_value_z = QtGui.QLineEdit()
@@ -78,6 +82,8 @@ class LineZoneGeneratorWidget(QtGui.QWidget):
         self.direction_layout.addWidget(self.direction_value_x)
         self.direction_layout.addWidget(self.direction_value_y)
         self.direction_layout.addWidget(self.direction_value_z)
+
+        self.direction_value_y.setVisible(False) # Lines are 2d only!
 
         self.rotation_enabled_checkbox = QtGui.QCheckBox(__("Enable rotation"))
         self.rotation_enabled_checkbox.stateChanged.connect(self.on_rotation_enabled_checked)

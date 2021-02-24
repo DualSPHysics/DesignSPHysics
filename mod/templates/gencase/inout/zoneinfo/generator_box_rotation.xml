@@ -1,0 +1,4 @@
+                            <rotateaxis angle="{rotateaxis_angle}" anglesunits="degrees">
+                                <point1 x="{rotateaxis_point1[0]}" y="{rotateaxis_point1[1]}" z="{rotateaxis_point1[2]}" />
+                                <point2 x="{rotateaxis_point2[0]}" y="{rotateaxis_point2[1]}" z="{rotateaxis_point2[2]}" />
+                            </rotateaxis>
