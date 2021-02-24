@@ -3,8 +3,8 @@
 """ A Zone generator that creates particles along a line """
 
 
-class InletOutletZoneGenerator():
-    """ Base class for the different Inlet/Outlet Zone Generators. """
+class InletOutletZoneLineGenerator():
+    """ A Zone generator that creates particles along a line """
     
     def __init__(self) -> None:
         self.point: list = [0.0, 0.0, 0.0]

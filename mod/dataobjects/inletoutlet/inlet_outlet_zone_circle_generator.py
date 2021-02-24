@@ -3,7 +3,7 @@
 """ A generator that cretes partiles along the surface of a circle. """
 
 
-class InletOutletZoneGenerator():
+class InletOutletZoneCircleGenerator():
     """ A generator that cretes partiles along the surface of a circle. """
 
     def __init__(self) -> None:
