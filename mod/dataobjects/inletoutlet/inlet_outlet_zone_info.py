@@ -12,4 +12,4 @@ class InletOutletZoneInfo():
     def __init__(self):
         self.zone_type: InletOutletZoneType = InletOutletZoneType.ZONE_2D
         self.zone_generator_type: InletOutletZoneGeneratorType = InletOutletZoneGeneratorType.MK
-        self.zone_generator: InletOutletZoneMKGenerator = None
+        self.zone_generator: InletOutletZoneMKGenerator = InletOutletZoneMKGenerator()
