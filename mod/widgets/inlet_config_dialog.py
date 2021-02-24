@@ -63,15 +63,30 @@ class InletConfigDialog(QtGui.QDialog):
         self.main_layout = QtGui.QVBoxLayout()
 
         # Creates layout for content first options
-        self.io_options_layout = QtGui.QHBoxLayout()
+        self.io_options_layout = QtGui.QVBoxLayout()
 
-        # Creates resizetime option
-        self.resizetime_layout = QtGui.QHBoxLayout()
-        self.resizetime_option = QtGui.QLabel(__("Resizetime: "))
-        self.resizetime_line_edit = QtGui.QLineEdit(str(self.inlet_outlet.resizetime))
+        # Creates memory_resize option
+        self.memory_resize_layout = QtGui.QHBoxLayout()
+        self.memory_resize_size0_option = QtGui.QLabel(__("Initial Memory Resize: "))
+        self.memory_resize_size0_line_edit = QtGui.QLineEdit(str(self.inlet_outlet.memoryresize_size0))
 
-        self.resizetime_layout.addWidget(self.resizetime_option)
-        self.resizetime_layout.addWidget(self.resizetime_line_edit)
+        self.memory_resize_size_option = QtGui.QLabel(__("Following Memory Resizes: "))
+        self.memory_resize_size_line_edit = QtGui.QLineEdit(str(self.inlet_outlet.memoryresize_size))
+
+        self.memory_resize_layout.addWidget(self.memory_resize_size0_option)
+        self.memory_resize_layout.addWidget(self.memory_resize_size0_line_edit)
+        self.memory_resize_layout.addWidget(self.memory_resize_size_option)
+        self.memory_resize_layout.addWidget(self.memory_resize_size_line_edit)
+
+        # Creates extrapolate mode selector
+        self.useboxlimit_layout = QtGui.QHBoxLayout()
+        self.useboxlimit_option = QtGui.QLabel(__("Use BoxLimit: "))
+        self.useboxlimit_check = QtGui.QCheckBox()
+        self.useboxlimit_check.setChecked(self.inlet_outlet.useboxlimit_enabled)
+
+        self.useboxlimit_layout.addWidget(self.useboxlimit_option)
+        self.useboxlimit_layout.addWidget(self.useboxlimit_check)
+        self.useboxlimit_layout.addStretch(1)
 
         # Creates extrapolate mode selector
         self.extrapolatemode_layout = QtGui.QHBoxLayout()
@@ -82,6 +97,7 @@ class InletConfigDialog(QtGui.QDialog):
 
         self.extrapolatemode_layout.addWidget(self.extrapolatemode_option)
         self.extrapolatemode_layout.addWidget(self.extrapolatemode_combobox)
+        self.extrapolatemode_layout.addStretch(1)
 
         # Creates use determlimit option
         self.determlimit_layout = QtGui.QHBoxLayout()
@@ -92,6 +108,12 @@ class InletConfigDialog(QtGui.QDialog):
 
         self.determlimit_layout.addWidget(self.determlimit_option)
         self.determlimit_layout.addWidget(self.determlimit_combobox)
+        self.determlimit_layout.addStretch(1)
+
+        self.first_row_layout: QtGui.QHBoxLayout = QtGui.QHBoxLayout()
+        self.first_row_layout.addLayout(self.extrapolatemode_layout)
+        self.first_row_layout.addLayout(self.determlimit_layout)
+        self.first_row_layout.addLayout(self.useboxlimit_layout)
 
         # Creates 2 main buttons
         self.finish_button = QtGui.QPushButton(__("Close"))
@@ -125,9 +147,8 @@ class InletConfigDialog(QtGui.QDialog):
         self.zones_groupbox.setLayout(self.zones_groupbox_layout)
 
         # Adds options to option layout
-        self.io_options_layout.addLayout(self.resizetime_layout)
-        self.io_options_layout.addLayout(self.extrapolatemode_layout)
-        self.io_options_layout.addLayout(self.determlimit_layout)
+        self.io_options_layout.addLayout(self.memory_resize_layout)
+        self.io_options_layout.addLayout(self.first_row_layout)
 
         # Adds options to main
         self.main_layout.addLayout(self.io_options_layout)
@@ -181,9 +202,11 @@ class InletConfigDialog(QtGui.QDialog):
         """ Save data """
 
         if not self.inlet_outlet:
-            self.inlet_outlet = InletOutletConfig
+            self.inlet_outlet = InletOutletConfig()
 
-        self.inlet_outlet.resizetime = float(self.resizetime_line_edit.text())
+        self.inlet_outlet.memoryresize_size0 = float(self.memory_resize_size0_line_edit.text())
+        self.inlet_outlet.memoryresize_size = float(self.memory_resize_size_line_edit.text())
         self.inlet_outlet.determlimit = self.determlimit_combobox.currentText()
         self.inlet_outlet.extrapolatemode = self.extrapolatemode_combobox.currentIndex() + 1
+        self.inlet_outlet.useboxlimit_enabled = self.useboxlimit_check.isChecked()
         InletConfigDialog.accept(self)
