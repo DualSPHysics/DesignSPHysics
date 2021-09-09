@@ -60,6 +60,9 @@ class IrregularFlapWaveMotionTimeline(QtGui.QWidget):
         self.wave_period_label = QtGui.QLabel(__("Wave period (s): "))
         self.wave_period_input = QtGui.QLineEdit()
 
+        self.gainstroke_label = QtGui.QLabel(__("Gain factor: "))
+        self.gainstroke_input = QtGui.QLineEdit()
+
         self.variable_draft_label = QtGui.QLabel(__("Variable Draft (m): "))
         self.variable_draft_input = QtGui.QLineEdit()
 
@@ -147,7 +150,7 @@ class IrregularFlapWaveMotionTimeline(QtGui.QWidget):
             self.fifth_row_layout.addWidget(x)
 
         self.sixth_row_layout = QtGui.QHBoxLayout()
-        for x in [self.waves_label, self.waves_input, self.randomseed_label, self.randomseed_input]:
+        for x in [self.gainstroke_label, self.gainstroke_input, self.waves_label, self.waves_input, self.randomseed_label, self.randomseed_input]:
             self.sixth_row_layout.addWidget(x)
 
         self.seventh_row_layout = QtGui.QHBoxLayout()
@@ -205,6 +208,7 @@ class IrregularFlapWaveMotionTimeline(QtGui.QWidget):
                                                       IrregularDiscretization.COSSTRETCHED: 3}[irreg_wave_gen.discretization])
         self.peak_coef_input.setText(str(irreg_wave_gen.peak_coef))
         self.waves_input.setText(str(irreg_wave_gen.waves))
+        self.gainstroke_input.setText(str(irreg_wave_gen.gainstroke))
         self.randomseed_input.setText(str(irreg_wave_gen.randomseed))
         self.serieini_input.setText(str(irreg_wave_gen.serieini))
         self.serieini_autofit.setChecked(irreg_wave_gen.serieini_autofit)
@@ -233,7 +237,7 @@ class IrregularFlapWaveMotionTimeline(QtGui.QWidget):
         for x in [self.wave_order_selector, self.spectrum_selector, self.discretization_selector]:
             x.currentIndexChanged.connect(self.on_change)
 
-        for x in [self.peak_coef_input, self.waves_input, self.randomseed_input,
+        for x in [self.peak_coef_input, self.waves_input, self.gainstroke_input, self.randomseed_input,
                   self.serieini_input, self.ramptime_input, self.duration_input,
                   self.depth_input, self.flap_axis_0_x,
                   self.flap_axis_0_y, self.flap_axis_0_z,
@@ -281,6 +285,7 @@ class IrregularFlapWaveMotionTimeline(QtGui.QWidget):
                                     peak_coef=float(
                                         self.peak_coef_input.text()),
                                     waves=float(self.waves_input.text()),
+                                    gainstroke=float(self.gainstroke_input.text()),
                                     randomseed=float(
                                         self.randomseed_input.text()),
                                     serieini=float(
@@ -320,7 +325,7 @@ class IrregularFlapWaveMotionTimeline(QtGui.QWidget):
                   self.flap_axis_1_x,
                   self.flap_axis_1_y, self.flap_axis_1_z,
                   self.wave_height_input, self.wave_period_input,
-                  self.variable_draft_input,
+                  self.variable_draft_input, self.gainstroke_input,
                   self.peak_coef_input, self.randomseed_input,
                   self.serieini_input, self.ramptime_input,
                   self.savemotion_time_input, self.savemotion_timedt_input,

@@ -19,9 +19,9 @@ class RegularFlapWaveGen(WaveGen):
     """
 
     def __init__(self, wave_order=2, start=0, duration=0, depth=0, wave_height=0.5,
-                 wave_period=1, phase=0, ramp=0, disksave_periods=24, disksave_periodsteps=20, disksave_xpos=2,
+                 wave_period=1, gainstroke=1.0, phase=0, ramp=0, disksave_periods=24, disksave_periodsteps=20, disksave_xpos=2,
                  disksave_zpos=-0.15, variable_draft=0.0, flapaxis0=None, flapaxis1=None):
-        WaveGen.__init__(self, wave_order, start, duration, depth, wave_height, wave_period)
+        WaveGen.__init__(self, wave_order, start, duration, depth, wave_height, wave_period, gainstroke)
         self.type = MotionType.REGULAR_FLAP_WAVE_GENERATOR
         self.phase = phase
         self.ramp = ramp

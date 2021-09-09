@@ -56,6 +56,9 @@ class IrregularPistonWaveMotionTimeline(QtGui.QWidget):
         self.wave_period_label = QtGui.QLabel(__("Wave period (s): "))
         self.wave_period_input = QtGui.QLineEdit()
 
+        self.gainstroke_label = QtGui.QLabel(__("Gain factor: "))
+        self.gainstroke_input = QtGui.QLineEdit()
+
         self.spectrum_label = QtGui.QLabel(__("Spectrum"))
         self.spectrum_selector = QtGui.QComboBox()
         # Index numbers match IrregularSpectrum static values
@@ -180,7 +183,7 @@ class IrregularPistonWaveMotionTimeline(QtGui.QWidget):
             self.second_row_layout.addWidget(x)
 
         self.third_row_layout = QtGui.QHBoxLayout()
-        for x in [self.wave_height_label, self.wave_height_input, self.wave_period_label, self.wave_period_input]:
+        for x in [self.wave_height_label, self.wave_height_input, self.wave_period_label, self.wave_period_input, self.gainstroke_label, self.gainstroke_input]:
             self.third_row_layout.addWidget(x)
 
         self.fourth_row_layout = QtGui.QHBoxLayout()
@@ -268,6 +271,7 @@ class IrregularPistonWaveMotionTimeline(QtGui.QWidget):
         self.piston_dir_z.setText(str(irreg_wave_gen.piston_dir[2]))
         self.wave_height_input.setText(str(irreg_wave_gen.wave_height))
         self.wave_period_input.setText(str(irreg_wave_gen.wave_period))
+        self.gainstroke_input.setText(str(irreg_wave_gen.gainstroke))
         self.spectrum_selector.setCurrentIndex({IrregularSpectrum.JONSWAP: 0, IrregularSpectrum.PIERSON_MOSKOWITZ: 1}[irreg_wave_gen.spectrum])
         self.discretization_selector.setCurrentIndex({IrregularDiscretization.REGULAR: 0,
                                                       IrregularDiscretization.RANDOM: 1,
@@ -337,7 +341,7 @@ class IrregularPistonWaveMotionTimeline(QtGui.QWidget):
                   self.serieini_input, self.ramptime_input, self.duration_input,
                   self.depth_input, self.piston_dir_x,
                   self.piston_dir_y, self.piston_dir_z, self.wave_height_input,
-                  self.wave_period_input, self.savemotion_time_input,
+                  self.wave_period_input, self.gainstroke_input, self.savemotion_time_input,
                   self.savemotion_timedt_input, self.savemotion_xpos_input,
                   self.savemotion_zpos_input, self.saveserie_timemin_input,
                   self.saveserie_timemax_input, self.saveserie_timedt_input,
@@ -432,6 +436,7 @@ class IrregularPistonWaveMotionTimeline(QtGui.QWidget):
                                       piston_dir=[float(self.piston_dir_x.text()), float(self.piston_dir_y.text()), float(self.piston_dir_z.text())],
                                       wave_height=float(self.wave_height_input.text()),
                                       wave_period=float(self.wave_period_input.text()),
+                                      gainstroke=float(self.gainstroke_input.text()),
                                       spectrum={0: IrregularSpectrum.JONSWAP, 1: IrregularSpectrum.PIERSON_MOSKOWITZ}[self.spectrum_selector.currentIndex()],
                                       discretization={0: IrregularDiscretization.REGULAR, 1: IrregularDiscretization.RANDOM, 2: IrregularDiscretization.STRETCHED, 3: IrregularDiscretization.COSSTRETCHED}[self.discretization_selector.currentIndex()],
                                       peak_coef=float(self.peak_coef_input.text()),
@@ -460,7 +465,7 @@ class IrregularPistonWaveMotionTimeline(QtGui.QWidget):
     def _sanitize_input(self):
         for x in [self.duration_input, self.depth_input, self.piston_dir_x,
                   self.piston_dir_y, self.piston_dir_z,
-                  self.wave_height_input, self.wave_period_input,
+                  self.wave_height_input, self.wave_period_input, self.gainstroke_input,
                   self.peak_coef_input, self.randomseed_input,
                   self.serieini_input, self.ramptime_input,
                   self.savemotion_time_input, self.savemotion_timedt_input,

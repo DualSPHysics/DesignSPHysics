@@ -62,6 +62,9 @@ class RegularFlapWaveMotionTimeline(QtGui.QWidget):
         self.variable_draft_label = QtGui.QLabel(__("Variable Draft (m): "))
         self.variable_draft_input = QtGui.QLineEdit()
 
+        self.gainstroke_label = QtGui.QLabel(__("Gain factor: "))
+        self.gainstroke_input = QtGui.QLineEdit()
+
         self.phase_label = QtGui.QLabel(__("Phase (rad): "))
         self.phase_input = QtGui.QLineEdit()
 
@@ -101,7 +104,7 @@ class RegularFlapWaveMotionTimeline(QtGui.QWidget):
             self.fourth_row_layout.addWidget(x)
 
         self.fifth_row_layout = QtGui.QHBoxLayout()
-        for x in [self.phase_label, self.phase_input, self.ramp_label, self.ramp_input]:
+        for x in [self.gainstroke_label, self.gainstroke_input, self.phase_label, self.phase_input, self.ramp_label, self.ramp_input]:
             self.fifth_row_layout.addWidget(x)
 
         self.sixth_row_layout = QtGui.QHBoxLayout()
@@ -134,6 +137,7 @@ class RegularFlapWaveMotionTimeline(QtGui.QWidget):
         self.variable_draft_input.setText(str(reg_wave_gen.variable_draft))
         self.wave_height_input.setText(str(reg_wave_gen.wave_height))
         self.wave_period_input.setText(str(reg_wave_gen.wave_period))
+        self.gainstroke_input.setText(str(reg_wave_gen.gainstroke))
         self.phase_input.setText(str(reg_wave_gen.phase))
         self.ramp_input.setText(str(reg_wave_gen.ramp))
         self.disksave_periods.setText(str(reg_wave_gen.disksave_periods))
@@ -150,7 +154,7 @@ class RegularFlapWaveMotionTimeline(QtGui.QWidget):
                   self.flap_axis_1_x,
                   self.flap_axis_1_y, self.flap_axis_1_z,
                   self.wave_height_input, self.wave_period_input,
-                  self.ramp_input, self.phase_input, self.disksave_periods,
+                  self.ramp_input, self.gainstroke_input, self.phase_input, self.disksave_periods,
                   self.disksave_periodsteps, self.disksave_xpos,
                   self.disksave_zpos]:
             x.textChanged.connect(self.on_change)
@@ -181,6 +185,7 @@ class RegularFlapWaveMotionTimeline(QtGui.QWidget):
                                       self.wave_height_input.text()),
                                   wave_period=float(
                                       self.wave_period_input.text()),
+                                  gainstroke=float(self.gainstroke_input.text()),
                                   phase=float(self.phase_input.text()),
                                   ramp=float(self.ramp_input.text()),
                                   disksave_periods=int(
@@ -202,7 +207,7 @@ class RegularFlapWaveMotionTimeline(QtGui.QWidget):
                   self.flap_axis_1_y, self.flap_axis_1_z,
                   self.variable_draft_input,
                   self.wave_height_input, self.wave_period_input,
-                  self.ramp_input, self.phase_input, self.disksave_periods,
+                  self.ramp_input, self.gainstroke_input, self.phase_input, self.disksave_periods,
                   self.disksave_periodsteps, self.disksave_xpos,
                   self.disksave_zpos]:
             x.setText("0" if not x.text() else x.text().replace(",", "."))

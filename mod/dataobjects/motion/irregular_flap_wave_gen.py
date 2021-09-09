@@ -25,14 +25,14 @@ class IrregularFlapWaveGen(WaveGen):
     """
 
     def __init__(self, wave_order=1, start=0, duration=0, depth=0, wave_height=0.5,
-                 wave_period=1, spectrum=IrregularSpectrum.JONSWAP,
+                 wave_period=1, gainstroke=1.0, spectrum=IrregularSpectrum.JONSWAP,
                  discretization=IrregularDiscretization.STRETCHED,
                  peak_coef=0.1, waves=50, randomseed=randint(0, 9999), serieini=0, ramptime=0,
                  serieini_autofit=True, savemotion_time=30, savemotion_timedt=0.05, savemotion_xpos=2,
                  savemotion_zpos=-0.15, saveserie_timemin=0, saveserie_timemax=1300, saveserie_timedt=0.05,
                  saveserie_xpos=0, saveseriewaves_timemin=0, saveseriewaves_timemax=1000, saveseriewaves_xpos=2,
                  variable_draft=0.0, flapaxis0=None, flapaxis1=None):
-        WaveGen.__init__(self, wave_order, start, duration, depth, wave_height, wave_period)
+        WaveGen.__init__(self, wave_order, start, duration, depth, wave_height, wave_period, gainstroke)
         self.type = MotionType.IRREGULAR_FLAP_WAVE_GENERATOR
         self.spectrum = spectrum
         self.discretization = discretization

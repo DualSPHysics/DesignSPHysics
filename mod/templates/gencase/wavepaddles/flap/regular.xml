@@ -8,6 +8,7 @@
                     <flapaxis1 x="{flapaxis1[0]}" y="{flapaxis1[1]}" z="{flapaxis1[2]}" comment="Point 1 of axis rotation" />
                     <waveheight value="{wave_height}" comment="Wave height" />
                     <waveperiod value="{wave_period}" comment="Wave period" />
+                    <gainstroke value="{gainstroke}" comment="Gain factor to amplify/reduce the paddle stroke (default=1)" />
                     <phase value="{phase}" comment="Initial wave phase in function of PI (default=0)" />
                     <ramp value="{ramp}" comment="Periods of ramp (default=0)" />
                     <savemotion periods="{disksave_periods}" periodsteps="{disksave_periodsteps}" xpos="{disksave_xpos}" zpos="{disksave_zpos}" comment="Saves motion data. xpos and zpos are optional. zpos=-depth of the measuring point" />

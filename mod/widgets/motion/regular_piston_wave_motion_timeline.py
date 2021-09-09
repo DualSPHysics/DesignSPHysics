@@ -57,6 +57,9 @@ class RegularPistonWaveMotionTimeline(QtGui.QWidget):
         self.wave_period_label = QtGui.QLabel(__("Wave period (s): "))
         self.wave_period_input = QtGui.QLineEdit()
 
+        self.gainstroke_label = QtGui.QLabel(__("Gain factor: "))
+        self.gainstroke_input = QtGui.QLineEdit()
+
         self.phase_label = QtGui.QLabel(__("Phase (rad): "))
         self.phase_input = QtGui.QLineEdit()
 
@@ -144,7 +147,7 @@ class RegularPistonWaveMotionTimeline(QtGui.QWidget):
             self.third_row_layout.addWidget(x)
 
         self.fourth_row_layout = QtGui.QHBoxLayout()
-        for x in [self.phase_label, self.phase_input, self.ramp_label, self.ramp_input]:
+        for x in [self.gainstroke_label, self.gainstroke_input, self.phase_label, self.phase_input, self.ramp_label, self.ramp_input]:
             self.fourth_row_layout.addWidget(x)
 
         self.fifth_row_layout = QtGui.QHBoxLayout()
@@ -216,6 +219,7 @@ class RegularPistonWaveMotionTimeline(QtGui.QWidget):
         self.wave_height_input.setText(str(reg_wave_gen.wave_height))
         self.wave_period_input.setText(str(reg_wave_gen.wave_period))
         self.phase_input.setText(str(reg_wave_gen.phase))
+        self.gainstroke_input.setText(str(reg_wave_gen.gainstroke))
         self.ramp_input.setText(str(reg_wave_gen.ramp))
         self.disksave_periods.setText(str(reg_wave_gen.disksave_periods))
         self.disksave_periodsteps.setText(str(reg_wave_gen.disksave_periodsteps))
@@ -257,7 +261,7 @@ class RegularPistonWaveMotionTimeline(QtGui.QWidget):
         for x in [self.duration_input, self.depth_input, self.piston_dir_x,
                   self.piston_dir_y, self.piston_dir_z,
                   self.wave_height_input, self.wave_period_input,
-                  self.ramp_input, self.phase_input, self.disksave_periods,
+                  self.ramp_input, self.phase_input, self.gainstroke_input, self.disksave_periods,
                   self.disksave_periodsteps, self.disksave_xpos,
                   self.disksave_zpos, self.awas_startawas_input,
                   self.awas_swl_input, self.awas_gaugex_input, self.awas_gaugedp_input,
@@ -355,6 +359,7 @@ class RegularPistonWaveMotionTimeline(QtGui.QWidget):
                                         self.wave_height_input.text()),
                                     wave_period=float(
                                         self.wave_period_input.text()),
+                                    gainstroke=float(self.gainstroke_input.text()),
                                     phase=float(self.phase_input.text()),
                                     ramp=float(self.ramp_input.text()),
                                     disksave_periods=int(
@@ -375,7 +380,7 @@ class RegularPistonWaveMotionTimeline(QtGui.QWidget):
         for x in [self.duration_input, self.depth_input, self.piston_dir_x,
                   self.piston_dir_y, self.piston_dir_z,
                   self.wave_height_input, self.wave_period_input,
-                  self.ramp_input, self.phase_input, self.disksave_periods,
+                  self.ramp_input, self.gainstroke_input, self.phase_input, self.disksave_periods,
                   self.disksave_periodsteps, self.disksave_xpos,
                   self.disksave_zpos, self.awas_startawas_input,
                   self.awas_swl_input, self.awas_gaugex_input,

@@ -1214,5 +1214,6 @@
     "Remove particles above surface": "Remove particles above surface",
     "File Path (m)": "File Path (m)",
     "Browse...": "Browse...",
-    "Surface level (m)": "Surface level (m)"
+    "Surface level (m)": "Surface level (m)",
+    "Gain factor: ": "Gain factor: "
 }

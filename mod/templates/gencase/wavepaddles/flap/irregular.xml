@@ -10,6 +10,7 @@
                     <discretization value="{discretization}" comment="Spectrum discretization: regular,random,stretched,cosstretched (default=stretched)" />
                     <waveheight value="{wave_height}" comment="Significant Wave Height (Hs)" />
                     <waveperiod value="{wave_period}" comment="Peak Period" />
+                    <gainstroke value="{gainstroke}" comment="Gain factor to amplify/reduce the paddle stroke (default=1)" />
                     <peakcoef value="{peak_coef}" comment="Peak enhancement coefficient (default=3.3)" />
                     <waves value="{waves}" comment="Number of waves to create irregular waves (default=50)" />
                     <randomseed value="{randomseed}" comment="Random seed to initialize a pseudorandom number generator" />
