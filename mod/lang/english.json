@@ -1215,5 +1215,9 @@
     "File Path (m)": "File Path (m)",
     "Browse...": "Browse...",
     "Surface level (m)": "Surface level (m)",
-    "Gain factor: ": "Gain factor: "
+    "Gain factor: ": "Gain factor: ",
+    "Boundary method 1:DBC, 2:mDBC (default=1).": "Boundary method 1:DBC, 2:mDBC (default=1).",
+    "Boundary Method:": "Boundary Method:",
+    "DBC": "DBC",
+    "mDBC": "mDBC"
 }

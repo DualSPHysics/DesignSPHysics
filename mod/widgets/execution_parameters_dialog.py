@@ -47,6 +47,19 @@ class ExecutionParametersDialog(QtGui.QDialog):
         self.saveposdouble_layout.addWidget(self.saveposdouble_input)
         self.saveposdouble_layout.addStretch(1)
 
+        self.boundary_layout = QtGui.QHBoxLayout()
+        self.boundary_label = QtGui.QLabel(__("Boundary Method:"))
+        self.boundary_input = FocusableComboBox()
+        self.boundary_input.insertItems(0, [__("DBC"), __("mDBC")])
+        self.boundary_input.setCurrentIndex(int(Case.the().execution_parameters.boundary) - 1)
+        self.boundary_input.set_help_text(HelpText.BOUNDARY)
+
+        self.boundary_input.focus.connect(self.on_help_focus)
+
+        self.boundary_layout.addWidget(self.boundary_label)
+        self.boundary_layout.addWidget(self.boundary_input)
+        self.boundary_layout.addStretch(1)
+
         self.stepalgorithm_layout = QtGui.QHBoxLayout()
         self.stepalgorithm_label = QtGui.QLabel(__("Step Algorithm:"))
         self.stepalgorithm_input = FocusableComboBox()
@@ -616,6 +629,7 @@ class ExecutionParametersDialog(QtGui.QDialog):
         self.ep_main_layout = QtGui.QVBoxLayout()
 
         self.ep_main_layout.addLayout(self.saveposdouble_layout)
+        self.ep_main_layout.addLayout(self.boundary_layout)
         self.ep_main_layout.addLayout(self.stepalgorithm_layout)
         self.ep_main_layout.addLayout(self.verletsteps_layout)
         self.ep_main_layout.addLayout(self.kernel_layout)
@@ -835,6 +849,7 @@ class ExecutionParametersDialog(QtGui.QDialog):
     def on_ok(self):
         """ Applies the data from the dialog onto the main data structure. """
         Case.the().execution_parameters.saveposdouble = int(self.saveposdouble_input.currentIndex())
+        Case.the().execution_parameters.boundary = int(self.boundary_input.currentIndex() + 1)
         Case.the().execution_parameters.stepalgorithm = int(self.stepalgorithm_input.currentIndex() + 1)
         Case.the().execution_parameters.verletsteps = int(self.verletsteps_input.text())
         Case.the().execution_parameters.kernel = int(self.kernel_input.currentIndex() + 1)

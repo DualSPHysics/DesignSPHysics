@@ -284,6 +284,7 @@ class HelpText:
     ZMIN = __("The domain is fixed in the specified limit (default=not applied)")
     ZMAX = __("The domain is fixed in the specified limit (default=not applied)")
     SAVEPOSDOUBLE = __("Saves particle position using double precision (default=0).")
+    BOUNDARY = __("Boundary method 1:DBC, 2:mDBC (default=1).")
     POSDOUBLE = __("Precision in particle interaction 0:Simple, 1:Double, 2:Uses and saves double (default=0).")
     STEPALGORITHM = __("Time-integrator algorithm 1:Verlet, 2:Symplectic (default=1).")
     VERLETSTEPS = __("Verlet only: Number of steps to apply Euler timestepping (default=40).")
