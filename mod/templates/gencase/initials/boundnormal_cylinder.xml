@@ -1,0 +1,10 @@
+            <boundnormal_cylinder mkbound="{mk}">
+                <center1 x="{center1[0]}" y="{center1[1]}" z="{center1[2]}" /> 
+                <center2 x="{center2[0]}" y="{center2[1]}" z="{center2[2]}" /> 
+                <radius v="{radius}" />
+                <inside v="{inside}" comment="Boundary particles inside the cylinder" />		
+                <maxdisth v="{maxdisth}" comment="Maximum distance to boundary limit. It uses H*maxdisth (default=2)" />
+            </boundnormal_cylinder>
+
+
+            

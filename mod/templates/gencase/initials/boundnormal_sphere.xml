@@ -1,0 +1,6 @@
+            <boundnormal_sphere mkbound="{mk}">
+                <center x="{center[0]}" y="{center[1]}" z="{center[2]}" /> 
+                <radius v="{radius}" />
+                <inside v="{inside}" comment="Boundary particles inside the sphere" />		
+                <maxdisth v="{maxdisth}" comment="Maximum distance to boundary limit. It uses H*maxdisth (default=2)" />
+            </boundnormal_sphere>

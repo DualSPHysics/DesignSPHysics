@@ -2,7 +2,6 @@
 # -*- coding: utf-8 -*-
 """DesignSPHysics Initials Dialog """
 
-from mod.dataobjects.bound_initials_property import BoundInitialsProperty
 import FreeCADGui
 
 from PySide import QtGui
@@ -12,8 +11,8 @@ from mod.dialog_tools import info_dialog
 
 from mod.enums import BoundInitialsType, ObjectType
 
+from mod.dataobjects.bound_initials_property import BoundInitialsProperty
 from mod.dataobjects.case import Case
-from mod.dataobjects.initials_property import InitialsProperty
 
 
 class SetInitialsWidget(QtGui.QWidget):
@@ -380,6 +379,7 @@ class BoundInitialsDialog(QtGui.QDialog):
             # Initials true
             # Structure: BoundInitialsProperty Object
             bound_initials = BoundInitialsProperty()
+            bound_initials.mk = self.target_mk
             bound_initials.initials_type = self.initials_type_selector.currentIndex()
             if bound_initials.initials_type == BoundInitialsType.SET:
                 bound_initials.normal = [float(self.set_initials_widget.normal_input_x.text()), float(self.set_initials_widget.normal_input_y.text()), float(self.set_initials_widget.normal_input_z.text())]
