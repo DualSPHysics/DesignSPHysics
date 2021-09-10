@@ -100,12 +100,14 @@ class InletOutletZoneType:
     ZONE_2D = "zone2d"
     ZONE_3D = "zone3d"
 
+
 class InletOutletZoneGeneratorType:
     """ Inlet/Outlet Zone Generator Type. """
     MK = 0
     LINE = 1
     BOX = 2
     CIRCLE = 3
+
 
 class InletOutletDirection:
     """ Inlet/Outlet Zone Direction. """
@@ -123,6 +125,7 @@ class InletOutletVelocityType:
     VARIABLE = 1
     EXTRAPOLATED = 2
     INTERPOLATED = 3
+
 
 class InletOutletVelocitySpecType:
     """ Inlet/Outlet Velocity Specification Type """
@@ -151,11 +154,13 @@ class InletOutletElevationType:
     VARIABLE = 1
     AUTOMATIC = 2
 
+
 class InletOutletZSurfMode:
     """ Inlet/Outlet ZSurf Mode. """
     FIXED = 0
     TIMELIST = 1
     FILE = 2
+
 
 class InletOutletExtrapolateMode:
     """ Types of extrapolatemode for Inlet/Outlet configuration. """
@@ -250,19 +255,32 @@ class InitialsType:
     PARABOLIC = 2
 
 
+class BoundInitialsType:
+    """ Types of initials for boundaries """
+    SET = 0
+    PLANE = 1
+    SPHERE = 2
+    CYLINDER = 3
+    PARTS = 4
+
+
 class InformationDetailsMode:
     """ Types of detailed text for the information dialog. """
     PLAIN = 0
     HTML = 1
 
+
 class OMPThreads:
     """ Types of contact methods for CHRONO collisions. """
     MULTI_CORE = 0
     SINGLE_CORE = 1
+
+
 class ContactMethod:
     """ Types of contact methods for CHRONO collisions. """
     NSC = 0
     SMC = 1
+
 
 class HelpText:
     """ Help strings for different zones of the application GUIs. """

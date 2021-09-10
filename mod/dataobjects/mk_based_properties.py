@@ -2,8 +2,10 @@
 # -*- coding: utf-8 -*-
 """ DesignSPHysics MK Based Properties. """
 
+from typing import Union
 from mod.dataobjects.float_property import FloatProperty
 from mod.dataobjects.initials_property import InitialsProperty
+from mod.dataobjects.bound_initials_property import BoundInitialsProperty
 from mod.dataobjects.ml_piston import MLPiston
 from mod.dataobjects.properties.property import Property
 
@@ -16,6 +18,7 @@ class MKBasedProperties():
         self.movements: list = list()  # [Movement]
         self.float_property: FloatProperty = None
         self.initials: InitialsProperty = None
+        self.bound_initials: BoundInitialsProperty = None
         self.mlayerpiston: MLPiston = None
         self.property: Property = None
 

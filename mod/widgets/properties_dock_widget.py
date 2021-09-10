@@ -16,6 +16,7 @@ from mod.dialog_tools import ok_cancel_dialog
 
 from mod.widgets.damping_config_dialog import DampingConfigDialog
 from mod.widgets.initials_dialog import InitialsDialog
+from mod.widgets.bound_initials_dialog import BoundInitialsDialog
 from mod.widgets.motion.movement_dialog import MovementDialog
 from mod.widgets.float_state_dialog import FloatStateDialog
 from mod.widgets.faces_dialog import FacesDialog
@@ -271,7 +272,6 @@ class PropertiesDockWidget(QtGui.QDockWidget):
                 # Can't change attributes
                 pass
             self.floatstate_prop.setEnabled(True)
-            self.initials_prop.setEnabled(False)
             self.set_mkgroup_text("{} <a href='{}'>?</a>".format(__("MKBound"), HelpURL.BASIC_CONCEPTS))
         elif self.objtype_prop.itemText(index).lower() == "fluid":
             self.mkgroup_prop.setRange(0, MKFLUID_LIMIT - MKFLUID_OFFSET - 1)
@@ -292,7 +292,6 @@ class PropertiesDockWidget(QtGui.QDockWidget):
                 mk_properties.remove_all_movements()
 
             self.floatstate_prop.setEnabled(False)
-            self.initials_prop.setEnabled(True)
             self.set_mkgroup_text("{} <a href='{}'>?</a>".format(__("MKFluid"), HelpURL.BASIC_CONCEPTS))
 
         # Update simulation object type
@@ -333,7 +332,12 @@ class PropertiesDockWidget(QtGui.QDockWidget):
 
     def on_initials_change(self):
         """ Initials configuration button behaviour. """
-        InitialsDialog(parent=get_fc_main_window())
+        selection = FreeCADGui.Selection.getSelection()[0]
+        sim_object = Case.the().get_simulation_object(selection.Name)
+        if sim_object.type == ObjectType.FLUID:
+            InitialsDialog(parent=get_fc_main_window())
+        elif sim_object.type == ObjectType.BOUND:
+            BoundInitialsDialog(parent=get_fc_main_window())
 
     def on_motion_change(self):
         """ Movement configuration button behaviour. """
@@ -497,9 +501,6 @@ class PropertiesDockWidget(QtGui.QDockWidget):
         # Object Float State button adaptation
         if sim_object.supports_floating():
             self.floatstate_prop.setEnabled(sim_object.type != ObjectType.FLUID)
-
-        # Object Initials button adaptation
-        self.initials_prop.setEnabled(sim_object.type == ObjectType.FLUID)
 
         # Object Motion button adaptation
         self.motion_prop.setEnabled(sim_object.supports_motion())

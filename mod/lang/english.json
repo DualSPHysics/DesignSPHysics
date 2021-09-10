@@ -1219,5 +1219,14 @@
     "Boundary method 1:DBC, 2:mDBC (default=1).": "Boundary method 1:DBC, 2:mDBC (default=1).",
     "Boundary Method:": "Boundary Method:",
     "DBC": "DBC",
-    "mDBC": "mDBC"
+    "mDBC": "mDBC",
+    "Normal: ": "Normal: ",
+    "Point: ": "Point: ",
+    "Max. distance to boundary limit: ": "Max. distance to boundary limit: ",
+    "Center: ": "Center: ",
+    "Boundary particles inside the sphere:": "Boundary particles inside the sphere:",
+    "Center 1: ": "Center 1: ",
+    "Center 2: ": "Center 2: ",
+    "Boundary particles inside the cylinder:": "Boundary particles inside the cylinder:",
+    "This will apply the initials properties to all objects with mkbound = ": "This will apply the initials properties to all objects with mkbound = "
 }
