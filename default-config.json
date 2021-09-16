@@ -1,5 +1,5 @@
 {
-    "windows":{
+    "windows": {
         "gencase": "./dualsphysics/bin/GenCase_win64.exe",
         "dsphysics": "./dualsphysics/bin/DualSPHysics5.0_win64.exe",
         "partvtk": "./dualsphysics/bin/PartVTK_win64.exe",
@@ -8,9 +8,10 @@
         "measuretool": "./dualsphysics/bin/MeasureTool_win64.exe",
         "isosurface": "./dualsphysics/bin/IsoSurface_win64.exe",
         "boundaryvtk": "./dualsphysics/bin/BoundaryVTK_win64.exe",
-        "flowtool": "./dualsphysics/bin/FlowTool_win64.exe"
+        "flowtool": "./dualsphysics/bin/FlowTool_win64.exe",
+        "bathymetrytool": "./dualsphysics/bin/BathymetryTool_win64.exe"
     },
-    "linux":{
+    "linux": {
         "gencase": "./dualsphysics/bin/GenCase_linux64",
         "dsphysics": "./dualsphysics/bin/DualSPHysics5.0_linux64",
         "partvtk": "./dualsphysics/bin/PartVTK_linux64",
@@ -19,6 +20,7 @@
         "measuretool": "./dualsphysics/bin/MeasureTool_linux64",
         "isosurface": "./dualsphysics/bin/IsoSurface_linux64",
         "boundaryvtk": "./dualsphysics/bin/BoundaryVTK_linux64",
-        "flowtool": "./dualsphysics/bin/FlowTool_linux64"
+        "flowtool": "./dualsphysics/bin/FlowTool_linux64",
+        "bathymetrytool": "./dualsphysics/bin/BathymetryTool_linux64"
     }
 }

@@ -135,6 +135,18 @@ class SetupPluginDialog(QtGui.QDialog):
         self.flowtool_layout.addWidget(self.flowtool_input)
         self.flowtool_layout.addWidget(self.flowtool_browse)
 
+        # BathymetryTool path
+        self.bathymetrytool_layout = QtGui.QHBoxLayout()
+        self.bathymetrytool_label = QtGui.QLabel("BathymetryTool Path: ")
+        self.bathymetrytool_input = QtGui.QLineEdit()
+        self.bathymetrytool_input.setText(Case.the().executable_paths.bathymetrytool)
+        self.bathymetrytool_input.setPlaceholderText("Put BathymetryTool path here")
+        self.bathymetrytool_browse = QtGui.QPushButton("...")
+
+        self.bathymetrytool_layout.addWidget(self.bathymetrytool_label)
+        self.bathymetrytool_layout.addWidget(self.bathymetrytool_input)
+        self.bathymetrytool_layout.addWidget(self.bathymetrytool_browse)
+
         # ParaView path
         self.paraview_layout = QtGui.QHBoxLayout()
         self.paraview_label = QtGui.QLabel("ParaView Path: ")
@@ -159,6 +171,7 @@ class SetupPluginDialog(QtGui.QDialog):
         self.measuretool_browse.clicked.connect(lambda: self.browse("MeasureTool", self.measuretool_input))
         self.boundaryvtk_browse.clicked.connect(lambda: self.browse("BoundaryVTK", self.boundaryvtk_input))
         self.flowtool_browse.clicked.connect(lambda: self.browse("FlowTool", self.flowtool_input))
+        self.bathymetrytool_browse.clicked.connect(lambda: self.browse("Bathymetrytool", self.bathymetrytool_input))
         self.isosurface_browse.clicked.connect(lambda: self.browse("IsoSurface", self.isosurface_input))
         self.paraview_browse.clicked.connect(self.on_paraview_browse)
 
@@ -173,6 +186,7 @@ class SetupPluginDialog(QtGui.QDialog):
         self.executables_layout.addLayout(self.isosurface_layout)
         self.executables_layout.addLayout(self.boundaryvtk_layout)
         self.executables_layout.addLayout(self.flowtool_layout)
+        self.executables_layout.addLayout(self.bathymetrytool_layout)
         self.executables_layout.addLayout(self.paraview_layout)
         self.executables_layout.addStretch(1)
 
@@ -233,6 +247,7 @@ class SetupPluginDialog(QtGui.QDialog):
         Case.the().executable_paths.isosurface = self.isosurface_input.text()
         Case.the().executable_paths.boundaryvtk = self.boundaryvtk_input.text()
         Case.the().executable_paths.flowtool = self.flowtool_input.text()
+        Case.the().executable_paths.bathymetrytool = self.bathymetrytool_input.text()
         Case.the().executable_paths.paraview = self.paraview_input.text()
         Case.the().executable_paths.check_and_filter()
 
@@ -261,6 +276,7 @@ class SetupPluginDialog(QtGui.QDialog):
         self.isosurface_input.setText(default_config["isosurface"])
         self.boundaryvtk_input.setText(default_config["boundaryvtk"])
         self.flowtool_input.setText(default_config["flowtool"])
+        self.bathymetrytool_input.setText(default_config["bathymetrytool"])
         self.use_debug_check.setChecked(True)
         self.use_verbose_check.setChecked(True)
         self.use_version_check.setChecked(True)

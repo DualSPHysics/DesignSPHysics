@@ -27,6 +27,7 @@ class ExecutablePaths():
         self.isosurface: str = ""
         self.boundaryvtk: str = ""
         self.flowtool: str = ""
+        self.bathymetrytool: str = ""
         self.paraview: str = ""
 
         self.restore_from_disk()
@@ -44,7 +45,8 @@ class ExecutablePaths():
             "measuretool": self.measuretool,
             "isosurface": self.isosurface,
             "boundaryvtk": self.boundaryvtk,
-            "flowtool": self.flowtool
+            "flowtool": self.flowtool,
+            "bathymetrytool": self.bathymetrytool
         }
 
         bad_executables: list = list()
@@ -86,6 +88,7 @@ class ExecutablePaths():
         self.isosurface = default_data["isosurface"]
         self.boundaryvtk = default_data["boundaryvtk"]
         self.flowtool = default_data["flowtool"]
+        self.bathymetrytool = default_data["bathymetrytool"]
 
     def restore_from_disk(self) -> None:
         """ Tries to restore the saved paths from the persisted ones if they exist."""
@@ -104,6 +107,7 @@ class ExecutablePaths():
             self.isosurface = obj.isosurface
             self.boundaryvtk = obj.boundaryvtk
             self.flowtool = obj.flowtool
+            self.bathymetrytool = obj.bathymetrytool
             self.paraview = obj.paraview
 
     def persist(self) -> None:
@@ -122,5 +126,6 @@ class ExecutablePaths():
             "Isosurface: {isosurface}\n"
             "Boundaryvtk: {boundaryvtk}\n"
             "Flowtool: {flowtool}\n"
+            "BathymetryTool: {bathymetrytool}\n"
             "Paraview: {paraview}"
         ).format(**self.__dict__)
