@@ -76,6 +76,7 @@ def are_executables_bundled():
 
 def ensure_process_is_executable_or_fail(cli_path: str) -> None:
     """ Ensures and asserts a process is executable or fails and raises an exception. """
+    refocus_cwd()
     if platform in ("linux", "linux2"):
         st = stat(cli_path)
         chmod(cli_path, st.st_mode | unix_stat.S_IEXEC)

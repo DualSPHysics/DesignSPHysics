@@ -2,6 +2,7 @@
 # -*- coding: utf-8 -*-
 """ DesignSPHysics Case Information Data """
 
+from mod.dataobjects.bathymetry_form_data import BathymetryFormData
 from os.path import isdir, isfile, dirname
 from pathlib import Path
 
@@ -24,6 +25,7 @@ class CaseInformation():
         self.global_movements: list = list()  # [Movement]
         self.global_materials: list = list()  # [MaterialProperty]
         self.last_used_directory: str = str(Path.home())
+        self.last_used_bathymetry_data: BathymetryFormData = BathymetryFormData()
 
         self.load_default_materials()
 

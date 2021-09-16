@@ -316,7 +316,7 @@ class DockPreProcessingWidget(QtGui.QWidget):
         """ Add STL file. Opens a file opener and allows the user to set parameters for the import process """
         self.need_refresh.emit()
 
-        file_name, _ = QtGui.QFileDialog().getOpenFileName(get_fc_main_window(), __("Select GEO to import"), Case.the().info.last_used_directory, "STL Files (*.stl);;PLY Files (*.ply);;VTK Files (*.vtk)")
+        file_name, _ = QtGui.QFileDialog().getOpenFileName(get_fc_main_window(), __("Select GEO to import"), Case.the().info.last_used_directory, "STL Files (*.stl);;PLY Files (*.ply);;VTK Files (*.vtk);;XYZ Files (*.xyz)")
         Case.the().info.update_last_used_directory(file_name)
         if not file_name:
             return
