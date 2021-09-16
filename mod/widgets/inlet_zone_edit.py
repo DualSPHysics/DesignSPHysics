@@ -365,7 +365,7 @@ class VelocityTypeVariableUniformWidget(QtGui.QWidget):
         self.main_layout = QtGui.QVBoxLayout()
 
         self.table = QtGui.QTableWidget(60, 2)
-        self.table.setHorizontalHeaderLabels([__("Time"), __("Velocity (m/s)")])
+        self.table.setHorizontalHeaderLabels([__("Time (s)"), __("Velocity (m/s)")])
         self.table.verticalHeader().setVisible(False)
         self.table.horizontalHeader().setSectionResizeMode(QtGui.QHeaderView.ResizeMode.Stretch)
 
@@ -382,7 +382,7 @@ class VelocityTypeVariableLinearWidget(QtGui.QWidget):
         self.main_layout = QtGui.QVBoxLayout()
 
         self.table = QtGui.QTableWidget(60, 5)
-        self.table.setHorizontalHeaderLabels([__("Time"), __("V (m/s)"), __("V2 (m/s)"), __("Z (m/s)"), __("Z2 (m/s)")])
+        self.table.setHorizontalHeaderLabels([__("Time (s)"), __("V (m/s)"), __("V2 (m/s)"), __("Z (m/s)"), __("Z2 (m/s)")])
         self.table.verticalHeader().setVisible(False)
         self.table.horizontalHeader().setSectionResizeMode(QtGui.QHeaderView.ResizeMode.Stretch)
 
@@ -399,7 +399,7 @@ class VelocityTypeVariableParabolicWidget(QtGui.QWidget):
         self.main_layout = QtGui.QVBoxLayout()
 
         self.table = QtGui.QTableWidget(60, 7)
-        self.table.setHorizontalHeaderLabels([__("Time"), __("V (m/s)"), __("V2 (m/s)"), __("V3 (m/s)"), __("Z (m/s)"), __("Z2 (m/s)"), __("Z3 (m/s)")])
+        self.table.setHorizontalHeaderLabels([__("Time (s)"), __("V (m/s)"), __("V2 (m/s)"), __("V3 (m/s)"), __("Z (m/s)"), __("Z2 (m/s)"), __("Z3 (m/s)")])
         self.table.verticalHeader().setVisible(False)
         self.table.horizontalHeader().setSectionResizeMode(QtGui.QHeaderView.ResizeMode.Stretch)
 
@@ -474,7 +474,7 @@ class ImposezsurfVariableWidget(QtGui.QWidget):
         self.zbottom_layout.addWidget(self.zbottom_input)
 
         self.zsurf_table = QtGui.QTableWidget(60, 2)
-        self.zsurf_table.setHorizontalHeaderLabels([__("Time"), __("Surface level (m)")])
+        self.zsurf_table.setHorizontalHeaderLabels([__("Time (s)"), __("Surface level (m)")])
         self.zsurf_table.verticalHeader().setVisible(False)
         self.zsurf_table.horizontalHeader().setSectionResizeMode(QtGui.QHeaderView.ResizeMode.Stretch)
 
