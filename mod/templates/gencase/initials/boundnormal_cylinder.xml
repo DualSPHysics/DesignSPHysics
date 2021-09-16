@@ -5,6 +5,3 @@
                 <inside v="{inside}" comment="Boundary particles inside the cylinder" />		
                 <maxdisth v="{maxdisth}" comment="Maximum distance to boundary limit. It uses H*maxdisth (default=2)" />
             </boundnormal_cylinder>
-
-
-            
