@@ -60,7 +60,9 @@ class InoutRenderer():
             inout_zone_template_list.append(get_template_text(cls.INOUT_EACH).format(**each_formatter))
 
         formatter: dict = data["inlet_outlet"]
-        formatter["useboxlimit_template"] = cls.get_useboxlimit_template(data["inlet_outlet"])
+        # 16/09/2021 Remove useboxlimit from the XML as Alex stated
+        # formatter["useboxlimit_template"] = cls.get_useboxlimit_template(data["inlet_outlet"])
+        formatter["useboxlimit_template"] = ""
         formatter["each_zone"] = LINE_END.join(inout_zone_template_list)
 
         return get_template_text(cls.INOUT_BASE).format(**formatter)
