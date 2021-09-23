@@ -149,7 +149,7 @@ class MeasureToolDialog(QtGui.QDialog):
             if self.mtool_types_chk_kcorr.isChecked():
                 export_parameters["save_vars"] += ",+kcorr"
 
-        if export_parameters["save_vars"] == "-all":
+        if export_parameters["save_vars"] == "-all" and not self.mtool_calculate_elevation.isChecked():
             export_parameters["save_vars"] = "+all"
 
         export_parameters["calculate_water_elevation"] = self.mtool_calculate_elevation.isChecked()
