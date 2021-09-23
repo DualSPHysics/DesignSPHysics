@@ -92,7 +92,7 @@ class AddGEODialog(QtGui.QDialog):
         self.geo_bathymetry_options_widget = QtGui.QWidget()
         self.geo_bathymetry_options_layout = QtGui.QVBoxLayout()
 
-        self.bath_input_options_header_label = QtGui.QLabel("<h2>{}</h2>".format("Input configuration"))
+        self.bath_input_options_header_label = QtGui.QLabel("<h4>{}</h4>".format("Input configuration"))
 
         self.bath_move_layout = QtGui.QHBoxLayout()
         self.bath_move_label = QtGui.QLabel(__("Move: "))
@@ -183,7 +183,7 @@ class AddGEODialog(QtGui.QDialog):
         self.bath_selection_enabled_chk.toggled.connect(self.on_bath_selection_toggled)
         self.on_bath_selection_toggled()
 
-        self.bath_grid_options_header_label = QtGui.QLabel("<h2>{}</h2>".format("Grid configuration"))
+        self.bath_grid_options_header_label = QtGui.QLabel("<h4>{}</h4>".format("Grid configuration"))
 
         self.bath_grid_dp_layout = QtGui.QHBoxLayout()
         self.bath_grid_dp_label = QtGui.QLabel(__("Grid DP: "))
@@ -704,10 +704,12 @@ class AddGEODialog(QtGui.QDialog):
         """ Defines behaviour when the file path changes. """
         if "xyz" in self.geo_file_path.text().lower()[-4:]:
             self.geo_scaling_widget.setVisible(False)
+            self.geo_autofill_chck.setVisible(False)
             self.geo_bathymetry_options_scroll.setVisible(True)
             self.bathymetry_mode = True
         else:
             self.geo_scaling_widget.setVisible(True)
+            self.geo_autofill_chck.setVisible(True)
             self.geo_bathymetry_options_scroll.setVisible(False)
             self.bathymetry_mode = False
 
