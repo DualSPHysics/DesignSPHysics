@@ -20,8 +20,8 @@ class ObjectsRenderer():
     OBJECTS_MKFLUID_XML = "/templates/gencase/objects/each/mkfluid.xml"
     OBJECTS_MKBOUND_XML = "/templates/gencase/objects/each/mkbound.xml"
     OBJECTS_ROTATION_XML = "/templates/gencase/objects/each/rotation.xml"
-    OBJECT_FRDRAWMODE_ENABLE = "/templates/gencase/objects/each/frdrawmode_enable.xml" 
-    OBJECT_FRDRAWMODE_DISABLE = "/templates/gencase/objects/each/frdrawmode_disable.xml" 
+    OBJECT_FRDRAWMODE_ENABLE = "/templates/gencase/objects/each/frdrawmode_enable.xml"
+    OBJECT_FRDRAWMODE_DISABLE = "/templates/gencase/objects/each/frdrawmode_disable.xml"
     OBJECTS_MATRIXRESET_XML = "/templates/gencase/objects/each/matrixreset.xml"
     OBJECTS_MOVE_XML = "/templates/gencase/objects/each/move.xml"
     OBJECT_BOX_XML = "/templates/gencase/objects/each/cube.xml"
@@ -66,6 +66,7 @@ class ObjectsRenderer():
         if fc_object.TypeId == FreeCADObjectType.BOX:
             obj_formatter.update({
                 "boxfill": obj["faces_configuration"]["face_print"] if obj["faces_configuration"] else "solid",
+                "layers": '\t\t\t\t\t<layers vdp="{}" />'.format(obj["faces_configuration"]["layers"]) if obj["faces_configuration"] and obj["faces_configuration"]["layers"] != "" else "",
                 "size": [fc_object.Length.Value / DIVIDER, fc_object.Width.Value / DIVIDER, fc_object.Height.Value / DIVIDER],
             })
         if fc_object.TypeId == FreeCADObjectType.SPHERE:

@@ -1250,5 +1250,6 @@
     "Importing bathymetry...": "Importing bathymetry...",
     "Point 1 [X, Z]": "Point 1 [X, Z]",
     "Point 2 [X, Z]": "Point 2 [X, Z]",
-    "Direction [X, Z]": "Direction [X, Z]"
+    "Direction [X, Z]": "Direction [X, Z]",
+    "Layers:": "Layers:"
 }

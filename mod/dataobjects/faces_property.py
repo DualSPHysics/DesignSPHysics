@@ -8,7 +8,7 @@ class FacesProperty():
 
     def __init__(self, all_faces=False, front_face=False,
                  back_face=False, top_face=False, bottom_face=False,
-                 left_face=False, right_face=False, face_print=""):
+                 left_face=False, right_face=False, face_print="", layers=""):
         self.all_faces = all_faces
         self.front_face = front_face
         self.back_face = back_face
@@ -17,6 +17,7 @@ class FacesProperty():
         self.left_face = left_face
         self.right_face = right_face
         self.face_print = face_print
+        self.layers = layers
 
     def build_face_print(self) -> None:
         """ Builds a string to print faces. """

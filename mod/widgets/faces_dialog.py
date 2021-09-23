@@ -20,7 +20,7 @@ class FacesDialog(QtGui.QDialog):
         self.setWindowTitle(__("Faces configuration"))
         self.ok_button = QtGui.QPushButton(__("OK"))
         self.cancel_button = QtGui.QPushButton(__("Cancel"))
-        self.main_faces_layout = QtGui.QVBoxLayout()
+        self.main_layout = QtGui.QVBoxLayout()
 
         self.target_object: SimulationObject = Case.the().get_simulation_object(selection_name)
 
@@ -43,6 +43,9 @@ class FacesDialog(QtGui.QDialog):
         self.left_face = QtGui.QCheckBox(__("Left face"))
         self.right_face = QtGui.QCheckBox(__("Right face"))
 
+        self.layers_label = QtGui.QLabel(__("Layers:"))
+        self.layers_input = QtGui.QLineEdit()
+
         if self.target_object.faces_configuration:
             self.all_faces.setCheckState(QtCore.Qt.Checked if self.target_object.faces_configuration.all_faces else QtCore.Qt.Unchecked)
             self.front_face.setCheckState(QtCore.Qt.Checked if self.target_object.faces_configuration.front_face else QtCore.Qt.Unchecked)
@@ -51,21 +54,37 @@ class FacesDialog(QtGui.QDialog):
             self.bottom_face.setCheckState(QtCore.Qt.Checked if self.target_object.faces_configuration.bottom_face else QtCore.Qt.Unchecked)
             self.left_face.setCheckState(QtCore.Qt.Checked if self.target_object.faces_configuration.left_face else QtCore.Qt.Unchecked)
             self.right_face.setCheckState(QtCore.Qt.Checked if self.target_object.faces_configuration.right_face else QtCore.Qt.Unchecked)
+            self.layers_input.setText(self.target_object.faces_configuration.layers)
 
         self.all_faces.toggled.connect(self.on_faces_checkbox)
 
+        self.faces_options_layout = QtGui.QHBoxLayout()
+        self.faces_options_col1_layout = QtGui.QVBoxLayout()
+        self.faces_options_col2_layout = QtGui.QVBoxLayout()
+
+        self.faces_options_col1_layout.addWidget(self.front_face)
+        self.faces_options_col1_layout.addWidget(self.top_face)
+        self.faces_options_col1_layout.addWidget(self.left_face)
+
+        self.faces_options_col2_layout.addWidget(self.back_face)
+        self.faces_options_col2_layout.addWidget(self.bottom_face)
+        self.faces_options_col2_layout.addWidget(self.right_face)
+
+        self.faces_options_layout.addLayout(self.faces_options_col1_layout)
+        self.faces_options_layout.addLayout(self.faces_options_col2_layout)
+
         self.faces_layout.addWidget(self.all_faces)
-        self.faces_layout.addWidget(self.front_face)
-        self.faces_layout.addWidget(self.back_face)
-        self.faces_layout.addWidget(self.top_face)
-        self.faces_layout.addWidget(self.bottom_face)
-        self.faces_layout.addWidget(self.left_face)
-        self.faces_layout.addWidget(self.right_face)
+        self.faces_layout.addLayout(self.faces_options_layout)
 
-        self.main_faces_layout.addLayout(self.faces_layout)
-        self.main_faces_layout.addLayout(self.button_layout)
+        self.layers_layout = QtGui.QVBoxLayout()
+        self.layers_layout.addWidget(self.layers_label)
+        self.layers_layout.addWidget(self.layers_input)
 
-        self.setLayout(self.main_faces_layout)
+        self.main_layout.addLayout(self.faces_layout)
+        self.main_layout.addLayout(self.layers_layout)
+        self.main_layout.addLayout(self.button_layout)
+
+        self.setLayout(self.main_layout)
 
         self.on_faces_checkbox()
 
@@ -86,6 +105,7 @@ class FacesDialog(QtGui.QDialog):
             fp.right_face = self.right_face.isChecked()
 
         fp.build_face_print()
+        fp.layers = self.layers_input.text()
         self.target_object.faces_configuration = fp
         self.accept()
 
