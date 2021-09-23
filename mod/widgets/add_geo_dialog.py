@@ -740,7 +740,7 @@ class AddGEODialog(QtGui.QDialog):
         working_dialog = WorkingDialog(self)
 
         def on_export_finished():
-            temp_bathymetry_file_path = "{}/output.vtk".format(temp_dir)
+            temp_bathymetry_file_path = "{}/output.stl".format(temp_dir)
             import_geo(filename=str(temp_bathymetry_file_path),
                        scale_x=1.0,
                        scale_y=1.0,
@@ -789,8 +789,8 @@ class AddGEODialog(QtGui.QDialog):
         if self.bath_finalmove_enabled_chk.isChecked():
             executable_parameters.append("-gmove:{}:{}:{}".format(self.bath_finalmove_x_e.text(), self.bath_finalmove_y_e.text(), self.bath_finalmove_z_e.text()))
 
-        executable_parameters.append("-savegridmm")
-        executable_parameters.append("{}/output.vtk".format(temp_dir))
+        executable_parameters.append("-savegrid:stl:mm")
+        executable_parameters.append("{}/output.stl".format(temp_dir))
 
         self.save_default_data()
 
