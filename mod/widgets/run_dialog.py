@@ -131,7 +131,7 @@ class RunDialog(QtGui.QDialog):
         details_text: str = self.run_details_text.toPlainText()
         if "[WARNINGS]" not in details_text:
             return
-        warning_list: list = details_text.split("[WARNINGS]\n")[-1].split("\n\n")[0].split("\n")
+        warning_list: list = details_text.split("[WARNINGS]\n")[-1].split("\n\n")[0].split("[")[0].split("\n")
         self.run_group_label_completed.setText("<b style='color: #ABA400'>{}</b>".format(__("Simulation completed with warnings.")))
         try:
             self.run_button_warnings.clicked.disconnect()
