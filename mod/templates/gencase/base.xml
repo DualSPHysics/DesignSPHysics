@@ -30,12 +30,12 @@
             </commands>
         </geometry>
 {properties_template}
-{initials_template}
 {floatings_template}
 {motion_template}
     </casedef>
     <execution>
         <special>
+{initials_template}
 {accinput_template}
 {damping_template}
 {mlpistons_template}
