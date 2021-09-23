@@ -787,7 +787,7 @@ class AddGEODialog(QtGui.QDialog):
         if self.bath_finalmove_enabled_chk.isChecked():
             executable_parameters.append("-gmove:{}:{}:{}".format(self.bath_finalmove_x_e.text(), self.bath_finalmove_y_e.text(), self.bath_finalmove_z_e.text()))
 
-        executable_parameters.append("-savegrid")
+        executable_parameters.append("-savegridmm")
         executable_parameters.append("{}/output.vtk".format(temp_dir))
 
         self.save_default_data()
