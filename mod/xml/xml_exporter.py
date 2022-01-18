@@ -8,6 +8,8 @@ The utilities on this module creates
 import os
 from datetime import datetime
 
+from mod.stdout_tools import debug
+
 from mod.constants import APP_NAME, LINE_END
 from mod.template_tools import obj_to_dict, get_template_text
 
@@ -93,7 +95,8 @@ class XMLExporter():
         properties_list: list = list()
         for mkbasedproperty in case.mkbasedproperties.values():
             if mkbasedproperty.property:
-                properties_list.append(get_template_text(self.PROPERTY_MATERIALS_XML).format(**mkbasedproperty.property.__dict__))
+                if not any(mkbasedproperty.property.name in prop for prop in properties_list):
+                    properties_list.append(get_template_text(self.PROPERTY_MATERIALS_XML).format(**mkbasedproperty.property.__dict__))
 
         formatter: dict = {
             "each_property": LINE_END.join(properties_list)
