@@ -28,6 +28,11 @@ class InitialsRenderer():
     @classmethod
     def render(cls, data):
         """ Returns the rendered string. """
+
+        for x in data["mkbasedproperties"].values():
+            if not "bound_initials" in x:
+                x["bound_initials"] = None
+
         suitable_mkbasedproperties = filter(lambda x: x["initials"] is not None or x["bound_initials"] is not None, data["mkbasedproperties"].values())
 
         if not suitable_mkbasedproperties:
