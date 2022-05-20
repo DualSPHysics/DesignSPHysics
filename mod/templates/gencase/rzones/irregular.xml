@@ -12,7 +12,7 @@
                     <depth value="{depth}" comment="Water depth for wave generation" />
                     <swl value="{swl}" comment="Still water level (free-surface)" />
                     <center x="{center[0]}" y="{center[1]}" z="{center[2]}"  comment="Central point of application" />
-                    <width value="{width}"comment="Width for generation" />
+                    <width value="{width}" comment="Width for generation" />
                     <ramptime value="{ramptime}" comment="Time of initial ramp (default=0)" />
                     <serieini value="{serieini}" comment="Initial time in irregular wave serie (default=0)" />
                     <savemotion time="{savemotion_time}" timedt="{savemotion_timedt}" xpos="{savemotion_xpos}" zpos="{savemotion_zpos}" comment="Saves motion data. xpos and zpos are optional. zpos=-depth of the measuring point" />
