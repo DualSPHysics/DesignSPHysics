@@ -270,7 +270,7 @@ class RelaxationZoneIrregularConfigDialog(QtGui.QDialog):
         self.temp_relaxationzone.waveheight = float(self.waveheight_input.text())
         self.temp_relaxationzone.waveperiod = float(self.waveperiod_input.text())
         self.temp_relaxationzone.waves = float(self.waves_input.text())
-        self.temp_relaxationzone.randomseed = float(self.waveperiod_input.text())
+        self.temp_relaxationzone.randomseed = float(self.randomseed_input.text())
         self.temp_relaxationzone.depth = float(self.depth_input.text())
         self.temp_relaxationzone.swl = float(self.swl_input.text())
         self.temp_relaxationzone.center[0] = float(self.center_x.text())
