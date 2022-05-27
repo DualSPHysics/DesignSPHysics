@@ -4,7 +4,7 @@
 
 import FreeCADGui
 
-from PySide import QtGui
+from PySide import QtGui, QtCore
 
 from mod.translation_tools import __
 from mod.dialog_tools import info_dialog
@@ -49,8 +49,6 @@ class PlaneInitialsWidget(QtGui.QWidget):
         super().__init__(parent=parent)
         self.main_layout = QtGui.QVBoxLayout()
 
-        # FIXME: Support "auto" point
-
         self.point_layout = QtGui.QHBoxLayout()
         self.point_label = QtGui.QLabel(__("Point: "))
         self.point_label_x = QtGui.QLabel("X")
@@ -59,6 +57,7 @@ class PlaneInitialsWidget(QtGui.QWidget):
         self.point_input_y = QtGui.QLineEdit()
         self.point_label_z = QtGui.QLabel("Z")
         self.point_input_z = QtGui.QLineEdit()
+        self.point_auto_check = QtGui.QCheckBox(__("Auto"))
         self.point_layout.addWidget(self.point_label)
         self.point_layout.addWidget(self.point_label_x)
         self.point_layout.addWidget(self.point_input_x)
@@ -66,6 +65,9 @@ class PlaneInitialsWidget(QtGui.QWidget):
         self.point_layout.addWidget(self.point_input_y)
         self.point_layout.addWidget(self.point_label_z)
         self.point_layout.addWidget(self.point_input_z)
+        self.point_layout.addWidget(self.point_auto_check)
+
+        self.point_auto_check.clicked.connect(self.on_point_auto_check)
 
         self.normal_layout = QtGui.QHBoxLayout()
         self.normal_label = QtGui.QLabel(__("Normal: "))
@@ -95,6 +97,15 @@ class PlaneInitialsWidget(QtGui.QWidget):
 
         self.setLayout(self.main_layout)
 
+    def on_point_auto_check(self):
+        if self.point_auto_check.isChecked():
+            self.point_input_x.setEnabled(False)
+            self.point_input_y.setEnabled(False)
+            self.point_input_z.setEnabled(False)
+        else:
+            self.point_input_x.setEnabled(True)
+            self.point_input_y.setEnabled(True)
+            self.point_input_z.setEnabled(True)
 
 class SphereInitialsWidget(QtGui.QWidget):
     """ Widget with properties used by the Sphere type """
@@ -236,7 +247,7 @@ class BoundInitialsDialog(QtGui.QDialog):
     def __init__(self, parent=None):
         super().__init__(parent=parent)
 
-        self.setWindowTitle(__("Initials configuration"))
+        self.setWindowTitle(__("Initials configuration for boundary"))
         self.ok_button = QtGui.QPushButton(__("OK"))
         self.cancel_button = QtGui.QPushButton(__("Cancel"))
         self.target_mk = Case.the().get_simulation_object(FreeCADGui.Selection.getSelection()[0].Name).obj_mk
@@ -251,10 +262,10 @@ class BoundInitialsDialog(QtGui.QDialog):
         self.has_initials_selector.insertItems(0, ["True", "False"])
         self.has_initials_selector.currentIndexChanged.connect(self.on_initials_change)
 
-        self.initials_type_label = QtGui.QLabel(__("Initials Type: "))
+        self.initials_type_label = QtGui.QLabel(__("Type: "))
         self.initials_type_label.setToolTip(__("Chooses the type of the initial velocity."))
         self.initials_type_selector = QtGui.QComboBox()
-        self.initials_type_selector.insertItems(0, ['Set', 'Plane', 'Sphere', 'Cylinder', 'Parts'])
+        self.initials_type_selector.insertItems(0, ['Normals - Set', 'Normals - Plane', 'Normals - Sphere', 'Normals - Cylinder', 'Normals - Parts'])
         self.initials_type_selector.currentIndexChanged.connect(self.on_initials_type_change)
 
         self.has_initials_targetlabel = QtGui.QLabel(__("Target MKBound: ") + str(self.target_mk))
@@ -313,6 +324,7 @@ class BoundInitialsDialog(QtGui.QDialog):
             self.plane_initials_widget.point_input_x.setText(str(initials_object.point[0]))
             self.plane_initials_widget.point_input_y.setText(str(initials_object.point[1]))
             self.plane_initials_widget.point_input_z.setText(str(initials_object.point[2]))
+            self.plane_initials_widget.point_auto_check.setCheckState(QtCore.Qt.Checked if initials_object.point_auto else QtCore.Qt.Unchecked)
             self.plane_initials_widget.normal_input_x.setText(str(initials_object.normal[0]))
             self.plane_initials_widget.normal_input_y.setText(str(initials_object.normal[1]))
             self.plane_initials_widget.normal_input_z.setText(str(initials_object.normal[2]))
@@ -333,6 +345,10 @@ class BoundInitialsDialog(QtGui.QDialog):
             self.cylinder_initials_widget.inside_input.setCurrentIndex(0 if initials_object.inside else 1)
             self.cylinder_initials_widget.maxdisth_input.setText(str(initials_object.maxdisth))
             self.parts_initials_widget.maxdisth_input.setText(str(initials_object.maxdisth))
+
+            if initials_object.point_auto:
+                self.plane_initials_widget.on_point_auto_check()
+
             self.on_initials_type_change(initials_object.initials_type)
         else:
             self.has_initials_selector.setCurrentIndex(1)
@@ -374,7 +390,7 @@ class BoundInitialsDialog(QtGui.QDialog):
         info_dialog(__("This will apply the initials properties to all objects with mkbound = ") + str(self.target_mk))
         if self.has_initials_selector.currentIndex() == 1:
             # Initials false
-            Case.the().get_mk_based_properties(ObjectType.BOUND, self.target_mk).initials = None
+            Case.the().get_mk_based_properties(ObjectType.BOUND, self.target_mk).bound_initials = None
         else:
             # Initials true
             # Structure: BoundInitialsProperty Object
@@ -384,6 +400,7 @@ class BoundInitialsDialog(QtGui.QDialog):
             if bound_initials.initials_type == BoundInitialsType.SET:
                 bound_initials.normal = [float(self.set_initials_widget.normal_input_x.text()), float(self.set_initials_widget.normal_input_y.text()), float(self.set_initials_widget.normal_input_z.text())]
             elif bound_initials.initials_type == BoundInitialsType.PLANE:
+                bound_initials.point_auto = self.plane_initials_widget.point_auto_check.isChecked()
                 bound_initials.normal = [float(self.plane_initials_widget.normal_input_x.text()), float(self.plane_initials_widget.normal_input_y.text()), float(self.plane_initials_widget.normal_input_z.text())]
                 bound_initials.point = [float(self.plane_initials_widget.point_input_x.text()), float(self.plane_initials_widget.point_input_y.text()), float(self.plane_initials_widget.point_input_z.text())]
                 bound_initials.maxdisth = float(self.plane_initials_widget.maxdisth_input.text())
