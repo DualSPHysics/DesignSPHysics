@@ -153,6 +153,11 @@ class MoorDynLineConfigurationDialog(QtGui.QDialog):
 
     def _fill_data(self):
 
+        if  self.line.vessel2_connection == None:
+            self.connection_type_combobox.setCurrentIndex(0)
+        else:
+            self.connection_type_combobox.setCurrentIndex(1)
+
         fix_connection_to_fill = self.line.fix_connection
         if not fix_connection_to_fill:
             fix_connection_to_fill = MoorDynFixConnection()
@@ -198,9 +203,17 @@ class MoorDynLineConfigurationDialog(QtGui.QDialog):
         current_body_enumerated_tuple: tuple = next(filter(lambda index_body_tuple: index_body_tuple[1].ref == vessel_connection_to_fill, enumerate(self.stored_configuration.bodies)), None)
         self.vessel_connection_body_combo.setCurrentIndex(current_body_enumerated_tuple[0] + 1 if current_body_enumerated_tuple else 0)
 
+        #FIXME: Check if the input list of bodies contains the selected ref
+        current_index = vessel_connection_to_fill.bodyref+1
+        self.vessel_connection_body_combo.setCurrentIndex(current_index)
+
         self.vessel2_connection_body_combo.addItems(["None"] + list(map(lambda body: "MKBound: {}".format(body.ref), self.stored_configuration.bodies)))
         current_body_enumerated_tuple: tuple = next(filter(lambda index_body_tuple: index_body_tuple[1].ref == vessel2_connection_to_fill, enumerate(self.stored_configuration.bodies)), None)
         self.vessel2_connection_body_combo.setCurrentIndex(current_body_enumerated_tuple[0] + 1 if current_body_enumerated_tuple else 0)
+
+        #FIXME: Check if the input list of bodies contains the selected ref
+        current_index = vessel2_connection_to_fill.bodyref+1
+        self.vessel2_connection_body_combo.setCurrentIndex(current_index)
 
     def _on_type_of_connection_change(self, new_index):
         if new_index == 0:

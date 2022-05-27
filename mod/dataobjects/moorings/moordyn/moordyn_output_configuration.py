@@ -10,7 +10,7 @@ class MoorDynOutputConfiguration():
         self.startTime: float = 0
         self.endTime: float = 10
         self.dtOut: float = 0.01
-        self.tension: str = "all"
-        self.force: str = "all"
-        self.velocity: str = "all"
-        self.position: str = "all"
+        self.tension: bool = True
+        self.force: bool = True
+        self.velocity: bool = True
+        self.position: bool = True
