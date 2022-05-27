@@ -10,6 +10,7 @@ from mod.stdout_tools import debug
 
 from mod.dataobjects.motion.cir_sinu_motion import CirSinuMotion
 
+from mod.functions import make_float
 
 class CirSinuMotionTimeline(QtGui.QWidget):
     """ A sinusoidal circular motion graphical representation for a table-based timeline """
@@ -175,17 +176,17 @@ class CirSinuMotionTimeline(QtGui.QWidget):
     def construct_motion_object(self):
         """ Constructs a new CirSinuMotion from the data on the widget. """
         return CirSinuMotion(
-            axis1=[float(self.x1_input.text()),
-                   float(self.y1_input.text()),
-                   float(self.z1_input.text())],
-            axis2=[float(self.x2_input.text()),
-                   float(self.y2_input.text()),
-                   float(self.z2_input.text())],
-            reference=[float(self.reference_x_input.text()),
-                       float(self.reference_y_input.text()),
-                       float(self.reference_z_input.text())],
-            duration=float(self.time_input.text()), freq=float(self.freq_input.text()),
-            ampl=float(self.ampl_input.text()), phase=float(self.phase_input.text()))
+            axis1=[make_float(self.x1_input.text()),
+                   make_float(self.y1_input.text()),
+                   make_float(self.z1_input.text())],
+            axis2=[make_float(self.x2_input.text()),
+                   make_float(self.y2_input.text()),
+                   make_float(self.z2_input.text())],
+            reference=[make_float(self.reference_x_input.text()),
+                       make_float(self.reference_y_input.text()),
+                       make_float(self.reference_z_input.text())],
+            duration=make_float(self.time_input.text()), freq=make_float(self.freq_input.text()),
+            ampl=make_float(self.ampl_input.text()), phase=make_float(self.phase_input.text()))
 
     def on_delete(self):
         """ Deletes the currenlty represented motion object. """

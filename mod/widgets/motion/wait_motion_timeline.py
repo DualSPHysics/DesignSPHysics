@@ -10,6 +10,8 @@ from mod.stdout_tools import debug
 
 from mod.dataobjects.motion.wait_motion import WaitMotion
 
+from mod.functions import make_float
+
 
 class WaitMotionTimeline(QtGui.QWidget):
     """ A wait motion graphical representation for a table-based timeline """
@@ -84,7 +86,7 @@ class WaitMotionTimeline(QtGui.QWidget):
 
     def construct_motion_object(self):
         """ Constructs a new WaitMotion data object from the data currently introduced on the widget. """
-        return WaitMotion(duration=float(self.time_input.text()))
+        return WaitMotion(duration=make_float(self.time_input.text()))
 
     def on_change(self):
         """ Reacts to any input change sanitizing it and firing a signal with the appropriate data object. """

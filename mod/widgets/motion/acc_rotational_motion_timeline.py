@@ -10,6 +10,7 @@ from mod.stdout_tools import debug
 
 from mod.dataobjects.motion.acc_rot_motion import AccRotMotion
 
+from mod.functions import make_float
 
 class AccRotationalMotionTimeline(QtGui.QWidget):
     """ An accelerated rotational motion graphical representation for a table-based timeline """
@@ -146,15 +147,15 @@ class AccRotationalMotionTimeline(QtGui.QWidget):
     def construct_motion_object(self):
         """ Constructs an AccRotMotion from the data on the widget. """
         return AccRotMotion(
-            ang_vel=float(self.velocity_input.text()),
-            ang_acc=float(self.acceleration_input.text()),
-            axis1=[float(self.x1_input.text()),
-                   float(self.y1_input.text()),
-                   float(self.z1_input.text())],
-            axis2=[float(self.x2_input.text()),
-                   float(self.y2_input.text()),
-                   float(self.z2_input.text())],
-            duration=float(self.time_input.text()))
+            ang_vel=make_float(self.velocity_input.text()),
+            ang_acc=make_float(self.acceleration_input.text()),
+            axis1=[make_float(self.x1_input.text()),
+                   make_float(self.y1_input.text()),
+                   make_float(self.z1_input.text())],
+            axis2=[make_float(self.x2_input.text()),
+                   make_float(self.y2_input.text()),
+                   make_float(self.z2_input.text())],
+            duration=make_float(self.time_input.text()))
 
     def on_delete(self):
         """ Deletes the currently represented motion object. """

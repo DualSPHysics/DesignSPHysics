@@ -10,6 +10,7 @@ from mod.stdout_tools import debug
 
 from mod.dataobjects.motion.rect_motion import RectMotion
 
+from mod.functions import make_float
 
 class RectilinearMotionTimeline(QtGui.QWidget):
     """ A Rectilinear motion graphical representation for a table-based timeline """
@@ -108,10 +109,10 @@ class RectilinearMotionTimeline(QtGui.QWidget):
     def construct_motion_object(self):
         """ Constructs a new RectMotion object with the current data from the widget. """
         return RectMotion(
-            velocity=[float(self.x_input.text()),
-                      float(self.y_input.text()),
-                      float(self.z_input.text())],
-            duration=float(self.time_input.text()))
+            velocity=[make_float(self.x_input.text()),
+                      make_float(self.y_input.text()),
+                      make_float(self.z_input.text())],
+            duration=make_float(self.time_input.text()))
 
     def on_delete(self):
         """ Deletes the currently represented motion object. """

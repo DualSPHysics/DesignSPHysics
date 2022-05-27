@@ -11,6 +11,8 @@ from mod.enums import IrregularDiscretization, IrregularSpectrum
 
 from mod.dataobjects.motion.irregular_flap_wave_gen import IrregularFlapWaveGen
 
+from mod.functions import make_float
+
 
 class IrregularFlapWaveMotionTimeline(QtGui.QWidget):
     """ An Irregular Flap Wave motion graphical representation for a table-based timeline """
@@ -265,32 +267,32 @@ class IrregularFlapWaveMotionTimeline(QtGui.QWidget):
     def construct_motion_object(self):
         """ Constructs an IrregularFlapWaveGen object from the widget data. """
         return IrregularFlapWaveGen(wave_order=self.wave_order_selector.currentIndex() + 1, start=0,
-                                    duration=float(self.duration_input.text()), depth=float(self.depth_input.text()),
-                                    flapaxis0=[float(self.flap_axis_0_x.text()),
-                                               float(
+                                    duration=make_float(self.duration_input.text()), depth=make_float(self.depth_input.text()),
+                                    flapaxis0=[make_float(self.flap_axis_0_x.text()),
+                                               make_float(
                                                    self.flap_axis_0_y.text()),
-                                               float(self.flap_axis_0_z.text())],
-                                    flapaxis1=[float(self.flap_axis_1_x.text()),
-                                               float(
+                                               make_float(self.flap_axis_0_z.text())],
+                                    flapaxis1=[make_float(self.flap_axis_1_x.text()),
+                                               make_float(
                                                    self.flap_axis_1_y.text()),
-                                               float(self.flap_axis_1_z.text())],
-                                    wave_height=float(
+                                               make_float(self.flap_axis_1_z.text())],
+                                    wave_height=make_float(
                                         self.wave_height_input.text()),
-                                    wave_period=float(
+                                    wave_period=make_float(
                                         self.wave_period_input.text()),
-                                    variable_draft=float(
+                                    variable_draft=make_float(
                                         self.variable_draft_input.text()),
                                     spectrum={0: IrregularSpectrum.JONSWAP, 1: IrregularSpectrum.PIERSON_MOSKOWITZ}[self.spectrum_selector.currentIndex()],
                                     discretization={0: IrregularDiscretization.REGULAR, 1: IrregularDiscretization.RANDOM, 2: IrregularDiscretization.STRETCHED, 3: IrregularDiscretization.COSSTRETCHED}[self.discretization_selector.currentIndex()],
-                                    peak_coef=float(
+                                    peak_coef=make_float(
                                         self.peak_coef_input.text()),
-                                    waves=float(self.waves_input.text()),
-                                    gainstroke=float(self.gainstroke_input.text()),
-                                    randomseed=float(
+                                    waves=make_float(self.waves_input.text()),
+                                    gainstroke=make_float(self.gainstroke_input.text()),
+                                    randomseed=make_float(
                                         self.randomseed_input.text()),
-                                    serieini=float(
+                                    serieini=make_float(
                                         self.serieini_input.text()),
-                                    ramptime=float(
+                                    ramptime=make_float(
                                         self.ramptime_input.text()),
                                     serieini_autofit=self.serieini_autofit.isChecked(),
                                     savemotion_time=str(

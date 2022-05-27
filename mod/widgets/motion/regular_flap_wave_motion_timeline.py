@@ -10,6 +10,7 @@ from mod.stdout_tools import debug
 
 from mod.dataobjects.motion.regular_flap_wave_gen import RegularFlapWaveGen
 
+from mod.functions import make_float, make_int
 
 class RegularFlapWaveMotionTimeline(QtGui.QWidget):
     """ A Regular Flap Wave motion graphical representation for a table-based timeline """
@@ -126,7 +127,7 @@ class RegularFlapWaveMotionTimeline(QtGui.QWidget):
         """ Fills the values from the data structure onto the widget. """
         self.duration_input.setText(str(reg_wave_gen.duration))
         self.wave_order_selector.setCurrentIndex(
-            int(reg_wave_gen.wave_order) - 1)
+            make_int(reg_wave_gen.wave_order) - 1)
         self.depth_input.setText(str(reg_wave_gen.depth))
         self.flap_axis_0_x.setText(str(reg_wave_gen.flapaxis0[0]))
         self.flap_axis_0_y.setText(str(reg_wave_gen.flapaxis0[1]))
@@ -170,31 +171,31 @@ class RegularFlapWaveMotionTimeline(QtGui.QWidget):
     def construct_motion_object(self):
         """ Constructs a RegularFlapWaveGen with the data currently introduced in the widget. """
         return RegularFlapWaveGen(wave_order=self.wave_order_selector.currentIndex() + 1, start=0,
-                                  duration=float(self.duration_input.text()), depth=float(self.depth_input.text()),
-                                  flapaxis0=[float(self.flap_axis_0_x.text()),
-                                             float(
+                                  duration=make_float(self.duration_input.text()), depth=make_float(self.depth_input.text()),
+                                  flapaxis0=[make_float(self.flap_axis_0_x.text()),
+                                             make_float(
                                                  self.flap_axis_0_y.text()),
-                                             float(self.flap_axis_0_z.text())],
-                                  flapaxis1=[float(self.flap_axis_1_x.text()),
-                                             float(
+                                             make_float(self.flap_axis_0_z.text())],
+                                  flapaxis1=[make_float(self.flap_axis_1_x.text()),
+                                             make_float(
                                                  self.flap_axis_1_y.text()),
-                                             float(self.flap_axis_1_z.text())],
-                                  variable_draft=float(
+                                             make_float(self.flap_axis_1_z.text())],
+                                  variable_draft=make_float(
                                       self.variable_draft_input.text()),
-                                  wave_height=float(
+                                  wave_height=make_float(
                                       self.wave_height_input.text()),
-                                  wave_period=float(
+                                  wave_period=make_float(
                                       self.wave_period_input.text()),
-                                  gainstroke=float(self.gainstroke_input.text()),
-                                  phase=float(self.phase_input.text()),
-                                  ramp=float(self.ramp_input.text()),
-                                  disksave_periods=int(
+                                  gainstroke=make_float(self.gainstroke_input.text()),
+                                  phase=make_float(self.phase_input.text()),
+                                  ramp=make_float(self.ramp_input.text()),
+                                  disksave_periods=make_int(
                                       self.disksave_periods.text()),
-                                  disksave_periodsteps=int(
+                                  disksave_periodsteps=make_int(
                                       self.disksave_periodsteps.text()),
-                                  disksave_xpos=float(
+                                  disksave_xpos=make_float(
                                       self.disksave_xpos.text()),
-                                  disksave_zpos=float(self.disksave_zpos.text()))
+                                  disksave_zpos=make_float(self.disksave_zpos.text()))
 
     def on_delete(self):
         """ Deletes the currently represented object. """

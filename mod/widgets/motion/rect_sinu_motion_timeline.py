@@ -10,6 +10,8 @@ from mod.stdout_tools import debug
 
 from mod.dataobjects.motion.rect_sinu_motion import RectSinuMotion
 
+from mod.functions import make_float
+
 
 class RectSinuMotionTimeline(QtGui.QWidget):
     """ A sinusoidal rectilinear motion graphical representation for a table-based timeline """
@@ -144,16 +146,16 @@ class RectSinuMotionTimeline(QtGui.QWidget):
     def construct_motion_object(self):
         """ Constructs a RectSinuMotion object from the values in the widget. """
         return RectSinuMotion(
-            phase=[float(self.phase_x_input.text()),
-                   float(self.phase_y_input.text()),
-                   float(self.phase_z_input.text())],
-            freq=[float(self.freq_x_input.text()),
-                  float(self.freq_y_input.text()),
-                  float(self.freq_z_input.text())],
-            ampl=[float(self.amp_x_input.text()),
-                  float(self.amp_y_input.text()),
-                  float(self.amp_z_input.text())],
-            duration=float(self.time_input.text()))
+            phase=[make_float(self.phase_x_input.text()),
+                   make_float(self.phase_y_input.text()),
+                   make_float(self.phase_z_input.text())],
+            freq=[make_float(self.freq_x_input.text()),
+                  make_float(self.freq_y_input.text()),
+                  make_float(self.freq_z_input.text())],
+            ampl=[make_float(self.amp_x_input.text()),
+                  make_float(self.amp_y_input.text()),
+                  make_float(self.amp_z_input.text())],
+            duration=make_float(self.time_input.text()))
 
     def on_delete(self):
         """ Deletes the currently represented object. """
