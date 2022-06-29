@@ -11,6 +11,8 @@ from mod.stdout_tools import debug
 from mod.dataobjects.case import Case
 from mod.dataobjects.motion.rotation_file_gen import RotationFileGen
 
+from mod.functions import make_float
+
 
 class RotationFileMotionTimeline(QtGui.QWidget):
     """ A rotation file motion graphical representation for a table-based timeline """
@@ -129,16 +131,16 @@ class RotationFileMotionTimeline(QtGui.QWidget):
 
     def construct_motion_object(self):
         """ Constructs a motion object from the data on the widget. """
-        return RotationFileGen(duration=float(self.duration_input.text()),
+        return RotationFileGen(duration=make_float(self.duration_input.text()),
                                filename=str(self.filename_input.text()),
                                anglesunits=str(
                                    self.anglesunits_selector.currentText().lower()),
-                               axisp1=[float(self.axisp1x_input.text()),
-                                       float(self.axisp1y_input.text()),
-                                       float(self.axisp1z_input.text())],
-                               axisp2=[float(self.axisp2x_input.text()),
-                                       float(self.axisp2y_input.text()),
-                                       float(self.axisp2z_input.text())])
+                               axisp1=[make_float(self.axisp1x_input.text()),
+                                       make_float(self.axisp1y_input.text()),
+                                       make_float(self.axisp1z_input.text())],
+                               axisp2=[make_float(self.axisp2x_input.text()),
+                                       make_float(self.axisp2y_input.text()),
+                                       make_float(self.axisp2z_input.text())])
 
     def on_delete(self):
         """ Deletes the currently represented object. """

@@ -18,7 +18,7 @@ class Constants():
         self.coefsound: float = 20
         self.speedsound: float = 0
         self.speedsound_auto: bool = True
-        self.coefh: float = 1
+        self.coefh: float = 1.2
         self.cflnumber: float = 0.2
         self.h: float = 0
         self.h_auto: bool = True

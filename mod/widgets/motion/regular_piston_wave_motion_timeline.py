@@ -14,6 +14,7 @@ from mod.dataobjects.motion.regular_piston_wave_gen import RegularPistonWaveGen
 from mod.dataobjects.awas_correction import AWASCorrection
 from mod.dataobjects.awas import AWAS
 
+from mod.functions import make_float, make_int
 
 class RegularPistonWaveMotionTimeline(QtGui.QWidget):
     """ A Regular Wave motion graphical representation for a table-based timeline """
@@ -328,48 +329,40 @@ class RegularPistonWaveMotionTimeline(QtGui.QWidget):
 
         _cmo_correction = AWASCorrection(
             enabled=self.awas_correction_enabled.isChecked(),
-            coefstroke=float(self.awas_correction_coefstroke_input.text()),
-            coefperiod=float(self.awas_correction_coefperiod_input.text()),
-            powerfunc=float(self.awas_correction_powerfunc_input.text())
+            coefstroke=make_float(self.awas_correction_coefstroke_input.text()),
+            coefperiod=make_float(self.awas_correction_coefperiod_input.text()),
+            powerfunc=make_float(self.awas_correction_powerfunc_input.text())
         )
 
         awas_object = AWAS(
             enabled=self.awas_enabled.isChecked(),
-            startawas=float(self.awas_startawas_input.text()),
-            swl=float(self.awas_swl_input.text()),
+            startawas=make_float(self.awas_startawas_input.text()),
+            swl=make_float(self.awas_swl_input.text()),
             elevation=_cmo_elevation,
-            gaugex=float(self.awas_gaugex_input.text()),
-            gaugey=float(self.awas_gaugey_input.text()),
-            gaugezmin=float(self.awas_gaugezmin_input.text()),
-            gaugezmax=float(self.awas_gaugezmax_input.text()),
-            gaugedp=float(self.awas_gaugedp_input.text()),
-            coefmasslimit=float(self.awas_coefmasslimit_input.text()),
+            gaugex=make_float(self.awas_gaugex_input.text()),
+            gaugey=make_float(self.awas_gaugey_input.text()),
+            gaugezmin=make_float(self.awas_gaugezmin_input.text()),
+            gaugezmax=make_float(self.awas_gaugezmax_input.text()),
+            gaugedp=make_float(self.awas_gaugedp_input.text()),
+            coefmasslimit=make_float(self.awas_coefmasslimit_input.text()),
             savedata=_cmo_savedata,
-            limitace=float(self.awas_limitace_input.text()),
+            limitace=make_float(self.awas_limitace_input.text()),
             correction=_cmo_correction
         )
 
         return RegularPistonWaveGen(wave_order=self.wave_order_selector.currentIndex() + 1, start=0,
-                                    duration=float(self.duration_input.text()), depth=float(self.depth_input.text()),
-                                    piston_dir=[float(self.piston_dir_x.text()),
-                                                float(
-                                                    self.piston_dir_y.text()),
-                                                float(self.piston_dir_z.text())],
-                                    wave_height=float(
-                                        self.wave_height_input.text()),
-                                    wave_period=float(
-                                        self.wave_period_input.text()),
-                                    gainstroke=float(self.gainstroke_input.text()),
-                                    phase=float(self.phase_input.text()),
-                                    ramp=float(self.ramp_input.text()),
-                                    disksave_periods=int(
-                                        self.disksave_periods.text()),
-                                    disksave_periodsteps=int(
-                                        self.disksave_periodsteps.text()),
-                                    disksave_xpos=float(
-                                        self.disksave_xpos.text()),
-                                    disksave_zpos=float(
-                                        self.disksave_zpos.text()),
+                                    duration=make_float(self.duration_input.text()), 
+                                    depth=make_float(self.depth_input.text()),
+                                    piston_dir=[make_float(self.piston_dir_x.text()),make_float(self.piston_dir_y.text()),make_float(self.piston_dir_z.text())],
+                                    wave_height=make_float(self.wave_height_input.text()),
+                                    wave_period=make_float(self.wave_period_input.text()),
+                                    gainstroke=make_float(self.gainstroke_input.text()),
+                                    phase=make_float(self.phase_input.text()),
+                                    ramp=make_float(self.ramp_input.text()),
+                                    disksave_periods=make_int(self.disksave_periods.text()),
+                                    disksave_periodsteps=make_int(self.disksave_periodsteps.text()),
+                                    disksave_xpos=make_float(self.disksave_xpos.text()),
+                                    disksave_zpos=make_float(self.disksave_zpos.text()),
                                     awas=awas_object)
 
     def on_delete(self):

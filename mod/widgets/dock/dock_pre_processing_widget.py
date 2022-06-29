@@ -2,7 +2,8 @@
 # -*- coding: utf-8 -*-
 """DesignSPHysics Dock Pre Processing Widget """
 
-from os import path
+from os import path, walk
+import shutil
 from traceback import print_exc
 
 from PySide import QtCore, QtGui
@@ -28,6 +29,7 @@ from mod.widgets.case_summary import CaseSummary
 from mod.dataobjects.case import Case
 from mod.dataobjects.simulation_object import SimulationObject
 
+from mod.dialog_tools import ok_cancel_dialog, ok_discard_dialog
 
 class DockPreProcessingWidget(QtGui.QWidget):
     """DesignSPHysics Dock Pre Processing Widget """
@@ -183,9 +185,20 @@ class DockPreProcessingWidget(QtGui.QWidget):
         self.case_created.emit()
         self.need_refresh.emit()
 
-    def on_save_case(self, save_as=None):
+    def on_save_case(self, save_as=None, run_gencase=False):
         """ Defines what happens when save case button is clicked.
         Saves a freecad scene definition, and a dump of dsph data for the case."""
+
+        if not run_gencase:
+            # Decision dialog to remove data before running GenCase
+            execute_gencase=ok_discard_dialog(__("Remove old data"),__("This action will remove the old data stored in the Case folder.\n\nPress OK to clear and save the configuration.\nPress Discard to overwrite."))
+            if execute_gencase == QtGui.QMessageBox.Ok:
+                #	Remove some folders before execute GenCase
+                output_folder=str("{path}/{name}_out/".format(path=Case.the().path, name=Case.the().name))
+                self.delete_sub_folder(output_folder,"Vtk")
+                self.delete_root_folder(output_folder)
+                self.delete_root_folder(Case.the().path)
+
         if Case.the().was_not_saved() or save_as:
             save_name, _ = QtGui.QFileDialog.getSaveFileName(self, __("Save Case"), Case.the().info.last_used_directory)
             Case.the().info.update_last_used_directory(save_name)
@@ -208,7 +221,7 @@ class DockPreProcessingWidget(QtGui.QWidget):
 
     def on_execute_gencase(self):
         """ Saves data into disk and uses GenCase to generate the case files."""
-        self.on_save_case()
+        self.on_save_case(run_gencase=True)
         if not Case.the().executable_paths.gencase:
             warning_dialog(__("GenCase executable is not set."))
             return
@@ -219,6 +232,16 @@ class DockPreProcessingWidget(QtGui.QWidget):
                      "-save:+all"]
         cmd_string = "{} {}".format(gencase_full_path, " ".join(arguments))
 
+        # Decision dialog to remove data before running GenCase
+        execute_gencase=ok_cancel_dialog(__("Remove the Case output data"),__("This action will remove the data generated before.\n\nPress Ok to remove and run GenCase.\nPress Cancel to exit and keep the data."))
+        if execute_gencase == QtGui.QMessageBox.Cancel:
+            return
+        else:
+            # Remove some folders before execute GenCase
+            output_folder=str("{path}/{name}_out/".format(path=Case.the().path, name=Case.the().name))
+            self.delete_sub_folder(output_folder,"Vtk")
+            self.delete_root_folder(output_folder)
+            
         refocus_cwd()
         process = QtCore.QProcess(get_fc_main_window())
         process.setWorkingDirectory(Case.the().path)
@@ -242,7 +265,7 @@ class DockPreProcessingWidget(QtGui.QWidget):
                 Case.the().info.particle_number = total_particles
                 GencaseCompletedDialog(particle_count=total_particles, detail_text=output, cmd_string=cmd_string, parent=get_fc_main_window()).show()
                 Case.the().info.is_gencase_done = True
-                self.on_save_case()
+                self.on_save_case(run_gencase=True)
                 Case.the().info.needs_to_run_gencase = False
             except ValueError:
                 print_exc()
@@ -251,6 +274,18 @@ class DockPreProcessingWidget(QtGui.QWidget):
 
         # Refresh widget enable/disable status as GenCase finishes
         self.gencase_completed.emit(Case.the().info.is_gencase_done)
+
+    def delete_sub_folder(self,output_folder,endwith):
+        """ Deletes sub folders that end with a desired string. """
+        for subir, dirs, files in walk(output_folder):
+            for dir in dirs:
+                if dir.endswith(endwith):
+                    shutil.rmtree(str("{}/{}".format(output_folder,dir)))
+    
+    def delete_root_folder(self,output_folder):
+        """ Deletes sub folders that end with a desired string. """
+        if path.isdir(output_folder):
+            shutil.rmtree(str("{}".format(output_folder)))
 
     def on_newdoc_menu(self, action):
         """ Handles the new document button and its dropdown items. """
@@ -360,3 +395,4 @@ class DockPreProcessingWidget(QtGui.QWidget):
     def on_force_button(self):
         """ Triggers a signal implying that the force button was pressed. """
         self.force_pressed.emit()
+        

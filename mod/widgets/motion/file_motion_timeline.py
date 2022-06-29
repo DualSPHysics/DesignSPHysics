@@ -11,6 +11,7 @@ from mod.stdout_tools import debug
 from mod.dataobjects.case import Case
 from mod.dataobjects.motion.file_gen import FileGen
 
+from mod.functions import make_float, make_int
 
 class FileMotionTimeline(QtGui.QWidget):
     """ A File motion graphical representation for a table-based timeline """
@@ -118,13 +119,13 @@ class FileMotionTimeline(QtGui.QWidget):
 
     def construct_motion_object(self):
         """ Constructs an FileGen object based on the widget data. """
-        return FileGen(duration=float(self.duration_input.text()),
+        return FileGen(duration=make_float(self.duration_input.text()),
                        filename=str(self.filename_input.text()),
-                       fields=int(self.fields_input.text()),
-                       fieldtime=int(self.fieldtime_input.text()),
-                       fieldx=int(self.fieldx_input.text()),
-                       fieldy=int(self.fieldy_input.text()),
-                       fieldz=int(self.fieldz_input.text()))
+                       fields=make_int(self.fields_input.text()),
+                       fieldtime=make_int(self.fieldtime_input.text()),
+                       fieldx=make_int(self.fieldx_input.text()),
+                       fieldy=make_int(self.fieldy_input.text()),
+                       fieldz=make_int(self.fieldz_input.text()))
 
     def on_delete(self):
         """ Deletes the currently defined object. """

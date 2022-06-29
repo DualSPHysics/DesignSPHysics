@@ -21,6 +21,8 @@ class InitialsRenderer():
 
     SET_XML = "/templates/gencase/initials/boundnormal_set.xml"
     PLANE_XML = "/templates/gencase/initials/boundnormal_plane.xml"
+    PLANE_POINT_XML = "/templates/gencase/initials/boundnormal_plane_point.xml"
+    PLANE_POINT_AUTO_XML = "/templates/gencase/initials/boundnormal_plane_point_auto.xml"
     SPHERE_XML = "/templates/gencase/initials/boundnormal_sphere.xml"
     CYLINDER_XML = "/templates/gencase/initials/boundnormal_cylinder.xml"
     PARTS_XML = "/templates/gencase/initials/boundnormal_parts.xml"
@@ -54,6 +56,18 @@ class InitialsRenderer():
                 if bound_initials["initials_type"] == BoundInitialsType.SET:
                     initials_templates.append(get_template_text(cls.SET_XML).format(**bound_initials))
                 elif bound_initials["initials_type"] == BoundInitialsType.PLANE:
+                    bound_plane_key="bound_normal_point_template"
+                    if  bound_initials["point_auto"] == "true":
+                        bound_initials[bound_plane_key] = get_template_text(cls.PLANE_POINT_AUTO_XML).format(**bound_initials)
+                        #initials_templates.append(get_template_text(cls.PLANE_XML).format(**formatter))
+                        #plane_point_auto_tmp = get_template_text(cls.PLANE_POINT_AUTO_XML)
+                        #plane_xml_tmp=plane_xml_tmp.format(bound_normal_point_template=plane_point_auto_tmp)
+                    else:
+                        bound_initials[bound_plane_key] = get_template_text(cls.PLANE_POINT_XML).format(**bound_initials)
+                        #initials_templates.append(get_template_text(cls.PLANE_XML).format(**formatter))
+                        #plane_point_auto_tmp = get_template_text(cls.PLANE_POINT_AUTO_XML)
+                        #plane_xml_tmp=plane_xml_tmp.format(bound_normal_point_template=plane_point_auto_tmp)
+                    #initials_templates.append(plane_xml_tmp.format(**bound_initials))
                     initials_templates.append(get_template_text(cls.PLANE_XML).format(**bound_initials))
                 elif bound_initials["initials_type"] == BoundInitialsType.SPHERE:
                     initials_templates.append(get_template_text(cls.SPHERE_XML).format(**bound_initials))

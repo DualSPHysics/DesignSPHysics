@@ -10,6 +10,8 @@ from mod.stdout_tools import debug
 
 from mod.dataobjects.motion.acc_cir_motion import AccCirMotion
 
+from mod.functions import make_float
+
 
 class AccCircularMotionTimeline(QtGui.QWidget):
     """ An accelerated circular motion graphical representation for a table-based timeline """
@@ -163,18 +165,18 @@ class AccCircularMotionTimeline(QtGui.QWidget):
     def construct_motion_object(self):
         """ Constructs a AccCirMotion object with the data introduced in the widget. """
         return AccCirMotion(
-            ang_vel=float(self.velocity_input.text()),
-            ang_acc=float(self.acceleration_input.text()),
-            reference=[float(self.reference_x_input.text()),
-                       float(self.reference_y_input.text()),
-                       float(self.reference_z_input.text())],
-            axis1=[float(self.x1_input.text()),
-                   float(self.y1_input.text()),
-                   float(self.z1_input.text())],
-            axis2=[float(self.x2_input.text()),
-                   float(self.y2_input.text()),
-                   float(self.z2_input.text())],
-            duration=float(self.time_input.text()))
+            ang_vel=make_float(self.velocity_input.text()),
+            ang_acc=make_float(self.acceleration_input.text()),
+            reference=[make_float(self.reference_x_input.text()),
+                       make_float(self.reference_y_input.text()),
+                       make_float(self.reference_z_input.text())],
+            axis1=[make_float(self.x1_input.text()),
+                   make_float(self.y1_input.text()),
+                   make_float(self.z1_input.text())],
+            axis2=[make_float(self.x2_input.text()),
+                   make_float(self.y2_input.text()),
+                   make_float(self.z2_input.text())],
+            duration=make_float(self.time_input.text()))
 
     def on_delete(self):
         """ Emits the delete signal on the current motion object specified. """

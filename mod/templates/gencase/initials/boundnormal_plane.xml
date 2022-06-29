@@ -1,5 +1,5 @@
             <boundnormal_plane mkbound="{mk}">
-                <point x="{point[0]}" y="{point[1]}" z="{point[2]}" />
+{bound_normal_point_template}
                 <normal x="{normal[0]}" y="{normal[1]}" z="{normal[2]}" />
                 <maxdisth v="{maxdisth}" comment="Maximum distance to boundary limit. It uses H*maxdisth (default=2)" />
             </boundnormal_plane>

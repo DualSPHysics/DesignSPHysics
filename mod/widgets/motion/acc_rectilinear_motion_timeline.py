@@ -10,6 +10,7 @@ from mod.stdout_tools import debug
 
 from mod.dataobjects.motion.acc_rect_motion import AccRectMotion
 
+from mod.functions import make_float
 
 class AccRectilinearMotionTimeline(QtGui.QWidget):
     """ An accelerated rectilinear motion graphical representation for a table-based timeline """
@@ -139,13 +140,13 @@ class AccRectilinearMotionTimeline(QtGui.QWidget):
     def construct_motion_object(self):
         """ Constructs an AccRectMotion object with the data on the widget. """
         return AccRectMotion(
-            velocity=[float(self.x_input.text()),
-                      float(self.y_input.text()),
-                      float(self.z_input.text())],
-            acceleration=[float(self.xa_input.text()),
-                          float(self.ya_input.text()),
-                          float(self.za_input.text())],
-            duration=float(self.time_input.text()))
+            velocity=[make_float(self.x_input.text()),
+                      make_float(self.y_input.text()),
+                      make_float(self.z_input.text())],
+            acceleration=[make_float(self.xa_input.text()),
+                          make_float(self.ya_input.text()),
+                          make_float(self.za_input.text())],
+            duration=make_float(self.time_input.text()))
 
     def on_delete(self):
         """ Deletes the object represented on the widget. """

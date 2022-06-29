@@ -1,4 +1,5 @@
             <definition dp="{dp}" comment="Initial inter-particle distance" units_comment="metres (m)">
+                <pointref x="0" y="0" z="0" />
                 <pointmin x="{pointmin[0]}" y="{pointmin[1]}" z="{pointmin[2]}" />
                 <pointmax x="{pointmax[0]}" y="{pointmax[1]}" z="{pointmax[2]}" />
             </definition>

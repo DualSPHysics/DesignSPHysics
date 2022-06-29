@@ -14,6 +14,7 @@ from mod.dataobjects.motion.irregular_piston_wave_gen import IrregularPistonWave
 from mod.dataobjects.awas import AWAS
 from mod.dataobjects.awas_correction import AWASCorrection
 
+from mod.functions import make_float
 
 class IrregularPistonWaveMotionTimeline(QtGui.QWidget):
     """ An Irregular Wave motion graphical representation for a table-based timeline """
@@ -410,40 +411,40 @@ class IrregularPistonWaveMotionTimeline(QtGui.QWidget):
 
         _cmo_correction = AWASCorrection(
             enabled=self.awas_correction_enabled.isChecked(),
-            coefstroke=float(self.awas_correction_coefstroke_input.text()),
-            coefperiod=float(self.awas_correction_coefperiod_input.text()),
-            powerfunc=float(self.awas_correction_powerfunc_input.text())
+            coefstroke=make_float(self.awas_correction_coefstroke_input.text()),
+            coefperiod=make_float(self.awas_correction_coefperiod_input.text()),
+            powerfunc=make_float(self.awas_correction_powerfunc_input.text())
         )
 
         awas_object = AWAS(
             enabled=self.awas_enabled.isChecked(),
-            startawas=float(self.awas_startawas_input.text()),
-            swl=float(self.awas_swl_input.text()),
+            startawas=make_float(self.awas_startawas_input.text()),
+            swl=make_float(self.awas_swl_input.text()),
             elevation=_cmo_elevation,
-            gaugex=float(self.awas_gaugex_input.text()),
-            gaugey=float(self.awas_gaugey_input.text()),
-            gaugezmin=float(self.awas_gaugezmin_input.text()),
-            gaugezmax=float(self.awas_gaugezmax_input.text()),
-            gaugedp=float(self.awas_gaugedp_input.text()),
-            coefmasslimit=float(self.awas_coefmasslimit_input.text()),
+            gaugex=make_float(self.awas_gaugex_input.text()),
+            gaugey=make_float(self.awas_gaugey_input.text()),
+            gaugezmin=make_float(self.awas_gaugezmin_input.text()),
+            gaugezmax=make_float(self.awas_gaugezmax_input.text()),
+            gaugedp=make_float(self.awas_gaugedp_input.text()),
+            coefmasslimit=make_float(self.awas_coefmasslimit_input.text()),
             savedata=_cmo_savedata,
-            limitace=float(self.awas_limitace_input.text()),
+            limitace=make_float(self.awas_limitace_input.text()),
             correction=_cmo_correction
         )
 
         return IrregularPistonWaveGen(wave_order=self.wave_order_selector.currentIndex() + 1, start=0,
-                                      duration=float(self.duration_input.text()), depth=float(self.depth_input.text()),
-                                      piston_dir=[float(self.piston_dir_x.text()), float(self.piston_dir_y.text()), float(self.piston_dir_z.text())],
-                                      wave_height=float(self.wave_height_input.text()),
-                                      wave_period=float(self.wave_period_input.text()),
-                                      gainstroke=float(self.gainstroke_input.text()),
+                                      duration=make_float(self.duration_input.text()), depth=make_float(self.depth_input.text()),
+                                      piston_dir=[make_float(self.piston_dir_x.text()), make_float(self.piston_dir_y.text()), make_float(self.piston_dir_z.text())],
+                                      wave_height=make_float(self.wave_height_input.text()),
+                                      wave_period=make_float(self.wave_period_input.text()),
+                                      gainstroke=make_float(self.gainstroke_input.text()),
                                       spectrum={0: IrregularSpectrum.JONSWAP, 1: IrregularSpectrum.PIERSON_MOSKOWITZ}[self.spectrum_selector.currentIndex()],
                                       discretization={0: IrregularDiscretization.REGULAR, 1: IrregularDiscretization.RANDOM, 2: IrregularDiscretization.STRETCHED, 3: IrregularDiscretization.COSSTRETCHED}[self.discretization_selector.currentIndex()],
-                                      peak_coef=float(self.peak_coef_input.text()),
-                                      waves=float(self.waves_input.text()),
-                                      randomseed=float(self.randomseed_input.text()),
-                                      serieini=float(self.serieini_input.text()),
-                                      ramptime=float(self.ramptime_input.text()),
+                                      peak_coef=make_float(self.peak_coef_input.text()),
+                                      waves=make_float(self.waves_input.text()),
+                                      randomseed=make_float(self.randomseed_input.text()),
+                                      serieini=make_float(self.serieini_input.text()),
+                                      ramptime=make_float(self.ramptime_input.text()),
                                       serieini_autofit=self.serieini_autofit.isChecked(),
                                       savemotion_time=str(self.savemotion_time_input.text()),
                                       savemotion_timedt=str(self.savemotion_timedt_input.text()),

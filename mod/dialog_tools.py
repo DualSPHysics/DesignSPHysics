@@ -35,3 +35,13 @@ def ok_cancel_dialog(title, text):
                                            QtGui.QMessageBox.Cancel)
     open_confirm_dialog.setDefaultButton(QtGui.QMessageBox.Ok)
     return open_confirm_dialog.exec_()
+
+def ok_discard_dialog(title, text):
+    """Spawns an okay/discard dialog with the title and text passed"""
+    open_confirm_dialog = QtGui.QMessageBox()
+    open_confirm_dialog.setWindowTitle(title)
+    open_confirm_dialog.setText(text)
+    open_confirm_dialog.setStandardButtons(QtGui.QMessageBox.Ok |
+                                           QtGui.QMessageBox.Discard)
+    open_confirm_dialog.setDefaultButton(QtGui.QMessageBox.Ok)
+    return open_confirm_dialog.exec_()

@@ -12,6 +12,7 @@ class BoundInitialsProperty():
         self.mk = mk
         self.initials_type: BoundInitialsType = initials_type
         self.normal = [1.0, 0.0, 0.0]
+        self.point_auto = True
         self.point = [1.0, 0.0, 0.0]
         self.maxdisth = 2.0
         self.limitdist = 0.5
