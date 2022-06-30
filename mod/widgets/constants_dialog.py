@@ -409,7 +409,7 @@ class ConstantsDialog(QtGui.QDialog):
         self.exec_()
 
     def on_hswlauto_check(self):
-        """ Reacts to the user selectin auto HSWL. """
+        """ Reacts to the user selecting auto HSWL. """
         if self.hswlauto_chk.isChecked():
             self.hswl_input.setEnabled(False)
         else:

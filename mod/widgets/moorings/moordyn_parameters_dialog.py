@@ -232,7 +232,7 @@ class MoorDynParametersDialog(QtGui.QDialog):
         self.cdn_label.setToolTip(__("Transverse drag coefficient (with respect to frontal area, d*l). (default=1.6)\nXML Name: cdn"))
         self.cdt_label: QtGui.QLabel = QtGui.QLabel(__("Tangential drag coefficient:"))
         self.cdt_label.setToolTip(__("Tangential drag coefficient (with respect to surface area, π*d*l). (default=0.05)\nXML Name: cdt"))
-        self.breaktension_label: QtGui.QLabel = QtGui.QLabel(__("Maximun tension for the lines:"))
+        self.breaktension_label: QtGui.QLabel = QtGui.QLabel(__("Maximum tension for the lines:"))
         self.breaktension_label.setToolTip(__("Maximum value of tension for the lines. value=0 Break Tension is not used. (default=0)\nXML Name: breaktension"))
 
         self.line_default_configuration_groupbox_layout.setLabelAlignment(QtCore.Qt.AlignLeft)
@@ -388,7 +388,7 @@ class MoorDynParametersDialog(QtGui.QDialog):
     def _on_configure_line(self, line_id):
         selected_line = next(filter(lambda line: line.line_id == line_id, self.stored_configuration.lines), None)
         if not selected_line:
-            raise RuntimeError("The specified line to configure does not exist in the list of liness.")
+            raise RuntimeError("The specified line to configure does not exist in the list of lines.")
         MoorDynLineConfigurationDialog(selected_line, self.stored_configuration)
 
     def _on_configure_body(self, mkbound):

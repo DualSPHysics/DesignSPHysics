@@ -189,7 +189,7 @@ class CirSinuMotionTimeline(QtGui.QWidget):
             ampl=make_float(self.ampl_input.text()), phase=make_float(self.phase_input.text()))
 
     def on_delete(self):
-        """ Deletes the currenlty represented motion object. """
+        """ Deletes the currently represented motion object. """
         self.deleted.emit(self.index, self.construct_motion_object())
 
     def _sanitize_input(self):
