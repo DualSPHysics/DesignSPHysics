@@ -185,20 +185,9 @@ class DockPreProcessingWidget(QtGui.QWidget):
         self.case_created.emit()
         self.need_refresh.emit()
 
-    def on_save_case(self, save_as=None, run_gencase=False):
+    def on_save_case(self, save_as=None):
         """ Defines what happens when save case button is clicked.
         Saves a freecad scene definition, and a dump of dsph data for the case."""
-
-        if not run_gencase:
-            # Decision dialog to remove data before running GenCase
-            execute_gencase=ok_discard_dialog(__("Remove old data"),__("This action will remove the old data stored in the Case folder.\n\nPress OK to clear and save the configuration.\nPress Discard to overwrite."))
-            if execute_gencase == QtGui.QMessageBox.Ok:
-                #	Remove some folders before execute GenCase
-                output_folder=str("{path}/{name}_out/".format(path=Case.the().path, name=Case.the().name))
-                self.delete_sub_folder(output_folder,"Vtk")
-                self.delete_root_folder(output_folder)
-                self.delete_root_folder(Case.the().path)
-
         if Case.the().was_not_saved() or save_as:
             save_name, _ = QtGui.QFileDialog.getSaveFileName(self, __("Save Case"), Case.the().info.last_used_directory)
             Case.the().info.update_last_used_directory(save_name)
@@ -221,7 +210,7 @@ class DockPreProcessingWidget(QtGui.QWidget):
 
     def on_execute_gencase(self):
         """ Saves data into disk and uses GenCase to generate the case files."""
-        self.on_save_case(run_gencase=True)
+        self.on_save_case()
         if not Case.the().executable_paths.gencase:
             warning_dialog(__("GenCase executable is not set."))
             return
