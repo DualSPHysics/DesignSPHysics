@@ -254,7 +254,7 @@ class DockPreProcessingWidget(QtGui.QWidget):
                 Case.the().info.particle_number = total_particles
                 GencaseCompletedDialog(particle_count=total_particles, detail_text=output, cmd_string=cmd_string, parent=get_fc_main_window()).show()
                 Case.the().info.is_gencase_done = True
-                self.on_save_case(run_gencase=True)
+                self.on_save_case()
                 Case.the().info.needs_to_run_gencase = False
             except ValueError:
                 print_exc()
