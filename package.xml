@@ -2,8 +2,8 @@
 <package format="1" xmlns="https://wiki.freecad.org/Package_Metadata">
   <name>DesignSPHysics</name>
   <description>DesignSPHysics is a macro/addon for FreeCAD that provides a Graphical User Interface for fluid and multi-physics solver DualSPHysics</description>
-  <version>0.6.1-2207-03-01</version>
-  <date>2022-07-03</date>
+  <version>0.6.2 (24-09-2022)</version>
+  <date>24-09-2022</date>
   <maintainer email="anvieiravazquez@gmail.com">Andrés Vieira</maintainer>
   <license file="LICENSE">GPLv3</license>
   <url type="repository" branch="main">https://github.com/DualSPHysics/DesignSPHysics</url>
