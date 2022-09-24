@@ -852,5 +852,7 @@
     "Remove the Case output data": "Remove the Case output data",
     "This action will remove the data generated before.\n\nPress Ok to remove and run GenCase.\nPress Cancel to exit and keep the data.": "This action will remove the data generated before.\n\nPress Ok to remove and run GenCase.\nPress Cancel to exit and keep the data.",
     "Initial density gradient 1:Rhop0, 2:Water column, 3:Max. water height (default=2).": "Initial density gradient 1:Rhop0, 2:Water column, 3:Max. water height (default=2).",
-    "Initial density gradient:": "Initial density gradient:"
+    "Initial density gradient:": "Initial density gradient:",
+    "Max. distance to boundary limit (value*h): ": "Max. distance to boundary limit (value*h): ",
+    "Gauge dp (value*dp): ": "Gauge dp (value*dp): "
 }
