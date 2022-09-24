@@ -221,15 +221,18 @@ class DockPreProcessingWidget(QtGui.QWidget):
                      "-save:+all"]
         cmd_string = "{} {}".format(gencase_full_path, " ".join(arguments))
 
-        # Decision dialog to remove data before running GenCase
-        execute_gencase=ok_cancel_dialog(__("Remove the Case output data"),__("This action will remove the data generated before.\n\nPress Ok to remove and run GenCase.\nPress Cancel to exit and keep the data."))
-        if execute_gencase == QtGui.QMessageBox.Cancel:
-            return
-        else:
-            # Remove some folders before execute GenCase
-            output_folder=str("{path}/{name}_out/".format(path=Case.the().path, name=Case.the().name))
-            self.delete_sub_folder(output_folder,"Vtk")
-            self.delete_root_folder(output_folder)
+        # Check if the case was already generated
+        dirout=str("{path}/{name}_out/".format(path=Case.the().path, name=Case.the().name))
+        gencasefile=str("{dirout}/{name}.out".format(dirout=dirout, name=Case.the().name))
+        if path.exists(gencasefile):
+            execute_gencase=ok_cancel_dialog(__("Remove the Case output data"),__("This action will remove the data generated before.\n\nPress Ok to remove and run GenCase.\nPress Cancel to exit and keep the data."))
+            # Decision dialog to remove data before running GenCase
+            if execute_gencase == QtGui.QMessageBox.Cancel:
+                return
+            else:
+                # Remove some folders before execute GenCase
+                self.delete_sub_folder(dirout,"Vtk")
+                self.delete_root_folder(dirout)
             
         refocus_cwd()
         process = QtCore.QProcess(get_fc_main_window())
