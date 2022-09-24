@@ -1,6 +1,6 @@
 #!/usr/bin/env python3.7
 # -*- coding: utf-8 -*-
-""" General funtions to be used in DesingSPHysics."""
+""" General functions to be used in DesingSPHysics."""
 
 
 def make_float(num):
@@ -21,10 +21,10 @@ def operate_val(val):
     val_str = str(val)
     if len(val_str) > 0:  # Check if there is at least 1 character to process
         is_sub = True if len(val_str.split(
-            '-')) > 1 else False  # is a substraction?
+            '-')) > 1 else False  # is a subtraction?
         is_sum = True if len(val_str.split(
             '+')) > 1 else False  # is an addition?
-        # In case of a substraction
+        # In case of a subtraction
         if is_sub:
             val_tmp = 0
             for i in range(len(val_str.split('-'))):

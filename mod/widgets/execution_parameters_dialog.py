@@ -918,6 +918,6 @@ class ExecutionParametersDialog(QtGui.QDialog):
         self.accept()
 
     def on_cancel(self):
-        """ Canceles the dialog rejecting it. """
+        """ Cancels the dialog rejecting it. """
         log("Execution Parameters not changed")
         self.reject()
