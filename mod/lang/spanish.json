@@ -692,7 +692,7 @@
     "Transverse drag coefficient (with respect to frontal area, d*l). (default=1.6)\nXML Name: cdn": "Transverse drag coefficient (with respect to frontal area, d*l). (default=1.6)\nXML Name: cdn",
     "Tangential drag coefficient:": "Tangential drag coefficient:",
     "Tangential drag coefficient (with respect to surface area, \u03c0*d*l). (default=0.05)\nXML Name: cdt": "Tangential drag coefficient (with respect to surface area, \u03c0*d*l). (default=0.05)\nXML Name: cdt",
-    "Maximun tension for the lines:": "Maximun tension for the lines:",
+    "Maximum tension for the lines:": "Maximum tension for the lines:",
     "Maximum value of tension for the lines. value=0 Break Tension is not used. (default=0)\nXML Name: breaktension": "Maximum value of tension for the lines. value=0 Break Tension is not used. (default=0)\nXML Name: breaktension",
     "Lines": "Lines",
     "Add a new Line": "Add a new Line",

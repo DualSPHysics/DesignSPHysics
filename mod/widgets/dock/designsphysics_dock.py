@@ -74,7 +74,7 @@ class DesignSPHysicsDock(QtGui.QDockWidget):
         self.simulation_widget.simulation_cancelled.connect(self.adapt_to_simulation_cancel)
 
     def on_refresh(self):
-        """ Reacts to a refresh signal emmited by the pre processing widget. """
+        """ Reacts to a refresh signal emitted by the pre processing widget. """
         self.need_refresh.emit()
         self.dock_configuration_widget.update_case_name(Case.the().name)
 

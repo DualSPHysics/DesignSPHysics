@@ -44,7 +44,7 @@ __status__ = "Development"
 
 def on_tree_item_selection_change(properties_widget, designsphysics_dock):
     """ Refreshes relevant parts of DesignsPHysics under an important change event. """
-    debug("Syncronizing FreeCAD data structures with DesignSPHysics")
+    debug("Synchronizing FreeCAD data structures with DesignSPHysics")
     selection = FreeCADGui.Selection.getSelection()
     properties_widget.set_add_button_enabled(True)
 

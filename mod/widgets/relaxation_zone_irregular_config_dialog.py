@@ -301,7 +301,7 @@ class RelaxationZoneIrregularConfigDialog(QtGui.QDialog):
         self.accept()
 
     def on_delete(self):
-        """ Deletes the currenlty represented object. """
+        """ Deletes the currently represented object. """
         self.relaxationzone = None
         self.reject()
 
