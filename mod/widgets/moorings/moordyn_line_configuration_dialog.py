@@ -202,18 +202,28 @@ class MoorDynLineConfigurationDialog(QtGui.QDialog):
         self.vessel_connection_body_combo.addItems(["None"] + list(map(lambda body: "MKBound: {}".format(body.ref), self.stored_configuration.bodies)))
         current_body_enumerated_tuple: tuple = next(filter(lambda index_body_tuple: index_body_tuple[1].ref == vessel_connection_to_fill, enumerate(self.stored_configuration.bodies)), None)
         self.vessel_connection_body_combo.setCurrentIndex(current_body_enumerated_tuple[0] + 1 if current_body_enumerated_tuple else 0)
-
-        #FIXME: Check if the input list of bodies contains the selected ref
-        current_index = vessel_connection_to_fill.bodyref+1
-        self.vessel_connection_body_combo.setCurrentIndex(current_index)
+        
+        # Load the moored floating body for vessel connection 1
+        self.vessel_connection_body_combo.setCurrentIndex(0) # 0: None by default
+        body_ref1 = vessel_connection_to_fill.bodyref
+        for i in range(len(self.stored_configuration.bodies)):
+            body=self.stored_configuration.bodies[i]
+            if body.ref == body_ref1:
+                self.vessel_connection_body_combo.setCurrentIndex(i+1) # Increase one index since the first item is 1 (0: None)  
+                break
 
         self.vessel2_connection_body_combo.addItems(["None"] + list(map(lambda body: "MKBound: {}".format(body.ref), self.stored_configuration.bodies)))
         current_body_enumerated_tuple: tuple = next(filter(lambda index_body_tuple: index_body_tuple[1].ref == vessel2_connection_to_fill, enumerate(self.stored_configuration.bodies)), None)
         self.vessel2_connection_body_combo.setCurrentIndex(current_body_enumerated_tuple[0] + 1 if current_body_enumerated_tuple else 0)
-
-        #FIXME: Check if the input list of bodies contains the selected ref
-        current_index = vessel2_connection_to_fill.bodyref+1
-        self.vessel2_connection_body_combo.setCurrentIndex(current_index)
+      
+        # Load the moored floating body for vessel connection 2
+        self.vessel2_connection_body_combo.setCurrentIndex(0) # 0: None by default
+        body_ref2 = vessel2_connection_to_fill.bodyref
+        for i in range(len(self.stored_configuration.bodies)):
+            body=self.stored_configuration.bodies[i]
+            if body.ref == body_ref2:
+                self.vessel2_connection_body_combo.setCurrentIndex(i+1) # Increase one index since the first item is 1 (0: None) 
+                break
 
     def _on_type_of_connection_change(self, new_index):
         if new_index == 0:
