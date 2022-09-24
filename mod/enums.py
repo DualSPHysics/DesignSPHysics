@@ -284,6 +284,9 @@ class ContactMethod:
 
 class HelpText:
     """ Help strings for different zones of the application GUIs. """
+    POINTREFX = __("Reference point to create particles in X direction.")
+    POINTREFY = __("Reference point to create particles in Y direction.")
+    POINTREFZ = __("Reference point to create particles in Z direction.")
     GRAVITYX = __("Gravitational acceleration in X direction.")
     GRAVITYY = __("Gravitational acceleration in Y direction.")
     GRAVITYZ = __("Gravitational acceleration in Z direction.")

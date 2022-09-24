@@ -21,7 +21,9 @@ class DefinitionRenderer():
         template = get_template_text(cls.DEFINITION_XML)
         fc_object = FreeCAD.ActiveDocument.getObject("Case_Limits")
         min_point = fc_object.Placement.Base
+        # Note: 'pointref' is defined in "Define Constants" layout
         formatter = {
+            "pointref": data["constants"]["pointref"],
             "dp": data["dp"],
             "pointmin": [min_point.x / DIVIDER, min_point.y / DIVIDER, min_point.z / DIVIDER],
             "pointmax": [

@@ -75,6 +75,10 @@ def filter_data(raw):
     fil["massfluid"] = float(raw["case"]["casedef"]["constantsdef"]["massfluid"]["@value"])
     fil["massfluid_auto"] = raw["case"]["casedef"]["constantsdef"]["massbound"]["@auto"].lower() == "true"
 
+    # Pointref: Defined in "Define Constants" but included in casedef/geometry/definition
+    fil["pointref"] = [float(raw["case"]["casedef"]["geometry"]["definition"]["pointref"]["@x"]),
+                       float(raw["case"]["casedef"]["geometry"]["definition"]["pointref"]["@y"]),
+                       float(raw["case"]["casedef"]["geometry"]["definition"]["pointref"]["@z"])]
     # Getting dp
     fil["dp"] = float(raw["case"]["casedef"]["geometry"]["definition"]["@dp"])
 

@@ -8,6 +8,7 @@ class Constants():
     def __init__(self):
         self.lattice_bound: int = 1
         self.lattice_fluid: int = 1
+        self.pointref: list = [0, 0, 0]
         self.gravity: list = [0, 0, -9.81]
         self.rhop0: float = 1000
         self.rhopgradient: int = 2
