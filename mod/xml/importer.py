@@ -55,6 +55,7 @@ def filter_data(raw):
                       float(raw["case"]["casedef"]["constantsdef"]["gravity"]["@y"]),
                       float(raw["case"]["casedef"]["constantsdef"]["gravity"]["@z"])]
     fil["rhop0"] = float(raw["case"]["casedef"]["constantsdef"]["rhop0"]["@value"])
+    fil["rhopgradient"] = int(raw["case"]["casedef"]["constantsdef"]["rhopgradient"]["@value"])
     fil["hswl"] = float(raw["case"]["casedef"]["constantsdef"]["hswl"]["@value"])
     fil["hswl_auto"] = raw["case"]["casedef"]["constantsdef"]["hswl"]["@auto"].lower() == "true"
     fil["gamma"] = float(raw["case"]["casedef"]["constantsdef"]["gamma"]["@value"])

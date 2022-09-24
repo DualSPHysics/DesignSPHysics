@@ -6,6 +6,7 @@
             <lattice bound="{constants[lattice_bound]}" fluid="{constants[lattice_fluid]}" />
             <gravity x="{constants[gravity][0]}" y="{constants[gravity][1]}" z="{constants[gravity][2]}" comment="Gravitational acceleration" units_comment="m/s^2" />
             <rhop0 value="{constants[rhop0]}" comment="Reference density of the fluid" units_comment="kg/m^3" />
+            <rhopgradient value="{constants[rhopgradient]}" comment="Initial density gradient 1:Rhop0, 2:Water column, 3:Max. water height (default=2)." units_comment="-" />
             <hswl value="{constants[hswl]}" auto="{constants[hswl_auto]}" comment="Maximum still water level to calculate speedofsound using coefsound" units_comment="metres (m)" />
             <gamma value="{constants[gamma]}" comment="Polytropic constant for water used in the state equation" />
             <speedsystem value="{constants[speedsystem]}" auto="{constants[speedsystem_auto]}" comment="Maximum system speed (by default the dam-break propagation is used)" />

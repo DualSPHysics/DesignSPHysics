@@ -10,6 +10,7 @@ class Constants():
         self.lattice_fluid: int = 1
         self.gravity: list = [0, 0, -9.81]
         self.rhop0: float = 1000
+        self.rhopgradient: int = 2
         self.hswl: float = 0
         self.hswl_auto: bool = True
         self.gamma: float = 7

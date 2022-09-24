@@ -119,6 +119,24 @@ class ConstantsDialog(QtGui.QDialog):
         self.rhop0_layout.addWidget(self.rhop0_input)
         self.rhop0_layout.addWidget(self.rhop0_label2)
 
+        # Initial density gradient: layout and components
+        self.rhopgradient_layout = QtGui.QHBoxLayout()
+        self.rhopgradient_label = QtGui.QLabel(__("Initial density gradient:"))
+
+        self.rhopgradient_input = QtGui.QLineEdit()
+        self.rhopgradient_input = FocusableLineEdit()
+        self.rhopgradient_input.set_help_text(HelpText.RHOPGRADIENT)
+        self.rhopgradient_input.setMaxLength(1)
+
+        self.rhopgradient_input.focus.connect(self.on_help_focus)
+
+        self.rhopgradient_validator = QtGui.QIntValidator(0, 10000, self.rhopgradient_input)
+        self.rhopgradient_input.setText(str(Case.the().constants.rhopgradient))
+        self.rhopgradient_input.setValidator(self.rhopgradient_validator)
+
+        self.rhopgradient_layout.addWidget(self.rhopgradient_label)
+        self.rhopgradient_layout.addWidget(self.rhopgradient_input)
+
         # Maximum still water level to calc.  spdofsound using coefsound: layout and
         # components
         self.hswlauto_layout = QtGui.QHBoxLayout()
@@ -376,6 +394,7 @@ class ConstantsDialog(QtGui.QDialog):
         # self.cw_main_layout.addLayout(self.lattice2_layout)
         self.cw_main_layout.addLayout(self.gravity_layout)
         self.cw_main_layout.addLayout(self.rhop0_layout)
+        self.cw_main_layout.addLayout(self.rhopgradient_layout)
         self.cw_main_layout.addLayout(self.hswlauto_layout)
         self.cw_main_layout.addLayout(self.hswl_layout)
         self.cw_main_layout.addLayout(self.gamma_layout)
@@ -453,6 +472,7 @@ class ConstantsDialog(QtGui.QDialog):
         Case.the().constants.lattice_fluid = self.lattice2_input.currentIndex() + 1
         Case.the().constants.gravity = [float(self.gravityx_input.text()), float(self.gravityy_input.text()), float(self.gravityz_input.text())]
         Case.the().constants.rhop0 = float(self.rhop0_input.text())
+        Case.the().constants.rhopgradient = float(self.rhopgradient_input.text())
         Case.the().constants.hswl = float(self.hswl_input.text())
         Case.the().constants.hswl_auto = self.hswlauto_chk.isChecked()
         Case.the().constants.gamma = float(self.gamma_input.text())

@@ -288,6 +288,7 @@ class HelpText:
     GRAVITYY = __("Gravitational acceleration in Y direction.")
     GRAVITYZ = __("Gravitational acceleration in Z direction.")
     RHOP0 = __("Reference density of the fluid.")
+    RHOPGRADIENT = __("Initial density gradient 1:Rhop0, 2:Water column, 3:Max. water height (default=2).")
     HSWL = __("Maximum still water level to calculate speedofsound as the celerity during dam-break propagation.")
     GAMMA = __("Polytropic constant for ocean water used in the state equation.")
     SPEEDSYSTEM = __("Maximum speed system (by default the celerity during dam-break propagation).")
