@@ -32,6 +32,51 @@ class ConstantsDialog(QtGui.QDialog):
         self.ok_button = QtGui.QPushButton(__("OK"))
         self.cancel_button = QtGui.QPushButton(__("Cancel"))
 
+        # Pointref
+        self.pointref_layout = QtGui.QHBoxLayout()
+        self.pointref_label = HoverableLabel(__("Pointref [X, Y, Z]:"))
+
+        self.pointrefx_input = QtGui.QLineEdit()
+        self.pointrefx_input = FocusableLineEdit()
+        self.pointrefx_input.set_help_text(HelpText.POINTREFX)
+        self.pointrefx_input.setMaxLength(10)
+
+        self.pointrefx_input.focus.connect(self.on_help_focus)
+
+        self.pointrefx_validator = QtGui.QDoubleValidator(-200, 200, 8, self.pointrefx_input)
+        self.pointrefx_input.setText(str(Case.the().constants.pointref[0]))
+        self.pointrefx_input.setValidator(self.pointrefx_validator)
+
+        self.pointrefy_input = QtGui.QLineEdit()
+        self.pointrefy_input = FocusableLineEdit()
+        self.pointrefy_input.set_help_text(HelpText.POINTREFY)
+        self.pointrefy_input.setMaxLength(10)
+
+        self.pointrefy_input.focus.connect(self.on_help_focus)
+
+        self.pointrefy_validator = QtGui.QDoubleValidator(-200, 200, 8, self.pointrefy_input)
+        self.pointrefy_input.setText(str(Case.the().constants.pointref[1]))
+        self.pointrefy_input.setValidator(self.pointrefy_validator)
+
+        self.pointrefz_input = QtGui.QLineEdit()
+        self.pointrefz_input = FocusableLineEdit()
+        self.pointrefz_input.set_help_text(HelpText.POINTREFZ)
+        self.pointrefz_input.setMaxLength(10)
+
+        self.pointrefz_input.focus.connect(self.on_help_focus)
+
+        self.pointrefz_validator = QtGui.QDoubleValidator(-200, 200, 8, self.pointrefz_input)
+        self.pointrefz_input.setText(str(Case.the().constants.pointref[2]))
+        self.pointrefz_input.setValidator(self.pointrefz_validator)
+
+        self.pointref_label2 = QtGui.QLabel("metres")
+
+        self.pointref_layout.addWidget(self.pointref_label)
+        self.pointref_layout.addWidget(self.pointrefx_input)  # For X
+        self.pointref_layout.addWidget(self.pointrefy_input)  # For Y
+        self.pointref_layout.addWidget(self.pointrefz_input)  # For Z
+        self.pointref_layout.addWidget(self.pointref_label2)
+
         # Lattice for boundaries layout and components
         self.lattice_layout = QtGui.QHBoxLayout()
         self.lattice_label = QtGui.QLabel(__("Lattice for Boundaries:"))
@@ -118,6 +163,24 @@ class ConstantsDialog(QtGui.QDialog):
         self.rhop0_layout.addWidget(self.rhop0_label)
         self.rhop0_layout.addWidget(self.rhop0_input)
         self.rhop0_layout.addWidget(self.rhop0_label2)
+
+        # Initial density gradient: layout and components
+        self.rhopgradient_layout = QtGui.QHBoxLayout()
+        self.rhopgradient_label = QtGui.QLabel(__("Initial density gradient:"))
+
+        self.rhopgradient_input = QtGui.QLineEdit()
+        self.rhopgradient_input = FocusableLineEdit()
+        self.rhopgradient_input.set_help_text(HelpText.RHOPGRADIENT)
+        self.rhopgradient_input.setMaxLength(1)
+
+        self.rhopgradient_input.focus.connect(self.on_help_focus)
+
+        self.rhopgradient_validator = QtGui.QIntValidator(0, 10000, self.rhopgradient_input)
+        self.rhopgradient_input.setText(str(Case.the().constants.rhopgradient))
+        self.rhopgradient_input.setValidator(self.rhopgradient_validator)
+
+        self.rhopgradient_layout.addWidget(self.rhopgradient_label)
+        self.rhopgradient_layout.addWidget(self.rhopgradient_input)
 
         # Maximum still water level to calc.  spdofsound using coefsound: layout and
         # components
@@ -374,8 +437,10 @@ class ConstantsDialog(QtGui.QDialog):
         # Lattice was removed on 0.3Beta - 1 of June
         # self.cw_main_layout.addLayout(self.lattice_layout)
         # self.cw_main_layout.addLayout(self.lattice2_layout)
+        self.cw_main_layout.addLayout(self.pointref_layout)
         self.cw_main_layout.addLayout(self.gravity_layout)
         self.cw_main_layout.addLayout(self.rhop0_layout)
+        self.cw_main_layout.addLayout(self.rhopgradient_layout)
         self.cw_main_layout.addLayout(self.hswlauto_layout)
         self.cw_main_layout.addLayout(self.hswl_layout)
         self.cw_main_layout.addLayout(self.gamma_layout)
@@ -451,8 +516,10 @@ class ConstantsDialog(QtGui.QDialog):
         """ Applies the current dialog data onto the main data structure. """
         Case.the().constants.lattice_bound = self.lattice_input.currentIndex() + 1
         Case.the().constants.lattice_fluid = self.lattice2_input.currentIndex() + 1
+        Case.the().constants.pointref = [float(self.pointrefx_input.text()), float(self.pointrefy_input.text()), float(self.pointrefz_input.text())]
         Case.the().constants.gravity = [float(self.gravityx_input.text()), float(self.gravityy_input.text()), float(self.gravityz_input.text())]
         Case.the().constants.rhop0 = float(self.rhop0_input.text())
+        Case.the().constants.rhopgradient = float(self.rhopgradient_input.text())
         Case.the().constants.hswl = float(self.hswl_input.text())
         Case.the().constants.hswl_auto = self.hswlauto_chk.isChecked()
         Case.the().constants.gamma = float(self.gamma_input.text())

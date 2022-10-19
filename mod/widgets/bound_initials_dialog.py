@@ -86,7 +86,7 @@ class PlaneInitialsWidget(QtGui.QWidget):
         self.normal_layout.addWidget(self.normal_input_z)
 
         self.maxdisth_layout = QtGui.QHBoxLayout()
-        self.maxdisth_label = QtGui.QLabel(__("Max. distance to boundary limit: "))
+        self.maxdisth_label = QtGui.QLabel(__("Max. distance to boundary limit (value*h): "))
         self.maxdisth_input = QtGui.QLineEdit()
         self.maxdisth_layout.addWidget(self.maxdisth_label)
         self.maxdisth_layout.addWidget(self.maxdisth_input)
@@ -145,7 +145,7 @@ class SphereInitialsWidget(QtGui.QWidget):
         self.inside_layout.addStretch(1)
 
         self.maxdisth_layout = QtGui.QHBoxLayout()
-        self.maxdisth_label = QtGui.QLabel(__("Max. distance to boundary limit: "))
+        self.maxdisth_label = QtGui.QLabel(__("Max. distance to boundary limit (value*h): "))
         self.maxdisth_input = QtGui.QLineEdit()
         self.maxdisth_layout.addWidget(self.maxdisth_label)
         self.maxdisth_layout.addWidget(self.maxdisth_input)
@@ -211,7 +211,7 @@ class CylinderInitialsWidget(QtGui.QWidget):
         self.inside_layout.addStretch(1)
 
         self.maxdisth_layout = QtGui.QHBoxLayout()
-        self.maxdisth_label = QtGui.QLabel(__("Max. distance to boundary limit: "))
+        self.maxdisth_label = QtGui.QLabel(__("Max. distance to boundary limit (value*h): "))
         self.maxdisth_input = QtGui.QLineEdit()
         self.maxdisth_layout.addWidget(self.maxdisth_label)
         self.maxdisth_layout.addWidget(self.maxdisth_input)
@@ -232,7 +232,7 @@ class PartsInitialsWidget(QtGui.QWidget):
         self.main_layout = QtGui.QVBoxLayout()
 
         self.maxdisth_layout = QtGui.QHBoxLayout()
-        self.maxdisth_label = QtGui.QLabel(__("Max. distance to boundary limit: "))
+        self.maxdisth_label = QtGui.QLabel(__("Max. distance to boundary limit (value*h): "))
         self.maxdisth_input = QtGui.QLineEdit()
         self.maxdisth_layout.addWidget(self.maxdisth_label)
         self.maxdisth_layout.addWidget(self.maxdisth_input)

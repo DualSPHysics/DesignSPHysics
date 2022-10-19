@@ -55,6 +55,7 @@ def filter_data(raw):
                       float(raw["case"]["casedef"]["constantsdef"]["gravity"]["@y"]),
                       float(raw["case"]["casedef"]["constantsdef"]["gravity"]["@z"])]
     fil["rhop0"] = float(raw["case"]["casedef"]["constantsdef"]["rhop0"]["@value"])
+    fil["rhopgradient"] = int(raw["case"]["casedef"]["constantsdef"]["rhopgradient"]["@value"])
     fil["hswl"] = float(raw["case"]["casedef"]["constantsdef"]["hswl"]["@value"])
     fil["hswl_auto"] = raw["case"]["casedef"]["constantsdef"]["hswl"]["@auto"].lower() == "true"
     fil["gamma"] = float(raw["case"]["casedef"]["constantsdef"]["gamma"]["@value"])
@@ -74,6 +75,10 @@ def filter_data(raw):
     fil["massfluid"] = float(raw["case"]["casedef"]["constantsdef"]["massfluid"]["@value"])
     fil["massfluid_auto"] = raw["case"]["casedef"]["constantsdef"]["massbound"]["@auto"].lower() == "true"
 
+    # Pointref: Defined in "Define Constants" but included in casedef/geometry/definition
+    fil["pointref"] = [float(raw["case"]["casedef"]["geometry"]["definition"]["pointref"]["@x"]),
+                       float(raw["case"]["casedef"]["geometry"]["definition"]["pointref"]["@y"]),
+                       float(raw["case"]["casedef"]["geometry"]["definition"]["pointref"]["@z"])]
     # Getting dp
     fil["dp"] = float(raw["case"]["casedef"]["geometry"]["definition"]["@dp"])
 

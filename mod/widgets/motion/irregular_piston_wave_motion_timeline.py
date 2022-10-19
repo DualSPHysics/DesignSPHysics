@@ -143,7 +143,7 @@ class IrregularPistonWaveMotionTimeline(QtGui.QWidget):
         self.awas_gaugezmax_label = QtGui.QLabel(__("Gauge Z Max (m): "))
         self.awas_gaugezmax_input = QtGui.QLineEdit()
 
-        self.awas_gaugedp_label = QtGui.QLabel(__("Gauge dp: "))
+        self.awas_gaugedp_label = QtGui.QLabel(__("Gauge dp (value*dp): "))
         self.awas_gaugedp_input = QtGui.QLineEdit()
 
         self.awas_coefmasslimit_label = QtGui.QLabel(__("Coef. mass limit: "))

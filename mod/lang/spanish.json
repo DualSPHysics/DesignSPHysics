@@ -850,5 +850,16 @@
     "Remove old data": "Remove old data",
     "This action will remove the old data stored in the Case folder.\n\nPress OK to clear and save the configuration.\nPress Discard to overwrite.": "This action will remove the old data stored in the Case folder.\n\nPress OK to clear and save the configuration.\nPress Discard to overwrite.",
     "Remove the Case output data": "Remove the Case output data",
-    "This action will remove the data generated before.\n\nPress Ok to remove and run GenCase.\nPress Cancel to exit and keep the data.": "This action will remove the data generated before.\n\nPress Ok to remove and run GenCase.\nPress Cancel to exit and keep the data."
+    "This action will remove the data generated before.\n\nPress Ok to remove and run GenCase.\nPress Cancel to exit and keep the data.": "This action will remove the data generated before.\n\nPress Ok to remove and run GenCase.\nPress Cancel to exit and keep the data.",
+    "Initial density gradient 1:Rhop0, 2:Water column, 3:Max. water height (default=2).": "Initial density gradient 1:Rhop0, 2:Water column, 3:Max. water height (default=2).",
+    "Initial density gradient:": "Initial density gradient:",
+    "Max. distance to boundary limit (value*h): ": "Max. distance to boundary limit (value*h): ",
+    "Gauge dp (value*dp): ": "Gauge dp (value*dp): ",
+    "Point reference in X direction.": "Point reference in X direction.",
+    "Point reference in Y direction.": "Point reference in Y direction.",
+    "Point reference in Z direction.": "Point reference in Z direction.",
+    "Pointref [X, Y, Z]:": "Pointref [X, Y, Z]:",
+    "Reference point to create particles in X direction.": "Reference point to create particles in X direction.",
+    "Reference point to create particles in Y direction.": "Reference point to create particles in Y direction.",
+    "Reference point to create particles in Z direction.": "Reference point to create particles in Z direction."
 }
