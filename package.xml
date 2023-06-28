@@ -6,7 +6,7 @@
   <date>24-09-2022</date>
   <maintainer email="anvieiravazquez@gmail.com">Andrés Vieira</maintainer>
   <license file="LICENSE">GPLv3</license>
-  <url type="repository" branch="main">https://github.com/DualSPHysics/DesignSPHysics</url>
+  <url type="repository" branch="master">https://github.com/DualSPHysics/DesignSPHysics</url>
   <icon>images/icon.svg</icon>
 
   <content>
