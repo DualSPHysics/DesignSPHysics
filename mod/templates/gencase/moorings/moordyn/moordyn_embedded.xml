@@ -4,7 +4,7 @@
                         <freesurface value="{solver_options[freesurface]}" comment="Z position of the water free surface.(default=0)" />
                         <kBot value="{solver_options[kBot]}" comment="Bottom stiffness constant. (default=3.0e6)" units_comment="Pa/m" />
                         <cBot value="{solver_options[cBot]}" comment="Bottom damping constant. (default=3.0e5)"  units_comment="Pa*s/m" />
-                        <dtM value="{solver_options[dtM]}" comment="Desired mooring model time step. (default=0.0001)" />
+                        <dtM value="{solver_options[dtM]}" auto="{solver_options[dtMauto]}" comment="Desired mooring model time step. (default=0.0001)" />
                         <waveKin value="{solver_options[waveKin]}" comment="Wave kinematics flag ( 0: neglect [the only option currently supported] ). (default=0)" />
                         <writeUnits value="{solver_options[writeUnits]}" comment="Write units line. value=[yes|no]. (default=yes)" />
                         <frictionCoefficient value="{solver_options[frictionCoefficient]}" comment="General bottom friction coefficient, as a start. (default=0.0)" />

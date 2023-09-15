@@ -298,7 +298,7 @@ class SetupPluginDialog(QtGui.QDialog):
         if executable_contains_string(file_name, app_name):
             input_prop.setText(file_name)
         else:
-            error_dialog(__("Can't recognize {} in the selected executable.").format(app_name))
+            error_dialog(__("Cannot recognize {} in the selected executable.").format(app_name))
 
     def on_paraview_browse(self):
         """ Opens a file dialog to select a paraview executable. """

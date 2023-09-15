@@ -17,6 +17,7 @@ from mod.dataobjects.motion.movement import Movement
 from mod.dataobjects.motion.special_movement import SpecialMovement
 from mod.dataobjects.motion.regular_piston_wave_gen import RegularPistonWaveGen
 from mod.dataobjects.motion.irregular_piston_wave_gen import IrregularPistonWaveGen
+from mod.dataobjects.motion.focused_piston_wave_gen import FocusedPistonWaveGen
 from mod.dataobjects.motion.regular_flap_wave_gen import RegularFlapWaveGen
 from mod.dataobjects.motion.irregular_flap_wave_gen import IrregularFlapWaveGen
 from mod.dataobjects.motion.file_gen import FileGen
@@ -44,6 +45,7 @@ from mod.widgets.motion.cir_sinu_motion_timeline import CirSinuMotionTimeline
 from mod.widgets.motion.rect_sinu_motion_timeline import RectSinuMotionTimeline
 from mod.widgets.motion.regular_piston_wave_motion_timeline import RegularPistonWaveMotionTimeline
 from mod.widgets.motion.irregular_piston_wave_motion_timeline import IrregularPistonWaveMotionTimeline
+from mod.widgets.motion.focused_piston_wave_motion_timeline import FocusedPistonWaveMotionTimeline
 from mod.widgets.motion.regular_flap_wave_motion_timeline import RegularFlapWaveMotionTimeline
 from mod.widgets.motion.irregular_flap_wave_motion_timeline import IrregularFlapWaveMotionTimeline
 from mod.widgets.motion.file_motion_timeline import FileMotionTimeline
@@ -91,6 +93,8 @@ class MovementDialog(QtGui.QDialog):
         self.create_new_movement_menu.addAction(get_icon("regular_wave.png"), __("Regular wave generator (Piston)"))
         self.create_new_movement_menu.addAction(get_icon("irregular_wave.png"),
                                                 __("Irregular wave generator (Piston)"))
+        self.create_new_movement_menu.addAction(get_icon("focused_wave.png"),
+                                                __("Focused wave generator (Piston)"))
         self.create_new_movement_menu.addAction(get_icon("regular_wave.png"), __("Regular wave generator (Flap)"))
         self.create_new_movement_menu.addAction(get_icon("irregular_wave.png"),
                                                 __("Irregular wave generator (Flap)"))
@@ -296,7 +300,7 @@ class MovementDialog(QtGui.QDialog):
             # Reset the notice label if a valid change is made
             self.notice_label.setText("")
         except ValueError:
-            # Movement wasn't selected
+            # Movement was not selected
             pass
         Case.the().info.global_movements.pop(index)
         self.refresh_movements_table()
@@ -323,6 +327,8 @@ class MovementDialog(QtGui.QDialog):
             to_add = SpecialMovement(name="Regular Wave Generator (Piston)", generator=RegularPistonWaveGen())
         if __("Irregular wave generator (Piston)") in action.text():
             to_add = SpecialMovement(name="Irregular Wave Generator (Piston)", generator=IrregularPistonWaveGen())
+        if __("Focused wave generator (Piston)") in action.text():
+            to_add = SpecialMovement(name="Focused wave generator (Piston)", generator=FocusedPistonWaveGen())
         if __("Regular wave generator (Flap)") in action.text():
             to_add = SpecialMovement(name="Regular Wave Generator (Flap)", generator=RegularFlapWaveGen())
         if __("Irregular wave generator (Flap)") in action.text():
@@ -439,6 +445,8 @@ class MovementDialog(QtGui.QDialog):
                 target_to_put = RegularPistonWaveMotionTimeline(self.currently_selected_movement.generator, parent=get_fc_main_window())
             elif isinstance(self.currently_selected_movement.generator, IrregularPistonWaveGen):
                 target_to_put = IrregularPistonWaveMotionTimeline(self.currently_selected_movement.generator, parent=get_fc_main_window())
+            elif isinstance(self.currently_selected_movement.generator, FocusedPistonWaveGen):
+                target_to_put = FocusedPistonWaveMotionTimeline(self.currently_selected_movement.generator, parent=get_fc_main_window())
             if isinstance(self.currently_selected_movement.generator, RegularFlapWaveGen):
                 target_to_put = RegularFlapWaveMotionTimeline(self.currently_selected_movement.generator, parent=get_fc_main_window())
             elif isinstance(self.currently_selected_movement.generator, IrregularFlapWaveGen):

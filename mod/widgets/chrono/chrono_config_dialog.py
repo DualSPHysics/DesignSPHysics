@@ -95,6 +95,7 @@ class ChronoConfigDialog(QtGui.QDialog):
         self.collision_fields_ompthreads_combo.setCurrentIndex(self.case.chrono.collisiondp.ompthreads)
         self.collision_fields_ompthreads_layout.addWidget(self.collision_fields_ompthreads_label)
         self.collision_fields_ompthreads_layout.addWidget(self.collision_fields_ompthreads_combo)
+        self.collision_fields_ompthreads_combo.setEnabled(False) # Disabled
 
         self.collision_fields_contactmethod_layout = QtGui.QHBoxLayout()
         self.collision_fields_contactmethod_label = QtGui.QLabel("Contact method type:")

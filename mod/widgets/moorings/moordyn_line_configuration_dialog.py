@@ -153,7 +153,7 @@ class MoorDynLineConfigurationDialog(QtGui.QDialog):
 
     def _fill_data(self):
 
-        if  self.line.vessel2_connection == None:
+        if  self.line.vessel2_connection is None:
             self.connection_type_combobox.setCurrentIndex(0)
         else:
             self.connection_type_combobox.setCurrentIndex(1)

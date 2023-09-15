@@ -126,7 +126,7 @@ class SpecialOptionsSelectorDialog(QtGui.QDialog):
 
         # Check if it is fluid and warn the user.
         if Case.the().get_simulation_object(selection.Name).type == ObjectType.FLUID:
-            error_dialog(__("You can't apply a piston movement to a fluid.\nPlease select a boundary and try again"))
+            error_dialog(__("You cannot apply a piston movement to a fluid.\nPlease select a boundary and try again"))
             return
 
         # Get selection mk

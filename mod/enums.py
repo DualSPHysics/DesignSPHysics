@@ -213,6 +213,7 @@ class MotionType:
     SINUSOIDAL_CIRCULAR = "Sinusoidal Circular Motion"
     REGULAR_PISTON_WAVE_GENERATOR = "Regular Piston Wave Generator"
     IRREGULAR_PISTON_WAVE_GENERATOR = "Irregular Piston Wave Generator"
+    FOCUSED_PISTON_WAVE_GENERATOR = "Focused Piston Wave Generator"
     REGULAR_FLAP_WAVE_GENERATOR = "Regular Flap Wave Generator"
     IRREGULAR_FLAP_WAVE_GENERATOR = "Irregular Flap Wave Generator"
     FILE_GENERATOR = "File Generator"

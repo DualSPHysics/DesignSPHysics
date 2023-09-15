@@ -167,7 +167,7 @@ class MeasureToolDialog(QtGui.QDialog):
         if not Case.the().info.measuretool_points and not Case.the().info.measuretool_grid:
             error_dialog(
                 __("No points or grid are defined to execute MeasureTool"),
-                __("Please define either list of points or a grid of points to continue. MeasureTool won't be executed.")
+                __("Please define either list of points or a grid of points to continue. MeasureTool will not be executed.")
             )
         else:
             measuretool_export(export_parameters, Case.the(), self.post_processing_widget)

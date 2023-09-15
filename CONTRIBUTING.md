@@ -63,3 +63,4 @@ If you need help on how to contribute please contact one of the following people
 - Orlando García Feal - orlando@uvigo.es
 - José Manuel Domínguez Alonso - jmdalonso@gmail.com
 - Alejandro Jacobo Cabrera Crespo - alexbexe@uvigo.es
+- Iván Martínez Estévez - ivan.martinez.estevez@uvigo.es

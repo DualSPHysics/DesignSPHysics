@@ -62,7 +62,7 @@ class LinkCoulombDampingEdit(QtGui.QDialog):
 
         # Points where the elements interact in body 1
         self.points_b1_layout = QtGui.QHBoxLayout()
-        self.points_b1_label = QtGui.QLabel(__("Points in body 1: "))
+        self.points_b1_label = QtGui.QLabel(__("Point in body 1: "))
         self.point_b1_x_label = QtGui.QLabel(__("X"))
         self.point_b1_x_line_edit = QtGui.QLineEdit(str(target_link_coulombdamping.point_fb1[0]))
         self.point_b1_y_label = QtGui.QLabel(__("Y"))
@@ -82,7 +82,7 @@ class LinkCoulombDampingEdit(QtGui.QDialog):
 
         # Points where the elements interact in body 2
         self.points_b2_layout = QtGui.QHBoxLayout()
-        self.points_b2_label = QtGui.QLabel(__("Points in body 2: "))
+        self.points_b2_label = QtGui.QLabel(__("Point in body 2: "))
         self.point_b2_x_label = QtGui.QLabel(__("X"))
         self.point_b2_x_line_edit = QtGui.QLineEdit(str(target_link_coulombdamping.point_fb2[0]))
         self.point_b2_y_label = QtGui.QLabel(__("Y"))

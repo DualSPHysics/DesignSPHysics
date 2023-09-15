@@ -81,4 +81,4 @@ def ensure_process_is_executable_or_fail(cli_path: str) -> None:
         st = stat(cli_path)
         chmod(cli_path, st.st_mode | unix_stat.S_IEXEC)
     if not access(cli_path, X_OK):
-        raise RuntimeError(__("The executable {} doesn't have executable permissions and {} can't provide it for you. Please give execution permissions to that file.").format(cli_path, APP_NAME))
+        raise RuntimeError(__("The executable {} does not have executable permissions and {} cannot provide it for you. Please give execution permissions to that file.").format(cli_path, APP_NAME))

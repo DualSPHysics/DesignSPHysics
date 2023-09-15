@@ -7,8 +7,8 @@ class MoorDynLineDefaultConfiguration():
     """ MoorDyn LineDefault configuration object. """
 
     def __init__(self):
-        self.ea: str = "2.9e3"
-        self.diameter: str = "3.656E-3"
+        self.ea: float = 2.9e3
+        self.diameter: float = 3.656e-3
         self.massDenInAir: float = 0.0607
         self.ba: float = -0.8
         self.can: float = 1.0
@@ -16,4 +16,4 @@ class MoorDynLineDefaultConfiguration():
         self.cdn: float = 1.6
         self.cdt: float = 0.05
         self.breaktension: float = 0.0
-        self.outputFlags: str = "pvc"
+        self.outputFlags: str = "p"

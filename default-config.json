@@ -1,7 +1,7 @@
 {
     "windows": {
         "gencase": "./dualsphysics/bin/GenCase_win64.exe",
-        "dsphysics": "./dualsphysics/bin/DualSPHysics5.0_win64.exe",
+        "dsphysics": "./dualsphysics/bin/DualSPHysics5.2_win64.exe",
         "partvtk": "./dualsphysics/bin/PartVTK_win64.exe",
         "computeforces": "./dualsphysics/bin/ComputeForces_win64.exe",
         "floatinginfo": "./dualsphysics/bin/FloatingInfo_win64.exe",
@@ -13,7 +13,7 @@
     },
     "linux": {
         "gencase": "./dualsphysics/bin/GenCase_linux64",
-        "dsphysics": "./dualsphysics/bin/DualSPHysics5.0_linux64",
+        "dsphysics": "./dualsphysics/bin/DualSPHysics5.2_linux64",
         "partvtk": "./dualsphysics/bin/PartVTK_linux64",
         "computeforces": "./dualsphysics/bin/ComputeForces_linux64",
         "floatinginfo": "./dualsphysics/bin/FloatingInfo_linux64",
