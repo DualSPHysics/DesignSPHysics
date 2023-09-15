@@ -45,7 +45,7 @@ def operate_val(val):
 
 def has_special_char(text: str) -> bool:
     """Checks if a given text includes special characters and spaces"""
-    regex = re.compile('[ @!#$%^&*()<>?`´\'|}{~áéíóúàèìòùÁÉÍÓÚÀÈÌÒÙ]')      
+    regex = re.compile('[ @!#$%^&*()<>?`\'|}{~]')      
     if regex.search(text) is None: 
         return False
     return True
