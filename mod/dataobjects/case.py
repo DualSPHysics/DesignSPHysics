@@ -45,6 +45,7 @@ class Case():
         self.constants: Constants = Constants()
         self.execution_parameters: ExecutionParameters = ExecutionParameters()
         self.objects: list = list()  # [SimulationObject]
+        self.tmp_objects: list = list()  # [SimulationObject]
         self.mkbasedproperties: dict = dict()  # {realmk: MKBasedProperties}
         self.damping_zones: dict = dict()  # {freecad_object_name: Damping}
         self.flowtool_boxes: list = list()  # [FlowToolBox]
@@ -79,7 +80,7 @@ class Case():
         for attr, value in new.__dict__.items():
             debug("Evaluating attr {} from the new object of type {}, for the old object of type {}".format(attr, type(new), type(old)))
             if not hasattr(old, attr):
-                debug("Old object didn't have that attribute. Just updating it and going forward")
+                debug("Old object did not have that attribute. Just updating it and going forward")
                 setattr(old, attr, value)
                 continue
             if hasattr(value, "__dict__") and hasattr(old, attr):
@@ -101,10 +102,19 @@ class Case():
         """ Returns a list with all the internal names used by the objects in the simulation. """
         return list(map(lambda obj: obj.name, self.objects))
 
+    def get_all_tmp_object_names(self):
+        """ Returns a list with all the internal names used by the temporal objects to be included to the simulation. """
+        return list(map(lambda obj: obj.name, self.tmp_objects))
+
     def get_simulation_object(self, name) -> SimulationObject:
         """ Returns a simulation object from its internal name.
         Raises an exception if the selected object is not added to the simulation. """
         return next(filter(lambda obj: obj.name == name, self.objects), None)
+    
+    def get_tmp_object(self, name) -> SimulationObject:
+        """ Returns a temporal object from its internal name.
+        Raises an exception if the selected object is not added to the simulation. """
+        return next(filter(lambda obj: obj.name == name, self.tmp_objects), None)
 
     def get_all_complex_objects(self) -> list:
         """ Returns all complex simulation objects. """
@@ -148,7 +158,19 @@ class Case():
         """ Adds an object to the current case """
         if simobject.name in self.get_all_simulation_object_names():
             raise RuntimeError("Object with the name: {} is already added to the case".format(simobject.name))
-        self.objects.append(simobject)
+        if simobject.name in self.get_all_tmp_object_names():
+            tmp_obj = self.get_tmp_object(simobject.name)
+            tmp_obj.obj_mk = simobject.obj_mk
+            #self.remove_tmp_object(simobject.name)
+            self.objects.append(tmp_obj)
+        else:
+            self.objects.append(simobject)
+
+    def add_tmp_object(self, simobject: SimulationObject):
+        """ Adds an object to the current case but not to the simulation """
+        if simobject.name in self.get_all_simulation_object_names() or simobject.name in self.get_all_tmp_object_names():
+            raise RuntimeError("Object with the name: {} is already added to the case".format(simobject.name))
+        self.tmp_objects.append(simobject)
 
     def remove_object(self, object_name: str) -> SimulationObject:
         """ Tries to remove the given object name from the simulation.
@@ -157,6 +179,13 @@ class Case():
             raise RuntimeError("The object that you are trying to remove ({}) is not present in the simulation")
         self.objects = list(filter(lambda obj: obj.name != object_name, self.objects))
         self.delete_orphan_mkbasedproperties()
+    
+    def remove_tmp_object(self, object_name: str) -> SimulationObject:
+        """ Tries to remove the given object name from the temporal object list.
+        If no element is found an error is raised. """
+        if object_name in self.get_all_tmp_object_names():
+            self.tmp_objects = list(filter(lambda obj: obj.name != object_name, self.tmp_objects))
+            self.delete_orphan_mkbasedproperties()
 
     def get_orphan_mkbasedproperties(self):
         """ Returns all MKBasedProperties that no longer have an object present in the case. """

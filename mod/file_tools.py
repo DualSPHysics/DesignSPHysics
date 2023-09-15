@@ -90,6 +90,7 @@ def load_case(load_path: str) -> "Case":
 def save_case(save_name: str, case: "Case") -> None:
     """ Saves a case to disk in the given path. """
     project_name = save_name.split("/")[-1]
+
     case.path = save_name
     case.name = project_name
 
@@ -319,11 +320,17 @@ def import_geo(filename=None, scale_x=1, scale_y=1, scale_z=1, name=None, autofi
     scale_matrix.scale(scale_x, scale_y, scale_z)
     loaded_mesh.transform(scale_matrix)
     internal_name = "external_{}".format(name)
+
+    SimObj=SimulationObject(internal_name, -1, ObjectType.BOUND, ObjectFillMode.SOLID)
+    if not FreeCAD.ActiveDocument.getObject(SimObj.name):
+        case.remove_tmp_object(SimObj.name)
+
     Mesh.show(loaded_mesh, internal_name)
     FreeCADGui.SendMsgToActiveView("ViewFit")
-
-    case.add_object(SimulationObject(internal_name, case.get_first_mk_not_used(ObjectType.BOUND), ObjectType.BOUND, ObjectFillMode.SOLID))
-    case.get_simulation_object(internal_name).autofill = autofill
+   
+    # Add the geometry to the temporal object list. The mk must be defined when adding to the DSPH simulation (By default: mk=-1) 
+    case.add_tmp_object(SimulationObject(internal_name, -1, ObjectType.BOUND, ObjectFillMode.SOLID))
+    case.get_tmp_object(internal_name).autofill = autofill
     get_fc_object(internal_name).Label = name
 
 

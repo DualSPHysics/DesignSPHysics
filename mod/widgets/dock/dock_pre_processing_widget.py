@@ -19,6 +19,7 @@ from mod.freecad_tools import get_fc_main_window, valid_document_environment, sa
 
 from mod.constants import CASE_LIMITS_OBJ_NAME, CASE_LIMITS_2D_LABEL, CASE_LIMITS_3D_LABEL
 from mod.enums import ObjectType, ObjectFillMode
+from mod.functions import has_special_char
 
 from mod.widgets.add_geo_dialog import AddGEODialog
 from mod.widgets.special_options_selector_dialog import SpecialOptionsSelectorDialog
@@ -198,11 +199,17 @@ class DockPreProcessingWidget(QtGui.QWidget):
             return
 
         Case.the().info.needs_to_run_gencase = True
+
+        if has_special_char(save_name):
+            error_dialog(__("There was an error saving the case.\nSpaces or special characters cannot be included in path to save the case."))
+            return
+        
         save_case(save_name, Case.the())
+
         save_current_freecad_document(Case.the().path)
         if Case.the().has_materials() and Case.the().execution_parameters.rigidalgorithm not in (2, 3):
             warning_dialog(
-                __("Properties and Material information wasn't written. See details for more info."),
+                __("Properties and Material information was not written. See details for more info."),
                 __("The case being saved has some properties/materials defined in one of its MKs.\n"
                    "However, the solid-solid interaction on the execution parameters must be set to DEM or CHRONO for this feature to work.")
             )
@@ -210,7 +217,14 @@ class DockPreProcessingWidget(QtGui.QWidget):
 
     def on_execute_gencase(self):
         """ Saves data into disk and uses GenCase to generate the case files."""
-        self.on_save_case()
+
+        if not Case.the().path:
+            error_dialog(__("The case must be saved before running GenCase."))
+            self.on_save_case()
+        
+        if not Case.the().path:
+            return
+
         if not Case.the().executable_paths.gencase:
             warning_dialog(__("GenCase executable is not set."))
             return

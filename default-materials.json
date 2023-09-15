@@ -1,6 +1,25 @@
 [
     {
         "Young_Modulus": {
+            "value": "30000000000.0",
+            "comment": "Young Modulus (N/m2)"
+        },
+        "PoissonRatio": {
+            "value": "0.35",
+            "comment": "Poisson Ratio (-)"
+        },
+        "Restitution_Coefficient": {
+            "value": "0.25",
+            "comment": "Restitution Coefficient (-)"
+        },
+        "Kfric": {
+            "value": "0.55",
+            "comment": "Kinetic friction coefficient"
+        },
+        "name": "concrete"
+    },
+    {
+        "Young_Modulus": {
             "value": "69000000000.0",
             "comment": "Young Modulus (N/m2)"
         },

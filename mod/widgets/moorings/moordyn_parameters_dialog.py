@@ -97,6 +97,14 @@ class MoorDynParametersDialog(QtGui.QDialog):
         # Solver options groupbox
         self.solver_options_groupbox: QtGui.QGroupBox = QtGui.QGroupBox(__("Solver Options"))
         self.solver_options_groupbox_layout: QtGui.QFormLayout = QtGui.QFormLayout()
+        
+        self.dtM_line_edit: QtGui.QLineEdit = QtGui.QLineEdit()
+        self.dtM_line_check: QtGui.QCheckBox = QtGui.QCheckBox(__("Auto"))
+        self.dtM_line_edit_layout: QtGui.QHBoxLayout = QtGui.QHBoxLayout()
+        self.dtM_line_edit_layout.setContentsMargins(0, 0, 0, 0)
+        self.dtM_line_edit_layout.addWidget(self.dtM_line_edit)
+        self.dtM_line_edit_layout.addWidget(self.dtM_line_check)
+
         self.water_depth_line_edit: QtGui.QLineEdit = QtGui.QLineEdit()
         self.freesurface_line_edit: QtGui.QLineEdit = QtGui.QLineEdit()
 
@@ -120,7 +128,8 @@ class MoorDynParametersDialog(QtGui.QDialog):
         self.cdScaleIC_line_edit: QtGui.QLineEdit = QtGui.QLineEdit()
         self.tmaxIC_line_edit: QtGui.QLineEdit = QtGui.QLineEdit()
         self.timeMax_line_edit: QtGui.QLineEdit = QtGui.QLineEdit()
-
+        self.dtM_label: QtGui.QLabel = QtGui.QLabel(__("Mooring model time step. (s):"))
+        self.dtM_label.setToolTip(__("Desired mooring model time step. (default=1e-4)\nXML Name: dtM"))
         self.water_depth_label: QtGui.QLabel = QtGui.QLabel(__("Water Depth (m):"))
         self.water_depth_label.setToolTip(__("Gravitational constant. (default=9.81)\nXML Name: waterDepth"))
         self.freesurface_label: QtGui.QLabel = QtGui.QLabel(__("Free Surface (m):"))
@@ -138,11 +147,12 @@ class MoorDynParametersDialog(QtGui.QDialog):
         self.cdScaleIC_label: QtGui.QLabel = QtGui.QLabel(__("Factor to scale drag coefficients:"))
         self.cdScaleIC_label.setToolTip(__("Factor to scale drag coefficients during dynamic relaxation for initial conditions. (default=5)\nXML Name: cdScaleIC"))
         self.tmaxIC_label: QtGui.QLabel = QtGui.QLabel(__("Max. time for initial conditions (s):"))
-        self.tmaxIC_label.setToolTip(__("Maximum time for initial conditions without convergence. (default=10)\nXML Name: tmaxIC"))
+        self.tmaxIC_label.setToolTip(__("Maximum time for initial conditions without convergence. (default=0.5)\nXML Name: tmaxIC"))
         self.timeMax_label: QtGui.QLabel = QtGui.QLabel(__("Simulation Time (s):"))
         self.timeMax_label.setToolTip(__("Time of simulation(s)\nXML Name: timeMax"))
 
         self.solver_options_groupbox_layout.setLabelAlignment(QtCore.Qt.AlignLeft)
+        self.solver_options_groupbox_layout.addRow(self.dtM_label, self.dtM_line_edit_layout)
         self.solver_options_groupbox_layout.addRow(self.water_depth_label, self.water_depth_line_edit)
         self.solver_options_groupbox_layout.addRow(self.freesurface_label, self.freesurface_line_edit)
         self.solver_options_groupbox_layout.addRow(self.kBot_label, self.kBot_line_edit_layout)
@@ -282,6 +292,7 @@ class MoorDynParametersDialog(QtGui.QDialog):
         self.setLayout(self.root_layout)
 
         # Bind connections
+        self.dtM_line_check.stateChanged.connect(self._on_dtM_check)
         self.kBot_line_check.stateChanged.connect(self._on_kBot_check)
         self.cBot_line_check.stateChanged.connect(self._on_cBot_check)
         self.ba_line_check.stateChanged.connect(self._on_ba_check)
@@ -300,6 +311,8 @@ class MoorDynParametersDialog(QtGui.QDialog):
     def _on_ok(self):
         # Solver options
         default_solver_options = MoorDynSolverOptions()
+        self.stored_configuration.solver_options.dtM = default_solver_options.dtM if self.dtM_line_check.isChecked() else str(self.dtM_line_edit.text())
+        self.stored_configuration.solver_options.dtMauto = self.dtM_line_check.isChecked()
         self.stored_configuration.solver_options.kBot = default_solver_options.kBot if self.kBot_line_check.isChecked() else str(self.kBot_line_edit.text())
         self.stored_configuration.solver_options.cBot = default_solver_options.cBot if self.cBot_line_check.isChecked() else str(self.cBot_line_edit.text())
         self.stored_configuration.solver_options.water_depth = float(self.water_depth_line_edit.text())
@@ -325,6 +338,9 @@ class MoorDynParametersDialog(QtGui.QDialog):
 
         # Bodies and lines are references to lists, so they're already modified in memory :)
         self.accept()
+
+    def _on_dtM_check(self):
+        self.dtM_line_edit.setEnabled(not self.dtM_line_check.isChecked())
 
     def _on_kBot_check(self):
         self.kBot_line_edit.setEnabled(not self.kBot_line_check.isChecked())
@@ -400,6 +416,8 @@ class MoorDynParametersDialog(QtGui.QDialog):
     def _fill_data(self):
         # Solver options
         default_solver_options = MoorDynSolverOptions()
+        self.dtM_line_edit.setText(str(self.stored_configuration.solver_options.dtM))
+        self.dtM_line_check.setChecked(self.stored_configuration.solver_options.dtM == default_solver_options.dtM)
         self.kBot_line_edit.setText(str(self.stored_configuration.solver_options.kBot))
         self.kBot_line_check.setChecked(self.stored_configuration.solver_options.kBot == default_solver_options.kBot)
         self.cBot_line_edit.setText(str(self.stored_configuration.solver_options.cBot))
@@ -447,6 +465,7 @@ class MoorDynParametersDialog(QtGui.QDialog):
             self.lines_table.setCellWidget(index, 0, widget)
 
         # Refresh appropriate widgets
+        self._on_dtM_check()
         self._on_kBot_check()
         self._on_cBot_check()
         self._on_ba_check()

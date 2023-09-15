@@ -155,7 +155,7 @@ class ConstantsDialog(QtGui.QDialog):
 
         self.rhop0_input.focus.connect(self.on_help_focus)
 
-        self.rhop0_validator = QtGui.QIntValidator(0, 10000, self.rhop0_input)
+        self.rhop0_validator = QtGui.QDoubleValidator(0, 10000, 8, self.rhop0_input)
         self.rhop0_input.setText(str(Case.the().constants.rhop0))
         self.rhop0_input.setValidator(self.rhop0_validator)
         self.rhop0_label2 = QtGui.QLabel("kg/m<span style='vertical-align:super'>3<span>")
@@ -225,7 +225,7 @@ class ConstantsDialog(QtGui.QDialog):
 
         self.gamma_input.focus.connect(self.on_help_focus)
 
-        self.gamma_validator = QtGui.QIntValidator(0, 999, self.gamma_input)
+        self.gamma_validator = QtGui.QDoubleValidator(0, 999, 8, self.gamma_input)
         self.gamma_input.setText(str(Case.the().constants.gamma))
         self.gamma_input.setValidator(self.gamma_validator)
         self.gamma_label2 = QtGui.QLabel("units")
@@ -276,7 +276,7 @@ class ConstantsDialog(QtGui.QDialog):
 
         self.coefsound_input.focus.connect(self.on_help_focus)
 
-        self.coefsound_validator = QtGui.QIntValidator(0, 999, self.coefsound_input)
+        self.coefsound_validator = QtGui.QDoubleValidator(0, 999, 8, self.coefsound_input)
         self.coefsound_input.setText(str(Case.the().constants.coefsound))
         self.coefsound_input.setValidator(self.coefsound_validator)
         self.coefsound_label2 = QtGui.QLabel("units")

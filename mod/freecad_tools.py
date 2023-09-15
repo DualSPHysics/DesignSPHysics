@@ -182,10 +182,10 @@ def enforce_case_limits_restrictions(mode_3d_enabled: bool = True):
         case_limits_view.Selectable = False
     if case_limits.Placement.Rotation.Angle != 0.0:
         case_limits.Placement.Rotation.Angle = 0.0
-        error(__("Can't change rotation on the Case Limits object."))
+        error(__("Cannot change rotation on the Case Limits object."))
     if not mode_3d_enabled and case_limits.Width.Value != WIDTH_2D:
         case_limits.Width.Value = WIDTH_2D
-        error(__("Can't change width of the Case Limits object while being in 2D mode."))
+        error(__("Cannot change width of the Case Limits object while being in 2D mode."))
 
 
 def enforce_fillbox_restrictions():
@@ -194,7 +194,7 @@ def enforce_fillbox_restrictions():
         for sub_element in target.OutList:
             if sub_element.Placement.Rotation.Angle != 0.0:
                 sub_element.Placement.Rotation.Angle = 0.0
-                error(__("Can't change rotation on Fillbox inner objects"))
+                error(__("Cannot change rotation on Fillbox inner objects"))
 
 
 def save_current_freecad_document(project_path: str) -> None:

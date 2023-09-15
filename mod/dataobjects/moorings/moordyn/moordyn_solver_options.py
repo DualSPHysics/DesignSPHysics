@@ -10,9 +10,10 @@ class MoorDynSolverOptions():
         self.gravity: float = 9.81
         self.water_depth: float = 0.5
         self.freesurface: float = 0.0
-        self.kBot: str = "3.0e6"
-        self.cBot: str = "3.0e6"
+        self.kBot: float = 3.0e6
+        self.cBot: float = 3.0e6
         self.dtM: float = 0.0001
+        self.dtMauto: bool = True
         self.waveKin: int = 0
         self.writeUnits: str = "yes"
         self.frictionCoefficient: float = 0.0
@@ -21,5 +22,5 @@ class MoorDynSolverOptions():
         self.dtIC: float = 1.0
         self.cdScaleIC: float = 5.0
         self.threshIC: float = 0.01
-        self.tmaxIC: float = 10.0
-        self.timeMax: float = 10.0
+        self.tmaxIC: float = 0.5
+        self.timeMax: float = 0

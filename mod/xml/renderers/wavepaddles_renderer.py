@@ -16,6 +16,7 @@ class WavePaddlesRenderer():
     WAVEPADDLES_TEMPLATE_BASE = "/templates/gencase/wavepaddles/base.xml"
     WAVEPADDLES_REGULAR_PISTON = "/templates/gencase/wavepaddles/piston/regular.xml"
     WAVEPADDLES_IRREGULAR_PISTON = "/templates/gencase/wavepaddles/piston/irregular.xml"
+    WAVEPADDLES_FOCUSED_PISTON = "/templates/gencase/wavepaddles/piston/focused.xml"
     WAVEPADDLES_PISTON_AWAS = "/templates/gencase/wavepaddles/awas.xml"
     WAVEPADDLES_PISTON_AWAS_CORRECTION = "/templates/gencase/wavepaddles/awas_correction.xml"
     WAVEPADDLES_REGULAR_FLAP = "/templates/gencase/wavepaddles/flap/regular.xml"
@@ -24,7 +25,7 @@ class WavePaddlesRenderer():
     @classmethod
     def render(cls, data):
         """ Returns the rendered string. """
-        target_types: list = [MotionType.REGULAR_PISTON_WAVE_GENERATOR, MotionType.IRREGULAR_PISTON_WAVE_GENERATOR, MotionType.REGULAR_FLAP_WAVE_GENERATOR, MotionType.IRREGULAR_FLAP_WAVE_GENERATOR]
+        target_types: list = [MotionType.REGULAR_PISTON_WAVE_GENERATOR, MotionType.IRREGULAR_PISTON_WAVE_GENERATOR, MotionType.FOCUSED_PISTON_WAVE_GENERATOR, MotionType.REGULAR_FLAP_WAVE_GENERATOR, MotionType.IRREGULAR_FLAP_WAVE_GENERATOR]
         filtered_mkprops: list = list(filter(lambda mkprop: len(mkprop["movements"]) == 1 and "generator" in mkprop["movements"][0] and mkprop["movements"][0]["generator"] and mkprop["movements"][0]["generator"]["type"] in target_types, data["mkbasedproperties"].values()))
 
         if not filtered_mkprops:
@@ -65,6 +66,13 @@ class WavePaddlesRenderer():
         return get_template_text(cls.WAVEPADDLES_IRREGULAR_PISTON).format(**generator)
 
     @classmethod
+    def get_focused_piston_wave_template(cls, mk: int, generator: dict) -> str:
+        """ Renders a <piston_focused> tag from an focused piston wave generator. """
+        generator["mk"] = mk
+
+        return get_template_text(cls.WAVEPADDLES_FOCUSED_PISTON).format(**generator)
+
+    @classmethod
     def get_regular_flap_wave_template(cls, mk: int, generator: dict) -> str:
         """ Renders a <flap> tag from a regular flap wave generator. """
         generator["mk"] = mk
@@ -89,6 +97,8 @@ class WavePaddlesRenderer():
                 each_template.append(cls.get_regular_piston_wave_template(mk_bound, movement["generator"]))
             elif movement["generator"]["type"] == MotionType.IRREGULAR_PISTON_WAVE_GENERATOR:
                 each_template.append(cls.get_irregular_piston_wave_template(mk_bound, movement["generator"]))
+            elif movement["generator"]["type"] == MotionType.FOCUSED_PISTON_WAVE_GENERATOR:
+                each_template.append(cls.get_focused_piston_wave_template(mk_bound, movement["generator"]))
             elif movement["generator"]["type"] == MotionType.REGULAR_FLAP_WAVE_GENERATOR:
                 each_template.append(cls.get_regular_flap_wave_template(mk_bound, movement["generator"]))
             elif movement["generator"]["type"] == MotionType.IRREGULAR_FLAP_WAVE_GENERATOR:

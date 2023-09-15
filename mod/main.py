@@ -32,13 +32,13 @@ from mod.dataobjects.application_settings import ApplicationSettings
 from mod.widgets.dock.designsphysics_dock import DesignSPHysicsDock
 from mod.widgets.properties_dock_widget import PropertiesDockWidget
 
-__author__ = "Andrés Vieira"
-__copyright__ = "Copyright 2016-2019, DualSHPysics Team"
-__credits__ = ["Andrés Vieira", "Lorena Docasar", "Alejandro Jacobo Cabrera Crespo", "Orlando García Feal"]
+__author__ = "Andrés Vieira, Iván Martínez Estévez"
+__copyright__ = "Copyright 2016-2023, DualSHPysics Team"
+__credits__ = ["Andrés Vieira","Iván Martínez Estévez", "Lorena Docasar", "Alejandro Jacobo Cabrera Crespo", "Orlando García Feal" ]
 __license__ = "GPL"
 __version__ = VERSION
-__maintainer__ = "Andrés Vieira"
-__email__ = "avieira@uvigo.es"
+__maintainer__ = "Iván Martínez Estévez"
+__email__ = "ivan.martinez.estevez@uvigo.es"
 __status__ = "Development"
 
 

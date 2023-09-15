@@ -59,7 +59,7 @@ class ExecutablePaths():
 
         if not execs_correct:
             error_dialog("One or more of the executables set on the configuration is not correct. Please see the details below.",
-                         "These executables do not correspond to their appropriate tool or don't have execution permissions:\n\n{}".format(LINE_END.join(bad_executables)))
+                         "These executables do not correspond to their appropriate tool or do not have execution permissions:\n\n{}".format(LINE_END.join(bad_executables)))
 
         self.persist()
         return execs_correct

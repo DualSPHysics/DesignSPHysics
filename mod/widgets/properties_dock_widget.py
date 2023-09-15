@@ -269,7 +269,7 @@ class PropertiesDockWidget(QtGui.QDockWidget):
                 selectiongui.ShapeColor = (0.80, 0.80, 0.80)
                 selectiongui.Transparency = 0
             except AttributeError:
-                # Can't change attributes
+                # Cannot change attributes
                 pass
             self.floatstate_prop.setEnabled(True)
             self.set_mkgroup_text("{} <a href='{}'>?</a>".format(__("MKBound"), HelpURL.BASIC_CONCEPTS))
@@ -281,7 +281,7 @@ class PropertiesDockWidget(QtGui.QDockWidget):
                 selectiongui.ShapeColor = (0.00, 0.45, 1.00)
                 selectiongui.Transparency = 30
             except AttributeError:
-                # Can't change attributes
+                # Cannot change attributes
                 pass
             # Remove floating properties if it is changed to fluid
             if mk_properties.float_property is not None:
@@ -449,7 +449,7 @@ class PropertiesDockWidget(QtGui.QDockWidget):
 
     def configure_to_incompatible_object(self):
         """ Configures the property widgeet to show a message warning of an incompatible object. """
-        self.set_add_button_text(__("Can't add this object to the simulation"))
+        self.set_add_button_text(__("Cannot add this object to the simulation"))
         self.set_property_table_visibility(False)
         self.set_add_button_visibility(True)
         self.set_add_button_enabled(False)

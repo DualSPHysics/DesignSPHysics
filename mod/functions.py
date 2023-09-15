@@ -2,6 +2,8 @@
 # -*- coding: utf-8 -*-
 """ General functions to be used in DesingSPHysics."""
 
+import re
+from mod.stdout_tools import debug
 
 def make_float(num):
     """Operate the content before to cast it to float"""
@@ -40,3 +42,10 @@ def operate_val(val):
             val_str = str(val_tmp)
         # Remember to cast the return value for recursive calls
     return (float(val_str) if val_str != '' else 0)
+
+def has_special_char(text: str) -> bool:
+    """Checks if a given text includes special characters and spaces"""
+    regex = re.compile('[ @!#$%^&*()<>?`´\'|}{~áéíóúàèìòùÁÉÍÓÚÀÈÌÒÙ]')      
+    if regex.search(text) is None: 
+        return False
+    return True
