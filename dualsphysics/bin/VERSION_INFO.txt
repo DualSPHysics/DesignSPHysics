@@ -2,8 +2,8 @@ DualSPHysics5             v5.2.269            03-04-2023
 BoundaryVTK               v5.0.206            12-04-2023
 ComputeForces             v5.0.206            12-04-2023
 FloatingInfo              v5.0.206            12-04-2023
-GenCase                   v5.0.283            05-06-2023
-GenCase [MkWord]          v5.0.283            05-06-2023
+GenCase                   v5.0.278c           30-10-2023
+GenCase [MkWord]          v5.0.278c           30-10-2023
 IsoSurface                v5.0.206            12-04-2023
 FlowTool                  v5.0.206            12-04-2023
 MeasureTool               v5.0.206            12-04-2023
