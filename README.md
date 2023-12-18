@@ -7,6 +7,7 @@ Check the [Official Webpage](http://design.sphysics.org) for downloads and more 
 ![Screenshot](https://design.sphysics.org/img/github-shot-21112019.png)
 
 ## News
+ * [7th DualSPHysics Workshop](https://dual.sphysics.org/7thworkshop/), Politecnico di Bari, Italy, on **March 19-21, 2024**.
  * [v0.7.0](https://github.com/DualSPHysics/DesignSPHysics/releases/tag/0.7.0) has been released (15-09-2023). See [CHANGELOG file](CHANGELOG.md)
 
 
