@@ -41,6 +41,8 @@ By default, for example, in Windows, it is located in `%appdata%/FreeCAD/Mod` or
 Then copy the file `DesignSPHysics.FCMacro` of this repository into the FreeCAD macro directory (`%appdata%/FreeCAD/Macro` on Windows; `~/.FreeCAD/Macro` on GNU/Linux)
 
 ## Where to get help
+The new [DualSPHysics forum](https://github.com/DualSPHysics/DualSPHysics/discussions) is available for help on using the features available in the solver.
+
 You can check the [DesignSPHysics Wiki](http://design.sphysics.org/wiki) to get help. Also, you can post an [issue here on GitHub](https://github.com/DualSPHysics/DesignSPHysics/issues) or send an email to any of the people found in the [CONTRIBUTING file](CONTRIBUTING.md). 
 
 ## Contributing and developing for DesignSPHysics
