@@ -11,7 +11,7 @@ from mod.dataobjects.case import Case
 
 
 class PartVTKDialog(QtGui.QDialog):
-    """ A PartVTK Configuration and Exeuction Dialog. """
+    """ A PartVTK Configuration and Execution Dialog. """
 
     DEFAULT_NAMES = ["PartAll", "PartBound", "PartFluid", "PartFixed", "PartMoving", "PartFloating"]
 

@@ -1,7 +1,7 @@
 #!/usr/bin/env python3.7
 # -*- coding: utf-8 -*-
 
-""" This file acts as a bootstraper to load DesignSPHysics from the
+""" This file acts as a bootstrapper to load DesignSPHysics from the
     "Mod" folder of the FreeCAD install directory.
 """
 

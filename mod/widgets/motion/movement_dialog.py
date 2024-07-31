@@ -222,7 +222,7 @@ class MovementDialog(QtGui.QDialog):
         self.bt_to_add.clicked.connect(self.on_add_sinu_rect)
         self.actions_groupbox_table.setCellWidget(8, 0, self.bt_to_add)
 
-        # Set motion suscription for this mk
+        # Set motion subcription for this mk
         self.has_motion_selector.setCurrentIndex(0 if self.movements_selected else 1)
 
         self.exec_()

@@ -71,6 +71,6 @@ class DockPostProcessingWidget(QtGui.QWidget):
         self.setEnabled(False)
 
     def adapt_to_export_finished(self) -> None:
-        """ Adapts the widget to post processing tool finis. """
+        """ Adapts the widget to post processing tool finish. """
         self.setEnabled(True)
         self.setWindowTitle("<b>{}</b>".format(__("Post-processing")))

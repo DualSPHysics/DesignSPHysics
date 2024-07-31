@@ -730,7 +730,7 @@ class AddGEODialog(QtGui.QDialog):
                            case=Case.the())
             self.accept()
         except ValueError:
-            error_dialog(__("There was an error. Are you sure you wrote correct float values in the sacaling factor?"))
+            error_dialog(__("There was an error. Are you sure you wrote correct float values in the scaling factor?"))
 
     def execute_bathymetry_tool(self):
         """ Executes bathymetry tool and returns the output path of the generated file. """
