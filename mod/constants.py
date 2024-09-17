@@ -6,7 +6,7 @@
 from mod.enums import FreeCADObjectType
 
 # APP Constants
-FREECAD_MIN_VERSION = "018"
+FREECAD_MIN_VERSION = "0.18"
 APP_NAME = "DesignSPHysics"
 DIVIDER = 1000
 LINE_END = "\n"

@@ -42,7 +42,7 @@ def check_compatibility():
 
 def is_compatible_version():
     """ Checks if the current FreeCAD version is suitable for this macro. """
-    version_num = FreeCAD.Version()[0] + FreeCAD.Version()[1]
+    version_num = FreeCAD.Version()[0] + '.' + FreeCAD.Version()[1]
     if float(version_num) < float(FREECAD_MIN_VERSION):
         return False
     return True
