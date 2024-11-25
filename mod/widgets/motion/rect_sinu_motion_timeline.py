@@ -2,7 +2,8 @@
 # -*- coding: utf-8 -*-
 """DesignSPHysics Rectilinear Sinusoidal Motion Timeline """
 
-from PySide import QtCore, QtGui
+# from PySide import QtCore, QtGui
+from PySide2 import QtCore, QtWidgets
 
 from mod.translation_tools import __
 from mod.gui_tools import get_icon
@@ -13,7 +14,7 @@ from mod.dataobjects.motion.rect_sinu_motion import RectSinuMotion
 from mod.functions import make_float
 
 
-class RectSinuMotionTimeline(QtGui.QWidget):
+class RectSinuMotionTimeline(QtWidgets.QWidget):
     """ A sinusoidal rectilinear motion graphical representation for a table-based timeline """
 
     changed = QtCore.Signal(int, RectSinuMotion)
@@ -30,37 +31,37 @@ class RectSinuMotionTimeline(QtGui.QWidget):
 
         self.index = index
 
-        self.main_layout = QtGui.QHBoxLayout()
+        self.main_layout = QtWidgets.QHBoxLayout()
         self.main_layout.setContentsMargins(10, 0, 10, 0)
-        self.label = QtGui.QLabel("Sinusoidal \nRectilinear \nMotion ")
+        self.label = QtWidgets.QLabel("Sinusoidal \nRectilinear \nMotion ")
         self.label.setMinimumWidth(75)
-        self.freq_amp_layout = QtGui.QVBoxLayout()
-        self.freq_amp_first_row_layout = QtGui.QHBoxLayout()
-        self.freq_amp_second_row_layout = QtGui.QHBoxLayout()
-        self.freq_label = QtGui.QLabel("Freq (X, Y, Z): ")
-        self.amp_label = QtGui.QLabel("Amp (X, Y, Z): ")
-        self.freq_x_input = QtGui.QLineEdit()
-        self.freq_y_input = QtGui.QLineEdit()
-        self.freq_z_input = QtGui.QLineEdit()
-        self.amp_x_input = QtGui.QLineEdit()
-        self.amp_y_input = QtGui.QLineEdit()
-        self.amp_z_input = QtGui.QLineEdit()
+        self.freq_amp_layout = QtWidgets.QVBoxLayout()
+        self.freq_amp_first_row_layout = QtWidgets.QHBoxLayout()
+        self.freq_amp_second_row_layout = QtWidgets.QHBoxLayout()
+        self.freq_label = QtWidgets.QLabel("Freq (X, Y, Z): ")
+        self.amp_label = QtWidgets.QLabel("Amp (X, Y, Z): ")
+        self.freq_x_input = QtWidgets.QLineEdit()
+        self.freq_y_input = QtWidgets.QLineEdit()
+        self.freq_z_input = QtWidgets.QLineEdit()
+        self.amp_x_input = QtWidgets.QLineEdit()
+        self.amp_y_input = QtWidgets.QLineEdit()
+        self.amp_z_input = QtWidgets.QLineEdit()
 
-        self.phase_label = QtGui.QLabel("Phase (X, Y, Z): ")
-        self.phase_x_input = QtGui.QLineEdit()
-        self.phase_y_input = QtGui.QLineEdit()
-        self.phase_z_input = QtGui.QLineEdit()
+        self.phase_label = QtWidgets.QLabel("Phase (X, Y, Z): ")
+        self.phase_x_input = QtWidgets.QLineEdit()
+        self.phase_y_input = QtWidgets.QLineEdit()
+        self.phase_z_input = QtWidgets.QLineEdit()
 
-        self.time_label = QtGui.QLabel(__("Duration (s): "))
-        self.time_input = QtGui.QLineEdit()
-        self.delete_button = QtGui.QPushButton(
+        self.time_label = QtWidgets.QLabel(__("Duration (s): "))
+        self.time_input = QtWidgets.QLineEdit()
+        self.delete_button = QtWidgets.QPushButton(
             get_icon("trash.png"), None)
-        self.order_button_layout = QtGui.QVBoxLayout()
+        self.order_button_layout = QtWidgets.QVBoxLayout()
         self.order_button_layout.setContentsMargins(0, 0, 0, 0)
         self.order_button_layout.setSpacing(0)
-        self.order_up_button = QtGui.QPushButton(
+        self.order_up_button = QtWidgets.QPushButton(
             get_icon("up_arrow.png"), None)
-        self.order_down_button = QtGui.QPushButton(
+        self.order_down_button = QtWidgets.QPushButton(
             get_icon("down_arrow.png"), None)
 
         self.order_button_layout.addWidget(self.order_up_button)

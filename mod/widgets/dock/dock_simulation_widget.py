@@ -5,7 +5,8 @@
 import os
 from sys import platform
 
-from PySide import QtGui, QtCore
+# from PySide import QtGui, QtCore
+from PySide2 import QtCore, QtWidgets
 
 from mod.translation_tools import __
 from mod.gui_tools import get_icon
@@ -21,7 +22,7 @@ from mod.widgets.run_dialog import RunDialog
 from mod.widgets.run_additional_parameters_dialog import RunAdditionalParametersDialog
 
 
-class DockSimulationWidget(QtGui.QWidget):
+class DockSimulationWidget(QtWidgets.QWidget):
     """DesignSPHysics Dock Execution Widget """
 
     simulation_complete = QtCore.Signal(bool)
@@ -32,18 +33,18 @@ class DockSimulationWidget(QtGui.QWidget):
         super().__init__(parent=parent)
 
         # Execution section scaffolding
-        self.main_layout = QtGui.QVBoxLayout()
+        self.main_layout = QtWidgets.QVBoxLayout()
         self.main_layout.setContentsMargins(0, 0, 0, 0)
-        self.title_label = QtGui.QLabel("<b>" + __("Simulation control") + "</b> ")
+        self.title_label = QtWidgets.QLabel("<b>" + __("Simulation control") + "</b> ")
         self.title_label.setWordWrap(True)
 
         # Combobox for processor selection
-        self.device_selector = QtGui.QComboBox()
+        self.device_selector = QtWidgets.QComboBox()
         self.device_selector.addItem("CPU")
         self.device_selector.addItem("GPU")
 
         # Simulate case button
-        self.execute_button = QtGui.QPushButton(__("Run"))
+        self.execute_button = QtWidgets.QPushButton(__("Run"))
         self.execute_button.setStyleSheet("QPushButton {font-weight: bold; }")
         self.execute_button.setToolTip(__("Starts the case simulation. From the simulation\n"
                                           "window you can see the current progress and\n"
@@ -53,11 +54,11 @@ class DockSimulationWidget(QtGui.QWidget):
         self.execute_button.clicked.connect(self.on_ex_simulate)
 
         # Additional parameters button
-        self.additional_parameters_button = QtGui.QPushButton(__("Additional parameters"))
+        self.additional_parameters_button = QtWidgets.QPushButton(__("Additional parameters"))
         self.additional_parameters_button.setToolTip(__("Sets simulation additional parameters for execution."))
         self.additional_parameters_button.clicked.connect(self.on_additional_parameters)
 
-        self.button_layout = QtGui.QHBoxLayout()
+        self.button_layout = QtWidgets.QHBoxLayout()
         self.button_layout.addWidget(self.execute_button)
         self.button_layout.addWidget(self.device_selector)
         self.button_layout.addWidget(self.additional_parameters_button)

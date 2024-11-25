@@ -2,7 +2,8 @@
 # -*- coding: utf-8 -*-
 """DesignSPHysics General Information Dialog"""
 
-from PySide import QtGui
+# from PySide import QtGui
+from PySide2 import QtWidgets
 
 from mod.gui_tools import h_line_generator
 from mod.translation_tools import __
@@ -10,7 +11,7 @@ from mod.translation_tools import __
 from mod.enums import InformationDetailsMode
 
 
-class InformationDialog(QtGui.QDialog):
+class InformationDialog(QtWidgets.QDialog):
     """ A resizable information report dialog  """
 
     MINIMUM_WIDTH = 500
@@ -19,23 +20,23 @@ class InformationDialog(QtGui.QDialog):
 
     def __init__(self, title: str, message: str, detailed_text: str = None, details_lang=InformationDetailsMode.PLAIN):
         super().__init__()
-        self.main_layout = QtGui.QVBoxLayout()
+        self.main_layout = QtWidgets.QVBoxLayout()
 
         self.setWindowTitle(str(title))
         self.setMinimumWidth(self.MINIMUM_WIDTH)
-        self.message_label = QtGui.QLabel(str(message))
+        self.message_label = QtWidgets.QLabel(str(message))
         self.message_label.setWordWrap(True)
-        self.button_layout = QtGui.QHBoxLayout()
-        self.details_widget = QtGui.QWidget()
+        self.button_layout = QtWidgets.QHBoxLayout()
+        self.details_widget = QtWidgets.QWidget()
 
-        self.show_details_button = QtGui.QPushButton(self.SHOW_DETAILS_TEXT)
-        self.ok_button = QtGui.QPushButton("OK")
+        self.show_details_button = QtWidgets.QPushButton(self.SHOW_DETAILS_TEXT)
+        self.ok_button = QtWidgets.QPushButton("OK")
 
         self.button_layout.addStretch(1)
         self.button_layout.addWidget(self.show_details_button)
         self.button_layout.addWidget(self.ok_button)
 
-        self.details_textarea = QtGui.QTextEdit()
+        self.details_textarea = QtWidgets.QTextEdit()
 
         if details_lang == InformationDetailsMode.PLAIN:
             self.details_textarea.insertPlainText(str(detailed_text).replace("\\n", "\n"))
@@ -44,7 +45,7 @@ class InformationDialog(QtGui.QDialog):
 
         self.details_textarea.setReadOnly(True)
 
-        self.details_widget_layout = QtGui.QVBoxLayout()
+        self.details_widget_layout = QtWidgets.QVBoxLayout()
         self.details_widget_layout.setContentsMargins(0, 0, 0, 0)
         self.details_widget_layout.addWidget(h_line_generator())
         self.details_widget_layout.addWidget(self.details_textarea)

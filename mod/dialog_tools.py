@@ -4,7 +4,8 @@
 
 Contains general use standard dialogs. """
 
-from PySide import QtGui
+# from PySide import QtGui
+from PySide2 import QtWidgets
 
 from mod.translation_tools import __
 
@@ -28,20 +29,20 @@ def info_dialog(info_text, detailed_text=None):
 
 def ok_cancel_dialog(title, text):
     """Spawns an okay/cancel dialog with the title and text passed"""
-    open_confirm_dialog = QtGui.QMessageBox()
+    open_confirm_dialog = QtWidgets.QMessageBox()
     open_confirm_dialog.setWindowTitle(title)
     open_confirm_dialog.setText(text)
-    open_confirm_dialog.setStandardButtons(QtGui.QMessageBox.Ok |
-                                           QtGui.QMessageBox.Cancel)
-    open_confirm_dialog.setDefaultButton(QtGui.QMessageBox.Ok)
+    open_confirm_dialog.setStandardButtons(QtWidgets.QMessageBox.Ok |
+                                           QtWidgets.QMessageBox.Cancel)
+    open_confirm_dialog.setDefaultButton(QtWidgets.QMessageBox.Ok)
     return open_confirm_dialog.exec_()
 
 def ok_discard_dialog(title, text):
     """Spawns an okay/discard dialog with the title and text passed"""
-    open_confirm_dialog = QtGui.QMessageBox()
+    open_confirm_dialog = QtWidgets.QMessageBox()
     open_confirm_dialog.setWindowTitle(title)
     open_confirm_dialog.setText(text)
-    open_confirm_dialog.setStandardButtons(QtGui.QMessageBox.Ok |
-                                           QtGui.QMessageBox.Discard)
-    open_confirm_dialog.setDefaultButton(QtGui.QMessageBox.Ok)
+    open_confirm_dialog.setStandardButtons(QtWidgets.QMessageBox.Ok |
+                                           QtWidgets.QMessageBox.Discard)
+    open_confirm_dialog.setDefaultButton(QtWidgets.QMessageBox.Ok)
     return open_confirm_dialog.exec_()

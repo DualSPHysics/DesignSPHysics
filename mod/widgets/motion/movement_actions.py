@@ -2,13 +2,14 @@
 # -*- coding: utf-8 -*-
 """DesignSPHysics Movement Actions Widget. """
 
-from PySide import QtCore, QtGui
+# from PySide import QtCore, QtGui
+from PySide2 import QtCore, QtWidgets
 
 from mod.translation_tools import __
 from mod.gui_tools import get_icon
 
 
-class MovementActions(QtGui.QWidget):
+class MovementActions(QtWidgets.QWidget):
     """ A set of movement actions (use and delete) with its custom signals"""
     delete = QtCore.Signal(int)
     use = QtCore.Signal(int, bool)
@@ -17,16 +18,16 @@ class MovementActions(QtGui.QWidget):
     def __init__(self, index, use_checked, loop_checked, parent=None):
         super().__init__(parent=parent)
         self.index = index
-        self.use_checkbox = QtGui.QCheckBox(__("Use"))
+        self.use_checkbox = QtWidgets.QCheckBox(__("Use"))
         self.use_checkbox.setChecked(use_checked)
         self.use_checkbox.stateChanged.connect(self.on_use)
-        self.loop_checkbox = QtGui.QCheckBox(__("Loop"))
+        self.loop_checkbox = QtWidgets.QCheckBox(__("Loop"))
         self.loop_checkbox.setChecked(loop_checked)
         self.loop_checkbox.stateChanged.connect(self.on_loop)
-        self.delete_button = QtGui.QPushButton(get_icon("trash.png"), None)
+        self.delete_button = QtWidgets.QPushButton(get_icon("trash.png"), None)
         self.delete_button.clicked.connect(self.on_delete)
 
-        main_layout = QtGui.QHBoxLayout()
+        main_layout = QtWidgets.QHBoxLayout()
         main_layout.setContentsMargins(10, 0, 10, 0)
         main_layout.addWidget(self.use_checkbox)
         main_layout.addWidget(self.loop_checkbox)

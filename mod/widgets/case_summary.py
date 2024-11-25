@@ -2,7 +2,8 @@
 # -*- coding: utf-8 -*-
 """ DesignsSPHysics Case Summary Dialog """
 
-from PySide import QtGui
+# from PySide import QtGui
+from PySide2 import QtWidgets
 
 from mod.translation_tools import __
 from mod.template_tools import get_template_text, obj_to_dict
@@ -16,16 +17,16 @@ from mod.dataobjects.simulation_object import SimulationObject
 from mod.dataobjects.motion.movement import Movement
 
 
-class CaseSummary(QtGui.QDialog):
+class CaseSummary(QtWidgets.QDialog):
     """ Dialog that shows summarized case details in html format. """
 
     CASE_SUMMARY_TEMPLATE = "/templates/case_summary_template.html"
 
     def __init__(self, parent=None):
         super().__init__(parent=parent)
-        self.main_layout = QtGui.QVBoxLayout()
-        self.info = QtGui.QTextEdit()
-        self.close_button = QtGui.QPushButton(__("Close"))
+        self.main_layout = QtWidgets.QVBoxLayout()
+        self.info = QtWidgets.QTextEdit()
+        self.close_button = QtWidgets.QPushButton(__("Close"))
         self.close_button.clicked.connect(self.accept)
 
         self.info_text = get_template_text(self.CASE_SUMMARY_TEMPLATE).format(**self.get_formatter())

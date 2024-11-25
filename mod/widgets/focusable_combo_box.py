@@ -2,10 +2,11 @@
 # -*- coding: utf-8 -*-
 """ DesignSPHysics Focusable ComboBox implementation. """
 
-from PySide import QtCore, QtGui
+# from PySide import QtCore, QtGui
+from PySide2 import QtCore, QtWidgets
 
 
-class FocusableComboBox(QtGui.QComboBox):
+class FocusableComboBox(QtWidgets.QComboBox):
     """ A ComboBox that emits the focus signal with a help text as a parameter when focusing it on the GUI. """
     focus = QtCore.Signal(str)
     help_text = ""
@@ -18,6 +19,6 @@ class FocusableComboBox(QtGui.QComboBox):
         self.help_text = help_text
 
     def focusInEvent(self, *args, **kwargs):
-        """ Redefines the focusInEvent from QtGui.QComboBox adding a focus signal fire. """
-        QtGui.QComboBox.focusInEvent(self, *args, **kwargs)
+        """ Redefines the focusInEvent from QtWidgets.QComboBox adding a focus signal fire. """
+        QtWidgets.QComboBox.focusInEvent(self, *args, **kwargs)
         self.focus.emit(self.help_text)

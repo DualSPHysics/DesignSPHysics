@@ -2,7 +2,8 @@
 # -*- coding: utf-8 -*-
 """DesignSPHysics File Based Motion Timeline Widget. """
 
-from PySide import QtCore, QtGui
+# from PySide import QtCore, QtGui
+from PySide2 import QtCore, QtWidgets
 
 from mod.translation_tools import __
 from mod.gui_tools import h_line_generator
@@ -13,7 +14,7 @@ from mod.dataobjects.motion.file_gen import FileGen
 
 from mod.functions import make_float, make_int
 
-class FileMotionTimeline(QtGui.QWidget):
+class FileMotionTimeline(QtWidgets.QWidget):
     """ A File motion graphical representation for a table-based timeline """
     changed = QtCore.Signal(int, FileGen)
 
@@ -29,53 +30,53 @@ class FileMotionTimeline(QtGui.QWidget):
         # Needed for copying movement file to root of the case.
         self.project_folder_path = project_folder_path
 
-        self.main_layout = QtGui.QVBoxLayout()
+        self.main_layout = QtWidgets.QVBoxLayout()
         self.main_layout.setContentsMargins(10, 10, 10, 10)
 
-        self.root_label = QtGui.QLabel(__("File movement: "))
+        self.root_label = QtWidgets.QLabel(__("File movement: "))
 
-        self.duration_label = QtGui.QLabel(__("Duration (s): "))
-        self.duration_input = QtGui.QLineEdit()
+        self.duration_label = QtWidgets.QLabel(__("Duration (s): "))
+        self.duration_input = QtWidgets.QLineEdit()
 
-        self.filename_label = QtGui.QLabel(__("File name: "))
-        self.filename_input = QtGui.QLineEdit()
-        self.filename_browse = QtGui.QPushButton(__("Browse"))
+        self.filename_label = QtWidgets.QLabel(__("File name: "))
+        self.filename_input = QtWidgets.QLineEdit()
+        self.filename_browse = QtWidgets.QPushButton(__("Browse"))
 
-        self.fields_label = QtGui.QLabel(__("Number of fields: "))
-        self.fields_input = QtGui.QLineEdit()
+        self.fields_label = QtWidgets.QLabel(__("Number of fields: "))
+        self.fields_input = QtWidgets.QLineEdit()
 
-        self.fieldtime_label = QtGui.QLabel(__("Column with time: "))
-        self.fieldtime_input = QtGui.QLineEdit()
+        self.fieldtime_label = QtWidgets.QLabel(__("Column with time: "))
+        self.fieldtime_input = QtWidgets.QLineEdit()
 
-        self.fieldx_label = QtGui.QLabel(__("X position column: "))
-        self.fieldx_input = QtGui.QLineEdit()
+        self.fieldx_label = QtWidgets.QLabel(__("X position column: "))
+        self.fieldx_input = QtWidgets.QLineEdit()
 
-        self.fieldy_label = QtGui.QLabel(__("Y position column: "))
-        self.fieldy_input = QtGui.QLineEdit()
+        self.fieldy_label = QtWidgets.QLabel(__("Y position column: "))
+        self.fieldy_input = QtWidgets.QLineEdit()
 
-        self.fieldz_label = QtGui.QLabel(__("Z position column: "))
-        self.fieldz_input = QtGui.QLineEdit()
+        self.fieldz_label = QtWidgets.QLabel(__("Z position column: "))
+        self.fieldz_input = QtWidgets.QLineEdit()
 
-        self.root_layout = QtGui.QHBoxLayout()
+        self.root_layout = QtWidgets.QHBoxLayout()
         self.root_layout.addWidget(self.root_label)
         self.root_layout.addStretch(1)
         self.root_layout.addWidget(self.duration_label)
         self.root_layout.addWidget(self.duration_input)
 
-        self.first_row_layout = QtGui.QHBoxLayout()
+        self.first_row_layout = QtWidgets.QHBoxLayout()
         self.first_row_layout.addWidget(self.filename_label)
         self.first_row_layout.addWidget(self.filename_input)
         self.first_row_layout.addWidget(self.filename_browse)
 
-        self.second_row_layout = QtGui.QHBoxLayout()
+        self.second_row_layout = QtWidgets.QHBoxLayout()
         self.second_row_layout.addWidget(self.fields_label)
         self.second_row_layout.addWidget(self.fields_input)
 
-        self.third_row_layout = QtGui.QHBoxLayout()
+        self.third_row_layout = QtWidgets.QHBoxLayout()
         self.third_row_layout.addWidget(self.fieldtime_label)
         self.third_row_layout.addWidget(self.fieldtime_input)
 
-        self.fourth_row_layout = QtGui.QHBoxLayout()
+        self.fourth_row_layout = QtWidgets.QHBoxLayout()
         for x in [self.fieldx_label, self.fieldx_input, self.fieldy_label, self.fieldy_input, self.fieldz_label, self.fieldz_input]:
             self.fourth_row_layout.addWidget(x)
 
@@ -105,7 +106,7 @@ class FileMotionTimeline(QtGui.QWidget):
 
     def on_file_browse(self):
         """ Opens a file browser dialog and sets the path on the widget. """
-        filename, _ = QtGui.QFileDialog.getOpenFileName(self, __("Open file"), Case.the().info.last_used_directory)
+        filename, _ = QtWidgets.QFileDialog.getOpenFileName(self, __("Open file"), Case.the().info.last_used_directory)
         Case.the().info.update_last_used_directory(filename)
         self.filename_input.setText(filename)
 

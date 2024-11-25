@@ -4,7 +4,8 @@
 
 from copy import deepcopy
 
-from PySide import QtGui
+# from PySide import QtGui
+from PySide2 import QtWidgets
 
 from mod.translation_tools import __
 from mod.dialog_tools import error_dialog
@@ -20,20 +21,20 @@ from mod.dataobjects.moorings.moordyn.moordyn_configuration import MoorDynConfig
 from mod.widgets.moorings.moordyn_parameters_dialog import MoorDynParametersDialog
 
 
-class MooringsCompatibleFloatingWidget(QtGui.QWidget):
+class MooringsCompatibleFloatingWidget(QtWidgets.QWidget):
     """ Widget to embed in each element of the floating list for the Moorings Configuration Dialog. """
 
     def __init__(self, checked: bool, obj_type: ObjectType, mkbound: int):
         super().__init__()
         self.setContentsMargins(0, 0, 0, 0)
-        self.root_layout: QtGui.QHBoxLayout = QtGui.QHBoxLayout()
+        self.root_layout: QtWidgets.QHBoxLayout = QtWidgets.QHBoxLayout()
         self.root_layout.setContentsMargins(5, 1, 5, 1)
         self.mkbound = mkbound
 
-        self.use_checkbox: QtGui.QCheckBox = QtGui.QCheckBox()
+        self.use_checkbox: QtWidgets.QCheckBox = QtWidgets.QCheckBox()
         self.use_checkbox.setChecked(checked)
 
-        self.mkbound_label: QtGui.QLabel = QtGui.QLabel("{} - <b>{}</b>".format(obj_type.capitalize(), str(self.mkbound)))
+        self.mkbound_label: QtWidgets.QLabel = QtWidgets.QLabel("{} - <b>{}</b>".format(obj_type.capitalize(), str(self.mkbound)))
 
         self.root_layout.addWidget(self.use_checkbox)
         self.root_layout.addWidget(self.mkbound_label)
@@ -42,7 +43,7 @@ class MooringsCompatibleFloatingWidget(QtGui.QWidget):
         self.setLayout(self.root_layout)
 
 
-class MooringsConfigurationDialog(QtGui.QDialog):
+class MooringsConfigurationDialog(QtWidgets.QDialog):
     """ DesignSPHysics Moorings Configuration Dialog. """
 
     def __init__(self, parent=None):
@@ -52,29 +53,29 @@ class MooringsConfigurationDialog(QtGui.QDialog):
 
         self.moordyn_parameters_data: MoorDynConfiguration = deepcopy(Case.the().moorings.moordyn_configuration)  # Result of the MoorDynParametersDialog
 
-        self.root_layout: QtGui.QVBoxLayout = QtGui.QVBoxLayout()
+        self.root_layout: QtWidgets.QVBoxLayout = QtWidgets.QVBoxLayout()
 
         # Composing the top enabled selector layout
-        self.enabled_selector_layout: QtGui.QHBoxLayout = QtGui.QHBoxLayout()
-        self.enabled_selector_label: QtGui.QLabel = QtGui.QLabel(__("Enabled:"))
-        self.enabled_selector_combobox: QtGui.QComboBox = QtGui.QComboBox()
+        self.enabled_selector_layout: QtWidgets.QHBoxLayout = QtWidgets.QHBoxLayout()
+        self.enabled_selector_label: QtWidgets.QLabel = QtWidgets.QLabel(__("Enabled:"))
+        self.enabled_selector_combobox: QtWidgets.QComboBox = QtWidgets.QComboBox()
         self.enabled_selector_combobox.addItems([__("No"), __("Yes")])
         self.enabled_selector_layout.addWidget(self.enabled_selector_label)
         self.enabled_selector_layout.addWidget(self.enabled_selector_combobox)
         self.enabled_selector_layout.addStretch(1)
 
         # Save options layout
-        self.save_options_hlayout: QtGui.QHBoxLayout = QtGui.QHBoxLayout()
-        self.savevtk_label: QtGui.QLabel = QtGui.QLabel(__("Save VTK:"))
-        self.savevtk_combo: QtGui.QComboBox = QtGui.QComboBox()
+        self.save_options_hlayout: QtWidgets.QHBoxLayout = QtWidgets.QHBoxLayout()
+        self.savevtk_label: QtWidgets.QLabel = QtWidgets.QLabel(__("Save VTK:"))
+        self.savevtk_combo: QtWidgets.QComboBox = QtWidgets.QComboBox()
         self.savevtk_combo.addItems([__("Yes"), __("No")])
 
-        self.savepointscsv_label: QtGui.QLabel = QtGui.QLabel(__("Save points (CSV):"))
-        self.savepointscsv_combo: QtGui.QComboBox = QtGui.QComboBox()
+        self.savepointscsv_label: QtWidgets.QLabel = QtWidgets.QLabel(__("Save points (CSV):"))
+        self.savepointscsv_combo: QtWidgets.QComboBox = QtWidgets.QComboBox()
         self.savepointscsv_combo.addItems([__("Yes"), __("No")])
 
-        self.savepointsvtk_label: QtGui.QLabel = QtGui.QLabel(__("Save points (VTK):"))
-        self.savepointsvtk_combo: QtGui.QComboBox = QtGui.QComboBox()
+        self.savepointsvtk_label: QtWidgets.QLabel = QtWidgets.QLabel(__("Save points (VTK):"))
+        self.savepointsvtk_combo: QtWidgets.QComboBox = QtWidgets.QComboBox()
         self.savepointsvtk_combo.addItems([__("Yes"), __("No")])
 
         self.save_options_hlayout.addWidget(self.savevtk_label)
@@ -87,34 +88,34 @@ class MooringsConfigurationDialog(QtGui.QDialog):
         self.save_options_hlayout.addWidget(self.savepointsvtk_combo)
 
         # Floating selection layout
-        self.floating_selection_vlayout: QtGui.QVBoxLayout = QtGui.QVBoxLayout()
-        self.floating_selection_label: QtGui.QLabel = QtGui.QLabel(__("Select mks to use with moorings:"))
-        self.floating_selection_table: QtGui.QTableWidget = QtGui.QTableWidget(0, 1)
-        self.floating_selection_table.horizontalHeader().setResizeMode(QtGui.QHeaderView.Stretch)
+        self.floating_selection_vlayout: QtWidgets.QVBoxLayout = QtWidgets.QVBoxLayout()
+        self.floating_selection_label: QtWidgets.QLabel = QtWidgets.QLabel(__("Select mks to use with moorings:"))
+        self.floating_selection_table: QtWidgets.QTableWidget = QtWidgets.QTableWidget(0, 1)
+        self.floating_selection_table.horizontalHeader().setResizeMode(QtWidgets.QHeaderView.Stretch)
         self.floating_selection_table.horizontalHeader().hide()
         self.floating_selection_table.verticalHeader().hide()
-        self.floating_selection_table.setEditTriggers(QtGui.QAbstractItemView.NoEditTriggers)
+        self.floating_selection_table.setEditTriggers(QtWidgets.QAbstractItemView.NoEditTriggers)
 
         self.floating_selection_vlayout.addWidget(self.floating_selection_label)
         self.floating_selection_vlayout.addWidget(self.floating_selection_table)
 
         # Configuration method selection layout
-        self.configuration_method_hlayout: QtGui.QHBoxLayout = QtGui.QHBoxLayout()
-        self.configuration_method_label: QtGui.QLabel = QtGui.QLabel(__("Configuration method for MoorDyn:"))
-        self.configuration_method_combo: QtGui.QComboBox = QtGui.QComboBox()
+        self.configuration_method_hlayout: QtWidgets.QHBoxLayout = QtWidgets.QHBoxLayout()
+        self.configuration_method_label: QtWidgets.QLabel = QtWidgets.QLabel(__("Configuration method for MoorDyn:"))
+        self.configuration_method_combo: QtWidgets.QComboBox = QtWidgets.QComboBox()
         self.configuration_method_combo.addItems([__("Embedded"), __("From XML")])
         self.configuration_method_hlayout.addWidget(self.configuration_method_label)
         self.configuration_method_hlayout.addWidget(self.configuration_method_combo)
         self.configuration_method_hlayout.addStretch(1)
 
         # XML File selection layout
-        self.xml_file_selection_widget: QtGui.QWidget = QtGui.QWidget()
-        self.xml_file_selection_hlayout: QtGui.QHBoxLayout = QtGui.QHBoxLayout()
+        self.xml_file_selection_widget: QtWidgets.QWidget = QtWidgets.QWidget()
+        self.xml_file_selection_hlayout: QtWidgets.QHBoxLayout = QtWidgets.QHBoxLayout()
         self.xml_file_selection_hlayout.setContentsMargins(0, 0, 0, 0)
-        self.xml_file_selection_label: QtGui.QLabel = QtGui.QLabel(__("XML File:"))
-        self.xml_file_selection_edit: QtGui.QLineEdit = QtGui.QLineEdit()
+        self.xml_file_selection_label: QtWidgets.QLabel = QtWidgets.QLabel(__("XML File:"))
+        self.xml_file_selection_edit: QtWidgets.QLineEdit = QtWidgets.QLineEdit()
         self.xml_file_selection_edit.setPlaceholderText(__("Type a path or select a file"))
-        self.xml_file_selection_button: QtGui.QPushButton = QtGui.QPushButton("...")
+        self.xml_file_selection_button: QtWidgets.QPushButton = QtWidgets.QPushButton("...")
 
         self.xml_file_selection_hlayout.addWidget(self.xml_file_selection_label)
         self.xml_file_selection_hlayout.addWidget(self.xml_file_selection_edit)
@@ -124,12 +125,12 @@ class MooringsConfigurationDialog(QtGui.QDialog):
         self.xml_file_selection_widget.hide()
 
         # Configure MoorDyn big button
-        self.configure_moordyn_button: QtGui.QPushButton = QtGui.QPushButton(__("Configure MoorDyn Parameters"))
+        self.configure_moordyn_button: QtWidgets.QPushButton = QtWidgets.QPushButton(__("Configure MoorDyn Parameters"))
 
         # Composing the bottom button layout (Ok and Cancel buttons)
-        self.bottom_button_layout: QtGui.QHBoxLayout = QtGui.QHBoxLayout()
-        self.ok_button: QtGui.QPushButton = QtGui.QPushButton(__("OK"))
-        self.cancel_button: QtGui.QPushButton = QtGui.QPushButton(__("Cancel"))
+        self.bottom_button_layout: QtWidgets.QHBoxLayout = QtWidgets.QHBoxLayout()
+        self.ok_button: QtWidgets.QPushButton = QtWidgets.QPushButton(__("OK"))
+        self.cancel_button: QtWidgets.QPushButton = QtWidgets.QPushButton(__("Cancel"))
         self.bottom_button_layout.addStretch(1)
         self.bottom_button_layout.addWidget(self.cancel_button)
         self.bottom_button_layout.addWidget(self.ok_button)

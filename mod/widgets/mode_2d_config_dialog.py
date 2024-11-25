@@ -2,13 +2,14 @@
 # -*- coding: utf-8 -*-
 """ 2D Mode Configuration Dialog. """
 
-from PySide import QtGui
+# from PySide import QtGui
+from PySide2 import QtWidgets
 
 from mod.translation_tools import __
 from mod.dialog_tools import error_dialog
 
 
-class Mode2DConfigDialog(QtGui.QDialog):
+class Mode2DConfigDialog(QtWidgets.QDialog):
     """ A dialog to configure features of going into 2D mode. """
 
     def __init__(self, case_limits_y_value: float, parent=None):
@@ -18,31 +19,31 @@ class Mode2DConfigDialog(QtGui.QDialog):
 
         self.setWindowTitle(__("Set Y position"))
 
-        self.ok_button = QtGui.QPushButton(__("OK"))
-        self.cancel_button = QtGui.QPushButton(__("Cancel"))
+        self.ok_button = QtWidgets.QPushButton(__("OK"))
+        self.cancel_button = QtWidgets.QPushButton(__("Cancel"))
 
         self.ok_button.clicked.connect(self.on_ok)
         self.cancel_button.clicked.connect(self.on_cancel)
 
-        self.y2d_button_layout = QtGui.QHBoxLayout()
+        self.y2d_button_layout = QtWidgets.QHBoxLayout()
         self.y2d_button_layout.addStretch(1)
         self.y2d_button_layout.addWidget(self.ok_button)
         self.y2d_button_layout.addWidget(self.cancel_button)
 
-        self.y_pos_intro_layout = QtGui.QHBoxLayout()
-        self.y_pos_intro_label = QtGui.QLabel(__("New Y position (mm): "))
-        self.y2_pos_input = QtGui.QLineEdit()
+        self.y_pos_intro_layout = QtWidgets.QHBoxLayout()
+        self.y_pos_intro_label = QtWidgets.QLabel(__("New Y position (mm): "))
+        self.y2_pos_input = QtWidgets.QLineEdit()
         self.y2_pos_input.setText(str(case_limits_y_value))
         self.y_pos_intro_layout.addWidget(self.y_pos_intro_label)
         self.y_pos_intro_layout.addWidget(self.y2_pos_input)
 
-        self.y_pos_2d_layout = QtGui.QVBoxLayout()
+        self.y_pos_2d_layout = QtWidgets.QVBoxLayout()
         self.y_pos_2d_layout.addLayout(self.y_pos_intro_layout)
         self.y_pos_2d_layout.addStretch(1)
         self.y_pos_2d_layout.addLayout(self.y2d_button_layout)
 
         self.setLayout(self.y_pos_2d_layout)
-        self.exit_status: QtGui.QDialog.DialogCode = self.exec_()
+        self.exit_status: QtWidgets.QDialog.DialogCode = self.exec_()
 
     def on_ok(self):
         """ Tries to convert the current case to 2D mode while saving the 3D mode data. """

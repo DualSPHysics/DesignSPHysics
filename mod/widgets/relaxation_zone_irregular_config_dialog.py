@@ -2,7 +2,8 @@
 # -*- coding: utf-8 -*-
 """DesignSPHysics Relaxation Zone Irregular Config Dialog """
 
-from PySide import QtGui
+# from PySide import QtGui
+from PySide2 import QtWidgets
 
 from mod.translation_tools import __
 
@@ -11,7 +12,7 @@ from mod.enums import IrregularSpectrum, IrregularDiscretization
 from mod.dataobjects.relaxation_zone_irregular import RelaxationZoneIrregular
 
 
-class RelaxationZoneIrregularConfigDialog(QtGui.QDialog):
+class RelaxationZoneIrregularConfigDialog(QtWidgets.QDialog):
     """ A configuration dialog for a irregular relaxation zone. """
 
     def __init__(self, relaxationzone=None, parent=None):
@@ -19,121 +20,121 @@ class RelaxationZoneIrregularConfigDialog(QtGui.QDialog):
         self.temp_relaxationzone = relaxationzone if relaxationzone is not None else RelaxationZoneIrregular()
         self.relaxationzone = relaxationzone
 
-        self.main_layout = QtGui.QVBoxLayout()
-        self.data_layout = QtGui.QVBoxLayout()
-        self.button_layout = QtGui.QHBoxLayout()
+        self.main_layout = QtWidgets.QVBoxLayout()
+        self.data_layout = QtWidgets.QVBoxLayout()
+        self.button_layout = QtWidgets.QHBoxLayout()
 
-        self.start_layout = QtGui.QHBoxLayout()
-        self.start_label = QtGui.QLabel(__("Start time (s):"))
-        self.start_input = QtGui.QLineEdit()
+        self.start_layout = QtWidgets.QHBoxLayout()
+        self.start_label = QtWidgets.QLabel(__("Start time (s):"))
+        self.start_input = QtWidgets.QLineEdit()
 
         for x in [self.start_label, self.start_input]:
             self.start_layout.addWidget(x)
 
-        self.duration_layout = QtGui.QHBoxLayout()
-        self.duration_label = QtGui.QLabel(__("Movement duration (0 for end of simulation):"))
-        self.duration_input = QtGui.QLineEdit()
+        self.duration_layout = QtWidgets.QHBoxLayout()
+        self.duration_label = QtWidgets.QLabel(__("Movement duration (0 for end of simulation):"))
+        self.duration_input = QtWidgets.QLineEdit()
         for x in [self.duration_label, self.duration_input]:
             self.duration_layout.addWidget(x)
 
-        self.peakcoef_layout = QtGui.QHBoxLayout()
-        self.peakcoef_label = QtGui.QLabel(__("Peak enhancement coefficient:"))
-        self.peakcoef_input = QtGui.QLineEdit()
+        self.peakcoef_layout = QtWidgets.QHBoxLayout()
+        self.peakcoef_label = QtWidgets.QLabel(__("Peak enhancement coefficient:"))
+        self.peakcoef_input = QtWidgets.QLineEdit()
         for x in [self.peakcoef_label, self.peakcoef_input]:
             self.peakcoef_layout.addWidget(x)
 
-        self.spectrum_layout = QtGui.QHBoxLayout()
-        self.spectrum_label = QtGui.QLabel(__("Spectrum type:"))
-        self.spectrum_selector = QtGui.QComboBox()
+        self.spectrum_layout = QtWidgets.QHBoxLayout()
+        self.spectrum_label = QtWidgets.QLabel(__("Spectrum type:"))
+        self.spectrum_selector = QtWidgets.QComboBox()
         self.spectrum_selector.insertItems(0, [__("Jonswap"), __("Pierson-Moskowitz")])
         for x in [self.spectrum_label, self.spectrum_selector]:
             self.spectrum_layout.addWidget(x)
 
-        self.discretization_layout = QtGui.QHBoxLayout()
-        self.discretization_label = QtGui.QLabel(__("Spectrum discretization:"))
-        self.discretization_selector = QtGui.QComboBox()
+        self.discretization_layout = QtWidgets.QHBoxLayout()
+        self.discretization_label = QtWidgets.QLabel(__("Spectrum discretization:"))
+        self.discretization_selector = QtWidgets.QComboBox()
         self.discretization_selector.insertItems(0, [__("Regular"), __("Random"), __("Stretched"), __("Cosstretched")])
         for x in [self.discretization_label, self.discretization_selector]:
             self.discretization_layout.addWidget(x)
 
-        self.waveorder_layout = QtGui.QHBoxLayout()
-        self.waveorder_label = QtGui.QLabel(__("Order wave generation:"))
-        self.waveorder_input = QtGui.QLineEdit()
+        self.waveorder_layout = QtWidgets.QHBoxLayout()
+        self.waveorder_label = QtWidgets.QLabel(__("Order wave generation:"))
+        self.waveorder_input = QtWidgets.QLineEdit()
         for x in [self.waveorder_label, self.waveorder_input]:
             self.waveorder_layout.addWidget(x)
 
-        self.waveheight_layout = QtGui.QHBoxLayout()
-        self.waveheight_label = QtGui.QLabel(__("Wave Height:"))
-        self.waveheight_input = QtGui.QLineEdit()
+        self.waveheight_layout = QtWidgets.QHBoxLayout()
+        self.waveheight_label = QtWidgets.QLabel(__("Wave Height:"))
+        self.waveheight_input = QtWidgets.QLineEdit()
         for x in [self.waveheight_label, self.waveheight_input]:
             self.waveheight_layout.addWidget(x)
 
-        self.waveperiod_layout = QtGui.QHBoxLayout()
-        self.waveperiod_label = QtGui.QLabel(__("Wave Period:"))
-        self.waveperiod_input = QtGui.QLineEdit()
+        self.waveperiod_layout = QtWidgets.QHBoxLayout()
+        self.waveperiod_label = QtWidgets.QLabel(__("Wave Period:"))
+        self.waveperiod_input = QtWidgets.QLineEdit()
         for x in [self.waveperiod_label, self.waveperiod_input]:
             self.waveperiod_layout.addWidget(x)
 
-        self.waves_layout = QtGui.QHBoxLayout()
-        self.waves_label = QtGui.QLabel(__("Number of waves:"))
-        self.waves_input = QtGui.QLineEdit()
+        self.waves_layout = QtWidgets.QHBoxLayout()
+        self.waves_label = QtWidgets.QLabel(__("Number of waves:"))
+        self.waves_input = QtWidgets.QLineEdit()
         for x in [self.waves_label, self.waves_input]:
             self.waves_layout.addWidget(x)
 
-        self.randomseed_layout = QtGui.QHBoxLayout()
-        self.randomseed_label = QtGui.QLabel(__("Random seed:"))
-        self.randomseed_input = QtGui.QLineEdit()
+        self.randomseed_layout = QtWidgets.QHBoxLayout()
+        self.randomseed_label = QtWidgets.QLabel(__("Random seed:"))
+        self.randomseed_input = QtWidgets.QLineEdit()
         for x in [self.randomseed_label, self.randomseed_input]:
             self.randomseed_layout.addWidget(x)
 
-        self.depth_layout = QtGui.QHBoxLayout()
-        self.depth_label = QtGui.QLabel(__("Water depth:"))
-        self.depth_input = QtGui.QLineEdit()
+        self.depth_layout = QtWidgets.QHBoxLayout()
+        self.depth_label = QtWidgets.QLabel(__("Water depth:"))
+        self.depth_input = QtWidgets.QLineEdit()
         for x in [self.depth_label, self.depth_input]:
             self.depth_layout.addWidget(x)
 
-        self.swl_layout = QtGui.QHBoxLayout()
-        self.swl_label = QtGui.QLabel(__("Still water level:"))
-        self.swl_input = QtGui.QLineEdit()
+        self.swl_layout = QtWidgets.QHBoxLayout()
+        self.swl_label = QtWidgets.QLabel(__("Still water level:"))
+        self.swl_input = QtWidgets.QLineEdit()
         for x in [self.swl_label, self.swl_input]:
             self.swl_layout.addWidget(x)
 
-        self.center_layout = QtGui.QHBoxLayout()
-        self.center_label = QtGui.QLabel(__("Central point (X, Y, Z):"))
-        self.center_x = QtGui.QLineEdit()
-        self.center_y = QtGui.QLineEdit()
-        self.center_z = QtGui.QLineEdit()
+        self.center_layout = QtWidgets.QHBoxLayout()
+        self.center_label = QtWidgets.QLabel(__("Central point (X, Y, Z):"))
+        self.center_x = QtWidgets.QLineEdit()
+        self.center_y = QtWidgets.QLineEdit()
+        self.center_z = QtWidgets.QLineEdit()
         for x in [self.center_label, self.center_x, self.center_y, self.center_z]:
             self.center_layout.addWidget(x)
 
-        self.width_layout = QtGui.QHBoxLayout()
-        self.width_label = QtGui.QLabel(__("Width for generation:"))
-        self.width_input = QtGui.QLineEdit()
+        self.width_layout = QtWidgets.QHBoxLayout()
+        self.width_label = QtWidgets.QLabel(__("Width for generation:"))
+        self.width_input = QtWidgets.QLineEdit()
         for x in [self.width_label, self.width_input]:
             self.width_layout.addWidget(x)
 
-        self.ramptime_layout = QtGui.QHBoxLayout()
-        self.ramptime_label = QtGui.QLabel(__("Time of initial ramp:"))
-        self.ramptime_input = QtGui.QLineEdit()
+        self.ramptime_layout = QtWidgets.QHBoxLayout()
+        self.ramptime_label = QtWidgets.QLabel(__("Time of initial ramp:"))
+        self.ramptime_input = QtWidgets.QLineEdit()
         for x in [self.ramptime_label, self.ramptime_input]:
             self.ramptime_layout.addWidget(x)
 
-        self.serieini_layout = QtGui.QHBoxLayout()
-        self.serieini_label = QtGui.QLabel(__("Initial time:"))
-        self.serieini_input = QtGui.QLineEdit()
+        self.serieini_layout = QtWidgets.QHBoxLayout()
+        self.serieini_label = QtWidgets.QLabel(__("Initial time:"))
+        self.serieini_input = QtWidgets.QLineEdit()
         for x in [self.serieini_label, self.serieini_input]:
             self.serieini_layout.addWidget(x)
 
-        self.savemotion_layout = QtGui.QHBoxLayout()
-        self.savemotion_label = QtGui.QLabel(__("Save motion data ->"))
-        self.savemotion_time_label = QtGui.QLabel(__("Time: "))
-        self.savemotion_time_input = QtGui.QLineEdit()
-        self.savemotion_timedt_label = QtGui.QLabel(__("Time data: "))
-        self.savemotion_timedt_input = QtGui.QLineEdit()
-        self.savemotion_xpos_label = QtGui.QLabel(__("X Position: "))
-        self.savemotion_xpos_input = QtGui.QLineEdit()
-        self.savemotion_zpos_label = QtGui.QLabel(__("Z Position: "))
-        self.savemotion_zpos_input = QtGui.QLineEdit()
+        self.savemotion_layout = QtWidgets.QHBoxLayout()
+        self.savemotion_label = QtWidgets.QLabel(__("Save motion data ->"))
+        self.savemotion_time_label = QtWidgets.QLabel(__("Time: "))
+        self.savemotion_time_input = QtWidgets.QLineEdit()
+        self.savemotion_timedt_label = QtWidgets.QLabel(__("Time data: "))
+        self.savemotion_timedt_input = QtWidgets.QLineEdit()
+        self.savemotion_xpos_label = QtWidgets.QLabel(__("X Position: "))
+        self.savemotion_xpos_input = QtWidgets.QLineEdit()
+        self.savemotion_zpos_label = QtWidgets.QLabel(__("Z Position: "))
+        self.savemotion_zpos_input = QtWidgets.QLineEdit()
         for x in [self.savemotion_label,
                   self.savemotion_time_label,
                   self.savemotion_time_input,
@@ -145,16 +146,16 @@ class RelaxationZoneIrregularConfigDialog(QtGui.QDialog):
                   self.savemotion_zpos_input]:
             self.savemotion_layout.addWidget(x)
 
-        self.saveserie_layout = QtGui.QHBoxLayout()
-        self.saveserie_label = QtGui.QLabel(__("Save serie data ->"))
-        self.saveserie_timemin_label = QtGui.QLabel(__("Time min.: "))
-        self.saveserie_timemin_input = QtGui.QLineEdit()
-        self.saveserie_timemax_label = QtGui.QLabel(__("Time max.: "))
-        self.saveserie_timemax_input = QtGui.QLineEdit()
-        self.saveserie_timedt_label = QtGui.QLabel(__("Time max.: "))
-        self.saveserie_timedt_input = QtGui.QLineEdit()
-        self.saveserie_xpos_label = QtGui.QLabel(__("X Position: "))
-        self.saveserie_xpos_input = QtGui.QLineEdit()
+        self.saveserie_layout = QtWidgets.QHBoxLayout()
+        self.saveserie_label = QtWidgets.QLabel(__("Save serie data ->"))
+        self.saveserie_timemin_label = QtWidgets.QLabel(__("Time min.: "))
+        self.saveserie_timemin_input = QtWidgets.QLineEdit()
+        self.saveserie_timemax_label = QtWidgets.QLabel(__("Time max.: "))
+        self.saveserie_timemax_input = QtWidgets.QLineEdit()
+        self.saveserie_timedt_label = QtWidgets.QLabel(__("Time max.: "))
+        self.saveserie_timedt_input = QtWidgets.QLineEdit()
+        self.saveserie_xpos_label = QtWidgets.QLabel(__("X Position: "))
+        self.saveserie_xpos_input = QtWidgets.QLineEdit()
         for x in [self.saveserie_label,
                   self.saveserie_timemin_label,
                   self.saveserie_timemin_input,
@@ -166,14 +167,14 @@ class RelaxationZoneIrregularConfigDialog(QtGui.QDialog):
                   self.saveserie_xpos_input]:
             self.saveserie_layout.addWidget(x)
 
-        self.saveseriewaves_layout = QtGui.QHBoxLayout()
-        self.saveseriewaves_label = QtGui.QLabel(__("Save serie heights ->"))
-        self.saveseriewaves_timemin_label = QtGui.QLabel(__("Time min.: "))
-        self.saveseriewaves_timemin_input = QtGui.QLineEdit()
-        self.saveseriewaves_timemax_label = QtGui.QLabel(__("Time max.: "))
-        self.saveseriewaves_timemax_input = QtGui.QLineEdit()
-        self.saveseriewaves_xpos_label = QtGui.QLabel(__("X Position: "))
-        self.saveseriewaves_xpos_input = QtGui.QLineEdit()
+        self.saveseriewaves_layout = QtWidgets.QHBoxLayout()
+        self.saveseriewaves_label = QtWidgets.QLabel(__("Save serie heights ->"))
+        self.saveseriewaves_timemin_label = QtWidgets.QLabel(__("Time min.: "))
+        self.saveseriewaves_timemin_input = QtWidgets.QLineEdit()
+        self.saveseriewaves_timemax_label = QtWidgets.QLabel(__("Time max.: "))
+        self.saveseriewaves_timemax_input = QtWidgets.QLineEdit()
+        self.saveseriewaves_xpos_label = QtWidgets.QLabel(__("X Position: "))
+        self.saveseriewaves_xpos_input = QtWidgets.QLineEdit()
         for x in [self.saveseriewaves_label,
                   self.saveseriewaves_timemin_label,
                   self.saveseriewaves_timemin_input,
@@ -183,30 +184,30 @@ class RelaxationZoneIrregularConfigDialog(QtGui.QDialog):
                   self.saveseriewaves_xpos_input]:
             self.saveseriewaves_layout.addWidget(x)
 
-        self.coefdir_layout = QtGui.QHBoxLayout()
-        self.coefdir_label = QtGui.QLabel(__("Coefficient for each direction (X, Y, Z):"))
-        self.coefdir_x = QtGui.QLineEdit()
+        self.coefdir_layout = QtWidgets.QHBoxLayout()
+        self.coefdir_label = QtWidgets.QLabel(__("Coefficient for each direction (X, Y, Z):"))
+        self.coefdir_x = QtWidgets.QLineEdit()
         self.coefdir_x.setEnabled(False)
-        self.coefdir_y = QtGui.QLineEdit()
+        self.coefdir_y = QtWidgets.QLineEdit()
         self.coefdir_y.setEnabled(False)
-        self.coefdir_z = QtGui.QLineEdit()
+        self.coefdir_z = QtWidgets.QLineEdit()
         self.coefdir_z.setEnabled(False)
         for x in [self.coefdir_label, self.coefdir_x, self.coefdir_y, self.coefdir_z]:
             self.coefdir_layout.addWidget(x)
 
-        self.coefdt_layout = QtGui.QHBoxLayout()
-        self.coefdt_label = QtGui.QLabel(__("Multiplier for dt value in each direction:"))
-        self.coefdt_input = QtGui.QLineEdit()
+        self.coefdt_layout = QtWidgets.QHBoxLayout()
+        self.coefdt_label = QtWidgets.QLabel(__("Multiplier for dt value in each direction:"))
+        self.coefdt_input = QtWidgets.QLineEdit()
         self.coefdt_input.setEnabled(False)
         for x in [self.coefdt_label, self.coefdt_input]:
             self.coefdt_layout.addWidget(x)
 
-        self.function_layout = QtGui.QHBoxLayout()
-        self.function_label = QtGui.QLabel(__("Coefficients in function for velocity ->"))
-        self.function_psi_label = QtGui.QLabel(__("Psi: "))
-        self.function_psi_input = QtGui.QLineEdit()
-        self.function_beta_label = QtGui.QLabel(__("Beta: "))
-        self.function_beta_input = QtGui.QLineEdit()
+        self.function_layout = QtWidgets.QHBoxLayout()
+        self.function_label = QtWidgets.QLabel(__("Coefficients in function for velocity ->"))
+        self.function_psi_label = QtWidgets.QLabel(__("Psi: "))
+        self.function_psi_input = QtWidgets.QLineEdit()
+        self.function_beta_label = QtWidgets.QLabel(__("Beta: "))
+        self.function_beta_input = QtWidgets.QLineEdit()
         for x in [self.function_label,
                   self.function_psi_label,
                   self.function_psi_input,
@@ -214,9 +215,9 @@ class RelaxationZoneIrregularConfigDialog(QtGui.QDialog):
                   self.function_beta_input]:
             self.function_layout.addWidget(x)
 
-        self.driftcorrection_layout = QtGui.QHBoxLayout()
-        self.driftcorrection_label = QtGui.QLabel(__("Coefficient of drift correction (for X):"))
-        self.driftcorrection_input = QtGui.QLineEdit()
+        self.driftcorrection_layout = QtWidgets.QHBoxLayout()
+        self.driftcorrection_label = QtWidgets.QLabel(__("Coefficient of drift correction (for X):"))
+        self.driftcorrection_input = QtWidgets.QLineEdit()
         for x in [self.driftcorrection_label, self.driftcorrection_input]:
             self.driftcorrection_layout.addWidget(x)
 
@@ -244,8 +245,8 @@ class RelaxationZoneIrregularConfigDialog(QtGui.QDialog):
                   self.driftcorrection_layout]:
             self.data_layout.addLayout(x)
 
-        self.delete_button = QtGui.QPushButton(__("Delete RZ configuration"))
-        self.apply_button = QtGui.QPushButton(__("Apply this configuration"))
+        self.delete_button = QtWidgets.QPushButton(__("Delete RZ configuration"))
+        self.apply_button = QtWidgets.QPushButton(__("Apply this configuration"))
         self.button_layout.addStretch(1)
         self.button_layout.addWidget(self.delete_button)
         self.button_layout.addWidget(self.apply_button)

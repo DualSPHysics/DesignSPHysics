@@ -2,7 +2,8 @@
 # -*- coding: utf-8 -*-
 """DesignSPHysics Acceleration Input Dialog."""
 
-from PySide import QtCore, QtGui
+# from PySide import QtCore, QtGui
+from PySide2 import QtCore, QtWidgets
 
 from mod.translation_tools import __
 
@@ -11,7 +12,7 @@ from mod.dataobjects.acceleration_input_data import AccelerationInputData
 from mod.dataobjects.case import Case
 
 
-class AccelerationInputDialog(QtGui.QDialog):
+class AccelerationInputDialog(QtWidgets.QDialog):
     """ A Dialog which shows the contents of the case AccelerationInput object.
     Shows a list with the AccelerationInputData objects defined for the case and
     its details when clicked.
@@ -22,18 +23,18 @@ class AccelerationInputDialog(QtGui.QDialog):
         self.accinput = accinput
         self.setWindowTitle(__("Acceleration Input List"))
 
-        self.main_layout = QtGui.QVBoxLayout()
+        self.main_layout = QtWidgets.QVBoxLayout()
 
-        self.enabled_check = QtGui.QCheckBox(__("Enabled"))
+        self.enabled_check = QtWidgets.QCheckBox(__("Enabled"))
 
-        self.accinput_layout = QtGui.QHBoxLayout()
+        self.accinput_layout = QtWidgets.QHBoxLayout()
 
-        self.accinput_list_groupbox = QtGui.QGroupBox(__("Acceleration Input list"))
-        self.accinput_list_layout = QtGui.QVBoxLayout()
-        self.accinput_list = QtGui.QListWidget()
-        self.accinput_list_button_layout = QtGui.QHBoxLayout()
-        self.accinput_list_add_button = QtGui.QPushButton("Add new")
-        self.accinput_list_remove_button = QtGui.QPushButton("Remove selected")
+        self.accinput_list_groupbox = QtWidgets.QGroupBox(__("Acceleration Input list"))
+        self.accinput_list_layout = QtWidgets.QVBoxLayout()
+        self.accinput_list = QtWidgets.QListWidget()
+        self.accinput_list_button_layout = QtWidgets.QHBoxLayout()
+        self.accinput_list_add_button = QtWidgets.QPushButton("Add new")
+        self.accinput_list_remove_button = QtWidgets.QPushButton("Remove selected")
 
         self.accinput_list_button_layout.addWidget(self.accinput_list_add_button)
         self.accinput_list_button_layout.addWidget(self.accinput_list_remove_button)
@@ -42,46 +43,46 @@ class AccelerationInputDialog(QtGui.QDialog):
         self.accinput_list_layout.addLayout(self.accinput_list_button_layout)
         self.accinput_list_groupbox.setLayout(self.accinput_list_layout)
 
-        self.accinput_data_groupbox = QtGui.QGroupBox(__("Acceleration Input data"))
-        self.accinput_data_layout = QtGui.QVBoxLayout()
+        self.accinput_data_groupbox = QtWidgets.QGroupBox(__("Acceleration Input data"))
+        self.accinput_data_layout = QtWidgets.QVBoxLayout()
 
-        self.accinput_label_layout = QtGui.QHBoxLayout()
-        self.accinput_label_label = QtGui.QLabel(__("Label:"))
-        self.accinput_label_input = QtGui.QLineEdit()
+        self.accinput_label_layout = QtWidgets.QHBoxLayout()
+        self.accinput_label_label = QtWidgets.QLabel(__("Label:"))
+        self.accinput_label_input = QtWidgets.QLineEdit()
         self.accinput_label_layout.addWidget(self.accinput_label_label)
         self.accinput_label_layout.addWidget(self.accinput_label_input)
 
-        self.accinput_mkfluid_layout = QtGui.QHBoxLayout()
-        self.accinput_mkfluid_label = QtGui.QLabel(__("Mk-fluid of selected particles:"))
-        self.accinput_mkfluid_input = QtGui.QLineEdit()
+        self.accinput_mkfluid_layout = QtWidgets.QHBoxLayout()
+        self.accinput_mkfluid_label = QtWidgets.QLabel(__("Mk-fluid of selected particles:"))
+        self.accinput_mkfluid_input = QtWidgets.QLineEdit()
         self.accinput_mkfluid_layout.addWidget(self.accinput_mkfluid_label)
         self.accinput_mkfluid_layout.addWidget(self.accinput_mkfluid_input)
 
-        self.accinput_acccentre_layout = QtGui.QHBoxLayout()
-        self.accinput_acccentre_label = QtGui.QLabel(__("Center of acceleration [X,Y,Z] (m):"))
-        self.accinput_acccentre_x = QtGui.QLineEdit()
-        self.accinput_acccentre_y = QtGui.QLineEdit()
-        self.accinput_acccentre_z = QtGui.QLineEdit()
+        self.accinput_acccentre_layout = QtWidgets.QHBoxLayout()
+        self.accinput_acccentre_label = QtWidgets.QLabel(__("Center of acceleration [X,Y,Z] (m):"))
+        self.accinput_acccentre_x = QtWidgets.QLineEdit()
+        self.accinput_acccentre_y = QtWidgets.QLineEdit()
+        self.accinput_acccentre_z = QtWidgets.QLineEdit()
 
         self.accinput_acccentre_layout.addWidget(self.accinput_acccentre_label)
         self.accinput_acccentre_layout.addWidget(self.accinput_acccentre_x)
         self.accinput_acccentre_layout.addWidget(self.accinput_acccentre_y)
         self.accinput_acccentre_layout.addWidget(self.accinput_acccentre_z)
 
-        self.accinput_globalgravity_layout = QtGui.QHBoxLayout()
-        self.accinput_globalgravity_check = QtGui.QCheckBox(__("Global Gravity"))
+        self.accinput_globalgravity_layout = QtWidgets.QHBoxLayout()
+        self.accinput_globalgravity_check = QtWidgets.QCheckBox(__("Global Gravity"))
         self.accinput_globalgravity_layout.addWidget(self.accinput_globalgravity_check)
 
-        self.accinput_datafile_layout = QtGui.QHBoxLayout()
-        self.accinput_datafile_label = QtGui.QLabel(__("File with acceleration data:"))
-        self.accinput_datafile_input = QtGui.QLineEdit()
-        self.accinput_datafile_button = QtGui.QPushButton(__("..."))
+        self.accinput_datafile_layout = QtWidgets.QHBoxLayout()
+        self.accinput_datafile_label = QtWidgets.QLabel(__("File with acceleration data:"))
+        self.accinput_datafile_input = QtWidgets.QLineEdit()
+        self.accinput_datafile_button = QtWidgets.QPushButton(__("..."))
         self.accinput_datafile_layout.addWidget(self.accinput_datafile_label)
         self.accinput_datafile_layout.addWidget(self.accinput_datafile_input)
         self.accinput_datafile_layout.addWidget(self.accinput_datafile_button)
 
-        self.accinput_save_layout = QtGui.QHBoxLayout()
-        self.accinput_save_button = QtGui.QPushButton(__("Save Data"))
+        self.accinput_save_layout = QtWidgets.QHBoxLayout()
+        self.accinput_save_button = QtWidgets.QPushButton(__("Save Data"))
         self.accinput_save_layout.addStretch(1)
         self.accinput_save_layout.addWidget(self.accinput_save_button)
 
@@ -97,8 +98,8 @@ class AccelerationInputDialog(QtGui.QDialog):
         self.accinput_layout.addWidget(self.accinput_list_groupbox)
         self.accinput_layout.addWidget(self.accinput_data_groupbox)
 
-        self.button_layout = QtGui.QHBoxLayout()
-        self.ok_button = QtGui.QPushButton(__("OK"))
+        self.button_layout = QtWidgets.QHBoxLayout()
+        self.ok_button = QtWidgets.QPushButton(__("OK"))
         self.button_layout.addStretch(1)
         self.button_layout.addWidget(self.ok_button)
 
@@ -138,7 +139,7 @@ class AccelerationInputDialog(QtGui.QDialog):
 
     def on_browse(self):
         """ Opens a file dialog to select a file to use. """
-        file_name, _ = QtGui.QFileDialog().getOpenFileName(self, "Select file to use", Case.the().info.last_used_directory)
+        file_name, _ = QtWidgets.QFileDialog().getOpenFileName(self, "Select file to use", Case.the().info.last_used_directory)
         Case.the().info.update_last_used_directory(file_name)
         self.accinput_datafile_input.setText(file_name)
 

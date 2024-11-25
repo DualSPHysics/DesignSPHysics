@@ -2,7 +2,8 @@
 # -*- coding: utf-8 -*-
 """DesignSPHysics Irregular Piston Wave Motion Timeline Widget"""
 
-from PySide import QtCore, QtGui
+# from PySide import QtCore, QtGui
+from PySide2 import QtCore, QtWidgets
 
 from mod.translation_tools import __
 from mod.gui_tools import h_line_generator
@@ -16,7 +17,7 @@ from mod.dataobjects.awas_correction import AWASCorrection
 
 from mod.functions import make_float
 
-class IrregularPistonWaveMotionTimeline(QtGui.QWidget):
+class IrregularPistonWaveMotionTimeline(QtWidgets.QWidget):
     """ An Irregular Wave motion graphical representation for a table-based timeline """
     changed = QtCore.Signal(int, IrregularPistonWaveGen)
 
@@ -29,220 +30,220 @@ class IrregularPistonWaveMotionTimeline(QtGui.QWidget):
                             "motion widget in the timeline without a motion object")
         super().__init__(parent=parent)
 
-        self.main_layout = QtGui.QVBoxLayout()
+        self.main_layout = QtWidgets.QVBoxLayout()
         self.main_layout.setContentsMargins(10, 10, 10, 10)
 
-        self.root_label = QtGui.QLabel(__("Irregular wave generator (Piston)"))
+        self.root_label = QtWidgets.QLabel(__("Irregular wave generator (Piston)"))
 
-        self.duration_label = QtGui.QLabel(__("Duration"))
-        self.duration_input = QtGui.QLineEdit()
+        self.duration_label = QtWidgets.QLabel(__("Duration"))
+        self.duration_input = QtWidgets.QLineEdit()
 
-        self.wave_order_label = QtGui.QLabel(__("Wave Order"))
-        self.wave_order_selector = QtGui.QComboBox()
+        self.wave_order_label = QtWidgets.QLabel(__("Wave Order"))
+        self.wave_order_selector = QtWidgets.QComboBox()
         self.wave_order_selector.insertItems(
             0, [__("1st Order"), __("2nd Order")])
 
-        self.depth_label = QtGui.QLabel(__("Depth (m): "))
-        self.depth_input = QtGui.QLineEdit()
+        self.depth_label = QtWidgets.QLabel(__("Depth (m): "))
+        self.depth_input = QtWidgets.QLineEdit()
 
-        self.piston_dir_label = QtGui.QLabel(
+        self.piston_dir_label = QtWidgets.QLabel(
             __("Piston direction (X, Y, Z): "))
-        self.piston_dir_x = QtGui.QLineEdit()
-        self.piston_dir_y = QtGui.QLineEdit()
-        self.piston_dir_z = QtGui.QLineEdit()
+        self.piston_dir_x = QtWidgets.QLineEdit()
+        self.piston_dir_y = QtWidgets.QLineEdit()
+        self.piston_dir_z = QtWidgets.QLineEdit()
 
-        self.wave_height_label = QtGui.QLabel(__("Wave height (m): "))
-        self.wave_height_input = QtGui.QLineEdit()
+        self.wave_height_label = QtWidgets.QLabel(__("Wave height (m): "))
+        self.wave_height_input = QtWidgets.QLineEdit()
 
-        self.wave_period_label = QtGui.QLabel(__("Wave period (s): "))
-        self.wave_period_input = QtGui.QLineEdit()
+        self.wave_period_label = QtWidgets.QLabel(__("Wave period (s): "))
+        self.wave_period_input = QtWidgets.QLineEdit()
 
-        self.gainstroke_label = QtGui.QLabel(__("Gain factor: "))
-        self.gainstroke_input = QtGui.QLineEdit()
+        self.gainstroke_label = QtWidgets.QLabel(__("Gain factor: "))
+        self.gainstroke_input = QtWidgets.QLineEdit()
 
-        self.spectrum_label = QtGui.QLabel(__("Spectrum"))
-        self.spectrum_selector = QtGui.QComboBox()
+        self.spectrum_label = QtWidgets.QLabel(__("Spectrum"))
+        self.spectrum_selector = QtWidgets.QComboBox()
         # Index numbers match IrregularSpectrum static values
         self.spectrum_selector.insertItems(0, ["Jonswap", "Pierson-Moskowitz"])
 
-        self.discretization_label = QtGui.QLabel(__("Discretization"))
-        self.discretization_selector = QtGui.QComboBox()
+        self.discretization_label = QtWidgets.QLabel(__("Discretization"))
+        self.discretization_selector = QtWidgets.QComboBox()
         # Index numbers match IrregularDiscretization static values
         self.discretization_selector.insertItems(
             0, ["Regular", "Random", "Stretched", "Crosstreched"])
 
-        self.peak_coef_label = QtGui.QLabel(__("Peak Coeff"))
-        self.peak_coef_input = QtGui.QLineEdit()
+        self.peak_coef_label = QtWidgets.QLabel(__("Peak Coeff"))
+        self.peak_coef_input = QtWidgets.QLineEdit()
 
-        self.waves_label = QtGui.QLabel(__("Number of waves"))
-        self.waves_input = QtGui.QLineEdit()
+        self.waves_label = QtWidgets.QLabel(__("Number of waves"))
+        self.waves_input = QtWidgets.QLineEdit()
 
-        self.randomseed_label = QtGui.QLabel(__("Random Seed"))
-        self.randomseed_input = QtGui.QLineEdit()
+        self.randomseed_label = QtWidgets.QLabel(__("Random Seed"))
+        self.randomseed_input = QtWidgets.QLineEdit()
 
-        self.serieini_label = QtGui.QLabel(
+        self.serieini_label = QtWidgets.QLabel(
             __("Initial time in wave serie (s): "))
-        self.serieini_input = QtGui.QLineEdit()
+        self.serieini_input = QtWidgets.QLineEdit()
 
-        self.serieini_autofit = QtGui.QCheckBox("Auto fit")
+        self.serieini_autofit = QtWidgets.QCheckBox("Auto fit")
 
-        self.ramptime_label = QtGui.QLabel(__("Time of ramp (s): "))
-        self.ramptime_input = QtGui.QLineEdit()
+        self.ramptime_label = QtWidgets.QLabel(__("Time of ramp (s): "))
+        self.ramptime_input = QtWidgets.QLineEdit()
 
-        self.savemotion_label = QtGui.QLabel(__("Motion saving > "))
-        self.savemotion_time_input = QtGui.QLineEdit()
-        self.savemotion_time_label = QtGui.QLabel(__("Time (s): "))
-        self.savemotion_timedt_input = QtGui.QLineEdit()
-        self.savemotion_timedt_label = QtGui.QLabel(__("DT Time (s): "))
-        self.savemotion_xpos_input = QtGui.QLineEdit()
-        self.savemotion_xpos_label = QtGui.QLabel(__("X Pos (m): "))
-        self.savemotion_zpos_input = QtGui.QLineEdit()
-        self.savemotion_zpos_label = QtGui.QLabel(__("Z Pos (m): "))
+        self.savemotion_label = QtWidgets.QLabel(__("Motion saving > "))
+        self.savemotion_time_input = QtWidgets.QLineEdit()
+        self.savemotion_time_label = QtWidgets.QLabel(__("Time (s): "))
+        self.savemotion_timedt_input = QtWidgets.QLineEdit()
+        self.savemotion_timedt_label = QtWidgets.QLabel(__("DT Time (s): "))
+        self.savemotion_xpos_input = QtWidgets.QLineEdit()
+        self.savemotion_xpos_label = QtWidgets.QLabel(__("X Pos (m): "))
+        self.savemotion_zpos_input = QtWidgets.QLineEdit()
+        self.savemotion_zpos_label = QtWidgets.QLabel(__("Z Pos (m): "))
 
-        self.saveserie_label = QtGui.QLabel(__("Save serie > "))
-        self.saveserie_timemin_input = QtGui.QLineEdit()
-        self.saveserie_timemin_label = QtGui.QLabel(__("Min. Time (s): "))
-        self.saveserie_timemax_input = QtGui.QLineEdit()
-        self.saveserie_timemax_label = QtGui.QLabel(__("Max. Time (s): "))
-        self.saveserie_timedt_input = QtGui.QLineEdit()
-        self.saveserie_timedt_label = QtGui.QLabel(__("DT Time (s): "))
-        self.saveserie_xpos_input = QtGui.QLineEdit()
-        self.saveserie_xpos_label = QtGui.QLabel(__("X Pos (m): "))
+        self.saveserie_label = QtWidgets.QLabel(__("Save serie > "))
+        self.saveserie_timemin_input = QtWidgets.QLineEdit()
+        self.saveserie_timemin_label = QtWidgets.QLabel(__("Min. Time (s): "))
+        self.saveserie_timemax_input = QtWidgets.QLineEdit()
+        self.saveserie_timemax_label = QtWidgets.QLabel(__("Max. Time (s): "))
+        self.saveserie_timedt_input = QtWidgets.QLineEdit()
+        self.saveserie_timedt_label = QtWidgets.QLabel(__("DT Time (s): "))
+        self.saveserie_xpos_input = QtWidgets.QLineEdit()
+        self.saveserie_xpos_label = QtWidgets.QLabel(__("X Pos (m): "))
 
-        self.saveseriewaves_label = QtGui.QLabel(__("Save serie waves > "))
-        self.saveseriewaves_timemin_input = QtGui.QLineEdit()
-        self.saveseriewaves_timemin_label = QtGui.QLabel(__("Min. Time (s): "))
-        self.saveseriewaves_timemax_input = QtGui.QLineEdit()
-        self.saveseriewaves_timemax_label = QtGui.QLabel(__("Max. Time (s): "))
-        self.saveseriewaves_xpos_input = QtGui.QLineEdit()
-        self.saveseriewaves_xpos_label = QtGui.QLabel(__("X Pos (m): "))
+        self.saveseriewaves_label = QtWidgets.QLabel(__("Save serie waves > "))
+        self.saveseriewaves_timemin_input = QtWidgets.QLineEdit()
+        self.saveseriewaves_timemin_label = QtWidgets.QLabel(__("Min. Time (s): "))
+        self.saveseriewaves_timemax_input = QtWidgets.QLineEdit()
+        self.saveseriewaves_timemax_label = QtWidgets.QLabel(__("Max. Time (s): "))
+        self.saveseriewaves_xpos_input = QtWidgets.QLineEdit()
+        self.saveseriewaves_xpos_label = QtWidgets.QLabel(__("X Pos (m): "))
 
-        self.awas_label = QtGui.QLabel(__("AWAS configuration"))
-        self.awas_enabled = QtGui.QCheckBox(__("Enabled"))
+        self.awas_label = QtWidgets.QLabel(__("AWAS configuration"))
+        self.awas_enabled = QtWidgets.QCheckBox(__("Enabled"))
 
-        self.awas_startawas_label = QtGui.QLabel(__("Start AWAS (s): "))
-        self.awas_startawas_input = QtGui.QLineEdit()
+        self.awas_startawas_label = QtWidgets.QLabel(__("Start AWAS (s): "))
+        self.awas_startawas_input = QtWidgets.QLineEdit()
 
-        self.awas_swl_label = QtGui.QLabel(__("Still water level (m): "))
-        self.awas_swl_input = QtGui.QLineEdit()
+        self.awas_swl_label = QtWidgets.QLabel(__("Still water level (m): "))
+        self.awas_swl_input = QtWidgets.QLineEdit()
 
-        self.awas_elevation_label = QtGui.QLabel(__("Wave order: "))
-        self.awas_elevation_selector = QtGui.QComboBox()
+        self.awas_elevation_label = QtWidgets.QLabel(__("Wave order: "))
+        self.awas_elevation_selector = QtWidgets.QComboBox()
         self.awas_elevation_selector.insertItems(
             0, [__("1st Order"), __("2nd Order")])
 
-        self.awas_gaugex_label = QtGui.QLabel(__("Gauge X (value*h): "))
-        self.awas_gaugex_input = QtGui.QLineEdit()
+        self.awas_gaugex_label = QtWidgets.QLabel(__("Gauge X (value*h): "))
+        self.awas_gaugex_input = QtWidgets.QLineEdit()
 
-        self.awas_gaugey_label = QtGui.QLabel(__("Gauge Y (m): "))
-        self.awas_gaugey_input = QtGui.QLineEdit()
+        self.awas_gaugey_label = QtWidgets.QLabel(__("Gauge Y (m): "))
+        self.awas_gaugey_input = QtWidgets.QLineEdit()
 
-        self.awas_gaugezmin_label = QtGui.QLabel(__("Gauge Z Min (m): "))
-        self.awas_gaugezmin_input = QtGui.QLineEdit()
+        self.awas_gaugezmin_label = QtWidgets.QLabel(__("Gauge Z Min (m): "))
+        self.awas_gaugezmin_input = QtWidgets.QLineEdit()
 
-        self.awas_gaugezmax_label = QtGui.QLabel(__("Gauge Z Max (m): "))
-        self.awas_gaugezmax_input = QtGui.QLineEdit()
+        self.awas_gaugezmax_label = QtWidgets.QLabel(__("Gauge Z Max (m): "))
+        self.awas_gaugezmax_input = QtWidgets.QLineEdit()
 
-        self.awas_gaugedp_label = QtGui.QLabel(__("Gauge dp (value*dp): "))
-        self.awas_gaugedp_input = QtGui.QLineEdit()
+        self.awas_gaugedp_label = QtWidgets.QLabel(__("Gauge dp (value*dp): "))
+        self.awas_gaugedp_input = QtWidgets.QLineEdit()
 
-        self.awas_coefmasslimit_label = QtGui.QLabel(__("Coef. mass limit: "))
-        self.awas_coefmasslimit_input = QtGui.QLineEdit()
+        self.awas_coefmasslimit_label = QtWidgets.QLabel(__("Coef. mass limit: "))
+        self.awas_coefmasslimit_input = QtWidgets.QLineEdit()
 
-        self.awas_savedata_label = QtGui.QLabel(__("Save data: "))
-        self.awas_savedata_selector = QtGui.QComboBox()
+        self.awas_savedata_label = QtWidgets.QLabel(__("Save data: "))
+        self.awas_savedata_selector = QtWidgets.QComboBox()
         self.awas_savedata_selector.insertItems(
             0, [__("By Part"), __("More Info"), __("By Step")])
 
-        self.awas_limitace_label = QtGui.QLabel(__("Limit acceleration: "))
-        self.awas_limitace_input = QtGui.QLineEdit()
+        self.awas_limitace_label = QtWidgets.QLabel(__("Limit acceleration: "))
+        self.awas_limitace_input = QtWidgets.QLineEdit()
 
-        self.awas_correction_label = QtGui.QLabel(__("Drift correction: "))
-        self.awas_correction_enabled = QtGui.QCheckBox(__("Enabled"))
+        self.awas_correction_label = QtWidgets.QLabel(__("Drift correction: "))
+        self.awas_correction_enabled = QtWidgets.QCheckBox(__("Enabled"))
 
-        self.awas_correction_coefstroke_label = QtGui.QLabel(__("Coefstroke"))
-        self.awas_correction_coefstroke_input = QtGui.QLineEdit()
+        self.awas_correction_coefstroke_label = QtWidgets.QLabel(__("Coefstroke"))
+        self.awas_correction_coefstroke_input = QtWidgets.QLineEdit()
 
-        self.awas_correction_coefperiod_label = QtGui.QLabel(__("Coefperiod"))
-        self.awas_correction_coefperiod_input = QtGui.QLineEdit()
+        self.awas_correction_coefperiod_label = QtWidgets.QLabel(__("Coefperiod"))
+        self.awas_correction_coefperiod_input = QtWidgets.QLineEdit()
 
-        self.awas_correction_powerfunc_label = QtGui.QLabel(__("Powerfunc"))
-        self.awas_correction_powerfunc_input = QtGui.QLineEdit()
+        self.awas_correction_powerfunc_label = QtWidgets.QLabel(__("Powerfunc"))
+        self.awas_correction_powerfunc_input = QtWidgets.QLineEdit()
 
-        self.root_layout = QtGui.QHBoxLayout()
+        self.root_layout = QtWidgets.QHBoxLayout()
         self.root_layout.addWidget(self.root_label)
         self.root_layout.addStretch(1)
         for x in [self.duration_label, self.duration_input]:
             self.root_layout.addWidget(x)
 
-        self.first_row_layout = QtGui.QHBoxLayout()
+        self.first_row_layout = QtWidgets.QHBoxLayout()
         for x in [self.wave_order_label, self.wave_order_selector, self.depth_label, self.depth_input]:
             self.first_row_layout.addWidget(x)
 
-        self.second_row_layout = QtGui.QHBoxLayout()
+        self.second_row_layout = QtWidgets.QHBoxLayout()
         for x in [self.piston_dir_label, self.piston_dir_x, self.piston_dir_y, self.piston_dir_z]:
             self.second_row_layout.addWidget(x)
 
-        self.third_row_layout = QtGui.QHBoxLayout()
+        self.third_row_layout = QtWidgets.QHBoxLayout()
         for x in [self.wave_height_label, self.wave_height_input, self.wave_period_label, self.wave_period_input, self.gainstroke_label, self.gainstroke_input]:
             self.third_row_layout.addWidget(x)
 
-        self.fourth_row_layout = QtGui.QHBoxLayout()
+        self.fourth_row_layout = QtWidgets.QHBoxLayout()
         for x in [self.spectrum_label, self.spectrum_selector, self.discretization_label, self.discretization_selector, self.peak_coef_label, self.peak_coef_input]:
             self.fourth_row_layout.addWidget(x)
 
-        self.fifth_row_layout = QtGui.QHBoxLayout()
+        self.fifth_row_layout = QtWidgets.QHBoxLayout()
         for x in [self.waves_label, self.waves_input, self.randomseed_label, self.randomseed_input]:
             self.fifth_row_layout.addWidget(x)
 
-        self.sixth_row_layout = QtGui.QHBoxLayout()
+        self.sixth_row_layout = QtWidgets.QHBoxLayout()
         for x in [self.serieini_label, self.serieini_input, self.serieini_autofit]:
             self.sixth_row_layout.addWidget(x)
 
-        self.seventh_row_layout = QtGui.QHBoxLayout()
+        self.seventh_row_layout = QtWidgets.QHBoxLayout()
         for x in [self.ramptime_label, self.ramptime_input]:
             self.seventh_row_layout.addWidget(x)
 
-        self.eighth_row_layout = QtGui.QHBoxLayout()
+        self.eighth_row_layout = QtWidgets.QHBoxLayout()
         for x in [self.savemotion_label, self.savemotion_time_label, self.savemotion_time_input, self.savemotion_timedt_label, self.savemotion_timedt_input,
                   self.savemotion_xpos_label, self.savemotion_xpos_input, self.savemotion_zpos_label, self.savemotion_zpos_input]:
             self.eighth_row_layout.addWidget(x)
 
-        self.ninth_row_layout = QtGui.QHBoxLayout()
+        self.ninth_row_layout = QtWidgets.QHBoxLayout()
         for x in [self.saveserie_label, self.saveserie_timemin_label, self.saveserie_timemin_input, self.saveserie_timemax_label, self.saveserie_timemax_input,
                   self.saveserie_timedt_label, self.saveserie_timedt_input, self.saveserie_xpos_label, self.saveserie_xpos_input]:
             self.ninth_row_layout.addWidget(x)
 
-        self.tenth_row_layout = QtGui.QHBoxLayout()
+        self.tenth_row_layout = QtWidgets.QHBoxLayout()
         for x in [self.saveseriewaves_label, self.saveseriewaves_timemin_label, self.saveseriewaves_timemin_input, self.saveseriewaves_timemax_label, self.saveseriewaves_timemax_input, self.saveseriewaves_xpos_label, self.saveseriewaves_xpos_input]:
             self.tenth_row_layout.addWidget(x)
 
-        self.awas_root_layout = QtGui.QHBoxLayout()
+        self.awas_root_layout = QtWidgets.QHBoxLayout()
         self.awas_root_layout.addWidget(self.awas_label)
         self.awas_root_layout.addStretch(1)
         self.awas_root_layout.addWidget(self.awas_enabled)
 
-        self.awas_first_row_layout = QtGui.QHBoxLayout()
+        self.awas_first_row_layout = QtWidgets.QHBoxLayout()
         for x in [self.awas_startawas_label, self.awas_startawas_input, self.awas_swl_label, self.awas_swl_input, self.awas_elevation_label, self.awas_elevation_selector]:
             self.awas_first_row_layout.addWidget(x)
 
-        self.awas_second_row_layout = QtGui.QHBoxLayout()
+        self.awas_second_row_layout = QtWidgets.QHBoxLayout()
         for x in [self.awas_gaugex_label, self.awas_gaugex_input, self.awas_gaugey_label, self.awas_gaugey_input]:
             self.awas_second_row_layout.addWidget(x)
 
-        self.awas_third_row_layout = QtGui.QHBoxLayout()
+        self.awas_third_row_layout = QtWidgets.QHBoxLayout()
         for x in [self.awas_gaugezmin_label, self.awas_gaugezmin_input, self.awas_gaugezmax_label, self.awas_gaugezmax_input]:
             self.awas_third_row_layout.addWidget(x)
 
-        self.awas_fourth_row_layout = QtGui.QHBoxLayout()
+        self.awas_fourth_row_layout = QtWidgets.QHBoxLayout()
         for x in [self.awas_gaugedp_label, self.awas_gaugedp_input, self.awas_coefmasslimit_label, self.awas_coefmasslimit_input]:
             self.awas_fourth_row_layout.addWidget(x)
 
-        self.awas_fifth_row_layout = QtGui.QHBoxLayout()
+        self.awas_fifth_row_layout = QtWidgets.QHBoxLayout()
         for x in [self.awas_savedata_label, self.awas_savedata_selector, self.awas_limitace_label, self.awas_limitace_input]:
             self.awas_fifth_row_layout.addWidget(x)
 
-        self.awas_sixth_row_layout = QtGui.QHBoxLayout()
+        self.awas_sixth_row_layout = QtWidgets.QHBoxLayout()
         for x in [self.awas_correction_label, self.awas_correction_enabled, self.awas_correction_coefstroke_label, self.awas_correction_coefstroke_input, self.awas_correction_coefperiod_label, self.awas_correction_coefperiod_input, self.awas_correction_powerfunc_label, self.awas_correction_powerfunc_input]:
             self.awas_sixth_row_layout.addWidget(x)
 

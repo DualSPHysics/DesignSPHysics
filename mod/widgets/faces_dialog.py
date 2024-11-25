@@ -2,7 +2,8 @@
 # -*- coding: utf-8 -*-
 """DesignSPHysics Faces Configuration Dialog"""
 
-from PySide import QtCore, QtGui
+# from PySide import QtCore, QtGui
+from PySide2 import QtCore, QtWidgets
 
 from mod.translation_tools import __
 
@@ -11,40 +12,40 @@ from mod.dataobjects.simulation_object import SimulationObject
 from mod.dataobjects.faces_property import FacesProperty
 
 
-class FacesDialog(QtGui.QDialog):
+class FacesDialog(QtWidgets.QDialog):
     """ Defines a window with faces  """
 
     def __init__(self, selection_name, parent=None):
         super().__init__(parent=parent)
 
         self.setWindowTitle(__("Faces configuration"))
-        self.ok_button = QtGui.QPushButton(__("OK"))
-        self.cancel_button = QtGui.QPushButton(__("Cancel"))
-        self.main_layout = QtGui.QVBoxLayout()
+        self.ok_button = QtWidgets.QPushButton(__("OK"))
+        self.cancel_button = QtWidgets.QPushButton(__("Cancel"))
+        self.main_layout = QtWidgets.QVBoxLayout()
 
         self.target_object: SimulationObject = Case.the().get_simulation_object(selection_name)
 
-        self.button_layout = QtGui.QHBoxLayout()
+        self.button_layout = QtWidgets.QHBoxLayout()
         self.button_layout.addWidget(self.ok_button)
         self.button_layout.addWidget(self.cancel_button)
         self.ok_button.clicked.connect(self.on_ok)
         self.cancel_button.clicked.connect(self.on_cancel)
 
-        self.faces_layout = QtGui.QVBoxLayout()
+        self.faces_layout = QtWidgets.QVBoxLayout()
 
-        self.all_faces = QtGui.QCheckBox(__("All faces"))
+        self.all_faces = QtWidgets.QCheckBox(__("All faces"))
         self.all_faces.setCheckState(QtCore.Qt.Checked)
         self.all_faces.toggled.connect(self.on_faces_checkbox)
 
-        self.front_face = QtGui.QCheckBox(__("Front face"))
-        self.back_face = QtGui.QCheckBox(__("Back face"))
-        self.top_face = QtGui.QCheckBox(__("Top face"))
-        self.bottom_face = QtGui.QCheckBox(__("Bottom face"))
-        self.left_face = QtGui.QCheckBox(__("Left face"))
-        self.right_face = QtGui.QCheckBox(__("Right face"))
+        self.front_face = QtWidgets.QCheckBox(__("Front face"))
+        self.back_face = QtWidgets.QCheckBox(__("Back face"))
+        self.top_face = QtWidgets.QCheckBox(__("Top face"))
+        self.bottom_face = QtWidgets.QCheckBox(__("Bottom face"))
+        self.left_face = QtWidgets.QCheckBox(__("Left face"))
+        self.right_face = QtWidgets.QCheckBox(__("Right face"))
 
-        self.layers_label = QtGui.QLabel(__("Layers:"))
-        self.layers_input = QtGui.QLineEdit()
+        self.layers_label = QtWidgets.QLabel(__("Layers:"))
+        self.layers_input = QtWidgets.QLineEdit()
 
         if self.target_object.faces_configuration:
             self.all_faces.setCheckState(QtCore.Qt.Checked if self.target_object.faces_configuration.all_faces else QtCore.Qt.Unchecked)
@@ -58,9 +59,9 @@ class FacesDialog(QtGui.QDialog):
 
         self.all_faces.toggled.connect(self.on_faces_checkbox)
 
-        self.faces_options_layout = QtGui.QHBoxLayout()
-        self.faces_options_col1_layout = QtGui.QVBoxLayout()
-        self.faces_options_col2_layout = QtGui.QVBoxLayout()
+        self.faces_options_layout = QtWidgets.QHBoxLayout()
+        self.faces_options_col1_layout = QtWidgets.QVBoxLayout()
+        self.faces_options_col2_layout = QtWidgets.QVBoxLayout()
 
         self.faces_options_col1_layout.addWidget(self.front_face)
         self.faces_options_col1_layout.addWidget(self.top_face)
@@ -76,7 +77,7 @@ class FacesDialog(QtGui.QDialog):
         self.faces_layout.addWidget(self.all_faces)
         self.faces_layout.addLayout(self.faces_options_layout)
 
-        self.layers_layout = QtGui.QVBoxLayout()
+        self.layers_layout = QtWidgets.QVBoxLayout()
         self.layers_layout.addWidget(self.layers_label)
         self.layers_layout.addWidget(self.layers_input)
 

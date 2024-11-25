@@ -2,7 +2,9 @@
 # -*- coding: utf-8 -*-
 """DesignSPHysics CoulombDamping Edit Dialog """
 
-from PySide import QtGui
+# from PySide import QtGui
+from PySide2 import QtWidgets
+
 
 from mod.translation_tools import __
 from mod.dialog_tools import error_dialog
@@ -10,7 +12,7 @@ from mod.dialog_tools import error_dialog
 from mod.dataobjects.case import Case
 
 
-class LinkCoulombDampingEdit(QtGui.QDialog):
+class LinkCoulombDampingEdit(QtWidgets.QDialog):
     """ Defines Link coulombdamping window dialog """
 
     def __init__(self, link_coulombdamping_id, bodies_widgets, parent=None):
@@ -21,7 +23,7 @@ class LinkCoulombDampingEdit(QtGui.QDialog):
 
         # Title
         self.setWindowTitle(__("Link coulombdamping configuration"))
-        self.link_coulombdamping_edit_layout = QtGui.QVBoxLayout()
+        self.link_coulombdamping_edit_layout = QtWidgets.QVBoxLayout()
 
         # Find the link coulombdamping for which the button was pressed
         target_link_coulombdamping = None
@@ -36,20 +38,20 @@ class LinkCoulombDampingEdit(QtGui.QDialog):
             return
 
         # Elements that interact
-        self.body_layout = QtGui.QHBoxLayout()
-        self.body_one_label = QtGui.QLabel(__("Body 1: "))
-        self.body_one_line_edit = QtGui.QComboBox()
+        self.body_layout = QtWidgets.QHBoxLayout()
+        self.body_one_label = QtWidgets.QLabel(__("Body 1: "))
+        self.body_one_line_edit = QtWidgets.QComboBox()
         self.body_one_line_edit.insertItems(0, [str(target_link_coulombdamping.idbody1)])
         for body in bodies_widgets:
             if body.object_check.isChecked() and body.object_name != str(target_link_coulombdamping.idbody1):
                 self.body_one_line_edit.insertItems(0, [body.object_name])
-        self.body_two_label = QtGui.QLabel(__("Body 2: "))
-        self.body_two_line_edit = QtGui.QComboBox()
+        self.body_two_label = QtWidgets.QLabel(__("Body 2: "))
+        self.body_two_line_edit = QtWidgets.QComboBox()
         self.body_two_line_edit.insertItems(0, [str(target_link_coulombdamping.idbody2)])
         for body in bodies_widgets:
             if body.object_check.isChecked() and body.object_name != str(target_link_coulombdamping.idbody2):
                 self.body_two_line_edit.insertItems(0, [body.object_name])
-        self.body_to_body_label = QtGui.QLabel(__("to"))
+        self.body_to_body_label = QtWidgets.QLabel(__("to"))
 
         self.body_layout.addWidget(self.body_one_label)
         self.body_layout.addWidget(self.body_one_line_edit)
@@ -61,14 +63,14 @@ class LinkCoulombDampingEdit(QtGui.QDialog):
         self.link_coulombdamping_edit_layout.addLayout(self.body_layout)
 
         # Points where the elements interact in body 1
-        self.points_b1_layout = QtGui.QHBoxLayout()
-        self.points_b1_label = QtGui.QLabel(__("Point in body 1: "))
-        self.point_b1_x_label = QtGui.QLabel(__("X"))
-        self.point_b1_x_line_edit = QtGui.QLineEdit(str(target_link_coulombdamping.point_fb1[0]))
-        self.point_b1_y_label = QtGui.QLabel(__("Y"))
-        self.point_b1_y_line_edit = QtGui.QLineEdit(str(target_link_coulombdamping.point_fb1[1]))
-        self.point_b1_z_label = QtGui.QLabel(__("Z"))
-        self.point_b1_z_line_edit = QtGui.QLineEdit(str(target_link_coulombdamping.point_fb1[2]))
+        self.points_b1_layout = QtWidgets.QHBoxLayout()
+        self.points_b1_label = QtWidgets.QLabel(__("Point in body 1: "))
+        self.point_b1_x_label = QtWidgets.QLabel(__("X"))
+        self.point_b1_x_line_edit = QtWidgets.QLineEdit(str(target_link_coulombdamping.point_fb1[0]))
+        self.point_b1_y_label = QtWidgets.QLabel(__("Y"))
+        self.point_b1_y_line_edit = QtWidgets.QLineEdit(str(target_link_coulombdamping.point_fb1[1]))
+        self.point_b1_z_label = QtWidgets.QLabel(__("Z"))
+        self.point_b1_z_line_edit = QtWidgets.QLineEdit(str(target_link_coulombdamping.point_fb1[2]))
 
         self.points_b1_layout.addWidget(self.points_b1_label)
         self.points_b1_layout.addWidget(self.point_b1_x_label)
@@ -81,14 +83,14 @@ class LinkCoulombDampingEdit(QtGui.QDialog):
         self.link_coulombdamping_edit_layout.addLayout(self.points_b1_layout)
 
         # Points where the elements interact in body 2
-        self.points_b2_layout = QtGui.QHBoxLayout()
-        self.points_b2_label = QtGui.QLabel(__("Point in body 2: "))
-        self.point_b2_x_label = QtGui.QLabel(__("X"))
-        self.point_b2_x_line_edit = QtGui.QLineEdit(str(target_link_coulombdamping.point_fb2[0]))
-        self.point_b2_y_label = QtGui.QLabel(__("Y"))
-        self.point_b2_y_line_edit = QtGui.QLineEdit(str(target_link_coulombdamping.point_fb2[1]))
-        self.point_b2_z_label = QtGui.QLabel(__("Z"))
-        self.point_b2_z_line_edit = QtGui.QLineEdit(str(target_link_coulombdamping.point_fb2[2]))
+        self.points_b2_layout = QtWidgets.QHBoxLayout()
+        self.points_b2_label = QtWidgets.QLabel(__("Point in body 2: "))
+        self.point_b2_x_label = QtWidgets.QLabel(__("X"))
+        self.point_b2_x_line_edit = QtWidgets.QLineEdit(str(target_link_coulombdamping.point_fb2[0]))
+        self.point_b2_y_label = QtWidgets.QLabel(__("Y"))
+        self.point_b2_y_line_edit = QtWidgets.QLineEdit(str(target_link_coulombdamping.point_fb2[1]))
+        self.point_b2_z_label = QtWidgets.QLabel(__("Z"))
+        self.point_b2_z_line_edit = QtWidgets.QLineEdit(str(target_link_coulombdamping.point_fb2[2]))
 
         self.points_b2_layout.addWidget(self.points_b2_label)
         self.points_b2_layout.addWidget(self.point_b2_x_label)
@@ -101,12 +103,12 @@ class LinkCoulombDampingEdit(QtGui.QDialog):
         self.link_coulombdamping_edit_layout.addLayout(self.points_b2_layout)
 
         # Torsion options
-        self.rest_length_layout = QtGui.QHBoxLayout()
-        self.damping_layout = QtGui.QHBoxLayout()
-        self.rest_length_label = QtGui.QLabel(__("Rest length (m):"))
-        self.rest_length_line_edit = QtGui.QLineEdit(str(target_link_coulombdamping.rest_length))
-        self.damping_label = QtGui.QLabel(__("Damping (N):"))
-        self.damping_line_edit = QtGui.QLineEdit(str(target_link_coulombdamping.damping))
+        self.rest_length_layout = QtWidgets.QHBoxLayout()
+        self.damping_layout = QtWidgets.QHBoxLayout()
+        self.rest_length_label = QtWidgets.QLabel(__("Rest length (m):"))
+        self.rest_length_line_edit = QtWidgets.QLineEdit(str(target_link_coulombdamping.rest_length))
+        self.damping_label = QtWidgets.QLabel(__("Damping (N):"))
+        self.damping_line_edit = QtWidgets.QLineEdit(str(target_link_coulombdamping.damping))
 
         self.rest_length_layout.addWidget(self.rest_length_label)
         self.rest_length_layout.addWidget(self.rest_length_line_edit)
@@ -117,14 +119,14 @@ class LinkCoulombDampingEdit(QtGui.QDialog):
         self.link_coulombdamping_edit_layout.addLayout(self.damping_layout)
 
         # vtk
-        self.visualization_options_groupbox = QtGui.QGroupBox(__("Visualization Options"))
-        self.vtk_layout = QtGui.QHBoxLayout()
-        self.vtk_nside_label = QtGui.QLabel(__("Number of sections: "))
-        self.vtk_nside_line_edit = QtGui.QLineEdit(str(target_link_coulombdamping.nside))
-        self.vtk_radius_label = QtGui.QLabel(__("Spring radius: "))
-        self.vtk_radius_line_edit = QtGui.QLineEdit(str(target_link_coulombdamping.radius))
-        self.vtk_length_label = QtGui.QLabel(__("Length for revolution: "))
-        self.vtk_length_line_edit = QtGui.QLineEdit(str(target_link_coulombdamping.length))
+        self.visualization_options_groupbox = QtWidgets.QGroupBox(__("Visualization Options"))
+        self.vtk_layout = QtWidgets.QHBoxLayout()
+        self.vtk_nside_label = QtWidgets.QLabel(__("Number of sections: "))
+        self.vtk_nside_line_edit = QtWidgets.QLineEdit(str(target_link_coulombdamping.nside))
+        self.vtk_radius_label = QtWidgets.QLabel(__("Spring radius: "))
+        self.vtk_radius_line_edit = QtWidgets.QLineEdit(str(target_link_coulombdamping.radius))
+        self.vtk_length_label = QtWidgets.QLabel(__("Length for revolution: "))
+        self.vtk_length_line_edit = QtWidgets.QLineEdit(str(target_link_coulombdamping.length))
 
         self.vtk_layout.addWidget(self.vtk_nside_label)
         self.vtk_layout.addWidget(self.vtk_nside_line_edit)
@@ -137,11 +139,11 @@ class LinkCoulombDampingEdit(QtGui.QDialog):
         self.link_coulombdamping_edit_layout.addWidget(self.visualization_options_groupbox)
 
         # Buttons
-        self.ok_button = QtGui.QPushButton("Save")
+        self.ok_button = QtWidgets.QPushButton("Save")
         self.ok_button.clicked.connect(self.on_save)
-        self.cancel_button = QtGui.QPushButton("Cancel")
+        self.cancel_button = QtWidgets.QPushButton("Cancel")
         self.cancel_button.clicked.connect(self.on_cancel)
-        self.button_layout = QtGui.QHBoxLayout()
+        self.button_layout = QtWidgets.QHBoxLayout()
         self.button_layout.addStretch(1)
 
         self.button_layout.addWidget(self.ok_button)

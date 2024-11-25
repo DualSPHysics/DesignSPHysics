@@ -2,7 +2,8 @@
 # -*- coding: utf-8 -*-
 """DesignSPHysics Wait Motion Timeline Widget """
 
-from PySide import QtCore, QtGui
+# from PySide import QtCore, QtGui
+from PySide2 import QtCore, QtWidgets
 
 from mod.translation_tools import __
 from mod.gui_tools import get_icon
@@ -13,7 +14,7 @@ from mod.dataobjects.motion.wait_motion import WaitMotion
 from mod.functions import make_float
 
 
-class WaitMotionTimeline(QtGui.QWidget):
+class WaitMotionTimeline(QtWidgets.QWidget):
     """ A wait motion graphical representation for a table-based timeline """
 
     changed = QtCore.Signal(int, WaitMotion)
@@ -31,20 +32,20 @@ class WaitMotionTimeline(QtGui.QWidget):
         super().__init__(parent=parent)
 
         self.index = index
-        self.main_layout = QtGui.QHBoxLayout()
+        self.main_layout = QtWidgets.QHBoxLayout()
         self.main_layout.setContentsMargins(10, 0, 10, 0)
-        self.label = QtGui.QLabel("Wait")
+        self.label = QtWidgets.QLabel("Wait")
         self.label.setMinimumWidth(75)
-        self.time_label = QtGui.QLabel(__("Duration (s): "))
-        self.time_input = QtGui.QLineEdit()
-        self.delete_button = QtGui.QPushButton(
+        self.time_label = QtWidgets.QLabel(__("Duration (s): "))
+        self.time_input = QtWidgets.QLineEdit()
+        self.delete_button = QtWidgets.QPushButton(
             get_icon("trash.png"), None)
-        self.order_button_layout = QtGui.QVBoxLayout()
+        self.order_button_layout = QtWidgets.QVBoxLayout()
         self.order_button_layout.setContentsMargins(0, 0, 0, 0)
         self.order_button_layout.setSpacing(0)
-        self.order_up_button = QtGui.QPushButton(
+        self.order_up_button = QtWidgets.QPushButton(
             get_icon("up_arrow.png"), None)
-        self.order_down_button = QtGui.QPushButton(
+        self.order_down_button = QtWidgets.QPushButton(
             get_icon("down_arrow.png"), None)
         self.order_button_layout.addWidget(self.order_up_button)
         self.order_button_layout.addWidget(self.order_down_button)
