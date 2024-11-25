@@ -7,9 +7,12 @@ Check the [Official Webpage](http://design.sphysics.org) for downloads and more 
 ![Screenshot](https://design.sphysics.org/img/github-shot-21112019.png)
 
 ## News
- * [7th DualSPHysics Workshop](https://dual.sphysics.org/7thworkshop/), Politecnico di Bari, Italy, on **March 19-21, 2024**.
- * [v0.7.0](https://github.com/DualSPHysics/DesignSPHysics/releases/tag/0.7.0) has been released (15-09-2023). See [CHANGELOG file](CHANGELOG.md)
+### Training courses
+ * [4th Hands-on course on experimental and numerical modelling of wave-structure interaction](https://sites.google.com/unifi.it/hands-on-course-2024), Florence, Italy, on **1-5 July 2024**.
+ * [7th DualSPHysics Workshop](https://dual.sphysics.org/7thworkshop/), Politecnico di Bari, Italy, on **19-21 March, 2024**.
 
+### Releases
+ * [v0.7.0](https://github.com/DualSPHysics/DesignSPHysics/releases/tag/0.7.0) has been released (15-09-2023). See [CHANGELOG file](CHANGELOG.md)
 
 ## Description
 DesignSPHysics enables the user to create cases with solids and fluids and exports it to a DualSPHysics compatible format. In addition, it does the hard work for the user, generating the case data automatically, simulating, and post-processing, all inside FreeCAD.
@@ -38,6 +41,8 @@ By default, for example, in Windows, it is located in `%appdata%/FreeCAD/Mod` or
 Then copy the file `DesignSPHysics.FCMacro` of this repository into the FreeCAD macro directory (`%appdata%/FreeCAD/Macro` on Windows; `~/.FreeCAD/Macro` on GNU/Linux)
 
 ## Where to get help
+The new [DualSPHysics forum](https://github.com/DualSPHysics/DualSPHysics/discussions) is available for help on using the features available in the solver.
+
 You can check the [DesignSPHysics Wiki](http://design.sphysics.org/wiki) to get help. Also, you can post an [issue here on GitHub](https://github.com/DualSPHysics/DesignSPHysics/issues) or send an email to any of the people found in the [CONTRIBUTING file](CONTRIBUTING.md). 
 
 ## Contributing and developing for DesignSPHysics
