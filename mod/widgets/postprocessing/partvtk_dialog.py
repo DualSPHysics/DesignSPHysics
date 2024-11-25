@@ -11,8 +11,9 @@ from mod.post_processing_tools import partvtk_export
 from mod.dataobjects.case import Case
 
 
+
 class PartVTKDialog(QtWidgets.QDialog):
-    """ A PartVTK Configuration and Exeuction Dialog. """
+    """ A PartVTK Configuration and Execution Dialog. """
 
     DEFAULT_NAMES = ["PartAll", "PartBound", "PartFluid", "PartFixed", "PartMoving", "PartFloating"]
 

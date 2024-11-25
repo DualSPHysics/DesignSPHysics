@@ -5,7 +5,7 @@
   <version>0.7.1 (25-11-2024)</version>
   <date>25-11-2024</date>
   <maintainer email="ivan.martinez.estevez@uvigo.es">Iván Martínez Estévez</maintainer>
-  <license file="LICENSE">GPLv3</license>
+  <license file="LICENSE">GPL-3.0-or-later</license>
   <url type="repository" branch="master">https://github.com/DualSPHysics/DesignSPHysics</url>
   <icon>images/icon.svg</icon>
 
