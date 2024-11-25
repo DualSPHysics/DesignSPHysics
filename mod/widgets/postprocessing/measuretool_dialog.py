@@ -2,7 +2,8 @@
 # -*- coding: utf-8 -*-
 """DesignSPHysics ComputeForces Config and Execution Dialog."""
 
-from PySide import QtGui, QtCore
+# from PySide import QtGui, QtCore
+from PySide2 import QtCore, QtWidgets
 
 from mod.translation_tools import __
 from mod.post_processing_tools import measuretool_export
@@ -15,7 +16,7 @@ from mod.widgets.postprocessing.measuretool_grid_dialog import MeasureToolGridDi
 from mod.widgets.postprocessing.measuretool_points_dialog import MeasureToolPointsDialog
 
 
-class MeasureToolDialog(QtGui.QDialog):
+class MeasureToolDialog(QtWidgets.QDialog):
     """ DesignSPHysics ComputeForces Config and Execution Dialog. """
 
     def __init__(self, post_processing_widget, parent=None):
@@ -25,34 +26,34 @@ class MeasureToolDialog(QtGui.QDialog):
 
         self.setModal(False)
         self.setWindowTitle(__("MeasureTool"))
-        self.measuretool_tool_layout = QtGui.QVBoxLayout()
+        self.measuretool_tool_layout = QtWidgets.QVBoxLayout()
 
-        self.mtool_format_layout = QtGui.QHBoxLayout()
-        self.mtool_types_groupbox = QtGui.QGroupBox(__("Variables to export"))
-        self.mtool_filename_layout = QtGui.QHBoxLayout()
-        self.mtool_parameters_layout = QtGui.QHBoxLayout()
-        self.mtool_buttons_layout = QtGui.QHBoxLayout()
+        self.mtool_format_layout = QtWidgets.QHBoxLayout()
+        self.mtool_types_groupbox = QtWidgets.QGroupBox(__("Variables to export"))
+        self.mtool_filename_layout = QtWidgets.QHBoxLayout()
+        self.mtool_parameters_layout = QtWidgets.QHBoxLayout()
+        self.mtool_buttons_layout = QtWidgets.QHBoxLayout()
 
-        self.outformat_label = QtGui.QLabel(__("Output format"))
-        self.outformat_combobox = QtGui.QComboBox()
+        self.outformat_label = QtWidgets.QLabel(__("Output format"))
+        self.outformat_combobox = QtWidgets.QComboBox()
         self.outformat_combobox.insertItems(0, ["VTK", "CSV", "ASCII"])
         self.outformat_combobox.setCurrentIndex(1)
         self.mtool_format_layout.addWidget(self.outformat_label)
         self.mtool_format_layout.addStretch(1)
         self.mtool_format_layout.addWidget(self.outformat_combobox)
 
-        self.mtool_types_groupbox_layout = QtGui.QVBoxLayout()
-        self.mtool_types_chk_all = QtGui.QCheckBox(__("All"))
+        self.mtool_types_groupbox_layout = QtWidgets.QVBoxLayout()
+        self.mtool_types_chk_all = QtWidgets.QCheckBox(__("All"))
         self.mtool_types_chk_all.setCheckState(QtCore.Qt.Checked)
-        self.mtool_types_chk_vel = QtGui.QCheckBox(__("Velocity"))
-        self.mtool_types_chk_rhop = QtGui.QCheckBox(__("Density"))
-        self.mtool_types_chk_press = QtGui.QCheckBox(__("Pressure"))
-        self.mtool_types_chk_mass = QtGui.QCheckBox(__("Mass"))
-        self.mtool_types_chk_vol = QtGui.QCheckBox(__("Volume"))
-        self.mtool_types_chk_idp = QtGui.QCheckBox(__("Particle ID"))
-        self.mtool_types_chk_ace = QtGui.QCheckBox(__("Acceleration"))
-        self.mtool_types_chk_vor = QtGui.QCheckBox(__("Vorticity"))
-        self.mtool_types_chk_kcorr = QtGui.QCheckBox(__("KCorr"))
+        self.mtool_types_chk_vel = QtWidgets.QCheckBox(__("Velocity"))
+        self.mtool_types_chk_rhop = QtWidgets.QCheckBox(__("Density"))
+        self.mtool_types_chk_press = QtWidgets.QCheckBox(__("Pressure"))
+        self.mtool_types_chk_mass = QtWidgets.QCheckBox(__("Mass"))
+        self.mtool_types_chk_vol = QtWidgets.QCheckBox(__("Volume"))
+        self.mtool_types_chk_idp = QtWidgets.QCheckBox(__("Particle ID"))
+        self.mtool_types_chk_ace = QtWidgets.QCheckBox(__("Acceleration"))
+        self.mtool_types_chk_vor = QtWidgets.QCheckBox(__("Vorticity"))
+        self.mtool_types_chk_kcorr = QtWidgets.QCheckBox(__("KCorr"))
         for x in [self.mtool_types_chk_all,
                   self.mtool_types_chk_vel,
                   self.mtool_types_chk_rhop,
@@ -67,27 +68,27 @@ class MeasureToolDialog(QtGui.QDialog):
 
         self.mtool_types_groupbox.setLayout(self.mtool_types_groupbox_layout)
 
-        self.mtool_calculate_elevation = QtGui.QCheckBox(__("Calculate water elevation"))
+        self.mtool_calculate_elevation = QtWidgets.QCheckBox(__("Calculate water elevation"))
 
-        self.mtool_set_points_layout = QtGui.QHBoxLayout()
-        self.mtool_set_points = QtGui.QPushButton("List of points")
-        self.mtool_set_grid = QtGui.QPushButton("Grid of points")
+        self.mtool_set_points_layout = QtWidgets.QHBoxLayout()
+        self.mtool_set_points = QtWidgets.QPushButton("List of points")
+        self.mtool_set_grid = QtWidgets.QPushButton("Grid of points")
         self.mtool_set_points_layout.addWidget(self.mtool_set_points)
         self.mtool_set_points_layout.addWidget(self.mtool_set_grid)
 
-        self.mtool_file_name_label = QtGui.QLabel(__("File name"))
-        self.mtool_file_name_text = QtGui.QLineEdit()
+        self.mtool_file_name_label = QtWidgets.QLabel(__("File name"))
+        self.mtool_file_name_text = QtWidgets.QLineEdit()
         self.mtool_file_name_text.setText("MeasurePart")
         self.mtool_filename_layout.addWidget(self.mtool_file_name_label)
         self.mtool_filename_layout.addWidget(self.mtool_file_name_text)
 
-        self.mtool_parameters_label = QtGui.QLabel(__("Additional Parameters"))
-        self.mtool_parameters_text = QtGui.QLineEdit()
+        self.mtool_parameters_label = QtWidgets.QLabel(__("Additional Parameters"))
+        self.mtool_parameters_text = QtWidgets.QLineEdit()
         self.mtool_parameters_layout.addWidget(self.mtool_parameters_label)
         self.mtool_parameters_layout.addWidget(self.mtool_parameters_text)
 
-        self.mtool_export_button = QtGui.QPushButton(__("Export"))
-        self.mtool_cancel_button = QtGui.QPushButton(__("Cancel"))
+        self.mtool_export_button = QtWidgets.QPushButton(__("Export"))
+        self.mtool_cancel_button = QtWidgets.QPushButton(__("Cancel"))
         self.mtool_buttons_layout.addWidget(self.mtool_export_button)
         self.mtool_buttons_layout.addWidget(self.mtool_cancel_button)
 

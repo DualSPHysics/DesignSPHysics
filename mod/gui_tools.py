@@ -9,22 +9,23 @@ operations in DesignSPHysics.
 
 import os
 
-from PySide import QtGui
+# from PySide import QtGui
+from PySide2 import QtWidgets, QtGui
 
 
-def h_line_generator() -> QtGui.QFrame:
+def h_line_generator() -> QtWidgets.QFrame:
     """ Generates an horizontal line that can be used as a separator."""
-    to_ret = QtGui.QFrame()
-    to_ret.setFrameShape(QtGui.QFrame.HLine)
-    to_ret.setFrameShadow(QtGui.QFrame.Sunken)
+    to_ret = QtWidgets.QFrame()
+    to_ret.setFrameShape(QtWidgets.QFrame.HLine)
+    to_ret.setFrameShadow(QtWidgets.QFrame.Sunken)
     return to_ret
 
 
-def v_line_generator() -> QtGui.QFrame:
+def v_line_generator() -> QtWidgets.QFrame:
     """ Generates a vertical line that can be used as a separator"""
-    to_ret = QtGui.QFrame()
-    to_ret.setFrameShape(QtGui.QFrame.VLine)
-    to_ret.setFrameShadow(QtGui.QFrame.Sunken)
+    to_ret = QtWidgets.QFrame()
+    to_ret.setFrameShape(QtWidgets.QFrame.VLine)
+    to_ret.setFrameShadow(QtWidgets.QFrame.Sunken)
     return to_ret
 
 

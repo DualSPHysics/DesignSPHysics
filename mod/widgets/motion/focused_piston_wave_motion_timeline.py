@@ -2,7 +2,8 @@
 # -*- coding: utf-8 -*-
 """DesignSPHysics Focused Piston Wave Motion Timeline Widget"""
 
-from PySide import QtCore, QtGui
+# from PySide import QtCore, QtGui
+from PySide2 import QtCore, QtWidgets
 
 from mod.translation_tools import __
 from mod.gui_tools import h_line_generator
@@ -14,7 +15,7 @@ from mod.dataobjects.motion.focused_piston_wave_gen import FocusedPistonWaveGen
 
 from mod.functions import make_float
 
-class FocusedPistonWaveMotionTimeline(QtGui.QWidget):
+class FocusedPistonWaveMotionTimeline(QtWidgets.QWidget):
     """ An Focused Wave motion graphical representation for a table-based timeline """
     changed = QtCore.Signal(int, FocusedPistonWaveGen)
 
@@ -27,149 +28,149 @@ class FocusedPistonWaveMotionTimeline(QtGui.QWidget):
                             "motion widget in the timeline without a motion object")
         super().__init__(parent=parent)
 
-        self.main_layout = QtGui.QVBoxLayout()
+        self.main_layout = QtWidgets.QVBoxLayout()
         self.main_layout.setContentsMargins(10, 10, 10, 10)
 
-        self.root_label = QtGui.QLabel(__("Focused wave generator (Piston)"))
+        self.root_label = QtWidgets.QLabel(__("Focused wave generator (Piston)"))
 
-        self.duration_label = QtGui.QLabel(__("Duration"))
-        self.duration_input = QtGui.QLineEdit()
+        self.duration_label = QtWidgets.QLabel(__("Duration"))
+        self.duration_input = QtWidgets.QLineEdit()
 
-        self.wave_order_label = QtGui.QLabel(__("Wave Order"))
-        self.wave_order_selector = QtGui.QComboBox()
+        self.wave_order_label = QtWidgets.QLabel(__("Wave Order"))
+        self.wave_order_selector = QtWidgets.QComboBox()
         self.wave_order_selector.insertItems(
             0, [__("1st Order"), __("2nd Order")])
 
-        self.depth_label = QtGui.QLabel(__("Depth (m): "))
-        self.depth_input = QtGui.QLineEdit()
+        self.depth_label = QtWidgets.QLabel(__("Depth (m): "))
+        self.depth_input = QtWidgets.QLineEdit()
 
-        self.piston_dir_label = QtGui.QLabel(
+        self.piston_dir_label = QtWidgets.QLabel(
             __("Piston direction (X, Y, Z): "))
-        self.piston_dir_x = QtGui.QLineEdit()
-        self.piston_dir_y = QtGui.QLineEdit()
-        self.piston_dir_z = QtGui.QLineEdit()
+        self.piston_dir_x = QtWidgets.QLineEdit()
+        self.piston_dir_y = QtWidgets.QLineEdit()
+        self.piston_dir_z = QtWidgets.QLineEdit()
 
-        self.wave_height_label = QtGui.QLabel(__("Wave height (m): "))
-        self.wave_height_input = QtGui.QLineEdit()
+        self.wave_height_label = QtWidgets.QLabel(__("Wave height (m): "))
+        self.wave_height_input = QtWidgets.QLineEdit()
 
-        self.wave_period_label = QtGui.QLabel(__("Wave period (s): "))
-        self.wave_period_input = QtGui.QLineEdit()
+        self.wave_period_label = QtWidgets.QLabel(__("Wave period (s): "))
+        self.wave_period_input = QtWidgets.QLineEdit()
 
-        self.gainstroke_label = QtGui.QLabel(__("Gain factor: "))
-        self.gainstroke_input = QtGui.QLineEdit()
+        self.gainstroke_label = QtWidgets.QLabel(__("Gain factor: "))
+        self.gainstroke_input = QtWidgets.QLineEdit()
 
-        self.spectrum_label = QtGui.QLabel(__("Spectrum"))
-        self.spectrum_selector = QtGui.QComboBox()
+        self.spectrum_label = QtWidgets.QLabel(__("Spectrum"))
+        self.spectrum_selector = QtWidgets.QComboBox()
         # Index numbers match FocusedSpectrum static values
         self.spectrum_selector.insertItems(0, ["Jonswap", "Pierson-Moskowitz"])
 
-        self.discretization_label = QtGui.QLabel(__("Discretization"))
-        self.discretization_selector = QtGui.QComboBox()
+        self.discretization_label = QtWidgets.QLabel(__("Discretization"))
+        self.discretization_selector = QtWidgets.QComboBox()
         # Index numbers match FocusedDiscretization static values
         self.discretization_selector.insertItems(
             0, ["Regular", "Random", "Stretched", "Crosstreched"])
 
-        self.peak_coef_label = QtGui.QLabel(__("Peak Coeff"))
-        self.peak_coef_input = QtGui.QLineEdit()
+        self.peak_coef_label = QtWidgets.QLabel(__("Peak Coeff"))
+        self.peak_coef_input = QtWidgets.QLineEdit()
 
-        self.waves_label = QtGui.QLabel(__("Number of waves"))
-        self.waves_input = QtGui.QLineEdit()
+        self.waves_label = QtWidgets.QLabel(__("Number of waves"))
+        self.waves_input = QtWidgets.QLineEdit()
 
-        self.randomseed_label = QtGui.QLabel(__("Random Seed"))
-        self.randomseed_input = QtGui.QLineEdit()
+        self.randomseed_label = QtWidgets.QLabel(__("Random Seed"))
+        self.randomseed_input = QtWidgets.QLineEdit()
 
-        self.ramptime_label = QtGui.QLabel(__("Time of ramp (s): "))
-        self.ramptime_input = QtGui.QLineEdit()
+        self.ramptime_label = QtWidgets.QLabel(__("Time of ramp (s): "))
+        self.ramptime_input = QtWidgets.QLineEdit()
 
-        self.savemotion_label = QtGui.QLabel(__("Motion saving > "))
-        self.savemotion_time_input = QtGui.QLineEdit()
-        self.savemotion_time_label = QtGui.QLabel(__("Time (s): "))
-        self.savemotion_timedt_input = QtGui.QLineEdit()
-        self.savemotion_timedt_label = QtGui.QLabel(__("DT Time (s): "))
-        self.savemotion_xpos_input = QtGui.QLineEdit()
-        self.savemotion_xpos_label = QtGui.QLabel(__("X Pos (m): "))
-        self.savemotion_zpos_input = QtGui.QLineEdit()
-        self.savemotion_zpos_label = QtGui.QLabel(__("Z Pos (m): "))
+        self.savemotion_label = QtWidgets.QLabel(__("Motion saving > "))
+        self.savemotion_time_input = QtWidgets.QLineEdit()
+        self.savemotion_time_label = QtWidgets.QLabel(__("Time (s): "))
+        self.savemotion_timedt_input = QtWidgets.QLineEdit()
+        self.savemotion_timedt_label = QtWidgets.QLabel(__("DT Time (s): "))
+        self.savemotion_xpos_input = QtWidgets.QLineEdit()
+        self.savemotion_xpos_label = QtWidgets.QLabel(__("X Pos (m): "))
+        self.savemotion_zpos_input = QtWidgets.QLineEdit()
+        self.savemotion_zpos_label = QtWidgets.QLabel(__("Z Pos (m): "))
 
-        self.xf_label = QtGui.QLabel(__("Focused location: "))
-        self.xf_input = QtGui.QLineEdit()
+        self.xf_label = QtWidgets.QLabel(__("Focused location: "))
+        self.xf_input = QtWidgets.QLineEdit()
 
-        self.fphase_label = QtGui.QLabel(__("Focused phase (deg): "))
-        self.fphase_input = QtGui.QLineEdit()
+        self.fphase_label = QtWidgets.QLabel(__("Focused phase (deg): "))
+        self.fphase_input = QtWidgets.QLineEdit()
 
-        self.maxwaveh_label = QtGui.QLabel(__("Compute maximum wave H"))
-        self.maxwaveh_nwaves_label = QtGui.QLabel(__("Number of waves: "))
-        self.maxwaveh_nwaves_input = QtGui.QLineEdit()
+        self.maxwaveh_label = QtWidgets.QLabel(__("Compute maximum wave H"))
+        self.maxwaveh_nwaves_label = QtWidgets.QLabel(__("Number of waves: "))
+        self.maxwaveh_nwaves_input = QtWidgets.QLineEdit()
 
-        self.maxwaveh_time_label = QtGui.QLabel(__("Time (s): "))
-        self.maxwaveh_time_input = QtGui.QLineEdit()
+        self.maxwaveh_time_label = QtWidgets.QLabel(__("Time (s): "))
+        self.maxwaveh_time_input = QtWidgets.QLineEdit()
 
-        self.fpretime_label = QtGui.QLabel(__("Initial extra time for focus generation (s): "))
-        self.fpretime_input = QtGui.QLineEdit()
+        self.fpretime_label = QtWidgets.QLabel(__("Initial extra time for focus generation (s): "))
+        self.fpretime_input = QtWidgets.QLineEdit()
     
-        self.fmovtime_label = QtGui.QLabel(__("Final time for paddle motion (s): "))
-        self.fmovtime_input = QtGui.QLineEdit()
+        self.fmovtime_label = QtWidgets.QLabel(__("Final time for paddle motion (s): "))
+        self.fmovtime_input = QtWidgets.QLineEdit()
 
-        self.fmovramp_label = QtGui.QLabel(__("Final ramp time before final time motion (s): "))
-        self.fmovramp_input = QtGui.QLineEdit()
+        self.fmovramp_label = QtWidgets.QLabel(__("Final ramp time before final time motion (s): "))
+        self.fmovramp_input = QtWidgets.QLineEdit()
 
-        self.root_layout = QtGui.QHBoxLayout()
+        self.root_layout = QtWidgets.QHBoxLayout()
         self.root_layout.addWidget(self.root_label)
         self.root_layout.addStretch(1)
         for x in [self.duration_label, self.duration_input]:
             self.root_layout.addWidget(x)
 
-        self.first_row_layout = QtGui.QHBoxLayout()
+        self.first_row_layout = QtWidgets.QHBoxLayout()
         for x in [self.wave_order_label, self.wave_order_selector, self.depth_label, self.depth_input]:
             self.first_row_layout.addWidget(x)
 
-        self.second_row_layout = QtGui.QHBoxLayout()
+        self.second_row_layout = QtWidgets.QHBoxLayout()
         for x in [self.piston_dir_label, self.piston_dir_x, self.piston_dir_y, self.piston_dir_z]:
             self.second_row_layout.addWidget(x)
 
-        self.third_row_layout = QtGui.QHBoxLayout()
+        self.third_row_layout = QtWidgets.QHBoxLayout()
         for x in [self.wave_height_label, self.wave_height_input, self.wave_period_label, self.wave_period_input, self.gainstroke_label, self.gainstroke_input]:
             self.third_row_layout.addWidget(x)
 
-        self.fourth_row_layout = QtGui.QHBoxLayout()
+        self.fourth_row_layout = QtWidgets.QHBoxLayout()
         for x in [self.spectrum_label, self.spectrum_selector, self.discretization_label, self.discretization_selector, self.peak_coef_label, self.peak_coef_input]:
             self.fourth_row_layout.addWidget(x)
 
-        self.fifth_row_layout = QtGui.QHBoxLayout()
+        self.fifth_row_layout = QtWidgets.QHBoxLayout()
         for x in [self.waves_label, self.waves_input, self.randomseed_label, self.randomseed_input]:
             self.fifth_row_layout.addWidget(x)
 
-        self.sixth_row_layout = QtGui.QHBoxLayout()
+        self.sixth_row_layout = QtWidgets.QHBoxLayout()
         for x in [self.ramptime_label, self.ramptime_input]:
             self.sixth_row_layout.addWidget(x)
 
-        self.seventh_row_layout = QtGui.QHBoxLayout()
+        self.seventh_row_layout = QtWidgets.QHBoxLayout()
         for x in [self.savemotion_label, self.savemotion_time_label, self.savemotion_time_input, self.savemotion_timedt_label, self.savemotion_timedt_input,
                   self.savemotion_xpos_label, self.savemotion_xpos_input, self.savemotion_zpos_label, self.savemotion_zpos_input]:
             self.seventh_row_layout.addWidget(x)
 
-        self.eighth_row_layout = QtGui.QHBoxLayout()
+        self.eighth_row_layout = QtWidgets.QHBoxLayout()
         for x in [self.xf_label, self.xf_input, self.fphase_label,self.fphase_input]:
             self.eighth_row_layout.addWidget(x)
 
-        self.ninth_row_layout = QtGui.QHBoxLayout()
+        self.ninth_row_layout = QtWidgets.QHBoxLayout()
         for x in [self.maxwaveh_label]: 
             self.ninth_row_layout.addWidget(x)
         
-        self.tenth_row_layout = QtGui.QHBoxLayout()
+        self.tenth_row_layout = QtWidgets.QHBoxLayout()
         for x in [self.maxwaveh_nwaves_label, self.maxwaveh_nwaves_input, 
             self.maxwaveh_time_label, self.maxwaveh_time_input]: 
             self.tenth_row_layout.addWidget(x)
 
-        self.eleventh_row_layout = QtGui.QHBoxLayout()
+        self.eleventh_row_layout = QtWidgets.QHBoxLayout()
         for x in [self.fpretime_label, self.fpretime_input]:
             self.eleventh_row_layout.addWidget(x)
 
-        self.twelfth_row_layout = QtGui.QHBoxLayout()
+        self.twelfth_row_layout = QtWidgets.QHBoxLayout()
         for x in [self.fmovtime_label, self.fmovtime_input]:
             self.twelfth_row_layout.addWidget(x)
 
-        self.thirteenth_row_layout = QtGui.QHBoxLayout()
+        self.thirteenth_row_layout = QtWidgets.QHBoxLayout()
         for x in [self.fmovramp_label, self.fmovramp_input]:
             self.thirteenth_row_layout.addWidget(x)
 

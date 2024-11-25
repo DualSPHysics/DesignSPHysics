@@ -5,7 +5,8 @@
 import FreeCAD
 import FreeCADGui
 
-from PySide import QtCore, QtGui
+#from PySide import QtCore, QtGui
+from PySide2 import QtCore, QtWidgets
 
 from mod.translation_tools import __
 from mod.enums import ObjectType, ObjectFillMode, FreeCADObjectType, HelpURL
@@ -26,7 +27,7 @@ from mod.dataobjects.case import Case
 from mod.dataobjects.simulation_object import SimulationObject
 
 
-class PropertiesDockWidget(QtGui.QDockWidget):
+class PropertiesDockWidget(QtWidgets.QDockWidget):
     """ DesignSPHysics object properties widget. """
 
     NUMBER_OF_ROWS = 10
@@ -45,27 +46,27 @@ class PropertiesDockWidget(QtGui.QDockWidget):
         self.setWindowTitle(__("DSPH Object Properties"))
 
         # Scaffolding widget, only useful to apply to the properties_dock widget
-        self.properties_scaff_widget = QtGui.QWidget()
-        self.property_widget_layout = QtGui.QVBoxLayout()
+        self.properties_scaff_widget = QtWidgets.QWidget()
+        self.property_widget_layout = QtWidgets.QVBoxLayout()
 
         # Property table
-        self.object_property_table = QtGui.QTableWidget(self.NUMBER_OF_ROWS, self.NUMBER_OF_COLUMNS)
+        self.object_property_table = QtWidgets.QTableWidget(self.NUMBER_OF_ROWS, self.NUMBER_OF_COLUMNS)
         self.object_property_table.setMinimumHeight(self.MIN_HEIGHT)
         self.object_property_table.setHorizontalHeaderLabels([__("Property Name"), __("Value")])
         self.object_property_table.verticalHeader().setVisible(False)
-        self.object_property_table.horizontalHeader().setResizeMode(QtGui.QHeaderView.Stretch)
+        self.object_property_table.horizontalHeader().setSectionResizeMode(QtWidgets.QHeaderView.Stretch)
 
         # Add an object to DSPH. Only appears when an object is not part of the simulation
-        self.addtodsph_button = QtGui.QPushButton(__("Add to DSPH Simulation"))
+        self.addtodsph_button = QtWidgets.QPushButton(__("Add to DSPH Simulation"))
         self.addtodsph_button.setToolTip(__("Adds the current selection to\nthe case. Objects not included will not be exported."))
 
         # Same as above, this time with remove
-        self.removefromdsph_button = QtGui.QPushButton(__("Remove from DSPH Simulation"))
+        self.removefromdsph_button = QtWidgets.QPushButton(__("Remove from DSPH Simulation"))
         self.removefromdsph_button.setToolTip(__("Removes the current selection from the case.\n"
                                                  "Objects not included in the case will not be exported."))
 
         # Damping configuration button
-        self.damping_config_button = QtGui.QPushButton(__("Damping configuration"))
+        self.damping_config_button = QtWidgets.QPushButton(__("Damping configuration"))
         self.damping_config_button.setToolTip(__("Opens the damping configuration for the selected object"))
 
         self.property_widget_layout.addWidget(self.object_property_table)
@@ -78,51 +79,51 @@ class PropertiesDockWidget(QtGui.QDockWidget):
         self.setWidget(self.properties_scaff_widget)
 
         # Different labels to add to the property table
-        self.mkgroup_label = QtGui.QLabel()
+        self.mkgroup_label = QtWidgets.QLabel()
         self.mkgroup_label.setText("&nbsp;<span>{}</span>".format(__("MKGroup")))
         self.mkgroup_label.setOpenExternalLinks(True)
         self.mkgroup_label.setToolTip(__("Establishes the object group."))
 
-        self.objtype_label = QtGui.QLabel()
+        self.objtype_label = QtWidgets.QLabel()
         self.objtype_label.setText("&nbsp;<span>{}</span>".format(__("Type of object")))
         self.objtype_label.setToolTip(__("Establishes the object type: Fluid or bound"))
 
-        self.fillmode_label = QtGui.QLabel()
+        self.fillmode_label = QtWidgets.QLabel()
         self.fillmode_label.setText("&nbsp;<span>{}</span>".format(__("Fill mode")))
         self.fillmode_label.setToolTip(__("Sets fill mode.\nFull: generates internal volume and external mesh."
                                           "\nSolid: generates only internal volume."
                                           "\nFace: generates only external mesh."
                                           "\nWire: generates only external mesh polygon edges."))
 
-        self.floatstate_label = QtGui.QLabel()
+        self.floatstate_label = QtWidgets.QLabel()
         self.floatstate_label.setText("&nbsp;<span>{}</span>".format(__("Float state")))
         self.floatstate_label.setToolTip(__("Sets floating state for this object MK."))
 
-        self.initials_label = QtGui.QLabel()
+        self.initials_label = QtWidgets.QLabel()
         self.initials_label.setText("&nbsp;<span>{}</span>".format(__("Initials")))
         self.initials_label.setToolTip(__("Sets initials options for this object"))
 
-        self.material_label = QtGui.QLabel()
+        self.material_label = QtWidgets.QLabel()
         self.material_label.setText("&nbsp;<span>{}</span>".format(__("Material")))
         self.material_label.setToolTip(__("Sets material for this object"))
 
-        self.motion_label = QtGui.QLabel()
+        self.motion_label = QtWidgets.QLabel()
         self.motion_label.setText("&nbsp;<span>{}</span>".format(__("Motion")))
         self.motion_label.setToolTip(__("Sets motion for this object"))
 
-        self.faces_label = QtGui.QLabel()
+        self.faces_label = QtWidgets.QLabel()
         self.faces_label.setText("&nbsp;<span>{}</span>".format(__("Faces")))
         self.faces_label.setToolTip(__("Adds faces"))
 
-        self.material_label = QtGui.QLabel()
+        self.material_label = QtWidgets.QLabel()
         self.material_label.setText("&nbsp;<span>{}</span>".format(__("Material")))
         self.material_label.setToolTip(__("Configures the selected object material"))
 
-        self.autofill_label = QtGui.QLabel()
+        self.autofill_label = QtWidgets.QLabel()
         self.autofill_label.setText("&nbsp;<span>{}</span>".format(__("Autofill")))
         self.autofill_label.setToolTip(__("Controls geometry autofill"))
 
-        self.frdrawmode_label = QtGui.QLabel()
+        self.frdrawmode_label = QtWidgets.QLabel()
         self.frdrawmode_label.setText("&nbsp;<span>{}</span>".format(__("FreeDraw")))
         self.frdrawmode_label.setToolTip(__("Controls geometry frdrawmode"))
 
@@ -150,16 +151,16 @@ class PropertiesDockWidget(QtGui.QDockWidget):
         self.object_property_table.setCellWidget(9, 0, self.frdrawmode_label)
 
         # Property change widgets
-        self.mkgroup_prop = QtGui.QSpinBox()
-        self.objtype_prop = QtGui.QComboBox()
-        self.fillmode_prop = QtGui.QComboBox()
-        self.floatstate_prop = QtGui.QPushButton(__("Configure"))
-        self.initials_prop = QtGui.QPushButton(__("Configure"))
-        self.motion_prop = QtGui.QPushButton(__("Configure"))
-        self.faces_prop = QtGui.QPushButton(__("Configure"))
-        self.material_prop = QtGui.QPushButton(__("Configure"))
-        self.autofill_prop = QtGui.QCheckBox("Enabled")
-        self.frdrawmode_prop = QtGui.QCheckBox("Enabled")
+        self.mkgroup_prop = QtWidgets.QSpinBox()
+        self.objtype_prop = QtWidgets.QComboBox()
+        self.fillmode_prop = QtWidgets.QComboBox()
+        self.floatstate_prop = QtWidgets.QPushButton(__("Configure"))
+        self.initials_prop = QtWidgets.QPushButton(__("Configure"))
+        self.motion_prop = QtWidgets.QPushButton(__("Configure"))
+        self.faces_prop = QtWidgets.QPushButton(__("Configure"))
+        self.material_prop = QtWidgets.QPushButton(__("Configure"))
+        self.autofill_prop = QtWidgets.QCheckBox("Enabled")
+        self.frdrawmode_prop = QtWidgets.QCheckBox("Enabled")
 
         self.faces_prop.setEnabled(False)
         self.mkgroup_prop.setRange(0, 240)
@@ -248,7 +249,7 @@ class PropertiesDockWidget(QtGui.QDockWidget):
         orphan_mkbasedproperties: list = Case.the().get_orphan_mkbasedproperties()
         if orphan_mkbasedproperties:
             response = ok_cancel_dialog(__("Changing MK value"), __("By doing this you will loose all MK configuration for the previous MK: {}. Are you sure you want to do this?").format(old_value))
-            if response == QtGui.QMessageBox.Ok:
+            if response == QtWidgets.QMessageBox.Ok:
                 debug("Changing from mk {} to {} caused orphan mkbasedproperties. Deleting...".format(old_value, new_value))
                 Case.the().delete_orphan_mkbasedproperties()
             else:
@@ -370,23 +371,23 @@ class PropertiesDockWidget(QtGui.QDockWidget):
     def set_add_button_visibility(self, visible: bool) -> None:
         """ Sets the add button visibility. """
         if visible:
-            self.addtodsph_button.show()
+            self.addtodsph_button.setVisible(True)
         else:
-            self.addtodsph_button.hide()
+            self.addtodsph_button.setVisible(False)
 
     def set_remove_button_visibility(self, visible: bool) -> None:
         """ Sets the remove button visibility. """
         if visible:
-            self.removefromdsph_button.show()
+            self.removefromdsph_button.setVisible(True)
         else:
-            self.removefromdsph_button.hide()
+            self.removefromdsph_button.setVisible(False)
 
     def set_damping_button_visibility(self, visible: bool) -> None:
         """ Sets the damping button visibility. """
         if visible:
-            self.damping_config_button.show()
+            self.damping_config_button.setVisible(True)
         else:
-            self.damping_config_button.hide()
+            self.damping_config_button.setVisible(False)
 
     def set_add_button_text(self, text: str) -> None:
         """ Sets the Add button text. """
@@ -395,9 +396,9 @@ class PropertiesDockWidget(QtGui.QDockWidget):
     def set_property_table_visibility(self, visible: bool) -> None:
         """ Sets the property table visibility. """
         if visible:
-            self.object_property_table.show()
+            self.object_property_table.setVisible(True)
         else:
-            self.object_property_table.hide()
+            self.object_property_table.setVisible(False)
 
     def set_mkgroup_range(self, obj_type: ObjectType) -> int:
         """ Sets the mkgroup range according to the object type specified. """
@@ -409,7 +410,7 @@ class PropertiesDockWidget(QtGui.QDockWidget):
         """ Sets the mkgroup label text. """
         self.mkgroup_label.setText("&nbsp;<span>{}</span>".format(text))
 
-    def get_cell_widget(self, row: int, column: int) -> QtGui.QWidget:
+    def get_cell_widget(self, row: int, column: int) -> QtWidgets.QWidget:
         """ Retrieves the appropriate QWidget for the row and column specified from the table. """
         return self.object_property_table.cellWidget(row, column)
 

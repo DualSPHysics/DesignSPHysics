@@ -2,7 +2,8 @@
 # -*- coding: utf-8 -*-
 """DesignSPHysics Sinusoidal Circular Motion widget."""
 
-from PySide import QtCore, QtGui
+# from PySide import QtCore, QtGui
+from PySide2 import QtCore, QtWidgets
 
 from mod.translation_tools import __
 from mod.gui_tools import get_icon
@@ -12,7 +13,7 @@ from mod.dataobjects.motion.cir_sinu_motion import CirSinuMotion
 
 from mod.functions import make_float
 
-class CirSinuMotionTimeline(QtGui.QWidget):
+class CirSinuMotionTimeline(QtWidgets.QWidget):
     """ A sinusoidal circular motion graphical representation for a table-based timeline """
 
     changed = QtCore.Signal(int, CirSinuMotion)
@@ -30,49 +31,49 @@ class CirSinuMotionTimeline(QtGui.QWidget):
         super().__init__(parent=parent)
 
         self.index = index
-        self.main_layout = QtGui.QHBoxLayout()
+        self.main_layout = QtWidgets.QHBoxLayout()
         self.main_layout.setContentsMargins(10, 0, 10, 0)
-        self.label = QtGui.QLabel("Sinusoidal \nCircular \nMotion ")
+        self.label = QtWidgets.QLabel("Sinusoidal \nCircular \nMotion ")
         self.label.setMinimumWidth(75)
-        self.axis_label = QtGui.QLabel(
+        self.axis_label = QtWidgets.QLabel(
             "Axis 1 (X, Y, Z): \n\nAxis 2 (X, Y, Z): ")
-        self.axis_layout = QtGui.QVBoxLayout()
-        self.axis_first_row_layout = QtGui.QHBoxLayout()
-        self.axis_second_row_layout = QtGui.QHBoxLayout()
-        self.x1_input = QtGui.QLineEdit()
-        self.y1_input = QtGui.QLineEdit()
-        self.z1_input = QtGui.QLineEdit()
-        self.x2_input = QtGui.QLineEdit()
-        self.y2_input = QtGui.QLineEdit()
-        self.z2_input = QtGui.QLineEdit()
+        self.axis_layout = QtWidgets.QVBoxLayout()
+        self.axis_first_row_layout = QtWidgets.QHBoxLayout()
+        self.axis_second_row_layout = QtWidgets.QHBoxLayout()
+        self.x1_input = QtWidgets.QLineEdit()
+        self.y1_input = QtWidgets.QLineEdit()
+        self.z1_input = QtWidgets.QLineEdit()
+        self.x2_input = QtWidgets.QLineEdit()
+        self.y2_input = QtWidgets.QLineEdit()
+        self.z2_input = QtWidgets.QLineEdit()
 
-        self.ref_layout = QtGui.QVBoxLayout()
-        self.ref_first_row = QtGui.QHBoxLayout()
-        self.ref_second_row = QtGui.QHBoxLayout()
-        self.freq_label = QtGui.QLabel("Freq ")
-        self.freq_input = QtGui.QLineEdit()
+        self.ref_layout = QtWidgets.QVBoxLayout()
+        self.ref_first_row = QtWidgets.QHBoxLayout()
+        self.ref_second_row = QtWidgets.QHBoxLayout()
+        self.freq_label = QtWidgets.QLabel("Freq ")
+        self.freq_input = QtWidgets.QLineEdit()
 
-        self.ampl_label = QtGui.QLabel("Ampl ")
-        self.ampl_input = QtGui.QLineEdit()
+        self.ampl_label = QtWidgets.QLabel("Ampl ")
+        self.ampl_input = QtWidgets.QLineEdit()
 
-        self.phase_label = QtGui.QLabel("Phase ")
-        self.phase_input = QtGui.QLineEdit()
+        self.phase_label = QtWidgets.QLabel("Phase ")
+        self.phase_input = QtWidgets.QLineEdit()
 
-        self.reference_label = QtGui.QLabel("Ref (X, Y, Z): ")
-        self.reference_x_input = QtGui.QLineEdit()
-        self.reference_y_input = QtGui.QLineEdit()
-        self.reference_z_input = QtGui.QLineEdit()
+        self.reference_label = QtWidgets.QLabel("Ref (X, Y, Z): ")
+        self.reference_x_input = QtWidgets.QLineEdit()
+        self.reference_y_input = QtWidgets.QLineEdit()
+        self.reference_z_input = QtWidgets.QLineEdit()
 
-        self.time_label = QtGui.QLabel(__("Duration (s): "))
-        self.time_input = QtGui.QLineEdit()
-        self.delete_button = QtGui.QPushButton(
+        self.time_label = QtWidgets.QLabel(__("Duration (s): "))
+        self.time_input = QtWidgets.QLineEdit()
+        self.delete_button = QtWidgets.QPushButton(
             get_icon("trash.png"), None)
-        self.order_button_layout = QtGui.QVBoxLayout()
+        self.order_button_layout = QtWidgets.QVBoxLayout()
         self.order_button_layout.setContentsMargins(0, 0, 0, 0)
         self.order_button_layout.setSpacing(0)
-        self.order_up_button = QtGui.QPushButton(
+        self.order_up_button = QtWidgets.QPushButton(
             get_icon("up_arrow.png"), None)
-        self.order_down_button = QtGui.QPushButton(
+        self.order_down_button = QtWidgets.QPushButton(
             get_icon("down_arrow.png"), None)
 
         self.order_button_layout.addWidget(self.order_up_button)

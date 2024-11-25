@@ -2,7 +2,8 @@
 # -*- coding: utf-8 -*-
 """DesignSPHysics PartVTK Config and Execution Dialog."""
 
-from PySide import QtGui, QtCore
+# from PySide import QtGui, QtCore
+from PySide2 import QtCore, QtWidgets
 
 from mod.translation_tools import __
 from mod.post_processing_tools import partvtk_export
@@ -10,7 +11,8 @@ from mod.post_processing_tools import partvtk_export
 from mod.dataobjects.case import Case
 
 
-class PartVTKDialog(QtGui.QDialog):
+
+class PartVTKDialog(QtWidgets.QDialog):
     """ A PartVTK Configuration and Execution Dialog. """
 
     DEFAULT_NAMES = ["PartAll", "PartBound", "PartFluid", "PartFixed", "PartMoving", "PartFloating"]
@@ -22,29 +24,29 @@ class PartVTKDialog(QtGui.QDialog):
 
         self.setModal(False)
         self.setWindowTitle(__("PartVTK Tool"))
-        self.partvtk_tool_layout = QtGui.QVBoxLayout()
+        self.partvtk_tool_layout = QtWidgets.QVBoxLayout()
 
-        self.pvtk_format_layout = QtGui.QHBoxLayout()
-        self.pvtk_types_groupbox = QtGui.QGroupBox(__("Types to export"))
-        self.pvtk_filename_layout = QtGui.QHBoxLayout()
-        self.pvtk_parameters_layout = QtGui.QHBoxLayout()
-        self.pvtk_buttons_layout = QtGui.QHBoxLayout()
+        self.pvtk_format_layout = QtWidgets.QHBoxLayout()
+        self.pvtk_types_groupbox = QtWidgets.QGroupBox(__("Types to export"))
+        self.pvtk_filename_layout = QtWidgets.QHBoxLayout()
+        self.pvtk_parameters_layout = QtWidgets.QHBoxLayout()
+        self.pvtk_buttons_layout = QtWidgets.QHBoxLayout()
 
-        self.outformat_label = QtGui.QLabel(__("Output format"))
-        self.outformat_combobox = QtGui.QComboBox()
+        self.outformat_label = QtWidgets.QLabel(__("Output format"))
+        self.outformat_combobox = QtWidgets.QComboBox()
         self.outformat_combobox.insertItems(0, ["VTK", "CSV", "ASCII"])
         self.pvtk_format_layout.addWidget(self.outformat_label)
         self.pvtk_format_layout.addStretch(1)
         self.pvtk_format_layout.addWidget(self.outformat_combobox)
 
-        self.pvtk_types_groupbox_layout = QtGui.QVBoxLayout()
-        self.pvtk_types_chk_all = QtGui.QCheckBox(__("All"))
+        self.pvtk_types_groupbox_layout = QtWidgets.QVBoxLayout()
+        self.pvtk_types_chk_all = QtWidgets.QCheckBox(__("All"))
         self.pvtk_types_chk_all.setCheckState(QtCore.Qt.Checked)
-        self.pvtk_types_chk_bound = QtGui.QCheckBox(__("Bound"))
-        self.pvtk_types_chk_fluid = QtGui.QCheckBox(__("Fluid"))
-        self.pvtk_types_chk_fixed = QtGui.QCheckBox(__("Fixed"))
-        self.pvtk_types_chk_moving = QtGui.QCheckBox(__("Moving"))
-        self.pvtk_types_chk_floating = QtGui.QCheckBox(__("Floating"))
+        self.pvtk_types_chk_bound = QtWidgets.QCheckBox(__("Bound"))
+        self.pvtk_types_chk_fluid = QtWidgets.QCheckBox(__("Fluid"))
+        self.pvtk_types_chk_fixed = QtWidgets.QCheckBox(__("Fixed"))
+        self.pvtk_types_chk_moving = QtWidgets.QCheckBox(__("Moving"))
+        self.pvtk_types_chk_floating = QtWidgets.QCheckBox(__("Floating"))
 
         for x in [self.pvtk_types_chk_all,
                   self.pvtk_types_chk_bound,
@@ -56,22 +58,22 @@ class PartVTKDialog(QtGui.QDialog):
 
         self.pvtk_types_groupbox.setLayout(self.pvtk_types_groupbox_layout)
 
-        self.pvtk_file_name_label = QtGui.QLabel(__("File name"))
-        self.pvtk_file_name_text = QtGui.QLineEdit()
+        self.pvtk_file_name_label = QtWidgets.QLabel(__("File name"))
+        self.pvtk_file_name_text = QtWidgets.QLineEdit()
         self.pvtk_file_name_text.setText(self.DEFAULT_NAMES[0])
         self.pvtk_filename_layout.addWidget(self.pvtk_file_name_label)
         self.pvtk_filename_layout.addWidget(self.pvtk_file_name_text)
 
-        self.pvtk_parameters_label = QtGui.QLabel(__("Additional Parameters"))
-        self.pvtk_parameters_text = QtGui.QLineEdit()
+        self.pvtk_parameters_label = QtWidgets.QLabel(__("Additional Parameters"))
+        self.pvtk_parameters_text = QtWidgets.QLineEdit()
         self.pvtk_parameters_layout.addWidget(self.pvtk_parameters_label)
         self.pvtk_parameters_layout.addWidget(self.pvtk_parameters_text)
 
-        self.pvtk_open_at_end = QtGui.QCheckBox("Open with ParaView")
+        self.pvtk_open_at_end = QtWidgets.QCheckBox("Open with ParaView")
         self.pvtk_open_at_end.setEnabled(Case.the().executable_paths.paraview != "")
 
-        self.pvtk_export_button = QtGui.QPushButton(__("Export"))
-        self.pvtk_cancel_button = QtGui.QPushButton(__("Cancel"))
+        self.pvtk_export_button = QtWidgets.QPushButton(__("Export"))
+        self.pvtk_cancel_button = QtWidgets.QPushButton(__("Cancel"))
         self.pvtk_buttons_layout.addWidget(self.pvtk_export_button)
         self.pvtk_buttons_layout.addWidget(self.pvtk_cancel_button)
 

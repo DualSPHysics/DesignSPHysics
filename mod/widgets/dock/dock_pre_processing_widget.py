@@ -6,7 +6,8 @@ from os import path, walk
 import shutil
 from traceback import print_exc
 
-from PySide import QtCore, QtGui
+# from PySide import QtCore, QtGui
+from PySide2 import QtCore, QtWidgets, QtGui
 
 from mod.translation_tools import __
 from mod.gui_tools import get_icon
@@ -32,7 +33,7 @@ from mod.dataobjects.simulation_object import SimulationObject
 
 from mod.dialog_tools import ok_cancel_dialog, ok_discard_dialog
 
-class DockPreProcessingWidget(QtGui.QWidget):
+class DockPreProcessingWidget(QtWidgets.QWidget):
     """DesignSPHysics Dock Pre Processing Widget """
 
     need_refresh = QtCore.Signal()
@@ -45,76 +46,76 @@ class DockPreProcessingWidget(QtGui.QWidget):
     def __init__(self, parent=None):
         super().__init__(parent=parent)
 
-        self.main_layout = QtGui.QVBoxLayout()
+        self.main_layout = QtWidgets.QVBoxLayout()
         self.main_layout.setContentsMargins(0, 0, 0, 0)
 
-        self.label_layout = QtGui.QHBoxLayout()
-        self.first_row_layout = QtGui.QHBoxLayout()
-        self.second_row_layout = QtGui.QHBoxLayout()
-        self.third_row_layout = QtGui.QHBoxLayout()
-        self.fourth_row_layout = QtGui.QHBoxLayout()
+        self.label_layout = QtWidgets.QHBoxLayout()
+        self.first_row_layout = QtWidgets.QHBoxLayout()
+        self.second_row_layout = QtWidgets.QHBoxLayout()
+        self.third_row_layout = QtWidgets.QHBoxLayout()
+        self.fourth_row_layout = QtWidgets.QHBoxLayout()
 
-        self.casecontrols_label = QtGui.QLabel("<b>{}</b>".format(__("Pre-processing")))
-        self.force_button = QtGui.QPushButton(__("Force Enable Panels"))
+        self.casecontrols_label = QtWidgets.QLabel("<b>{}</b>".format(__("Pre-processing")))
+        self.force_button = QtWidgets.QPushButton(__("Force Enable Panels"))
         self.force_button.setStyleSheet("font-size: 8px; max-height: 10px; padding-bottom: 0; padding-top: 0; padding-left:2px; padding-right: 2px")
 
-        self.new_case_button = QtGui.QToolButton()
-        self.new_case_button.setPopupMode(QtGui.QToolButton.MenuButtonPopup)
+        self.new_case_button = QtWidgets.QToolButton()
+        self.new_case_button.setPopupMode(QtWidgets.QToolButton.MenuButtonPopup)
         self.new_case_button.setToolButtonStyle(QtCore.Qt.ToolButtonTextBesideIcon)
         self.new_case_button.setText("  {}".format(__("New\n  Case")))
         self.new_case_button.setToolTip(__("Creates a new case. \nThe opened documents will be closed."))
         self.new_case_button.setIcon(QtGui.QIcon.fromTheme("document-new", get_icon("new.png")))
         self.new_case_button.setIconSize(QtCore.QSize(28, 28))
 
-        self.new_case_menu = QtGui.QMenu()
+        self.new_case_menu = QtWidgets.QMenu()
         self.new_case_menu.addAction(QtGui.QIcon.fromTheme("document-new", get_icon("new.png")), __("New"))
         self.new_case_menu.addAction(QtGui.QIcon.fromTheme("document-new", get_icon("new.png")), __("Import FreeCAD Document"))
 
         self.new_case_button.setMenu(self.new_case_menu)
         self.new_case_menu.resize(60, 60)
 
-        self.save_button = QtGui.QToolButton()
-        self.save_button.setPopupMode(QtGui.QToolButton.MenuButtonPopup)
+        self.save_button = QtWidgets.QToolButton()
+        self.save_button.setPopupMode(QtWidgets.QToolButton.MenuButtonPopup)
         self.save_button.setToolButtonStyle(QtCore.Qt.ToolButtonTextBesideIcon)
         self.save_button.setText("  {}".format(__("Save\n  Case")))
         self.save_button.setToolTip(__("Saves the case."))
         self.save_button.setIcon(QtGui.QIcon.fromTheme("document-save", get_icon("save.png")))
         self.save_button.setIconSize(QtCore.QSize(28, 28))
-        self.save_menu = QtGui.QMenu()
+        self.save_menu = QtWidgets.QMenu()
         self.save_menu.addAction(QtGui.QIcon.fromTheme("document-save-as", get_icon("save.png")), __("Save as..."))
         self.save_button.setMenu(self.save_menu)
 
-        self.load_button = QtGui.QToolButton()
+        self.load_button = QtWidgets.QToolButton()
         self.load_button.setToolButtonStyle(QtCore.Qt.ToolButtonTextBesideIcon)
         self.load_button.setText("  {}".format(__("Load\n  Case")))
         self.load_button.setToolTip(__("Loads a case from disk. All the current documents\nwill be closed."))
         self.load_button.setIcon(QtGui.QIcon.fromTheme("document-open", get_icon("load.png")))
         self.load_button.setIconSize(QtCore.QSize(28, 28))
 
-        self.add_fillbox_button = QtGui.QPushButton(__("Add fillbox"))
+        self.add_fillbox_button = QtWidgets.QPushButton(__("Add fillbox"))
         self.add_fillbox_button.setToolTip(__("Adds a FillBox. A FillBox is able to fill an empty space\nwithin limits of geometry and a maximum bounding\nbox placed by the user."))
         self.add_fillbox_button.setIcon(QtGui.QIcon.fromTheme("list-add"))
 
-        self.add_geometry_button = QtGui.QPushButton("Import GEO")
+        self.add_geometry_button = QtWidgets.QPushButton("Import GEO")
         self.add_geometry_button.setToolTip(__("Imports a GEO object with postprocessing. This way you can set the scale of the imported object."))
         self.add_geometry_button.setIcon(QtGui.QIcon.fromTheme("list-add"))
 
-        self.import_xml_button = QtGui.QPushButton(__("Import XML"))
+        self.import_xml_button = QtWidgets.QPushButton(__("Import XML"))
         self.import_xml_button.setToolTip(__("Imports an already created XML case from disk."))
 
-        self.case_summary_button = QtGui.QPushButton(__("Case summary"))
+        self.case_summary_button = QtWidgets.QPushButton(__("Case summary"))
         self.case_summary_button.setToolTip(__("Shows a complete case summary with objects, configurations and settings in a brief view."))
         self.case_summary_button.setIcon(QtGui.QIcon.fromTheme("document-properties"))
 
-        self.toggle_2d_mode_button = QtGui.QPushButton(__("Change 3D/2D"))
+        self.toggle_2d_mode_button = QtWidgets.QPushButton(__("Change 3D/2D"))
         self.toggle_2d_mode_button.setToolTip(__("Changes the case mode between 2D and 3D mode, switching the Case Limits between a plane or a cube"))
         self.toggle_2d_mode_button.setIcon(QtGui.QIcon.fromTheme("object-flip-horizontal"))
 
-        self.special_button = QtGui.QPushButton(__("Special"))
+        self.special_button = QtWidgets.QPushButton(__("Special"))
         self.special_button.setToolTip(__("Special actions for the case."))
         self.special_button.setIcon(QtGui.QIcon.fromTheme("window-new"))
 
-        self.gencase_button = QtGui.QPushButton(__("Run GenCase"))
+        self.gencase_button = QtWidgets.QPushButton(__("Run GenCase"))
         self.gencase_button.setStyleSheet("QPushButton {font-weight: bold; }")
         self.gencase_button.setToolTip(__("This pre-processing tool creates the initial state of the particles (position, velocity and density) and defines the different SPH parameters for the simulation."))
         self.gencase_button.setIcon(get_icon("run_gencase.png"))
@@ -173,7 +174,7 @@ class DockPreProcessingWidget(QtGui.QWidget):
     def on_new_from_freecad_document(self, prompt=True):
         """ Creates a new case based on an existing FreeCAD document.
         This is specially useful for CAD users that want to use existing geometry for DesignSPHysics. """
-        file_name, _ = QtGui.QFileDialog().getOpenFileName(get_fc_main_window(), "Select document to import", Case.the().info.last_used_directory)
+        file_name, _ = QtWidgets.QFileDialog().getOpenFileName(get_fc_main_window(), "Select document to import", Case.the().info.last_used_directory)
         Case.the().info.update_last_used_directory(file_name)
         if file_name and document_count() and not prompt_close_all_documents(prompt):
             return
@@ -190,7 +191,7 @@ class DockPreProcessingWidget(QtGui.QWidget):
         """ Defines what happens when save case button is clicked.
         Saves a freecad scene definition, and a dump of dsph data for the case."""
         if Case.the().was_not_saved() or save_as:
-            save_name, _ = QtGui.QFileDialog.getSaveFileName(self, __("Save Case"), Case.the().info.last_used_directory)
+            save_name, _ = QtWidgets.QFileDialog.getSaveFileName(self, __("Save Case"), Case.the().info.last_used_directory)
             Case.the().info.update_last_used_directory(save_name)
         else:
             save_name = Case.the().path
@@ -241,7 +242,7 @@ class DockPreProcessingWidget(QtGui.QWidget):
         if path.exists(gencasefile):
             execute_gencase=ok_cancel_dialog(__("Remove the Case output data"),__("This action will remove the data generated before.\n\nPress Ok to remove and run GenCase.\nPress Cancel to exit and keep the data."))
             # Decision dialog to remove data before running GenCase
-            if execute_gencase == QtGui.QMessageBox.Cancel:
+            if execute_gencase == QtWidgets.QMessageBox.Cancel:
                 return
             else:
                 # Remove some folders before execute GenCase
@@ -318,7 +319,7 @@ class DockPreProcessingWidget(QtGui.QWidget):
         """Defines loading case mechanism. Load points to a dsphdata custom file, that stores all the relevant info.
            If FCStd file is not found the project is considered corrupt."""
 
-        load_path, _ = QtGui.QFileDialog.getOpenFileName(self, __("Load Case"), Case.the().info.last_used_directory, "casedata.dsphdata")
+        load_path, _ = QtWidgets.QFileDialog.getOpenFileName(self, __("Load Case"), Case.the().info.last_used_directory, "casedata.dsphdata")
         Case.the().info.update_last_used_directory(load_path)
 
         if load_path == "":
@@ -357,7 +358,7 @@ class DockPreProcessingWidget(QtGui.QWidget):
         """ Add STL file. Opens a file opener and allows the user to set parameters for the import process """
         self.need_refresh.emit()
 
-        file_name, _ = QtGui.QFileDialog().getOpenFileName(get_fc_main_window(), __("Select GEO to import"), Case.the().info.last_used_directory, "STL Files (*.stl);;PLY Files (*.ply);;VTK Files (*.vtk);;XYZ Files (*.xyz)")
+        file_name, _ = QtWidgets.QFileDialog().getOpenFileName(get_fc_main_window(), __("Select GEO to import"), Case.the().info.last_used_directory, "STL Files (*.stl);;PLY Files (*.ply);;VTK Files (*.vtk);;XYZ Files (*.xyz)")
         Case.the().info.update_last_used_directory(file_name)
         if not file_name:
             return
@@ -375,7 +376,7 @@ class DockPreProcessingWidget(QtGui.QWidget):
             # 3D to 2D
             Case.the().info.last_3d_width = fc_object.Width.Value
             config_dialog = Mode2DConfigDialog(fc_object.Placement.Base.y, parent=get_fc_main_window())
-            if config_dialog.exit_status == QtGui.QDialog.Rejected:
+            if config_dialog.exit_status == QtWidgets.QDialog.Rejected:
                 return
             fc_object.Placement.Base.y = float(config_dialog.stored_y_value)
             fc_object.Label = CASE_LIMITS_2D_LABEL

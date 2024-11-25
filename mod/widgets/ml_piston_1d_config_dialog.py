@@ -2,7 +2,8 @@
 # -*- coding: utf-8 -*-
 """DesignSPHysics MLPiston1D Configuration Dialog. """
 
-from PySide import QtGui
+# from PySide import QtGui
+from PySide2 import QtWidgets
 
 from mod.translation_tools import __
 from mod.gui_tools import h_line_generator
@@ -11,7 +12,7 @@ from mod.dataobjects.case import Case
 from mod.dataobjects.ml_piston_1d import MLPiston1D
 
 
-class MLPiston1DConfigDialog(QtGui.QDialog):
+class MLPiston1DConfigDialog(QtWidgets.QDialog):
     """ DesignSPHysics MLPiston1D Configuration Dialog. """
 
     def __init__(self, mk=None, mlpiston1d=None, parent=None):
@@ -20,37 +21,37 @@ class MLPiston1DConfigDialog(QtGui.QDialog):
         self.temp_mlpiston1d = mlpiston1d if mlpiston1d is not None else MLPiston1D()
         self.mlpiston1d = mlpiston1d
 
-        self.main_layout = QtGui.QVBoxLayout()
-        self.data_layout = QtGui.QVBoxLayout()
-        self.button_layout = QtGui.QHBoxLayout()
+        self.main_layout = QtWidgets.QVBoxLayout()
+        self.data_layout = QtWidgets.QVBoxLayout()
+        self.button_layout = QtWidgets.QHBoxLayout()
 
-        self.mk_label = QtGui.QLabel(__("MK to use: {}").format(self.mk))
+        self.mk_label = QtWidgets.QLabel(__("MK to use: {}").format(self.mk))
 
-        self.filevelx_layout = QtGui.QHBoxLayout()
-        self.filevelx_label = QtGui.QLabel(__("File with X velocity:"))
-        self.filevelx_input = QtGui.QLineEdit()
-        self.filevelx_browse = QtGui.QPushButton("...")
+        self.filevelx_layout = QtWidgets.QHBoxLayout()
+        self.filevelx_label = QtWidgets.QLabel(__("File with X velocity:"))
+        self.filevelx_input = QtWidgets.QLineEdit()
+        self.filevelx_browse = QtWidgets.QPushButton("...")
 
         for x in [self.filevelx_label, self.filevelx_input, self.filevelx_browse]:
             self.filevelx_layout.addWidget(x)
 
-        self.incz_layout = QtGui.QHBoxLayout()
-        self.incz_label = QtGui.QLabel(__("Z offset (m):"))
-        self.incz_input = QtGui.QLineEdit()
+        self.incz_layout = QtWidgets.QHBoxLayout()
+        self.incz_label = QtWidgets.QLabel(__("Z offset (m):"))
+        self.incz_input = QtWidgets.QLineEdit()
 
         for x in [self.incz_label, self.incz_input]:
             self.incz_layout.addWidget(x)
 
-        self.timedataini_layout = QtGui.QHBoxLayout()
-        self.timedataini_label = QtGui.QLabel(__("Time offset (s):"))
-        self.timedataini_input = QtGui.QLineEdit()
+        self.timedataini_layout = QtWidgets.QHBoxLayout()
+        self.timedataini_label = QtWidgets.QLabel(__("Time offset (s):"))
+        self.timedataini_input = QtWidgets.QLineEdit()
 
         for x in [self.timedataini_label, self.timedataini_input]:
             self.timedataini_layout.addWidget(x)
 
-        self.smooth_layout = QtGui.QHBoxLayout()
-        self.smooth_label = QtGui.QLabel(__("Smooth motion level:"))
-        self.smooth_input = QtGui.QLineEdit()
+        self.smooth_layout = QtWidgets.QHBoxLayout()
+        self.smooth_label = QtWidgets.QLabel(__("Smooth motion level:"))
+        self.smooth_input = QtWidgets.QLineEdit()
 
         for x in [self.smooth_label, self.smooth_input]:
             self.smooth_layout.addWidget(x)
@@ -58,8 +59,8 @@ class MLPiston1DConfigDialog(QtGui.QDialog):
         for x in [self.filevelx_layout, self.incz_layout, self.timedataini_layout, self.smooth_layout]:
             self.data_layout.addLayout(x)
 
-        self.delete_button = QtGui.QPushButton(__("Delete piston configuration"))
-        self.apply_button = QtGui.QPushButton(__("Apply this configuration"))
+        self.delete_button = QtWidgets.QPushButton(__("Delete piston configuration"))
+        self.apply_button = QtWidgets.QPushButton(__("Apply this configuration"))
         self.button_layout.addStretch(1)
         self.button_layout.addWidget(self.delete_button)
         self.button_layout.addWidget(self.apply_button)
@@ -102,6 +103,6 @@ class MLPiston1DConfigDialog(QtGui.QDialog):
 
     def on_browse(self):
         """ Opens a file browser and sets the path for the file on the dialog. """
-        filename, _ = QtGui.QFileDialog.getOpenFileName(self, __("Open file"), Case.the().info.last_used_directory, "External velocity data (*.csv)")
+        filename, _ = QtWidgets.QFileDialog.getOpenFileName(self, __("Open file"), Case.the().info.last_used_directory, "External velocity data (*.csv)")
         Case.the().info.update_last_used_directory(filename)
         self.filevelx_input.setText(filename)

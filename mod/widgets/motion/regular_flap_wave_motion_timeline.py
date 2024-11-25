@@ -2,7 +2,8 @@
 # -*- coding: utf-8 -*-
 """DesignSPHysics Regular Flap Wave Motion Timeline Widget """
 
-from PySide import QtCore, QtGui
+# from PySide import QtCore, QtGui
+from PySide2 import QtCore, QtWidgets
 
 from mod.translation_tools import __
 from mod.gui_tools import h_line_generator
@@ -12,7 +13,7 @@ from mod.dataobjects.motion.regular_flap_wave_gen import RegularFlapWaveGen
 
 from mod.functions import make_float, make_int
 
-class RegularFlapWaveMotionTimeline(QtGui.QWidget):
+class RegularFlapWaveMotionTimeline(QtWidgets.QWidget):
     """ A Regular Flap Wave motion graphical representation for a table-based timeline """
     changed = QtCore.Signal(int, RegularFlapWaveGen)
 
@@ -25,90 +26,90 @@ class RegularFlapWaveMotionTimeline(QtGui.QWidget):
                             "motion widget in the timeline without a motion object")
         super().__init__(parent=parent)
 
-        self.main_layout = QtGui.QVBoxLayout()
+        self.main_layout = QtWidgets.QVBoxLayout()
         self.main_layout.setContentsMargins(10, 10, 10, 10)
 
-        self.root_label = QtGui.QLabel(
+        self.root_label = QtWidgets.QLabel(
             __("Regular flap wave generator (Flap)"))
 
-        self.duration_label = QtGui.QLabel(__("Duration (s): "))
-        self.duration_input = QtGui.QLineEdit()
+        self.duration_label = QtWidgets.QLabel(__("Duration (s): "))
+        self.duration_input = QtWidgets.QLineEdit()
 
-        self.wave_order_label = QtGui.QLabel(__("Wave Order"))
-        self.wave_order_selector = QtGui.QComboBox()
+        self.wave_order_label = QtWidgets.QLabel(__("Wave Order"))
+        self.wave_order_selector = QtWidgets.QComboBox()
         self.wave_order_selector.insertItems(
             0, [__("1st Order"), __("2nd Order")])
 
-        self.depth_label = QtGui.QLabel(__("Depth (m): "))
-        self.depth_input = QtGui.QLineEdit()
+        self.depth_label = QtWidgets.QLabel(__("Depth (m): "))
+        self.depth_input = QtWidgets.QLineEdit()
 
-        self.flap_axis_0_label = QtGui.QLabel(
+        self.flap_axis_0_label = QtWidgets.QLabel(
             __("Flap axis 0 (X, Y, Z): "))
-        self.flap_axis_0_x = QtGui.QLineEdit()
-        self.flap_axis_0_y = QtGui.QLineEdit()
-        self.flap_axis_0_z = QtGui.QLineEdit()
+        self.flap_axis_0_x = QtWidgets.QLineEdit()
+        self.flap_axis_0_y = QtWidgets.QLineEdit()
+        self.flap_axis_0_z = QtWidgets.QLineEdit()
 
-        self.flap_axis_1_label = QtGui.QLabel(
+        self.flap_axis_1_label = QtWidgets.QLabel(
             __("Flap axis 1 (X, Y, Z): "))
-        self.flap_axis_1_x = QtGui.QLineEdit()
-        self.flap_axis_1_y = QtGui.QLineEdit()
-        self.flap_axis_1_z = QtGui.QLineEdit()
+        self.flap_axis_1_x = QtWidgets.QLineEdit()
+        self.flap_axis_1_y = QtWidgets.QLineEdit()
+        self.flap_axis_1_z = QtWidgets.QLineEdit()
 
-        self.wave_height_label = QtGui.QLabel(__("Wave height (m): "))
-        self.wave_height_input = QtGui.QLineEdit()
+        self.wave_height_label = QtWidgets.QLabel(__("Wave height (m): "))
+        self.wave_height_input = QtWidgets.QLineEdit()
 
-        self.wave_period_label = QtGui.QLabel(__("Wave period (s): "))
-        self.wave_period_input = QtGui.QLineEdit()
+        self.wave_period_label = QtWidgets.QLabel(__("Wave period (s): "))
+        self.wave_period_input = QtWidgets.QLineEdit()
 
-        self.variable_draft_label = QtGui.QLabel(__("Variable Draft (m): "))
-        self.variable_draft_input = QtGui.QLineEdit()
+        self.variable_draft_label = QtWidgets.QLabel(__("Variable Draft (m): "))
+        self.variable_draft_input = QtWidgets.QLineEdit()
 
-        self.gainstroke_label = QtGui.QLabel(__("Gain factor: "))
-        self.gainstroke_input = QtGui.QLineEdit()
+        self.gainstroke_label = QtWidgets.QLabel(__("Gain factor: "))
+        self.gainstroke_input = QtWidgets.QLineEdit()
 
-        self.phase_label = QtGui.QLabel(__("Phase (rad): "))
-        self.phase_input = QtGui.QLineEdit()
+        self.phase_label = QtWidgets.QLabel(__("Phase (rad): "))
+        self.phase_input = QtWidgets.QLineEdit()
 
-        self.ramp_label = QtGui.QLabel(__("Ramp: "))
-        self.ramp_input = QtGui.QLineEdit()
+        self.ramp_label = QtWidgets.QLabel(__("Ramp: "))
+        self.ramp_input = QtWidgets.QLineEdit()
 
-        self.disksave_label = QtGui.QLabel(__("Save theoretical values > "))
-        self.disksave_periods = QtGui.QLineEdit()
-        self.disksave_periods_label = QtGui.QLabel(__("Periods: "))
-        self.disksave_periodsteps = QtGui.QLineEdit()
-        self.disksave_periodsteps_label = QtGui.QLabel(__("Period Steps: "))
-        self.disksave_xpos = QtGui.QLineEdit()
-        self.disksave_xpos_label = QtGui.QLabel(__("X Pos (m): "))
-        self.disksave_zpos = QtGui.QLineEdit()
-        self.disksave_zpos_label = QtGui.QLabel(__("Z Pos (m): "))
+        self.disksave_label = QtWidgets.QLabel(__("Save theoretical values > "))
+        self.disksave_periods = QtWidgets.QLineEdit()
+        self.disksave_periods_label = QtWidgets.QLabel(__("Periods: "))
+        self.disksave_periodsteps = QtWidgets.QLineEdit()
+        self.disksave_periodsteps_label = QtWidgets.QLabel(__("Period Steps: "))
+        self.disksave_xpos = QtWidgets.QLineEdit()
+        self.disksave_xpos_label = QtWidgets.QLabel(__("X Pos (m): "))
+        self.disksave_zpos = QtWidgets.QLineEdit()
+        self.disksave_zpos_label = QtWidgets.QLabel(__("Z Pos (m): "))
 
-        self.root_layout = QtGui.QHBoxLayout()
+        self.root_layout = QtWidgets.QHBoxLayout()
         self.root_layout.addWidget(self.root_label)
         self.root_layout.addStretch(1)
         for x in [self.duration_label, self.duration_input]:
             self.root_layout.addWidget(x)
 
-        self.first_row_layout = QtGui.QHBoxLayout()
+        self.first_row_layout = QtWidgets.QHBoxLayout()
         for x in [self.wave_order_label, self.wave_order_selector, self.depth_label, self.depth_input]:
             self.first_row_layout.addWidget(x)
 
-        self.second_row_layout = QtGui.QHBoxLayout()
+        self.second_row_layout = QtWidgets.QHBoxLayout()
         for x in [self.flap_axis_0_label, self.flap_axis_0_x, self.flap_axis_0_y, self.flap_axis_0_z]:
             self.second_row_layout.addWidget(x)
 
-        self.third_row_layout = QtGui.QHBoxLayout()
+        self.third_row_layout = QtWidgets.QHBoxLayout()
         for x in [self.flap_axis_1_label, self.flap_axis_1_x, self.flap_axis_1_y, self.flap_axis_1_z]:
             self.third_row_layout.addWidget(x)
 
-        self.fourth_row_layout = QtGui.QHBoxLayout()
+        self.fourth_row_layout = QtWidgets.QHBoxLayout()
         for x in [self.wave_height_label, self.wave_height_input, self.wave_period_label, self.wave_period_input, self.variable_draft_label, self.variable_draft_input]:
             self.fourth_row_layout.addWidget(x)
 
-        self.fifth_row_layout = QtGui.QHBoxLayout()
+        self.fifth_row_layout = QtWidgets.QHBoxLayout()
         for x in [self.gainstroke_label, self.gainstroke_input, self.phase_label, self.phase_input, self.ramp_label, self.ramp_input]:
             self.fifth_row_layout.addWidget(x)
 
-        self.sixth_row_layout = QtGui.QHBoxLayout()
+        self.sixth_row_layout = QtWidgets.QHBoxLayout()
         for x in [self.disksave_label, self.disksave_periods_label, self.disksave_periods, self.disksave_periodsteps_label,
                   self.disksave_periodsteps, self.disksave_xpos_label, self.disksave_xpos, self.disksave_zpos_label,
                   self.disksave_zpos]:

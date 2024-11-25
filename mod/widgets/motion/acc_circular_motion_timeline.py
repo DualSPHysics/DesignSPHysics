@@ -2,7 +2,8 @@
 # -*- coding: utf-8 -*-
 """DesignSPHysics Accelerated Circular Motion Timeline widget"""
 
-from PySide import QtGui, QtCore
+# from PySide import QtGui, QtCore
+from PySide2 import QtCore, QtWidgets
 
 from mod.translation_tools import __
 from mod.gui_tools import get_icon
@@ -13,7 +14,7 @@ from mod.dataobjects.motion.acc_cir_motion import AccCirMotion
 from mod.functions import make_float
 
 
-class AccCircularMotionTimeline(QtGui.QWidget):
+class AccCircularMotionTimeline(QtWidgets.QWidget):
     """ An accelerated circular motion graphical representation for a table-based timeline """
 
     changed = QtCore.Signal(int, AccCirMotion)
@@ -31,44 +32,44 @@ class AccCircularMotionTimeline(QtGui.QWidget):
         super().__init__(parent=parent)
 
         self.index = index
-        self.main_layout = QtGui.QHBoxLayout()
+        self.main_layout = QtWidgets.QHBoxLayout()
         self.main_layout.setContentsMargins(10, 0, 10, 0)
-        self.label = QtGui.QLabel("Accelerated \nCircular \nMotion ")
+        self.label = QtWidgets.QLabel("Accelerated \nCircular \nMotion ")
         self.label.setMinimumWidth(75)
-        self.vel_and_acc_layout = QtGui.QVBoxLayout()
-        self.vel_layout = QtGui.QHBoxLayout()
-        self.acc_layout = QtGui.QHBoxLayout()
-        self.velocity_label = QtGui.QLabel("Vel: ")
-        self.velocity_input = QtGui.QLineEdit()
-        self.acceleration_label = QtGui.QLabel("Acc: ")
-        self.acceleration_input = QtGui.QLineEdit()
-        self.axis_label = QtGui.QLabel(
+        self.vel_and_acc_layout = QtWidgets.QVBoxLayout()
+        self.vel_layout = QtWidgets.QHBoxLayout()
+        self.acc_layout = QtWidgets.QHBoxLayout()
+        self.velocity_label = QtWidgets.QLabel("Vel: ")
+        self.velocity_input = QtWidgets.QLineEdit()
+        self.acceleration_label = QtWidgets.QLabel("Acc: ")
+        self.acceleration_input = QtWidgets.QLineEdit()
+        self.axis_label = QtWidgets.QLabel(
             "Axis 1 (X, Y, Z): \n\nAxis 2 (X, Y, Z): ")
-        self.axis_layout = QtGui.QVBoxLayout()
-        self.axis_first_row_layout = QtGui.QHBoxLayout()
-        self.axis_second_row_layout = QtGui.QHBoxLayout()
-        self.x1_input = QtGui.QLineEdit()
-        self.y1_input = QtGui.QLineEdit()
-        self.z1_input = QtGui.QLineEdit()
-        self.x2_input = QtGui.QLineEdit()
-        self.y2_input = QtGui.QLineEdit()
-        self.z2_input = QtGui.QLineEdit()
+        self.axis_layout = QtWidgets.QVBoxLayout()
+        self.axis_first_row_layout = QtWidgets.QHBoxLayout()
+        self.axis_second_row_layout = QtWidgets.QHBoxLayout()
+        self.x1_input = QtWidgets.QLineEdit()
+        self.y1_input = QtWidgets.QLineEdit()
+        self.z1_input = QtWidgets.QLineEdit()
+        self.x2_input = QtWidgets.QLineEdit()
+        self.y2_input = QtWidgets.QLineEdit()
+        self.z2_input = QtWidgets.QLineEdit()
 
-        self.reference_label = QtGui.QLabel("Ref (X, Y, Z): ")
-        self.reference_x_input = QtGui.QLineEdit()
-        self.reference_y_input = QtGui.QLineEdit()
-        self.reference_z_input = QtGui.QLineEdit()
+        self.reference_label = QtWidgets.QLabel("Ref (X, Y, Z): ")
+        self.reference_x_input = QtWidgets.QLineEdit()
+        self.reference_y_input = QtWidgets.QLineEdit()
+        self.reference_z_input = QtWidgets.QLineEdit()
 
-        self.time_label = QtGui.QLabel(__("Duration (s): "))
-        self.time_input = QtGui.QLineEdit()
-        self.delete_button = QtGui.QPushButton(
+        self.time_label = QtWidgets.QLabel(__("Duration (s): "))
+        self.time_input = QtWidgets.QLineEdit()
+        self.delete_button = QtWidgets.QPushButton(
             get_icon("trash.png"), None)
-        self.order_button_layout = QtGui.QVBoxLayout()
+        self.order_button_layout = QtWidgets.QVBoxLayout()
         self.order_button_layout.setContentsMargins(0, 0, 0, 0)
         self.order_button_layout.setSpacing(0)
-        self.order_up_button = QtGui.QPushButton(
+        self.order_up_button = QtWidgets.QPushButton(
             get_icon("up_arrow.png"), None)
-        self.order_down_button = QtGui.QPushButton(
+        self.order_down_button = QtWidgets.QPushButton(
             get_icon("down_arrow.png"), None)
 
         self.vel_layout.addWidget(self.velocity_label)

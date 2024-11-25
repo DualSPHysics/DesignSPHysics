@@ -4,7 +4,8 @@
 
 import FreeCADGui
 
-from PySide import QtGui
+# from PySide import QtGui
+from PySide2 import QtWidgets
 
 from mod.translation_tools import __
 from mod.dialog_tools import error_dialog, warning_dialog, ok_cancel_dialog
@@ -35,7 +36,7 @@ from mod.dataobjects.relaxation_zone_file import RelaxationZoneFile
 from mod.dataobjects.relaxation_zone_uniform import RelaxationZoneUniform
 
 
-class SpecialOptionsSelectorDialog(QtGui.QDialog):
+class SpecialOptionsSelectorDialog(QtWidgets.QDialog):
     """ A dialog with different buttons to access special DesignSPHysics options for a case. """
 
     def __init__(self, parent=None):
@@ -43,28 +44,28 @@ class SpecialOptionsSelectorDialog(QtGui.QDialog):
 
         self.setWindowTitle(__("Special"))
         self.setMinimumWidth(200)
-        self.sp_window_layout = QtGui.QVBoxLayout()
+        self.sp_window_layout = QtWidgets.QVBoxLayout()
 
-        self.sp_damping_button = QtGui.QPushButton(__("Damping Zone"))
-        self.sp_inlet_button = QtGui.QPushButton(__("Inlet/Outlet"))
-        self.sp_chrono_button = QtGui.QPushButton(__("Project Chrono"))
-        self.sp_multilayeredmb_button = QtGui.QPushButton(__("Multi-layered Piston"))
-        self.sp_multilayeredmb_menu = QtGui.QMenu()
+        self.sp_damping_button = QtWidgets.QPushButton(__("Damping Zone"))
+        self.sp_inlet_button = QtWidgets.QPushButton(__("Inlet/Outlet"))
+        self.sp_chrono_button = QtWidgets.QPushButton(__("Project Chrono"))
+        self.sp_multilayeredmb_button = QtWidgets.QPushButton(__("Multi-layered Piston"))
+        self.sp_multilayeredmb_menu = QtWidgets.QMenu()
         self.sp_multilayeredmb_menu.addAction(__("1 Dimension"))
         self.sp_multilayeredmb_menu.addAction(__("2 Dimensions"))
         self.sp_multilayeredmb_button.setMenu(self.sp_multilayeredmb_menu)
 
-        self.sp_relaxationzone_button = QtGui.QPushButton(__("Relaxation Zone"))
-        self.sp_relaxationzone_menu = QtGui.QMenu()
+        self.sp_relaxationzone_button = QtWidgets.QPushButton(__("Relaxation Zone"))
+        self.sp_relaxationzone_menu = QtWidgets.QMenu()
         self.sp_relaxationzone_menu.addAction(__("Regular waves"))
         self.sp_relaxationzone_menu.addAction(__("Irregular waves"))
         self.sp_relaxationzone_menu.addAction(__("External Input"))
         self.sp_relaxationzone_menu.addAction(__("Uniform velocity"))
         self.sp_relaxationzone_button.setMenu(self.sp_relaxationzone_menu)
 
-        self.sp_accinput_button = QtGui.QPushButton(__("Acceleration Inputs"))
+        self.sp_accinput_button = QtWidgets.QPushButton(__("Acceleration Inputs"))
 
-        self.sp_moorings_button = QtGui.QPushButton(__("Moorings"))
+        self.sp_moorings_button = QtWidgets.QPushButton(__("Moorings"))
 
         self.sp_damping_button.clicked.connect(self.on_damping_option)
         self.sp_inlet_button.clicked.connect(self.on_inlet_option)
@@ -138,7 +139,7 @@ class SpecialOptionsSelectorDialog(QtGui.QDialog):
         if mk_properties.has_movements():
             # MK has motions applied. Warn the user and delete them
             motion_delete_warning = ok_cancel_dialog(APP_NAME, __("This mk already has motions applied. Setting a Multi-layered piston will delete all of its movement. Are you sure?"))
-            if motion_delete_warning == QtGui.QMessageBox.Cancel:
+            if motion_delete_warning == QtWidgets.QMessageBox.Cancel:
                 return
             mk_properties.remove_all_movements()
 
@@ -146,11 +147,11 @@ class SpecialOptionsSelectorDialog(QtGui.QDialog):
         if __("1 Dimension") in action.text():
             if mk_properties.mlayerpiston and not isinstance(mk_properties.mlayerpiston, MLPiston1D):
                 overwrite_warn = ok_cancel_dialog(APP_NAME, __("You're about to overwrite a previous coupling movement for this mk. Are you sure?"))
-                if overwrite_warn == QtGui.QMessageBox.Cancel:
+                if overwrite_warn == QtWidgets.QMessageBox.Cancel:
                     return
 
             config_dialog = MLPiston1DConfigDialog(selection_mk, mk_properties.mlayerpiston, parent=get_fc_main_window())
-            if config_dialog.result() == QtGui.QDialog.Accepted:
+            if config_dialog.result() == QtWidgets.QDialog.Accepted:
                 warning_dialog(__("All changes have been applied for mk = {}").format(selection_mk))
             mk_properties.mlayerpiston = config_dialog.mlpiston1d
 
@@ -158,11 +159,11 @@ class SpecialOptionsSelectorDialog(QtGui.QDialog):
             # Check that there's no other multilayered piston for this mk
             if mk_properties.mlayerpiston and not isinstance(mk_properties.mlayerpiston, MLPiston2D):
                 overwrite_warn = ok_cancel_dialog(APP_NAME, __("You're about to overwrite a previous coupling movement for this mk. Are you sure?"))
-                if overwrite_warn == QtGui.QMessageBox.Cancel:
+                if overwrite_warn == QtWidgets.QMessageBox.Cancel:
                     return
 
             config_dialog = MLPiston2DConfigDialog(selection_mk, mk_properties.mlayerpiston, parent=get_fc_main_window())
-            if config_dialog.result() == QtGui.QDialog.Accepted:
+            if config_dialog.result() == QtWidgets.QDialog.Accepted:
                 warning_dialog(__("All changes have been applied for mk = {}").format(selection_mk))
             mk_properties.mlayerpiston = config_dialog.mlpiston2d
 
@@ -176,7 +177,7 @@ class SpecialOptionsSelectorDialog(QtGui.QDialog):
             if Case.the().relaxation_zone is not None:
                 if not isinstance(Case.the().relaxation_zone, RelaxationZoneRegular):
                     overwrite_warn = ok_cancel_dialog(__("Relaxation Zone"), __("There's already another type of Relaxation Zone defined. Continuing will overwrite it. Are you sure?"))
-                    if overwrite_warn == QtGui.QMessageBox.Cancel:
+                    if overwrite_warn == QtWidgets.QMessageBox.Cancel:
                         return
                     Case.the().relaxation_zone = RelaxationZoneRegular()
 
@@ -188,7 +189,7 @@ class SpecialOptionsSelectorDialog(QtGui.QDialog):
             if Case.the().relaxation_zone is not None:
                 if not isinstance(Case.the().relaxation_zone, RelaxationZoneIrregular):
                     overwrite_warn = ok_cancel_dialog(__("Relaxation Zone"), __("There's already another type of Relaxation Zone defined. Continuing will overwrite it. Are you sure?"))
-                    if overwrite_warn == QtGui.QMessageBox.Cancel:
+                    if overwrite_warn == QtWidgets.QMessageBox.Cancel:
                         return
                     Case.the().relaxation_zone = RelaxationZoneIrregular()
 
@@ -200,7 +201,7 @@ class SpecialOptionsSelectorDialog(QtGui.QDialog):
             if Case.the().relaxation_zone is not None:
                 if not isinstance(Case.the().relaxation_zone, RelaxationZoneFile):
                     overwrite_warn = ok_cancel_dialog(__("Relaxation Zone"), __("There's already another type of Relaxation Zone defined. Continuing will overwrite it. Are you sure?"))
-                    if overwrite_warn == QtGui.QMessageBox.Cancel:
+                    if overwrite_warn == QtWidgets.QMessageBox.Cancel:
                         return
                     Case.the().relaxation_zone = RelaxationZoneFile()
 
@@ -213,7 +214,7 @@ class SpecialOptionsSelectorDialog(QtGui.QDialog):
             if Case.the().relaxation_zone is not None:
                 if not isinstance(Case.the().relaxation_zone, RelaxationZoneUniform):
                     overwrite_warn = ok_cancel_dialog(__("Relaxation Zone"), __("There's already another type of Relaxation Zone defined. Continuing will overwrite it. Are you sure?"))
-                    if overwrite_warn == QtGui.QMessageBox.Cancel:
+                    if overwrite_warn == QtWidgets.QMessageBox.Cancel:
                         return
                     Case.the().relaxation_zone = RelaxationZoneUniform()
 
@@ -229,7 +230,7 @@ class SpecialOptionsSelectorDialog(QtGui.QDialog):
         accinput_dialog = AccelerationInputDialog(Case.the().acceleration_input, parent=get_fc_main_window())
         result = accinput_dialog.exec_()
 
-        if result == QtGui.QDialog.Accepted:
+        if result == QtWidgets.QDialog.Accepted:
             Case.the().acceleration_input = accinput_dialog.get_result()
         self.accept()
 

@@ -4,7 +4,8 @@
 
 import subprocess
 
-from PySide import QtCore, QtGui
+# from PySide import QtCore, QtGui
+from PySide2 import QtCore, QtWidgets
 
 from mod.translation_tools import __
 from mod.dialog_tools import error_dialog
@@ -13,7 +14,7 @@ from mod.gui_tools import h_line_generator
 from mod.dataobjects.case import Case
 
 
-class GencaseCompletedDialog(QtGui.QDialog):
+class GencaseCompletedDialog(QtWidgets.QDialog):
     """ Gencase Save Dialog with different options, like open the results
         with paraview, show details, or dismiss. """
 
@@ -29,19 +30,19 @@ class GencaseCompletedDialog(QtGui.QDialog):
         self.setMinimumSize(400, 100)
 
         # Main Layout creation
-        self.main_layout = QtGui.QVBoxLayout()
+        self.main_layout = QtWidgets.QVBoxLayout()
 
         # Main Layout elements
-        self.info_message = QtGui.QLabel(__(
+        self.info_message = QtWidgets.QLabel(__(
             "Gencase exported <b>{}</b> particles.<br/>"
             "Press the <i>Details</i> button to check the output."
         ).format(str(particle_count)))
 
-        self.button_layout = QtGui.QHBoxLayout()
+        self.button_layout = QtWidgets.QHBoxLayout()
 
-        self.bt_open_with_paraview = QtGui.QPushButton(__("Open with Paraview"))
+        self.bt_open_with_paraview = QtWidgets.QPushButton(__("Open with Paraview"))
 
-        self.open_menu = QtGui.QMenu()
+        self.open_menu = QtWidgets.QMenu()
         self.open_menu.addAction("{}_MkCells.vtk".format(Case.the().name))
         self.open_menu.addAction("{}_All.vtk".format(Case.the().name))
         self.open_menu.addAction("{}_Fluid.vtk".format(Case.the().name))
@@ -49,8 +50,8 @@ class GencaseCompletedDialog(QtGui.QDialog):
 
         self.bt_open_with_paraview.setMenu(self.open_menu)
 
-        self.bt_details = QtGui.QPushButton(__("Details"))
-        self.bt_ok = QtGui.QPushButton(__("OK"))
+        self.bt_details = QtWidgets.QPushButton(__("Details"))
+        self.bt_ok = QtWidgets.QPushButton(__("OK"))
 
         self.button_layout.addWidget(self.bt_open_with_paraview)
         self.button_layout.addStretch(1)
@@ -58,12 +59,12 @@ class GencaseCompletedDialog(QtGui.QDialog):
         self.button_layout.addWidget(self.bt_ok)
 
         # Details widget
-        self.detail_text_widget = QtGui.QWidget()
+        self.detail_text_widget = QtWidgets.QWidget()
         self.detail_text_widget.setContentsMargins(0, 0, 0, 0)
-        self.detail_text_widget_layout = QtGui.QVBoxLayout()
+        self.detail_text_widget_layout = QtWidgets.QVBoxLayout()
         self.detail_text_widget_layout.setContentsMargins(0, 0, 0, 0)
 
-        self.detail_text_area = QtGui.QTextEdit()
+        self.detail_text_area = QtWidgets.QTextEdit()
         self.detail_text_area.setText("<b>{}:</b> <tt>{}</tt><br><pre>{}</pre>".format(__("The executed command line was"), cmd_string, detail_text))
 
         self.detail_text_widget_layout.addWidget(h_line_generator())

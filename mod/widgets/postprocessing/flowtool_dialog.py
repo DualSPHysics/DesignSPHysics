@@ -2,7 +2,8 @@
 # -*- coding: utf-8 -*-
 """DesignSPHysics FlowTool Config and Execution Dialog."""
 
-from PySide import QtGui
+# from PySide import QtGui
+from PySide2 import QtWidgets
 
 from mod.translation_tools import __
 from mod.file_tools import create_flowtool_boxes
@@ -15,7 +16,7 @@ from mod.dataobjects.flow_tool_box import FlowToolBox
 from mod.widgets.postprocessing.flowtool_box_edit_dialog import FlowToolBoxEditDialog
 
 
-class FlowToolDialog(QtGui.QDialog):
+class FlowToolDialog(QtWidgets.QDialog):
     """ DesignSPHysics FlowTool Config and Execution Dialog. """
 
     def __init__(self, post_processing_widget, parent=None):
@@ -25,46 +26,46 @@ class FlowToolDialog(QtGui.QDialog):
 
         self.setModal(False)
         self.setWindowTitle(__("FlowTool Tool"))
-        self.flowtool_tool_layout = QtGui.QVBoxLayout()
+        self.flowtool_tool_layout = QtWidgets.QVBoxLayout()
 
-        self.fltool_boxlist_groupbox = QtGui.QGroupBox(__("List of boxes"))
-        self.fltool_csvname_layout = QtGui.QHBoxLayout()
-        self.fltool_vtkname_layout = QtGui.QHBoxLayout()
-        self.fltool_parameters_layout = QtGui.QHBoxLayout()
-        self.fltool_buttons_layout = QtGui.QHBoxLayout()
+        self.fltool_boxlist_groupbox = QtWidgets.QGroupBox(__("List of boxes"))
+        self.fltool_csvname_layout = QtWidgets.QHBoxLayout()
+        self.fltool_vtkname_layout = QtWidgets.QHBoxLayout()
+        self.fltool_parameters_layout = QtWidgets.QHBoxLayout()
+        self.fltool_buttons_layout = QtWidgets.QHBoxLayout()
 
-        self.fltool_boxlist_groupbox_layout = QtGui.QVBoxLayout()
+        self.fltool_boxlist_groupbox_layout = QtWidgets.QVBoxLayout()
 
-        self.fltool_addbox_layout = QtGui.QHBoxLayout()
-        self.fltool_addbox_button = QtGui.QPushButton(__("New Box"))
+        self.fltool_addbox_layout = QtWidgets.QHBoxLayout()
+        self.fltool_addbox_button = QtWidgets.QPushButton(__("New Box"))
         self.fltool_addbox_layout.addStretch(1)
         self.fltool_addbox_layout.addWidget(self.fltool_addbox_button)
 
-        self.fltool_boxlist_layout = QtGui.QVBoxLayout()
+        self.fltool_boxlist_layout = QtWidgets.QVBoxLayout()
 
         self.fltool_boxlist_groupbox_layout.addLayout(self.fltool_addbox_layout)
         self.fltool_boxlist_groupbox_layout.addLayout(self.fltool_boxlist_layout)
         self.fltool_boxlist_groupbox.setLayout(self.fltool_boxlist_groupbox_layout)
 
-        self.fltool_csv_file_name_label = QtGui.QLabel(__("CSV file name"))
-        self.fltool_csv_file_name_text = QtGui.QLineEdit()
+        self.fltool_csv_file_name_label = QtWidgets.QLabel(__("CSV file name"))
+        self.fltool_csv_file_name_text = QtWidgets.QLineEdit()
         self.fltool_csv_file_name_text.setText("_ResultFlow")
         self.fltool_csvname_layout.addWidget(self.fltool_csv_file_name_label)
         self.fltool_csvname_layout.addWidget(self.fltool_csv_file_name_text)
 
-        self.fltool_vtk_file_name_label = QtGui.QLabel(__("VTK file name"))
-        self.fltool_vtk_file_name_text = QtGui.QLineEdit()
+        self.fltool_vtk_file_name_label = QtWidgets.QLabel(__("VTK file name"))
+        self.fltool_vtk_file_name_text = QtWidgets.QLineEdit()
         self.fltool_vtk_file_name_text.setText("Boxes")
         self.fltool_vtkname_layout.addWidget(self.fltool_vtk_file_name_label)
         self.fltool_vtkname_layout.addWidget(self.fltool_vtk_file_name_text)
 
-        self.fltool_parameters_label = QtGui.QLabel(__("Additional Parameters"))
-        self.fltool_parameters_text = QtGui.QLineEdit()
+        self.fltool_parameters_label = QtWidgets.QLabel(__("Additional Parameters"))
+        self.fltool_parameters_text = QtWidgets.QLineEdit()
         self.fltool_parameters_layout.addWidget(self.fltool_parameters_label)
         self.fltool_parameters_layout.addWidget(self.fltool_parameters_text)
 
-        self.fltool_export_button = QtGui.QPushButton(__("Export"))
-        self.fltool_cancel_button = QtGui.QPushButton(__("Cancel"))
+        self.fltool_export_button = QtWidgets.QPushButton(__("Export"))
+        self.fltool_cancel_button = QtWidgets.QPushButton(__("Cancel"))
         self.fltool_buttons_layout.addWidget(self.fltool_export_button)
         self.fltool_buttons_layout.addWidget(self.fltool_cancel_button)
 
@@ -107,12 +108,12 @@ class FlowToolDialog(QtGui.QDialog):
             target.setParent(None)
 
         for box in Case.the().flowtool_boxes:
-            to_add_layout = QtGui.QHBoxLayout()
-            to_add_label = QtGui.QLabel(str(box.name))
+            to_add_layout = QtWidgets.QHBoxLayout()
+            to_add_label = QtWidgets.QLabel(str(box.name))
             to_add_layout.addWidget(to_add_label)
             to_add_layout.addStretch(1)
-            to_add_editbutton = QtGui.QPushButton("Edit")
-            to_add_deletebutton = QtGui.QPushButton("Delete")
+            to_add_editbutton = QtWidgets.QPushButton("Edit")
+            to_add_deletebutton = QtWidgets.QPushButton("Delete")
             to_add_layout.addWidget(to_add_editbutton)
             to_add_layout.addWidget(to_add_deletebutton)
             to_add_editbutton.clicked.connect(lambda _=False, b=box.id: self.box_edit(b))

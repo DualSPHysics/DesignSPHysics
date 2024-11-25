@@ -6,12 +6,12 @@
 from mod.enums import FreeCADObjectType
 
 # APP Constants
-FREECAD_MIN_VERSION = "018"
+FREECAD_MIN_VERSION = "0.18"
 APP_NAME = "DesignSPHysics"
 DIVIDER = 1000
 LINE_END = "\n"
 PICKLE_PROTOCOL = 1  # Binary mode
-VERSION = "0.7.0 (15-09-2023)" # Version must be M.m.p (dd-mm-yyyy)
+VERSION = "0.7.1 (25-11-2024)" # Version must be M.m.p (dd-mm-yyyy)
 WIDTH_2D = 0.001
 MAX_PARTICLE_WARNING = 2000000
 DISK_DUMP_FILE_NAME = "designsphysics-{}.log".format(VERSION)

@@ -2,7 +2,8 @@
 # -*- coding: utf-8 -*-
 """Main DesignSPHysics Dock Widget """
 
-from PySide import QtGui, QtCore
+# from PySide import QtGui, QtCore
+from PySide2 import QtCore, QtWidgets
 
 from mod.gui_tools import h_line_generator
 from mod.freecad_tools import get_fc_main_window
@@ -20,7 +21,7 @@ from mod.widgets.dock.dock_post_processing_widget import DockPostProcessingWidge
 from mod.widgets.dock.dock_object_list_table_widget import DockObjectListTableWidget
 
 
-class DesignSPHysicsDock(QtGui.QDockWidget):
+class DesignSPHysicsDock(QtWidgets.QDockWidget):
     """ Main DesignSPHysics Dock, containing all the tools needed to manage cases. """
 
     need_refresh = QtCore.Signal()
@@ -31,8 +32,8 @@ class DesignSPHysicsDock(QtGui.QDockWidget):
         self.setObjectName(MAIN_WIDGET_INTERNAL_NAME)
         self.setWindowTitle("{} {}".format(APP_NAME, str(VERSION)))
 
-        self.root_widget = QtGui.QWidget()
-        self.main_layout = QtGui.QVBoxLayout()
+        self.root_widget = QtWidgets.QWidget()
+        self.main_layout = QtWidgets.QVBoxLayout()
         self.main_layout.setContentsMargins(5, 0, 5, 0)
 
         self.dock_logo_widget = DockLogoWidget(parent=get_fc_main_window())

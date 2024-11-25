@@ -4,7 +4,8 @@
 
 import FreeCADGui
 
-from PySide import QtCore, QtGui
+# from PySide import QtCore, QtGui
+from PySide2 import QtCore, QtWidgets
 
 from mod.translation_tools import __
 from mod.gui_tools import get_icon
@@ -54,7 +55,7 @@ from mod.widgets.motion.movement_actions import MovementActions
 from mod.widgets.motion.wave_movement_actions import WaveMovementActions
 
 
-class MovementDialog(QtGui.QDialog):
+class MovementDialog(QtWidgets.QDialog):
     """ Defines a window with motion  """
 
     def __init__(self, parent=None):
@@ -64,9 +65,9 @@ class MovementDialog(QtGui.QDialog):
 
         self.setMinimumSize(1400, 650)
         self.setWindowTitle(__("Motion configuration"))
-        self.ok_button = QtGui.QPushButton(__("OK"))
-        self.cancel_button = QtGui.QPushButton(__("Cancel"))
-        self.notice_label = QtGui.QLabel("")
+        self.ok_button = QtWidgets.QPushButton(__("OK"))
+        self.cancel_button = QtWidgets.QPushButton(__("Cancel"))
+        self.notice_label = QtWidgets.QLabel("")
         self.notice_label.setStyleSheet("QLabel { color : red; }")
         self.target_mk = Case.the().get_simulation_object(FreeCADGui.Selection.getSelection()[0].Name).obj_mk
         self.mkbasedproperties = Case.the().get_mk_based_properties(ObjectType.BOUND, self.target_mk)
@@ -75,20 +76,20 @@ class MovementDialog(QtGui.QDialog):
         self.ok_button.clicked.connect(self.on_ok)
         self.cancel_button.clicked.connect(self.on_cancel)
 
-        self.has_motion_layout = QtGui.QHBoxLayout()
-        self.has_motion_label = QtGui.QLabel(__("Set motion: "))
+        self.has_motion_layout = QtWidgets.QHBoxLayout()
+        self.has_motion_label = QtWidgets.QLabel(__("Set motion: "))
         self.has_motion_label.setToolTip(__("Enables motion for the selected MKBound"))
-        self.has_motion_selector = QtGui.QComboBox()
+        self.has_motion_selector = QtWidgets.QComboBox()
         self.has_motion_selector.insertItems(0, ["True", "False"])
         self.has_motion_selector.currentIndexChanged.connect(self.on_motion_change)
 
         ##############################################################################
 
-        self.create_new_movement_button = QtGui.QToolButton()
-        self.create_new_movement_button.setPopupMode(QtGui.QToolButton.MenuButtonPopup)
+        self.create_new_movement_button = QtWidgets.QToolButton()
+        self.create_new_movement_button.setPopupMode(QtWidgets.QToolButton.MenuButtonPopup)
         self.create_new_movement_button.setText(" {}".format(__("Create New")))
 
-        self.create_new_movement_menu = QtGui.QMenu()
+        self.create_new_movement_menu = QtWidgets.QMenu()
         self.create_new_movement_menu.addAction(get_icon("movement.png"), __("Movement"))
         self.create_new_movement_menu.addAction(get_icon("regular_wave.png"), __("Regular wave generator (Piston)"))
         self.create_new_movement_menu.addAction(get_icon("irregular_wave.png"),
@@ -104,31 +105,31 @@ class MovementDialog(QtGui.QDialog):
 
         ##############################################################################
 
-        self.has_motion_helplabel = QtGui.QLabel("<a href='{}'>{}</a>".format(HelpURL.MOTION_HELP, __("Movement Help")))
+        self.has_motion_helplabel = QtWidgets.QLabel("<a href='{}'>{}</a>".format(HelpURL.MOTION_HELP, __("Movement Help")))
         self.has_motion_helplabel.setTextFormat(QtCore.Qt.RichText)
         self.has_motion_helplabel.setTextInteractionFlags(
             QtCore.Qt.TextBrowserInteraction)
         self.has_motion_helplabel.setOpenExternalLinks(True)
-        self.has_motion_targetlabel = QtGui.QLabel(__("Target MKBound: ") + str(self.target_mk))
+        self.has_motion_targetlabel = QtWidgets.QLabel(__("Target MKBound: ") + str(self.target_mk))
         self.has_motion_layout.addWidget(self.has_motion_label)
         self.has_motion_layout.addWidget(self.has_motion_selector)
         self.has_motion_layout.addStretch(1)
         self.has_motion_layout.addWidget(self.has_motion_helplabel)
         self.has_motion_layout.addWidget(self.has_motion_targetlabel)
 
-        self.motion_features_layout = QtGui.QVBoxLayout()
-        self.motion_features_splitter = QtGui.QSplitter()
+        self.motion_features_layout = QtWidgets.QVBoxLayout()
+        self.motion_features_splitter = QtWidgets.QSplitter()
 
-        self.movement_list_groupbox = QtGui.QGroupBox(__("Global Movements"))
-        self.movement_list_groupbox_layout = QtGui.QVBoxLayout()
+        self.movement_list_groupbox = QtWidgets.QGroupBox(__("Global Movements"))
+        self.movement_list_groupbox_layout = QtWidgets.QVBoxLayout()
 
-        self.movement_list_table = QtGui.QTableWidget(1, 2)
+        self.movement_list_table = QtWidgets.QTableWidget(1, 2)
         self.movement_list_table.setSelectionBehavior(
-            QtGui.QAbstractItemView.SelectItems)
-        self.movement_list_table.setSelectionMode(QtGui.QAbstractItemView.SingleSelection)
-        self.movement_list_table.horizontalHeader().setResizeMode(QtGui.QHeaderView.Stretch)
-        self.movement_list_table.horizontalHeader().setResizeMode(0, QtGui.QHeaderView.Stretch)
-        self.movement_list_table.horizontalHeader().setResizeMode(1, QtGui.QHeaderView.ResizeToContents)
+            QtWidgets.QAbstractItemView.SelectItems)
+        self.movement_list_table.setSelectionMode(QtWidgets.QAbstractItemView.SingleSelection)
+        self.movement_list_table.horizontalHeader().setResizeMode(QtWidgets.QHeaderView.Stretch)
+        self.movement_list_table.horizontalHeader().setResizeMode(0, QtWidgets.QHeaderView.Stretch)
+        self.movement_list_table.horizontalHeader().setResizeMode(1, QtWidgets.QHeaderView.ResizeToContents)
 
         self.movement_list_table.verticalHeader().setVisible(False)
         self.movement_list_table.horizontalHeader().setVisible(False)
@@ -137,12 +138,12 @@ class MovementDialog(QtGui.QDialog):
         self.movement_list_groupbox_layout.addWidget(self.movement_list_table)
         self.movement_list_groupbox.setLayout(self.movement_list_groupbox_layout)
 
-        self.timeline_groupbox = QtGui.QGroupBox(__("Timeline for the selected movement"))
-        self.timeline_groupbox_layout = QtGui.QVBoxLayout()
+        self.timeline_groupbox = QtWidgets.QGroupBox(__("Timeline for the selected movement"))
+        self.timeline_groupbox_layout = QtWidgets.QVBoxLayout()
 
-        self.timeline_list_table = QtGui.QTableWidget(0, 1)
-        self.timeline_list_table.horizontalHeader().setResizeMode(QtGui.QHeaderView.Stretch)
-        self.timeline_list_table.verticalHeader().setResizeMode(QtGui.QHeaderView.ResizeToContents)
+        self.timeline_list_table = QtWidgets.QTableWidget(0, 1)
+        self.timeline_list_table.horizontalHeader().setResizeMode(QtWidgets.QHeaderView.Stretch)
+        self.timeline_list_table.verticalHeader().setResizeMode(QtWidgets.QHeaderView.ResizeToContents)
         self.timeline_list_table.verticalHeader().setVisible(False)
         self.timeline_list_table.horizontalHeader().setVisible(False)
         self.timeline_list_table.resizeRowsToContents()
@@ -150,11 +151,11 @@ class MovementDialog(QtGui.QDialog):
         self.timeline_groupbox_layout.addWidget(self.timeline_list_table)
         self.timeline_groupbox.setLayout(self.timeline_groupbox_layout)
 
-        self.actions_groupbox = QtGui.QGroupBox(__("Available actions"))
-        self.actions_groupbox_layout = QtGui.QVBoxLayout()
+        self.actions_groupbox = QtWidgets.QGroupBox(__("Available actions"))
+        self.actions_groupbox_layout = QtWidgets.QVBoxLayout()
 
-        self.actions_groupbox_table = QtGui.QTableWidget(0, 1)
-        self.actions_groupbox_table.horizontalHeader().setResizeMode(QtGui.QHeaderView.Stretch)
+        self.actions_groupbox_table = QtWidgets.QTableWidget(0, 1)
+        self.actions_groupbox_table.horizontalHeader().setResizeMode(QtWidgets.QHeaderView.Stretch)
         self.actions_groupbox_table.verticalHeader().setVisible(False)
         self.actions_groupbox_table.horizontalHeader().setVisible(False)
 
@@ -164,16 +165,16 @@ class MovementDialog(QtGui.QDialog):
         self.motion_features_splitter.addWidget(self.movement_list_groupbox)
         self.motion_features_splitter.addWidget(self.timeline_groupbox)
         self.motion_features_splitter.addWidget(self.actions_groupbox)
-        self.motion_features_splitter.setSizePolicy(QtGui.QSizePolicy.Expanding, QtGui.QSizePolicy.Expanding)
+        self.motion_features_splitter.setSizePolicy(QtWidgets.QSizePolicy.Expanding, QtWidgets.QSizePolicy.Expanding)
         self.motion_features_layout.addWidget(self.motion_features_splitter)
 
-        self.buttons_layout = QtGui.QHBoxLayout()
+        self.buttons_layout = QtWidgets.QHBoxLayout()
         self.buttons_layout.addWidget(self.notice_label)
         self.buttons_layout.addStretch(1)
         self.buttons_layout.addWidget(self.ok_button)
         self.buttons_layout.addWidget(self.cancel_button)
 
-        self.motion_window_layout = QtGui.QVBoxLayout()
+        self.motion_window_layout = QtWidgets.QVBoxLayout()
         self.motion_window_layout.addLayout(self.has_motion_layout)
         self.motion_window_layout.addLayout(self.motion_features_layout)
         self.motion_window_layout.addLayout(self.buttons_layout)
@@ -185,39 +186,39 @@ class MovementDialog(QtGui.QDialog):
         self.movement_list_table.cellClicked.connect(self.on_movement_selected)
 
         self.actions_groupbox_table.setRowCount(9)
-        self.bt_to_add = QtGui.QPushButton(get_icon("left-arrow.png"), __("Add a delay"))
+        self.bt_to_add = QtWidgets.QPushButton(get_icon("left-arrow.png"), __("Add a delay"))
         self.bt_to_add.setStyleSheet("text-align: left")
         self.bt_to_add.clicked.connect(self.on_add_delay)
         self.actions_groupbox_table.setCellWidget(0, 0, self.bt_to_add)
-        self.bt_to_add = QtGui.QPushButton(get_icon("left-arrow.png"), __("Add a rectilinear motion"))
+        self.bt_to_add = QtWidgets.QPushButton(get_icon("left-arrow.png"), __("Add a rectilinear motion"))
         self.bt_to_add.setStyleSheet("text-align: left")
         self.bt_to_add.clicked.connect(self.on_add_rectilinear)
         self.actions_groupbox_table.setCellWidget(1, 0, self.bt_to_add)
-        self.bt_to_add = QtGui.QPushButton(get_icon("left-arrow.png"), __("Add an accelerated rectilinear motion"))
+        self.bt_to_add = QtWidgets.QPushButton(get_icon("left-arrow.png"), __("Add an accelerated rectilinear motion"))
         self.bt_to_add.setStyleSheet("text-align: left")
         self.bt_to_add.clicked.connect(self.on_add_accrectilinear)
         self.actions_groupbox_table.setCellWidget(2, 0, self.bt_to_add)
-        self.bt_to_add = QtGui.QPushButton(get_icon("left-arrow.png"), __("Add a rotational motion"))
+        self.bt_to_add = QtWidgets.QPushButton(get_icon("left-arrow.png"), __("Add a rotational motion"))
         self.bt_to_add.setStyleSheet("text-align: left")
         self.bt_to_add.clicked.connect(self.on_add_rotational)
         self.actions_groupbox_table.setCellWidget(3, 0, self.bt_to_add)
-        self.bt_to_add = QtGui.QPushButton(get_icon("left-arrow.png"), __("Add an accelerated rotational motion"))
+        self.bt_to_add = QtWidgets.QPushButton(get_icon("left-arrow.png"), __("Add an accelerated rotational motion"))
         self.bt_to_add.setStyleSheet("text-align: left")
         self.bt_to_add.clicked.connect(self.on_add_acc_rotational)
         self.actions_groupbox_table.setCellWidget(4, 0, self.bt_to_add)
-        self.bt_to_add = QtGui.QPushButton(get_icon("left-arrow.png"), __("Add an accelerated circular motion"))
+        self.bt_to_add = QtWidgets.QPushButton(get_icon("left-arrow.png"), __("Add an accelerated circular motion"))
         self.bt_to_add.setStyleSheet("text-align: left")
         self.bt_to_add.clicked.connect(self.on_add_acc_circular)
         self.actions_groupbox_table.setCellWidget(5, 0, self.bt_to_add)
-        self.bt_to_add = QtGui.QPushButton(get_icon("left-arrow.png"), __("Add a sinusoidal rotational motion"))
+        self.bt_to_add = QtWidgets.QPushButton(get_icon("left-arrow.png"), __("Add a sinusoidal rotational motion"))
         self.bt_to_add.setStyleSheet("text-align: left")
         self.bt_to_add.clicked.connect(self.on_add_sinu_rot)
         self.actions_groupbox_table.setCellWidget(6, 0, self.bt_to_add)
-        self.bt_to_add = QtGui.QPushButton(get_icon("left-arrow.png"), __("Add a sinusoidal circular motion"))
+        self.bt_to_add = QtWidgets.QPushButton(get_icon("left-arrow.png"), __("Add a sinusoidal circular motion"))
         self.bt_to_add.setStyleSheet("text-align: left")
         self.bt_to_add.clicked.connect(self.on_add_sinu_cir)
         self.actions_groupbox_table.setCellWidget(7, 0, self.bt_to_add)
-        self.bt_to_add = QtGui.QPushButton(get_icon("left-arrow.png"), __("Add a sinusoidal rectilinear motion"))
+        self.bt_to_add = QtWidgets.QPushButton(get_icon("left-arrow.png"), __("Add a sinusoidal rectilinear motion"))
         self.bt_to_add.setStyleSheet("text-align: left")
         self.bt_to_add.clicked.connect(self.on_add_sinu_rect)
         self.actions_groupbox_table.setCellWidget(8, 0, self.bt_to_add)
@@ -465,7 +466,7 @@ class MovementDialog(QtGui.QDialog):
         self.movement_list_table.setRowCount(len(Case.the().info.global_movements) + 1)
         current_row = 0
         for movement in Case.the().info.global_movements:
-            self.movement_list_table.setItem(current_row, 0, QtGui.QTableWidgetItem(movement.name))
+            self.movement_list_table.setItem(current_row, 0, QtWidgets.QTableWidgetItem(movement.name))
             try:
                 has_loop = movement.loop
             except AttributeError:
@@ -492,7 +493,7 @@ class MovementDialog(QtGui.QDialog):
         self.create_new_movement_button.clicked.connect(self.on_new_movement)
         self.create_new_movement_menu.triggered.connect(self.on_new_wave_generator)
 
-        self.movement_list_table.setCellWidget(current_row, 0, QtGui.QWidget())
+        self.movement_list_table.setCellWidget(current_row, 0, QtWidgets.QWidget())
 
     def on_add_delay(self):
         """ Adds a WaitMotion to the timeline of the selected movement. """

@@ -2,7 +2,8 @@
 # -*- coding: utf-8 -*-
 """DesignSPHysics Rotational Motion Timeline Widget """
 
-from PySide import QtCore, QtGui
+# from PySide import QtCore, QtGui
+from PySide2 import QtCore, QtWidgets
 
 from mod.translation_tools import __
 from mod.stdout_tools import debug
@@ -13,7 +14,7 @@ from mod.dataobjects.motion.rot_motion import RotMotion
 from mod.functions import make_float
 
 
-class RotationalMotionTimeline(QtGui.QWidget):
+class RotationalMotionTimeline(QtWidgets.QWidget):
     """ A Rotational motion graphical representation for a table-based timeline """
 
     changed = QtCore.Signal(int, RotMotion)
@@ -30,32 +31,32 @@ class RotationalMotionTimeline(QtGui.QWidget):
 
         self.index = index
 
-        self.main_layout = QtGui.QHBoxLayout()
+        self.main_layout = QtWidgets.QHBoxLayout()
         self.main_layout.setContentsMargins(10, 0, 10, 0)
-        self.label = QtGui.QLabel("Rotational \nMotion  ")
+        self.label = QtWidgets.QLabel("Rotational \nMotion  ")
         self.label.setMinimumWidth(75)
-        self.velocity_label = QtGui.QLabel("Vel: ")
-        self.velocity_input = QtGui.QLineEdit()
-        self.axis_label = QtGui.QLabel("Axis 1 (X, Y, Z): \n\nAxis 2 (X, Y, Z): ")
-        self.axis_layout = QtGui.QVBoxLayout()
-        self.axis_first_row_layout = QtGui.QHBoxLayout()
-        self.axis_second_row_layout = QtGui.QHBoxLayout()
-        self.x1_input = QtGui.QLineEdit()
-        self.y1_input = QtGui.QLineEdit()
-        self.z1_input = QtGui.QLineEdit()
-        self.x2_input = QtGui.QLineEdit()
-        self.y2_input = QtGui.QLineEdit()
-        self.z2_input = QtGui.QLineEdit()
-        self.time_label = QtGui.QLabel(__("Duration (s): "))
-        self.time_input = QtGui.QLineEdit()
-        self.delete_button = QtGui.QPushButton(
+        self.velocity_label = QtWidgets.QLabel("Vel: ")
+        self.velocity_input = QtWidgets.QLineEdit()
+        self.axis_label = QtWidgets.QLabel("Axis 1 (X, Y, Z): \n\nAxis 2 (X, Y, Z): ")
+        self.axis_layout = QtWidgets.QVBoxLayout()
+        self.axis_first_row_layout = QtWidgets.QHBoxLayout()
+        self.axis_second_row_layout = QtWidgets.QHBoxLayout()
+        self.x1_input = QtWidgets.QLineEdit()
+        self.y1_input = QtWidgets.QLineEdit()
+        self.z1_input = QtWidgets.QLineEdit()
+        self.x2_input = QtWidgets.QLineEdit()
+        self.y2_input = QtWidgets.QLineEdit()
+        self.z2_input = QtWidgets.QLineEdit()
+        self.time_label = QtWidgets.QLabel(__("Duration (s): "))
+        self.time_input = QtWidgets.QLineEdit()
+        self.delete_button = QtWidgets.QPushButton(
             get_icon("trash.png"), None)
-        self.order_button_layout = QtGui.QVBoxLayout()
+        self.order_button_layout = QtWidgets.QVBoxLayout()
         self.order_button_layout.setContentsMargins(0, 0, 0, 0)
         self.order_button_layout.setSpacing(0)
-        self.order_up_button = QtGui.QPushButton(
+        self.order_up_button = QtWidgets.QPushButton(
             get_icon("up_arrow.png"), None)
-        self.order_down_button = QtGui.QPushButton(
+        self.order_down_button = QtWidgets.QPushButton(
             get_icon("down_arrow.png"), None)
 
         self.order_button_layout.addWidget(self.order_up_button)

@@ -4,7 +4,8 @@
 
 import FreeCADGui
 
-from PySide import QtGui
+# from PySide import QtGui
+from PySide2 import QtWidgets
 
 from mod.translation_tools import __
 from mod.dialog_tools import info_dialog
@@ -17,34 +18,34 @@ from mod.dataobjects.initials_property import InitialsProperty
 from mod.functions import make_float
 
 
-class InitialsDialog(QtGui.QDialog):
+class InitialsDialog(QtWidgets.QDialog):
     """ Defines a window with initials  """
 
     def __init__(self, parent=None):
         super().__init__(parent=parent)
 
         self.setWindowTitle(__("Initials configuration for fluid"))
-        self.ok_button = QtGui.QPushButton(__("OK"))
-        self.cancel_button = QtGui.QPushButton(__("Cancel"))
+        self.ok_button = QtWidgets.QPushButton(__("OK"))
+        self.cancel_button = QtWidgets.QPushButton(__("Cancel"))
         self.target_mk = Case.the().get_simulation_object(FreeCADGui.Selection.getSelection()[0].Name).obj_mk
 
         self.ok_button.clicked.connect(self.on_ok)
         self.cancel_button.clicked.connect(self.on_cancel)
 
-        self.has_initials_layout = QtGui.QHBoxLayout()
-        self.has_initials_label = QtGui.QLabel(__("Set initials: "))
+        self.has_initials_layout = QtWidgets.QHBoxLayout()
+        self.has_initials_label = QtWidgets.QLabel(__("Set initials: "))
         self.has_initials_label.setToolTip(__("Sets the current initial movement vector."))
-        self.has_initials_selector = QtGui.QComboBox()
+        self.has_initials_selector = QtWidgets.QComboBox()
         self.has_initials_selector.insertItems(0, ["True", "False"])
         self.has_initials_selector.currentIndexChanged.connect(self.on_initials_change)
 
-        self.initials_type_label = QtGui.QLabel(__("Type: "))
+        self.initials_type_label = QtWidgets.QLabel(__("Type: "))
         self.initials_type_label.setToolTip(__("Chooses the type of the initial velocity."))
-        self.initials_type_selector = QtGui.QComboBox()
+        self.initials_type_selector = QtWidgets.QComboBox()
         self.initials_type_selector.insertItems(0, ['Velocity - Uniform', 'Velocity - Linear', 'Velocity - Parabolic'])
         self.initials_type_selector.currentIndexChanged.connect(self.on_initials_type_change)
 
-        self.has_initials_targetlabel = QtGui.QLabel(__("Target MKFluid: ") + str(self.target_mk))
+        self.has_initials_targetlabel = QtWidgets.QLabel(__("Target MKFluid: ") + str(self.target_mk))
 
         self.has_initials_layout.addWidget(self.has_initials_label)
         self.has_initials_layout.addWidget(self.has_initials_selector)
@@ -53,18 +54,18 @@ class InitialsDialog(QtGui.QDialog):
         self.has_initials_layout.addStretch(1)
         self.has_initials_layout.addWidget(self.has_initials_targetlabel)
 
-        self.initials_props_group = QtGui.QGroupBox(__("Initial properties"))
-        self.initials_props_layout = QtGui.QVBoxLayout()
+        self.initials_props_group = QtWidgets.QGroupBox(__("Initial properties"))
+        self.initials_props_layout = QtWidgets.QVBoxLayout()
 
-        self.initials_vector_layout = QtGui.QHBoxLayout()
-        self.initials_vector_label = QtGui.QLabel(__("Velocity (m/s): "))
+        self.initials_vector_layout = QtWidgets.QHBoxLayout()
+        self.initials_vector_label = QtWidgets.QLabel(__("Velocity (m/s): "))
         self.initials_vector_label.setToolTip(__("Sets the mk group movement vector."))
-        self.initials_vector_label_x = QtGui.QLabel("X")
-        self.initials_vector_input_x = QtGui.QLineEdit()
-        self.initials_vector_label_y = QtGui.QLabel("Y")
-        self.initials_vector_input_y = QtGui.QLineEdit()
-        self.initials_vector_label_z = QtGui.QLabel("Z")
-        self.initials_vector_input_z = QtGui.QLineEdit()
+        self.initials_vector_label_x = QtWidgets.QLabel("X")
+        self.initials_vector_input_x = QtWidgets.QLineEdit()
+        self.initials_vector_label_y = QtWidgets.QLabel("Y")
+        self.initials_vector_input_y = QtWidgets.QLineEdit()
+        self.initials_vector_label_z = QtWidgets.QLabel("Z")
+        self.initials_vector_input_z = QtWidgets.QLineEdit()
         self.initials_vector_layout.addWidget(self.initials_vector_label)
         self.initials_vector_layout.addWidget(self.initials_vector_label_x)
         self.initials_vector_layout.addWidget(self.initials_vector_input_x)
@@ -73,32 +74,32 @@ class InitialsDialog(QtGui.QDialog):
         self.initials_vector_layout.addWidget(self.initials_vector_label_z)
         self.initials_vector_layout.addWidget(self.initials_vector_input_z)
 
-        self.initials_velocities_layout = QtGui.QVBoxLayout()
-        self.initials_velocities_order1_layout = QtGui.QHBoxLayout()
-        self.initials_velocities_v1_label = QtGui.QLabel('V1: ')
-        self.initials_velocities_v1_input = QtGui.QLineEdit()
-        self.initials_velocities_z1_label = QtGui.QLabel('Z1: ')
-        self.initials_velocities_z1_input = QtGui.QLineEdit()
+        self.initials_velocities_layout = QtWidgets.QVBoxLayout()
+        self.initials_velocities_order1_layout = QtWidgets.QHBoxLayout()
+        self.initials_velocities_v1_label = QtWidgets.QLabel('V1: ')
+        self.initials_velocities_v1_input = QtWidgets.QLineEdit()
+        self.initials_velocities_z1_label = QtWidgets.QLabel('Z1: ')
+        self.initials_velocities_z1_input = QtWidgets.QLineEdit()
         self.initials_velocities_order1_layout.addWidget(self.initials_velocities_v1_label)
         self.initials_velocities_order1_layout.addWidget(self.initials_velocities_v1_input)
         self.initials_velocities_order1_layout.addWidget(self.initials_velocities_z1_label)
         self.initials_velocities_order1_layout.addWidget(self.initials_velocities_z1_input)
 
-        self.initials_velocities_order2_layout = QtGui.QHBoxLayout()
-        self.initials_velocities_v2_label = QtGui.QLabel('V2: ')
-        self.initials_velocities_v2_input = QtGui.QLineEdit()
-        self.initials_velocities_z2_label = QtGui.QLabel('Z2: ')
-        self.initials_velocities_z2_input = QtGui.QLineEdit()
+        self.initials_velocities_order2_layout = QtWidgets.QHBoxLayout()
+        self.initials_velocities_v2_label = QtWidgets.QLabel('V2: ')
+        self.initials_velocities_v2_input = QtWidgets.QLineEdit()
+        self.initials_velocities_z2_label = QtWidgets.QLabel('Z2: ')
+        self.initials_velocities_z2_input = QtWidgets.QLineEdit()
         self.initials_velocities_order2_layout.addWidget(self.initials_velocities_v2_label)
         self.initials_velocities_order2_layout.addWidget(self.initials_velocities_v2_input)
         self.initials_velocities_order2_layout.addWidget(self.initials_velocities_z2_label)
         self.initials_velocities_order2_layout.addWidget(self.initials_velocities_z2_input)
 
-        self.initials_velocities_order3_layout = QtGui.QHBoxLayout()
-        self.initials_velocities_v3_label = QtGui.QLabel('V3: ')
-        self.initials_velocities_v3_input = QtGui.QLineEdit()
-        self.initials_velocities_z3_label = QtGui.QLabel('Z3: ')
-        self.initials_velocities_z3_input = QtGui.QLineEdit()
+        self.initials_velocities_order3_layout = QtWidgets.QHBoxLayout()
+        self.initials_velocities_v3_label = QtWidgets.QLabel('V3: ')
+        self.initials_velocities_v3_input = QtWidgets.QLineEdit()
+        self.initials_velocities_z3_label = QtWidgets.QLabel('Z3: ')
+        self.initials_velocities_z3_input = QtWidgets.QLineEdit()
         self.initials_velocities_order3_layout.addWidget(self.initials_velocities_v3_label)
         self.initials_velocities_order3_layout.addWidget(self.initials_velocities_v3_input)
         self.initials_velocities_order3_layout.addWidget(self.initials_velocities_z3_label)
@@ -113,12 +114,12 @@ class InitialsDialog(QtGui.QDialog):
         self.initials_props_layout.addStretch(1)
         self.initials_props_group.setLayout(self.initials_props_layout)
 
-        self.buttons_layout = QtGui.QHBoxLayout()
+        self.buttons_layout = QtWidgets.QHBoxLayout()
         self.buttons_layout.addStretch(1)
         self.buttons_layout.addWidget(self.ok_button)
         self.buttons_layout.addWidget(self.cancel_button)
 
-        self.initials_window_layout = QtGui.QVBoxLayout()
+        self.initials_window_layout = QtWidgets.QVBoxLayout()
         self.initials_window_layout.addLayout(self.has_initials_layout)
         self.initials_window_layout.addWidget(self.initials_props_group)
         self.initials_window_layout.addLayout(self.buttons_layout)

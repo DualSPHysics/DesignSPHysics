@@ -2,12 +2,13 @@
 # -*- coding: utf-8 -*-
 """DesignSPHysics Execution Progress Dialog."""
 
-from PySide import QtGui, QtCore
+# from PySide import QtGui, QtCore
+from PySide2 import QtCore, QtWidgets
 
 from mod.translation_tools import __
 
 
-class ExportProgressDialog(QtGui.QDialog):
+class ExportProgressDialog(QtWidgets.QDialog):
     """ Export Progress Dialog. """
 
     on_cancel = QtCore.Signal()
@@ -21,16 +22,16 @@ class ExportProgressDialog(QtGui.QDialog):
         self.setModal(False)
         self.setMinimumSize(400, 100)
         self.setWindowTitle(__("Exporting: {}%").format("0"))
-        self.export_dialog_layout = QtGui.QVBoxLayout()
+        self.export_dialog_layout = QtWidgets.QVBoxLayout()
 
-        self.export_progbar_layout = QtGui.QHBoxLayout()
-        self.export_progbar_bar = QtGui.QProgressBar()
+        self.export_progbar_layout = QtWidgets.QHBoxLayout()
+        self.export_progbar_bar = QtWidgets.QProgressBar()
         self.export_progbar_bar.setRange(0, 100)
         self.export_progbar_bar.setTextVisible(False)
         self.export_progbar_layout.addWidget(self.export_progbar_bar)
 
-        self.export_button_layout = QtGui.QHBoxLayout()
-        self.export_button_cancel = QtGui.QPushButton(__("Cancel Exporting"))
+        self.export_button_layout = QtWidgets.QHBoxLayout()
+        self.export_button_cancel = QtWidgets.QPushButton(__("Cancel Exporting"))
         self.export_button_layout.addStretch(1)
         self.export_button_layout.addWidget(self.export_button_cancel)
 

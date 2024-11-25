@@ -16,7 +16,8 @@ from urllib.error import URLError
 import FreeCAD
 import FreeCADGui
 
-from PySide import QtGui, QtCore
+# from PySide import QtGui, QtCore
+from PySide2 import QtCore, QtWidgets
 
 from mod.translation_tools import __
 from mod.freecad_tools import check_compatibility, document_count, prompt_close_all_documents, get_fc_main_window, get_fc_object
@@ -146,7 +147,11 @@ def boot():
 
     # Subscribe the FreeCAD Objects tree to the item selection change function.
     # This helps FreeCAD notify DesignSPHysics for the deleted and changed objects to get updated correctly.
-    fc_object_tree: QtGui.QTreeWidget = get_fc_main_window().findChildren(QtGui.QSplitter)[0].findChildren(QtGui.QTreeWidget)[0]
+    for child in get_fc_main_window().findChildren(QtWidgets.QSplitter):
+        widget = child.findChildren(QtWidgets.QTreeWidget)
+        if widget:
+            fc_object_tree: QtWidgets.QTreeWidget = widget[0]
+            break
     fc_object_tree.itemSelectionChanged.connect(lambda p=properties_widget, d=designsphysics_dock: on_tree_item_selection_change(p, d))
     debug("Subscribing selection change monitor handler to freecad object tree item changed.")
 

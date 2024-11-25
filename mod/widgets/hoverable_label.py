@@ -2,10 +2,11 @@
 # -*- coding: utf-8 -*-
 """DesignSPHysics Hoverable Label implementation."""
 
-from PySide import QtCore, QtGui
+# from PySide import QtCore, QtGui
+from PySide2 import QtCore, QtWidgets, QtGui
 
 
-class HoverableLabel(QtGui.QLabel):
+class HoverableLabel(QtWidgets.QLabel):
     """ A QLabel that emits a signal with a text whenever its hovered by the mouse """
 
     hover = QtCore.Signal(str)
@@ -20,5 +21,5 @@ class HoverableLabel(QtGui.QLabel):
 
     def enterEvent(self, event: QtGui.QEnterEvent):
         """ Override of the enter event to emit the hover signal. """
-        QtGui.QLabel.enterEvent(self, event)
+        QtWidgets.QLabel.enterEvent(self, event)
         self.hover.emit(self.help_text)

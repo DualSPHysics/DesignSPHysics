@@ -2,7 +2,8 @@
 # -*- coding: utf-8 -*-
 """DesignSPHysics """
 
-from PySide import QtCore, QtGui
+# from PySide import QtCore, QtGui
+from PySide2 import QtCore, QtWidgets
 
 from mod.translation_tools import __
 from mod.gui_tools import h_line_generator
@@ -14,7 +15,7 @@ from mod.dataobjects.motion.rotation_file_gen import RotationFileGen
 from mod.functions import make_float
 
 
-class RotationFileMotionTimeline(QtGui.QWidget):
+class RotationFileMotionTimeline(QtWidgets.QWidget):
     """ A rotation file motion graphical representation for a table-based timeline """
     changed = QtCore.Signal(int, RotationFileGen)
 
@@ -30,42 +31,42 @@ class RotationFileMotionTimeline(QtGui.QWidget):
         # Needed for copying movement file to root of the case.
         self.project_folder_path = project_folder_path
 
-        self.main_layout = QtGui.QVBoxLayout()
+        self.main_layout = QtWidgets.QVBoxLayout()
         self.main_layout.setContentsMargins(10, 10, 10, 10)
 
-        self.root_label = QtGui.QLabel(__("Rotation file movement"))
+        self.root_label = QtWidgets.QLabel(__("Rotation file movement"))
 
-        self.duration_label = QtGui.QLabel(__("Duration (s): "))
-        self.duration_input = QtGui.QLineEdit()
+        self.duration_label = QtWidgets.QLabel(__("Duration (s): "))
+        self.duration_input = QtWidgets.QLineEdit()
 
-        self.filename_label = QtGui.QLabel(__("File name: "))
-        self.filename_input = QtGui.QLineEdit()
-        self.filename_browse = QtGui.QPushButton(__("Browse"))
+        self.filename_label = QtWidgets.QLabel(__("File name: "))
+        self.filename_input = QtWidgets.QLineEdit()
+        self.filename_browse = QtWidgets.QPushButton(__("Browse"))
 
-        self.anglesunits_label = QtGui.QLabel(__("Angle Units: "))
-        self.anglesunits_selector = QtGui.QComboBox()
+        self.anglesunits_label = QtWidgets.QLabel(__("Angle Units: "))
+        self.anglesunits_selector = QtWidgets.QComboBox()
         self.anglesunits_selector.insertItems(
             0, [__("Degrees"), __("Radians")])
 
-        self.axisp1x_label = QtGui.QLabel(__("Axis 1 X: "))
-        self.axisp1x_input = QtGui.QLineEdit()
+        self.axisp1x_label = QtWidgets.QLabel(__("Axis 1 X: "))
+        self.axisp1x_input = QtWidgets.QLineEdit()
 
-        self.axisp1y_label = QtGui.QLabel(__("Axis 1 Y: "))
-        self.axisp1y_input = QtGui.QLineEdit()
+        self.axisp1y_label = QtWidgets.QLabel(__("Axis 1 Y: "))
+        self.axisp1y_input = QtWidgets.QLineEdit()
 
-        self.axisp1z_label = QtGui.QLabel(__("Axis 1 Z: "))
-        self.axisp1z_input = QtGui.QLineEdit()
+        self.axisp1z_label = QtWidgets.QLabel(__("Axis 1 Z: "))
+        self.axisp1z_input = QtWidgets.QLineEdit()
 
-        self.axisp2x_label = QtGui.QLabel(__("Axis 2 X: "))
-        self.axisp2x_input = QtGui.QLineEdit()
+        self.axisp2x_label = QtWidgets.QLabel(__("Axis 2 X: "))
+        self.axisp2x_input = QtWidgets.QLineEdit()
 
-        self.axisp2y_label = QtGui.QLabel(__("Axis 2 Y: "))
-        self.axisp2y_input = QtGui.QLineEdit()
+        self.axisp2y_label = QtWidgets.QLabel(__("Axis 2 Y: "))
+        self.axisp2y_input = QtWidgets.QLineEdit()
 
-        self.axisp2z_label = QtGui.QLabel(__("Axis 2 Z: "))
-        self.axisp2z_input = QtGui.QLineEdit()
+        self.axisp2z_label = QtWidgets.QLabel(__("Axis 2 Z: "))
+        self.axisp2z_input = QtWidgets.QLineEdit()
 
-        self.root_layout = QtGui.QHBoxLayout()
+        self.root_layout = QtWidgets.QHBoxLayout()
         self.root_layout.addWidget(self.root_label)
         self.root_layout.addStretch(1)
         self.root_layout.addWidget(self.anglesunits_label)
@@ -73,16 +74,16 @@ class RotationFileMotionTimeline(QtGui.QWidget):
         self.root_layout.addWidget(self.duration_label)
         self.root_layout.addWidget(self.duration_input)
 
-        self.first_row_layout = QtGui.QHBoxLayout()
+        self.first_row_layout = QtWidgets.QHBoxLayout()
         self.first_row_layout.addWidget(self.filename_label)
         self.first_row_layout.addWidget(self.filename_input)
         self.first_row_layout.addWidget(self.filename_browse)
 
-        self.second_row_layout = QtGui.QHBoxLayout()
+        self.second_row_layout = QtWidgets.QHBoxLayout()
         for x in [self.axisp1x_label, self.axisp1x_input, self.axisp1y_label, self.axisp1y_input, self.axisp1z_label, self.axisp1z_input]:
             self.second_row_layout.addWidget(x)
 
-        self.third_row_layout = QtGui.QHBoxLayout()
+        self.third_row_layout = QtWidgets.QHBoxLayout()
         for x in [self.axisp2x_label, self.axisp2x_input, self.axisp2y_label, self.axisp2y_input, self.axisp2z_label, self.axisp2z_input]:
             self.third_row_layout.addWidget(x)
 
@@ -117,7 +118,7 @@ class RotationFileMotionTimeline(QtGui.QWidget):
 
     def on_file_browse(self):
         """ Opens a file dialog to open the filename, then puts it into the widget. """
-        filename, _ = QtGui.QFileDialog.getOpenFileName(self, __("Open file"), Case.the().info.last_used_directory)
+        filename, _ = QtWidgets.QFileDialog.getOpenFileName(self, __("Open file"), Case.the().info.last_used_directory)
         Case.the().info.update_last_used_directory(filename)
         self.filename_input.setText(filename)
 

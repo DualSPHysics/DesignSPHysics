@@ -4,7 +4,8 @@
 
 import FreeCADGui
 
-from PySide import QtGui, QtCore
+# from PySide import QtGui, QtCore
+from PySide2 import QtCore, QtWidgets
 
 from mod.translation_tools import __
 from mod.dialog_tools import info_dialog
@@ -15,21 +16,21 @@ from mod.dataobjects.bound_initials_property import BoundInitialsProperty
 from mod.dataobjects.case import Case
 
 
-class SetInitialsWidget(QtGui.QWidget):
+class SetInitialsWidget(QtWidgets.QWidget):
     """ Widget with properties used by the Set type """
 
     def __init__(self, parent=None):
         super().__init__(parent=parent)
-        self.main_layout = QtGui.QVBoxLayout()
+        self.main_layout = QtWidgets.QVBoxLayout()
 
-        self.normal_layout = QtGui.QHBoxLayout()
-        self.normal_label = QtGui.QLabel(__("Normal: "))
-        self.normal_label_x = QtGui.QLabel("X")
-        self.normal_input_x = QtGui.QLineEdit()
-        self.normal_label_y = QtGui.QLabel("Y")
-        self.normal_input_y = QtGui.QLineEdit()
-        self.normal_label_z = QtGui.QLabel("Z")
-        self.normal_input_z = QtGui.QLineEdit()
+        self.normal_layout = QtWidgets.QHBoxLayout()
+        self.normal_label = QtWidgets.QLabel(__("Normal: "))
+        self.normal_label_x = QtWidgets.QLabel("X")
+        self.normal_input_x = QtWidgets.QLineEdit()
+        self.normal_label_y = QtWidgets.QLabel("Y")
+        self.normal_input_y = QtWidgets.QLineEdit()
+        self.normal_label_z = QtWidgets.QLabel("Z")
+        self.normal_input_z = QtWidgets.QLineEdit()
         self.normal_layout.addWidget(self.normal_label)
         self.normal_layout.addWidget(self.normal_label_x)
         self.normal_layout.addWidget(self.normal_input_x)
@@ -42,22 +43,22 @@ class SetInitialsWidget(QtGui.QWidget):
         self.setLayout(self.main_layout)
 
 
-class PlaneInitialsWidget(QtGui.QWidget):
+class PlaneInitialsWidget(QtWidgets.QWidget):
     """ Widget with properties used by the Plane type """
 
     def __init__(self, parent=None):
         super().__init__(parent=parent)
-        self.main_layout = QtGui.QVBoxLayout()
+        self.main_layout = QtWidgets.QVBoxLayout()
 
-        self.point_layout = QtGui.QHBoxLayout()
-        self.point_label = QtGui.QLabel(__("Point: "))
-        self.point_label_x = QtGui.QLabel("X")
-        self.point_input_x = QtGui.QLineEdit()
-        self.point_label_y = QtGui.QLabel("Y")
-        self.point_input_y = QtGui.QLineEdit()
-        self.point_label_z = QtGui.QLabel("Z")
-        self.point_input_z = QtGui.QLineEdit()
-        self.point_auto_check = QtGui.QCheckBox(__("Auto"))
+        self.point_layout = QtWidgets.QHBoxLayout()
+        self.point_label = QtWidgets.QLabel(__("Point: "))
+        self.point_label_x = QtWidgets.QLabel("X")
+        self.point_input_x = QtWidgets.QLineEdit()
+        self.point_label_y = QtWidgets.QLabel("Y")
+        self.point_input_y = QtWidgets.QLineEdit()
+        self.point_label_z = QtWidgets.QLabel("Z")
+        self.point_input_z = QtWidgets.QLineEdit()
+        self.point_auto_check = QtWidgets.QCheckBox(__("Auto"))
         self.point_layout.addWidget(self.point_label)
         self.point_layout.addWidget(self.point_label_x)
         self.point_layout.addWidget(self.point_input_x)
@@ -69,14 +70,14 @@ class PlaneInitialsWidget(QtGui.QWidget):
 
         self.point_auto_check.clicked.connect(self.on_point_auto_check)
 
-        self.normal_layout = QtGui.QHBoxLayout()
-        self.normal_label = QtGui.QLabel(__("Normal: "))
-        self.normal_label_x = QtGui.QLabel("X")
-        self.normal_input_x = QtGui.QLineEdit()
-        self.normal_label_y = QtGui.QLabel("Y")
-        self.normal_input_y = QtGui.QLineEdit()
-        self.normal_label_z = QtGui.QLabel("Z")
-        self.normal_input_z = QtGui.QLineEdit()
+        self.normal_layout = QtWidgets.QHBoxLayout()
+        self.normal_label = QtWidgets.QLabel(__("Normal: "))
+        self.normal_label_x = QtWidgets.QLabel("X")
+        self.normal_input_x = QtWidgets.QLineEdit()
+        self.normal_label_y = QtWidgets.QLabel("Y")
+        self.normal_input_y = QtWidgets.QLineEdit()
+        self.normal_label_z = QtWidgets.QLabel("Z")
+        self.normal_input_z = QtWidgets.QLineEdit()
         self.normal_layout.addWidget(self.normal_label)
         self.normal_layout.addWidget(self.normal_label_x)
         self.normal_layout.addWidget(self.normal_input_x)
@@ -85,9 +86,9 @@ class PlaneInitialsWidget(QtGui.QWidget):
         self.normal_layout.addWidget(self.normal_label_z)
         self.normal_layout.addWidget(self.normal_input_z)
 
-        self.maxdisth_layout = QtGui.QHBoxLayout()
-        self.maxdisth_label = QtGui.QLabel(__("Max. distance to boundary limit (value*h): "))
-        self.maxdisth_input = QtGui.QLineEdit()
+        self.maxdisth_layout = QtWidgets.QHBoxLayout()
+        self.maxdisth_label = QtWidgets.QLabel(__("Max. distance to boundary limit (value*h): "))
+        self.maxdisth_input = QtWidgets.QLineEdit()
         self.maxdisth_layout.addWidget(self.maxdisth_label)
         self.maxdisth_layout.addWidget(self.maxdisth_input)
 
@@ -107,21 +108,21 @@ class PlaneInitialsWidget(QtGui.QWidget):
             self.point_input_y.setEnabled(True)
             self.point_input_z.setEnabled(True)
 
-class SphereInitialsWidget(QtGui.QWidget):
+class SphereInitialsWidget(QtWidgets.QWidget):
     """ Widget with properties used by the Sphere type """
 
     def __init__(self, parent=None):
         super().__init__(parent=parent)
-        self.main_layout = QtGui.QVBoxLayout()
+        self.main_layout = QtWidgets.QVBoxLayout()
 
-        self.center_layout = QtGui.QHBoxLayout()
-        self.center_label = QtGui.QLabel(__("Center: "))
-        self.center_label_x = QtGui.QLabel("X")
-        self.center_input_x = QtGui.QLineEdit()
-        self.center_label_y = QtGui.QLabel("Y")
-        self.center_input_y = QtGui.QLineEdit()
-        self.center_label_z = QtGui.QLabel("Z")
-        self.center_input_z = QtGui.QLineEdit()
+        self.center_layout = QtWidgets.QHBoxLayout()
+        self.center_label = QtWidgets.QLabel(__("Center: "))
+        self.center_label_x = QtWidgets.QLabel("X")
+        self.center_input_x = QtWidgets.QLineEdit()
+        self.center_label_y = QtWidgets.QLabel("Y")
+        self.center_input_y = QtWidgets.QLineEdit()
+        self.center_label_z = QtWidgets.QLabel("Z")
+        self.center_input_z = QtWidgets.QLineEdit()
         self.center_layout.addWidget(self.center_label)
         self.center_layout.addWidget(self.center_label_x)
         self.center_layout.addWidget(self.center_input_x)
@@ -130,23 +131,23 @@ class SphereInitialsWidget(QtGui.QWidget):
         self.center_layout.addWidget(self.center_label_z)
         self.center_layout.addWidget(self.center_input_z)
 
-        self.radius_layout = QtGui.QHBoxLayout()
-        self.radius_label = QtGui.QLabel(__("Radius: "))
-        self.radius_input = QtGui.QLineEdit()
+        self.radius_layout = QtWidgets.QHBoxLayout()
+        self.radius_label = QtWidgets.QLabel(__("Radius: "))
+        self.radius_input = QtWidgets.QLineEdit()
         self.radius_layout.addWidget(self.radius_label)
         self.radius_layout.addWidget(self.radius_input)
 
-        self.inside_layout = QtGui.QHBoxLayout()
-        self.inside_label = QtGui.QLabel(__("Boundary particles inside the sphere:"))
-        self.inside_input = QtGui.QComboBox()
+        self.inside_layout = QtWidgets.QHBoxLayout()
+        self.inside_label = QtWidgets.QLabel(__("Boundary particles inside the sphere:"))
+        self.inside_input = QtWidgets.QComboBox()
         self.inside_input.insertItems(0, [__("Yes"), __("No")])
         self.inside_layout.addWidget(self.inside_label)
         self.inside_layout.addWidget(self.inside_input)
         self.inside_layout.addStretch(1)
 
-        self.maxdisth_layout = QtGui.QHBoxLayout()
-        self.maxdisth_label = QtGui.QLabel(__("Max. distance to boundary limit (value*h): "))
-        self.maxdisth_input = QtGui.QLineEdit()
+        self.maxdisth_layout = QtWidgets.QHBoxLayout()
+        self.maxdisth_label = QtWidgets.QLabel(__("Max. distance to boundary limit (value*h): "))
+        self.maxdisth_input = QtWidgets.QLineEdit()
         self.maxdisth_layout.addWidget(self.maxdisth_label)
         self.maxdisth_layout.addWidget(self.maxdisth_input)
 
@@ -157,21 +158,21 @@ class SphereInitialsWidget(QtGui.QWidget):
         self.setLayout(self.main_layout)
 
 
-class CylinderInitialsWidget(QtGui.QWidget):
+class CylinderInitialsWidget(QtWidgets.QWidget):
     """ Widget with properties used by the Cylinder type """
 
     def __init__(self, parent=None):
         super().__init__(parent=parent)
-        self.main_layout = QtGui.QVBoxLayout()
+        self.main_layout = QtWidgets.QVBoxLayout()
 
-        self.center1_layout = QtGui.QHBoxLayout()
-        self.center1_label = QtGui.QLabel(__("Center 1: "))
-        self.center1_label_x = QtGui.QLabel("X")
-        self.center1_input_x = QtGui.QLineEdit()
-        self.center1_label_y = QtGui.QLabel("Y")
-        self.center1_input_y = QtGui.QLineEdit()
-        self.center1_label_z = QtGui.QLabel("Z")
-        self.center1_input_z = QtGui.QLineEdit()
+        self.center1_layout = QtWidgets.QHBoxLayout()
+        self.center1_label = QtWidgets.QLabel(__("Center 1: "))
+        self.center1_label_x = QtWidgets.QLabel("X")
+        self.center1_input_x = QtWidgets.QLineEdit()
+        self.center1_label_y = QtWidgets.QLabel("Y")
+        self.center1_input_y = QtWidgets.QLineEdit()
+        self.center1_label_z = QtWidgets.QLabel("Z")
+        self.center1_input_z = QtWidgets.QLineEdit()
         self.center1_layout.addWidget(self.center1_label)
         self.center1_layout.addWidget(self.center1_label_x)
         self.center1_layout.addWidget(self.center1_input_x)
@@ -180,14 +181,14 @@ class CylinderInitialsWidget(QtGui.QWidget):
         self.center1_layout.addWidget(self.center1_label_z)
         self.center1_layout.addWidget(self.center1_input_z)
 
-        self.center2_layout = QtGui.QHBoxLayout()
-        self.center2_label = QtGui.QLabel(__("Center 2: "))
-        self.center2_label_x = QtGui.QLabel("X")
-        self.center2_input_x = QtGui.QLineEdit()
-        self.center2_label_y = QtGui.QLabel("Y")
-        self.center2_input_y = QtGui.QLineEdit()
-        self.center2_label_z = QtGui.QLabel("Z")
-        self.center2_input_z = QtGui.QLineEdit()
+        self.center2_layout = QtWidgets.QHBoxLayout()
+        self.center2_label = QtWidgets.QLabel(__("Center 2: "))
+        self.center2_label_x = QtWidgets.QLabel("X")
+        self.center2_input_x = QtWidgets.QLineEdit()
+        self.center2_label_y = QtWidgets.QLabel("Y")
+        self.center2_input_y = QtWidgets.QLineEdit()
+        self.center2_label_z = QtWidgets.QLabel("Z")
+        self.center2_input_z = QtWidgets.QLineEdit()
         self.center2_layout.addWidget(self.center2_label)
         self.center2_layout.addWidget(self.center2_label_x)
         self.center2_layout.addWidget(self.center2_input_x)
@@ -196,23 +197,23 @@ class CylinderInitialsWidget(QtGui.QWidget):
         self.center2_layout.addWidget(self.center2_label_z)
         self.center2_layout.addWidget(self.center2_input_z)
 
-        self.radius_layout = QtGui.QHBoxLayout()
-        self.radius_label = QtGui.QLabel(__("Radius: "))
-        self.radius_input = QtGui.QLineEdit()
+        self.radius_layout = QtWidgets.QHBoxLayout()
+        self.radius_label = QtWidgets.QLabel(__("Radius: "))
+        self.radius_input = QtWidgets.QLineEdit()
         self.radius_layout.addWidget(self.radius_label)
         self.radius_layout.addWidget(self.radius_input)
 
-        self.inside_layout = QtGui.QHBoxLayout()
-        self.inside_label = QtGui.QLabel(__("Boundary particles inside the cylinder:"))
-        self.inside_input = QtGui.QComboBox()
+        self.inside_layout = QtWidgets.QHBoxLayout()
+        self.inside_label = QtWidgets.QLabel(__("Boundary particles inside the cylinder:"))
+        self.inside_input = QtWidgets.QComboBox()
         self.inside_input.insertItems(0, [__("Yes"), __("No")])
         self.inside_layout.addWidget(self.inside_label)
         self.inside_layout.addWidget(self.inside_input)
         self.inside_layout.addStretch(1)
 
-        self.maxdisth_layout = QtGui.QHBoxLayout()
-        self.maxdisth_label = QtGui.QLabel(__("Max. distance to boundary limit (value*h): "))
-        self.maxdisth_input = QtGui.QLineEdit()
+        self.maxdisth_layout = QtWidgets.QHBoxLayout()
+        self.maxdisth_label = QtWidgets.QLabel(__("Max. distance to boundary limit (value*h): "))
+        self.maxdisth_input = QtWidgets.QLineEdit()
         self.maxdisth_layout.addWidget(self.maxdisth_label)
         self.maxdisth_layout.addWidget(self.maxdisth_input)
 
@@ -224,16 +225,16 @@ class CylinderInitialsWidget(QtGui.QWidget):
         self.setLayout(self.main_layout)
 
 
-class PartsInitialsWidget(QtGui.QWidget):
+class PartsInitialsWidget(QtWidgets.QWidget):
     """ Widget with properties used by the Parts type """
 
     def __init__(self, parent=None):
         super().__init__(parent=parent)
-        self.main_layout = QtGui.QVBoxLayout()
+        self.main_layout = QtWidgets.QVBoxLayout()
 
-        self.maxdisth_layout = QtGui.QHBoxLayout()
-        self.maxdisth_label = QtGui.QLabel(__("Max. distance to boundary limit (value*h): "))
-        self.maxdisth_input = QtGui.QLineEdit()
+        self.maxdisth_layout = QtWidgets.QHBoxLayout()
+        self.maxdisth_label = QtWidgets.QLabel(__("Max. distance to boundary limit (value*h): "))
+        self.maxdisth_input = QtWidgets.QLineEdit()
         self.maxdisth_layout.addWidget(self.maxdisth_label)
         self.maxdisth_layout.addWidget(self.maxdisth_input)
 
@@ -241,34 +242,34 @@ class PartsInitialsWidget(QtGui.QWidget):
         self.setLayout(self.main_layout)
 
 
-class BoundInitialsDialog(QtGui.QDialog):
+class BoundInitialsDialog(QtWidgets.QDialog):
     """ Defines a window with initials  """
 
     def __init__(self, parent=None):
         super().__init__(parent=parent)
 
         self.setWindowTitle(__("Initials configuration for boundary"))
-        self.ok_button = QtGui.QPushButton(__("OK"))
-        self.cancel_button = QtGui.QPushButton(__("Cancel"))
+        self.ok_button = QtWidgets.QPushButton(__("OK"))
+        self.cancel_button = QtWidgets.QPushButton(__("Cancel"))
         self.target_mk = Case.the().get_simulation_object(FreeCADGui.Selection.getSelection()[0].Name).obj_mk
 
         self.ok_button.clicked.connect(self.on_ok)
         self.cancel_button.clicked.connect(self.on_cancel)
 
-        self.has_initials_layout = QtGui.QHBoxLayout()
-        self.has_initials_label = QtGui.QLabel(__("Set initials: "))
+        self.has_initials_layout = QtWidgets.QHBoxLayout()
+        self.has_initials_label = QtWidgets.QLabel(__("Set initials: "))
         self.has_initials_label.setToolTip(__("Sets the current initial movement vector."))
-        self.has_initials_selector = QtGui.QComboBox()
+        self.has_initials_selector = QtWidgets.QComboBox()
         self.has_initials_selector.insertItems(0, ["True", "False"])
         self.has_initials_selector.currentIndexChanged.connect(self.on_initials_change)
 
-        self.initials_type_label = QtGui.QLabel(__("Type: "))
+        self.initials_type_label = QtWidgets.QLabel(__("Type: "))
         self.initials_type_label.setToolTip(__("Chooses the type of the initial velocity."))
-        self.initials_type_selector = QtGui.QComboBox()
+        self.initials_type_selector = QtWidgets.QComboBox()
         self.initials_type_selector.insertItems(0, ['Normals - Set', 'Normals - Plane', 'Normals - Sphere', 'Normals - Cylinder', 'Normals - Parts'])
         self.initials_type_selector.currentIndexChanged.connect(self.on_initials_type_change)
 
-        self.has_initials_targetlabel = QtGui.QLabel(__("Target MKBound: ") + str(self.target_mk))
+        self.has_initials_targetlabel = QtWidgets.QLabel(__("Target MKBound: ") + str(self.target_mk))
 
         self.has_initials_layout.addWidget(self.has_initials_label)
         self.has_initials_layout.addWidget(self.has_initials_selector)
@@ -277,8 +278,8 @@ class BoundInitialsDialog(QtGui.QDialog):
         self.has_initials_layout.addStretch(1)
         self.has_initials_layout.addWidget(self.has_initials_targetlabel)
 
-        self.initials_props_group = QtGui.QGroupBox(__("Initial properties"))
-        self.initials_props_layout = QtGui.QVBoxLayout()
+        self.initials_props_group = QtWidgets.QGroupBox(__("Initial properties"))
+        self.initials_props_layout = QtWidgets.QVBoxLayout()
 
         self.set_initials_widget = SetInitialsWidget()
         self.plane_initials_widget = PlaneInitialsWidget()
@@ -294,12 +295,12 @@ class BoundInitialsDialog(QtGui.QDialog):
         self.initials_props_layout.addStretch(1)
         self.initials_props_group.setLayout(self.initials_props_layout)
 
-        self.buttons_layout = QtGui.QHBoxLayout()
+        self.buttons_layout = QtWidgets.QHBoxLayout()
         self.buttons_layout.addStretch(1)
         self.buttons_layout.addWidget(self.ok_button)
         self.buttons_layout.addWidget(self.cancel_button)
 
-        self.initials_window_layout = QtGui.QVBoxLayout()
+        self.initials_window_layout = QtWidgets.QVBoxLayout()
         self.initials_window_layout.addLayout(self.has_initials_layout)
         self.initials_window_layout.addWidget(self.initials_props_group)
         self.initials_window_layout.addLayout(self.buttons_layout)

@@ -4,7 +4,8 @@
 
 from os import path
 
-from PySide import QtGui
+# from PySide import QtGui
+from PySide2 import QtWidgets
 
 from mod.translation_tools import __
 
@@ -12,7 +13,7 @@ from mod.dataobjects.case import Case
 from mod.dataobjects.relaxation_zone_file import RelaxationZoneFile
 
 
-class RelaxationZoneFileConfigDialog(QtGui.QDialog):
+class RelaxationZoneFileConfigDialog(QtWidgets.QDialog):
     """ A dialog with configuration related to a relaxation zone with file. """
 
     def __init__(self, relaxationzone=None, parent=None):
@@ -20,113 +21,113 @@ class RelaxationZoneFileConfigDialog(QtGui.QDialog):
         self.temp_relaxationzone = relaxationzone if relaxationzone is not None else RelaxationZoneFile()
         self.relaxationzone = relaxationzone
 
-        self.main_layout = QtGui.QVBoxLayout()
-        self.data_layout = QtGui.QVBoxLayout()
-        self.button_layout = QtGui.QHBoxLayout()
+        self.main_layout = QtWidgets.QVBoxLayout()
+        self.data_layout = QtWidgets.QVBoxLayout()
+        self.button_layout = QtWidgets.QHBoxLayout()
 
-        self.start_layout = QtGui.QHBoxLayout()
-        self.start_label = QtGui.QLabel(__("Start time (s):"))
-        self.start_input = QtGui.QLineEdit()
+        self.start_layout = QtWidgets.QHBoxLayout()
+        self.start_label = QtWidgets.QLabel(__("Start time (s):"))
+        self.start_input = QtWidgets.QLineEdit()
         for x in [self.start_label, self.start_input]:
             self.start_layout.addWidget(x)
 
-        self.duration_layout = QtGui.QHBoxLayout()
-        self.duration_label = QtGui.QLabel(__("Movement duration (0 for end of simulation):"))
-        self.duration_input = QtGui.QLineEdit()
+        self.duration_layout = QtWidgets.QHBoxLayout()
+        self.duration_label = QtWidgets.QLabel(__("Movement duration (0 for end of simulation):"))
+        self.duration_input = QtWidgets.QLineEdit()
         for x in [self.duration_label, self.duration_input]:
             self.duration_layout.addWidget(x)
 
-        self.depth_layout = QtGui.QHBoxLayout()
-        self.depth_label = QtGui.QLabel(__("Water depth:"))
-        self.depth_input = QtGui.QLineEdit()
+        self.depth_layout = QtWidgets.QHBoxLayout()
+        self.depth_label = QtWidgets.QLabel(__("Water depth:"))
+        self.depth_input = QtWidgets.QLineEdit()
         for x in [self.depth_label, self.depth_input]:
             self.depth_layout.addWidget(x)
 
-        self.swl_layout = QtGui.QHBoxLayout()
-        self.swl_label = QtGui.QLabel(__("Still water level:"))
-        self.swl_input = QtGui.QLineEdit()
+        self.swl_layout = QtWidgets.QHBoxLayout()
+        self.swl_label = QtWidgets.QLabel(__("Still water level:"))
+        self.swl_input = QtWidgets.QLineEdit()
         for x in [self.swl_label, self.swl_input]:
             self.swl_layout.addWidget(x)
 
-        self.filesvel_layout = QtGui.QHBoxLayout()
-        self.filesvel_label = QtGui.QLabel(__("Name of the file with velocity to use:"))
-        self.filesvel_input = QtGui.QLineEdit()
-        self.filesvel_browse = QtGui.QPushButton("...")
+        self.filesvel_layout = QtWidgets.QHBoxLayout()
+        self.filesvel_label = QtWidgets.QLabel(__("Name of the file with velocity to use:"))
+        self.filesvel_input = QtWidgets.QLineEdit()
+        self.filesvel_browse = QtWidgets.QPushButton("...")
         for x in [self.filesvel_label, self.filesvel_input, self.filesvel_browse]:
             self.filesvel_layout.addWidget(x)
 
-        self.filesvelx_initial_layout = QtGui.QHBoxLayout()
-        self.filesvelx_initial_label = QtGui.QLabel(__("First file:"))
-        self.filesvelx_initial_input = QtGui.QLineEdit()
+        self.filesvelx_initial_layout = QtWidgets.QHBoxLayout()
+        self.filesvelx_initial_label = QtWidgets.QLabel(__("First file:"))
+        self.filesvelx_initial_input = QtWidgets.QLineEdit()
         for x in [self.filesvelx_initial_label, self.filesvelx_initial_input]:
             self.filesvelx_initial_layout.addWidget(x)
 
-        self.filesvelx_count_layout = QtGui.QHBoxLayout()
-        self.filesvelx_count_label = QtGui.QLabel(__("File count:"))
-        self.filesvelx_count_input = QtGui.QLineEdit()
+        self.filesvelx_count_layout = QtWidgets.QHBoxLayout()
+        self.filesvelx_count_label = QtWidgets.QLabel(__("File count:"))
+        self.filesvelx_count_input = QtWidgets.QLineEdit()
         for x in [self.filesvelx_count_label, self.filesvelx_count_input]:
             self.filesvelx_count_layout.addWidget(x)
 
-        self.usevelz_check = QtGui.QCheckBox(__("Use velocity in Z"))
+        self.usevelz_check = QtWidgets.QCheckBox(__("Use velocity in Z"))
 
-        self.movedata_layout = QtGui.QHBoxLayout()
-        self.movedata_label = QtGui.QLabel(__("Movement of data in CSV files (X, Y, Z):"))
-        self.movedata_x = QtGui.QLineEdit()
-        self.movedata_y = QtGui.QLineEdit()
-        self.movedata_z = QtGui.QLineEdit()
+        self.movedata_layout = QtWidgets.QHBoxLayout()
+        self.movedata_label = QtWidgets.QLabel(__("Movement of data in CSV files (X, Y, Z):"))
+        self.movedata_x = QtWidgets.QLineEdit()
+        self.movedata_y = QtWidgets.QLineEdit()
+        self.movedata_z = QtWidgets.QLineEdit()
         for x in [self.movedata_label, self.movedata_x, self.movedata_y, self.movedata_z]:
             self.movedata_layout.addWidget(x)
 
-        self.dpz_layout = QtGui.QHBoxLayout()
-        self.dpz_label = QtGui.QLabel(__("Distance between key points in Z (dp):"))
-        self.dpz_input = QtGui.QLineEdit()
+        self.dpz_layout = QtWidgets.QHBoxLayout()
+        self.dpz_label = QtWidgets.QLabel(__("Distance between key points in Z (dp):"))
+        self.dpz_input = QtWidgets.QLineEdit()
         for x in [self.dpz_label, self.dpz_input]:
             self.dpz_layout.addWidget(x)
 
-        self.smooth_layout = QtGui.QHBoxLayout()
-        self.smooth_label = QtGui.QLabel(__("Smooth motion level:"))
-        self.smooth_input = QtGui.QLineEdit()
+        self.smooth_layout = QtWidgets.QHBoxLayout()
+        self.smooth_label = QtWidgets.QLabel(__("Smooth motion level:"))
+        self.smooth_input = QtWidgets.QLineEdit()
         for x in [self.smooth_label, self.smooth_input]:
             self.smooth_layout.addWidget(x)
 
-        self.center_layout = QtGui.QHBoxLayout()
-        self.center_label = QtGui.QLabel(__("Central point (X, Y, Z):"))
-        self.center_x = QtGui.QLineEdit()
-        self.center_y = QtGui.QLineEdit()
-        self.center_z = QtGui.QLineEdit()
+        self.center_layout = QtWidgets.QHBoxLayout()
+        self.center_label = QtWidgets.QLabel(__("Central point (X, Y, Z):"))
+        self.center_x = QtWidgets.QLineEdit()
+        self.center_y = QtWidgets.QLineEdit()
+        self.center_z = QtWidgets.QLineEdit()
         for x in [self.center_label, self.center_x, self.center_y, self.center_z]:
             self.center_layout.addWidget(x)
 
-        self.width_layout = QtGui.QHBoxLayout()
-        self.width_label = QtGui.QLabel(__("Width for generation:"))
-        self.width_input = QtGui.QLineEdit()
+        self.width_layout = QtWidgets.QHBoxLayout()
+        self.width_label = QtWidgets.QLabel(__("Width for generation:"))
+        self.width_input = QtWidgets.QLineEdit()
         for x in [self.width_label, self.width_input]:
             self.width_layout.addWidget(x)
 
-        self.coefdir_layout = QtGui.QHBoxLayout()
-        self.coefdir_label = QtGui.QLabel(__("Coefficient for each direction (X, Y, Z):"))
-        self.coefdir_x = QtGui.QLineEdit()
+        self.coefdir_layout = QtWidgets.QHBoxLayout()
+        self.coefdir_label = QtWidgets.QLabel(__("Coefficient for each direction (X, Y, Z):"))
+        self.coefdir_x = QtWidgets.QLineEdit()
         self.coefdir_x.setEnabled(False)
-        self.coefdir_y = QtGui.QLineEdit()
+        self.coefdir_y = QtWidgets.QLineEdit()
         self.coefdir_y.setEnabled(False)
-        self.coefdir_z = QtGui.QLineEdit()
+        self.coefdir_z = QtWidgets.QLineEdit()
         self.coefdir_z.setEnabled(False)
         for x in [self.coefdir_label, self.coefdir_x, self.coefdir_y, self.coefdir_z]:
             self.coefdir_layout.addWidget(x)
 
-        self.coefdt_layout = QtGui.QHBoxLayout()
-        self.coefdt_label = QtGui.QLabel(__("Multiplier for dt value in each direction:"))
-        self.coefdt_input = QtGui.QLineEdit()
+        self.coefdt_layout = QtWidgets.QHBoxLayout()
+        self.coefdt_label = QtWidgets.QLabel(__("Multiplier for dt value in each direction:"))
+        self.coefdt_input = QtWidgets.QLineEdit()
         self.coefdt_input.setEnabled(False)
         for x in [self.coefdt_label, self.coefdt_input]:
             self.coefdt_layout.addWidget(x)
 
-        self.function_layout = QtGui.QHBoxLayout()
-        self.function_label = QtGui.QLabel(__("Coefficients in function for velocity ->"))
-        self.function_psi_label = QtGui.QLabel(__("Psi: "))
-        self.function_psi_input = QtGui.QLineEdit()
-        self.function_beta_label = QtGui.QLabel(__("Beta: "))
-        self.function_beta_input = QtGui.QLineEdit()
+        self.function_layout = QtWidgets.QHBoxLayout()
+        self.function_label = QtWidgets.QLabel(__("Coefficients in function for velocity ->"))
+        self.function_psi_label = QtWidgets.QLabel(__("Psi: "))
+        self.function_psi_input = QtWidgets.QLineEdit()
+        self.function_beta_label = QtWidgets.QLabel(__("Beta: "))
+        self.function_beta_input = QtWidgets.QLineEdit()
         for x in [self.function_label,
                   self.function_psi_label,
                   self.function_psi_input,
@@ -134,15 +135,15 @@ class RelaxationZoneFileConfigDialog(QtGui.QDialog):
                   self.function_beta_input]:
             self.function_layout.addWidget(x)
 
-        self.driftcorrection_layout = QtGui.QHBoxLayout()
-        self.driftcorrection_label = QtGui.QLabel(__("Coefficient of drift correction (for X):"))
-        self.driftcorrection_input = QtGui.QLineEdit()
+        self.driftcorrection_layout = QtWidgets.QHBoxLayout()
+        self.driftcorrection_label = QtWidgets.QLabel(__("Coefficient of drift correction (for X):"))
+        self.driftcorrection_input = QtWidgets.QLineEdit()
         for x in [self.driftcorrection_label, self.driftcorrection_input]:
             self.driftcorrection_layout.addWidget(x)
 
-        self.driftinitialramp_layout = QtGui.QHBoxLayout()
-        self.driftinitialramp_label = QtGui.QLabel(__("Time to ignore waves from external data (s):"))
-        self.driftinitialramp_input = QtGui.QLineEdit()
+        self.driftinitialramp_layout = QtWidgets.QHBoxLayout()
+        self.driftinitialramp_label = QtWidgets.QLabel(__("Time to ignore waves from external data (s):"))
+        self.driftinitialramp_input = QtWidgets.QLineEdit()
         for x in [self.driftinitialramp_label, self.driftinitialramp_input]:
             self.driftinitialramp_layout.addWidget(x)
 
@@ -168,8 +169,8 @@ class RelaxationZoneFileConfigDialog(QtGui.QDialog):
                   self.driftinitialramp_layout]:
             self.data_layout.addLayout(x)
 
-        self.delete_button = QtGui.QPushButton(__("Delete RZ configuration"))
-        self.apply_button = QtGui.QPushButton(__("Apply this configuration"))
+        self.delete_button = QtWidgets.QPushButton(__("Delete RZ configuration"))
+        self.apply_button = QtWidgets.QPushButton(__("Apply this configuration"))
 
         self.button_layout.addStretch(1)
         self.button_layout.addWidget(self.delete_button)
@@ -187,7 +188,7 @@ class RelaxationZoneFileConfigDialog(QtGui.QDialog):
 
     def on_browse(self):
         """ Opens a file dialog to select a series of files. Then processes it to extract the series. """
-        file_name, _ = QtGui.QFileDialog.getOpenFileName(self, __("Open a file from the serie"), Case.the().info.last_used_directory, "External velocity data (*_x*_y*.csv)")
+        file_name, _ = QtWidgets.QFileDialog.getOpenFileName(self, __("Open a file from the serie"), Case.the().info.last_used_directory, "External velocity data (*_x*_y*.csv)")
         Case.the().info.update_last_used_directory(file_name)
         if not file_name:
             return

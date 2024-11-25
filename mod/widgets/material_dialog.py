@@ -2,7 +2,8 @@
 # -*- coding: utf-8 -*-
 """DesignSPHysics Faces Configuration Dialog"""
 
-from PySide import QtGui
+# from PySide import QtGui
+from PySide2 import QtWidgets
 
 from mod.translation_tools import __
 from mod.dialog_tools import info_dialog
@@ -13,7 +14,7 @@ from mod.dataobjects.mk_based_properties import MKBasedProperties
 from mod.dataobjects.simulation_object import SimulationObject
 
 
-class MaterialDialog(QtGui.QDialog):
+class MaterialDialog(QtWidgets.QDialog):
     """ Defines a window with material configuration  """
 
     NO_MATERIAL_LABEL = __("No material was selected.")
@@ -24,26 +25,26 @@ class MaterialDialog(QtGui.QDialog):
         self.setMinimumSize(400, 240)
 
         self.setWindowTitle(__("Material configuration"))
-        self.ok_button = QtGui.QPushButton(__("OK"))
-        self.cancel_button = QtGui.QPushButton(__("Cancel"))
-        self.root_layout = QtGui.QVBoxLayout()
+        self.ok_button = QtWidgets.QPushButton(__("OK"))
+        self.cancel_button = QtWidgets.QPushButton(__("Cancel"))
+        self.root_layout = QtWidgets.QVBoxLayout()
 
         self.target_object: SimulationObject = Case.the().get_simulation_object(selection_name)
         self.target_mkbasedproperties: MKBasedProperties = Case.the().get_mk_based_properties(self.target_object.type, self.target_object.obj_mk)
 
-        self.selector_layout = QtGui.QHBoxLayout()
-        self.material_label = QtGui.QLabel(__("Select a material:"))
-        self.material_combo = QtGui.QComboBox()
-        self.mk_label = QtGui.QLabel(__("Target MKBound: <b>{}</b>").format(self.target_object.obj_mk))
+        self.selector_layout = QtWidgets.QHBoxLayout()
+        self.material_label = QtWidgets.QLabel(__("Select a material:"))
+        self.material_combo = QtWidgets.QComboBox()
+        self.mk_label = QtWidgets.QLabel(__("Target MKBound: <b>{}</b>").format(self.target_object.obj_mk))
 
         self.selector_layout.addWidget(self.material_label)
         self.selector_layout.addWidget(self.material_combo)
         self.selector_layout.addStretch(1)
         self.selector_layout.addWidget(self.mk_label)
 
-        self.material_details_label = QtGui.QLabel(self.NO_MATERIAL_LABEL)
+        self.material_details_label = QtWidgets.QLabel(self.NO_MATERIAL_LABEL)
 
-        self.button_layout = QtGui.QHBoxLayout()
+        self.button_layout = QtWidgets.QHBoxLayout()
         self.button_layout.addStretch(1)
         self.button_layout.addWidget(self.cancel_button)
         self.button_layout.addWidget(self.ok_button)
