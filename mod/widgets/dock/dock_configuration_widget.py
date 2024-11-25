@@ -2,7 +2,8 @@
 # -*- coding: utf-8 -*-
 """DesignSPHysics Dock Configuration Widget. """
 
-from PySide import QtGui
+# from PySide import QtGui
+from PySide2 import QtWidgets
 
 from mod.translation_tools import __
 from mod.freecad_tools import get_fc_main_window
@@ -14,7 +15,7 @@ from mod.widgets.execution_parameters_dialog import ExecutionParametersDialog
 from mod.dataobjects.case import Case
 
 
-class DockConfigurationWidget(QtGui.QWidget):
+class DockConfigurationWidget(QtWidgets.QWidget):
     """DesignSPHysics Dock Configuration Widget. """
 
     CASE_TITLE_TEMPLATE = "- <i>{}</i>"
@@ -24,28 +25,28 @@ class DockConfigurationWidget(QtGui.QWidget):
 
         self.case_name = None
 
-        self.main_layout = QtGui.QVBoxLayout()
+        self.main_layout = QtWidgets.QVBoxLayout()
         self.main_layout.setContentsMargins(0, 0, 0, 0)
 
-        self.title_layout: QtGui.QHBoxLayout = QtGui.QHBoxLayout()
+        self.title_layout: QtWidgets.QHBoxLayout = QtWidgets.QHBoxLayout()
 
-        self.title_label = QtGui.QLabel("<b>{}</b>".format(__("Configuration")))
+        self.title_label = QtWidgets.QLabel("<b>{}</b>".format(__("Configuration")))
         self.title_label.setWordWrap(True)
 
-        self.case_title_label = QtGui.QLabel(self.CASE_TITLE_TEMPLATE.format(Case.the().name))
+        self.case_title_label = QtWidgets.QLabel(self.CASE_TITLE_TEMPLATE.format(Case.the().name))
         self.case_title_label.setWordWrap(True)
 
         self.title_layout.addWidget(self.title_label)
         self.title_layout.addWidget(self.case_title_label)
         self.title_layout.addStretch(1)
 
-        self.constants_button = QtGui.QPushButton(__("Define\nConstants"))
+        self.constants_button = QtWidgets.QPushButton(__("Define\nConstants"))
         self.constants_button.setToolTip(__("Use this button to define case constants,\nsuch as gravity or fluid reference density."))
 
-        self.setup_button = QtGui.QPushButton(__("Setup\nPlugin"))
+        self.setup_button = QtWidgets.QPushButton(__("Setup\nPlugin"))
         self.setup_button.setToolTip(__("Setup of the simulator executables"))
 
-        self.execparams_button = QtGui.QPushButton(__("Execution\nParameters"))
+        self.execparams_button = QtWidgets.QPushButton(__("Execution\nParameters"))
         self.execparams_button.setToolTip(__("Change execution parameters, such as\ntime of simulation, viscosity, etc."))
 
         self.setup_button.clicked.connect(self.on_setup_button_pressed)
@@ -54,7 +55,7 @@ class DockConfigurationWidget(QtGui.QWidget):
 
         self.main_layout.addLayout(self.title_layout)
 
-        self.button_layout = QtGui.QHBoxLayout()
+        self.button_layout = QtWidgets.QHBoxLayout()
         self.button_layout.addWidget(self.constants_button)
         self.button_layout.addWidget(self.execparams_button)
         self.button_layout.addWidget(self.setup_button)

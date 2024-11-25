@@ -1281,5 +1281,6 @@
     "Final ramp time before final time motion (s): ": "Final ramp time before final time motion (s): ",
     "Mooring model time step. (s):": "Mooring model time step. (s):",
     "Desired mooring model time step. (default=1e-4)\nXML Name: dtM": "Desired mooring model time step. (default=1e-4)\nXML Name: dtM",
-    "Maximum time for initial conditions without convergence. (default=0.5)\nXML Name: tmaxIC": "Maximum time for initial conditions without convergence. (default=0.5)\nXML Name: tmaxIC"
+    "Maximum time for initial conditions without convergence. (default=0.5)\nXML Name: tmaxIC": "Maximum time for initial conditions without convergence. (default=0.5)\nXML Name: tmaxIC",
+    "This FreeCAD version is not compatible. Please update FreeCAD to version {} or higher.": "This FreeCAD version is not compatible. Please update FreeCAD to version {} or higher."
 }

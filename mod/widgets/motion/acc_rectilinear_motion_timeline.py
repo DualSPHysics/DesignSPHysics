@@ -2,7 +2,8 @@
 # -*- coding: utf-8 -*-
 """DesignSPHysics Accelerated Rectilinear Motion widget"""
 
-from PySide import QtCore, QtGui
+# from PySide import QtCore, QtGui
+from PySide2 import QtCore, QtWidgets
 
 from mod.translation_tools import __
 from mod.gui_tools import get_icon
@@ -12,7 +13,7 @@ from mod.dataobjects.motion.acc_rect_motion import AccRectMotion
 
 from mod.functions import make_float
 
-class AccRectilinearMotionTimeline(QtGui.QWidget):
+class AccRectilinearMotionTimeline(QtWidgets.QWidget):
     """ An accelerated rectilinear motion graphical representation for a table-based timeline """
 
     changed = QtCore.Signal(int, AccRectMotion)
@@ -31,26 +32,26 @@ class AccRectilinearMotionTimeline(QtGui.QWidget):
 
         self.index = index
         self.setMinimumHeight(50)
-        self.main_layout = QtGui.QHBoxLayout()
+        self.main_layout = QtWidgets.QHBoxLayout()
         self.main_layout.setContentsMargins(10, 0, 10, 0)
-        self.label = QtGui.QLabel("Accelerated \nRectilinear \nMotion ")
+        self.label = QtWidgets.QLabel("Accelerated \nRectilinear \nMotion ")
         self.label.setMinimumWidth(75)
-        self.data_layout = QtGui.QVBoxLayout()
+        self.data_layout = QtWidgets.QVBoxLayout()
         self.data_layout.setContentsMargins(0, 0, 0, 0)
-        self.data_velocity_layout = QtGui.QHBoxLayout()
+        self.data_velocity_layout = QtWidgets.QHBoxLayout()
         self.data_velocity_layout.setContentsMargins(0, 0, 0, 0)
-        self.data_acceleration_layout = QtGui.QHBoxLayout()
+        self.data_acceleration_layout = QtWidgets.QHBoxLayout()
         self.data_acceleration_layout.setContentsMargins(0, 0, 0, 0)
 
-        self.velocity_label = QtGui.QLabel("Vel (X, Y, Z): ")
-        self.x_input = QtGui.QLineEdit()
-        self.y_input = QtGui.QLineEdit()
-        self.z_input = QtGui.QLineEdit()
+        self.velocity_label = QtWidgets.QLabel("Vel (X, Y, Z): ")
+        self.x_input = QtWidgets.QLineEdit()
+        self.y_input = QtWidgets.QLineEdit()
+        self.z_input = QtWidgets.QLineEdit()
 
-        self.acceleration_label = QtGui.QLabel("Acc (X, Y, Z): ")
-        self.xa_input = QtGui.QLineEdit()
-        self.ya_input = QtGui.QLineEdit()
-        self.za_input = QtGui.QLineEdit()
+        self.acceleration_label = QtWidgets.QLabel("Acc (X, Y, Z): ")
+        self.xa_input = QtWidgets.QLineEdit()
+        self.ya_input = QtWidgets.QLineEdit()
+        self.za_input = QtWidgets.QLineEdit()
 
         self.data_velocity_layout.addWidget(self.velocity_label)
         self.data_velocity_layout.addWidget(self.x_input)
@@ -65,16 +66,16 @@ class AccRectilinearMotionTimeline(QtGui.QWidget):
         self.data_layout.addLayout(self.data_velocity_layout)
         self.data_layout.addLayout(self.data_acceleration_layout)
 
-        self.time_label = QtGui.QLabel(__("Duration (s): "))
-        self.time_input = QtGui.QLineEdit()
-        self.delete_button = QtGui.QPushButton(
+        self.time_label = QtWidgets.QLabel(__("Duration (s): "))
+        self.time_input = QtWidgets.QLineEdit()
+        self.delete_button = QtWidgets.QPushButton(
             get_icon("trash.png"), None)
-        self.order_button_layout = QtGui.QVBoxLayout()
+        self.order_button_layout = QtWidgets.QVBoxLayout()
         self.order_button_layout.setContentsMargins(0, 0, 0, 0)
         self.order_button_layout.setSpacing(0)
-        self.order_up_button = QtGui.QPushButton(
+        self.order_up_button = QtWidgets.QPushButton(
             get_icon("up_arrow.png"), None)
-        self.order_down_button = QtGui.QPushButton(
+        self.order_down_button = QtWidgets.QPushButton(
             get_icon("down_arrow.png"), None)
 
         self.order_button_layout.addWidget(self.order_up_button)

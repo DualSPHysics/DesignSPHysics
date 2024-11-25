@@ -2,7 +2,8 @@
 # -*- coding: utf-8 -*-
 """DesignSPHysics Object Order widget"""
 
-from PySide import QtGui
+# from PySide import QtGui
+from PySide2 import QtWidgets
 
 from mod.translation_tools import __
 from mod.gui_tools import get_icon
@@ -10,7 +11,7 @@ from mod.gui_tools import get_icon
 from mod.dataobjects.case import Case
 
 
-class ObjectOrderWidget(QtGui.QWidget):
+class ObjectOrderWidget(QtWidgets.QWidget):
     """ A widget representing the object order. """
 
     def __init__(self, index=999, object_name="No name", object_mk=-1, mktype="bound",
@@ -21,13 +22,13 @@ class ObjectOrderWidget(QtGui.QWidget):
         self.object_name = object_name
         self.parent = parent
 
-        self.main_layout = QtGui.QHBoxLayout()
+        self.main_layout = QtWidgets.QHBoxLayout()
         self.main_layout.setContentsMargins(10, 0, 10, 0)
-        self.mk_label = QtGui.QLabel("<b>{}{}</b>".format(mktype[0].upper(), str(object_mk)))
-        self.name_label = QtGui.QLabel(str(object_name))
-        self.up_button = QtGui.QPushButton(get_icon("up_arrow.png"), None)
+        self.mk_label = QtWidgets.QLabel("<b>{}{}</b>".format(mktype[0].upper(), str(object_mk)))
+        self.name_label = QtWidgets.QLabel(str(object_name))
+        self.up_button = QtWidgets.QPushButton(get_icon("up_arrow.png"), None)
         self.up_button.clicked.connect(self.on_up)
-        self.down_button = QtGui.QPushButton(get_icon("down_arrow.png"), None)
+        self.down_button = QtWidgets.QPushButton(get_icon("down_arrow.png"), None)
         self.down_button.clicked.connect(self.on_down)
 
         self.main_layout.addWidget(self.mk_label)

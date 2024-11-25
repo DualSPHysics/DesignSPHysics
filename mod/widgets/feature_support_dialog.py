@@ -2,7 +2,8 @@
 # -*- coding: utf-8 -*-
 """DesignSPHysics Setup Plugin Dialog """
 
-from PySide import QtGui
+# from PySide import QtGui
+from PySide2 import QtWidgets
 
 from mod.stdout_tools import debug
 from mod.translation_tools import __
@@ -12,7 +13,7 @@ from mod.executable_tools import get_executable_info_flag
 from mod.dataobjects.executable_paths import ExecutablePaths
 
 
-class FeatureSupportDialog(QtGui.QDialog):
+class FeatureSupportDialog(QtWidgets.QDialog):
     """ Dialog that displays the currently supportede features of the currently configured executables. """
 
     TEMPLATE_PATH = "/templates/feature_support_report.html"
@@ -25,13 +26,13 @@ class FeatureSupportDialog(QtGui.QDialog):
 
         self.setWindowTitle(__("DualSPHysics Suite Feature Report"))
 
-        self.root_layout = QtGui.QVBoxLayout()
+        self.root_layout = QtWidgets.QVBoxLayout()
 
-        self.report_text = QtGui.QTextEdit()
+        self.report_text = QtWidgets.QTextEdit()
         self.report_text.setReadOnly(True)
 
-        self.button_layout = QtGui.QHBoxLayout()
-        self.ok_button = QtGui.QPushButton(__("OK"))
+        self.button_layout = QtWidgets.QHBoxLayout()
+        self.ok_button = QtWidgets.QPushButton(__("OK"))
 
         self.button_layout.addStretch(1)
         self.button_layout.addWidget(self.ok_button)

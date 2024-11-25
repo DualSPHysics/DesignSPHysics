@@ -2,7 +2,8 @@
 # -*- coding: utf-8 -*-
 """DesignSPHysics Object List Table Widget."""
 
-from PySide import QtGui
+# from PySide import QtGui
+from PySide2 import QtWidgets
 
 from mod.freecad_tools import get_fc_object
 from mod.translation_tools import __
@@ -14,22 +15,22 @@ from mod.dataobjects.case import Case
 from mod.widgets.object_order_widget import ObjectOrderWidget
 
 
-class DockObjectListTableWidget(QtGui.QWidget):
+class DockObjectListTableWidget(QtWidgets.QWidget):
     """ Object List Table Widget. """
 
     def __init__(self, parent=None):
         super().__init__(parent=parent)
 
         self.setObjectName("DSPH Objects")
-        self.objectlist_layout = QtGui.QVBoxLayout()
+        self.objectlist_layout = QtWidgets.QVBoxLayout()
 
-        self.objectlist_label = QtGui.QLabel("<b>" + __("Object order") + "</b>")
+        self.objectlist_label = QtWidgets.QLabel("<b>" + __("Object order") + "</b>")
         self.objectlist_label.setWordWrap(True)
 
-        self.objectlist_table = QtGui.QTableWidget(0, 1)
+        self.objectlist_table = QtWidgets.QTableWidget(0, 1)
         self.objectlist_table.verticalHeader().setVisible(False)
         self.objectlist_table.horizontalHeader().setVisible(False)
-        self.objectlist_table.horizontalHeader().setResizeMode(0, QtGui.QHeaderView.Stretch)
+        self.objectlist_table.horizontalHeader().setResizeMode(0, QtWidgets.QHeaderView.Stretch)
 
         self.objectlist_layout.addWidget(self.objectlist_label)
         self.objectlist_layout.addWidget(self.objectlist_table)
@@ -49,7 +50,7 @@ class DockObjectListTableWidget(QtGui.QWidget):
         """ Sets the number of rows for the table within the widget. """
         self.objectlist_table.setRowCount(count)
 
-    def set_table_cell_widget(self, row: int, column: int, widget: QtGui.QWidget):
+    def set_table_cell_widget(self, row: int, column: int, widget: QtWidgets.QWidget):
         """ Sets the widget for the specified row and column in the table within the widget. """
         self.objectlist_table.setCellWidget(row, column, widget)
 

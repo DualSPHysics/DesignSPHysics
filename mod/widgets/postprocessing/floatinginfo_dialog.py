@@ -2,7 +2,8 @@
 # -*- coding: utf-8 -*-
 """DesignSPHysics FloatingInfo configuration and execution Dialog."""
 
-from PySide import QtGui
+# from PySide import QtGui
+from PySide2 import QtWidgets
 
 from mod.translation_tools import __
 from mod.post_processing_tools import floatinginfo_export
@@ -10,7 +11,7 @@ from mod.post_processing_tools import floatinginfo_export
 from mod.dataobjects.case import Case
 
 
-class FloatingInfoDialog(QtGui.QDialog):
+class FloatingInfoDialog(QtWidgets.QDialog):
     """ FloatingInfo configuration and execution Dialog. """
 
     def __init__(self, post_processing_widget, parent=None):
@@ -20,32 +21,32 @@ class FloatingInfoDialog(QtGui.QDialog):
 
         self.setModal(False)
         self.setWindowTitle(__("FloatingInfo Tool"))
-        self.floatinfo_tool_layout = QtGui.QVBoxLayout()
+        self.floatinfo_tool_layout = QtWidgets.QVBoxLayout()
 
-        self.finfo_onlyprocess_layout = QtGui.QHBoxLayout()
-        self.finfo_filename_layout = QtGui.QHBoxLayout()
-        self.finfo_additional_parameters_layout = QtGui.QHBoxLayout()
-        self.finfo_buttons_layout = QtGui.QHBoxLayout()
+        self.finfo_onlyprocess_layout = QtWidgets.QHBoxLayout()
+        self.finfo_filename_layout = QtWidgets.QHBoxLayout()
+        self.finfo_additional_parameters_layout = QtWidgets.QHBoxLayout()
+        self.finfo_buttons_layout = QtWidgets.QHBoxLayout()
 
-        self.finfo_onlyprocess_label = QtGui.QLabel(__("MK to process (empty for all)"))
-        self.finfo_onlyprocess_text = QtGui.QLineEdit()
+        self.finfo_onlyprocess_label = QtWidgets.QLabel(__("MK to process (empty for all)"))
+        self.finfo_onlyprocess_text = QtWidgets.QLineEdit()
         self.finfo_onlyprocess_text.setPlaceholderText("1,2,3 or 1-30")
         self.finfo_onlyprocess_layout.addWidget(self.finfo_onlyprocess_label)
         self.finfo_onlyprocess_layout.addWidget(self.finfo_onlyprocess_text)
 
-        self.finfo_filename_label = QtGui.QLabel(__("File Name"))
-        self.finfo_filename_text = QtGui.QLineEdit()
+        self.finfo_filename_label = QtWidgets.QLabel(__("File Name"))
+        self.finfo_filename_text = QtWidgets.QLineEdit()
         self.finfo_filename_text.setText("FloatingMotion")
         self.finfo_filename_layout.addWidget(self.finfo_filename_label)
         self.finfo_filename_layout.addWidget(self.finfo_filename_text)
 
-        self.finfo_additional_parameters_label = QtGui.QLabel(__("Additional Parameters"))
-        self.finfo_additional_parameters_text = QtGui.QLineEdit()
+        self.finfo_additional_parameters_label = QtWidgets.QLabel(__("Additional Parameters"))
+        self.finfo_additional_parameters_text = QtWidgets.QLineEdit()
         self.finfo_additional_parameters_layout.addWidget(self.finfo_additional_parameters_label)
         self.finfo_additional_parameters_layout.addWidget(self.finfo_additional_parameters_text)
 
-        self.finfo_export_button = QtGui.QPushButton(__("Export"))
-        self.finfo_cancel_button = QtGui.QPushButton(__("Cancel"))
+        self.finfo_export_button = QtWidgets.QPushButton(__("Export"))
+        self.finfo_cancel_button = QtWidgets.QPushButton(__("Cancel"))
         self.finfo_buttons_layout.addWidget(self.finfo_export_button)
         self.finfo_buttons_layout.addWidget(self.finfo_cancel_button)
 

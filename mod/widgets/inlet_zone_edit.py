@@ -5,7 +5,8 @@
 from mod.freecad_tools import get_fc_main_window
 from PySide2.QtWidgets import QVBoxLayout
 from mod.dataobjects.awas_correction import AWASCorrection
-from PySide import QtCore, QtGui
+# from PySide import QtCore, QtGui
+from PySide2 import QtCore, QtWidgets
 
 from mod.translation_tools import __
 from mod.stdout_tools import debug
@@ -18,7 +19,7 @@ from mod.dataobjects.inletoutlet.velocities.linear_velocity import LinearVelocit
 from mod.dataobjects.inletoutlet.velocities.parabolic_velocity import ParabolicVelocity
 
 
-class MKZoneGeneratorWidget(QtGui.QWidget):
+class MKZoneGeneratorWidget(QtWidgets.QWidget):
     """ A widget to show options for the MK zone generator. """
 
     def __init__(self):
@@ -26,10 +27,10 @@ class MKZoneGeneratorWidget(QtGui.QWidget):
         self.main_layout = QVBoxLayout()
         self.setLayout(self.main_layout)
 
-        self.zone2d3d_mk_label = QtGui.QLabel("MK fluid: ")
-        self.zone2d3d_mk_line_edit = QtGui.QLineEdit(str(0))  # FIXME
-        self.zone2d3d_combobox_label = QtGui.QLabel(__("Direction: "))
-        self.zone2d3d_combobox = QtGui.QComboBox()
+        self.zone2d3d_mk_label = QtWidgets.QLabel("MK fluid: ")
+        self.zone2d3d_mk_line_edit = QtWidgets.QLineEdit(str(0))  # FIXME
+        self.zone2d3d_combobox_label = QtWidgets.QLabel(__("Direction: "))
+        self.zone2d3d_combobox = QtWidgets.QComboBox()
         self.zone2d3d_combobox.insertItems(0, [__("Left"), __("Right"), __("Front"), __("Back"), __("Top"), __("Bottom")])
 
         self.main_layout.addWidget(self.zone2d3d_mk_label)
@@ -38,7 +39,7 @@ class MKZoneGeneratorWidget(QtGui.QWidget):
         self.main_layout.addWidget(self.zone2d3d_combobox)
 
 
-class LineZoneGeneratorWidget(QtGui.QWidget):
+class LineZoneGeneratorWidget(QtWidgets.QWidget):
     """ A widget to show options for the Line zone generator. """
 
     def __init__(self):
@@ -46,11 +47,11 @@ class LineZoneGeneratorWidget(QtGui.QWidget):
         self.main_layout = QVBoxLayout()
         self.setLayout(self.main_layout)
 
-        self.point_layout = QtGui.QHBoxLayout()
-        self.point_label = QtGui.QLabel(__("Point 1 [X, Z]"))
-        self.point_value_x = QtGui.QLineEdit()
-        self.point_value_y = QtGui.QLineEdit()
-        self.point_value_z = QtGui.QLineEdit()
+        self.point_layout = QtWidgets.QHBoxLayout()
+        self.point_label = QtWidgets.QLabel(__("Point 1 [X, Z]"))
+        self.point_value_x = QtWidgets.QLineEdit()
+        self.point_value_y = QtWidgets.QLineEdit()
+        self.point_value_z = QtWidgets.QLineEdit()
         self.point_layout.addWidget(self.point_label)
         self.point_layout.addWidget(self.point_value_x)
         self.point_layout.addWidget(self.point_value_y)
@@ -58,11 +59,11 @@ class LineZoneGeneratorWidget(QtGui.QWidget):
 
         self.point_value_y.setVisible(False) # Lines are 2d only!
 
-        self.point2_layout = QtGui.QHBoxLayout()
-        self.point2_label = QtGui.QLabel(__("Point 2 [X, Z]"))
-        self.point2_value_x = QtGui.QLineEdit()
-        self.point2_value_y = QtGui.QLineEdit()
-        self.point2_value_z = QtGui.QLineEdit()
+        self.point2_layout = QtWidgets.QHBoxLayout()
+        self.point2_label = QtWidgets.QLabel(__("Point 2 [X, Z]"))
+        self.point2_value_x = QtWidgets.QLineEdit()
+        self.point2_value_y = QtWidgets.QLineEdit()
+        self.point2_value_z = QtWidgets.QLineEdit()
         self.point2_layout.addWidget(self.point2_label)
         self.point2_layout.addWidget(self.point2_value_x)
         self.point2_layout.addWidget(self.point2_value_y)
@@ -70,14 +71,14 @@ class LineZoneGeneratorWidget(QtGui.QWidget):
 
         self.point2_value_y.setVisible(False) # Lines are 2d only!
 
-        self.direction_enabled_checkbox = QtGui.QCheckBox(__("Enable direction"))
+        self.direction_enabled_checkbox = QtWidgets.QCheckBox(__("Enable direction"))
         self.direction_enabled_checkbox.stateChanged.connect(self.on_direction_enabled_checked)
 
-        self.direction_layout = QtGui.QHBoxLayout()
-        self.direction_label = QtGui.QLabel(__("Direction [X, Z]"))
-        self.direction_value_x = QtGui.QLineEdit()
-        self.direction_value_y = QtGui.QLineEdit()
-        self.direction_value_z = QtGui.QLineEdit()
+        self.direction_layout = QtWidgets.QHBoxLayout()
+        self.direction_label = QtWidgets.QLabel(__("Direction [X, Z]"))
+        self.direction_value_x = QtWidgets.QLineEdit()
+        self.direction_value_y = QtWidgets.QLineEdit()
+        self.direction_value_z = QtWidgets.QLineEdit()
         self.direction_layout.addWidget(self.direction_label)
         self.direction_layout.addWidget(self.direction_value_x)
         self.direction_layout.addWidget(self.direction_value_y)
@@ -85,12 +86,12 @@ class LineZoneGeneratorWidget(QtGui.QWidget):
 
         self.direction_value_y.setVisible(False) # Lines are 2d only!
 
-        self.rotation_enabled_checkbox = QtGui.QCheckBox(__("Enable rotation"))
+        self.rotation_enabled_checkbox = QtWidgets.QCheckBox(__("Enable rotation"))
         self.rotation_enabled_checkbox.stateChanged.connect(self.on_rotation_enabled_checked)
 
-        self.rotation_angle_layout = QtGui.QHBoxLayout()
-        self.rotation_angle_label = QtGui.QLabel(__("Rotation Angle (degrees)"))
-        self.rotation_angle_value = QtGui.QLineEdit()
+        self.rotation_angle_layout = QtWidgets.QHBoxLayout()
+        self.rotation_angle_label = QtWidgets.QLabel(__("Rotation Angle (degrees)"))
+        self.rotation_angle_value = QtWidgets.QLineEdit()
         self.rotation_angle_layout.addWidget(self.rotation_angle_label)
         self.rotation_angle_layout.addWidget(self.rotation_angle_value)
 
@@ -122,7 +123,7 @@ class LineZoneGeneratorWidget(QtGui.QWidget):
             self.rotation_angle_value.setEnabled(False)
 
 
-class BoxZoneGeneratorWidget(QtGui.QWidget):
+class BoxZoneGeneratorWidget(QtWidgets.QWidget):
     """ A widget to show options for the Box zone generator. """
 
     def __init__(self):
@@ -130,60 +131,60 @@ class BoxZoneGeneratorWidget(QtGui.QWidget):
         self.main_layout = QVBoxLayout()
         self.setLayout(self.main_layout)
 
-        self.point_layout = QtGui.QHBoxLayout()
-        self.point_label = QtGui.QLabel(__("Point [X, Y, Z]"))
-        self.point_value_x = QtGui.QLineEdit()
-        self.point_value_y = QtGui.QLineEdit()
-        self.point_value_z = QtGui.QLineEdit()
+        self.point_layout = QtWidgets.QHBoxLayout()
+        self.point_label = QtWidgets.QLabel(__("Point [X, Y, Z]"))
+        self.point_value_x = QtWidgets.QLineEdit()
+        self.point_value_y = QtWidgets.QLineEdit()
+        self.point_value_z = QtWidgets.QLineEdit()
         self.point_layout.addWidget(self.point_label)
         self.point_layout.addWidget(self.point_value_x)
         self.point_layout.addWidget(self.point_value_y)
         self.point_layout.addWidget(self.point_value_z)
 
-        self.size_layout = QtGui.QHBoxLayout()
-        self.size_label = QtGui.QLabel(__("Size [X, Y, Z]"))
-        self.size_value_x = QtGui.QLineEdit()
-        self.size_value_y = QtGui.QLineEdit()
-        self.size_value_z = QtGui.QLineEdit()
+        self.size_layout = QtWidgets.QHBoxLayout()
+        self.size_label = QtWidgets.QLabel(__("Size [X, Y, Z]"))
+        self.size_value_x = QtWidgets.QLineEdit()
+        self.size_value_y = QtWidgets.QLineEdit()
+        self.size_value_z = QtWidgets.QLineEdit()
         self.size_layout.addWidget(self.size_label)
         self.size_layout.addWidget(self.size_value_x)
         self.size_layout.addWidget(self.size_value_y)
         self.size_layout.addWidget(self.size_value_z)
 
-        self.direction_layout = QtGui.QHBoxLayout()
-        self.direction_label = QtGui.QLabel(__("Direction Vector [X, Y, Z]"))
-        self.direction_value_x = QtGui.QLineEdit()
-        self.direction_value_y = QtGui.QLineEdit()
-        self.direction_value_z = QtGui.QLineEdit()
+        self.direction_layout = QtWidgets.QHBoxLayout()
+        self.direction_label = QtWidgets.QLabel(__("Direction Vector [X, Y, Z]"))
+        self.direction_value_x = QtWidgets.QLineEdit()
+        self.direction_value_y = QtWidgets.QLineEdit()
+        self.direction_value_z = QtWidgets.QLineEdit()
         self.direction_layout.addWidget(self.direction_label)
         self.direction_layout.addWidget(self.direction_value_x)
         self.direction_layout.addWidget(self.direction_value_y)
         self.direction_layout.addWidget(self.direction_value_z)
 
-        self.rotateaxis_enabled_checkbox = QtGui.QCheckBox(__("Enable rotation"))
+        self.rotateaxis_enabled_checkbox = QtWidgets.QCheckBox(__("Enable rotation"))
         self.rotateaxis_enabled_checkbox.stateChanged.connect(self.on_rotateaxis_check)
 
-        self.rotateaxis_angle_layout = QtGui.QHBoxLayout()
-        self.rotateaxis_angle_label = QtGui.QLabel(__("Rotation angle (degrees)"))
-        self.rotateaxis_angle_value = QtGui.QLineEdit()
+        self.rotateaxis_angle_layout = QtWidgets.QHBoxLayout()
+        self.rotateaxis_angle_label = QtWidgets.QLabel(__("Rotation angle (degrees)"))
+        self.rotateaxis_angle_value = QtWidgets.QLineEdit()
         self.rotateaxis_angle_layout.addWidget(self.rotateaxis_angle_label)
         self.rotateaxis_angle_layout.addWidget(self.rotateaxis_angle_value)
 
-        self.rotateaxis_point1_layout = QtGui.QHBoxLayout()
-        self.rotateaxis_point1_label = QtGui.QLabel(__("Rotation Point 1 [X, Y, Z]"))
-        self.rotateaxis_point1_value_x = QtGui.QLineEdit()
-        self.rotateaxis_point1_value_y = QtGui.QLineEdit()
-        self.rotateaxis_point1_value_z = QtGui.QLineEdit()
+        self.rotateaxis_point1_layout = QtWidgets.QHBoxLayout()
+        self.rotateaxis_point1_label = QtWidgets.QLabel(__("Rotation Point 1 [X, Y, Z]"))
+        self.rotateaxis_point1_value_x = QtWidgets.QLineEdit()
+        self.rotateaxis_point1_value_y = QtWidgets.QLineEdit()
+        self.rotateaxis_point1_value_z = QtWidgets.QLineEdit()
         self.rotateaxis_point1_layout.addWidget(self.rotateaxis_point1_label)
         self.rotateaxis_point1_layout.addWidget(self.rotateaxis_point1_value_x)
         self.rotateaxis_point1_layout.addWidget(self.rotateaxis_point1_value_y)
         self.rotateaxis_point1_layout.addWidget(self.rotateaxis_point1_value_z)
 
-        self.rotateaxis_point2_layout = QtGui.QHBoxLayout()
-        self.rotateaxis_point2_label = QtGui.QLabel(__("Rotation point 2 [X, Y, Z]"))
-        self.rotateaxis_point2_value_x = QtGui.QLineEdit()
-        self.rotateaxis_point2_value_y = QtGui.QLineEdit()
-        self.rotateaxis_point2_value_z = QtGui.QLineEdit()
+        self.rotateaxis_point2_layout = QtWidgets.QHBoxLayout()
+        self.rotateaxis_point2_label = QtWidgets.QLabel(__("Rotation point 2 [X, Y, Z]"))
+        self.rotateaxis_point2_value_x = QtWidgets.QLineEdit()
+        self.rotateaxis_point2_value_y = QtWidgets.QLineEdit()
+        self.rotateaxis_point2_value_z = QtWidgets.QLineEdit()
         self.rotateaxis_point2_layout.addWidget(self.rotateaxis_point2_label)
         self.rotateaxis_point2_layout.addWidget(self.rotateaxis_point2_value_x)
         self.rotateaxis_point2_layout.addWidget(self.rotateaxis_point2_value_y)
@@ -211,7 +212,7 @@ class BoxZoneGeneratorWidget(QtGui.QWidget):
         self.rotateaxis_point2_value_z.setEnabled(should_enable)
 
 
-class CircleZoneGeneratorWidget(QtGui.QWidget):
+class CircleZoneGeneratorWidget(QtWidgets.QWidget):
     """ A widget to show options for the Circle zone generator. """
 
     def __init__(self):
@@ -219,27 +220,27 @@ class CircleZoneGeneratorWidget(QtGui.QWidget):
         self.main_layout = QVBoxLayout()
         self.setLayout(self.main_layout)
 
-        self.point_layout = QtGui.QHBoxLayout()
-        self.point_label = QtGui.QLabel(__("Point [X, Y, Z]"))
-        self.point_value_x = QtGui.QLineEdit()
-        self.point_value_y = QtGui.QLineEdit()
-        self.point_value_z = QtGui.QLineEdit()
+        self.point_layout = QtWidgets.QHBoxLayout()
+        self.point_label = QtWidgets.QLabel(__("Point [X, Y, Z]"))
+        self.point_value_x = QtWidgets.QLineEdit()
+        self.point_value_y = QtWidgets.QLineEdit()
+        self.point_value_z = QtWidgets.QLineEdit()
         self.point_layout.addWidget(self.point_label)
         self.point_layout.addWidget(self.point_value_x)
         self.point_layout.addWidget(self.point_value_y)
         self.point_layout.addWidget(self.point_value_z)
 
-        self.radius_layout = QtGui.QHBoxLayout()
-        self.radius_label = QtGui.QLabel(__("Radius (m)"))
-        self.radius_value = QtGui.QLineEdit()
+        self.radius_layout = QtWidgets.QHBoxLayout()
+        self.radius_label = QtWidgets.QLabel(__("Radius (m)"))
+        self.radius_value = QtWidgets.QLineEdit()
         self.radius_layout.addWidget(self.radius_label)
         self.radius_layout.addWidget(self.radius_value)
 
-        self.direction_layout = QtGui.QHBoxLayout()
-        self.direction_label = QtGui.QLabel(__("Direction Vector [X, Y, Z]"))
-        self.direction_value_x = QtGui.QLineEdit()
-        self.direction_value_y = QtGui.QLineEdit()
-        self.direction_value_z = QtGui.QLineEdit()
+        self.direction_layout = QtWidgets.QHBoxLayout()
+        self.direction_label = QtWidgets.QLabel(__("Direction Vector [X, Y, Z]"))
+        self.direction_value_x = QtWidgets.QLineEdit()
+        self.direction_value_y = QtWidgets.QLineEdit()
+        self.direction_value_z = QtWidgets.QLineEdit()
         self.direction_layout.addWidget(self.direction_label)
         self.direction_layout.addWidget(self.direction_value_x)
         self.direction_layout.addWidget(self.direction_value_y)
@@ -250,16 +251,16 @@ class CircleZoneGeneratorWidget(QtGui.QWidget):
         self.main_layout.addLayout(self.direction_layout)
 
 
-class VelocityTypeFixedConstantWidget(QtGui.QWidget):
+class VelocityTypeFixedConstantWidget(QtWidgets.QWidget):
     """ A widget to show options for Fixed Constant velocity. """
 
     def __init__(self):
         super().__init__()
-        self.main_layout = QtGui.QVBoxLayout()
+        self.main_layout = QtWidgets.QVBoxLayout()
 
-        self.row = QtGui.QHBoxLayout()
-        self.label = QtGui.QLabel(__("Constant Velocity (m/s):"))
-        self.input = QtGui.QLineEdit()
+        self.row = QtWidgets.QHBoxLayout()
+        self.label = QtWidgets.QLabel(__("Constant Velocity (m/s):"))
+        self.input = QtWidgets.QLineEdit()
         self.row.addWidget(self.label)
         self.row.addWidget(self.input)
 
@@ -267,34 +268,34 @@ class VelocityTypeFixedConstantWidget(QtGui.QWidget):
         self.setLayout(self.main_layout)
 
 
-class VelocityTypeFixedLinearWidget(QtGui.QWidget):
+class VelocityTypeFixedLinearWidget(QtWidgets.QWidget):
     """ A widget to show options for Fixed Linear velocity. """
 
     def __init__(self):
         super().__init__()
-        self.main_layout = QtGui.QVBoxLayout()
+        self.main_layout = QtWidgets.QVBoxLayout()
 
-        self.v_layout = QtGui.QHBoxLayout()
-        self.v_label = QtGui.QLabel(__("V (m/s):"))
-        self.v_input = QtGui.QLineEdit()
+        self.v_layout = QtWidgets.QHBoxLayout()
+        self.v_label = QtWidgets.QLabel(__("V (m/s):"))
+        self.v_input = QtWidgets.QLineEdit()
         self.v_layout.addWidget(self.v_label)
         self.v_layout.addWidget(self.v_input)
 
-        self.v2_layout = QtGui.QHBoxLayout()
-        self.v2_label = QtGui.QLabel(__("V2 (m/s):"))
-        self.v2_input = QtGui.QLineEdit()
+        self.v2_layout = QtWidgets.QHBoxLayout()
+        self.v2_label = QtWidgets.QLabel(__("V2 (m/s):"))
+        self.v2_input = QtWidgets.QLineEdit()
         self.v2_layout.addWidget(self.v2_label)
         self.v2_layout.addWidget(self.v2_input)
 
-        self.z_layout = QtGui.QHBoxLayout()
-        self.z_label = QtGui.QLabel(__("Z (m/s):"))
-        self.z_input = QtGui.QLineEdit()
+        self.z_layout = QtWidgets.QHBoxLayout()
+        self.z_label = QtWidgets.QLabel(__("Z (m/s):"))
+        self.z_input = QtWidgets.QLineEdit()
         self.z_layout.addWidget(self.z_label)
         self.z_layout.addWidget(self.z_input)
 
-        self.z2_layout = QtGui.QHBoxLayout()
-        self.z2_label = QtGui.QLabel(__("Z2 (m/s):"))
-        self.z2_input = QtGui.QLineEdit()
+        self.z2_layout = QtWidgets.QHBoxLayout()
+        self.z2_label = QtWidgets.QLabel(__("Z2 (m/s):"))
+        self.z2_input = QtWidgets.QLineEdit()
         self.z2_layout.addWidget(self.z2_label)
         self.z2_layout.addWidget(self.z2_input)
 
@@ -305,46 +306,46 @@ class VelocityTypeFixedLinearWidget(QtGui.QWidget):
         self.setLayout(self.main_layout)
 
 
-class VelocityTypeFixedParabolicWidget(QtGui.QWidget):
+class VelocityTypeFixedParabolicWidget(QtWidgets.QWidget):
     """ A widget to show options for Fixed Parabolic velocity. """
 
     def __init__(self):
         super().__init__()
-        self.main_layout = QtGui.QVBoxLayout()
+        self.main_layout = QtWidgets.QVBoxLayout()
 
-        self.v_layout = QtGui.QHBoxLayout()
-        self.v_label = QtGui.QLabel(__("V (m/s):"))
-        self.v_input = QtGui.QLineEdit()
+        self.v_layout = QtWidgets.QHBoxLayout()
+        self.v_label = QtWidgets.QLabel(__("V (m/s):"))
+        self.v_input = QtWidgets.QLineEdit()
         self.v_layout.addWidget(self.v_label)
         self.v_layout.addWidget(self.v_input)
 
-        self.v2_layout = QtGui.QHBoxLayout()
-        self.v2_label = QtGui.QLabel(__("V2 (m/s):"))
-        self.v2_input = QtGui.QLineEdit()
+        self.v2_layout = QtWidgets.QHBoxLayout()
+        self.v2_label = QtWidgets.QLabel(__("V2 (m/s):"))
+        self.v2_input = QtWidgets.QLineEdit()
         self.v2_layout.addWidget(self.v2_label)
         self.v2_layout.addWidget(self.v2_input)
 
-        self.v3_layout = QtGui.QHBoxLayout()
-        self.v3_label = QtGui.QLabel(__("v3 (m/s):"))
-        self.v3_input = QtGui.QLineEdit()
+        self.v3_layout = QtWidgets.QHBoxLayout()
+        self.v3_label = QtWidgets.QLabel(__("v3 (m/s):"))
+        self.v3_input = QtWidgets.QLineEdit()
         self.v3_layout.addWidget(self.v3_label)
         self.v3_layout.addWidget(self.v3_input)
 
-        self.z_layout = QtGui.QHBoxLayout()
-        self.z_label = QtGui.QLabel(__("Z (m/s):"))
-        self.z_input = QtGui.QLineEdit()
+        self.z_layout = QtWidgets.QHBoxLayout()
+        self.z_label = QtWidgets.QLabel(__("Z (m/s):"))
+        self.z_input = QtWidgets.QLineEdit()
         self.z_layout.addWidget(self.z_label)
         self.z_layout.addWidget(self.z_input)
 
-        self.z2_layout = QtGui.QHBoxLayout()
-        self.z2_label = QtGui.QLabel(__("Z2 (m/s):"))
-        self.z2_input = QtGui.QLineEdit()
+        self.z2_layout = QtWidgets.QHBoxLayout()
+        self.z2_label = QtWidgets.QLabel(__("Z2 (m/s):"))
+        self.z2_input = QtWidgets.QLineEdit()
         self.z2_layout.addWidget(self.z2_label)
         self.z2_layout.addWidget(self.z2_input)
 
-        self.z3_layout = QtGui.QHBoxLayout()
-        self.z3_label = QtGui.QLabel(__("z3 (m/s):"))
-        self.z3_input = QtGui.QLineEdit()
+        self.z3_layout = QtWidgets.QHBoxLayout()
+        self.z3_label = QtWidgets.QLabel(__("z3 (m/s):"))
+        self.z3_input = QtWidgets.QLineEdit()
         self.z3_layout.addWidget(self.z3_label)
         self.z3_layout.addWidget(self.z3_input)
 
@@ -357,67 +358,67 @@ class VelocityTypeFixedParabolicWidget(QtGui.QWidget):
         self.setLayout(self.main_layout)
 
 
-class VelocityTypeVariableUniformWidget(QtGui.QWidget):
+class VelocityTypeVariableUniformWidget(QtWidgets.QWidget):
     """ A widget to show options for Variable Uniform velocity. """
 
     def __init__(self):
         super().__init__()
-        self.main_layout = QtGui.QVBoxLayout()
+        self.main_layout = QtWidgets.QVBoxLayout()
 
-        self.table = QtGui.QTableWidget(60, 2)
+        self.table = QtWidgets.QTableWidget(60, 2)
         self.table.setHorizontalHeaderLabels([__("Time (s)"), __("Velocity (m/s)")])
         self.table.verticalHeader().setVisible(False)
-        self.table.horizontalHeader().setSectionResizeMode(QtGui.QHeaderView.ResizeMode.Stretch)
+        self.table.horizontalHeader().setSectionResizeMode(QtWidgets.QHeaderView.ResizeMode.Stretch)
 
         self.main_layout.addWidget(self.table)
 
         self.setLayout(self.main_layout)
 
 
-class VelocityTypeVariableLinearWidget(QtGui.QWidget):
+class VelocityTypeVariableLinearWidget(QtWidgets.QWidget):
     """ A widget to show options for Variable Linear velocity. """
 
     def __init__(self):
         super().__init__()
-        self.main_layout = QtGui.QVBoxLayout()
+        self.main_layout = QtWidgets.QVBoxLayout()
 
-        self.table = QtGui.QTableWidget(60, 5)
+        self.table = QtWidgets.QTableWidget(60, 5)
         self.table.setHorizontalHeaderLabels([__("Time (s)"), __("V (m/s)"), __("V2 (m/s)"), __("Z (m/s)"), __("Z2 (m/s)")])
         self.table.verticalHeader().setVisible(False)
-        self.table.horizontalHeader().setSectionResizeMode(QtGui.QHeaderView.ResizeMode.Stretch)
+        self.table.horizontalHeader().setSectionResizeMode(QtWidgets.QHeaderView.ResizeMode.Stretch)
 
         self.main_layout.addWidget(self.table)
 
         self.setLayout(self.main_layout)
 
 
-class VelocityTypeVariableParabolicWidget(QtGui.QWidget):
+class VelocityTypeVariableParabolicWidget(QtWidgets.QWidget):
     """ A widget to show options for Variable Parabolic velocity. """
 
     def __init__(self):
         super().__init__()
-        self.main_layout = QtGui.QVBoxLayout()
+        self.main_layout = QtWidgets.QVBoxLayout()
 
-        self.table = QtGui.QTableWidget(60, 7)
+        self.table = QtWidgets.QTableWidget(60, 7)
         self.table.setHorizontalHeaderLabels([__("Time (s)"), __("V (m/s)"), __("V2 (m/s)"), __("V3 (m/s)"), __("Z (m/s)"), __("Z2 (m/s)"), __("Z3 (m/s)")])
         self.table.verticalHeader().setVisible(False)
-        self.table.horizontalHeader().setSectionResizeMode(QtGui.QHeaderView.ResizeMode.Stretch)
+        self.table.horizontalHeader().setSectionResizeMode(QtWidgets.QHeaderView.ResizeMode.Stretch)
 
         self.main_layout.addWidget(self.table)
 
         self.setLayout(self.main_layout)
 
 
-class VelocityTypeFileWidget(QtGui.QWidget):
+class VelocityTypeFileWidget(QtWidgets.QWidget):
     """ A widget to show options for File based velocity. """
 
     def __init__(self):
         super().__init__()
-        self.main_layout = QtGui.QHBoxLayout()
+        self.main_layout = QtWidgets.QHBoxLayout()
 
-        self.label = QtGui.QLabel(__("File Path:"))
-        self.input = QtGui.QLineEdit()
-        self.button = QtGui.QPushButton(__("Browse"))
+        self.label = QtWidgets.QLabel(__("File Path:"))
+        self.input = QtWidgets.QLineEdit()
+        self.button = QtWidgets.QPushButton(__("Browse"))
 
         self.main_layout.addWidget(self.label)
         self.main_layout.addWidget(self.input)
@@ -428,27 +429,27 @@ class VelocityTypeFileWidget(QtGui.QWidget):
         self.setLayout(self.main_layout)
 
     def on_browse_buton(self):
-        file_name_temp, _ = QtGui.QFileDialog().getOpenFileName(get_fc_main_window(), __("Select a file"), Case.the().info.last_used_directory, "CSV Files (*.csv)")
+        file_name_temp, _ = QtWidgets.QFileDialog().getOpenFileName(get_fc_main_window(), __("Select a file"), Case.the().info.last_used_directory, "CSV Files (*.csv)")
         Case.the().info.update_last_used_directory(file_name_temp)
         if file_name_temp:
             self.input.setText(file_name_temp)
 
 
-class ImposezsurfFixedWidget(QtGui.QWidget):
+class ImposezsurfFixedWidget(QtWidgets.QWidget):
 
     def __init__(self):
         super().__init__()
-        self.main_layout = QtGui.QVBoxLayout()
+        self.main_layout = QtWidgets.QVBoxLayout()
 
-        self.zbottom_layout = QtGui.QHBoxLayout()
-        self.zbottom_label = QtGui.QLabel(__("Bottom level of water (m)"))
-        self.zbottom_input = QtGui.QLineEdit()
+        self.zbottom_layout = QtWidgets.QHBoxLayout()
+        self.zbottom_label = QtWidgets.QLabel(__("Bottom level of water (m)"))
+        self.zbottom_input = QtWidgets.QLineEdit()
         self.zbottom_layout.addWidget(self.zbottom_label)
         self.zbottom_layout.addWidget(self.zbottom_input)
 
-        self.zsurf_layout = QtGui.QHBoxLayout()
-        self.zsurf_label = QtGui.QLabel(__("Surface (m)"))
-        self.zsurf_input = QtGui.QLineEdit()
+        self.zsurf_layout = QtWidgets.QHBoxLayout()
+        self.zsurf_label = QtWidgets.QLabel(__("Surface (m)"))
+        self.zsurf_input = QtWidgets.QLineEdit()
         self.zsurf_layout.addWidget(self.zsurf_label)
         self.zsurf_layout.addWidget(self.zsurf_input)
 
@@ -458,25 +459,25 @@ class ImposezsurfFixedWidget(QtGui.QWidget):
         self.setLayout(self.main_layout)
 
 
-class ImposezsurfVariableWidget(QtGui.QWidget):
+class ImposezsurfVariableWidget(QtWidgets.QWidget):
 
     def __init__(self):
         super().__init__()
-        self.main_layout = QtGui.QVBoxLayout()
+        self.main_layout = QtWidgets.QVBoxLayout()
 
-        self.savevtk_checkbox = QtGui.QCheckBox(__("Save VTK files"))
-        self.remove_checkbox = QtGui.QCheckBox(__("Remove particles above surface"))
+        self.savevtk_checkbox = QtWidgets.QCheckBox(__("Save VTK files"))
+        self.remove_checkbox = QtWidgets.QCheckBox(__("Remove particles above surface"))
 
-        self.zbottom_layout = QtGui.QHBoxLayout()
-        self.zbottom_label = QtGui.QLabel(__("Bottom level of water (m)"))
-        self.zbottom_input = QtGui.QLineEdit()
+        self.zbottom_layout = QtWidgets.QHBoxLayout()
+        self.zbottom_label = QtWidgets.QLabel(__("Bottom level of water (m)"))
+        self.zbottom_input = QtWidgets.QLineEdit()
         self.zbottom_layout.addWidget(self.zbottom_label)
         self.zbottom_layout.addWidget(self.zbottom_input)
 
-        self.zsurf_table = QtGui.QTableWidget(60, 2)
+        self.zsurf_table = QtWidgets.QTableWidget(60, 2)
         self.zsurf_table.setHorizontalHeaderLabels([__("Time (s)"), __("Surface level (m)")])
         self.zsurf_table.verticalHeader().setVisible(False)
-        self.zsurf_table.horizontalHeader().setSectionResizeMode(QtGui.QHeaderView.ResizeMode.Stretch)
+        self.zsurf_table.horizontalHeader().setSectionResizeMode(QtWidgets.QHeaderView.ResizeMode.Stretch)
 
         self.main_layout.addWidget(self.savevtk_checkbox)
         self.main_layout.addWidget(self.remove_checkbox)
@@ -486,25 +487,25 @@ class ImposezsurfVariableWidget(QtGui.QWidget):
         self.setLayout(self.main_layout)
 
 
-class ImposezsurfVariableFromFileWidget(QtGui.QWidget):
+class ImposezsurfVariableFromFileWidget(QtWidgets.QWidget):
 
     def __init__(self):
         super().__init__()
-        self.main_layout = QtGui.QVBoxLayout()
+        self.main_layout = QtWidgets.QVBoxLayout()
 
-        self.savevtk_checkbox = QtGui.QCheckBox(__("Save VTK files"))
-        self.remove_checkbox = QtGui.QCheckBox(__("Remove particles above surface"))
+        self.savevtk_checkbox = QtWidgets.QCheckBox(__("Save VTK files"))
+        self.remove_checkbox = QtWidgets.QCheckBox(__("Remove particles above surface"))
 
-        self.zbottom_layout = QtGui.QHBoxLayout()
-        self.zbottom_label = QtGui.QLabel(__("Bottom level of water (m)"))
-        self.zbottom_input = QtGui.QLineEdit()
+        self.zbottom_layout = QtWidgets.QHBoxLayout()
+        self.zbottom_label = QtWidgets.QLabel(__("Bottom level of water (m)"))
+        self.zbottom_input = QtWidgets.QLineEdit()
         self.zbottom_layout.addWidget(self.zbottom_label)
         self.zbottom_layout.addWidget(self.zbottom_input)
 
-        self.zsurf_layout = QtGui.QHBoxLayout()
-        self.zsurf_label = QtGui.QLabel(__("File Path"))
-        self.zsurf_input = QtGui.QLineEdit()
-        self.zsurf_button = QtGui.QPushButton(__("Browse..."))
+        self.zsurf_layout = QtWidgets.QHBoxLayout()
+        self.zsurf_label = QtWidgets.QLabel(__("File Path"))
+        self.zsurf_input = QtWidgets.QLineEdit()
+        self.zsurf_button = QtWidgets.QPushButton(__("Browse..."))
         self.zsurf_layout.addWidget(self.zsurf_label)
         self.zsurf_layout.addWidget(self.zsurf_input)
         self.zsurf_layout.addWidget(self.zsurf_button)
@@ -519,30 +520,30 @@ class ImposezsurfVariableFromFileWidget(QtGui.QWidget):
         self.setLayout(self.main_layout)
 
     def on_browse_button(self):
-        file_name_temp, _ = QtGui.QFileDialog().getOpenFileName(get_fc_main_window(), __("Select a file"), Case.the().info.last_used_directory, "CSV Files (*.csv)")
+        file_name_temp, _ = QtWidgets.QFileDialog().getOpenFileName(get_fc_main_window(), __("Select a file"), Case.the().info.last_used_directory, "CSV Files (*.csv)")
         Case.the().info.update_last_used_directory(file_name_temp)
         if file_name_temp:
             self.zsurf_input.setText(file_name_temp)
 
 
-class ImposezsurfCalculatedWidget(QtGui.QWidget):
+class ImposezsurfCalculatedWidget(QtWidgets.QWidget):
 
     def __init__(self):
         super().__init__()
-        self.main_layout = QtGui.QVBoxLayout()
+        self.main_layout = QtWidgets.QVBoxLayout()
 
-        self.savevtk_checkbox = QtGui.QCheckBox(__("Save VTK files"))
-        self.remove_checkbox = QtGui.QCheckBox(__("Remove particles above surface"))
+        self.savevtk_checkbox = QtWidgets.QCheckBox(__("Save VTK files"))
+        self.remove_checkbox = QtWidgets.QCheckBox(__("Remove particles above surface"))
 
-        self.zbottom_layout = QtGui.QHBoxLayout()
-        self.zbottom_label = QtGui.QLabel(__("Bottom level of water (m)"))
-        self.zbottom_input = QtGui.QLineEdit()
+        self.zbottom_layout = QtWidgets.QHBoxLayout()
+        self.zbottom_label = QtWidgets.QLabel(__("Bottom level of water (m)"))
+        self.zbottom_input = QtWidgets.QLineEdit()
         self.zbottom_layout.addWidget(self.zbottom_label)
         self.zbottom_layout.addWidget(self.zbottom_input)
 
-        self.zsurf_layout = QtGui.QHBoxLayout()
-        self.zsurf_label = QtGui.QLabel(__("Surface (m)"))
-        self.zsurf_input = QtGui.QLineEdit()
+        self.zsurf_layout = QtWidgets.QHBoxLayout()
+        self.zsurf_label = QtWidgets.QLabel(__("Surface (m)"))
+        self.zsurf_input = QtWidgets.QLineEdit()
         self.zsurf_layout.addWidget(self.zsurf_label)
         self.zsurf_layout.addWidget(self.zsurf_input)
 
@@ -554,7 +555,7 @@ class ImposezsurfCalculatedWidget(QtGui.QWidget):
         self.setLayout(self.main_layout)
 
 
-class InletZoneEdit(QtGui.QDialog):
+class InletZoneEdit(QtWidgets.QDialog):
     """ Defines Inlet/Outlet window dialog """
 
     DIRECTION_MAPPING: dict = {
@@ -580,20 +581,20 @@ class InletZoneEdit(QtGui.QDialog):
 
         # Creates a dialog
         self.setWindowTitle("Inlet/Outlet object edit")
-        self.main_layout = QtGui.QVBoxLayout()
+        self.main_layout = QtWidgets.QVBoxLayout()
 
         # Add Layers option
-        self.layers_layout = QtGui.QHBoxLayout()
-        self.layers_option = QtGui.QLabel(__("Layers: "))
-        self.layers_line_edit = QtGui.QLineEdit(str(self.target_io_zone.layers))
+        self.layers_layout = QtWidgets.QHBoxLayout()
+        self.layers_option = QtWidgets.QLabel(__("Layers: "))
+        self.layers_line_edit = QtWidgets.QLineEdit(str(self.target_io_zone.layers))
 
         self.layers_layout.addWidget(self.layers_option)
         self.layers_layout.addWidget(self.layers_line_edit)
 
         # Add refilling option selector
-        self.refilling_layout = QtGui.QHBoxLayout()
-        self.refilling_label = QtGui.QLabel(__("Refilling mode:"))
-        self.refilling_selector = QtGui.QComboBox()
+        self.refilling_layout = QtWidgets.QHBoxLayout()
+        self.refilling_label = QtWidgets.QLabel(__("Refilling mode:"))
+        self.refilling_selector = QtWidgets.QComboBox()
         self.refilling_selector.insertItems(0, [__("Simple full"), __("Simple below Z Surface"), __("Advanced for reverse flows")])
         self.refilling_selector.setCurrentIndex(self.target_io_zone.refilling)
 
@@ -601,9 +602,9 @@ class InletZoneEdit(QtGui.QDialog):
         self.refilling_layout.addWidget(self.refilling_selector)
 
         # Add inputtreatment option selector
-        self.inputtreatment_layout = QtGui.QHBoxLayout()
-        self.inputtreatment_label = QtGui.QLabel(__("Input Treatment mode:"))
-        self.inputtreatment_selector = QtGui.QComboBox()
+        self.inputtreatment_layout = QtWidgets.QHBoxLayout()
+        self.inputtreatment_label = QtWidgets.QLabel(__("Input Treatment mode:"))
+        self.inputtreatment_selector = QtWidgets.QComboBox()
         self.inputtreatment_selector.insertItems(0, [__("No changes"), __("Convert Fluid"), __("Remove fluid")])
         self.inputtreatment_selector.setCurrentIndex(self.target_io_zone.inputtreatment)
 
@@ -611,16 +612,16 @@ class InletZoneEdit(QtGui.QDialog):
         self.inputtreatment_layout.addWidget(self.inputtreatment_selector)
 
         # Add Zone 2d or 3d
-        self.zone2d3d_main_layout = QtGui.QGroupBox("Zone 2D/3D")
-        self.zone2d3d_layout = QtGui.QVBoxLayout()
-        self.zone2d3d_zones_layout = QtGui.QHBoxLayout()
-        self.zone2d3d_generator_layout = QtGui.QHBoxLayout()
-        self.zone2d_option = QtGui.QRadioButton("Zone 2D")
-        self.zone3d_option = QtGui.QRadioButton("Zone 3D")
+        self.zone2d3d_main_layout = QtWidgets.QGroupBox("Zone 2D/3D")
+        self.zone2d3d_layout = QtWidgets.QVBoxLayout()
+        self.zone2d3d_zones_layout = QtWidgets.QHBoxLayout()
+        self.zone2d3d_generator_layout = QtWidgets.QHBoxLayout()
+        self.zone2d_option = QtWidgets.QRadioButton("Zone 2D")
+        self.zone3d_option = QtWidgets.QRadioButton("Zone 3D")
         self.zone2d_option.toggled.connect(self.on_zone2d3d_radio_toggled)
         self.zone2d_option.toggled.connect(self.on_zone2d3d_radio_toggled)
-        self.zone_gen_type_label = QtGui.QLabel("Type")
-        self.zone_gen_type_combo = QtGui.QComboBox()
+        self.zone_gen_type_label = QtWidgets.QLabel("Type")
+        self.zone_gen_type_combo = QtWidgets.QComboBox()
 
         # Zone Generator widgets
         self.mk_zone_generator_widget = MKZoneGeneratorWidget()
@@ -745,15 +746,15 @@ class InletZoneEdit(QtGui.QDialog):
         self.zone2d3d_main_layout.setLayout(self.zone2d3d_layout)
 
         # Add Imposed velocity option
-        self.imposevelocity_layout = QtGui.QGroupBox("Velocity")
-        self.imposevelocity_options_layout = QtGui.QVBoxLayout()
+        self.imposevelocity_layout = QtWidgets.QGroupBox("Velocity")
+        self.imposevelocity_options_layout = QtWidgets.QVBoxLayout()
 
-        self.imposevelocity_velocity_layout = QtGui.QHBoxLayout()
-        self.imposevelocity_combobox_label = QtGui.QLabel(__("Velocity Mode: "))
-        self.imposevelocity_combobox = QtGui.QComboBox()
+        self.imposevelocity_velocity_layout = QtWidgets.QHBoxLayout()
+        self.imposevelocity_combobox_label = QtWidgets.QLabel(__("Velocity Mode: "))
+        self.imposevelocity_combobox = QtWidgets.QComboBox()
         self.imposevelocity_combobox.insertItems(0, [__("Fixed"), __("Variable"), __("Extrapolated")])
-        self.imposevelocity_type_combobox_label = QtGui.QLabel(__("Velocity Type: "))
-        self.imposevelocity_type_combobox = QtGui.QComboBox()
+        self.imposevelocity_type_combobox_label = QtWidgets.QLabel(__("Velocity Type: "))
+        self.imposevelocity_type_combobox = QtWidgets.QComboBox()
 
         self.imposevelocity_velocity_layout.addWidget(self.imposevelocity_combobox_label)
         self.imposevelocity_velocity_layout.addWidget(self.imposevelocity_combobox)
@@ -820,32 +821,32 @@ class InletZoneEdit(QtGui.QDialog):
         target_widget = self.imposevelocity_variable_uniform_widget
         currentTableRow = 0
         for time, value in velocity_info.variable_uniform_values:
-            target_widget.table.setItem(currentTableRow, 0, QtGui.QTableWidgetItem(str(time)))
-            target_widget.table.setItem(currentTableRow, 1, QtGui.QTableWidgetItem(str(value)))
+            target_widget.table.setItem(currentTableRow, 0, QtWidgets.QTableWidgetItem(str(time)))
+            target_widget.table.setItem(currentTableRow, 1, QtWidgets.QTableWidgetItem(str(value)))
             currentTableRow += 1
 
         # Variable Linear
         target_widget = self.imposevelocity_variable_linear_widget
         currentTableRow = 0
         for time, value in velocity_info.variable_linear_values:
-            target_widget.table.setItem(currentTableRow, 0, QtGui.QTableWidgetItem(str(time)))
-            target_widget.table.setItem(currentTableRow, 1, QtGui.QTableWidgetItem(str(value.v1)))
-            target_widget.table.setItem(currentTableRow, 2, QtGui.QTableWidgetItem(str(value.v2)))
-            target_widget.table.setItem(currentTableRow, 3, QtGui.QTableWidgetItem(str(value.z1)))
-            target_widget.table.setItem(currentTableRow, 4, QtGui.QTableWidgetItem(str(value.z2)))
+            target_widget.table.setItem(currentTableRow, 0, QtWidgets.QTableWidgetItem(str(time)))
+            target_widget.table.setItem(currentTableRow, 1, QtWidgets.QTableWidgetItem(str(value.v1)))
+            target_widget.table.setItem(currentTableRow, 2, QtWidgets.QTableWidgetItem(str(value.v2)))
+            target_widget.table.setItem(currentTableRow, 3, QtWidgets.QTableWidgetItem(str(value.z1)))
+            target_widget.table.setItem(currentTableRow, 4, QtWidgets.QTableWidgetItem(str(value.z2)))
             currentTableRow += 1
 
         # Variable Parabolic
         target_widget = self.imposevelocity_variable_parabolic_widget
         currentTableRow = 0
         for time, value in velocity_info.variable_parabolic_values:
-            target_widget.table.setItem(currentTableRow, 0, QtGui.QTableWidgetItem(str(time)))
-            target_widget.table.setItem(currentTableRow, 1, QtGui.QTableWidgetItem(str(value.v1)))
-            target_widget.table.setItem(currentTableRow, 2, QtGui.QTableWidgetItem(str(value.v2)))
-            target_widget.table.setItem(currentTableRow, 3, QtGui.QTableWidgetItem(str(value.v3)))
-            target_widget.table.setItem(currentTableRow, 4, QtGui.QTableWidgetItem(str(value.z1)))
-            target_widget.table.setItem(currentTableRow, 5, QtGui.QTableWidgetItem(str(value.z2)))
-            target_widget.table.setItem(currentTableRow, 6, QtGui.QTableWidgetItem(str(value.z3)))
+            target_widget.table.setItem(currentTableRow, 0, QtWidgets.QTableWidgetItem(str(time)))
+            target_widget.table.setItem(currentTableRow, 1, QtWidgets.QTableWidgetItem(str(value.v1)))
+            target_widget.table.setItem(currentTableRow, 2, QtWidgets.QTableWidgetItem(str(value.v2)))
+            target_widget.table.setItem(currentTableRow, 3, QtWidgets.QTableWidgetItem(str(value.v3)))
+            target_widget.table.setItem(currentTableRow, 4, QtWidgets.QTableWidgetItem(str(value.z1)))
+            target_widget.table.setItem(currentTableRow, 5, QtWidgets.QTableWidgetItem(str(value.z2)))
+            target_widget.table.setItem(currentTableRow, 6, QtWidgets.QTableWidgetItem(str(value.z3)))
             currentTableRow += 1
 
         # File based movement
@@ -853,12 +854,12 @@ class InletZoneEdit(QtGui.QDialog):
         target_widget.input.setText(str(velocity_info.file_path))
 
         # Add Inlet density option
-        self.density_groupbox = QtGui.QGroupBox("Density")
-        self.density_options_layout = QtGui.QVBoxLayout()
+        self.density_groupbox = QtWidgets.QGroupBox("Density")
+        self.density_options_layout = QtWidgets.QVBoxLayout()
 
-        self.imposerhop_layout = QtGui.QHBoxLayout()
-        self.imposerhop_label = QtGui.QLabel(__("Density mode:"))
-        self.imposerhop_selector = QtGui.QComboBox()
+        self.imposerhop_layout = QtWidgets.QHBoxLayout()
+        self.imposerhop_label = QtWidgets.QLabel(__("Density mode:"))
+        self.imposerhop_selector = QtWidgets.QComboBox()
         self.imposerhop_selector.insertItems(0, [__("Fixed value"), __("Hydrostatic"), __("Extrapolated from ghost nodes")])
         self.imposerhop_selector.setCurrentIndex(self.target_io_zone.density_info.density_type)
 
@@ -870,15 +871,15 @@ class InletZoneEdit(QtGui.QDialog):
         self.density_groupbox.setLayout(self.density_options_layout)
 
         # Add Inlet Z-surface option
-        self.imposezsurf_layout = QtGui.QGroupBox("Elevation")
-        self.imposezsurf_options_layout = QtGui.QVBoxLayout()
-        self.imposezsurf_combobox_layout = QtGui.QHBoxLayout()
-        self.imposezsurf_combobox_label = QtGui.QLabel("Elevation Type:")
-        self.imposezsurf_combobox = QtGui.QComboBox()
+        self.imposezsurf_layout = QtWidgets.QGroupBox("Elevation")
+        self.imposezsurf_options_layout = QtWidgets.QVBoxLayout()
+        self.imposezsurf_combobox_layout = QtWidgets.QHBoxLayout()
+        self.imposezsurf_combobox_label = QtWidgets.QLabel("Elevation Type:")
+        self.imposezsurf_combobox = QtWidgets.QComboBox()
         self.imposezsurf_combobox.insertItems(0, [__("Fixed"), __("Variable"), __("Automatic")])
 
-        self.imposezsurf_type_combobox_label = QtGui.QLabel("Mode:")
-        self.imposezsurf_type_combobox = QtGui.QComboBox()
+        self.imposezsurf_type_combobox_label = QtWidgets.QLabel("Mode:")
+        self.imposezsurf_type_combobox = QtWidgets.QComboBox()
         self.imposezsurf_type_combobox.insertItems(0, [__("List of times"), __("From file")])
 
         self.imposezsurf_fixed_widget = ImposezsurfFixedWidget()
@@ -921,8 +922,8 @@ class InletZoneEdit(QtGui.QDialog):
         target_widget.zbottom_input.setText(str(elevation_info.zbottom))
         currentTableRow = 0
         for time, value in elevation_info.zsurftimes:
-            target_widget.zsurf_table.setItem(currentTableRow, 0, QtGui.QTableWidgetItem(str(time)))
-            target_widget.zsurf_table.setItem(currentTableRow, 1, QtGui.QTableWidgetItem(str(value)))
+            target_widget.zsurf_table.setItem(currentTableRow, 0, QtWidgets.QTableWidgetItem(str(time)))
+            target_widget.zsurf_table.setItem(currentTableRow, 1, QtWidgets.QTableWidgetItem(str(value)))
             currentTableRow += 1
 
         # Variable File
@@ -943,9 +944,9 @@ class InletZoneEdit(QtGui.QDialog):
         self.on_imposezsurf_type_change()
 
         # Creates 2 main buttons
-        self.ok_button = QtGui.QPushButton("Save")
-        self.cancel_button = QtGui.QPushButton("Cancel")
-        self.button_layout = QtGui.QHBoxLayout()
+        self.ok_button = QtWidgets.QPushButton("Save")
+        self.cancel_button = QtWidgets.QPushButton("Cancel")
+        self.button_layout = QtWidgets.QHBoxLayout()
         self.button_layout.addStretch(1)
 
         self.ok_button.clicked.connect(self.on_ok)

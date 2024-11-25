@@ -3,7 +3,8 @@
 """DesignSPHysics Damping Configutarion Dialog"""
 
 import FreeCAD
-from PySide import QtCore, QtGui
+# from PySide import QtCore, QtGui
+from PySide2 import QtCore, QtWidgets
 
 from mod.translation_tools import __
 from mod.dialog_tools import error_dialog
@@ -11,7 +12,7 @@ from mod.dialog_tools import error_dialog
 from mod.constants import DIVIDER
 
 
-class DampingConfigDialog(QtGui.QDialog):
+class DampingConfigDialog(QtWidgets.QDialog):
     """Defines the setup window.
     Modifies data dictionary passed as parameter."""
 
@@ -23,45 +24,45 @@ class DampingConfigDialog(QtGui.QDialog):
 
         # Creates a dialog and 2 main buttons
         self.setWindowTitle("Damping configuration")
-        self.ok_button = QtGui.QPushButton("Save")
-        self.cancel_button = QtGui.QPushButton("Cancel")
+        self.ok_button = QtWidgets.QPushButton("Save")
+        self.cancel_button = QtWidgets.QPushButton("Cancel")
 
-        self.main_layout = QtGui.QVBoxLayout()
+        self.main_layout = QtWidgets.QVBoxLayout()
 
-        self.enabled_checkbox = QtGui.QCheckBox("Enabled")
+        self.enabled_checkbox = QtWidgets.QCheckBox("Enabled")
 
-        self.main_groupbox = QtGui.QGroupBox("Damping parameters")
-        self.main_groupbox_layout = QtGui.QVBoxLayout()
+        self.main_groupbox = QtWidgets.QGroupBox("Damping parameters")
+        self.main_groupbox_layout = QtWidgets.QVBoxLayout()
 
-        self.limitmin_layout = QtGui.QHBoxLayout()
-        self.limitmin_label = QtGui.QLabel("Limit Min. (X, Y, Z) (m): ")
-        self.limitmin_input_x = QtGui.QLineEdit()
-        self.limitmin_input_y = QtGui.QLineEdit()
-        self.limitmin_input_z = QtGui.QLineEdit()
+        self.limitmin_layout = QtWidgets.QHBoxLayout()
+        self.limitmin_label = QtWidgets.QLabel("Limit Min. (X, Y, Z) (m): ")
+        self.limitmin_input_x = QtWidgets.QLineEdit()
+        self.limitmin_input_y = QtWidgets.QLineEdit()
+        self.limitmin_input_z = QtWidgets.QLineEdit()
         self.limitmin_layout.addWidget(self.limitmin_label)
         self.limitmin_layout.addWidget(self.limitmin_input_x)
         self.limitmin_layout.addWidget(self.limitmin_input_y)
         self.limitmin_layout.addWidget(self.limitmin_input_z)
 
-        self.limitmax_layout = QtGui.QHBoxLayout()
-        self.limitmax_label = QtGui.QLabel("Limit Max. (X, Y, Z) (m): ")
-        self.limitmax_input_x = QtGui.QLineEdit()
-        self.limitmax_input_y = QtGui.QLineEdit()
-        self.limitmax_input_z = QtGui.QLineEdit()
+        self.limitmax_layout = QtWidgets.QHBoxLayout()
+        self.limitmax_label = QtWidgets.QLabel("Limit Max. (X, Y, Z) (m): ")
+        self.limitmax_input_x = QtWidgets.QLineEdit()
+        self.limitmax_input_y = QtWidgets.QLineEdit()
+        self.limitmax_input_z = QtWidgets.QLineEdit()
         self.limitmax_layout.addWidget(self.limitmax_label)
         self.limitmax_layout.addWidget(self.limitmax_input_x)
         self.limitmax_layout.addWidget(self.limitmax_input_y)
         self.limitmax_layout.addWidget(self.limitmax_input_z)
 
-        self.overlimit_layout = QtGui.QHBoxLayout()
-        self.overlimit_label = QtGui.QLabel("Overlimit (m): ")
-        self.overlimit_input = QtGui.QLineEdit()
+        self.overlimit_layout = QtWidgets.QHBoxLayout()
+        self.overlimit_label = QtWidgets.QLabel("Overlimit (m): ")
+        self.overlimit_input = QtWidgets.QLineEdit()
         self.overlimit_layout.addWidget(self.overlimit_label)
         self.overlimit_layout.addWidget(self.overlimit_input)
 
-        self.redumax_layout = QtGui.QHBoxLayout()
-        self.redumax_label = QtGui.QLabel("Redumax: ")
-        self.redumax_input = QtGui.QLineEdit()
+        self.redumax_layout = QtWidgets.QHBoxLayout()
+        self.redumax_label = QtWidgets.QLabel("Redumax: ")
+        self.redumax_input = QtWidgets.QLineEdit()
         self.redumax_layout.addWidget(self.redumax_label)
         self.redumax_layout.addWidget(self.redumax_input)
 
@@ -72,7 +73,7 @@ class DampingConfigDialog(QtGui.QDialog):
 
         self.main_groupbox.setLayout(self.main_groupbox_layout)
 
-        self.button_layout = QtGui.QHBoxLayout()
+        self.button_layout = QtWidgets.QHBoxLayout()
         self.button_layout.addStretch(1)
         self.button_layout.addWidget(self.ok_button)
         self.button_layout.addWidget(self.cancel_button)

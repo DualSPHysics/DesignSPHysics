@@ -2,7 +2,8 @@
 # -*- coding: utf-8 -*-
 """ DesignSPHysics MoorDyn Line Configuration Dialog. """
 
-from PySide import QtGui
+# from PySide import QtGui
+from PySide2 import QtWidgets
 
 from mod.translation_tools import __
 from mod.gui_tools import h_line_generator
@@ -14,7 +15,7 @@ from mod.dataobjects.moorings.moordyn.moordyn_vessel_connection import MoorDynVe
 from mod.dataobjects.moorings.moordyn.moordyn_connect_connection import MoorDynConnectConnection
 
 
-class MoorDynLineConfigurationDialog(QtGui.QDialog):
+class MoorDynLineConfigurationDialog(QtWidgets.QDialog):
     """ DesignSPHysics MoorDyn Line Configuration Dialog. """
 
     def __init__(self, line, stored_configuration):
@@ -24,28 +25,28 @@ class MoorDynLineConfigurationDialog(QtGui.QDialog):
 
         self.setWindowTitle(__("MoorDyn Line Configuration"))
         self.setMinimumWidth(440)
-        self.root_layout: QtGui.QVBoxLayout = QtGui.QVBoxLayout()
+        self.root_layout: QtWidgets.QVBoxLayout = QtWidgets.QVBoxLayout()
 
         # Label
-        self.reference_label: QtGui.QLabel = QtGui.QLabel(__("Editing settings for line: <b>{}</b>").format(line.line_id))
+        self.reference_label: QtWidgets.QLabel = QtWidgets.QLabel(__("Editing settings for line: <b>{}</b>").format(line.line_id))
 
         # Basic configuration group
-        self.basic_configuration_groupbox: QtGui.QGroupBox = QtGui.QGroupBox(__("Basic configuration"))
-        self.basic_configuration_groupbox_layout: QtGui.QFormLayout = QtGui.QFormLayout()
+        self.basic_configuration_groupbox: QtWidgets.QGroupBox = QtWidgets.QGroupBox(__("Basic configuration"))
+        self.basic_configuration_groupbox_layout: QtWidgets.QFormLayout = QtWidgets.QFormLayout()
 
-        self.connection_type_combobox: QtGui.QComboBox = QtGui.QComboBox()
+        self.connection_type_combobox: QtWidgets.QComboBox = QtWidgets.QComboBox()
         self.connection_type_combobox.addItems([
             "Vessel to Fix connection",
             "Vessel to Vessel connection"
         ])
 
-        self.vessel_connection_label: QtGui.QLabel = QtGui.QLabel(__("Vessel Connection: "))
-        self.vessel_connection_layout: QtGui.QHBoxLayout = QtGui.QHBoxLayout()
-        self.vessel_connection_body_combo: QtGui.QComboBox = QtGui.QComboBox()
-        self.vessel_connection_point_label: QtGui.QLabel = QtGui.QLabel(__("Point (X, Y, Z):"))
-        self.vessel_connection_point_x: QtGui.QLineEdit = QtGui.QLineEdit()
-        self.vessel_connection_point_y: QtGui.QLineEdit = QtGui.QLineEdit()
-        self.vessel_connection_point_z: QtGui.QLineEdit = QtGui.QLineEdit()
+        self.vessel_connection_label: QtWidgets.QLabel = QtWidgets.QLabel(__("Vessel Connection: "))
+        self.vessel_connection_layout: QtWidgets.QHBoxLayout = QtWidgets.QHBoxLayout()
+        self.vessel_connection_body_combo: QtWidgets.QComboBox = QtWidgets.QComboBox()
+        self.vessel_connection_point_label: QtWidgets.QLabel = QtWidgets.QLabel(__("Point (X, Y, Z):"))
+        self.vessel_connection_point_x: QtWidgets.QLineEdit = QtWidgets.QLineEdit()
+        self.vessel_connection_point_y: QtWidgets.QLineEdit = QtWidgets.QLineEdit()
+        self.vessel_connection_point_z: QtWidgets.QLineEdit = QtWidgets.QLineEdit()
 
         self.vessel_connection_layout.addWidget(self.vessel_connection_body_combo)
         self.vessel_connection_layout.addWidget(self.vessel_connection_point_label)
@@ -53,13 +54,13 @@ class MoorDynLineConfigurationDialog(QtGui.QDialog):
         self.vessel_connection_layout.addWidget(self.vessel_connection_point_y)
         self.vessel_connection_layout.addWidget(self.vessel_connection_point_z)
 
-        self.vessel2_connection_label: QtGui.QLabel = QtGui.QLabel(__("Vessel Connection (2nd): "))
-        self.vessel2_connection_layout: QtGui.QHBoxLayout = QtGui.QHBoxLayout()
-        self.vessel2_connection_body_combo: QtGui.QComboBox = QtGui.QComboBox()
-        self.vessel2_connection_point_label: QtGui.QLabel = QtGui.QLabel(__("Point (X, Y, Z):"))
-        self.vessel2_connection_point_x: QtGui.QLineEdit = QtGui.QLineEdit()
-        self.vessel2_connection_point_y: QtGui.QLineEdit = QtGui.QLineEdit()
-        self.vessel2_connection_point_z: QtGui.QLineEdit = QtGui.QLineEdit()
+        self.vessel2_connection_label: QtWidgets.QLabel = QtWidgets.QLabel(__("Vessel Connection (2nd): "))
+        self.vessel2_connection_layout: QtWidgets.QHBoxLayout = QtWidgets.QHBoxLayout()
+        self.vessel2_connection_body_combo: QtWidgets.QComboBox = QtWidgets.QComboBox()
+        self.vessel2_connection_point_label: QtWidgets.QLabel = QtWidgets.QLabel(__("Point (X, Y, Z):"))
+        self.vessel2_connection_point_x: QtWidgets.QLineEdit = QtWidgets.QLineEdit()
+        self.vessel2_connection_point_y: QtWidgets.QLineEdit = QtWidgets.QLineEdit()
+        self.vessel2_connection_point_z: QtWidgets.QLineEdit = QtWidgets.QLineEdit()
 
         self.vessel2_connection_layout.addWidget(self.vessel2_connection_body_combo)
         self.vessel2_connection_layout.addWidget(self.vessel2_connection_point_label)
@@ -67,18 +68,18 @@ class MoorDynLineConfigurationDialog(QtGui.QDialog):
         self.vessel2_connection_layout.addWidget(self.vessel2_connection_point_y)
         self.vessel2_connection_layout.addWidget(self.vessel2_connection_point_z)
 
-        self.fix_connection_label: QtGui.QLabel = QtGui.QLabel(__("Fix Connection (X, Y, Z): "))
-        self.fix_connection_layout: QtGui.QHBoxLayout = QtGui.QHBoxLayout()
-        self.fix_connection_point_x: QtGui.QLineEdit = QtGui.QLineEdit()
-        self.fix_connection_point_y: QtGui.QLineEdit = QtGui.QLineEdit()
-        self.fix_connection_point_z: QtGui.QLineEdit = QtGui.QLineEdit()
+        self.fix_connection_label: QtWidgets.QLabel = QtWidgets.QLabel(__("Fix Connection (X, Y, Z): "))
+        self.fix_connection_layout: QtWidgets.QHBoxLayout = QtWidgets.QHBoxLayout()
+        self.fix_connection_point_x: QtWidgets.QLineEdit = QtWidgets.QLineEdit()
+        self.fix_connection_point_y: QtWidgets.QLineEdit = QtWidgets.QLineEdit()
+        self.fix_connection_point_z: QtWidgets.QLineEdit = QtWidgets.QLineEdit()
 
         self.fix_connection_layout.addWidget(self.fix_connection_point_x)
         self.fix_connection_layout.addWidget(self.fix_connection_point_y)
         self.fix_connection_layout.addWidget(self.fix_connection_point_z)
 
-        self.length_input: QtGui.QLineEdit = QtGui.QLineEdit()
-        self.segments_input: QtGui.QLineEdit = QtGui.QLineEdit()
+        self.length_input: QtWidgets.QLineEdit = QtWidgets.QLineEdit()
+        self.segments_input: QtWidgets.QLineEdit = QtWidgets.QLineEdit()
 
         self.basic_configuration_groupbox_layout.addRow(__("Type of connection: "), self.connection_type_combobox)
         self.basic_configuration_groupbox_layout.addRow(self.vessel_connection_label, self.vessel_connection_layout)
@@ -90,30 +91,30 @@ class MoorDynLineConfigurationDialog(QtGui.QDialog):
         self.basic_configuration_groupbox.setLayout(self.basic_configuration_groupbox_layout)
 
         # Override configuration group
-        self.override_configuration_groupbox: QtGui.QGroupBox = QtGui.QGroupBox(__("Configuration Overrides"))
-        self.override_configuration_groupbox_layout: QtGui.QFormLayout = QtGui.QFormLayout()
+        self.override_configuration_groupbox: QtWidgets.QGroupBox = QtWidgets.QGroupBox(__("Configuration Overrides"))
+        self.override_configuration_groupbox_layout: QtWidgets.QFormLayout = QtWidgets.QFormLayout()
 
-        self.ea_input: QtGui.QLineEdit = QtGui.QLineEdit()
-        self.ea_input_check: QtGui.QCheckBox = QtGui.QCheckBox()
-        self.ea_input_layout: QtGui.QHBoxLayout = QtGui.QHBoxLayout()
+        self.ea_input: QtWidgets.QLineEdit = QtWidgets.QLineEdit()
+        self.ea_input_check: QtWidgets.QCheckBox = QtWidgets.QCheckBox()
+        self.ea_input_layout: QtWidgets.QHBoxLayout = QtWidgets.QHBoxLayout()
         self.ea_input_layout.addWidget(self.ea_input)
         self.ea_input_layout.addWidget(self.ea_input_check)
 
-        self.diameter_input: QtGui.QLineEdit = QtGui.QLineEdit()
-        self.diameter_input_check: QtGui.QCheckBox = QtGui.QCheckBox()
-        self.diameter_input_layout: QtGui.QHBoxLayout = QtGui.QHBoxLayout()
+        self.diameter_input: QtWidgets.QLineEdit = QtWidgets.QLineEdit()
+        self.diameter_input_check: QtWidgets.QCheckBox = QtWidgets.QCheckBox()
+        self.diameter_input_layout: QtWidgets.QHBoxLayout = QtWidgets.QHBoxLayout()
         self.diameter_input_layout.addWidget(self.diameter_input)
         self.diameter_input_layout.addWidget(self.diameter_input_check)
 
-        self.massDenInAir_input: QtGui.QLineEdit = QtGui.QLineEdit()
-        self.massDenInAir_input_check: QtGui.QCheckBox = QtGui.QCheckBox()
-        self.massDenInAir_input_layout: QtGui.QHBoxLayout = QtGui.QHBoxLayout()
+        self.massDenInAir_input: QtWidgets.QLineEdit = QtWidgets.QLineEdit()
+        self.massDenInAir_input_check: QtWidgets.QCheckBox = QtWidgets.QCheckBox()
+        self.massDenInAir_input_layout: QtWidgets.QHBoxLayout = QtWidgets.QHBoxLayout()
         self.massDenInAir_input_layout.addWidget(self.massDenInAir_input)
         self.massDenInAir_input_layout.addWidget(self.massDenInAir_input_check)
 
-        self.ba_input: QtGui.QLineEdit = QtGui.QLineEdit()
-        self.ba_input_check: QtGui.QCheckBox = QtGui.QCheckBox()
-        self.ba_input_layout: QtGui.QHBoxLayout = QtGui.QHBoxLayout()
+        self.ba_input: QtWidgets.QLineEdit = QtWidgets.QLineEdit()
+        self.ba_input_check: QtWidgets.QCheckBox = QtWidgets.QCheckBox()
+        self.ba_input_layout: QtWidgets.QHBoxLayout = QtWidgets.QHBoxLayout()
         self.ba_input_layout.addWidget(self.ba_input)
         self.ba_input_layout.addWidget(self.ba_input_check)
 
@@ -125,8 +126,8 @@ class MoorDynLineConfigurationDialog(QtGui.QDialog):
         self.override_configuration_groupbox.setLayout(self.override_configuration_groupbox_layout)
 
         # Bottom button row
-        self.button_layout: QtGui.QHBoxLayout = QtGui.QHBoxLayout()
-        self.ok_button: QtGui.QPushButton = QtGui.QPushButton(__("OK"))
+        self.button_layout: QtWidgets.QHBoxLayout = QtWidgets.QHBoxLayout()
+        self.ok_button: QtWidgets.QPushButton = QtWidgets.QPushButton(__("OK"))
         self.button_layout.addStretch(1)
         self.button_layout.addWidget(self.ok_button)
 

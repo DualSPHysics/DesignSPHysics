@@ -2,14 +2,15 @@
 # -*- coding: utf-8 -*-
 """DesignSPHysics LinkPointLine Edit Dialog """
 
-from PySide import QtGui
+# from PySide import QtGui
+from PySide2 import QtWidgets
 from mod.translation_tools import __
 from mod.dialog_tools import error_dialog
 
 from mod.dataobjects.case import Case
 
 
-class LinkPointlineEdit(QtGui.QDialog):
+class LinkPointlineEdit(QtWidgets.QDialog):
     """ Defines Link pontline window dialog """
 
     def __init__(self, link_pointline_id, bodies_widgets, parent=None):
@@ -20,7 +21,7 @@ class LinkPointlineEdit(QtGui.QDialog):
 
         # Title
         self.setWindowTitle(__("Link pointline configuration"))
-        self.link_pointline_edit_layout = QtGui.QVBoxLayout()
+        self.link_pointline_edit_layout = QtWidgets.QVBoxLayout()
 
         # Find the link pointline for which the button was pressed
         target_link_pointline = None
@@ -35,9 +36,9 @@ class LinkPointlineEdit(QtGui.QDialog):
             return
 
         # Elements that interact
-        self.body_layout = QtGui.QHBoxLayout()
-        self.body_one_label = QtGui.QLabel(__("Body 1: "))
-        self.body_one_line_edit = QtGui.QComboBox()
+        self.body_layout = QtWidgets.QHBoxLayout()
+        self.body_one_label = QtWidgets.QLabel(__("Body 1: "))
+        self.body_one_line_edit = QtWidgets.QComboBox()
         if str(target_link_pointline.idbody1) != "":
             self.body_one_line_edit.insertItems(0, ["", str(target_link_pointline.idbody1)])
             self.body_one_line_edit.setCurrentIndex(1)
@@ -53,14 +54,14 @@ class LinkPointlineEdit(QtGui.QDialog):
         self.link_pointline_edit_layout.addLayout(self.body_layout)
 
         # Vector direction for sliding axis
-        self.sliding_vector_layout = QtGui.QHBoxLayout()
-        self.sliding_vector_label = QtGui.QLabel(__("Sliding Vector: "))
-        self.sliding_vector_x_label = QtGui.QLabel(__("X"))
-        self.sliding_vector_x_line_edit = QtGui.QLineEdit(str(target_link_pointline.slidingvector[0]))
-        self.sliding_vector_y_label = QtGui.QLabel(__("Y"))
-        self.sliding_vector_y_line_edit = QtGui.QLineEdit(str(target_link_pointline.slidingvector[1]))
-        self.sliding_vector_z_label = QtGui.QLabel(__("Z"))
-        self.sliding_vector_z_line_edit = QtGui.QLineEdit(str(target_link_pointline.slidingvector[2]))
+        self.sliding_vector_layout = QtWidgets.QHBoxLayout()
+        self.sliding_vector_label = QtWidgets.QLabel(__("Sliding Vector: "))
+        self.sliding_vector_x_label = QtWidgets.QLabel(__("X"))
+        self.sliding_vector_x_line_edit = QtWidgets.QLineEdit(str(target_link_pointline.slidingvector[0]))
+        self.sliding_vector_y_label = QtWidgets.QLabel(__("Y"))
+        self.sliding_vector_y_line_edit = QtWidgets.QLineEdit(str(target_link_pointline.slidingvector[1]))
+        self.sliding_vector_z_label = QtWidgets.QLabel(__("Z"))
+        self.sliding_vector_z_line_edit = QtWidgets.QLineEdit(str(target_link_pointline.slidingvector[2]))
 
         self.sliding_vector_layout.addWidget(self.sliding_vector_label)
         self.sliding_vector_layout.addWidget(self.sliding_vector_x_label)
@@ -73,14 +74,14 @@ class LinkPointlineEdit(QtGui.QDialog):
         self.link_pointline_edit_layout.addLayout(self.sliding_vector_layout)
 
         # Point for rotation
-        self.rotpoint_layout = QtGui.QHBoxLayout()
-        self.rotpoint_label = QtGui.QLabel(__("Point for rotation: "))
-        self.rotpoint_x_label = QtGui.QLabel(__("X"))
-        self.rotpoint_x_line_edit = QtGui.QLineEdit(str(target_link_pointline.rotpoint[0]))
-        self.rotpoint_y_label = QtGui.QLabel(__("Y"))
-        self.rotpoint_y_line_edit = QtGui.QLineEdit(str(target_link_pointline.rotpoint[1]))
-        self.rotpoint_z_label = QtGui.QLabel(__("Z"))
-        self.rotpoint_z_line_edit = QtGui.QLineEdit(str(target_link_pointline.rotpoint[2]))
+        self.rotpoint_layout = QtWidgets.QHBoxLayout()
+        self.rotpoint_label = QtWidgets.QLabel(__("Point for rotation: "))
+        self.rotpoint_x_label = QtWidgets.QLabel(__("X"))
+        self.rotpoint_x_line_edit = QtWidgets.QLineEdit(str(target_link_pointline.rotpoint[0]))
+        self.rotpoint_y_label = QtWidgets.QLabel(__("Y"))
+        self.rotpoint_y_line_edit = QtWidgets.QLineEdit(str(target_link_pointline.rotpoint[1]))
+        self.rotpoint_z_label = QtWidgets.QLabel(__("Z"))
+        self.rotpoint_z_line_edit = QtWidgets.QLineEdit(str(target_link_pointline.rotpoint[2]))
 
         self.rotpoint_layout.addWidget(self.rotpoint_label)
         self.rotpoint_layout.addWidget(self.rotpoint_x_label)
@@ -93,14 +94,14 @@ class LinkPointlineEdit(QtGui.QDialog):
         self.link_pointline_edit_layout.addLayout(self.rotpoint_layout)
 
         # Vector direction for rotation
-        self.rotvector_layout = QtGui.QHBoxLayout()
-        self.rotvector_label = QtGui.QLabel(__("Vector direction: "))
-        self.rotvector_x_label = QtGui.QLabel(__("X"))
-        self.rotvector_x_line_edit = QtGui.QLineEdit(str(target_link_pointline.rotvector[0]))
-        self.rotvector_y_label = QtGui.QLabel(__("Y"))
-        self.rotvector_y_line_edit = QtGui.QLineEdit(str(target_link_pointline.rotvector[1]))
-        self.rotvector_z_label = QtGui.QLabel(__("Z"))
-        self.rotvector_z_line_edit = QtGui.QLineEdit(str(target_link_pointline.rotvector[2]))
+        self.rotvector_layout = QtWidgets.QHBoxLayout()
+        self.rotvector_label = QtWidgets.QLabel(__("Vector direction: "))
+        self.rotvector_x_label = QtWidgets.QLabel(__("X"))
+        self.rotvector_x_line_edit = QtWidgets.QLineEdit(str(target_link_pointline.rotvector[0]))
+        self.rotvector_y_label = QtWidgets.QLabel(__("Y"))
+        self.rotvector_y_line_edit = QtWidgets.QLineEdit(str(target_link_pointline.rotvector[1]))
+        self.rotvector_z_label = QtWidgets.QLabel(__("Z"))
+        self.rotvector_z_line_edit = QtWidgets.QLineEdit(str(target_link_pointline.rotvector[2]))
 
         self.rotvector_layout.addWidget(self.rotvector_label)
         self.rotvector_layout.addWidget(self.rotvector_x_label)
@@ -113,14 +114,14 @@ class LinkPointlineEdit(QtGui.QDialog):
         self.link_pointline_edit_layout.addLayout(self.rotvector_layout)
 
         # Second vector to avoid rotation
-        self.rotvector2_layout = QtGui.QHBoxLayout()
-        self.rotvector2_label = QtGui.QLabel(__("Second vector: "))
-        self.rotvector2_x_label = QtGui.QLabel(__("X"))
-        self.rotvector2_x_line_edit = QtGui.QLineEdit(str(target_link_pointline.rotvector2[0]))
-        self.rotvector2_y_label = QtGui.QLabel(__("Y"))
-        self.rotvector2_y_line_edit = QtGui.QLineEdit(str(target_link_pointline.rotvector2[1]))
-        self.rotvector2_z_label = QtGui.QLabel(__("Z"))
-        self.rotvector2_z_line_edit = QtGui.QLineEdit(str(target_link_pointline.rotvector2[2]))
+        self.rotvector2_layout = QtWidgets.QHBoxLayout()
+        self.rotvector2_label = QtWidgets.QLabel(__("Second vector: "))
+        self.rotvector2_x_label = QtWidgets.QLabel(__("X"))
+        self.rotvector2_x_line_edit = QtWidgets.QLineEdit(str(target_link_pointline.rotvector2[0]))
+        self.rotvector2_y_label = QtWidgets.QLabel(__("Y"))
+        self.rotvector2_y_line_edit = QtWidgets.QLineEdit(str(target_link_pointline.rotvector2[1]))
+        self.rotvector2_z_label = QtWidgets.QLabel(__("Z"))
+        self.rotvector2_z_line_edit = QtWidgets.QLineEdit(str(target_link_pointline.rotvector2[2]))
 
         self.rotvector2_layout.addWidget(self.rotvector2_label)
         self.rotvector2_layout.addWidget(self.rotvector2_x_label)
@@ -133,12 +134,12 @@ class LinkPointlineEdit(QtGui.QDialog):
         self.link_pointline_edit_layout.addLayout(self.rotvector2_layout)
 
         # Torsion options
-        self.torsion_stiffness_layout = QtGui.QHBoxLayout()
-        self.torsion_damping_layout = QtGui.QHBoxLayout()
-        self.stiffness_label = QtGui.QLabel(__("Stiffness (Nm/rad):"))
-        self.stiffness_line_edit = QtGui.QLineEdit(str(target_link_pointline.stiffness))
-        self.damping_label = QtGui.QLabel(__("Damping (Nms/rad):"))
-        self.damping_line_edit = QtGui.QLineEdit(str(target_link_pointline.damping))
+        self.torsion_stiffness_layout = QtWidgets.QHBoxLayout()
+        self.torsion_damping_layout = QtWidgets.QHBoxLayout()
+        self.stiffness_label = QtWidgets.QLabel(__("Stiffness (Nm/rad):"))
+        self.stiffness_line_edit = QtWidgets.QLineEdit(str(target_link_pointline.stiffness))
+        self.damping_label = QtWidgets.QLabel(__("Damping (Nms/rad):"))
+        self.damping_line_edit = QtWidgets.QLineEdit(str(target_link_pointline.damping))
 
         self.torsion_stiffness_layout.addWidget(self.stiffness_label)
         self.torsion_stiffness_layout.addWidget(self.stiffness_line_edit)
@@ -149,11 +150,11 @@ class LinkPointlineEdit(QtGui.QDialog):
         self.link_pointline_edit_layout.addLayout(self.torsion_damping_layout)
 
         # Buttons
-        self.ok_button = QtGui.QPushButton("Save")
+        self.ok_button = QtWidgets.QPushButton("Save")
         self.ok_button.clicked.connect(self.on_save)
-        self.cancel_button = QtGui.QPushButton("Cancel")
+        self.cancel_button = QtWidgets.QPushButton("Cancel")
         self.cancel_button.clicked.connect(self.on_cancel)
-        self.button_layout = QtGui.QHBoxLayout()
+        self.button_layout = QtWidgets.QHBoxLayout()
         self.button_layout.addStretch(1)
 
         self.button_layout.addWidget(self.ok_button)

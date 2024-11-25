@@ -5,7 +5,8 @@
 from uuid import uuid4
 from tempfile import gettempdir
 
-from PySide import QtCore, QtGui
+# from PySide import QtCore, QtGui
+from PySide2 import QtCore, QtWidgets
 
 from mod.stdout_tools import debug
 from mod.file_tools import import_geo
@@ -17,7 +18,7 @@ from mod.executable_tools import ensure_process_is_executable_or_fail
 from mod.dataobjects.case import Case
 
 
-class WorkingDialog(QtGui.QDialog):
+class WorkingDialog(QtWidgets.QDialog):
     """ A modal dialog to show during BathymetryTool execution. """
 
     IS_DIALOG_MODAL: bool = True
@@ -27,8 +28,8 @@ class WorkingDialog(QtGui.QDialog):
         self.setModal(self.IS_DIALOG_MODAL)
         self.setWindowTitle(__("Import GEO"))
 
-        self.layout = QtGui.QVBoxLayout()
-        self.label = QtGui.QLabel(__("Importing bathymetry..."))
+        self.layout = QtWidgets.QVBoxLayout()
+        self.label = QtWidgets.QLabel(__("Importing bathymetry..."))
 
         self.layout.addWidget(self.label)
 
@@ -36,7 +37,7 @@ class WorkingDialog(QtGui.QDialog):
         self.adjustSize()
 
 
-class AddGEODialog(QtGui.QDialog):
+class AddGEODialog(QtWidgets.QDialog):
     """ A dialog that shows option to import a geometry passed as parameter """
 
     IS_DIALOG_MODAL: bool = True
@@ -49,30 +50,30 @@ class AddGEODialog(QtGui.QDialog):
         # Defines import stl dialog
         self.setModal(self.IS_DIALOG_MODAL)
         self.setWindowTitle(__("Import GEO"))
-        self.geo_dialog_layout = QtGui.QVBoxLayout()
-        self.geo_group = QtGui.QGroupBox(__("Import GEO options"))
-        self.geo_group_layout = QtGui.QVBoxLayout()
+        self.geo_dialog_layout = QtWidgets.QVBoxLayout()
+        self.geo_group = QtWidgets.QGroupBox(__("Import GEO options"))
+        self.geo_group_layout = QtWidgets.QVBoxLayout()
 
         # STL File selection
-        self.geo_file_layout = QtGui.QHBoxLayout()
-        self.geo_file_label = QtGui.QLabel(__("GEO File: "))
-        self.geo_file_path = QtGui.QLineEdit()
-        self.geo_file_browse = QtGui.QPushButton(__("Browse"))
+        self.geo_file_layout = QtWidgets.QHBoxLayout()
+        self.geo_file_label = QtWidgets.QLabel(__("GEO File: "))
+        self.geo_file_path = QtWidgets.QLineEdit()
+        self.geo_file_browse = QtWidgets.QPushButton(__("Browse"))
 
         for x in [self.geo_file_label, self.geo_file_path, self.geo_file_browse]:
             self.geo_file_layout.addWidget(x)
         # END STL File selection
 
         # Scaling factor
-        self.geo_scaling_widget = QtGui.QWidget()
-        self.geo_scaling_layout = QtGui.QHBoxLayout()
-        self.geo_scaling_label = QtGui.QLabel(__("Scaling factor: "))
-        self.geo_scaling_x_l = QtGui.QLabel("X: ")
-        self.geo_scaling_x_e = QtGui.QLineEdit("1")
-        self.geo_scaling_y_l = QtGui.QLabel("Y: ")
-        self.geo_scaling_y_e = QtGui.QLineEdit("1")
-        self.geo_scaling_z_l = QtGui.QLabel("Z: ")
-        self.geo_scaling_z_e = QtGui.QLineEdit("1")
+        self.geo_scaling_widget = QtWidgets.QWidget()
+        self.geo_scaling_layout = QtWidgets.QHBoxLayout()
+        self.geo_scaling_label = QtWidgets.QLabel(__("Scaling factor: "))
+        self.geo_scaling_x_l = QtWidgets.QLabel("X: ")
+        self.geo_scaling_x_e = QtWidgets.QLineEdit("1")
+        self.geo_scaling_y_l = QtWidgets.QLabel("Y: ")
+        self.geo_scaling_y_e = QtWidgets.QLineEdit("1")
+        self.geo_scaling_z_l = QtWidgets.QLabel("Z: ")
+        self.geo_scaling_z_e = QtWidgets.QLineEdit("1")
 
         for x in [self.geo_scaling_label,
                   self.geo_scaling_x_l,
@@ -87,21 +88,21 @@ class AddGEODialog(QtGui.QDialog):
         # END Scaling factor
 
         # Bathymetry Options
-        self.geo_bathymetry_options_scroll = QtGui.QScrollArea()
+        self.geo_bathymetry_options_scroll = QtWidgets.QScrollArea()
         self.geo_bathymetry_options_scroll.setWidgetResizable(True)
-        self.geo_bathymetry_options_widget = QtGui.QWidget()
-        self.geo_bathymetry_options_layout = QtGui.QVBoxLayout()
+        self.geo_bathymetry_options_widget = QtWidgets.QWidget()
+        self.geo_bathymetry_options_layout = QtWidgets.QVBoxLayout()
 
-        self.bath_input_options_header_label = QtGui.QLabel("<h4>{}</h4>".format("Input configuration"))
+        self.bath_input_options_header_label = QtWidgets.QLabel("<h4>{}</h4>".format("Input configuration"))
 
-        self.bath_move_layout = QtGui.QHBoxLayout()
-        self.bath_move_label = QtGui.QLabel(__("Move: "))
-        self.bath_move_x_l = QtGui.QLabel("X: ")
-        self.bath_move_x_e = QtGui.QLineEdit("0")
-        self.bath_move_y_l = QtGui.QLabel("Y: ")
-        self.bath_move_y_e = QtGui.QLineEdit("0")
-        self.bath_move_z_l = QtGui.QLabel("Z: ")
-        self.bath_move_z_e = QtGui.QLineEdit("0")
+        self.bath_move_layout = QtWidgets.QHBoxLayout()
+        self.bath_move_label = QtWidgets.QLabel(__("Move: "))
+        self.bath_move_x_l = QtWidgets.QLabel("X: ")
+        self.bath_move_x_e = QtWidgets.QLineEdit("0")
+        self.bath_move_y_l = QtWidgets.QLabel("Y: ")
+        self.bath_move_y_e = QtWidgets.QLineEdit("0")
+        self.bath_move_z_l = QtWidgets.QLabel("Z: ")
+        self.bath_move_z_e = QtWidgets.QLineEdit("0")
         for x in [self.bath_move_label,
                   self.bath_move_x_l,
                   self.bath_move_x_e,
@@ -111,14 +112,14 @@ class AddGEODialog(QtGui.QDialog):
                   self.bath_move_z_e, ]:
             self.bath_move_layout.addWidget(x)
 
-        self.bath_rotate_layout = QtGui.QHBoxLayout()
-        self.bath_rotate_label = QtGui.QLabel(__("Rotate: "))
-        self.bath_rotate_x_l = QtGui.QLabel("X: ")
-        self.bath_rotate_x_e = QtGui.QLineEdit("0")
-        self.bath_rotate_y_l = QtGui.QLabel("Y: ")
-        self.bath_rotate_y_e = QtGui.QLineEdit("0")
-        self.bath_rotate_z_l = QtGui.QLabel("Z: ")
-        self.bath_rotate_z_e = QtGui.QLineEdit("0")
+        self.bath_rotate_layout = QtWidgets.QHBoxLayout()
+        self.bath_rotate_label = QtWidgets.QLabel(__("Rotate: "))
+        self.bath_rotate_x_l = QtWidgets.QLabel("X: ")
+        self.bath_rotate_x_e = QtWidgets.QLineEdit("0")
+        self.bath_rotate_y_l = QtWidgets.QLabel("Y: ")
+        self.bath_rotate_y_e = QtWidgets.QLineEdit("0")
+        self.bath_rotate_z_l = QtWidgets.QLabel("Z: ")
+        self.bath_rotate_z_e = QtWidgets.QLineEdit("0")
         for x in [self.bath_rotate_label,
                   self.bath_rotate_x_l,
                   self.bath_rotate_x_e,
@@ -128,14 +129,14 @@ class AddGEODialog(QtGui.QDialog):
                   self.bath_rotate_z_e, ]:
             self.bath_rotate_layout.addWidget(x)
 
-        self.bath_scale_layout = QtGui.QHBoxLayout()
-        self.bath_scale_label = QtGui.QLabel(__("Scale: "))
-        self.bath_scale_x_l = QtGui.QLabel("X: ")
-        self.bath_scale_x_e = QtGui.QLineEdit("1")
-        self.bath_scale_y_l = QtGui.QLabel("Y: ")
-        self.bath_scale_y_e = QtGui.QLineEdit("1")
-        self.bath_scale_z_l = QtGui.QLabel("Z: ")
-        self.bath_scale_z_e = QtGui.QLineEdit("1")
+        self.bath_scale_layout = QtWidgets.QHBoxLayout()
+        self.bath_scale_label = QtWidgets.QLabel(__("Scale: "))
+        self.bath_scale_x_l = QtWidgets.QLabel("X: ")
+        self.bath_scale_x_e = QtWidgets.QLineEdit("1")
+        self.bath_scale_y_l = QtWidgets.QLabel("Y: ")
+        self.bath_scale_y_e = QtWidgets.QLineEdit("1")
+        self.bath_scale_z_l = QtWidgets.QLabel("Z: ")
+        self.bath_scale_z_e = QtWidgets.QLineEdit("1")
         for x in [self.bath_scale_label,
                   self.bath_scale_x_l,
                   self.bath_scale_x_e,
@@ -145,15 +146,15 @@ class AddGEODialog(QtGui.QDialog):
                   self.bath_scale_z_e, ]:
             self.bath_scale_layout.addWidget(x)
 
-        self.bath_selection_layout = QtGui.QVBoxLayout()
-        self.bath_selection_enabled_chk = QtGui.QCheckBox(__("Enable selection"))
+        self.bath_selection_layout = QtWidgets.QVBoxLayout()
+        self.bath_selection_enabled_chk = QtWidgets.QCheckBox(__("Enable selection"))
 
-        self.bath_selection_point_layout = QtGui.QHBoxLayout()
-        self.bath_selection_point_label = QtGui.QLabel(__("Point: "))
-        self.bath_selection_point_x_l = QtGui.QLabel("X: ")
-        self.bath_selection_point_x_e = QtGui.QLineEdit("")
-        self.bath_selection_point_y_l = QtGui.QLabel("Y: ")
-        self.bath_selection_point_y_e = QtGui.QLineEdit("")
+        self.bath_selection_point_layout = QtWidgets.QHBoxLayout()
+        self.bath_selection_point_label = QtWidgets.QLabel(__("Point: "))
+        self.bath_selection_point_x_l = QtWidgets.QLabel("X: ")
+        self.bath_selection_point_x_e = QtWidgets.QLineEdit("")
+        self.bath_selection_point_y_l = QtWidgets.QLabel("Y: ")
+        self.bath_selection_point_y_e = QtWidgets.QLineEdit("")
         for x in [self.bath_selection_point_label,
                   self.bath_selection_point_x_l,
                   self.bath_selection_point_x_e,
@@ -162,12 +163,12 @@ class AddGEODialog(QtGui.QDialog):
                   ]:
             self.bath_selection_point_layout.addWidget(x)
 
-        self.bath_selection_size_layout = QtGui.QHBoxLayout()
-        self.bath_selection_size_label = QtGui.QLabel(__("Size: "))
-        self.bath_selection_size_x_l = QtGui.QLabel("X: ")
-        self.bath_selection_size_x_e = QtGui.QLineEdit("")
-        self.bath_selection_size_y_l = QtGui.QLabel("Y: ")
-        self.bath_selection_size_y_e = QtGui.QLineEdit("")
+        self.bath_selection_size_layout = QtWidgets.QHBoxLayout()
+        self.bath_selection_size_label = QtWidgets.QLabel(__("Size: "))
+        self.bath_selection_size_x_l = QtWidgets.QLabel("X: ")
+        self.bath_selection_size_x_e = QtWidgets.QLineEdit("")
+        self.bath_selection_size_y_l = QtWidgets.QLabel("Y: ")
+        self.bath_selection_size_y_e = QtWidgets.QLineEdit("")
         for x in [self.bath_selection_size_label,
                   self.bath_selection_size_x_l,
                   self.bath_selection_size_x_e,
@@ -183,24 +184,24 @@ class AddGEODialog(QtGui.QDialog):
         self.bath_selection_enabled_chk.toggled.connect(self.on_bath_selection_toggled)
         self.on_bath_selection_toggled()
 
-        self.bath_grid_options_header_label = QtGui.QLabel("<h4>{}</h4>".format("Grid configuration"))
+        self.bath_grid_options_header_label = QtWidgets.QLabel("<h4>{}</h4>".format("Grid configuration"))
 
-        self.bath_grid_dp_layout = QtGui.QHBoxLayout()
-        self.bath_grid_dp_label = QtGui.QLabel(__("Grid DP: "))
-        self.bath_grid_dp_x_e = QtGui.QLineEdit("1")
+        self.bath_grid_dp_layout = QtWidgets.QHBoxLayout()
+        self.bath_grid_dp_label = QtWidgets.QLabel(__("Grid DP: "))
+        self.bath_grid_dp_x_e = QtWidgets.QLineEdit("1")
         for x in [self.bath_grid_dp_label,
                   self.bath_grid_dp_x_e]:
             self.bath_grid_dp_layout.addWidget(x)
 
-        self.bath_initdomain_layout = QtGui.QVBoxLayout()
-        self.bath_initdomain_enabled_chk = QtGui.QCheckBox(__("Enable initdomain"))
+        self.bath_initdomain_layout = QtWidgets.QVBoxLayout()
+        self.bath_initdomain_enabled_chk = QtWidgets.QCheckBox(__("Enable initdomain"))
 
-        self.bath_initdomain_point_layout = QtGui.QHBoxLayout()
-        self.bath_initdomain_point_label = QtGui.QLabel(__("Point: "))
-        self.bath_initdomain_point_x_l = QtGui.QLabel("X: ")
-        self.bath_initdomain_point_x_e = QtGui.QLineEdit("")
-        self.bath_initdomain_point_y_l = QtGui.QLabel("Y: ")
-        self.bath_initdomain_point_y_e = QtGui.QLineEdit("")
+        self.bath_initdomain_point_layout = QtWidgets.QHBoxLayout()
+        self.bath_initdomain_point_label = QtWidgets.QLabel(__("Point: "))
+        self.bath_initdomain_point_x_l = QtWidgets.QLabel("X: ")
+        self.bath_initdomain_point_x_e = QtWidgets.QLineEdit("")
+        self.bath_initdomain_point_y_l = QtWidgets.QLabel("Y: ")
+        self.bath_initdomain_point_y_e = QtWidgets.QLineEdit("")
         for x in [self.bath_initdomain_point_label,
                   self.bath_initdomain_point_x_l,
                   self.bath_initdomain_point_x_e,
@@ -209,12 +210,12 @@ class AddGEODialog(QtGui.QDialog):
                   ]:
             self.bath_initdomain_point_layout.addWidget(x)
 
-        self.bath_initdomain_size_layout = QtGui.QHBoxLayout()
-        self.bath_initdomain_size_label = QtGui.QLabel(__("Size: "))
-        self.bath_initdomain_size_x_l = QtGui.QLabel("X: ")
-        self.bath_initdomain_size_x_e = QtGui.QLineEdit("")
-        self.bath_initdomain_size_y_l = QtGui.QLabel("Y: ")
-        self.bath_initdomain_size_y_e = QtGui.QLineEdit("")
+        self.bath_initdomain_size_layout = QtWidgets.QHBoxLayout()
+        self.bath_initdomain_size_label = QtWidgets.QLabel(__("Size: "))
+        self.bath_initdomain_size_x_l = QtWidgets.QLabel("X: ")
+        self.bath_initdomain_size_x_e = QtWidgets.QLineEdit("")
+        self.bath_initdomain_size_y_l = QtWidgets.QLabel("Y: ")
+        self.bath_initdomain_size_y_e = QtWidgets.QLineEdit("")
         for x in [self.bath_initdomain_size_label,
                   self.bath_initdomain_size_x_l,
                   self.bath_initdomain_size_x_e,
@@ -230,19 +231,19 @@ class AddGEODialog(QtGui.QDialog):
         self.bath_initdomain_enabled_chk.toggled.connect(self.on_bath_initdomain_toggled)
         self.on_bath_initdomain_toggled()
 
-        self.bath_expands_layout = QtGui.QVBoxLayout()
+        self.bath_expands_layout = QtWidgets.QVBoxLayout()
 
-        self.bath_xmin_layout = QtGui.QHBoxLayout()
-        self.bath_xmin_check = QtGui.QCheckBox()
-        self.bath_xmin_label = QtGui.QLabel(__("XMin: "))
-        self.bath_xmin_size_l = QtGui.QLabel("Size: ")
-        self.bath_xmin_size_e = QtGui.QLineEdit("")
-        self.bath_xmin_z_l = QtGui.QLabel("Z: ")
-        self.bath_xmin_z_e = QtGui.QLineEdit("")
-        self.bath_xmin_size2_l = QtGui.QLabel("Size2: ")
-        self.bath_xmin_size2_e = QtGui.QLineEdit("")
-        self.bath_xmin_z2_l = QtGui.QLabel("Z2: ")
-        self.bath_xmin_z2_e = QtGui.QLineEdit("")
+        self.bath_xmin_layout = QtWidgets.QHBoxLayout()
+        self.bath_xmin_check = QtWidgets.QCheckBox()
+        self.bath_xmin_label = QtWidgets.QLabel(__("XMin: "))
+        self.bath_xmin_size_l = QtWidgets.QLabel("Size: ")
+        self.bath_xmin_size_e = QtWidgets.QLineEdit("")
+        self.bath_xmin_z_l = QtWidgets.QLabel("Z: ")
+        self.bath_xmin_z_e = QtWidgets.QLineEdit("")
+        self.bath_xmin_size2_l = QtWidgets.QLabel("Size2: ")
+        self.bath_xmin_size2_e = QtWidgets.QLineEdit("")
+        self.bath_xmin_z2_l = QtWidgets.QLabel("Z2: ")
+        self.bath_xmin_z2_e = QtWidgets.QLineEdit("")
         for x in [
             self.bath_xmin_check,
             self.bath_xmin_label,
@@ -257,17 +258,17 @@ class AddGEODialog(QtGui.QDialog):
         ]:
             self.bath_xmin_layout.addWidget(x)
 
-        self.bath_xmax_layout = QtGui.QHBoxLayout()
-        self.bath_xmax_check = QtGui.QCheckBox()
-        self.bath_xmax_label = QtGui.QLabel(__("XMax: "))
-        self.bath_xmax_size_l = QtGui.QLabel("Size: ")
-        self.bath_xmax_size_e = QtGui.QLineEdit("")
-        self.bath_xmax_z_l = QtGui.QLabel("Z: ")
-        self.bath_xmax_z_e = QtGui.QLineEdit("")
-        self.bath_xmax_size2_l = QtGui.QLabel("Size2: ")
-        self.bath_xmax_size2_e = QtGui.QLineEdit("")
-        self.bath_xmax_z2_l = QtGui.QLabel("Z2: ")
-        self.bath_xmax_z2_e = QtGui.QLineEdit("")
+        self.bath_xmax_layout = QtWidgets.QHBoxLayout()
+        self.bath_xmax_check = QtWidgets.QCheckBox()
+        self.bath_xmax_label = QtWidgets.QLabel(__("XMax: "))
+        self.bath_xmax_size_l = QtWidgets.QLabel("Size: ")
+        self.bath_xmax_size_e = QtWidgets.QLineEdit("")
+        self.bath_xmax_z_l = QtWidgets.QLabel("Z: ")
+        self.bath_xmax_z_e = QtWidgets.QLineEdit("")
+        self.bath_xmax_size2_l = QtWidgets.QLabel("Size2: ")
+        self.bath_xmax_size2_e = QtWidgets.QLineEdit("")
+        self.bath_xmax_z2_l = QtWidgets.QLabel("Z2: ")
+        self.bath_xmax_z2_e = QtWidgets.QLineEdit("")
         for x in [
             self.bath_xmax_check,
             self.bath_xmax_label,
@@ -282,17 +283,17 @@ class AddGEODialog(QtGui.QDialog):
         ]:
             self.bath_xmax_layout.addWidget(x)
 
-        self.bath_ymin_layout = QtGui.QHBoxLayout()
-        self.bath_ymin_check = QtGui.QCheckBox()
-        self.bath_ymin_label = QtGui.QLabel(__("YMin: "))
-        self.bath_ymin_size_l = QtGui.QLabel("Size: ")
-        self.bath_ymin_size_e = QtGui.QLineEdit("")
-        self.bath_ymin_z_l = QtGui.QLabel("Z: ")
-        self.bath_ymin_z_e = QtGui.QLineEdit("")
-        self.bath_ymin_size2_l = QtGui.QLabel("Size2: ")
-        self.bath_ymin_size2_e = QtGui.QLineEdit("")
-        self.bath_ymin_z2_l = QtGui.QLabel("Z2: ")
-        self.bath_ymin_z2_e = QtGui.QLineEdit("")
+        self.bath_ymin_layout = QtWidgets.QHBoxLayout()
+        self.bath_ymin_check = QtWidgets.QCheckBox()
+        self.bath_ymin_label = QtWidgets.QLabel(__("YMin: "))
+        self.bath_ymin_size_l = QtWidgets.QLabel("Size: ")
+        self.bath_ymin_size_e = QtWidgets.QLineEdit("")
+        self.bath_ymin_z_l = QtWidgets.QLabel("Z: ")
+        self.bath_ymin_z_e = QtWidgets.QLineEdit("")
+        self.bath_ymin_size2_l = QtWidgets.QLabel("Size2: ")
+        self.bath_ymin_size2_e = QtWidgets.QLineEdit("")
+        self.bath_ymin_z2_l = QtWidgets.QLabel("Z2: ")
+        self.bath_ymin_z2_e = QtWidgets.QLineEdit("")
         for x in [
             self.bath_ymin_check,
             self.bath_ymin_label,
@@ -307,17 +308,17 @@ class AddGEODialog(QtGui.QDialog):
         ]:
             self.bath_ymin_layout.addWidget(x)
 
-        self.bath_ymax_layout = QtGui.QHBoxLayout()
-        self.bath_ymax_check = QtGui.QCheckBox()
-        self.bath_ymax_label = QtGui.QLabel(__("YMax: "))
-        self.bath_ymax_size_l = QtGui.QLabel("Size: ")
-        self.bath_ymax_size_e = QtGui.QLineEdit("")
-        self.bath_ymax_z_l = QtGui.QLabel("Z: ")
-        self.bath_ymax_z_e = QtGui.QLineEdit("")
-        self.bath_ymax_size2_l = QtGui.QLabel("Size2: ")
-        self.bath_ymax_size2_e = QtGui.QLineEdit("")
-        self.bath_ymax_z2_l = QtGui.QLabel("Z2: ")
-        self.bath_ymax_z2_e = QtGui.QLineEdit("")
+        self.bath_ymax_layout = QtWidgets.QHBoxLayout()
+        self.bath_ymax_check = QtWidgets.QCheckBox()
+        self.bath_ymax_label = QtWidgets.QLabel(__("YMax: "))
+        self.bath_ymax_size_l = QtWidgets.QLabel("Size: ")
+        self.bath_ymax_size_e = QtWidgets.QLineEdit("")
+        self.bath_ymax_z_l = QtWidgets.QLabel("Z: ")
+        self.bath_ymax_z_e = QtWidgets.QLineEdit("")
+        self.bath_ymax_size2_l = QtWidgets.QLabel("Size2: ")
+        self.bath_ymax_size2_e = QtWidgets.QLineEdit("")
+        self.bath_ymax_z2_l = QtWidgets.QLabel("Z2: ")
+        self.bath_ymax_z2_e = QtWidgets.QLineEdit("")
         for x in [
             self.bath_ymax_check,
             self.bath_ymax_label,
@@ -345,14 +346,14 @@ class AddGEODialog(QtGui.QDialog):
         self.on_ymin_check()
         self.on_ymax_check()
 
-        self.bath_periodicx_layout = QtGui.QVBoxLayout()
-        self.bath_periodicx_enabled_chk = QtGui.QCheckBox(__("Enable periodicx"))
+        self.bath_periodicx_layout = QtWidgets.QVBoxLayout()
+        self.bath_periodicx_enabled_chk = QtWidgets.QCheckBox(__("Enable periodicx"))
 
-        self.bath_periodicx_rampwidth_layout = QtGui.QHBoxLayout()
-        self.bath_periodicx_rampwidth_x_l = QtGui.QLabel("Rampwidth: ")
-        self.bath_periodicx_rampwidth_x_e = QtGui.QLineEdit("0")
-        self.bath_periodicx_flatwidth_x_l = QtGui.QLabel("Flatwidth: ")
-        self.bath_periodicx_flatwidth_x_e = QtGui.QLineEdit("0")
+        self.bath_periodicx_rampwidth_layout = QtWidgets.QHBoxLayout()
+        self.bath_periodicx_rampwidth_x_l = QtWidgets.QLabel("Rampwidth: ")
+        self.bath_periodicx_rampwidth_x_e = QtWidgets.QLineEdit("0")
+        self.bath_periodicx_flatwidth_x_l = QtWidgets.QLabel("Flatwidth: ")
+        self.bath_periodicx_flatwidth_x_e = QtWidgets.QLineEdit("0")
         for x in [self.bath_periodicx_rampwidth_x_l,
                   self.bath_periodicx_rampwidth_x_e,
                   self.bath_periodicx_flatwidth_x_l,
@@ -365,14 +366,14 @@ class AddGEODialog(QtGui.QDialog):
         self.bath_periodicx_enabled_chk.toggled.connect(self.on_bath_periodicx_toggled)
         self.on_bath_periodicx_toggled()
 
-        self.bath_periodicy_layout = QtGui.QVBoxLayout()
-        self.bath_periodicy_enabled_chk = QtGui.QCheckBox(__("Enable periodicy"))
+        self.bath_periodicy_layout = QtWidgets.QVBoxLayout()
+        self.bath_periodicy_enabled_chk = QtWidgets.QCheckBox(__("Enable periodicy"))
 
-        self.bath_periodicy_rampwidth_layout = QtGui.QHBoxLayout()
-        self.bath_periodicy_rampwidth_x_l = QtGui.QLabel("Rampwidth: ")
-        self.bath_periodicy_rampwidth_x_e = QtGui.QLineEdit("0")
-        self.bath_periodicy_flatwidth_x_l = QtGui.QLabel("Flatwidth: ")
-        self.bath_periodicy_flatwidth_x_e = QtGui.QLineEdit("0")
+        self.bath_periodicy_rampwidth_layout = QtWidgets.QHBoxLayout()
+        self.bath_periodicy_rampwidth_x_l = QtWidgets.QLabel("Rampwidth: ")
+        self.bath_periodicy_rampwidth_x_e = QtWidgets.QLineEdit("0")
+        self.bath_periodicy_flatwidth_x_l = QtWidgets.QLabel("Flatwidth: ")
+        self.bath_periodicy_flatwidth_x_e = QtWidgets.QLineEdit("0")
         for x in [self.bath_periodicy_rampwidth_x_l,
                   self.bath_periodicy_rampwidth_x_e,
                   self.bath_periodicy_flatwidth_x_l,
@@ -385,17 +386,17 @@ class AddGEODialog(QtGui.QDialog):
         self.bath_periodicy_enabled_chk.toggled.connect(self.on_bath_periodicy_toggled)
         self.on_bath_periodicy_toggled()
 
-        self.bath_finalmove_layout = QtGui.QVBoxLayout()
-        self.bath_finalmove_enabled_chk = QtGui.QCheckBox(__("Enable finalmove"))
+        self.bath_finalmove_layout = QtWidgets.QVBoxLayout()
+        self.bath_finalmove_enabled_chk = QtWidgets.QCheckBox(__("Enable finalmove"))
 
-        self.bath_finalmove_data_layout = QtGui.QHBoxLayout()
-        self.bath_finalmove_label = QtGui.QLabel(__("Move grid: "))
-        self.bath_finalmove_x_l = QtGui.QLabel("X: ")
-        self.bath_finalmove_x_e = QtGui.QLineEdit("0")
-        self.bath_finalmove_y_l = QtGui.QLabel("Y: ")
-        self.bath_finalmove_y_e = QtGui.QLineEdit("0")
-        self.bath_finalmove_z_l = QtGui.QLabel("Z: ")
-        self.bath_finalmove_z_e = QtGui.QLineEdit("0")
+        self.bath_finalmove_data_layout = QtWidgets.QHBoxLayout()
+        self.bath_finalmove_label = QtWidgets.QLabel(__("Move grid: "))
+        self.bath_finalmove_x_l = QtWidgets.QLabel("X: ")
+        self.bath_finalmove_x_e = QtWidgets.QLineEdit("0")
+        self.bath_finalmove_y_l = QtWidgets.QLabel("Y: ")
+        self.bath_finalmove_y_e = QtWidgets.QLineEdit("0")
+        self.bath_finalmove_z_l = QtWidgets.QLabel("Z: ")
+        self.bath_finalmove_z_e = QtWidgets.QLineEdit("0")
         for x in [self.bath_finalmove_label,
                   self.bath_finalmove_x_l,
                   self.bath_finalmove_x_e,
@@ -428,16 +429,16 @@ class AddGEODialog(QtGui.QDialog):
         # END Bathymetry Options
 
         # Import object name
-        self.geo_objname_layout = QtGui.QHBoxLayout()
-        self.geo_objname_label = QtGui.QLabel(__("Import object name: "))
-        self.geo_objname_text = QtGui.QLineEdit("GEO-{}".format(uuid4()).replace("-", "_"))
+        self.geo_objname_layout = QtWidgets.QHBoxLayout()
+        self.geo_objname_label = QtWidgets.QLabel(__("Import object name: "))
+        self.geo_objname_text = QtWidgets.QLineEdit("GEO-{}".format(uuid4()).replace("-", "_"))
         for x in [self.geo_objname_label, self.geo_objname_text]:
             self.geo_objname_layout.addWidget(x)
         # End object name
 
         # Autofill
-        self.geo_autofil_layout = QtGui.QHBoxLayout()
-        self.geo_autofill_chck = QtGui.QCheckBox("Autofill")
+        self.geo_autofil_layout = QtWidgets.QHBoxLayout()
+        self.geo_autofill_chck = QtWidgets.QCheckBox("Autofill")
         self.geo_autofil_layout.addWidget(self.geo_autofill_chck)
 
         if self.geo_autofill_chck.isChecked():
@@ -458,9 +459,9 @@ class AddGEODialog(QtGui.QDialog):
         self.geo_group.setLayout(self.geo_group_layout)
 
         # Create button layout
-        self.geo_button_layout = QtGui.QHBoxLayout()
-        self.geo_button_ok = QtGui.QPushButton(__("Import"))
-        self.geo_button_cancel = QtGui.QPushButton(__("Cancel"))
+        self.geo_button_layout = QtWidgets.QHBoxLayout()
+        self.geo_button_ok = QtWidgets.QPushButton(__("Import"))
+        self.geo_button_cancel = QtWidgets.QPushButton(__("Cancel"))
         self.geo_button_cancel.clicked.connect(self.reject)
         self.geo_button_layout.addStretch(1)
         self.geo_button_layout.addWidget(self.geo_button_cancel)
@@ -802,7 +803,7 @@ class AddGEODialog(QtGui.QDialog):
 
     def geo_dialog_browse(self):
         """ Defines the browse button behaviour."""
-        file_name_temp, _ = QtGui.QFileDialog().getOpenFileName(get_fc_main_window(), __("Select GEO to import"), Case.the().info.last_used_directory, "STL Files (*.stl);;PLY Files (*.ply);;VTK Files (*.vtk);;XYZ Files (*.xyz)")
+        file_name_temp, _ = QtWidgets.QFileDialog().getOpenFileName(get_fc_main_window(), __("Select GEO to import"), Case.the().info.last_used_directory, "STL Files (*.stl);;PLY Files (*.ply);;VTK Files (*.vtk);;XYZ Files (*.xyz)")
         Case.the().info.update_last_used_directory(file_name_temp)
         if file_name_temp:
             self.geo_file_path.setText(file_name_temp)

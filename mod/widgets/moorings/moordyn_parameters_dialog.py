@@ -4,7 +4,8 @@
 
 from uuid import UUID
 
-from PySide import QtGui, QtCore
+# from PySide import QtGui, QtCore
+from PySide2 import QtCore, QtWidgets
 
 from mod.translation_tools import __
 from mod.enums import ObjectType
@@ -20,7 +21,7 @@ from mod.widgets.moorings.moordyn_body_configuration_dialog import MoorDynBodyCo
 from mod.widgets.moorings.moordyn_line_configuration_dialog import MoorDynLineConfigurationDialog
 
 
-class MoorDynBodyWidget(QtGui.QWidget):
+class MoorDynBodyWidget(QtWidgets.QWidget):
     """ Widget to embed in each element of the body list for the MoorDyn configuration dialog. """
 
     configure_clicked = QtCore.Signal(int)
@@ -28,13 +29,13 @@ class MoorDynBodyWidget(QtGui.QWidget):
     def __init__(self, obj_type: ObjectType, mk: int):
         super().__init__()
         self.setContentsMargins(0, 0, 0, 0)
-        self.root_layout: QtGui.QHBoxLayout = QtGui.QHBoxLayout()
+        self.root_layout: QtWidgets.QHBoxLayout = QtWidgets.QHBoxLayout()
         self.root_layout.setContentsMargins(5, 1, 5, 1)
         self.mk = mk
 
-        self.mk_label: QtGui.QLabel = QtGui.QLabel("{} - <b>{}</b>".format(obj_type.capitalize(), str(self.mk)))
+        self.mk_label: QtWidgets.QLabel = QtWidgets.QLabel("{} - <b>{}</b>".format(obj_type.capitalize(), str(self.mk)))
 
-        self.configure_button: QtGui.QPushButton = QtGui.QPushButton(__("Configure"))
+        self.configure_button: QtWidgets.QPushButton = QtWidgets.QPushButton(__("Configure"))
 
         self.root_layout.addWidget(self.mk_label)
         self.root_layout.addStretch(1)
@@ -45,7 +46,7 @@ class MoorDynBodyWidget(QtGui.QWidget):
         self.setLayout(self.root_layout)
 
 
-class MoorDynLineWidget(QtGui.QWidget):
+class MoorDynLineWidget(QtWidgets.QWidget):
     """ Widget to embed in each element of the line list for the MoorDyn configuration dialog. """
 
     configure_clicked = QtCore.Signal(UUID)
@@ -54,16 +55,16 @@ class MoorDynLineWidget(QtGui.QWidget):
     def __init__(self, line_id, row):
         super().__init__()
         self.setContentsMargins(0, 0, 0, 0)
-        self.root_layout: QtGui.QHBoxLayout = QtGui.QHBoxLayout()
+        self.root_layout: QtWidgets.QHBoxLayout = QtWidgets.QHBoxLayout()
         self.root_layout.setContentsMargins(5, 1, 5, 1)
 
         self.line_id = line_id
         self.row = row
 
-        self.label: QtGui.QLabel = QtGui.QLabel("Line {}".format(self.line_id))
+        self.label: QtWidgets.QLabel = QtWidgets.QLabel("Line {}".format(self.line_id))
 
-        self.configure_button: QtGui.QPushButton = QtGui.QPushButton(__("Configure"))
-        self.delete_button = QtGui.QPushButton(get_icon("trash.png"), None)
+        self.configure_button: QtWidgets.QPushButton = QtWidgets.QPushButton(__("Configure"))
+        self.delete_button = QtWidgets.QPushButton(get_icon("trash.png"), None)
 
         self.root_layout.addWidget(self.label)
         self.root_layout.addStretch(1)
@@ -76,7 +77,7 @@ class MoorDynLineWidget(QtGui.QWidget):
         self.setLayout(self.root_layout)
 
 
-class MoorDynParametersDialog(QtGui.QDialog):
+class MoorDynParametersDialog(QtWidgets.QDialog):
     """ DesignSPHysics MoorDyn Parameters Configuration Dialog. """
 
     def __init__(self, moordyn_parameters_data: MoorDynConfiguration):
@@ -86,69 +87,69 @@ class MoorDynParametersDialog(QtGui.QDialog):
         self.stored_configuration: MoorDynConfiguration = moordyn_parameters_data  # Can be None
 
         self.setMinimumSize(640, 480)
-        self.root_layout: QtGui.QVBoxLayout = QtGui.QVBoxLayout()
-        self.root_scroll: QtGui.QScrollArea = QtGui.QScrollArea()
+        self.root_layout: QtWidgets.QVBoxLayout = QtWidgets.QVBoxLayout()
+        self.root_scroll: QtWidgets.QScrollArea = QtWidgets.QScrollArea()
         self.root_scroll.setMinimumWidth(400)
         self.root_scroll.setWidgetResizable(True)
-        self.scroll_widget: QtGui.QWidget = QtGui.QWidget()
+        self.scroll_widget: QtWidgets.QWidget = QtWidgets.QWidget()
         self.scroll_widget.setMinimumWidth(400)
-        self.scroll_widget_layout: QtGui.QVBoxLayout = QtGui.QVBoxLayout()
+        self.scroll_widget_layout: QtWidgets.QVBoxLayout = QtWidgets.QVBoxLayout()
 
         # Solver options groupbox
-        self.solver_options_groupbox: QtGui.QGroupBox = QtGui.QGroupBox(__("Solver Options"))
-        self.solver_options_groupbox_layout: QtGui.QFormLayout = QtGui.QFormLayout()
+        self.solver_options_groupbox: QtWidgets.QGroupBox = QtWidgets.QGroupBox(__("Solver Options"))
+        self.solver_options_groupbox_layout: QtWidgets.QFormLayout = QtWidgets.QFormLayout()
         
-        self.dtM_line_edit: QtGui.QLineEdit = QtGui.QLineEdit()
-        self.dtM_line_check: QtGui.QCheckBox = QtGui.QCheckBox(__("Auto"))
-        self.dtM_line_edit_layout: QtGui.QHBoxLayout = QtGui.QHBoxLayout()
+        self.dtM_line_edit: QtWidgets.QLineEdit = QtWidgets.QLineEdit()
+        self.dtM_line_check: QtWidgets.QCheckBox = QtWidgets.QCheckBox(__("Auto"))
+        self.dtM_line_edit_layout: QtWidgets.QHBoxLayout = QtWidgets.QHBoxLayout()
         self.dtM_line_edit_layout.setContentsMargins(0, 0, 0, 0)
         self.dtM_line_edit_layout.addWidget(self.dtM_line_edit)
         self.dtM_line_edit_layout.addWidget(self.dtM_line_check)
 
-        self.water_depth_line_edit: QtGui.QLineEdit = QtGui.QLineEdit()
-        self.freesurface_line_edit: QtGui.QLineEdit = QtGui.QLineEdit()
+        self.water_depth_line_edit: QtWidgets.QLineEdit = QtWidgets.QLineEdit()
+        self.freesurface_line_edit: QtWidgets.QLineEdit = QtWidgets.QLineEdit()
 
-        self.kBot_line_edit: QtGui.QLineEdit = QtGui.QLineEdit()
-        self.kBot_line_check: QtGui.QCheckBox = QtGui.QCheckBox(__("Auto"))
-        self.kBot_line_edit_layout: QtGui.QHBoxLayout = QtGui.QHBoxLayout()
+        self.kBot_line_edit: QtWidgets.QLineEdit = QtWidgets.QLineEdit()
+        self.kBot_line_check: QtWidgets.QCheckBox = QtWidgets.QCheckBox(__("Auto"))
+        self.kBot_line_edit_layout: QtWidgets.QHBoxLayout = QtWidgets.QHBoxLayout()
         self.kBot_line_edit_layout.setContentsMargins(0, 0, 0, 0)
         self.kBot_line_edit_layout.addWidget(self.kBot_line_edit)
         self.kBot_line_edit_layout.addWidget(self.kBot_line_check)
 
-        self.cBot_line_edit: QtGui.QLineEdit = QtGui.QLineEdit()
-        self.cBot_line_check: QtGui.QCheckBox = QtGui.QCheckBox(__("Auto"))
-        self.cBot_line_edit_layout: QtGui.QHBoxLayout = QtGui.QHBoxLayout()
+        self.cBot_line_edit: QtWidgets.QLineEdit = QtWidgets.QLineEdit()
+        self.cBot_line_check: QtWidgets.QCheckBox = QtWidgets.QCheckBox(__("Auto"))
+        self.cBot_line_edit_layout: QtWidgets.QHBoxLayout = QtWidgets.QHBoxLayout()
         self.cBot_line_edit_layout.setContentsMargins(0, 0, 0, 0)
         self.cBot_line_edit_layout.addWidget(self.cBot_line_edit)
         self.cBot_line_edit_layout.addWidget(self.cBot_line_check)
 
-        self.fricdamp_line_edit: QtGui.QLineEdit = QtGui.QLineEdit()
-        self.statdynfricscale_line_edit: QtGui.QLineEdit = QtGui.QLineEdit()
-        self.dtIC_line_edit: QtGui.QLineEdit = QtGui.QLineEdit()
-        self.cdScaleIC_line_edit: QtGui.QLineEdit = QtGui.QLineEdit()
-        self.tmaxIC_line_edit: QtGui.QLineEdit = QtGui.QLineEdit()
-        self.timeMax_line_edit: QtGui.QLineEdit = QtGui.QLineEdit()
-        self.dtM_label: QtGui.QLabel = QtGui.QLabel(__("Mooring model time step. (s):"))
+        self.fricdamp_line_edit: QtWidgets.QLineEdit = QtWidgets.QLineEdit()
+        self.statdynfricscale_line_edit: QtWidgets.QLineEdit = QtWidgets.QLineEdit()
+        self.dtIC_line_edit: QtWidgets.QLineEdit = QtWidgets.QLineEdit()
+        self.cdScaleIC_line_edit: QtWidgets.QLineEdit = QtWidgets.QLineEdit()
+        self.tmaxIC_line_edit: QtWidgets.QLineEdit = QtWidgets.QLineEdit()
+        self.timeMax_line_edit: QtWidgets.QLineEdit = QtWidgets.QLineEdit()
+        self.dtM_label: QtWidgets.QLabel = QtWidgets.QLabel(__("Mooring model time step. (s):"))
         self.dtM_label.setToolTip(__("Desired mooring model time step. (default=1e-4)\nXML Name: dtM"))
-        self.water_depth_label: QtGui.QLabel = QtGui.QLabel(__("Water Depth (m):"))
+        self.water_depth_label: QtWidgets.QLabel = QtWidgets.QLabel(__("Water Depth (m):"))
         self.water_depth_label.setToolTip(__("Gravitational constant. (default=9.81)\nXML Name: waterDepth"))
-        self.freesurface_label: QtGui.QLabel = QtGui.QLabel(__("Free Surface (m):"))
+        self.freesurface_label: QtWidgets.QLabel = QtWidgets.QLabel(__("Free Surface (m):"))
         self.freesurface_label.setToolTip(__("Z position of the water free surface.(default=0\nXML Name: waterDepth"))
-        self.kBot_label: QtGui.QLabel = QtGui.QLabel(__("Bottom stiffness constant (Pa/m):"))
+        self.kBot_label: QtWidgets.QLabel = QtWidgets.QLabel(__("Bottom stiffness constant (Pa/m):"))
         self.kBot_label.setToolTip(__("Bottom stiffness constant. (default=3.0e6)\nXML Name: kBot"))
-        self.cBot_label: QtGui.QLabel = QtGui.QLabel(__("Bottom damping constant (Pa*s/m):"))
+        self.cBot_label: QtWidgets.QLabel = QtWidgets.QLabel(__("Bottom damping constant (Pa*s/m):"))
         self.cBot_label.setToolTip(__("Bottom damping constant. (default=3.0e5)\nXML Name: cBot"))
-        self.fricdamp_label: QtGui.QLabel = QtGui.QLabel(__("Damping coefficient:"))
+        self.fricdamp_label: QtWidgets.QLabel = QtWidgets.QLabel(__("Damping coefficient:"))
         self.fricdamp_label.setToolTip(__("Damping coefficient used to model the friction at speeds near zero. (default=200.0)\nXML Name: fricDamp"))
-        self.statdynfricscale_label: QtGui.QLabel = QtGui.QLabel(__("Ratio between static/dynamic friction:"))
+        self.statdynfricscale_label: QtWidgets.QLabel = QtWidgets.QLabel(__("Ratio between static/dynamic friction:"))
         self.statdynfricscale_label.setToolTip(__("Ratio between static and dynamic friction (mu_static/mu_dynamic). (default=1.0)\nXML Name: statDynFricScale"))
-        self.dtIC_label: QtGui.QLabel = QtGui.QLabel(__("Convergence analysis time step (s):"))
+        self.dtIC_label: QtWidgets.QLabel = QtWidgets.QLabel(__("Convergence analysis time step (s):"))
         self.dtIC_label.setToolTip(__("Period to analyze convergence of dynamic relaxation for initial conditions. (default=1.0)\nXML Name: dtIC"))
-        self.cdScaleIC_label: QtGui.QLabel = QtGui.QLabel(__("Factor to scale drag coefficients:"))
+        self.cdScaleIC_label: QtWidgets.QLabel = QtWidgets.QLabel(__("Factor to scale drag coefficients:"))
         self.cdScaleIC_label.setToolTip(__("Factor to scale drag coefficients during dynamic relaxation for initial conditions. (default=5)\nXML Name: cdScaleIC"))
-        self.tmaxIC_label: QtGui.QLabel = QtGui.QLabel(__("Max. time for initial conditions (s):"))
+        self.tmaxIC_label: QtWidgets.QLabel = QtWidgets.QLabel(__("Max. time for initial conditions (s):"))
         self.tmaxIC_label.setToolTip(__("Maximum time for initial conditions without convergence. (default=0.5)\nXML Name: tmaxIC"))
-        self.timeMax_label: QtGui.QLabel = QtGui.QLabel(__("Simulation Time (s):"))
+        self.timeMax_label: QtWidgets.QLabel = QtWidgets.QLabel(__("Simulation Time (s):"))
         self.timeMax_label.setToolTip(__("Time of simulation(s)\nXML Name: timeMax"))
 
         self.solver_options_groupbox_layout.setLabelAlignment(QtCore.Qt.AlignLeft)
@@ -166,10 +167,10 @@ class MoorDynParametersDialog(QtGui.QDialog):
         self.solver_options_groupbox.setLayout(self.solver_options_groupbox_layout)
 
         # Body configuration groupbox
-        self.body_configuration_groupbox: QtGui.QGroupBox = QtGui.QGroupBox(__("Body configuration"))
-        self.body_configuration_groupbox_layout: QtGui.QVBoxLayout = QtGui.QVBoxLayout()
-        self.body_configuration_table: QtGui.QTableWidget = QtGui.QTableWidget()
-        self.body_configuration_table.horizontalHeader().setResizeMode(QtGui.QHeaderView.Stretch)
+        self.body_configuration_groupbox: QtWidgets.QGroupBox = QtWidgets.QGroupBox(__("Body configuration"))
+        self.body_configuration_groupbox_layout: QtWidgets.QVBoxLayout = QtWidgets.QVBoxLayout()
+        self.body_configuration_table: QtWidgets.QTableWidget = QtWidgets.QTableWidget()
+        self.body_configuration_table.horizontalHeader().setResizeMode(QtWidgets.QHeaderView.Stretch)
         self.body_configuration_table.horizontalHeader().hide()
         self.body_configuration_table.verticalHeader().hide()
         self.body_configuration_table.setRowCount(0)
@@ -178,71 +179,71 @@ class MoorDynParametersDialog(QtGui.QDialog):
         self.body_configuration_groupbox.setLayout(self.body_configuration_groupbox_layout)
 
         # Line default configuration groupbox
-        self.line_default_configuration_groupbox: QtGui.QGroupBox = QtGui.QGroupBox(__("Line default configuration"))
-        self.line_default_configuration_groupbox_layout: QtGui.QFormLayout = QtGui.QFormLayout()
-        self.ea_line_edit: QtGui.QLineEdit = QtGui.QLineEdit()
-        self.diameter_line_edit: QtGui.QLineEdit = QtGui.QLineEdit()
-        self.massDenInAir_line_edit: QtGui.QLineEdit = QtGui.QLineEdit()
+        self.line_default_configuration_groupbox: QtWidgets.QGroupBox = QtWidgets.QGroupBox(__("Line default configuration"))
+        self.line_default_configuration_groupbox_layout: QtWidgets.QFormLayout = QtWidgets.QFormLayout()
+        self.ea_line_edit: QtWidgets.QLineEdit = QtWidgets.QLineEdit()
+        self.diameter_line_edit: QtWidgets.QLineEdit = QtWidgets.QLineEdit()
+        self.massDenInAir_line_edit: QtWidgets.QLineEdit = QtWidgets.QLineEdit()
 
-        self.ba_line_edit: QtGui.QLineEdit = QtGui.QLineEdit()
-        self.ba_line_check: QtGui.QCheckBox = QtGui.QCheckBox(__("Auto"))
-        self.ba_line_edit_layout: QtGui.QHBoxLayout = QtGui.QHBoxLayout()
+        self.ba_line_edit: QtWidgets.QLineEdit = QtWidgets.QLineEdit()
+        self.ba_line_check: QtWidgets.QCheckBox = QtWidgets.QCheckBox(__("Auto"))
+        self.ba_line_edit_layout: QtWidgets.QHBoxLayout = QtWidgets.QHBoxLayout()
         self.ba_line_edit_layout.setContentsMargins(0, 0, 0, 0)
         self.ba_line_edit_layout.addWidget(self.ba_line_edit)
         self.ba_line_edit_layout.addWidget(self.ba_line_check)
 
-        self.can_line_edit: QtGui.QLineEdit = QtGui.QLineEdit()
-        self.can_line_check: QtGui.QCheckBox = QtGui.QCheckBox(__("Auto"))
-        self.can_line_edit_layout: QtGui.QHBoxLayout = QtGui.QHBoxLayout()
+        self.can_line_edit: QtWidgets.QLineEdit = QtWidgets.QLineEdit()
+        self.can_line_check: QtWidgets.QCheckBox = QtWidgets.QCheckBox(__("Auto"))
+        self.can_line_edit_layout: QtWidgets.QHBoxLayout = QtWidgets.QHBoxLayout()
         self.can_line_edit_layout.setContentsMargins(0, 0, 0, 0)
         self.can_line_edit_layout.addWidget(self.can_line_edit)
         self.can_line_edit_layout.addWidget(self.can_line_check)
 
-        self.cat_line_edit: QtGui.QLineEdit = QtGui.QLineEdit()
-        self.cat_line_check: QtGui.QCheckBox = QtGui.QCheckBox(__("Auto"))
-        self.cat_line_edit_layout: QtGui.QHBoxLayout = QtGui.QHBoxLayout()
+        self.cat_line_edit: QtWidgets.QLineEdit = QtWidgets.QLineEdit()
+        self.cat_line_check: QtWidgets.QCheckBox = QtWidgets.QCheckBox(__("Auto"))
+        self.cat_line_edit_layout: QtWidgets.QHBoxLayout = QtWidgets.QHBoxLayout()
         self.cat_line_edit_layout.setContentsMargins(0, 0, 0, 0)
         self.cat_line_edit_layout.addWidget(self.cat_line_edit)
         self.cat_line_edit_layout.addWidget(self.cat_line_check)
 
-        self.cdn_line_edit: QtGui.QLineEdit = QtGui.QLineEdit()
-        self.cdn_line_check: QtGui.QCheckBox = QtGui.QCheckBox(__("Auto"))
-        self.cdn_line_edit_layout: QtGui.QHBoxLayout = QtGui.QHBoxLayout()
+        self.cdn_line_edit: QtWidgets.QLineEdit = QtWidgets.QLineEdit()
+        self.cdn_line_check: QtWidgets.QCheckBox = QtWidgets.QCheckBox(__("Auto"))
+        self.cdn_line_edit_layout: QtWidgets.QHBoxLayout = QtWidgets.QHBoxLayout()
         self.cdn_line_edit_layout.setContentsMargins(0, 0, 0, 0)
         self.cdn_line_edit_layout.addWidget(self.cdn_line_edit)
         self.cdn_line_edit_layout.addWidget(self.cdn_line_check)
 
-        self.cdt_line_edit: QtGui.QLineEdit = QtGui.QLineEdit()
-        self.cdt_line_check: QtGui.QCheckBox = QtGui.QCheckBox(__("Auto"))
-        self.cdt_line_edit_layout: QtGui.QHBoxLayout = QtGui.QHBoxLayout()
+        self.cdt_line_edit: QtWidgets.QLineEdit = QtWidgets.QLineEdit()
+        self.cdt_line_check: QtWidgets.QCheckBox = QtWidgets.QCheckBox(__("Auto"))
+        self.cdt_line_edit_layout: QtWidgets.QHBoxLayout = QtWidgets.QHBoxLayout()
         self.cdt_line_edit_layout.setContentsMargins(0, 0, 0, 0)
         self.cdt_line_edit_layout.addWidget(self.cdt_line_edit)
         self.cdt_line_edit_layout.addWidget(self.cdt_line_check)
 
-        self.breaktension_line_edit: QtGui.QLineEdit = QtGui.QLineEdit()
-        self.breaktension_line_check: QtGui.QCheckBox = QtGui.QCheckBox(__("Auto"))
-        self.breaktension_line_edit_layout: QtGui.QHBoxLayout = QtGui.QHBoxLayout()
+        self.breaktension_line_edit: QtWidgets.QLineEdit = QtWidgets.QLineEdit()
+        self.breaktension_line_check: QtWidgets.QCheckBox = QtWidgets.QCheckBox(__("Auto"))
+        self.breaktension_line_edit_layout: QtWidgets.QHBoxLayout = QtWidgets.QHBoxLayout()
         self.breaktension_line_edit_layout.setContentsMargins(0, 0, 0, 0)
         self.breaktension_line_edit_layout.addWidget(self.breaktension_line_edit)
         self.breaktension_line_edit_layout.addWidget(self.breaktension_line_check)
 
-        self.ea_label: QtGui.QLabel = QtGui.QLabel(__("Line Stiffness (N):"))
+        self.ea_label: QtWidgets.QLabel = QtWidgets.QLabel(__("Line Stiffness (N):"))
         self.ea_label.setToolTip(__("Line stiffness, product of elasticity modulus and cross-sectional area.\nXML Name: ea"))
-        self.diameter_label: QtGui.QLabel = QtGui.QLabel(__("Diameter (m):"))
+        self.diameter_label: QtWidgets.QLabel = QtWidgets.QLabel(__("Diameter (m):"))
         self.diameter_label.setToolTip(__("Volume-equivalent diameter of the line.\nXML Name: diameter"))
-        self.massDenInAir_label: QtGui.QLabel = QtGui.QLabel(__("Mass per unit length (kg/m):"))
+        self.massDenInAir_label: QtWidgets.QLabel = QtWidgets.QLabel(__("Mass per unit length (kg/m):"))
         self.massDenInAir_label.setToolTip(__("Mass per unit length of the line.\nXML Name: massDenInAir"))
-        self.ba_label: QtGui.QLabel = QtGui.QLabel(__("Line internal damping (Ns):"))
+        self.ba_label: QtWidgets.QLabel = QtWidgets.QLabel(__("Line internal damping (Ns):"))
         self.ba_label.setToolTip(__("Line internal damping (BA/-zeta). (default=-0.8)\nXML Name: ba"))
-        self.can_label: QtGui.QLabel = QtGui.QLabel(__("Transverse added mass coefficient:"))
+        self.can_label: QtWidgets.QLabel = QtWidgets.QLabel(__("Transverse added mass coefficient:"))
         self.can_label.setToolTip(__("Transverse added mass coefficient (with respect to line displacement). (default=1.0)\nXML Name: can"))
-        self.cat_label: QtGui.QLabel = QtGui.QLabel(__("Tangential added mass coefficient:"))
+        self.cat_label: QtWidgets.QLabel = QtWidgets.QLabel(__("Tangential added mass coefficient:"))
         self.cat_label.setToolTip(__("Tangential added mass coefficient (with respect to line displacement). (default=0.0)\nXML Name: cat"))
-        self.cdn_label: QtGui.QLabel = QtGui.QLabel(__("Transverse drag coefficient:"))
+        self.cdn_label: QtWidgets.QLabel = QtWidgets.QLabel(__("Transverse drag coefficient:"))
         self.cdn_label.setToolTip(__("Transverse drag coefficient (with respect to frontal area, d*l). (default=1.6)\nXML Name: cdn"))
-        self.cdt_label: QtGui.QLabel = QtGui.QLabel(__("Tangential drag coefficient:"))
+        self.cdt_label: QtWidgets.QLabel = QtWidgets.QLabel(__("Tangential drag coefficient:"))
         self.cdt_label.setToolTip(__("Tangential drag coefficient (with respect to surface area, π*d*l). (default=0.05)\nXML Name: cdt"))
-        self.breaktension_label: QtGui.QLabel = QtGui.QLabel(__("Maximum tension for the lines:"))
+        self.breaktension_label: QtWidgets.QLabel = QtWidgets.QLabel(__("Maximum tension for the lines:"))
         self.breaktension_label.setToolTip(__("Maximum value of tension for the lines. value=0 Break Tension is not used. (default=0)\nXML Name: breaktension"))
 
         self.line_default_configuration_groupbox_layout.setLabelAlignment(QtCore.Qt.AlignLeft)
@@ -258,22 +259,22 @@ class MoorDynParametersDialog(QtGui.QDialog):
         self.line_default_configuration_groupbox.setLayout(self.line_default_configuration_groupbox_layout)
 
         # Lines groupbox
-        self.lines_groupbox: QtGui.QGroupBox = QtGui.QGroupBox(__("Lines"))
-        self.lines_groupbox_layout: QtGui.QVBoxLayout = QtGui.QVBoxLayout()
-        self.lines_table: QtGui.QTableWidget = QtGui.QTableWidget()
+        self.lines_groupbox: QtWidgets.QGroupBox = QtWidgets.QGroupBox(__("Lines"))
+        self.lines_groupbox_layout: QtWidgets.QVBoxLayout = QtWidgets.QVBoxLayout()
+        self.lines_table: QtWidgets.QTableWidget = QtWidgets.QTableWidget()
         self.lines_table.setRowCount(0)
         self.lines_table.setColumnCount(1)
-        self.lines_table.horizontalHeader().setResizeMode(QtGui.QHeaderView.Stretch)
+        self.lines_table.horizontalHeader().setResizeMode(QtWidgets.QHeaderView.Stretch)
         self.lines_table.horizontalHeader().hide()
         self.lines_table.verticalHeader().hide()
-        self.add_line_button: QtGui.QPushButton = QtGui.QPushButton(__("Add a new Line"))
+        self.add_line_button: QtWidgets.QPushButton = QtWidgets.QPushButton(__("Add a new Line"))
         self.lines_groupbox_layout.addWidget(self.lines_table)
         self.lines_groupbox_layout.addWidget(self.add_line_button)
         self.lines_groupbox.setLayout(self.lines_groupbox_layout)
 
         # Bottom button row
-        self.bottom_button_layout: QtGui.QHBoxLayout = QtGui.QHBoxLayout()
-        self.ok_button: QtGui.QPushButton = QtGui.QPushButton(__("OK"))
+        self.bottom_button_layout: QtWidgets.QHBoxLayout = QtWidgets.QHBoxLayout()
+        self.ok_button: QtWidgets.QPushButton = QtWidgets.QPushButton(__("OK"))
 
         self.bottom_button_layout.addStretch(1)
         self.bottom_button_layout.addWidget(self.ok_button)

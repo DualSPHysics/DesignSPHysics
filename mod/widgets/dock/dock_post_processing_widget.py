@@ -2,7 +2,8 @@
 # -*- coding: utf-8 -*-
 """DesignSPHysics Dock Post Processing Widget """
 
-from PySide import QtGui
+# from PySide import QtGui
+from PySide2 import QtWidgets
 
 from mod.translation_tools import __
 from mod.freecad_tools import get_fc_main_window
@@ -15,28 +16,28 @@ from mod.widgets.postprocessing.isosurface_dialog import IsoSurfaceDialog
 from mod.widgets.postprocessing.flowtool_dialog import FlowToolDialog
 
 
-class DockPostProcessingWidget(QtGui.QWidget):
+class DockPostProcessingWidget(QtWidgets.QWidget):
     """DesignSPHysics Dock Post Processing Widget """
 
     def __init__(self, parent=None):
         super().__init__(parent=parent)
 
         # Post processing section scaffolding
-        self.main_layout = QtGui.QVBoxLayout()
+        self.main_layout = QtWidgets.QVBoxLayout()
         self.main_layout.setContentsMargins(0, 0, 0, 0)
 
-        self.title_label = QtGui.QLabel("<b>{}</b>".format(__("Post-processing")))
+        self.title_label = QtWidgets.QLabel("<b>{}</b>".format(__("Post-processing")))
         self.title_label.setWordWrap(True)
 
-        self.first_row_layout = QtGui.QHBoxLayout()
-        self.second_row_layout = QtGui.QHBoxLayout()
+        self.first_row_layout = QtWidgets.QHBoxLayout()
+        self.second_row_layout = QtWidgets.QHBoxLayout()
 
-        self.partvtk_button = QtGui.QPushButton(__("PartVTK"))
-        self.computeforces_button = QtGui.QPushButton(__("ComputeForces"))
-        self.isosurface_button = QtGui.QPushButton(__("IsoSurface"))
-        self.floatinginfo_button = QtGui.QPushButton(__("FloatingInfo"))
-        self.measuretool_button = QtGui.QPushButton(__("MeasureTool"))
-        self.flowtool_button = QtGui.QPushButton(__("FlowTool"))
+        self.partvtk_button = QtWidgets.QPushButton(__("PartVTK"))
+        self.computeforces_button = QtWidgets.QPushButton(__("ComputeForces"))
+        self.isosurface_button = QtWidgets.QPushButton(__("IsoSurface"))
+        self.floatinginfo_button = QtWidgets.QPushButton(__("FloatingInfo"))
+        self.measuretool_button = QtWidgets.QPushButton(__("MeasureTool"))
+        self.flowtool_button = QtWidgets.QPushButton(__("FlowTool"))
 
         self.partvtk_button.setToolTip(__("Opens the PartVTK tool."))
         self.computeforces_button.setToolTip(__("Opens the ComputeForces tool."))

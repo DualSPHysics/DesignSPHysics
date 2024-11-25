@@ -5,7 +5,8 @@
 import glob
 from os import path
 
-from PySide import QtGui
+# from PySide import QtGui
+from PySide2 import QtWidgets
 
 from mod.translation_tools import __
 from mod.gui_tools import h_line_generator
@@ -16,7 +17,7 @@ from mod.dataobjects.ml_piston_2d import MLPiston2D
 from mod.dataobjects.ml_piston_2d_veldata import MLPiston2DVeldata
 
 
-class MLPiston2DConfigDialog(QtGui.QDialog):
+class MLPiston2DConfigDialog(QtWidgets.QDialog):
     """ A Dialog to configure an MLPiston2D configuration. """
 
     def __init__(self, mk=None, mlpiston2d=None, parent=None):
@@ -25,48 +26,48 @@ class MLPiston2DConfigDialog(QtGui.QDialog):
         self.temp_mlpiston2d = mlpiston2d if mlpiston2d else MLPiston2D()
         self.mlpiston2d = mlpiston2d
 
-        self.main_layout = QtGui.QVBoxLayout()
-        self.data_layout = QtGui.QVBoxLayout()
-        self.button_layout = QtGui.QHBoxLayout()
+        self.main_layout = QtWidgets.QVBoxLayout()
+        self.data_layout = QtWidgets.QVBoxLayout()
+        self.button_layout = QtWidgets.QHBoxLayout()
 
-        self.mk_label = QtGui.QLabel(__("MK to use: {}").format(self.mk))
+        self.mk_label = QtWidgets.QLabel(__("MK to use: {}").format(self.mk))
 
-        self.incz_layout = QtGui.QHBoxLayout()
-        self.incz_label = QtGui.QLabel(__("Z offset (m):"))
-        self.incz_input = QtGui.QLineEdit()
+        self.incz_layout = QtWidgets.QHBoxLayout()
+        self.incz_label = QtWidgets.QLabel(__("Z offset (m):"))
+        self.incz_input = QtWidgets.QLineEdit()
 
         for x in [self.incz_label, self.incz_input]:
             self.incz_layout.addWidget(x)
 
-        self.smooth_layout = QtGui.QHBoxLayout()
-        self.smooth_label = QtGui.QLabel(__("Smooth motion level (Z, Y):"))
-        self.smooth_z = QtGui.QLineEdit()
-        self.smooth_y = QtGui.QLineEdit()
+        self.smooth_layout = QtWidgets.QHBoxLayout()
+        self.smooth_label = QtWidgets.QLabel(__("Smooth motion level (Z, Y):"))
+        self.smooth_z = QtWidgets.QLineEdit()
+        self.smooth_y = QtWidgets.QLineEdit()
 
         for x in [self.smooth_label, self.smooth_z, self.smooth_y]:
             self.smooth_layout.addWidget(x)
 
-        self.veldata_groupbox = QtGui.QGroupBox(__("Velocity data"))
-        self.veldata_groupbox_layout = QtGui.QVBoxLayout()
+        self.veldata_groupbox = QtWidgets.QGroupBox(__("Velocity data"))
+        self.veldata_groupbox_layout = QtWidgets.QVBoxLayout()
 
-        self.veldata_filevelx_layout = QtGui.QHBoxLayout()
-        self.veldata_filevelx_label = QtGui.QLabel(__("File series"))
-        self.veldata_filevelx_input = QtGui.QLineEdit()
-        self.veldata_filevelx_browse = QtGui.QPushButton("...")
+        self.veldata_filevelx_layout = QtWidgets.QHBoxLayout()
+        self.veldata_filevelx_label = QtWidgets.QLabel(__("File series"))
+        self.veldata_filevelx_input = QtWidgets.QLineEdit()
+        self.veldata_filevelx_browse = QtWidgets.QPushButton("...")
         for x in [self.veldata_filevelx_label, self.veldata_filevelx_input, self.veldata_filevelx_browse]:
             self.veldata_filevelx_layout.addWidget(x)
 
-        self.veldata_files_label = QtGui.QLabel(__("No files selected"))
+        self.veldata_files_label = QtWidgets.QLabel(__("No files selected"))
 
-        self.veldata_posy_layout = QtGui.QHBoxLayout()
-        self.veldata_posy_label = QtGui.QLabel(__("Y positions (separated by commas):"))
-        self.veldata_posy_input = QtGui.QLineEdit()
+        self.veldata_posy_layout = QtWidgets.QHBoxLayout()
+        self.veldata_posy_label = QtWidgets.QLabel(__("Y positions (separated by commas):"))
+        self.veldata_posy_input = QtWidgets.QLineEdit()
         for x in [self.veldata_posy_label, self.veldata_posy_input]:
             self.veldata_posy_layout.addWidget(x)
 
-        self.veldata_timedataini_layout = QtGui.QHBoxLayout()
-        self.veldata_timedataini_label = QtGui.QLabel(__("Time offsets (separated by commas):"))
-        self.veldata_timedataini_input = QtGui.QLineEdit()
+        self.veldata_timedataini_layout = QtWidgets.QHBoxLayout()
+        self.veldata_timedataini_label = QtWidgets.QLabel(__("Time offsets (separated by commas):"))
+        self.veldata_timedataini_input = QtWidgets.QLineEdit()
         for x in [self.veldata_timedataini_label, self.veldata_timedataini_input]:
             self.veldata_timedataini_layout.addWidget(x)
 
@@ -80,8 +81,8 @@ class MLPiston2DConfigDialog(QtGui.QDialog):
             self.data_layout.addLayout(x)
         self.data_layout.addWidget(self.veldata_groupbox)
 
-        self.delete_button = QtGui.QPushButton(__("Delete piston configuration"))
-        self.apply_button = QtGui.QPushButton(__("Apply this configuration"))
+        self.delete_button = QtWidgets.QPushButton(__("Delete piston configuration"))
+        self.apply_button = QtWidgets.QPushButton(__("Apply this configuration"))
         self.button_layout.addStretch(1)
         self.button_layout.addWidget(self.delete_button)
         self.button_layout.addWidget(self.apply_button)
@@ -141,7 +142,7 @@ class MLPiston2DConfigDialog(QtGui.QDialog):
 
     def on_browse(self):
         """ Opens a file browser to select the external velocity data, then parses it and fills the dialog with the information. """
-        filename, _ = QtGui.QFileDialog.getOpenFileName(self, __("Open a file from the serie"), Case.the().info.last_used_directory, "External velocity data (*_x*_y*.csv)")
+        filename, _ = QtWidgets.QFileDialog.getOpenFileName(self, __("Open a file from the serie"), Case.the().info.last_used_directory, "External velocity data (*_x*_y*.csv)")
         Case.the().info.update_last_used_directory(filename)
         if not filename:
             return

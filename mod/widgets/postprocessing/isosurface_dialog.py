@@ -2,7 +2,8 @@
 # -*- coding: utf-8 -*-
 """DesignSPHysics IsoSurface Config and Execution Dialog."""
 
-from PySide import QtGui
+# from PySide import QtGui
+from PySide2 import QtWidgets
 
 from mod.translation_tools import __
 from mod.post_processing_tools import isosurface_export
@@ -10,7 +11,7 @@ from mod.post_processing_tools import isosurface_export
 from mod.dataobjects.case import Case
 
 
-class IsoSurfaceDialog(QtGui.QDialog):
+class IsoSurfaceDialog(QtWidgets.QDialog):
     """ DesignSPHysics IsoSurface Config and Execution Dialog. """
 
     def __init__(self, post_processing_widget, parent=None):
@@ -20,35 +21,35 @@ class IsoSurfaceDialog(QtGui.QDialog):
 
         self.setModal(False)
         self.setWindowTitle(__("IsoSurface Tool"))
-        self.isosurface_tool_layout = QtGui.QVBoxLayout()
+        self.isosurface_tool_layout = QtWidgets.QVBoxLayout()
 
-        self.isosfc_filename_layout = QtGui.QHBoxLayout()
-        self.isosfc_parameters_layout = QtGui.QHBoxLayout()
-        self.isosfc_buttons_layout = QtGui.QHBoxLayout()
+        self.isosfc_filename_layout = QtWidgets.QHBoxLayout()
+        self.isosfc_parameters_layout = QtWidgets.QHBoxLayout()
+        self.isosfc_buttons_layout = QtWidgets.QHBoxLayout()
 
-        self.isosfc_selector_layout = QtGui.QHBoxLayout()
-        self.isosfc_selector_label = QtGui.QLabel(__("Save: "))
-        self.isosfc_selector = QtGui.QComboBox()
+        self.isosfc_selector_layout = QtWidgets.QHBoxLayout()
+        self.isosfc_selector_label = QtWidgets.QLabel(__("Save: "))
+        self.isosfc_selector = QtWidgets.QComboBox()
         self.isosfc_selector.insertItems(0, ["Surface", "Slice"])
         self.isosfc_selector_layout.addWidget(self.isosfc_selector_label)
         self.isosfc_selector_layout.addWidget(self.isosfc_selector)
 
-        self.isosfc_file_name_label = QtGui.QLabel(__("File name"))
-        self.isosfc_file_name_text = QtGui.QLineEdit()
+        self.isosfc_file_name_label = QtWidgets.QLabel(__("File name"))
+        self.isosfc_file_name_text = QtWidgets.QLineEdit()
         self.isosfc_file_name_text.setText("FileIso")
         self.isosfc_filename_layout.addWidget(self.isosfc_file_name_label)
         self.isosfc_filename_layout.addWidget(self.isosfc_file_name_text)
 
-        self.isosfc_parameters_label = QtGui.QLabel(__("Additional Parameters"))
-        self.isosfc_parameters_text = QtGui.QLineEdit()
+        self.isosfc_parameters_label = QtWidgets.QLabel(__("Additional Parameters"))
+        self.isosfc_parameters_text = QtWidgets.QLineEdit()
         self.isosfc_parameters_layout.addWidget(self.isosfc_parameters_label)
         self.isosfc_parameters_layout.addWidget(self.isosfc_parameters_text)
 
-        self.isosfc_open_at_end = QtGui.QCheckBox("Open with ParaView")
+        self.isosfc_open_at_end = QtWidgets.QCheckBox("Open with ParaView")
         self.isosfc_open_at_end.setEnabled(Case.the().executable_paths.paraview != "")
 
-        self.isosfc_export_button = QtGui.QPushButton(__("Export"))
-        self.isosfc_cancel_button = QtGui.QPushButton(__("Cancel"))
+        self.isosfc_export_button = QtWidgets.QPushButton(__("Export"))
+        self.isosfc_cancel_button = QtWidgets.QPushButton(__("Cancel"))
         self.isosfc_buttons_layout.addWidget(self.isosfc_export_button)
         self.isosfc_buttons_layout.addWidget(self.isosfc_cancel_button)
 

@@ -10,7 +10,8 @@ import FreeCAD
 import FreeCADGui
 import Draft
 
-from PySide import QtGui
+# from PySide import QtGui
+from PySide2 import QtWidgets
 
 from mod.translation_tools import __
 from mod.stdout_tools import log, error, debug
@@ -24,8 +25,8 @@ from mod.enums import FreeCADObjectType, FreeCADDisplayMode
 
 def delete_existing_docks():
     """ Searches for existing docks related to DesignSPHysics destroys them. """
-    for previous_dock in [get_fc_main_window().findChild(QtGui.QDockWidget, MAIN_WIDGET_INTERNAL_NAME),
-                          get_fc_main_window().findChild(QtGui.QDockWidget, PROP_WIDGET_INTERNAL_NAME)]:
+    for previous_dock in [get_fc_main_window().findChild(QtWidgets.QDockWidget, MAIN_WIDGET_INTERNAL_NAME),
+                          get_fc_main_window().findChild(QtWidgets.QDockWidget, PROP_WIDGET_INTERNAL_NAME)]:
         if previous_dock:
             debug("Removing previous {} dock".format(APP_NAME))
             previous_dock.setParent(None)
@@ -146,7 +147,7 @@ def prompt_close_all_documents(prompt: bool = True) -> bool:
         If accepted, close all the current documents and return True, else returns False. """
     if prompt:
         user_selection = ok_cancel_dialog(APP_NAME, "All documents will be closed")
-    if not prompt or user_selection == QtGui.QMessageBox.Ok:
+    if not prompt or user_selection == QtWidgets.QMessageBox.Ok:
         # Close all current documents.
         log(__("Closing all current documents"))
         for doc in FreeCAD.listDocuments().keys():

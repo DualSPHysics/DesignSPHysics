@@ -2,7 +2,8 @@
 # -*- coding: utf-8 -*-
 """DesignSPHysics Link Hinge Edit Dialog """
 
-from PySide import QtGui
+# from PySide import QtGui
+from PySide2 import QtWidgets
 
 from mod.translation_tools import __
 from mod.dialog_tools import error_dialog
@@ -10,7 +11,7 @@ from mod.dialog_tools import error_dialog
 from mod.dataobjects.case import Case
 
 
-class LinkHingeEdit(QtGui.QDialog):
+class LinkHingeEdit(QtWidgets.QDialog):
     """ Defines Link hinge window dialog """
 
     def __init__(self, link_hinge_id, bodies_widgets, parent=None):
@@ -21,7 +22,7 @@ class LinkHingeEdit(QtGui.QDialog):
 
         # Title
         self.setWindowTitle(__("Link hinge configuration"))
-        self.link_hinge_edit_layout = QtGui.QVBoxLayout()
+        self.link_hinge_edit_layout = QtWidgets.QVBoxLayout()
 
         # Find the link hinge for which the button was pressed
         target_link_hinge = None
@@ -36,20 +37,20 @@ class LinkHingeEdit(QtGui.QDialog):
             return
 
         # Elements that interact
-        self.body_layout = QtGui.QHBoxLayout()
-        self.body_one_label = QtGui.QLabel(__("Body 1: "))
-        self.body_one_line_edit = QtGui.QComboBox()
+        self.body_layout = QtWidgets.QHBoxLayout()
+        self.body_one_label = QtWidgets.QLabel(__("Body 1: "))
+        self.body_one_line_edit = QtWidgets.QComboBox()
         self.body_one_line_edit.insertItems(0, [str(target_link_hinge.idbody1)])
         for body in bodies_widgets:
             if body.object_check.isChecked() and body.object_name != str(target_link_hinge.idbody1):
                 self.body_one_line_edit.insertItems(0, [body.object_name])
-        self.body_two_label = QtGui.QLabel(__("Body 2: "))
-        self.body_two_line_edit = QtGui.QComboBox()
+        self.body_two_label = QtWidgets.QLabel(__("Body 2: "))
+        self.body_two_line_edit = QtWidgets.QComboBox()
         self.body_two_line_edit.insertItems(0, [str(target_link_hinge.idbody2)])
         for body in bodies_widgets:
             if body.object_check.isChecked() and body.object_name != str(target_link_hinge.idbody2):
                 self.body_two_line_edit.insertItems(0, [body.object_name])
-        self.body_to_body_label = QtGui.QLabel(__("to"))
+        self.body_to_body_label = QtWidgets.QLabel(__("to"))
 
         self.body_layout.addWidget(self.body_one_label)
         self.body_layout.addWidget(self.body_one_line_edit)
@@ -61,14 +62,14 @@ class LinkHingeEdit(QtGui.QDialog):
         self.link_hinge_edit_layout.addLayout(self.body_layout)
 
         # Points for rotation
-        self.rotpoints_layout = QtGui.QHBoxLayout()
-        self.rotpoints_label = QtGui.QLabel(__("Points for rotation: "))
-        self.rotpoints_x_label = QtGui.QLabel(__("X"))
-        self.rotpoints_x_line_edit = QtGui.QLineEdit(str(target_link_hinge.rotpoint[0]))
-        self.rotpoints_y_label = QtGui.QLabel(__("Y"))
-        self.rotpoints_y_line_edit = QtGui.QLineEdit(str(target_link_hinge.rotpoint[1]))
-        self.rotpoints_z_label = QtGui.QLabel(__("Z"))
-        self.rotpoints_z_line_edit = QtGui.QLineEdit(str(target_link_hinge.rotpoint[2]))
+        self.rotpoints_layout = QtWidgets.QHBoxLayout()
+        self.rotpoints_label = QtWidgets.QLabel(__("Points for rotation: "))
+        self.rotpoints_x_label = QtWidgets.QLabel(__("X"))
+        self.rotpoints_x_line_edit = QtWidgets.QLineEdit(str(target_link_hinge.rotpoint[0]))
+        self.rotpoints_y_label = QtWidgets.QLabel(__("Y"))
+        self.rotpoints_y_line_edit = QtWidgets.QLineEdit(str(target_link_hinge.rotpoint[1]))
+        self.rotpoints_z_label = QtWidgets.QLabel(__("Z"))
+        self.rotpoints_z_line_edit = QtWidgets.QLineEdit(str(target_link_hinge.rotpoint[2]))
 
         self.rotpoints_layout.addWidget(self.rotpoints_label)
         self.rotpoints_layout.addWidget(self.rotpoints_x_label)
@@ -81,14 +82,14 @@ class LinkHingeEdit(QtGui.QDialog):
         self.link_hinge_edit_layout.addLayout(self.rotpoints_layout)
 
         # Vector direction for rotation
-        self.rotvector_layout = QtGui.QHBoxLayout()
-        self.rotvector_label = QtGui.QLabel(__("Vector direction: "))
-        self.rotvector_x_label = QtGui.QLabel(__("X"))
-        self.rotvector_x_line_edit = QtGui.QLineEdit(str(target_link_hinge.rotvector[0]))
-        self.rotvector_y_label = QtGui.QLabel(__("Y"))
-        self.rotvector_y_line_edit = QtGui.QLineEdit(str(target_link_hinge.rotvector[1]))
-        self.rotvector_z_label = QtGui.QLabel(__("Z"))
-        self.rotvector_z_line_edit = QtGui.QLineEdit(str(target_link_hinge.rotvector[2]))
+        self.rotvector_layout = QtWidgets.QHBoxLayout()
+        self.rotvector_label = QtWidgets.QLabel(__("Vector direction: "))
+        self.rotvector_x_label = QtWidgets.QLabel(__("X"))
+        self.rotvector_x_line_edit = QtWidgets.QLineEdit(str(target_link_hinge.rotvector[0]))
+        self.rotvector_y_label = QtWidgets.QLabel(__("Y"))
+        self.rotvector_y_line_edit = QtWidgets.QLineEdit(str(target_link_hinge.rotvector[1]))
+        self.rotvector_z_label = QtWidgets.QLabel(__("Z"))
+        self.rotvector_z_line_edit = QtWidgets.QLineEdit(str(target_link_hinge.rotvector[2]))
 
         self.rotvector_layout.addWidget(self.rotvector_label)
         self.rotvector_layout.addWidget(self.rotvector_x_label)
@@ -101,12 +102,12 @@ class LinkHingeEdit(QtGui.QDialog):
         self.link_hinge_edit_layout.addLayout(self.rotvector_layout)
 
         # Torsion options
-        self.torsion_stiffness_layout = QtGui.QHBoxLayout()
-        self.torsion_damping_layout = QtGui.QHBoxLayout()
-        self.stiffness_label = QtGui.QLabel(__("Stiffness (Nm/rad):"))
-        self.stiffness_line_edit = QtGui.QLineEdit(str(target_link_hinge.stiffness))
-        self.damping_label = QtGui.QLabel(__("Damping (Nms/rad):"))
-        self.damping_line_edit = QtGui.QLineEdit(str(target_link_hinge.damping))
+        self.torsion_stiffness_layout = QtWidgets.QHBoxLayout()
+        self.torsion_damping_layout = QtWidgets.QHBoxLayout()
+        self.stiffness_label = QtWidgets.QLabel(__("Stiffness (Nm/rad):"))
+        self.stiffness_line_edit = QtWidgets.QLineEdit(str(target_link_hinge.stiffness))
+        self.damping_label = QtWidgets.QLabel(__("Damping (Nms/rad):"))
+        self.damping_line_edit = QtWidgets.QLineEdit(str(target_link_hinge.damping))
 
         self.torsion_stiffness_layout.addWidget(self.stiffness_label)
         self.torsion_stiffness_layout.addWidget(self.stiffness_line_edit)
@@ -117,11 +118,11 @@ class LinkHingeEdit(QtGui.QDialog):
         self.link_hinge_edit_layout.addLayout(self.torsion_damping_layout)
 
         # Buttons
-        self.ok_button = QtGui.QPushButton("Save")
+        self.ok_button = QtWidgets.QPushButton("Save")
         self.ok_button.clicked.connect(self.on_save)
-        self.cancel_button = QtGui.QPushButton("Cancel")
+        self.cancel_button = QtWidgets.QPushButton("Cancel")
         self.cancel_button.clicked.connect(self.on_cancel)
-        self.button_layout = QtGui.QHBoxLayout()
+        self.button_layout = QtWidgets.QHBoxLayout()
         self.button_layout.addStretch(1)
 
         self.button_layout.addWidget(self.ok_button)

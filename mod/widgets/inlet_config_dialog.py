@@ -3,7 +3,8 @@
 """DesignSPHysics Inlet/Oulet Configuration Dialog """
 
 from uuid import UUID
-from PySide import QtCore, QtGui
+# from PySide import QtCore, QtGui
+from PySide2 import QtCore, QtWidgets
 
 from mod.translation_tools import __
 from mod.freecad_tools import get_fc_main_window
@@ -18,7 +19,7 @@ from mod.dataobjects.inletoutlet.inlet_outlet_config import InletOutletConfig
 from mod.dataobjects.inletoutlet.inlet_outlet_zone import InletOutletZone
 
 
-class InletZoneWidget(QtGui.QWidget):
+class InletZoneWidget(QtWidgets.QWidget):
     """ A widget representing a zone to embed in the zones table. """
 
     on_edit = QtCore.Signal(UUID)
@@ -26,10 +27,10 @@ class InletZoneWidget(QtGui.QWidget):
 
     def __init__(self, index, io_object):
         super().__init__()
-        self.layout = QtGui.QHBoxLayout()
-        self.label = QtGui.QLabel(__("Inlet/Outlet Zone {}").format(str(index + 1)))
-        self.edit_button = QtGui.QPushButton(__("Edit"))
-        self.delete_button = QtGui.QPushButton(__("Delete"))
+        self.layout = QtWidgets.QHBoxLayout()
+        self.label = QtWidgets.QLabel(__("Inlet/Outlet Zone {}").format(str(index + 1)))
+        self.edit_button = QtWidgets.QPushButton(__("Edit"))
+        self.delete_button = QtWidgets.QPushButton(__("Delete"))
 
         self.edit_button.clicked.connect(lambda _=False, i=io_object.id: self.on_edit.emit(i))
         self.delete_button.clicked.connect(lambda _=False, obj=io_object: self.on_delete.emit(obj))
@@ -41,7 +42,7 @@ class InletZoneWidget(QtGui.QWidget):
         self.setLayout(self.layout)
 
 
-class InletConfigDialog(QtGui.QDialog):
+class InletConfigDialog(QtWidgets.QDialog):
     """ Defines the Inlet/Outlet dialog window.
        Modifies data dictionary passed as parameter. """
 
@@ -60,18 +61,18 @@ class InletConfigDialog(QtGui.QDialog):
         self.setModal(False)
         self.setMinimumWidth(self.MINIMUM_WIDTH)
         self.setMinimumHeight(self.MINIMUM_HEIGHT)
-        self.main_layout = QtGui.QVBoxLayout()
+        self.main_layout = QtWidgets.QVBoxLayout()
 
         # Creates layout for content first options
-        self.io_options_layout = QtGui.QVBoxLayout()
+        self.io_options_layout = QtWidgets.QVBoxLayout()
 
         # Creates memory_resize option
-        self.memory_resize_layout = QtGui.QHBoxLayout()
-        self.memory_resize_size0_option = QtGui.QLabel(__("Initial Memory Resize: "))
-        self.memory_resize_size0_line_edit = QtGui.QLineEdit(str(self.inlet_outlet.memoryresize_size0))
+        self.memory_resize_layout = QtWidgets.QHBoxLayout()
+        self.memory_resize_size0_option = QtWidgets.QLabel(__("Initial Memory Resize: "))
+        self.memory_resize_size0_line_edit = QtWidgets.QLineEdit(str(self.inlet_outlet.memoryresize_size0))
 
-        self.memory_resize_size_option = QtGui.QLabel(__("Following Memory Resizes: "))
-        self.memory_resize_size_line_edit = QtGui.QLineEdit(str(self.inlet_outlet.memoryresize_size))
+        self.memory_resize_size_option = QtWidgets.QLabel(__("Following Memory Resizes: "))
+        self.memory_resize_size_line_edit = QtWidgets.QLineEdit(str(self.inlet_outlet.memoryresize_size))
 
         self.memory_resize_layout.addWidget(self.memory_resize_size0_option)
         self.memory_resize_layout.addWidget(self.memory_resize_size0_line_edit)
@@ -79,9 +80,9 @@ class InletConfigDialog(QtGui.QDialog):
         self.memory_resize_layout.addWidget(self.memory_resize_size_line_edit)
 
         # Creates extrapolate mode selector
-        self.useboxlimit_layout = QtGui.QHBoxLayout()
-        self.useboxlimit_option = QtGui.QLabel(__("Use BoxLimit: "))
-        self.useboxlimit_check = QtGui.QCheckBox()
+        self.useboxlimit_layout = QtWidgets.QHBoxLayout()
+        self.useboxlimit_option = QtWidgets.QLabel(__("Use BoxLimit: "))
+        self.useboxlimit_check = QtWidgets.QCheckBox()
         self.useboxlimit_check.setChecked(self.inlet_outlet.useboxlimit_enabled)
 
         self.useboxlimit_layout.addWidget(self.useboxlimit_option)
@@ -89,9 +90,9 @@ class InletConfigDialog(QtGui.QDialog):
         self.useboxlimit_layout.addStretch(1)
 
         # Creates extrapolate mode selector
-        self.extrapolatemode_layout = QtGui.QHBoxLayout()
-        self.extrapolatemode_option = QtGui.QLabel(__("Extrapolate mode: "))
-        self.extrapolatemode_combobox = QtGui.QComboBox()
+        self.extrapolatemode_layout = QtWidgets.QHBoxLayout()
+        self.extrapolatemode_option = QtWidgets.QLabel(__("Extrapolate mode: "))
+        self.extrapolatemode_combobox = QtWidgets.QComboBox()
         self.extrapolatemode_combobox.insertItems(0, [__("Fast-Single"), __("Single"), __("Double")])
         self.extrapolatemode_combobox.setCurrentIndex(self.inlet_outlet.extrapolatemode - 1)
 
@@ -100,9 +101,9 @@ class InletConfigDialog(QtGui.QDialog):
         self.extrapolatemode_layout.addStretch(1)
 
         # Creates use determlimit option
-        self.determlimit_layout = QtGui.QHBoxLayout()
-        self.determlimit_option = QtGui.QLabel(__("Determlimit: "))
-        self.determlimit_combobox = QtGui.QComboBox()
+        self.determlimit_layout = QtWidgets.QHBoxLayout()
+        self.determlimit_option = QtWidgets.QLabel(__("Determlimit: "))
+        self.determlimit_combobox = QtWidgets.QComboBox()
         self.determlimit_combobox.insertItems(0, [__("1e+3"), __("1e-3")])
         self.determlimit_combobox.setCurrentIndex(0 if self.inlet_outlet.determlimit == InletOutletDetermLimit.ZEROTH_ORDER else 1)
 
@@ -110,14 +111,14 @@ class InletConfigDialog(QtGui.QDialog):
         self.determlimit_layout.addWidget(self.determlimit_combobox)
         self.determlimit_layout.addStretch(1)
 
-        self.first_row_layout: QtGui.QHBoxLayout = QtGui.QHBoxLayout()
+        self.first_row_layout: QtWidgets.QHBoxLayout = QtWidgets.QHBoxLayout()
         self.first_row_layout.addLayout(self.extrapolatemode_layout)
         self.first_row_layout.addLayout(self.determlimit_layout)
         self.first_row_layout.addLayout(self.useboxlimit_layout)
 
         # Creates 2 main buttons
-        self.finish_button = QtGui.QPushButton(__("Close"))
-        self.button_layout = QtGui.QHBoxLayout()
+        self.finish_button = QtWidgets.QPushButton(__("Close"))
+        self.button_layout = QtWidgets.QHBoxLayout()
 
         self.finish_button.clicked.connect(self.on_finish)
 
@@ -125,18 +126,18 @@ class InletConfigDialog(QtGui.QDialog):
         self.button_layout.addWidget(self.finish_button)
 
         # Create the list for zones
-        self.zones_groupbox = QtGui.QGroupBox(__("Inlet/Outlet zones"))
-        self.zones_groupbox_layout = QtGui.QVBoxLayout()
-        self.io_zones_table = QtGui.QTableWidget()
+        self.zones_groupbox = QtWidgets.QGroupBox(__("Inlet/Outlet zones"))
+        self.zones_groupbox_layout = QtWidgets.QVBoxLayout()
+        self.io_zones_table = QtWidgets.QTableWidget()
         self.io_zones_table.setColumnCount(1)
-        self.io_zones_table.horizontalHeader().setResizeMode(QtGui.QHeaderView.Stretch)
+        self.io_zones_table.horizontalHeader().setResizeMode(QtWidgets.QHeaderView.Stretch)
         self.io_zones_table.verticalHeader().setDefaultSectionSize(self.MINIMUM_TABLE_SECTION_HEIGHT)
         self.io_zones_table.horizontalHeader().setVisible(False)
         self.io_zones_table.verticalHeader().setVisible(False)
 
         # Add button
-        self.add_button_layout = QtGui.QHBoxLayout()
-        self.add_zone_button = QtGui.QPushButton(__("Add a new zone..."))
+        self.add_button_layout = QtWidgets.QHBoxLayout()
+        self.add_zone_button = QtWidgets.QPushButton(__("Add a new zone..."))
         self.add_button_layout.addStretch(1)
         self.add_button_layout.addWidget(self.add_zone_button)
         self.add_zone_button.clicked.connect(self.on_add_zone)

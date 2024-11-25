@@ -2,7 +2,8 @@
 # -*- coding: utf-8 -*-
 """ DesignSPHysics MoorDyn Body Configuration Dialog. """
 
-from PySide import QtGui
+# from PySide import QtGui
+from PySide2 import QtWidgets
 
 from mod.translation_tools import __
 from mod.gui_tools import h_line_generator
@@ -10,7 +11,7 @@ from mod.gui_tools import h_line_generator
 from mod.dataobjects.moorings.moordyn.moordyn_body import MoorDynBody
 
 
-class MoorDynBodyConfigurationDialog(QtGui.QDialog):
+class MoorDynBodyConfigurationDialog(QtWidgets.QDialog):
     """ DesignSPHysics MoorDyn Body Configuration Dialog. """
 
     def __init__(self, body):
@@ -19,24 +20,24 @@ class MoorDynBodyConfigurationDialog(QtGui.QDialog):
 
         self.setWindowTitle(__("MoorDyn Body Configuration"))
         self.setMinimumWidth(440)
-        self.root_layout: QtGui.QVBoxLayout = QtGui.QVBoxLayout()
+        self.root_layout: QtWidgets.QVBoxLayout = QtWidgets.QVBoxLayout()
 
         # Label
-        self.reference_label: QtGui.QLable = QtGui.QLabel(__("Editing settings for reference (mkbound): <b>{}</b>").format(body.ref))
+        self.reference_label: QtWidgets.QLable = QtWidgets.QLabel(__("Editing settings for reference (mkbound): <b>{}</b>").format(body.ref))
 
         # Depth value introduction
-        self.depth_layout: QtGui.QHBoxLayout = QtGui.QHBoxLayout()
-        self.depth_label: QtGui.QLabel = QtGui.QLabel(__("Water depth: "))
-        self.depth_enable_check: QtGui.QCheckBox = QtGui.QCheckBox(__("Override"))
-        self.depth_value_line_edit: QtGui.QLineEdit = QtGui.QLineEdit()
+        self.depth_layout: QtWidgets.QHBoxLayout = QtWidgets.QHBoxLayout()
+        self.depth_label: QtWidgets.QLabel = QtWidgets.QLabel(__("Water depth: "))
+        self.depth_enable_check: QtWidgets.QCheckBox = QtWidgets.QCheckBox(__("Override"))
+        self.depth_value_line_edit: QtWidgets.QLineEdit = QtWidgets.QLineEdit()
         self.depth_layout.addWidget(self.depth_label)
         self.depth_layout.addStretch(1)
         self.depth_layout.addWidget(self.depth_enable_check)
         self.depth_layout.addWidget(self.depth_value_line_edit)
 
         # Bottom button row
-        self.button_layout: QtGui.QHBoxLayout = QtGui.QHBoxLayout()
-        self.ok_button: QtGui.QPushButton = QtGui.QPushButton(__("OK"))
+        self.button_layout: QtWidgets.QHBoxLayout = QtWidgets.QHBoxLayout()
+        self.ok_button: QtWidgets.QPushButton = QtWidgets.QPushButton(__("OK"))
         self.button_layout.addStretch(1)
         self.button_layout.addWidget(self.ok_button)
 
