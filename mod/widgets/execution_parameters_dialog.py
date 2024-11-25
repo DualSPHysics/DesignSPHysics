@@ -86,7 +86,7 @@ class ExecutionParametersDialog(QtWidgets.QDialog):
 
         self.verletsteps_input.focus.connect(self.on_help_focus)
 
-        self.verletsteps_validator = QtWidgets.QIntValidator(0, 9999, self.verletsteps_input)
+        self.verletsteps_validator = QtGui.QIntValidator(0, 9999, self.verletsteps_input)
         self.verletsteps_input.setText(str(Case.the().execution_parameters.verletsteps))
         self.verletsteps_input.setValidator(self.verletsteps_validator)
 
@@ -340,7 +340,7 @@ class ExecutionParametersDialog(QtWidgets.QDialog):
         self.dtallparticles_label = QtWidgets.QLabel(__("Velocity of particles: "))
         self.dtallparticles_input = QtWidgets.QLineEdit()
         self.dtallparticles_input.setMaxLength(1)
-        self.dtallparticles_validator = QtWidgets.QIntValidator(0, 1, self.dtallparticles_input)
+        self.dtallparticles_validator = QtGui.QIntValidator(0, 1, self.dtallparticles_input)
         self.dtallparticles_input.setText(str(Case.the().execution_parameters.dtallparticles))
         self.dtallparticles_input.setValidator(self.dtallparticles_validator)
         self.dtallparticles_label2 = QtWidgets.QLabel("[0, 1]")

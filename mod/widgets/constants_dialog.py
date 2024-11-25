@@ -176,7 +176,7 @@ class ConstantsDialog(QtWidgets.QDialog):
 
         self.rhopgradient_input.focus.connect(self.on_help_focus)
 
-        self.rhopgradient_validator = QtWidgets.QIntValidator(0, 10000, self.rhopgradient_input)
+        self.rhopgradient_validator = QtGui.QIntValidator(0, 10000, self.rhopgradient_input)
         self.rhopgradient_input.setText(str(Case.the().constants.rhopgradient))
         self.rhopgradient_input.setValidator(self.rhopgradient_validator)
 
@@ -204,7 +204,7 @@ class ConstantsDialog(QtWidgets.QDialog):
 
         self.hswl_input.focus.connect(self.on_help_focus)
 
-        self.hswl_validator = QtWidgets.QIntValidator(0, 10000, self.hswl_input)
+        self.hswl_validator = QtGui.QIntValidator(0, 10000, self.hswl_input)
         self.hswl_input.setText(str(Case.the().constants.hswl))
         self.hswl_input.setValidator(self.hswl_validator)
         self.hswl_label2 = QtWidgets.QLabel(__("metres"))
@@ -255,7 +255,7 @@ class ConstantsDialog(QtWidgets.QDialog):
 
         self.speedsystem_input.focus.connect(self.on_help_focus)
 
-        self.speedsystem_validator = QtWidgets.QIntValidator(0, 10000, self.speedsystem_input)
+        self.speedsystem_validator = QtGui.QIntValidator(0, 10000, self.speedsystem_input)
         self.speedsystem_input.setText(str(Case.the().constants.speedsystem))
         self.speedsystem_input.setValidator(self.speedsystem_validator)
         self.speedsystem_label2 = QtWidgets.QLabel("m/s")
@@ -306,7 +306,7 @@ class ConstantsDialog(QtWidgets.QDialog):
 
         self.speedsound_input.focus.connect(self.on_help_focus)
 
-        self.speedsound_validator = QtWidgets.QIntValidator(0, 10000, self.speedsound_input)
+        self.speedsound_validator = QtGui.QIntValidator(0, 10000, self.speedsound_input)
         self.speedsound_input.setText(str(Case.the().constants.speedsound))
         self.speedsound_input.setValidator(self.speedsound_validator)
         self.speedsound_label2 = QtWidgets.QLabel("m/s")
