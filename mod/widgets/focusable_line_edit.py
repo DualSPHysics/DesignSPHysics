@@ -3,10 +3,10 @@
 """DesignSPHysics Focusable LineEdit implementation."""
 
 # from PySide import QtCore, QtGui
-from PySide2 import QtCore, QtGui
+from PySide2 import QtCore, QtWidgets
 
 
-class FocusableLineEdit(QtGui.QLineEdit):
+class FocusableLineEdit(QtWidgets.QLineEdit):
     """ A LineEdit that fires a focus event when focusing it. """
     focus = QtCore.Signal(str)
     help_text = ""
@@ -20,5 +20,5 @@ class FocusableLineEdit(QtGui.QLineEdit):
 
     def focusInEvent(self, *args, **kwargs):
         """ Reimplements the QLineEdit focusInEvent and fires the focus signal. """
-        QtGui.QLineEdit.focusInEvent(self, *args, **kwargs)
+        QtWidgets.QLineEdit.focusInEvent(self, *args, **kwargs)
         self.focus.emit(self.help_text)
