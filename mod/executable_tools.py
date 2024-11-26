@@ -8,7 +8,8 @@ import stat as unix_stat
 from sys import platform
 import json
 
-from PySide import QtCore
+# from PySide import QtCore
+from PySide2 import QtCore
 
 import FreeCADGui
 

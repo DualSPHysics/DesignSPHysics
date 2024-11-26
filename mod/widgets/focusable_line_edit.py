@@ -2,7 +2,8 @@
 # -*- coding: utf-8 -*-
 """DesignSPHysics Focusable LineEdit implementation."""
 
-from PySide import QtCore, QtGui
+# from PySide import QtCore, QtGui
+from PySide2 import QtCore, QtGui
 
 
 class FocusableLineEdit(QtGui.QLineEdit):
