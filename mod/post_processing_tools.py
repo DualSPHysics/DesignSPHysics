@@ -4,7 +4,8 @@
 
 import subprocess
 
-from PySide import QtCore
+# from PySide import QtCore
+from PySide2 import QtCore
 
 from mod.translation_tools import __
 from mod.dialog_tools import error_dialog, info_dialog
