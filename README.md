@@ -8,8 +8,11 @@ Check the [Official Webpage](http://design.sphysics.org) for downloads and more 
 
 ## News
 ### Training courses
+ * [8th DualSPHysics Workshop](https://dual.sphysics.org/8thworkshop/), Ourense, Spain, on **27-29 January, 2026**.
+#### Past events
+ * [SPH modelling For Engineering applications](https://sites.google.com/view/hykudsph/home?authuser=0), Braunschweig, Germany, on **25-27 March 2025**.
  * [4th Hands-on course on experimental and numerical modelling of wave-structure interaction](https://sites.google.com/unifi.it/hands-on-course-2024), Florence, Italy, on **1-5 July 2024**.
- * [7th DualSPHysics Workshop](https://dual.sphysics.org/7thworkshop/), Politecnico di Bari, Italy, on **19-21 March, 2024**.
+ * [7th DualSPHysics Workshop](https://dual.sphysics.org/7thworkshop/), Bari, Italy, on **19-21 March, 2024**.
 
 ### Releases
  * [v0.7.0](https://github.com/DualSPHysics/DesignSPHysics/releases/tag/0.7.0) has been released (15-09-2023). See [CHANGELOG file](CHANGELOG.md)
