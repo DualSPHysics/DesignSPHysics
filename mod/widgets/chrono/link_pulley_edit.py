@@ -3,7 +3,7 @@
 """DesignSPHysics Link Pulley Edit Dialog """
 
 # from PySide import QtGui
-from PySide2 import QtWidgets
+from PySide6 import QtWidgets
 
 from mod.translation_tools import __
 from mod.dialog_tools import error_dialog

@@ -17,7 +17,7 @@ import FreeCAD
 import FreeCADGui
 
 # from PySide import QtGui, QtCore
-from PySide2 import QtCore, QtWidgets
+from PySide6 import QtCore, QtWidgets
 
 from mod.translation_tools import __
 from mod.freecad_tools import check_compatibility, document_count, prompt_close_all_documents, get_fc_main_window, get_fc_object

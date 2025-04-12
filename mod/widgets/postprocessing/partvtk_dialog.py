@@ -3,7 +3,7 @@
 """DesignSPHysics PartVTK Config and Execution Dialog."""
 
 # from PySide import QtGui, QtCore
-from PySide2 import QtCore, QtWidgets
+from PySide6 import QtCore, QtWidgets
 
 from mod.translation_tools import __
 from mod.post_processing_tools import partvtk_export

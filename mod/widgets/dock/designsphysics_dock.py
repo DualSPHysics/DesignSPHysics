@@ -3,7 +3,7 @@
 """Main DesignSPHysics Dock Widget """
 
 # from PySide import QtGui, QtCore
-from PySide2 import QtCore, QtWidgets
+from PySide6 import QtCore, QtWidgets
 
 from mod.gui_tools import h_line_generator
 from mod.freecad_tools import get_fc_main_window

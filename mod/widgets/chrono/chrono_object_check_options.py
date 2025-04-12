@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 """DesignSPHysics Chrono Object Check Options widget."""
 
-from PySide2 import QtWidgets
+from PySide6 import QtWidgets
 
 from mod.translation_tools import __
 

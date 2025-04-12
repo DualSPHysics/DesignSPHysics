@@ -4,7 +4,7 @@
 
 from uuid import UUID
 # from PySide import QtCore, QtGui
-from PySide2 import QtCore, QtWidgets
+from PySide6 import QtCore, QtWidgets
 
 from mod.translation_tools import __
 from mod.freecad_tools import get_fc_main_window

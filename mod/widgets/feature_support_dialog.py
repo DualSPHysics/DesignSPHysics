@@ -3,7 +3,7 @@
 """DesignSPHysics Setup Plugin Dialog """
 
 # from PySide import QtGui
-from PySide2 import QtWidgets
+from PySide6 import QtWidgets
 
 from mod.stdout_tools import debug
 from mod.translation_tools import __

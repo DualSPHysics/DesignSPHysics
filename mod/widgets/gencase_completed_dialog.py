@@ -5,7 +5,7 @@
 import subprocess
 
 # from PySide import QtCore, QtGui
-from PySide2 import QtCore, QtWidgets
+from PySide6 import QtCore, QtWidgets
 
 from mod.translation_tools import __
 from mod.dialog_tools import error_dialog

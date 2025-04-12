@@ -3,7 +3,7 @@
 """DesignSPHysics Dock DP Intro Widget """
 
 # from PySide import QtGui
-from PySide2 import QtWidgets, QtGui
+from PySide6 import QtWidgets, QtGui
 
 from mod.translation_tools import __
 

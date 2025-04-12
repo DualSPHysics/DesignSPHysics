@@ -1,0 +1,2 @@
+# The following files were created outside this installation path during the installation of this Addon on 2025-03-08 15:32:05.048100+00:00:
+/home/ubuntu/.var/app/org.freecad.FreeCAD/data/FreeCAD/Macro/DesignSPHysics.FCMacro
