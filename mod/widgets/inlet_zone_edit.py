@@ -3,10 +3,10 @@
 """DesignSPHysics Inlet Zone Configuration Dialog."""
 
 from mod.freecad_tools import get_fc_main_window
-from PySide2.QtWidgets import QVBoxLayout
+from PySide6.QtWidgets import QVBoxLayout
 from mod.dataobjects.awas_correction import AWASCorrection
 # from PySide import QtCore, QtGui
-from PySide2 import QtCore, QtWidgets
+from PySide6 import QtCore, QtWidgets
 
 from mod.translation_tools import __
 from mod.stdout_tools import debug

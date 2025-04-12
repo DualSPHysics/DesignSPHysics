@@ -3,7 +3,7 @@
 """DesignSPHysics Object Order widget"""
 
 # from PySide import QtGui
-from PySide2 import QtWidgets
+from PySide6 import QtWidgets
 
 from mod.translation_tools import __
 from mod.gui_tools import get_icon

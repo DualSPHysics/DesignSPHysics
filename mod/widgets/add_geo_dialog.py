@@ -6,7 +6,7 @@ from uuid import uuid4
 from tempfile import gettempdir
 
 # from PySide import QtCore, QtGui
-from PySide2 import QtCore, QtWidgets
+from PySide6 import QtCore, QtWidgets
 
 from mod.stdout_tools import debug
 from mod.file_tools import import_geo

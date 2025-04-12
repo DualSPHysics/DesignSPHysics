@@ -5,7 +5,7 @@
 import webbrowser
 
 # from PySide import QtGui
-from PySide2 import QtWidgets, QtGui
+from PySide6 import QtWidgets, QtGui
 
 from mod.gui_tools import get_icon
 from mod.translation_tools import __

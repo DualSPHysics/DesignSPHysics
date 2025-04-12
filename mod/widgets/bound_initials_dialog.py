@@ -5,7 +5,7 @@
 import FreeCADGui
 
 # from PySide import QtGui, QtCore
-from PySide2 import QtCore, QtWidgets
+from PySide6 import QtCore, QtWidgets
 
 from mod.translation_tools import __
 from mod.dialog_tools import info_dialog

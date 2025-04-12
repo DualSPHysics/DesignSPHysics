@@ -10,7 +10,7 @@ operations in DesignSPHysics.
 import os
 
 # from PySide import QtGui
-from PySide2 import QtWidgets, QtGui
+from PySide6 import QtWidgets, QtGui
 
 
 def h_line_generator() -> QtWidgets.QFrame:
@@ -33,5 +33,10 @@ def get_icon(file_name, return_only_path=False) -> QtGui.QIcon:
     """ Returns a QIcon to use with DesignSPHysics. Retrieves a file with filename (like image.png) from the images folder. """
     file_to_load = os.path.dirname(os.path.abspath(__file__)) + "/../images/{}".format(file_name)
     if os.path.isfile(file_to_load):
-        return file_to_load if return_only_path else QtGui.QIcon(file_to_load)
+        if return_only_path:
+            # Return only the path
+            return QtGui.QPixmap(file_to_load)
+        else:
+            # Return the icon
+            return QtGui.QIcon(file_to_load)
     raise IOError("File {} not found in images folder".format(file_name))

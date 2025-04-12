@@ -3,7 +3,7 @@
 """DesignSPHysics Object List Table Widget."""
 
 # from PySide import QtGui
-from PySide2 import QtWidgets
+from PySide6 import QtWidgets
 
 from mod.freecad_tools import get_fc_object
 from mod.translation_tools import __

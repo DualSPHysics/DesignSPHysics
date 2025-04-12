@@ -3,7 +3,7 @@
 """DesignSPHysics Relaxation Zone Uniform Config Dialog. """
 
 # from PySide import QtGui
-from PySide2 import QtWidgets
+from PySide6 import QtWidgets
 
 from mod.translation_tools import __
 from mod.freecad_tools import get_fc_main_window

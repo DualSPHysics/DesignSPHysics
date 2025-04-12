@@ -39,6 +39,9 @@ To execute DesignSPHysics just open the same Macro dialog and double click DualS
 ### Installing a development build
 Clone the branch that you like from this repository and rename the folder to 'DesignSPHysics'. Then copy the folder to the Mod folder of the FreeCAD installation directory. 
 
+> Note: in FreeCAD 1.0 - flatpak - the repo should be cloned here:
+`/home/ubuntu/.var/app/org.freecad.FreeCAD/data/FreeCAD/Mod/`
+
 By default, for example, in Windows, it is located in `%appdata%/FreeCAD/Mod` or in Linux in `~/.FreeCAD/Mod`
 
 Then copy the file `DesignSPHysics.FCMacro` of this repository into the FreeCAD macro directory (`%appdata%/FreeCAD/Macro` on Windows; `~/.FreeCAD/Macro` on GNU/Linux)

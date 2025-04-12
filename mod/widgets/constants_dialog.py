@@ -4,7 +4,7 @@
 
 
 # from PySide import QtCore, QtGui
-from PySide2 import QtCore, QtWidgets, QtGui
+from PySide6 import QtCore, QtWidgets, QtGui
 
 from mod.translation_tools import __
 from mod.stdout_tools import log

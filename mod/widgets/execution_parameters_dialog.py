@@ -3,7 +3,7 @@
 """DesignSPHysics Execution Parameters Configuration Dialog."""
 
 # from PySide import QtCore, QtGui
-from PySide2 import QtCore, QtGui, QtWidgets
+from PySide6 import QtCore, QtGui, QtWidgets
 
 from mod.translation_tools import __
 from mod.stdout_tools import log
