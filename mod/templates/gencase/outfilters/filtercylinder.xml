@@ -1,0 +1,5 @@
+		<filtercylinder operation="{operation}" inverse="{inverse}">
+			<point1 x="{point1[0]}" y="{point1[1]}" z="{point1[2]}" />
+            <point2 x="{point2[0]}" y="{point2[1]}" z="{point2[2]}" />
+			<radius x="{radius}" />{ftfollow}
+		</filtercylinder>

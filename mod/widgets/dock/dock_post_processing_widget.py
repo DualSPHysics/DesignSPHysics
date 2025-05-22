@@ -2,18 +2,14 @@
 # -*- coding: utf-8 -*-
 """DesignSPHysics Dock Post Processing Widget """
 
-# from PySide import QtGui
 from PySide2 import QtWidgets
-
-from mod.translation_tools import __
-from mod.freecad_tools import get_fc_main_window
-
-from mod.widgets.postprocessing.partvtk_dialog import PartVTKDialog
-from mod.widgets.postprocessing.computeforces_dialog import ComputeForcesDialog
-from mod.widgets.postprocessing.floatinginfo_dialog import FloatingInfoDialog
-from mod.widgets.postprocessing.measuretool_dialog import MeasureToolDialog
-from mod.widgets.postprocessing.isosurface_dialog import IsoSurfaceDialog
-from mod.widgets.postprocessing.flowtool_dialog import FlowToolDialog
+from mod.tools.translation_tools import __
+from mod.widgets.dock.postprocessing.computeforces_dialog import ComputeForcesDialog
+from mod.widgets.dock.postprocessing.floatinginfo_dialog import FloatingInfoDialog
+from mod.widgets.dock.postprocessing.flowtool_dialog import FlowToolDialog
+from mod.widgets.dock.postprocessing.isosurface_dialog import IsoSurfaceDialog
+from mod.widgets.dock.postprocessing.measuretool_dialog import MeasureToolDialog
+from mod.widgets.dock.postprocessing.partvtk_dialog import PartVTKDialog
 
 
 class DockPostProcessingWidget(QtWidgets.QWidget):
@@ -46,12 +42,12 @@ class DockPostProcessingWidget(QtWidgets.QWidget):
         self.isosurface_button.setToolTip(__("Opens the IsoSurface tool."))
         self.flowtool_button.setToolTip(__("Opens the FlowTool tool."))
 
-        self.partvtk_button.clicked.connect(lambda: PartVTKDialog(self, parent=get_fc_main_window()))
-        self.computeforces_button.clicked.connect(lambda: ComputeForcesDialog(self, parent=get_fc_main_window()))
-        self.floatinginfo_button.clicked.connect(lambda: FloatingInfoDialog(self, parent=get_fc_main_window()))
-        self.measuretool_button.clicked.connect(lambda: MeasureToolDialog(self, parent=get_fc_main_window()))
-        self.isosurface_button.clicked.connect(lambda: IsoSurfaceDialog(self, parent=get_fc_main_window()))
-        self.flowtool_button.clicked.connect(lambda: FlowToolDialog(self, parent=get_fc_main_window()))
+        self.partvtk_button.clicked.connect(lambda: PartVTKDialog(self, parent=None))
+        self.computeforces_button.clicked.connect(lambda: ComputeForcesDialog(self, parent=None))
+        self.floatinginfo_button.clicked.connect(lambda: FloatingInfoDialog(self, parent=None))
+        self.measuretool_button.clicked.connect(lambda: MeasureToolDialog(self, parent=None))
+        self.isosurface_button.clicked.connect(lambda: IsoSurfaceDialog(self, parent=None))
+        self.flowtool_button.clicked.connect(lambda: FlowToolDialog(self, parent=None))
 
         self.main_layout.addWidget(self.title_label)
         self.first_row_layout.addWidget(self.partvtk_button)
@@ -63,6 +59,8 @@ class DockPostProcessingWidget(QtWidgets.QWidget):
 
         self.main_layout.addLayout(self.first_row_layout)
         self.main_layout.addLayout(self.second_row_layout)
+
+        #self.main_layout.setSizeConstraint(QtWidgets.QLayout.SetFixedSize)
 
         self.setLayout(self.main_layout)
 

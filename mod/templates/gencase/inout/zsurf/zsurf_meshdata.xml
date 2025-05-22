@@ -1,0 +1,7 @@
+                        <savevtk value="{savevtk}" comment="Creates VTK files with Zsurf for each PART (default=false)" />
+                        <remove value="{remove}" comment="Removes particles above the Zsurf limit (default=false)" />
+                        <meshdata file="{meshdata[file]}" comment="Zsurf data from mesh-data file (CSV or binary)." units_comment="m">
+                                <initialtime v="{meshdata[initial_time]}" comment="Defines the initial time of mesh data (default=0)" />
+                                <!-- <timeloop tbegin="{meshdata[timeloop_tbegin]}" tend="{meshdata[timeloop_tend]}" comment="Defines the loop by start and end time (default=0,0)" /> -->
+                                <setpos x="{meshdata[setpos][0]}" y="{meshdata[setpos][1]}" z="{meshdata[setpos][2]}" comment="Applies a position offset to the mesh data (default=0,0,0)" />
+		                </meshdata>

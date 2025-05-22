@@ -1,0 +1,3 @@
+		<filtertype operation="{operation}" inverse="{inverse}">
+			<type v="{type_str}" comment="Selection by type: bound, fixed, moving, floating and/or fluid" />
+		</filtertype>

@@ -1,0 +1,7 @@
+                <dampingzone>
+                    <limitmin x="{limitmin[0]}" y="{limitmin[1]}" z="{limitmin[2]}" />
+                    <limitmax x="{limitmax[0]}" y="{limitmax[1]}" z="{limitmax[2]}" />
+                    <overlimit value="{overlimit}" comment="The scope of maximum reduction over limitmax (default=0)"  />
+                    <redumax value="{redumax}" comment="Maximum reduction in location limitmax (default=10)" />
+                    <factorxyz x="{factorxyz[0]}" y="{factorxyz[1]}" z="{factorxyz[2]}" comment="Application factor in components (default x=1,y=1,z=1)" />
+                </dampingzone>

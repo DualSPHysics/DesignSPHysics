@@ -5,8 +5,9 @@
 This file holds a collection of useful enums
 in class forms, for code organization
 """
+from enum import Enum
 
-from mod.translation_tools import __
+from mod.tools.translation_tools import __
 
 
 class IrregularSpectrum():
@@ -81,6 +82,10 @@ class FreeCADObjectType:
     SPHERE = "Part::Sphere"
     CYLINDER = "Part::Cylinder"
     CUSTOM_MESH = "Mesh::Feature"
+    LINE = "Part::Line"
+    CIRCLE = "Part::Circle"
+    PLANE = "Part::Plane"
+    SPREADSHEET = 'Spreadsheet::Sheet'
 
 
 class FreeCADDisplayMode:
@@ -103,11 +108,11 @@ class InletOutletZoneType:
 
 class InletOutletZoneGeneratorType:
     """ Inlet/Outlet Zone Generator Type. """
-    MK = 0
-    LINE = 1
+    LINE = 0
+    MK_2D = 1
     BOX = 2
     CIRCLE = 3
-
+    MK_3D = 4
 
 class InletOutletDirection:
     """ Inlet/Outlet Zone Direction. """
@@ -117,6 +122,7 @@ class InletOutletDirection:
     BACK = "back"
     TOP = "top"
     BOTTOM = "bottom"
+    CUSTOM = "custom"
 
 
 class InletOutletVelocityType:
@@ -132,13 +138,14 @@ class InletOutletVelocitySpecType:
     FIXED_CONSTANT = 0
     FIXED_LINEAR = 1
     FIXED_PARABOLIC = 2
-    VARIABLE_UNIFORM = 3
-    VARIABLE_LINEAR = 4
-    VARIABLE_PARABOLIC = 5
-    FILE_UNIFORM = 6
-    FILE_LINEAR = 7
-    FILE_PARABOLIC = 8
-    FILE_INTERPOLATED = 9
+    FIXED_JETCIRCLE = 3  # CHANGE ALL?
+    VARIABLE_UNIFORM = 4
+    VARIABLE_LINEAR = 5
+    VARIABLE_PARABOLIC = 6
+    FILE_UNIFORM = 7
+    FILE_LINEAR = 8
+    FILE_PARABOLIC = 9
+    FILE_MESHDATA = 10
 
 
 class InletOutletDensityType:
@@ -160,6 +167,7 @@ class InletOutletZSurfMode:
     FIXED = 0
     TIMELIST = 1
     FILE = 2
+    MESHDATA = 3
 
 
 class InletOutletExtrapolateMode:
@@ -218,6 +226,9 @@ class MotionType:
     IRREGULAR_FLAP_WAVE_GENERATOR = "Irregular Flap Wave Generator"
     FILE_GENERATOR = "File Generator"
     FILE_ROTATIONAL_GENERATOR = "Rotational File Generator"
+    SOLITARY_PISTON_WAVE_GENERATOR = "Solitary Piston Wave Generator"
+    FILE_ROTATE_ADV_GENERATOR = "Advanced Rotation File Generator"
+    FILE_PATH_GENERATOR = "Path File Generator"
 
 
 class MLPistonType:
@@ -244,7 +255,7 @@ class DensityDTType:
 
 
 class MooringsConfigurationMethod:
-    """ Types of MoorDyn configuration types. """
+    """ Types of MoorDynPlus configuration types. """
     EMBEDDED = 0
     FROM_XML = 1
 
@@ -256,8 +267,8 @@ class InitialsType:
     PARABOLIC = 2
 
 
-class BoundInitialsType:
-    """ Types of initials for boundaries """
+class BoundNormalsType:
+    """ Types of normals for boundaries """
     SET = 0
     PLANE = 1
     SPHERE = 2
@@ -281,6 +292,47 @@ class ContactMethod:
     """ Types of contact methods for CHRONO collisions. """
     NSC = 0
     SMC = 1
+
+
+class DampingType:
+    """ Ytpes of Damping Zones"""
+    ZONE = 0
+    BOX = 1
+    CYLINDER = 2
+
+
+class ConstModel(Enum):
+    "Const model for flexible structures"
+
+    PLANESTRAIN = 1
+    PLANESTRESS = 2
+    STVENANTKIRCHOFF = 3
+
+
+
+class FlowUnits:
+    "Units for flow input"
+    LITERSSECOND = "l/s"
+    GALLONSSECOND = "gal/s"
+    GALLONSMIN = "gal/min"
+
+class FilterType:
+    BASE="base"
+    POS="pos"
+    PLANE="plane"
+    SPHERE="sphere"
+    CYLINDER="cylinder"
+    TYPE="type"
+    MK="mk"
+    GROUP="group"
+
+
+class FilterOperations:
+    ADD = "add"
+    DEL = "del"
+    CONFIRM = "confirm"
+    pos={ADD:0,DEL:1,CONFIRM:2}
+    operation={"add":ADD,"del":DEL,"confirm":CONFIRM}
 
 
 class HelpText:
@@ -317,7 +369,7 @@ class HelpText:
     VISCOBOUNDFACTOR = __("Multiply viscosity value for fluid-boundary interaction (default=1).")
     DELTASPH = __("DeltaSPH value, 0.1 is the typical value, with 0 disabled (default=0).")
     DENSITYDT = __("DDT value (default=0.1).")
-    SHIFTING = __("Shifting mode 0:None, 1:Ignore bound, 2:Ignore fixed, 3:Full (default=0).")
+    SHIFTING = __("Shifting mode 0:None, 1:Ignore bound, 2:Ignore fixed, 3:Full 4:Francesco1. 5: Francesco2 (default=0)")
     SHIFTINGCOEF = __("Coefficient for shifting computation (default=-2).")
     SHIFTINGTFS = __("Threshold to detect free surface. Typically 1.5 for 2D and 2.75 for 3D (default=0).")
     RIGIDALGORITHM = __("Rigid Algorithm 1:SPH, 2:DEM, 3:Chrono (default=1).")
@@ -328,7 +380,7 @@ class HelpText:
     TIMEMAX = __("Time of simulation.")
     TIMEOUT = __("Time to save output data.")
     INCZ = __("Increase of Z+ (%) (default=0).")
-    PARTSOUTMAX = __("%%/100 of fluid particles allowed to be excluded from domain (default=1).")
+    PARTSOUTMAX = __("Min %%/100 of fluid particles allowed to remain in the domain (default=0).")
     RHOPOUTMIN = __("Minimum rhop valid (default=700).")
     RHOPOUTMAX = __("Maximum rhop valid (default=1300).")
     DOMAINFIXED = __("The domain is fixed with the specified values (xmin:ymin:zmin:xmax:ymax:zmax).")

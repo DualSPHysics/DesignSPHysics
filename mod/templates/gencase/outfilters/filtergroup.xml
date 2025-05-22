@@ -1,0 +1,3 @@
+		<filtergroup preselection="{preselection_str}" operation="{operation}" inverse="{inverse}">
+			{each}
+		</filtergroup>

@@ -1,1 +1,5 @@
-                        <particles mkfluid="{mkfluid}" direction="{direction}" />
+                        <particles mkfluid="{mkfluid}" direction="{direction}">
+{generator_custom_direction}
+{generator_mk_rotation}
+{generator_rotateadv}
+                        </particles>

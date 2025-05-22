@@ -1,0 +1,3 @@
+            <norset mkbound="{mk}">
+                <normal x="{normal[0]}" y="{normal[1]}" z="{normal[2]}" />
+            </norset>

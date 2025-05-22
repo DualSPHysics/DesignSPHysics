@@ -1,1 +1,2 @@
-                        <velocity v="{}" comment="Uniform velocity" units_comment="m/s" />
+                         <flowvelocity active="{flow_velocity_active}" units="{flow_velocity_units}" ratio="{flow_velocity_ratio}" comment="Velocity values are read as flow (units=l/s, gal/s or gal/min) and ratio is used to compute particle volume (ratio*dp^3."/>
+                        <velocity v="{fixed_constant_value}" comment="Uniform velocity" units_comment="m/s" />

@@ -3,11 +3,9 @@
                     <inputtreatment value="{inputtreatment}" comment="Treatment of fluid entering the zone. 0:No changes, 1:Convert fluid (necessary for outlet), 2:Remove fluid (recommended for inlet)" />
                     <layers value="{layers}" comment="Number of inlet/outlet particle layers" />
 {zoneinfo}
-                    <imposevelocity mode="{velocity_info[velocity_type]}" comment="Imposed velocity 0:fixed value, 1:variable value, 2:Extrapolated value (default=0)">
+                    <imposevelocity mode="{velocity_info[velocity_type]}" comment="Imposed velocity 0:fixed value, 1:variable value, 2:Extrapolated value 3:Interpolated value(default=0)">
 {imposevelocity_param}
                     </imposevelocity>
                     <imposerhop mode="{density_info[density_type]}" comment="Outlet rhop 0:Imposed fixed value, 1:Hydrostatic, 2:Extrapolated from ghost nodes (default=0)" />
-                    <imposezsurf mode="{elevation_info[elevation_type]}" comment="Inlet Z-surface 0:Imposed fixed value, 1:Imposed variable value, 2:Calculated from fluid domain (default=0)">
-{zsurf_param}
-                    </imposezsurf>
+{imposezsurf}
                 </inoutzone>

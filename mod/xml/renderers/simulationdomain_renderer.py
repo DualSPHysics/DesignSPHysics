@@ -4,7 +4,7 @@
 Renders the <simulationdomain> tag of the GenCase XML.
 """
 
-from mod.template_tools import get_template_text
+from mod.tools.template_tools import get_template_text
 
 class SimulationDomainRenderer():
     """ Renders the <simulationdomain> tag of the GenCase XML. """
@@ -18,9 +18,19 @@ class SimulationDomainRenderer():
             return ""
         template = get_template_text(cls.SIMULATIONDOMAIN_XML)
         formatter = {}
-        for key in ["posmin_x", "posmin_y", "posmin_z", "posmax_x", "posmax_y", "posmax_z"]:
+        for key in ["posmin_x", "posmin_y", "posmin_z"]:
             value = data["domain"][key]["value"]
-            symbol = "+" if value >= 0 else "-"
+            symbol = "-"
+            modes = {
+                0: "default",
+                1: str(value),
+                2: "default{}{}".format(symbol, str(abs(value))),
+                3: "default{}{}%".format(symbol, str(abs(value)))
+            }
+            formatter[key] = modes[data["domain"][key]["type"]]
+        for key in [ "posmax_x", "posmax_y", "posmax_z"]:
+            value = data["domain"][key]["value"]
+            symbol = "+"
             modes = {
                 0: "default",
                 1: str(value),

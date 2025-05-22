@@ -1,0 +1,4 @@
+		<filterpos operation="{operation}" inverse="{inverse}">
+			{pos_min_str}
+			{pos_max_str}{ftfollow}
+		</filterpos>

@@ -1,6 +1,7 @@
 #!/usr/bin/env python3.7
 # -*- coding: utf-8 -*-
 """ DesignSPHysics Inlet/Outlet configuration. """
+from typing import List
 
 from mod.enums import InletOutletDetermLimit, InletOutletExtrapolateMode
 
@@ -15,10 +16,12 @@ class InletOutletConfig():
         self.memoryresize_size: int = 4
         self.useboxlimit_enabled: bool = True
         self.useboxlimit_freecentre_enabled: bool = False
-        self.useboxlimit_freecentre_values: bool = [0.0, 0.0, 0.0]
+
+        self.useboxlimit_freecentre_values: List[float] = [0,0,0]
         self.determlimit: InletOutletDetermLimit = InletOutletDetermLimit.ZEROTH_ORDER
         self.extrapolatemode: InletOutletExtrapolateMode = InletOutletExtrapolateMode.FAST_SINGLE
-        self.zones: list = list()  # [InletOutletZone]
+        self.refillingrate: int = 10
+        self.zones: list[InletOutletZone] = list()   # [InletOutletZone]
 
     def get_io_zone_for_id(self, search_id) -> InletOutletZone:
         """ Returns the InletOutletZone for a given id. """

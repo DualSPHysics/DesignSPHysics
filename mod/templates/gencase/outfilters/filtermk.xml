@@ -1,0 +1,3 @@
+		<filtermk operation="{operation}" inverse="{inverse}">
+			<{mk_type_str} v="{mk_str}" comment="Selection by mk value (a value or a range of values " />
+		</filtermk>

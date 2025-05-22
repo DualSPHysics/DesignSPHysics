@@ -4,10 +4,9 @@
 Renders the <motion> tag of the GenCase XML.
 """
 
-from mod.template_tools import get_template_text
-
-from mod.enums import MotionType
 from mod.constants import LINE_END, MKFLUID_LIMIT
+from mod.enums import MotionType
+from mod.tools.template_tools import get_template_text
 
 
 class MotionRenderer():
@@ -30,18 +29,20 @@ class MotionRenderer():
     MOTION_NEXT_ATTR = "/templates/gencase/motion/each/next_attr.txt"
     MOTION_GENERATORS_TEMPLATES = {
         MotionType.FILE_GENERATOR: "/templates/gencase/motion/each/special/file_gen.xml",
-        MotionType.FILE_ROTATIONAL_GENERATOR: "/templates/gencase/motion/each/special/file_rotational_gen.xml"
+        MotionType.FILE_ROTATIONAL_GENERATOR: "/templates/gencase/motion/each/special/file_rotational_gen.xml",
+        MotionType.FILE_ROTATE_ADV_GENERATOR: "/templates/gencase/motion/each/special/file_rotate_adv_gen.xml",
+        MotionType.FILE_PATH_GENERATOR: "/templates/gencase/motion/each/special/file_path_gen.xml"
     }
     MOTION_NULL_TEMPLATE = "/templates/gencase/motion/each/null.xml"
 
     @classmethod
     def render(cls, data):
         """ Returns the rendered string. """
+
         each_objreal_template: list = list()
         for prop in data["mkbasedproperties"].values():
             if not prop["movements"] and not prop["mlayerpiston"]:
                 continue
-
             formatter: dict = {
                 "ref": prop["mk"] - MKFLUID_LIMIT,
                 "movements_list": cls.get_movement_template_list(prop)
@@ -62,6 +63,7 @@ class MotionRenderer():
     @classmethod
     def get_specific_motion_template(cls, motion, first_index: int, index: int, is_last: bool, loops: bool):
         """ Renders an individual motion based on its type. """
+
         if motion["type"] not in cls.MOTION_TEMPLATES.keys():
             return get_template_text(cls.MOTION_NULL_TEMPLATE)
 
@@ -89,18 +91,18 @@ class MotionRenderer():
     @classmethod
     def get_each_motion_template(cls, movement: dict, counter: int) -> str:
         """ Renders the list of motions inside a movement. """
+
         if "generator" in movement.keys():
             # Is a SpecialMovement
             return cls.get_special_motion_template(movement["generator"])
 
         # If this code path is followed, is a regular movement
         if not movement["motion_list"]:
-            return ""
+            return get_template_text(cls.MOTION_NULL_TEMPLATE)
 
         motion_templates: list = list()
         first_index = counter
         index = counter
-
         for it_index, motion in enumerate(movement["motion_list"]):
             is_last = it_index == len(movement["motion_list"]) - 1
             loops = is_last and movement["loop"]

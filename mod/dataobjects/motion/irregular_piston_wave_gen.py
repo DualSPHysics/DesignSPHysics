@@ -6,7 +6,7 @@ from random import randint
 
 from mod.enums import IrregularDiscretization, IrregularSpectrum, MotionType
 from mod.dataobjects.motion.wave_gen import WaveGen
-from mod.dataobjects.awas import AWAS
+from mod.dataobjects.motion.awas import AWAS
 
 
 class IrregularPistonWaveGen(WaveGen):

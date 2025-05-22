@@ -4,10 +4,9 @@
 Renders the <floatings> tag of the GenCase XML.
 """
 
-from mod.template_tools import get_template_text
-
-from mod.enums import FloatingDensityType
 from mod.constants import LINE_END
+from mod.enums import FloatingDensityType
+from mod.tools.template_tools import get_template_text
 
 
 class FloatingsRenderer():
@@ -40,8 +39,7 @@ class FloatingsRenderer():
                 cls.FLOATINGS_LINEARVELINI_XML: "initial_linear_velocity",
                 cls.FLOATINGS_ANGULARVELINI_XML: "initial_angular_velocity",
                 cls.FLOATINGS_TRANSLATION_XML: "translation_restriction",
-                cls.FLOATINGS_ROTATION_XML: "rotation_restriction",
-                cls.FLOATINGS_MATERIAL_XML: "material"
+                cls.FLOATINGS_ROTATION_XML: "rotation_restriction"
             }
             for xml, attr in class_attributes.items():
                 if fp[attr]:
@@ -54,7 +52,9 @@ class FloatingsRenderer():
                 "floating_mk": fp["mk"],
                 "rhopbody": "",
                 "massbody": "",
+                "property" : get_template_text(cls.FLOATINGS_MATERIAL_XML).format(**fp),
                 "float_property_attributes": LINE_END.join(float_property_attributes)
+
             }
 
             if fp["mass_density_type"] == FloatingDensityType.MASSBODY:

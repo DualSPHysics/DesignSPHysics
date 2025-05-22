@@ -1,0 +1,11 @@
+            <bufferbox active="{active}">
+                <point x="{point[0]}" y="{point[1]}" z="{point[2]}" />
+                <size x="{size[0]}" y="{size[1]}" z="{size[2]}" />
+                <dpratio v="{dp_ratio}" comment="Refinement ratio" />
+                <buffsizeh v="{buffer_size_h}" comment="Buffer size according to H (H*v) (default v=2)" />
+                <overlappingh v="{overlapping_h}" comment="Overlapping size according to H (H*v) (default v=0)" />
+{tracking}
+{transform}
+{simulation_domain}
+{vres_each}
+            </bufferbox>

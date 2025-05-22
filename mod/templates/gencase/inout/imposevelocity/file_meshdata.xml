@@ -1,0 +1,9 @@
+                        <meshdata file="{filename}" comment="Velocity data from mesh-data file (CSV or binary)" units_comment="m/s">
+                                <magnitude v="{magnitude}" comment="Selects velocity magnitude (using inlet direction) when available in the input data (default=true)" />
+                                <reverse v="{reverse}" comment="Reverse velocity values (v=-v) (default=false)" />
+                                <initialtime v="{initial_time}" comment="Defines the initial time of mesh data (default=0)" />
+                                <timeloop tbegin="{timeloop_tbegin}" tend="{timeloop_tend}" comment="Defines the loop by start and end time (default=0,0)" />
+                                <setpos x="{setpos[0]}" y="{setpos[1]}" z="{setpos[2]}" comment="Applies a position offset to the mesh data (default=0,0,0)" />
+                                <setvelmul x="{setvelmul[0]}" y="{setvelmul[1]}" z="{setvelmul[2]}" comment="Multiply fixed value to velocity data (default=1,1,1)" units_comment="m/s" />
+                                <setveladd x="{setveladd[0]}" y="{setveladd[1]}" z="{setveladd[2]}" comment="Add fixed value to velocity data (default=0,0,0)" units_comment="m/s" />
+                        </meshdata>

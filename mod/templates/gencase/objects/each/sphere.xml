@@ -1,9 +1,11 @@
 {move_template}
 {rotation_template}
 {mktype_template}
+{setnormalinvert_template}
                 <setdrawmode mode="{obj[fillmode]}"/>
 {frdrawmode_template_enable}
                 <drawsphere radius="{radius}" objname="{label}">
+{layers}
                     <point x="{pos[0]}" y="{pos[1]}" z="{pos[2]}" />
                 </drawsphere>
 {frdrawmode_template_disable}

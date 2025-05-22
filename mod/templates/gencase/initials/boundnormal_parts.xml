@@ -1,3 +1,0 @@
-            <boundnormal_parts mkbound="{mk}">
-                <maxdisth v="{maxdisth}" comment="Maximum distance to boundary limit. It uses H*maxdisth (default=2)" />
-            </boundnormal_parts>

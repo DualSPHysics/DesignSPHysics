@@ -5,7 +5,7 @@
 from mod.enums import MotionType
 
 from mod.dataobjects.motion.wave_gen import WaveGen
-from mod.dataobjects.awas import AWAS
+from mod.dataobjects.motion.awas import AWAS
 
 
 class RegularPistonWaveGen(WaveGen):

@@ -38,11 +38,12 @@ This is a brief description on how the project files are structure and what each
     - `dataobjects`: Contains dataclasses representing the structure of a DesignSPHysics / DualSPHysics case.
     - `lang`: Language files and translations.
     - `templates`: Template files used in DesignSPHysics to create files on disk, create the DualSPHysics XML, represent information on screen etc.
+    - `tools` : These folder contains files with tools related to their name.
     - `widgets`: Contains Qt classes with the widgets that compose the GUI
     - `xml`: Contains the XML generator files, with its renderers.
     - `constants.py`: Contains useful constants for the application.
     - `enums.py`: Contains the enums used on the application.
-    - `*_tools.py`: These files contains little tools related to their name.
+    - `functions.py`: Contains the general functions used on the application.
 - `images`: Images and icons used in the user interface
 - `dualsphysics/bin`: DualSPHysics executables.
     
@@ -58,9 +59,10 @@ The main data structure is a singleton data object named `Case`. It can be acces
 
 # Need more help?
 If you need help on how to contribute please contact one of the following people
+- Iván Martínez Estévez - ivan.martinez.estevez@uvigo.es
 - Andrés Vieira Vázquez - anvieiravazquez@gmail.com
+- Irene Fernandez Mariño - irene.fernandez.marino@uvigo.es
 - Lorena Docasar Vázquez - docasarlorena@gmail.com
 - Orlando García Feal - orlando@uvigo.es
 - José Manuel Domínguez Alonso - jmdalonso@gmail.com
 - Alejandro Jacobo Cabrera Crespo - alexbexe@uvigo.es
-- Iván Martínez Estévez - ivan.martinez.estevez@uvigo.es

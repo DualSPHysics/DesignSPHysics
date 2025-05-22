@@ -1,0 +1,8 @@
+
+                <list name="GeometryForNormals">
+                    <setactive drawpoints="0" drawshapes="1"/>
+                    <setshapemode>actual | bound</setshapemode>
+{objects_each}
+                    <shapeout file="hdp" />
+                    <resetdraw />
+                </list>

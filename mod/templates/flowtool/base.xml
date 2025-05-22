@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<flowtool_boxes app="FlowTool v5.4.233 (14-03-2024)" date="15-03-2024 00:20:12">
+    <config>
+        <units v="{units}" comment="Define units for volume or flow and saves extra flow data between control boxes (empty by default, l/s, gal/s, gal/min)"/>
+    </config>
+{each}
+</flowtool_boxes>

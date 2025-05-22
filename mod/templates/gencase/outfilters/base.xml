@@ -1,0 +1,4 @@
+        <outputparts preselection="{preselection_str}" comment="Initial selection: all or none">
+                <ignore nparts="{n_parts}" comment="Ignore filters every nparts output files (default=0)"/>
+{each}
+        </outputparts>

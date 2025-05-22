@@ -1,2 +1,2 @@
-                        <zbottom value="{zbottom}" comment="Bottom level of water (used for Hydrostatic option)" units_comment="m" />
                         <zsurf value="{zsurf}" comment="Characteristic inlet Z-surface (used for Hydrostatic option)" units_comment="m" />
+                        <remove value="{remove}" comment="Removes particles above the Zsurf limit (default=false)" />

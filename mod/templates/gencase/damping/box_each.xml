@@ -1,0 +1,14 @@
+                <dampingbox>
+                    <directions value="{directions}" comment="Active directions (top/bottom/left/right/front/back) (default=all)"/>
+                    <limitmin comment="Limit where minimum reduction is applied">
+                        <pointini x="{limitmin_pointini[0]}" y="{limitmin_pointini[1]}" z="{limitmin_pointini[2]}" />
+                        <pointend x="{limitmin_pointend[0]}" y="{limitmin_pointend[1]}" z="{limitmin_pointend[2]}" />
+                    </limitmin>
+                    <limitmax comment="Limit where maximum reduction is applied">
+                        <pointini x="{limitmax_pointini[0]}" y="{limitmax_pointini[1]}" z="{limitmax_pointini[2]}" />
+                        <pointend x="{limitmax_pointend[0]}" y="{limitmax_pointend[1]}" z="{limitmax_pointend[2]}" />
+                    </limitmax>
+                    <overlimit value="{overlimit}" comment="The scope of maximum reduction over limitmax (default=0)" />
+                    <redumax value="{redumax}" comment="Maximum reduction in location limitmax (default=10)" />
+                    <factorxyz x="{factorxyz[0]}" y="{factorxyz[1]}" z="{factorxyz[2]}" comment="Application factor in components (default x=1,y=1,z=1)" />
+                </dampingbox>

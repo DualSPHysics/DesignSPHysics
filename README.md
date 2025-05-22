@@ -8,6 +8,7 @@ Check the [Official Webpage](http://design.sphysics.org) for downloads and more 
 
 ## News
 ### Training courses
+ * [19th SPHERIC World Conference](https://spheric2025.upc.edu/), Barcelona, Spain, on **16-19 June, 2025**.
  * [8th DualSPHysics Workshop](https://dual.sphysics.org/8thworkshop/), Ourense, Spain, on **27-29 January, 2026**.
 #### Past events
  * [SPH modelling For Engineering applications](https://sites.google.com/view/hykudsph/home?authuser=0), Braunschweig, Germany, on **25-27 March 2025**.
@@ -54,7 +55,9 @@ You can freely contribute to the project, if you want!. You can do it here on Gi
 Please check the [CONTRIBUTING file](CONTRIBUTING.md) to view information about how to contribute to the project.
 
 ## Copyright and License
-Copyright (C) 2019
+Copyright (C) 2025, 
+Ivan Martinez Estevez, Andres Vieira
+
 EPHYSLAB Environmental Physics Laboratory, Universidade de Vigo
 EPHYTECH Environmental Physics Technologies
 

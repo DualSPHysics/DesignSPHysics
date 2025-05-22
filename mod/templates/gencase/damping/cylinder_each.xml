@@ -1,0 +1,9 @@
+                <dampingcylinder>
+                    <point1 x="{point1[0]}" y="{point1[1]}" z="{point1[2]}" comment="Point for axis definition" />
+                    <point2 x="{point2[0]}" y="{point2[1]}" z="{point2[2]}" comment="Point for axis definition" />
+                    <limitmin radius="{limitmin}" comment="Limit where minimum reduction is applied" />
+                    <limitmax radius="{limitmax}" comment="Limit where maximum reduction is applied" />
+                    <overlimit value="{overlimit}" comment="The scope of maximum reduction over limitmax (default=0)" />
+                    <redumax value="{redumax}" comment="Maximum reduction in location limitmax (default=10)" />
+                    <factorxyz x="{factorxyz[0]}" y="{factorxyz[1]}" z="{factorxyz[2]}" comment="Application factor in components (default x=1,y=1,z=1)" />
+                </dampingcylinder>

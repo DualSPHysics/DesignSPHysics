@@ -4,10 +4,10 @@
 Renders the <mlayerpistons> tag of the GenCase XML.
 """
 
-from mod.template_tools import get_template_text
-
+from mod.constants import LINE_END, MKFLUID_LIMIT
 from mod.enums import MLPistonType
-from mod.constants import LINE_END
+from mod.tools.template_tools import get_template_text
+
 
 class MLPistonsRenderer():
     """ Renders the <mlayerpistons> tag of the GenCase XML. """
@@ -31,14 +31,14 @@ class MLPistonsRenderer():
         each_mlpiston_template: list = list()
         for mk, mlpiston in ml_pistons.items():
             if mlpiston["type"] == MLPistonType.MLPISTON1D:
-                mlpiston.update({"mk": mk})
+                mlpiston.update({"mk": mk-MKFLUID_LIMIT})
                 each_mlpiston_template.append(get_template_text(cls.MLPISTONS_EACH_1D).format(**mlpiston))
             elif mlpiston["type"] == MLPistonType.MLPISTON2D:
                 each_veldata_templates: list = list()
                 for veldata in mlpiston["veldata"]:
                     each_veldata_templates.append(get_template_text(cls.MLPISTONS_EACH_2D_VELDATA).format(**veldata))
                 mlpiston.update({
-                    "mk": mk,
+                    "mk": mk-MKFLUID_LIMIT,
                     "each_veldata": LINE_END.join(each_veldata_templates)
                 })
                 each_mlpiston_template.append(get_template_text(cls.MLPISTONS_EACH_2D).format(**mlpiston))

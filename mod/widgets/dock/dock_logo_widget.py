@@ -4,13 +4,13 @@
 
 import webbrowser
 
-# from PySide import QtGui
-from PySide2 import QtWidgets, QtGui
 
-from mod.gui_tools import get_icon
-from mod.translation_tools import __
+from PySide2 import QtWidgets,QtGui
+
 
 from mod.enums import HelpURL
+from mod.tools.gui_tools import get_icon
+from mod.tools.translation_tools import __
 
 
 class DockLogoWidget(QtWidgets.QWidget):
@@ -31,9 +31,9 @@ class DockLogoWidget(QtWidgets.QWidget):
         self.help_button.setIcon(QtGui.QIcon.fromTheme("system-help"))
         self.help_button.clicked.connect(lambda: webbrowser.open(HelpURL.WIKI_HOME))
 
-        self.main_layout.addStretch(0.5)
+        self.main_layout.addStretch(5)
         self.main_layout.addWidget(self.logo_label)
-        self.main_layout.addStretch(0.5)
+        self.main_layout.addStretch(5)
         self.main_layout.addWidget(self.help_button)
 
         self.setLayout(self.main_layout)

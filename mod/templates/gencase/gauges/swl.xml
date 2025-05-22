@@ -1,0 +1,7 @@
+                <swl name="{name}">
+{common}
+                    <masslimit {mass_limit_coef}="{mass_limit}" comment="Mass value to calculate free-surface (default=uses coefmasslimit)" units_comment="kg" />
+                    <pointdp {point_dp_coef_dp}  ="{point_dp}" comment="Distance between check points" units_comment="m" />
+                    <point0 x="{point0[0]}" y="{point0[1]}" z="{point0[2]}" comment="Initial point" units_comment="m" />
+                    <point2 x="{point1[0]}" y="{point1[1]}" z="{point1[2]}" comment="Final point" units_comment="m" />
+                </swl>

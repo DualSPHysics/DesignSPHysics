@@ -1,0 +1,6 @@
+                <mvrotadvfile id="1" duration="{duration}" anglesunits="{anglesunits}">
+                    <file name="{filename}" fields="{fields}" fieldtime="{fieldtime}" fieldangx="{fieldang1}" fieldangy="{fieldang2}" fieldangz="{fieldang3}"/>
+                    <center x="{center[0]}" y="{center[1]}" z="{center[2]}" />
+		            <intrinsic value="{intrinsic}"/>
+                    <axes value="{axes}"/>
+                </mvrotadvfile>

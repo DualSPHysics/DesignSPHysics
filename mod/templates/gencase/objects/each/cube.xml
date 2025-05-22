@@ -1,6 +1,7 @@
 {move_template}
 {rotation_template}
 {mktype_template}
+{setnormalinvert_template}
                 <setdrawmode mode="{obj[fillmode]}"/>
 {frdrawmode_template_enable}
                 <drawbox objname="{label}">

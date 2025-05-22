@@ -1,4 +1,8 @@
 {mktype_template}
-                <drawfilestl file="{file}" objname="{label}" autofill="{autofill}">
-                    <drawscale x="0.001" y="0.001" z="0.001" />
-                </drawfilestl>
+{setnormalinvert_template}
+                <drawfile{file_type} file="{file}" objname="{label}" autofill="{autofill}" advanced="{adm_enabled}" reverse="{adm_reverse_enabled}" >
+                    {depth}
+                    <drawscale x="{scale_x}" y="{scale_y}" z="{scale_z}" />
+                    <drawmove x="{move_x}" y="{move_y}" z="{move_z}" />
+                    <drawrotate angx="{rot_x}" angy="{rot_y}" angz="{rot_z}" />
+                </drawfile{file_type}>

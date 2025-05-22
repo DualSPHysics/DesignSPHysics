@@ -5,5 +5,5 @@
                 <mooredfloatings>
 {each_mooredfloatings_template}
                 </mooredfloatings>
-{moordyn_template}
+{moordynplus_template}
             </moorings>

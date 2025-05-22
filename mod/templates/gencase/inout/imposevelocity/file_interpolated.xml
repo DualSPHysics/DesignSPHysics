@@ -1,0 +1,3 @@
+                        <gridveldata file="{file_path}" comment="CSV file with velocity data in different times and positions" />
+		                <!-- <gridresetvelz value="{gridresetvelz}" comment="Reset Z velocity after interaction (default=false)" /> -->
+		                <gridposzero x="{gridposzero[0]}" z="{gridposzero[1]}" comment="Defines position of grid (default=0)" />

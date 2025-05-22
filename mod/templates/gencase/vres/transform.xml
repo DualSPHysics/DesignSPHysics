@@ -1,0 +1,5 @@
+                <transform>
+                    <move x="{transform_move[0]}" y="{transform_move[1]}" z="{transform_move[2]}"/>
+                    <rotate angx="{transform_rotate[0]}" angy="{transform_rotate[1]}" angz="{transform_rotate[2]}" anglesunits="{transform_rotate_units}" />
+                    <center x="{transform_center[0]}" y="{transform_center[1]}" z="{transform_center[2]}" comment="Rotation center is optional (default=0,0,0)" />
+                </transform>

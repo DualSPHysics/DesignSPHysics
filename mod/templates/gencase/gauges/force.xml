@@ -1,0 +1,4 @@
+                     <force name="{name}">
+{common}
+                            <target mkbound="{target}" comment="Indicates the mkbound of selected particles to compute forces" />
+                    </force>

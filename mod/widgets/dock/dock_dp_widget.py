@@ -2,12 +2,16 @@
 # -*- coding: utf-8 -*-
 """DesignSPHysics Dock DP Intro Widget """
 
-# from PySide import QtGui
-from PySide2 import QtWidgets, QtGui
 
-from mod.translation_tools import __
+from PySide2 import QtWidgets
+
+from mod.tools.translation_tools import __
 
 from mod.dataobjects.case import Case
+from mod.tools.freecad_tools import update_dp
+from mod.tools.translation_tools import __
+from mod.widgets.custom_widgets.value_input import ValueInput
+from mod.widgets.custom_widgets.size_input import SizeInput
 
 
 class DockDPWidget(QtWidgets.QWidget):
@@ -22,22 +26,19 @@ class DockDPWidget(QtWidgets.QWidget):
         self.dp_label = QtWidgets.QLabel(__("Inter-particle distance: "))
         self.dp_label.setToolTip(__("Lower DP to have more particles in the case."))
 
-        self.dp_input = QtWidgets.QLineEdit()
+        self.dp_input = SizeInput()
         self.dp_input.setToolTip(__("Lower DP to have more particles in the case."))
-        self.dp_validator = QtGui.QDoubleValidator(0.0, 100, 8, self.dp_input)
-        self.dp_input.setValidator(self.dp_validator)
-        self.dp_input.setMaxLength(10)
-        self.dp_input.setText(str(Case.the().dp))
-        self.dp_input.textChanged.connect(self.on_dp_changed)
-
-        self.dp_units_label = QtWidgets.QLabel(" meters")
+        self.dp_input.setValue(Case.the().dp)
+        self.dp_input.value_changed.connect(self.on_dp_changed)
 
         self.main_layout.addWidget(self.dp_label)
         self.main_layout.addWidget(self.dp_input)
-        self.main_layout.addWidget(self.dp_units_label)
 
         self.setLayout(self.main_layout)
 
     def on_dp_changed(self):
         """ DP Introduction. Changes the dp at the moment the user changes the text. """
-        Case.the().dp = float(self.dp_input.text())
+        dp=self.dp_input.value()
+        Case.the().dp = dp
+        update_dp(dp)
+

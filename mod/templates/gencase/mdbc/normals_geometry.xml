@@ -1,0 +1,7 @@
+        <norgeometry comment="Define initial configuration of normals before applying other configurations">
+            <distanceh value="{mdbc_disth}" comment="Maximum distance (H*distanceh) to compute normals data (default=2)" />
+            <maxsizeh value="{mdbc_maxsizeh}" comment="Maximum allowed normal size (H*distanceh) (disabled=0, default=0)" />
+            <geometryfile file="[CaseName]_hdp_Actual.vtk" comment="File with boundary geometry (VTK format)" />
+            <!--<svnormals value="1" comment="Saves VTK with particle normals according to <computenormals> for debug (default=1)" />-->
+            <svshapes v="true" comment="Saves VTK with geometry in triangles and quads with its normals for debug (default=false)" />
+        </norgeometry>

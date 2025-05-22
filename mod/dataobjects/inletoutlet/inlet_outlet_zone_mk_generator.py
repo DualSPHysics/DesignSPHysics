@@ -10,3 +10,7 @@ class InletOutletZoneMKGenerator():
     def __init__(self) -> None:
         self.mkfluid: int = 0
         self.direction: InletOutletDirection = InletOutletDirection.LEFT
+        
+    def save_values(self,values):
+        self.mkfluid = values["mkfluid"]
+        self.direction = values["direction"]

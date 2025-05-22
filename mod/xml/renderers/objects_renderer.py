@@ -7,10 +7,9 @@ import math
 
 import FreeCAD
 
-from mod.enums import FreeCADObjectType, ObjectType
 from mod.constants import DIVIDER, SUPPORTED_TYPES, LINE_END
-
-from mod.template_tools import get_template_text
+from mod.enums import FreeCADObjectType, ObjectType
+from mod.tools.template_tools import get_template_text
 
 
 class ObjectsRenderer():
@@ -29,6 +28,7 @@ class ObjectsRenderer():
     OBJECT_CYLINDER_XML = "/templates/gencase/objects/each/cylinder.xml"
     OBJECT_FILLBOX_XML = "/templates/gencase/objects/each/fillbox.xml"
     OBJECT_COMPLEX_XML = "/templates/gencase/objects/each/complex.xml"
+    OBJECT_SETNORMALINVERT_XML = "/templates/gencase/objects/each/setnormalinvert.xml"
 
     @classmethod
     def get_regular_objects_template(cls, obj, fc_object) -> str:
@@ -55,28 +55,36 @@ class ObjectsRenderer():
             }) if fc_object.Placement.Rotation.Angle else "",
             "frdrawmode_template_enable": get_template_text(cls.OBJECT_FRDRAWMODE_ENABLE) if fc_object.TypeId in (FreeCADObjectType.BOX, FreeCADObjectType.CYLINDER, FreeCADObjectType.SPHERE) and "frdrawmode" in obj.keys() and obj["frdrawmode"] == "true" else "",
             "frdrawmode_template_disable": get_template_text(cls.OBJECT_FRDRAWMODE_DISABLE) if fc_object.TypeId in (FreeCADObjectType.BOX, FreeCADObjectType.CYLINDER, FreeCADObjectType.SPHERE) and "frdrawmode" in obj.keys() and obj["frdrawmode"] == "true" else "",
+            "setnormalinvert_template" : get_template_text(cls.OBJECT_SETNORMALINVERT_XML).format(**{"normal_invert" : obj["mdbc_normal_invert"]}) if obj["use_mdbc"]=="true" and "layers" in obj else ""
         }
 
         # Decide if reset matrix or not
         obj_formatter.update({
             "matrixreset_template": get_template_text(cls.OBJECTS_MATRIXRESET_XML) if obj_formatter["move_template"] or obj_formatter["rotation_template"] else ""
         })
+        layers=""
+        if "layers" in obj:
+            layers=obj["layers"]
+        elif obj["faces_configuration"] and obj["faces_configuration"]["layers"]:
+            layers= obj["faces_configuration"]["layers"]
 
         # Formatting specific keys for each type of object
         if fc_object.TypeId == FreeCADObjectType.BOX:
             obj_formatter.update({
                 "boxfill": obj["faces_configuration"]["face_print"] if obj["faces_configuration"] else "solid",
-                "layers": '\t\t\t\t\t<layers vdp="{}" />'.format(obj["faces_configuration"]["layers"]) if obj["faces_configuration"] and obj["faces_configuration"]["layers"] != "" else "",
+                "layers": '\t\t\t\t\t<layers vdp="{}" />'.format(layers),
                 "size": [fc_object.Length.Value / DIVIDER, fc_object.Width.Value / DIVIDER, fc_object.Height.Value / DIVIDER],
             })
         if fc_object.TypeId == FreeCADObjectType.SPHERE:
             obj_formatter.update({
                 "radius": fc_object.Radius.Value / DIVIDER,
+                "layers": '\t\t    <layers vdp="{}" />'.format(layers),
             })
         if fc_object.TypeId == FreeCADObjectType.CYLINDER:
             obj_formatter.update({
                 "radius": fc_object.Radius.Value / DIVIDER,
-                "z2": (fc_object.Height.Value / DIVIDER) + (fc_object.Placement.Base.z / DIVIDER)
+                "z2": (fc_object.Height.Value / DIVIDER) + (fc_object.Placement.Base.z / DIVIDER),
+                "layers": '\t\t    <layers vdp="{}" />'.format(layers),
             })
 
         return get_template_text(template).format(**obj_formatter)
@@ -125,11 +133,50 @@ class ObjectsRenderer():
     @classmethod
     def get_complex_object_template(cls, obj, fc_object) -> str:
         ''' Builds a template for complex objects. '''
+        zyxrot=fc_object.Placement.Rotation.getYawPitchRoll()
+        depth=depthmin=depthmax=""
+        if obj["advdraw_mindepth_enabled"]=="true":
+            depthmin=f"depthmin=\"#Dp*{obj['advdraw_mindepth']}\""
+        if obj["advdraw_maxdepth_enabled"]=="true":
+            depthmax = f"depthmax=\"#Dp*{obj['advdraw_maxdepth']}\""
+        if depthmin + depthmax != "":
+            depth=f"<depth {depthmin} {depthmax} />"
+        if obj['file_type']=='vtu':
+            file_type='vtk'
+        else:
+            file_type=obj['file_type']
+        if not obj["is_loaded_geometry"]=='true' and not obj["is_normals_geo"] =='true':
+            obj["scale_factor"][0]=obj["scale_factor"][0]/DIVIDER
+            obj["scale_factor"][1]=obj["scale_factor"][1]/DIVIDER
+            obj["scale_factor"][2]=obj["scale_factor"][2]/DIVIDER
+            move_x = fc_object.Placement.Base.x / DIVIDER
+            move_y = fc_object.Placement.Base.y / DIVIDER
+            move_z = fc_object.Placement.Base.z / DIVIDER
+        else:
+            move_x = fc_object.Placement.Base.x / DIVIDER
+            move_y = fc_object.Placement.Base.y / DIVIDER
+            move_z = fc_object.Placement.Base.z / DIVIDER
         formatter = {
             "label": fc_object.Label,
             "mktype_template": (get_template_text(cls.OBJECTS_MKBOUND_XML) if obj["type"] == ObjectType.BOUND else get_template_text(cls.OBJECTS_MKFLUID_XML)).format(**obj),
-            "file": "{}.stl".format(fc_object.Name),
-            "autofill": "true" if obj["autofill"] == "true" else "false"
+            "file": obj['filename'],
+            "autofill": "true" if obj["autofill"] == "true" else "false",
+            "adm_enabled": obj["advdraw_enabled"],
+            "adm_reverse_enabled": obj["advdraw_reverse"],
+            "depth":depth,
+            "scale_x":obj["scale_factor"][0],
+            "scale_y": obj["scale_factor"][1],
+            "scale_z": obj["scale_factor"][2],
+            "move_x": move_x,
+            "move_y": move_y,
+            "move_z": move_z,
+            "rot_x": zyxrot[2],
+            "rot_y": zyxrot[1],
+            "rot_z": zyxrot[0],
+            "file_type" : file_type,
+            "setnormalinvert_template": get_template_text(cls.OBJECT_SETNORMALINVERT_XML).format(
+                **{"normal_invert": obj["mdbc_normal_invert"]}) if obj["use_mdbc"] == "true" and obj["is_normals_geo"] =='true' else ""
+
         }
 
         return get_template_text(cls.OBJECT_COMPLEX_XML).format(**formatter)
@@ -143,7 +190,7 @@ class ObjectsRenderer():
             if obj["type"] == ObjectType.SPECIAL:
                 continue
             fc_object = FreeCAD.ActiveDocument.getObject(obj["name"])
-
+            obj["is_normals_geo"] = "false"
             if fc_object.TypeId in SUPPORTED_TYPES:
                 object_template: str = cls.get_regular_objects_template(obj, fc_object)
             elif "FillBox" in fc_object.Name:

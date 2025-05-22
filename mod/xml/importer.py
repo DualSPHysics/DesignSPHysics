@@ -15,10 +15,10 @@ import FreeCAD
 import FreeCADGui
 import Mesh
 
-from mod import file_tools
-from mod.xml import xmltodict
-from mod.enums import FreeCADObjectType
+from mod.tools import file_tools
 from mod.constants import SINGLETON_DOCUMENT_NAME
+from mod.enums import FreeCADObjectType
+from mod.xml import xmltodict
 
 
 def import_xml_file(filename):
@@ -249,3 +249,18 @@ def create_fc_objects(f, path):
     FreeCAD.ActiveDocument.recompute()
     FreeCADGui.SendMsgToActiveView("ViewFit")
     return to_add_dsph
+
+def import_vtm_file(filename):
+    """ Returns data dictionary with values found
+        in a VTM(XML) file """
+
+    with open(filename, "r", encoding="utf-8") as target_file:
+        target_xml = target_file.read().replace("\n", "")
+
+    # Path to xml folder
+    path = "/".join(filename.split("/")[0:-1])
+
+    # Converts XML in python dictionary
+    data = json.loads(json.dumps(xmltodict.parse(target_xml)))
+
+    return data

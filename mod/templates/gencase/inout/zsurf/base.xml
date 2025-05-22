@@ -1,4 +1,3 @@
-                        <savevtk value="{savevtk}" comment="Creates VTK files with Zsurf for each PART (default=false)" />
-                        <remove value="{remove}" comment="Removes particles above the Zsurf limit (default=false)" />
-                        <zbottom value="{zbottom}" comment="Bottom level of water (only for Hydrostatic option)" units_comment="m" />
+                    <imposezsurf mode="{elevation_type}" comment="Inlet Z-surface 0:Imposed fixed value, 1:Imposed variable value, 2:Calculated from fluid domain (default=0)">
 {zsurf_mode_template}
+                    </imposezsurf>

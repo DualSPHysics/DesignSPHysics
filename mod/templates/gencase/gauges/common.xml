@@ -1,0 +1,6 @@
+                    <savevtkpart value="{save_vtk_part}" comment="Creates VTK files for each PART (default=false)" />
+                    <computedt value="{compute_dt}" comment="Time between measurements. 0:all steps (default=TimeOut)" units_comment="s" />
+                    <computetime start="{compute_time_start}" end="{compute_time_end}" comment="Start and end of measures. (default=simulation time)" units_comment="s" />
+                    <output value="{output}" comment="Creates CSV files of measurements (default=false)" />
+                    <outputdt value="{output_dt}" comment="Time between output measurements. 0:all computed measurements (default=TimeOut)" units_comment="s" />
+                    <outputtime start="{output_time_start}" end="{output_time_end}" comment="Start and end of output measures. (default=simulation time)" units_comment="s" />

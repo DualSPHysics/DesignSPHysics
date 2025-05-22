@@ -1,0 +1,4 @@
+		<filtersphere operation="{operation}" inverse="{inverse}">
+			<centre x="{center[0]}" y="{center[1]}" z="{center[2]}" />
+			<radius v="{radius}"  />{ftfollow}
+		</filtersphere>

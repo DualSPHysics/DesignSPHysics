@@ -1,0 +1,11 @@
+                <flow name="{name}">
+{common}
+                    <point x="{point0[0]}" y="{point0[1]}" z="{point0[2]}"  comment="Initial measurement position" units_comment="m" />
+                    <vec1 x="{vec1[0]}" y="{vec1[1]}" z="{vec1[2]}" comment="First axis vector to define the measurement grid" />
+                    <vec2 x="{vec2[0]}" y="{vec2[1]}" z="{vec2[2]}" comment="Second axis vector to define the measurement grid" />
+                    <size1 length="{size1_length}" distpt="{size1_distpt}" comment="Length and distance between measurement points for first direction" units_comment="m" />
+                    <size2 length="{size2_length}" distpt="{size2_distpt}" comment="Length and distance between measurement points for second direction" units_comment="m" />
+                    <dirdat x="{dirdat[0]}" y="{dirdat[1]}" z="{dirdat[2]}" comment="Direction vector for computed linear velocity or other variables" />
+                    <buffersize value="{buffersize}" comment="Output buffer size (default=30)" />
+                    <kclimit value="{kclimit}" comment="Minimum value of sum_wab_vol to apply the Kernel Correction. Use NONE to disable (default=0.5)" />
+                </flow>

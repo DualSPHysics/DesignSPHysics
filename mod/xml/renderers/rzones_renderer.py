@@ -4,9 +4,9 @@
 Renders the <relaxationzones> tag of the GenCase XML.
 """
 
-from mod.template_tools import get_template_text
-
 from mod.constants import LINE_END
+from mod.tools.template_tools import get_template_text
+
 
 class RZonesRenderer():
     """ Renders the <relaxationzones> tag of the GenCase XML. """

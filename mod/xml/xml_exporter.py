@@ -8,27 +8,31 @@ The utilities on this module creates
 import os
 from datetime import datetime
 
-from mod.stdout_tools import debug
-
 from mod.constants import APP_NAME, LINE_END
-from mod.template_tools import obj_to_dict, get_template_text
-
-from mod.xml.renderers.definition_renderer import DefinitionRenderer
-from mod.xml.renderers.objects_renderer import ObjectsRenderer
-from mod.xml.renderers.simulationdomain_renderer import SimulationDomainRenderer
-from mod.xml.renderers.initials_renderer import InitialsRenderer
-from mod.xml.renderers.floatings_renderer import FloatingsRenderer
-from mod.xml.renderers.rzones_renderer import RZonesRenderer
+from mod.tools.stdout_tools import debug
+from mod.tools.template_tools import obj_to_dict, get_template_text
 from mod.xml.renderers.accinput_renderer import AccinputRenderer
-from mod.xml.renderers.damping_renderer import DampingRenderer
-from mod.xml.renderers.mlpistons_renderer import MLPistonsRenderer
-from mod.xml.renderers.motion_renderer import MotionRenderer
-from mod.xml.renderers.wavepaddles_renderer import WavePaddlesRenderer
-from mod.xml.renderers.inout_renderer import InoutRenderer
 from mod.xml.renderers.chrono_renderer import ChronoRenderer
-from mod.xml.renderers.periodicity_renderer import PeriodicityRenderer
+from mod.xml.renderers.damping_renderer import DampingRenderer
+from mod.xml.renderers.definition_renderer import DefinitionRenderer
+from mod.xml.renderers.flexstruct_renderer import FlexStructRenderer
+from mod.xml.renderers.floatings_renderer import FloatingsRenderer
+from mod.xml.renderers.gauges_renderer import GaugesRenderer
+from mod.xml.renderers.initials_renderer import InitialsRenderer
+from mod.xml.renderers.inout_renderer import InoutRenderer
+from mod.xml.renderers.mdbc_renderer import MdbcRenderer
+from mod.xml.renderers.mlpistons_renderer import MLPistonsRenderer
 from mod.xml.renderers.moorings_renderer import MooringsRenderer
+from mod.xml.renderers.motion_renderer import MotionRenderer
+from mod.xml.renderers.objects_renderer import ObjectsRenderer
+from mod.xml.renderers.outfilters_renderer import OutFiltersRenderer
+from mod.xml.renderers.parameters_renderer import ParametersRenderer
+from mod.xml.renderers.periodicity_renderer import PeriodicityRenderer
 from mod.xml.renderers.properties_renderer import PropertiesRenderer
+from mod.xml.renderers.rzones_renderer import RZonesRenderer
+from mod.xml.renderers.simulationdomain_renderer import SimulationDomainRenderer
+from mod.xml.renderers.vres_renderer import VResRenderer
+from mod.xml.renderers.wavepaddles_renderer import WavePaddlesRenderer
 
 
 class XMLExporter():
@@ -65,7 +69,8 @@ class XMLExporter():
         data["periodicity_template"] = PeriodicityRenderer.render(data)
         data["initials_template"] = InitialsRenderer.render(data)
         data["floatings_template"] = FloatingsRenderer.render(data)
-        data["rzones_template"] = RZonesRenderer.render(data, type(case.relaxation_zone).__name__) if case.relaxation_zone else ""
+        data["rzones_template"] = RZonesRenderer.render(data, type(
+            case.relaxation_zone).__name__) if case.relaxation_zone else ""
         data["accinput_template"] = AccinputRenderer.render(data)
         data["damping_template"] = DampingRenderer.render(data) if case.damping_zones.keys() else ""
         data["mlpistons_template"] = MLPistonsRenderer.render(data)
@@ -75,14 +80,21 @@ class XMLExporter():
         data["chrono_template"] = ChronoRenderer.render(data)
         data["moorings_template"] = MooringsRenderer.render(data)
         data["properties_template"] = PropertiesRenderer.render(data)
+        data["gauges_template"] = GaugesRenderer.render(data)
+        data["flexstruct_template"] = FlexStructRenderer.render(data)
+        data["vres_template"] = VResRenderer.render(data)
+        data["parts_out_template"] = OutFiltersRenderer.render(data)
+        data["geometry_for_normals_template"] = MdbcRenderer.render_geo(data) if case.execution_parameters.boundary == 2 else ""
+        data["mdbc_runlist_template"] = MdbcRenderer.runlist() if case.execution_parameters.boundary == 2 and data["geometry_for_normals_template"] else ""
+        data["normals_template"] = MdbcRenderer.render_normals_base(data) if case.execution_parameters.boundary == 2  else ""
         data["application"] = APP_NAME
         data["current_date"] = datetime.now().strftime("%d-%m-%Y %H:%M:%S")
+        data["parameters_template"]=ParametersRenderer.render(data)
         return data
 
     def generate(self, case) -> str:
         """ Returns the GenCase-compatible XML resulting from the case """
         final_xml: str = get_template_text(self.BASE_XML).format(**self.get_adapted_case_data(case))
-
         # Strip empty lines from the final XML to clean it up.
         while "\n\n" in final_xml:
             final_xml = final_xml.replace("\n\n", "\n")
@@ -96,7 +108,8 @@ class XMLExporter():
         for mkbasedproperty in case.mkbasedproperties.values():
             if mkbasedproperty.property:
                 if not any(mkbasedproperty.property.name in prop for prop in properties_list):
-                    properties_list.append(get_template_text(self.PROPERTY_MATERIALS_XML).format(**mkbasedproperty.property.__dict__))
+                    properties_list.append(
+                        get_template_text(self.PROPERTY_MATERIALS_XML).format(**mkbasedproperty.property.__dict__))
 
         formatter: dict = {
             "each_property": LINE_END.join(properties_list)
@@ -110,3 +123,4 @@ class XMLExporter():
             file.write(self.generate_material(case))
         with open("{}/{}{}".format(path, case.name, self.GENCASE_XML_SUFFIX), "w", encoding="utf-8") as file:
             file.write(self.generate(case))
+

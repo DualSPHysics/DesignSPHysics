@@ -1,0 +1,4 @@
+                            <rotateadv angle1="{rotateadv_angle[0]}" angle2="{rotateadv_angle[1]}" angle3="{rotateadv_angle[2]}" axes="{rotateadv_axes}"
+                                       intrinsic="{rotateadv_intrinsic}" anglesunits="degrees">
+						        <center x="{rotateadv_center[0]}" y="{rotateadv_center[1]}" z="{rotateadv_center[2]}" comment="It is optional (default=0,0,0)" />
+					        </rotateadv>

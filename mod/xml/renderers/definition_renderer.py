@@ -7,8 +7,8 @@ Renders the <definition> tag of the GenCase XML.
 import FreeCAD
 
 from mod.constants import DIVIDER
+from mod.tools.template_tools import get_template_text
 
-from mod.template_tools import get_template_text
 
 class DefinitionRenderer():
     """ Renders the <definition> tag of the GenCase XML. """
@@ -22,8 +22,12 @@ class DefinitionRenderer():
         fc_object = FreeCAD.ActiveDocument.getObject("Case_Limits")
         min_point = fc_object.Placement.Base
         # Note: 'pointref' is defined in "Define Constants" layout
+        if data["constants"]["setpointref_hdp"] == "true":
+            pointref= ["#Dp/2","#Dp/2","#Dp/2"]
+        else:
+            pointref=data["constants"]["pointref"]
         formatter = {
-            "pointref": data["constants"]["pointref"],
+            "pointref" : pointref,
             "dp": data["dp"],
             "pointmin": [min_point.x / DIVIDER, min_point.y / DIVIDER, min_point.z / DIVIDER],
             "pointmax": [

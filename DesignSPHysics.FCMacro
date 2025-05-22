@@ -12,14 +12,15 @@ from traceback import format_tb
 
 sys.path.append(os.path.dirname(os.path.abspath(__file__)))
 
-from mod.widgets.error_report_dialog import ErrorReportDialog  # pylint: disable=wrong-import-position
+#from mod.widgets.custom_widgets.error_report_dialog import ErrorReportDialog  # pylint: disable=wrong-import-position
 from mod.main import boot  # pylint: disable=wrong-import-position
 
+'''
 def report_error(exctype, value, tb):
     """ Displays a dialog with options about the sudden crash. """
     sys.__excepthook__(exctype, value, tb)
-    ErrorReportDialog(escape(str(exctype)), escape(str(value)), escape(''.join(format_tb(tb))))
+    ErrorReportDialog(escape(str(exctype)), escape(str(value)), escape(''.join(format_tb(tb))))'''
 
 
-sys.excepthook = report_error
+#sys.excepthook = report_error
 boot()

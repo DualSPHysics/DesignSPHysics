@@ -1,4 +1,4 @@
-            <floating mkbound="{floating_mk}" {rhopbody}>
+            <floating mkbound="{floating_mk}" {rhopbody} {property}>
 {massbody}
 {float_property_attributes}
             </floating>

@@ -2,17 +2,12 @@
 # -*- coding: utf-8 -*-
 """DesignSPHysics Object List Table Widget."""
 
-# from PySide import QtGui
 from PySide2 import QtWidgets
-
-from mod.freecad_tools import get_fc_object
-from mod.translation_tools import __
-
 from mod.constants import CASE_LIMITS_OBJ_NAME
-
 from mod.dataobjects.case import Case
-
-from mod.widgets.object_order_widget import ObjectOrderWidget
+from mod.tools.freecad_tools import get_fc_object
+from mod.tools.translation_tools import __
+from mod.widgets.dock.dock_widgets.object_order_widget import ObjectOrderWidget
 
 
 class DockObjectListTableWidget(QtWidgets.QWidget):
@@ -35,6 +30,7 @@ class DockObjectListTableWidget(QtWidgets.QWidget):
         self.objectlist_layout.addWidget(self.objectlist_label)
         self.objectlist_layout.addWidget(self.objectlist_table)
         self.objectlist_layout.setContentsMargins(0, 0, 0, 0)
+
 
         self.setLayout(self.objectlist_layout)
 

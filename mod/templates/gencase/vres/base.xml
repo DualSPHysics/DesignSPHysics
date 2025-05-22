@@ -1,0 +1,4 @@
+        <vres active="true">
+            <buffsizeh v="{vres_buffer_size_h}" comment="Buffer size according to H (H*v) (default v=2)" />
+{vres_each}
+        </vres>

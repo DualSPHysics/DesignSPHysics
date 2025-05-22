@@ -1,0 +1,6 @@
+                <maxz name="{name}">
+{common}
+                    <point0 x="{point0[0]}" y="{point0[1]}" z="{point0[2]}" comment="Bottom point" units_comment="m" />
+                    <height value="{height}" comment="Maximum height to check" units_comment="m" />
+                    <distlimit value="{dist_limit}" comment="Radio to check particles" units_comment="m" />
+                </maxz>

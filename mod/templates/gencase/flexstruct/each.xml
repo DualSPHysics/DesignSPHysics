@@ -1,0 +1,7 @@
+                <flexstrucbody mkbound="{mkbound}" mkclamp="{mkclamp}">
+                        <density value="{density}" comment="Structure material density" units_comment="kg/m^3" />
+                        <youngmod value="{young_mod}" comment="Young's Modulus" units_comment="Pa" />
+                        <poissratio value="{poisson_ratio}" comment="Poisson ratio" />
+                        <constitmodel value="{const_model}" comment="Constitutive model 1:Plane Strain (2D), 2:Plane Stress (2D), 3:St. Venant Kirchhoff (3D)" />
+                        <hgfactor value="{hg_factor}" comment="Hourglass correction factor: keep as low as possible (default=0)" />
+                </flexstrucbody>

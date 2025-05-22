@@ -1,0 +1,4 @@
+                <velocity name="{name}">
+{common}
+                    <point x="{point0[0]}" y="{point0[1]}" z="{point0[2]}" comment="Measurement position" units_comment="m" />
+                </velocity>

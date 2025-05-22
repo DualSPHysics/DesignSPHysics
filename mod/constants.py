@@ -6,14 +6,15 @@
 from mod.enums import FreeCADObjectType
 
 # APP Constants
-FREECAD_MIN_VERSION = "0.18"
+FREECAD_MIN_VERSION = "0.21"
 APP_NAME = "DesignSPHysics"
 DIVIDER = 1000
 LINE_END = "\n"
 PICKLE_PROTOCOL = 1  # Binary mode
-VERSION = "0.7.1 (26-11-2024)" # Version must be M.m.p (dd-mm-yyyy)
+VERSION = "0.8.0" # Version must be M.m.p (dd-mm-yyyy)
+REVISION = "010" # Revision number must be rrr
+VER_DATE = "(16-05-2025)" # Date version must be (dd-mm-yyyy)
 WIDTH_2D = 0.001
-MAX_PARTICLE_WARNING = 2000000
 DISK_DUMP_FILE_NAME = "designsphysics-{}.log".format(VERSION)
 MKFLUID_LIMIT = 10
 MKFLUID_OFFSET = 1
@@ -30,7 +31,34 @@ CASE_LIMITS_LINE_COLOR = (1.00, 0.00, 0.00)
 CASE_LIMITS_LINE_WIDTH = 2.00
 FILLBOX_DEFAULT_LENGTH = "1000 mm"
 FILLBOX_DEFAULT_RADIUS = 10
+CASE_3D_MODE = True
+#Names for helper objects group folders
+HELPER_FOLDER_GROUP_NAME = "Helper_Objects"
+IO_ZONES_GROUP_NAME = "InOut_Zones"
+VRES_BOXES_GROUP_NAME = "VResolution_Boxes"
+GAUGES_GROUP_NAME = "Gauges"
+VARIABLES_SHEET_NAME = "Variables"
+OUTFILTERS_GROUP_NAME = "OutPartFilters"
+FLOWBOXES_GROUP_NAME = "Flowtool_Boxes"
+DAMPING_GROUP_NAME = "Damping_Zones"
+SIMULATION_DOMAIN_NAME = "Simulation_domain"
+#Colors for helper objects
+IO_ZONES_COLOR = ((0.32, 1.00, 0.00))
+VRES_BOXES_COLOR = (0.4,0.6,1.0)
+GAUGES_COLOR = (1.0,1.0,0.0)
+GAUGES_DIRECTION_COLOR = (1.0,1.0,0.4)
+FLOWBOXES_COLOR = (0.1,0.1,1.0)
+OUTFILTERS_COLOR = (1.0,0.4,0.6)
+DAMPING_COLOR = (1.0,0.4,0.4)
+SIMULATION_DOMAIN_COLOR = (0.1,0.1,0.0)
 
+#Default widget sizes (for UnitInputs)
+DEFAULT_MIN_WIDGET_WIDTH = 160
+DEFAULT_MAX_WIDGET_WIDTH = 180
+DEFAULT_WIDGET_HEIGHT = 24
+DEFAULT_UNITS_CONFIG = 1 # 0: "mm" Millimeter; 1: "m" Meter
+DEFAULT_DECIMALS = 3
+AUTO_UNITS_SELECT = False
 SUPPORTED_TYPES = [FreeCADObjectType.BOX, FreeCADObjectType.SPHERE, FreeCADObjectType.CYLINDER]
 
 MAIN_WIDGET_INTERNAL_NAME = "DSPH Widget"

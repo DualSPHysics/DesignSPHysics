@@ -2,17 +2,14 @@
 # -*- coding: utf-8 -*-
 """DesignSPHysics Dock Configuration Widget. """
 
-# from PySide import QtGui
 from PySide2 import QtWidgets
 
-from mod.translation_tools import __
-from mod.freecad_tools import get_fc_main_window
-
-from mod.widgets.constants_dialog import ConstantsDialog
-from mod.widgets.setup_plugin_dialog import SetupPluginDialog
-from mod.widgets.execution_parameters_dialog import ExecutionParametersDialog
 
 from mod.dataobjects.case import Case
+from mod.tools.translation_tools import __
+from mod.widgets.dock.dock_widgets.constants_dialog import ConstantsDialog
+from mod.widgets.dock.dock_widgets.execution_parameters_dialog import ExecutionParametersDialog
+from mod.widgets.dock.dock_widgets.setup_plugin_dialog import SetupPluginDialog
 
 
 class DockConfigurationWidget(QtWidgets.QWidget):
@@ -49,6 +46,10 @@ class DockConfigurationWidget(QtWidgets.QWidget):
         self.execparams_button = QtWidgets.QPushButton(__("Execution\nParameters"))
         self.execparams_button.setToolTip(__("Change execution parameters, such as\ntime of simulation, viscosity, etc."))
 
+        self.execparams_button.setToolTip(
+            __("Define variables to use in \nsimulation"))
+
+
         self.setup_button.clicked.connect(self.on_setup_button_pressed)
         self.execparams_button.clicked.connect(self.on_execparams_button_presed)
         self.constants_button.clicked.connect(self.on_constants_button_pressed)
@@ -74,15 +75,16 @@ class DockConfigurationWidget(QtWidgets.QWidget):
 
     def on_constants_button_pressed(self):
         """ Opens constant definition window on button click. """
-        ConstantsDialog(parent=get_fc_main_window())
+        ConstantsDialog(parent=None).exec_()
 
     def on_setup_button_pressed(self):
         """ Opens constant definition window on button click. """
-        SetupPluginDialog(parent=get_fc_main_window())
+        SetupPluginDialog(parent=None).exec_()
 
     def on_execparams_button_presed(self):
         """ Opens a dialog to tweak the simulation's execution parameters """
-        ExecutionParametersDialog(parent=get_fc_main_window())
+        ExecutionParametersDialog(parent=None).exec_()
+
 
     def adapt_to_no_case(self):
         """ Adapts the contents of the widget to an environment with no opened case. """

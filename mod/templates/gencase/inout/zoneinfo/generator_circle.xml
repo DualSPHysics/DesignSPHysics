@@ -2,4 +2,6 @@
                             <point x="{point[0]}" y="{point[1]}" z="{point[2]}" />
                             <radius v="{radius}" />
                             <direction x="{direction[0]}" y="{direction[1]}" z="{direction[2]}" />
+{generator_rotateaxis}
+{generator_rotateadv}
                         </circle>

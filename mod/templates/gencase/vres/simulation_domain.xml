@@ -1,0 +1,3 @@
+            <simulationdomain useparent="{useparent}" comment="Defines domain of simulation (default=Uses minimum and maximum position of the generated particles)" >
+{pos}
+            </simulationdomain>

@@ -1,7 +1,7 @@
 {
     "windows": {
         "gencase": "./dualsphysics/bin/GenCase_win64.exe",
-        "dsphysics": "./dualsphysics/bin/DualSPHysics5.2_win64.exe",
+        "dsphysics": "./dualsphysics/bin/DualSPHysics5.4_win64.exe",
         "partvtk": "./dualsphysics/bin/PartVTK_win64.exe",
         "computeforces": "./dualsphysics/bin/ComputeForces_win64.exe",
         "floatinginfo": "./dualsphysics/bin/FloatingInfo_win64.exe",
@@ -9,11 +9,12 @@
         "isosurface": "./dualsphysics/bin/IsoSurface_win64.exe",
         "boundaryvtk": "./dualsphysics/bin/BoundaryVTK_win64.exe",
         "flowtool": "./dualsphysics/bin/FlowTool_win64.exe",
-        "bathymetrytool": "./dualsphysics/bin/BathymetryTool_win64.exe"
+        "bathymetrytool": "./dualsphysics/bin/BathymetryTool_win64.exe",
+        "surfacesstl" : "./dualsphysics/bin/SurfacesSTL_win64.exe"
     },
     "linux": {
         "gencase": "./dualsphysics/bin/GenCase_linux64",
-        "dsphysics": "./dualsphysics/bin/DualSPHysics5.2_linux64",
+        "dsphysics": "./dualsphysics/bin/DualSPHysics5.4_linux64",
         "partvtk": "./dualsphysics/bin/PartVTK_linux64",
         "computeforces": "./dualsphysics/bin/ComputeForces_linux64",
         "floatinginfo": "./dualsphysics/bin/FloatingInfo_linux64",
@@ -21,6 +22,7 @@
         "isosurface": "./dualsphysics/bin/IsoSurface_linux64",
         "boundaryvtk": "./dualsphysics/bin/BoundaryVTK_linux64",
         "flowtool": "./dualsphysics/bin/FlowTool_linux64",
-        "bathymetrytool": "./dualsphysics/bin/BathymetryTool_linux64"
+        "bathymetrytool": "./dualsphysics/bin/BathymetryTool_linux64",
+        "surfacesstl" : "./dualsphysics/bin/SurfacesSTL_linux64"
     }
 }

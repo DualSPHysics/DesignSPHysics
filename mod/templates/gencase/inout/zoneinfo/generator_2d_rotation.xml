@@ -1,0 +1,1 @@
+                            <rotate angle="#-{rotation_angle}" centerx="{rotation_center[0]}" centerz="{rotation_center[1]}" anglesunits="degrees" />

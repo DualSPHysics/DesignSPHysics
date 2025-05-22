@@ -1,0 +1,17 @@
+                <mesh name="{name}">
+{common}
+                    <point x="{point0[0]}" y="{point0[1]}" z="{point0[2]}"  comment="Initial measurement position" units_comment="m" />
+                    <vec1 x="{vec1[0]}" y="{vec1[1]}" z="{vec1[2]}" comment="First axis vector to define the measurement grid" />
+                    <vec2 x="{vec2[0]}" y="{vec2[1]}" z="{vec2[2]}" comment="Second axis vector to define the measurement grid" />
+                    <vec3 x="{vec3[0]}" y="{vec3[1]}" z="{vec3[2]}" comment="Third axis vector to define the measurement grid (used for elevation calculation)" />
+                    <size1 length="{size1_length}" distpt="{size1_distpt}" comment="Length and distance between measurement points for first direction" units_comment="m" />
+                    <size2 length="{size2_length}" distpt="{size2_distpt}" comment="Length and distance between measurement points for second direction" units_comment="m" />
+                    <size3 length="{size3_length}" distpt="{size3_distpt}" comment="Length and distance between measurement points for third direction" units_comment="m" />
+                    <dirdat x="{dirdat[0]}" y="{dirdat[1]}" z="{dirdat[2]}" comment="Direction vector for computed linear velocity or other variables" />
+                    <masslimit {mass_limit_coef}="{mass_limit}" comment="Coefficient to calculate mass of free-surface (default=0.5 on 3D and 0.4 on 2D)" />
+                    <outputdata value="{output_data}" comment="Type of results requested (vel, veldir, rhop, zsurf)" />
+                    <outputfmt value="{output_fmt}" comment="Output formats (bin, csv) (default=csv)" />
+                    <buffersize value="{buffersize}" comment="Output buffer size (default=30)" />
+                    <kclimit value="{kclimit}" comment="Minimum value of sum_wab_vol to apply the Kernel Correction. Use NONE to disable (default=0.5)" />
+                    <kcdummy value="{kc_dummy}" comment="Dummy value for non-corrected values. Use NONE to disable (default=0)" />
+                </mesh>

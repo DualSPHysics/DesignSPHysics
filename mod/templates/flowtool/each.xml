@@ -1,0 +1,5 @@
+    <{boxtype} {first_box_name} {second_box_name}>{divide_string}
+        <point x="{point[0]}" y="{point[1]}" z="{point[2]}" />
+        <angle x="{angle[0]}" y="{angle[1]}" z="{angle[2]}" />
+        <size x="{size[0]}" y="{size[1]}" z="{size[2]}" />
+    </{boxtype}>
