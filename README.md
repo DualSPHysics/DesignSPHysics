@@ -16,7 +16,8 @@ Check the [Official Webpage](http://design.sphysics.org) for downloads and more 
  * [7th DualSPHysics Workshop](https://dual.sphysics.org/7thworkshop/), Bari, Italy, on **19-21 March, 2024**.
 
 ### Releases
- * [v0.7.0](https://github.com/DualSPHysics/DesignSPHysics/releases/tag/0.7.0) has been released (15-09-2023). See [CHANGELOG file](CHANGELOG.md)
+ * [v0.8.0](https://github.com/DualSPHysics/DesignSPHysics/releases/tag/0.8.0) (22-05-2023). See [CHANGELOG file](CHANGELOG.md)
+ * [v0.7.0](https://github.com/DualSPHysics/DesignSPHysics/releases/tag/0.7.0) (15-09-2023).
 
 ## Description
 DesignSPHysics enables the user to create cases with solids and fluids and exports it to a DualSPHysics compatible format. In addition, it does the hard work for the user, generating the case data automatically, simulating, and post-processing, all inside FreeCAD.
