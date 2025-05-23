@@ -6,6 +6,9 @@ Check the [Official Webpage](http://design.sphysics.org) for downloads and more 
 
 ![Screenshot](https://design.sphysics.org/img/github-shot-21112019.png)
 
+## Project Overview
+DesignSPHysics enables the user to create cases with solids and fluids and exports it to a DualSPHysics compatible format. In addition, it does the hard work for the user, generating the case data automatically, simulating, and post-processing, all inside FreeCAD.
+
 ## News
 ### Training courses
  * [19th SPHERIC World Conference](https://spheric2025.upc.edu/), Barcelona, Spain, on **16-19 June, 2025**.
@@ -19,41 +22,45 @@ Check the [Official Webpage](http://design.sphysics.org) for downloads and more 
  * [v0.8.0](https://github.com/DualSPHysics/DesignSPHysics/releases/tag/0.8.0) (22-05-2023). See [CHANGELOG file](CHANGELOG.md)
  * [v0.7.0](https://github.com/DualSPHysics/DesignSPHysics/releases/tag/0.7.0) (15-09-2023).
 
-## Description
-DesignSPHysics enables the user to create cases with solids and fluids and exports it to a DualSPHysics compatible format. In addition, it does the hard work for the user, generating the case data automatically, simulating, and post-processing, all inside FreeCAD.
-
 It includes support for pre-processing with GenCase, simulation with DualSPHysics and post-processign with several tools of the DualSPHysics package.
 
 In the future the code will be modular, so integration with different SPH solvers can be used. Right now it's optimized to be used with DualSPHysics
 
 It is developed as a FreeCAD module with a macro bootstrapper, in Python 3.5+, using the QT libraries via PySide.
 
-## Installation instructions
-To install DesignSPHysics you have 2 options: Using the FreeCAD Addon manager for an stable version, or installing manually whatever version that you like from git.
+## Installation
 
-### Installing a release version
-To install a release version, open FreeCAD 0.18+ and go to the menu *Macro -> Macros...* From there, press the *Addons...* button on the bottom right corner, search for DesignSPHysics and click *Install / Update*. FreeCAD will advise you to reboot the application and you'll be set.
+To install DesignSPHysics, you have two options:
 
-Take in mind that as it includes DualSPHysics, the package may take a while to download.
+### Installing a Release Version
+1. Open FreeCAD 0.18+ and navigate to `Macro -> Macros...`.
+2. Press the `Addons...` button in the bottom-right corner, search for DesignSPHysics, and click `Install / Update`.
+3. Reboot FreeCAD as advised, and you're ready to use the module.
 
-To execute DesignSPHysics just open the same Macro dialog and double click DualSPHysics.
+### Installing a Development Build
+1. Clone the branch of your choice from the repository and rename the folder to `DesignSPHysics`.
+2. Copy this folder to the `Mod` folder in your FreeCAD installation directory:
+    * On Windows: `%appdata%/FreeCAD/Mod`
+    * On Linux: `~/.FreeCAD/Mod`
+3. Copy the `DesignSPHysics.FCMacro` file from the repository into the FreeCAD macro directory:
+    * On Windows: `%appdata%/FreeCAD/Macro`
+    * On Linux: `~/.FreeCAD/Macro`
 
-### Installing a development build
-Clone the branch that you like from this repository and rename the folder to 'DesignSPHysics'. Then copy the folder to the Mod folder of the FreeCAD installation directory. 
 
-By default, for example, in Windows, it is located in `%appdata%/FreeCAD/Mod` or in Linux in `~/.FreeCAD/Mod`
+## Help and Support
 
-Then copy the file `DesignSPHysics.FCMacro` of this repository into the FreeCAD macro directory (`%appdata%/FreeCAD/Macro` on Windows; `~/.FreeCAD/Macro` on GNU/Linux)
+For assistance, you can:
 
-## Where to get help
-The new [DualSPHysics forum](https://github.com/DualSPHysics/DualSPHysics/discussions) is available for help on using the features available in the solver.
+- Visit the [DualSPHysics forum](https://github.com/DualSPHysics/DualSPHysics/discussions).
+- Check the [DesignSPHysics Wiki](http://design.sphysics.org/wiki).
+- Post an [issue on GitHub](https://github.com/DualSPHysics/DesignSPHysics/issues).
+- Contact contributors via the [CONTRIBUTING file](CONTRIBUTING.md).
 
-You can check the [DesignSPHysics Wiki](http://design.sphysics.org/wiki) to get help. Also, you can post an [issue here on GitHub](https://github.com/DualSPHysics/DesignSPHysics/issues) or send an email to any of the people found in the [CONTRIBUTING file](CONTRIBUTING.md). 
 
-## Contributing and developing for DesignSPHysics
-You can freely contribute to the project, if you want!. You can do it here on GitHub.
+## Contributing
 
-Please check the [CONTRIBUTING file](CONTRIBUTING.md) to view information about how to contribute to the project.
+Contributions are welcome! Please refer to the [CONTRIBUTING file](CONTRIBUTING.md) for detailed guidelines on how to contribute to the project.
+
 
 ## Copyright and License
 Copyright (C) 2025, 
