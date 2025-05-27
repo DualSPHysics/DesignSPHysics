@@ -1,5 +1,5 @@
 import time
-
+import sys
 from PySide2.QtCore import Signal, Slot, QObject
 from PySide2 import QtCore
 
@@ -128,8 +128,7 @@ class MainLoopManager(QObject):
     def deleted(self):
         try:
             manage_deleted_objects()
-        except Exception as e:
-            error_dialog(__("An unexpected error occurred while creating objects.\n\nDetails: {}").format(str(e)))
+        except Exception:
             return None
 
     @Slot()

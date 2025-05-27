@@ -1,78 +1,174 @@
 # DesignSPHysics
 
-DesignSPHysics is a software module built into [FreeCAD](http://www.freecadweb.org/) that provides a Graphical User Interface for [DualSPHysics](http://dual.sphysics.org/). It is under development since September 2016 and in Beta stage.
+**DesignSPHysics** is an open-source FreeCAD module that provides a comprehensive graphical user interface (GUI) for [DualSPHysics](http://dual.sphysics.org/), a mesh-free particle-based fluid simulation engine based on Smoothed Particle Hydrodynamics (SPH). 
 
-Check the [Official Webpage](http://design.sphysics.org) for downloads and more information.
+Development of DesignSPHysics began in September 2016, and the software is currently in its beta phase.
+
+Visit the [official DesignSPHysics website](http://design.sphysics.org) for downloads, tutorials, and additional information.
 
 ![Screenshot](https://design.sphysics.org/img/github-shot-21112019.png)
 
-## News
-### Training courses
- * [19th SPHERIC World Conference](https://spheric2025.upc.edu/), Barcelona, Spain, on **16-19 June, 2025**.
- * [8th DualSPHysics Workshop](https://dual.sphysics.org/8thworkshop/), Ourense, Spain, on **27-29 January, 2026**.
-#### Past events
- * [SPH modelling For Engineering applications](https://sites.google.com/view/hykudsph/home?authuser=0), Braunschweig, Germany, on **25-27 March 2025**.
- * [4th Hands-on course on experimental and numerical modelling of wave-structure interaction](https://sites.google.com/unifi.it/hands-on-course-2024), Florence, Italy, on **1-5 July 2024**.
- * [7th DualSPHysics Workshop](https://dual.sphysics.org/7thworkshop/), Bari, Italy, on **19-21 March, 2024**.
+---
 
-### Releases
- * [v0.8.0](https://github.com/DualSPHysics/DesignSPHysics/releases/tag/0.8.0) (22-05-2023). See [CHANGELOG file](CHANGELOG.md)
- * [v0.7.0](https://github.com/DualSPHysics/DesignSPHysics/releases/tag/0.7.0) (15-09-2023).
+## 📢 News
 
-## Description
-DesignSPHysics enables the user to create cases with solids and fluids and exports it to a DualSPHysics compatible format. In addition, it does the hard work for the user, generating the case data automatically, simulating, and post-processing, all inside FreeCAD.
+### Upcoming Events
+- **[19th SPHERIC World Conference](https://spheric2025.upc.edu/)** — Barcelona, Spain — *June 16–19, 2025*
+- **[8th DualSPHysics Workshop](https://dual.sphysics.org/8thworkshop/)** — Ourense, Spain — *January 27–29, 2026*
 
-It includes support for pre-processing with GenCase, simulation with DualSPHysics and post-processign with several tools of the DualSPHysics package.
+### Recent Past Events
+- **[SPH Modelling for Engineering Applications](https://sites.google.com/view/hykudsph/home?authuser=0)** — Braunschweig, Germany — *March 25–27, 2025*
+- **[4th Hands-on Course on Experimental and Numerical Modelling of Wave-Structure Interaction](https://sites.google.com/unifi.it/hands-on-course-2024)** — Florence, Italy — *July 1–5, 2024*
+- **[7th DualSPHysics Workshop](https://dual.sphysics.org/7thworkshop/)** — Bari, Italy — *March 19–21, 2024*
 
-In the future the code will be modular, so integration with different SPH solvers can be used. Right now it's optimized to be used with DualSPHysics
 
-It is developed as a FreeCAD module with a macro bootstrapper, in Python 3.5+, using the QT libraries via PySide.
+> Visit the [official DesignSPHysics website](https://dual.sphysics.org/training/) for more information.
 
-## Installation instructions
-To install DesignSPHysics you have 2 options: Using the FreeCAD Addon manager for an stable version, or installing manually whatever version that you like from git.
+---
 
-### Installing a release version
-To install a release version, open FreeCAD 0.18+ and go to the menu *Macro -> Macros...* From there, press the *Addons...* button on the bottom right corner, search for DesignSPHysics and click *Install / Update*. FreeCAD will advise you to reboot the application and you'll be set.
+## 🚀 Latest Releases
 
-Take in mind that as it includes DualSPHysics, the package may take a while to download.
+- [v0.8.1](https://github.com/DualSPHysics/DesignSPHysics/releases/tag/0.8.1) — *May 27, 2023* ([Changelog](CHANGELOG.md))
+- [v0.7.0](https://github.com/DualSPHysics/DesignSPHysics/releases/tag/0.7.0) — *September 15, 2023*
 
-To execute DesignSPHysics just open the same Macro dialog and double click DualSPHysics.
+---
 
-### Installing a development build
-Clone the branch that you like from this repository and rename the folder to 'DesignSPHysics'. Then copy the folder to the Mod folder of the FreeCAD installation directory. 
+## 🧩 Features
 
-By default, for example, in Windows, it is located in `%appdata%/FreeCAD/Mod` or in Linux in `~/.FreeCAD/Mod`
+DesignSPHysics simplifies the process of setting up, running, and post-processing SPH simulations through an intuitive interface in FreeCAD. Key functionalities include:
 
-Then copy the file `DesignSPHysics.FCMacro` of this repository into the FreeCAD macro directory (`%appdata%/FreeCAD/Macro` on Windows; `~/.FreeCAD/Macro` on GNU/Linux)
+- Integrated pre-processing with **GenCase**
+- Simulation execution with **DualSPHysics**
+- Post-processing using **DualSPHysics Tools**
+- Case creation with fluid and solid domains
+- Automated data generation and file management
+- Built-in support for Python 3.5+ and Qt via PySide
+- Macro bootstrapper integration with FreeCAD
 
-## Where to get help
-The new [DualSPHysics forum](https://github.com/DualSPHysics/DualSPHysics/discussions) is available for help on using the features available in the solver.
+Future versions will include modular support for additional SPH solvers beyond DualSPHysics.
 
-You can check the [DesignSPHysics Wiki](http://design.sphysics.org/wiki) to get help. Also, you can post an [issue here on GitHub](https://github.com/DualSPHysics/DesignSPHysics/issues) or send an email to any of the people found in the [CONTRIBUTING file](CONTRIBUTING.md). 
+---
 
-## Contributing and developing for DesignSPHysics
-You can freely contribute to the project, if you want!. You can do it here on GitHub.
+## ⚙️ Setup
 
-Please check the [CONTRIBUTING file](CONTRIBUTING.md) to view information about how to contribute to the project.
+There are multiple ways to obtain the DesignSPHysics package:
 
-## Copyright and License
-Copyright (C) 2025, 
-Ivan Martinez Estevez, Andres Vieira
+### 📥 Option 1: Clone the Repository
 
-EPHYSLAB Environmental Physics Laboratory, Universidade de Vigo
+Clone the latest development version from GitHub:
+```bash
+git clone https://github.com/DualSPHysics/DesignSPHysics.git
+```
+
+### 📦 Option 2: Download a Stable Release
+
+Get pre-packaged code from the [GitHub Releases page](https://github.com/DualSPHysics/DesignSPHysics/releases).
+
+---
+
+### 🔧 DualSPHysics Binaries
+
+> **Important:** Starting with version 0.8.0, DesignSPHysics does **not** include the DualSPHysics binaries. These must be downloaded separately.
+
+DualSPHysics binaries should be located in `DesignSPHysics/dualsphysics/bin`. 
+You can obtain the required binaries using one of the following methods:
+
+- **Option A: Automatically via Setup Script**
+  ```bash
+  cd DesignSPHysics
+  chmod +x setup.sh && ./setup.sh
+  ```
+
+- **Option B: Manually**
+  1. Download `dualsphysics.zip` from the [official DualSPHysics website](https://dual.sphysics.org/sphcourse/DualSPHysics-bin)
+  2. Move the file into the `DesignSPHysics` folder
+  3. Extract the contents
+
+---
+
+## 🛠 Installation Instructions
+
+### Installing a Development Build
+
+1. Rename the downloaded or cloned folder to `DesignSPHysics`
+2. Move the folder into FreeCAD’s `Mod` directory:
+   - **Windows:** `%APPDATA%/FreeCAD/Mod`
+   - **Linux:** `~/.FreeCAD/Mod`
+3. Copy the `DesignSPHysics.FCMacro` file into the FreeCAD `Macro` directory:
+   - **Windows:** `%APPDATA%/FreeCAD/Macro`
+   - **Linux:** `~/.FreeCAD/Macro`
+
+---
+
+## ▶️ Launching DesignSPHysics
+
+To start using the plugin in FreeCAD:
+
+1. Open **FreeCAD**
+2. Navigate to **Macro → Macros...**
+3. In the `Execute macro` window:
+   - Locate and select `DesignSPHysics.FCMacro`
+   - Click **Execute**
+
+A new panel labeled **DesignSPHysics** will appear on the right. Follow these steps:
+
+4. Click **Setup Plugin** to open the **DSPH Setup** window
+5. DualSPHysics executables should be configured automatically while ParaView executable should be configured manually.
+
+---
+
+## 🛠️ Troubleshooting
+
+If you experience issues during installation or launch, residual configuration files from previous installations might be the cause. You should delete them before proceeding.
+
+### Configuration File Locations
+
+- **Windows:**
+  ```
+  C:\Users\<user>\AppData\Roaming\FreeCAD
+  ```
+
+- **Linux:**
+  ```
+  ~/.config/FreeCAD
+  ```
+
+To manually remove residual files:
+- Use a file manager to delete any `DesignSPHysics`-related files
+- Or, run this command in a terminal (Linux):
+  ```bash
+  rm ~/.config/FreeCAD/designsphysics*
+  ```
+
+> Replace `<user>` with your actual system username.
+
+
+---
+
+## 📚 Documentation & Support
+
+- 📖 [DesignSPHysics Wiki](http://design.sphysics.org/wiki)
+- 💬 [DualSPHysics GitHub Discussions](https://github.com/DualSPHysics/DualSPHysics/discussions)
+- 🐛 [Report Issues on GitHub](https://github.com/DualSPHysics/DesignSPHysics/issues)
+- ✉️ Contact contributors via the [CONTRIBUTING file](CONTRIBUTING.md)
+
+---
+
+## 🤝 Contributing
+
+We welcome contributions! Whether it’s bug fixes, new features, or documentation improvements, your input is valuable. Please read the [CONTRIBUTING file](CONTRIBUTING.md) for detailed guidelines.
+
+---
+
+## 📄 License
+
+**DesignSPHysics** is released under the [GNU General Public License v3.0 or later](http://www.gnu.org/licenses/).
+
+```
+© 2025 Ivan Martinez Estevez, Andres Vieira
+
+EPHYSLAB Environmental Physics Laboratory, Universidade de Vigo  
 EPHYTECH Environmental Physics Technologies
+```
 
-This file is part of DesignSPHysics.
-
-DesignSPHysics is free software: you can redistribute it and/or modify
-it under the terms of the GNU General Public License as published by
-the Free Software Foundation, either version 3 of the License, or
-(at your option) any later version.
-
-DesignSPHysics is distributed in the hope that it will be useful,
-but WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-GNU General Public License for more details.
-
-You should have received a copy of the GNU General Public License
-along with DesignSPHysics.  If not, see <http://www.gnu.org/licenses/>.
+> This software is provided “as is,” without warranty of any kind. See the license for details.

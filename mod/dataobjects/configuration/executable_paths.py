@@ -2,8 +2,11 @@
 # -*- coding: utf-8 -*-
 """ DesignSPHysics Executable Paths data """
 
-import pickle
+
+
 import os
+import sys
+import pickle
 
 from mod.tools.executable_tools import executable_contains_string, get_executable_info_flag
 from mod.tools.file_tools import get_saved_config_file, get_default_config_file
@@ -32,13 +35,15 @@ class ExecutablePaths():
         self.vres: str = ""
         self.surfacesstl: str = ""
 
-
+        self.load_defaults()
         self.restore_from_disk()
 
     def check_and_filter(self):
         """ Filters the executable removing those not matching the correct application.
             Returns whether or not all of them were correctly set. """
         execs_correct: bool = True
+        self.load_defaults()
+        self.restore_from_disk()
         execs_to_check = {
             "gencase": self.gencase,
             "dualsphysics": self.dsphysics,
@@ -98,17 +103,17 @@ class ExecutablePaths():
         self.vres = default_data["dsphysics"]
         self.surfacesstl = default_data["surfacesstl"]
 
-
     def restore_from_disk(self) -> None:
         """ Tries to restore the saved paths from the persisted ones if they exist."""
         config_file: str = get_saved_config_file()
-        if not os.path.exists(config_file):
-            self.load_defaults()
-            return
+        # Check if file exists and has content
+        if not os.path.exists(config_file) or os.path.getsize(config_file) == 0:
+           return
+        
         with open(config_file, "rb") as picklefile:
             obj: ExecutablePaths = pickle.load(picklefile)
             self.gencase = obj.gencase
-            self.dsphysics = obj.dsphysics
+            # self.dsphysics = obj.dsphysics # Commented to avoid incompatibilities from previous DS codes
             self.partvtk = obj.partvtk
             self.floatinginfo = obj.floatinginfo
             self.computeforces = obj.computeforces
@@ -118,9 +123,8 @@ class ExecutablePaths():
             self.flowtool = obj.flowtool
             self.bathymetrytool = obj.bathymetrytool
             self.paraview = obj.paraview
-            self.vres = obj.dsphysics
+            # self.vres = obj.dsphysics # Commented to avoid incompatibilities from previous DS codes
             self.surfacesstl = obj.surfacesstl
-
 
     def persist(self) -> None:
         """ Persists the current executable paths to disk for next Case instantiations to load. """

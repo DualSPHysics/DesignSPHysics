@@ -1283,7 +1283,19 @@ def manage_gauges(gauges: Dict[str, Gauge]):
 
 
 def update_dp(dp:float):
-    get_fc_object(CASE_LIMITS_OBJ_NAME).Dp = f'{dp}  m'
+    case_limits_obj=get_fc_object(CASE_LIMITS_OBJ_NAME)
+    obj = case_limits_obj.Object if hasattr(case_limits_obj, 'Object') else case_limits_obj
+
+    try:
+        # Correct way to check for properties in FreeCAD
+        if not hasattr(obj, "PropertiesList") or "lastposition" not in obj.PropertiesList:
+            obj.addProperty("App::PropertyVector", "lastposition", "DesignSPHysics", "Last position of the object")
+        if not hasattr(obj, "PropertiesList") or "Dp" not in obj.PropertiesList:
+            obj.addProperty("App::PropertyDistance", "Dp", "DesignSPHysics", "Last position of the object")  
+    except Exception as e:
+        error_dialog(f"Error updating DP properties: {str(e)}")
+
+    case_limits_obj.Dp = f'{dp}  m'
 
 def draw_simulation_domain(min_x,min_y,min_z,max_x,max_y,max_z):
     size = [max_x - min_x, max_y - min_y, max_z - min_z]

@@ -9,6 +9,7 @@ import FreeCAD
 
 from mod.constants import VERSION
 from mod.functions import get_os
+from mod.functions import migrate_state
 
 
 class ApplicationSettings():
@@ -77,3 +78,15 @@ class ApplicationSettings():
         """ Persists the current settings to disk for next instantiations to load. """
         with open(self.get_save_file(), "w", encoding="utf-8") as save_file:
             json.dump(self.__dict__, save_file, indent=4)
+    
+    def __setstate__(self, state: dict):
+        # Attribute renaming map (old -> new)
+        rename_map = {
+            'force_moordyn_support_enabled': 'force_moordynplus_support_enabled',  # Add other renames if needed
+        }
+
+        # Handle missing attributes (backward compatibility)
+        default_attrs = dict()
+
+        # Restore the state
+        self.__dict__.update(migrate_state(rename_map,default_attrs,state))

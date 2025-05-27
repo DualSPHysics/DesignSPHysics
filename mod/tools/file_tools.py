@@ -14,6 +14,7 @@ import json
 import shutil
 import re
 import pickle
+import sys
 
 from sys import platform
 from traceback import print_exc
@@ -27,6 +28,7 @@ import Mesh
 import Fem
 from femmesh.femmesh2mesh import femmesh_2_mesh
 
+
 from mod.dataobjects.inletoutlet.inlet_outlet_elevation_info import InletOutletElevationInfo
 from mod.dataobjects.inletoutlet.inlet_outlet_velocity_info import InletOutletVelocityInfo
 from mod.dataobjects.motion.path_file_gen import PathFileGen
@@ -35,12 +37,12 @@ from mod.functions import get_designsphysics_path, get_mod_path
 from mod.tools.freecad_tools import manage_inlet_outlet_zones,manage_vres_bufferboxes, manage_gauges, manage_partfilters
 from mod.tools.stdout_tools import error, debug, log
 from mod.tools.translation_tools import __
-from mod.tools.pickle_tool import CustomUnpickler
 from mod.xml.xml_exporter import XMLExporter
 from mod.tools.dialog_tools import error_dialog, warning_dialog, WaitDialog
 from mod.tools.executable_tools import refocus_cwd
 from mod.tools.freecad_tools import document_count, prompt_close_all_documents, get_fc_object
 from mod.enums import ObjectType, ObjectFillMode, InletOutletVelocityType, InletOutletZSurfMode
+from mod.tools.pickle_tool import CustomUnpickler
 
 from mod.constants import VERSION, PICKLE_PROTOCOL
 
@@ -89,7 +91,7 @@ def load_case(load_path: str) -> "Case":
                 prompt_close_all_documents(prompt=False)
                 return None
             if loaded_data.version < VERSION:
-                warning_dialog(__("The case data you are loading is from a previous version ({}) of this software. They may be missing features or errors.").format(loaded_data.version))
+                warning_dialog(__("The case data you are loading comes from a previous version ({}) of this software. They may be missing features or errors. Please check your setup carefully.").format(loaded_data.version))
             elif loaded_data.version > VERSION:
                 warning_dialog(__("You are loading a case data from a future version ({}) of this software. You should upgrade DesignSPHysics as they may be errors using this file.").format(loaded_data.version))
             return loaded_data
@@ -416,8 +418,6 @@ def get_saved_config_file() -> str:
     """ Returns the path of the configuration file saved in the FreeCAD user directory. """
     config_file= "{datadir}/designsphysics-executables-{version}.data".format(datadir=FreeCAD.getUserAppDataDir(), version=VERSION)
     return config_file
-
-
 
 
 
