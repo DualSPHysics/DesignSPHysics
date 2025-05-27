@@ -2,6 +2,11 @@
 The release notes for the DesignSPHysics.
 
 -------------------
+## DesignSPHysics v0.8.1 (27-05-2025)
+* DualSPHysics v5.4 binaries uploaded at: https://dual.sphysics.org/sphcourse/DualSPHysics-bin/
+* Full compatibility with DesignSPHysics v0.7.0
+
+-------------------
 ## DesignSPHysics v0.8.0 (16-05-2025) 
 * Update DualSPHysics binaries from v5.4
 * Implementation of the novelties on DualSPHysics
@@ -15,7 +20,6 @@ The release notes for the DesignSPHysics.
 * Helper object to show position size and orientation of Inlet zones, Variable Resolution Zones, Gauges,Particle Filters and FlowTool Boxes
 * Script generation for Windows and Linux
 * Importing of .vtm and .vtu files
-* Compatibility with DesignSPHysics v0.7.0
 
 -------------------
 ## DesignSPHysics v0.7.0 (15-09-2023) 

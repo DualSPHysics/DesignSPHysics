@@ -1,4 +1,5 @@
 from mod.constants import LINE_END
+from mod.functions import is_key
 from mod.tools.template_tools import get_template_text
 
 
@@ -9,7 +10,7 @@ class FlexStructRenderer:
     def render(cls,data):
         flex_structs: dict = dict()
         for mk, mk_prop in data["mkbasedproperties"].items():
-            if mk_prop["flex_struct"] and mk_prop["flex_struct"]["enabled"]=="true":
+            if is_key(mk_prop,"flex_struct") and mk_prop["flex_struct"] and mk_prop["flex_struct"]["enabled"]=="true":
                 flex_structs[mk] = mk_prop["flex_struct"]
         if not flex_structs.values():
             return ""

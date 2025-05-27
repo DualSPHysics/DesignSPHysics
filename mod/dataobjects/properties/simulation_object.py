@@ -3,7 +3,7 @@
 """ DesignSPHysics Simulation Object data. """
 
 from mod.tools.freecad_tools import get_fc_object
-from mod.tools.stdout_tools import debug
+from mod.functions import migrate_state
 
 from mod.enums import ObjectType, ObjectFillMode, FreeCADObjectType
 from mod.constants import SUPPORTED_TYPES, MKFLUID_LIMIT, MKFLUID_OFFSET
@@ -41,6 +41,41 @@ class SimulationObject():
         self.mdbc_dist_vdp:float=0.0
         self.mdbc_normal_invert:bool=False
 
+    def __setstate__(self, state: dict):
+        # Attribute renaming map (old -> new)
+        rename_map = dict()
+
+        # Handle missing attributes (backward compatibility)
+        default_attrs = {
+            'faces_configuration' : None,
+            'autofill' : False,
+            'frdrawmode' : False,
+            'scale_factor' : [1, 1, 1],
+            'advdraw_enabled' : False,
+            'advdraw_reverse' : False,
+            'advdraw_maxdepth_enabled' : False,
+            'advdraw_mindepth_enabled' : False,
+            'advdraw_maxdepth' : 3.0,
+            'advdraw_mindepth' : 0.1,
+            'load_as_points' : False,
+            'filename' : "",
+            'file_type' : "stl",
+            'is_loaded_geometry':False,
+            'origin_filename': "",
+            'full_filename': "",
+            'use_mdbc': False,
+            'mdbc_dist_vdp': 0.0,
+            'mdbc_normal_invert': False,
+            'is_loaded_geometry': False,
+            'scale_factor' : [1, 1, 1],
+            'use_mdbc': False,
+            'mdbc_dist_vdp': 0.0,
+            'mdbc_normal_invert': False,
+            'file_type': "stl"
+        }
+
+        # Restore the state
+        self.__dict__.update(migrate_state(rename_map,default_attrs,state))
 
 
 

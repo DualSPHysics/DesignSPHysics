@@ -10,7 +10,7 @@ import FreeCAD
 from mod.constants import DIVIDER, SUPPORTED_TYPES, LINE_END
 from mod.enums import FreeCADObjectType, ObjectType
 from mod.tools.template_tools import get_template_text
-
+from mod.functions import is_key
 
 class ObjectsRenderer():
     """ Renders the <mainlist> tag of the GenCase XML. """
@@ -45,7 +45,7 @@ class ObjectsRenderer():
             "label": fc_object.Label,
             "obj": obj,
             "pos": [fc_object.Placement.Base.x / DIVIDER, fc_object.Placement.Base.y / DIVIDER, fc_object.Placement.Base.z / DIVIDER] if not fc_object.Placement.Rotation.Angle else [0, 0, 0],
-            "mktype_template": (get_template_text(cls.OBJECTS_MKBOUND_XML) if obj["type"] == ObjectType.BOUND else get_template_text(cls.OBJECTS_MKFLUID_XML)).format(**obj),
+            "mktype_template": (get_template_text(cls.OBJECTS_MKBOUND_XML) if is_key(obj,"type") and obj["type"] == ObjectType.BOUND else get_template_text(cls.OBJECTS_MKFLUID_XML)).format(**obj),
             "move_template": get_template_text(cls.OBJECTS_MOVE_XML).format(**{
                 "vec": [fc_object.Placement.Base.x / DIVIDER, fc_object.Placement.Base.y / DIVIDER, fc_object.Placement.Base.z / DIVIDER]
             }) if fc_object.Placement.Rotation.Angle else "",
@@ -55,7 +55,7 @@ class ObjectsRenderer():
             }) if fc_object.Placement.Rotation.Angle else "",
             "frdrawmode_template_enable": get_template_text(cls.OBJECT_FRDRAWMODE_ENABLE) if fc_object.TypeId in (FreeCADObjectType.BOX, FreeCADObjectType.CYLINDER, FreeCADObjectType.SPHERE) and "frdrawmode" in obj.keys() and obj["frdrawmode"] == "true" else "",
             "frdrawmode_template_disable": get_template_text(cls.OBJECT_FRDRAWMODE_DISABLE) if fc_object.TypeId in (FreeCADObjectType.BOX, FreeCADObjectType.CYLINDER, FreeCADObjectType.SPHERE) and "frdrawmode" in obj.keys() and obj["frdrawmode"] == "true" else "",
-            "setnormalinvert_template" : get_template_text(cls.OBJECT_SETNORMALINVERT_XML).format(**{"normal_invert" : obj["mdbc_normal_invert"]}) if obj["use_mdbc"]=="true" and "layers" in obj else ""
+            "setnormalinvert_template" : get_template_text(cls.OBJECT_SETNORMALINVERT_XML).format(**{"normal_invert" : obj["mdbc_normal_invert"]}) if is_key(obj,"use_mdbc") and obj["use_mdbc"] == "true" and "layers" in obj else ""
         }
 
         # Decide if reset matrix or not
@@ -63,7 +63,7 @@ class ObjectsRenderer():
             "matrixreset_template": get_template_text(cls.OBJECTS_MATRIXRESET_XML) if obj_formatter["move_template"] or obj_formatter["rotation_template"] else ""
         })
         layers=""
-        if "layers" in obj:
+        if is_key(obj,"layers"):
             layers=obj["layers"]
         elif obj["faces_configuration"] and obj["faces_configuration"]["layers"]:
             layers= obj["faces_configuration"]["layers"]
@@ -71,7 +71,7 @@ class ObjectsRenderer():
         # Formatting specific keys for each type of object
         if fc_object.TypeId == FreeCADObjectType.BOX:
             obj_formatter.update({
-                "boxfill": obj["faces_configuration"]["face_print"] if obj["faces_configuration"] else "solid",
+                "boxfill": obj["faces_configuration"]["face_print"] if is_key(obj,"faces_configuration") and obj["faces_configuration"] else "solid",
                 "layers": '\t\t\t\t\t<layers vdp="{}" />'.format(layers),
                 "size": [fc_object.Length.Value / DIVIDER, fc_object.Width.Value / DIVIDER, fc_object.Height.Value / DIVIDER],
             })
@@ -103,7 +103,7 @@ class ObjectsRenderer():
 
         formatter = {
             "label": fc_object.Label,
-            "mktype_template": (get_template_text(cls.OBJECTS_MKBOUND_XML) if obj["type"] == ObjectType.BOUND else get_template_text(cls.OBJECTS_MKFLUID_XML)).format(**obj),
+            "mktype_template": (get_template_text(cls.OBJECTS_MKBOUND_XML) if is_key(obj,"type") and obj["type"] == ObjectType.BOUND else get_template_text(cls.OBJECTS_MKFLUID_XML)).format(**obj),
             "move_template": get_template_text(cls.OBJECTS_MOVE_XML).format(**{
                 "vec": [fill_limits.Placement.Base.x / DIVIDER, fill_limits.Placement.Base.y / DIVIDER, fill_limits.Placement.Base.z / DIVIDER]
             }) if fill_limits.Placement.Base.Length else "",
@@ -135,16 +135,16 @@ class ObjectsRenderer():
         ''' Builds a template for complex objects. '''
         zyxrot=fc_object.Placement.Rotation.getYawPitchRoll()
         depth=depthmin=depthmax=""
-        if obj["advdraw_mindepth_enabled"]=="true":
+        if is_key(obj,"advdraw_mindepth_enabled") and obj["advdraw_mindepth_enabled"]=="true":
             depthmin=f"depthmin=\"#Dp*{obj['advdraw_mindepth']}\""
-        if obj["advdraw_maxdepth_enabled"]=="true":
+        if is_key(obj,"advdraw_maxdepth_enabled") and obj["advdraw_maxdepth_enabled"]=="true":
             depthmax = f"depthmax=\"#Dp*{obj['advdraw_maxdepth']}\""
         if depthmin + depthmax != "":
             depth=f"<depth {depthmin} {depthmax} />"
-        if obj['file_type']=='vtu':
+        if is_key(obj,"file_type") and obj['file_type']=='vtu':
             file_type='vtk'
         else:
-            file_type=obj['file_type']
+            file_type=obj['file_type'] if is_key(obj,"file_type") else ""
         if not obj["is_loaded_geometry"]=='true' and not obj["is_normals_geo"] =='true':
             obj["scale_factor"][0]=obj["scale_factor"][0]/DIVIDER
             obj["scale_factor"][1]=obj["scale_factor"][1]/DIVIDER
@@ -158,15 +158,15 @@ class ObjectsRenderer():
             move_z = fc_object.Placement.Base.z / DIVIDER
         formatter = {
             "label": fc_object.Label,
-            "mktype_template": (get_template_text(cls.OBJECTS_MKBOUND_XML) if obj["type"] == ObjectType.BOUND else get_template_text(cls.OBJECTS_MKFLUID_XML)).format(**obj),
-            "file": obj['filename'],
-            "autofill": "true" if obj["autofill"] == "true" else "false",
-            "adm_enabled": obj["advdraw_enabled"],
-            "adm_reverse_enabled": obj["advdraw_reverse"],
+            "mktype_template": (get_template_text(cls.OBJECTS_MKBOUND_XML) if is_key(obj,"type") and obj["type"] == ObjectType.BOUND else get_template_text(cls.OBJECTS_MKFLUID_XML)).format(**obj),
+            "file": obj['filename'] if is_key(obj,"filename") else "" ,
+            "autofill": "true" if is_key(obj,"autofill") and obj["autofill"]== "true" else "false",
+            "adm_enabled": "true" if is_key(obj,"advdraw_enabled") and obj["advdraw_enabled"]== "true" else "false",
+            "adm_reverse_enabled": "true" if is_key(obj,"advdraw_reverse") and obj["advdraw_reverse"]== "true" else "false",
             "depth":depth,
-            "scale_x":obj["scale_factor"][0],
-            "scale_y": obj["scale_factor"][1],
-            "scale_z": obj["scale_factor"][2],
+            "scale_x": obj["scale_factor"][0] if is_key(obj,"scale_factor") else 1,
+            "scale_y": obj["scale_factor"][1] if is_key(obj,"scale_factor") else 1,
+            "scale_z": obj["scale_factor"][2] if is_key(obj,"scale_factor") else 1,
             "move_x": move_x,
             "move_y": move_y,
             "move_z": move_z,
@@ -175,7 +175,7 @@ class ObjectsRenderer():
             "rot_z": zyxrot[0],
             "file_type" : file_type,
             "setnormalinvert_template": get_template_text(cls.OBJECT_SETNORMALINVERT_XML).format(
-                **{"normal_invert": obj["mdbc_normal_invert"]}) if obj["use_mdbc"] == "true" and obj["is_normals_geo"] =='true' else ""
+                **{"normal_invert": obj["mdbc_normal_invert"]}) if is_key(obj,"use_mdbc") and obj["use_mdbc"] == "true" and is_key(obj,"is_normals_geo") and obj["is_normals_geo"] =='true' else ""
 
         }
 
@@ -187,7 +187,7 @@ class ObjectsRenderer():
         template = get_template_text(cls.OBJECTS_XML)
         object_xmls = []
         for obj in data["objects"]:
-            if obj["type"] == ObjectType.SPECIAL:
+            if is_key(obj,"type") and obj["type"] == ObjectType.SPECIAL:
                 continue
             fc_object = FreeCAD.ActiveDocument.getObject(obj["name"])
             obj["is_normals_geo"] = "false"

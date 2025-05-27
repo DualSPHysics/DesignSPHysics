@@ -2,6 +2,8 @@ from mod.constants import LINE_END, SUPPORTED_TYPES
 from mod.enums import BoundNormalsType
 from mod.tools.template_tools import get_template_text
 from mod.xml.renderers.objects_renderer import ObjectsRenderer
+from mod.enums import ObjectType
+from mod.functions import is_key
 import FreeCAD
 
 class MdbcRenderer:
@@ -25,12 +27,14 @@ class MdbcRenderer:
         """ Returns the rendered string. """
         object_xmls = []
         for obj in data["objects"]:
-            if obj["use_mdbc"] == "false":
+            if is_key(obj,"use_mdbc") and obj["use_mdbc"] == "false":
+                continue
+            if "Case_Limits" in obj["name"] or obj["obj_mk"]<0:
                 continue
             fc_object = FreeCAD.ActiveDocument.getObject(obj["name"])
             obj["is_normals_geo"] = "true"
             if fc_object.TypeId in SUPPORTED_TYPES:
-                obj["layers"] = obj["mdbc_dist_vdp"]
+                obj["layers"] = obj["mdbc_dist_vdp"] if is_key(obj,"mdbc_dist_vdp") else 0
                 object_template: str = ObjectsRenderer.get_regular_objects_template(obj, fc_object)
             elif "FillBox" in fc_object.Name:
                 object_template: str = ObjectsRenderer.get_fillbox_object_template(obj, fc_object)

@@ -34,14 +34,12 @@ class WavePaddlesRenderer():
             return ""
         vresbuff_list=data["vres"]["bufferbox_list"].copy()
         wavepaddles_active = "true"
-        vreswavegen_id = -1
-        
-        for vresbbox in vresbuff_list:
-            if vresbbox["vreswavegen"] == "true":
-                vreswavegen_id=int(vresbbox["id"])
-                break
-        
-        if vreswavegen_id>=0:
+        if len(vresbuff_list)>0:
+            vreswavegen_id = 0
+            for vresbbox in vresbuff_list:
+                if vresbbox["vreswavegen"] == "true":
+                    vreswavegen_id=int(vresbbox["id"])+1
+                    break
             wavepaddles_active="#VResId=={}".format(vreswavegen_id)
        
         formatter: dict = {

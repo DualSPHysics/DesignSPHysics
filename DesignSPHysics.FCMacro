@@ -7,14 +7,28 @@
 
 import sys
 import os
-from html import escape
-from traceback import format_tb
+
+""" Disables some types of FreeCAD warnings """
+from PySide2.QtCore import qInstallMessageHandler, QtMsgType
+def customMessageHandler(type, context, message):
+    if "QWindowsWindow::setMouseGrabEnabled" not in message:
+        print(message)
+qInstallMessageHandler(customMessageHandler)
+os.environ["QT_LOGGING_RULES"] = "*.debug=false;*.warning=false"
+# --------------------
+
+import logging
+class IgnoreMouseGrabWarning(logging.Filter):
+    def filter(self, record):
+        return "QWindowsWindow::setMouseGrabEnabled" not in record.getMessage()
+logger = logging.getLogger()
+logger.addFilter(IgnoreMouseGrabWarning)
+# --------------------
 
 sys.path.append(os.path.dirname(os.path.abspath(__file__)))
+# --------------------
 
-#from mod.widgets.custom_widgets.error_report_dialog import ErrorReportDialog  # pylint: disable=wrong-import-position
 from mod.main import boot  # pylint: disable=wrong-import-position
-
 '''
 def report_error(exctype, value, tb):
     """ Displays a dialog with options about the sudden crash. """

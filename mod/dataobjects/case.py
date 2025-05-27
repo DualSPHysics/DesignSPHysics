@@ -20,7 +20,7 @@ from mod.tools.freecad_tools import get_fc_object
 from mod.tools.stdout_tools import debug, log
 
 from mod.constants import VERSION, SUPPORTED_TYPES, MKFLUID_LIMIT, CASE_3D_MODE
-from mod.enums import ObjectType, InletOutletZoneGeneratorType, FlowUnits
+from mod.enums import ObjectType
 
 from mod.dataobjects.inletoutlet.inlet_outlet_config import InletOutletConfig
 from mod.dataobjects.chrono.chrono_config import ChronoConfig
@@ -78,7 +78,6 @@ class Case():
         self.damping_zones: dict = dict()  # {freecad_object_name: Damping}
         self.acceleration_input: AccelerationInput = AccelerationInput()
         self.relaxation_zone: RelaxationZone = None
-
 
 
 

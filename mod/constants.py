@@ -11,9 +11,9 @@ APP_NAME = "DesignSPHysics"
 DIVIDER = 1000
 LINE_END = "\n"
 PICKLE_PROTOCOL = 1  # Binary mode
-VERSION = "0.8.0" # Version must be M.m.p (dd-mm-yyyy)
-REVISION = "010" # Revision number must be rrr
-VER_DATE = "(16-05-2025)" # Date version must be (dd-mm-yyyy)
+VERSION = "0.8.1" # Version must be M.m.p (dd-mm-yyyy)
+REVISION = "005" # Revision number must be rrr
+VER_DATE = "(27-05-2025)" # Date version must be (dd-mm-yyyy)
 WIDTH_2D = 0.001
 DISK_DUMP_FILE_NAME = "designsphysics-{}.log".format(VERSION)
 MKFLUID_LIMIT = 10
@@ -63,3 +63,19 @@ SUPPORTED_TYPES = [FreeCADObjectType.BOX, FreeCADObjectType.SPHERE, FreeCADObjec
 
 MAIN_WIDGET_INTERNAL_NAME = "DSPH Widget"
 PROP_WIDGET_INTERNAL_NAME = "DSPH_Properties"
+
+
+# In your mod/constants.py:
+class Constants:
+    """Dummy class that contains all module-level constants"""
+    pass
+
+# Copy all module-level constants into the class
+import sys
+module = sys.modules[__name__]
+for name in dir(module):
+    if not name.startswith('_'):
+        setattr(Constants, name, getattr(module, name))
+
+# Create an instance that pickle can find
+constants = Constants()

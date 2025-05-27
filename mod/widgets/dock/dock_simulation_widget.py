@@ -203,8 +203,14 @@ class DockSimulationWidget(QtWidgets.QWidget):
             log(f"Exit code: {exit_code}")
             # Reads output from the .out file and completes the progress bar
             output = ""
-            with open(Case.the().path + "/" + Case.the().name + "_out/Run.out", "r", encoding="utf-8") as run_file:
-                output = "".join(run_file.readlines())
+            try:
+                with open(Case.the().path + "/" + Case.the().name + "_out/Run.out", "r", encoding="utf-8") as run_file:
+                    output = "".join(run_file.readlines())
+            except FileNotFoundError:
+                error_dialog("Output file {} was missing during the simulation. The simulation will be stopped. Wait until the simulation is completed before doing any other action in DesignSPHysics.".format(Case.the().path + "/" + Case.the().name + "_out/Run.out"))
+                process.kill()            # Fill details window
+                Case.the().info.is_simulation_done = True
+                self.simulation_cancelled.emit()
 
             run_dialog.set_detail_text(str(output))
             run_dialog.run_complete()
@@ -275,10 +281,15 @@ class DockSimulationWidget(QtWidgets.QWidget):
         def on_fs_change():
             """ Executed each time the filesystem changes. This updates the percentage of the simulation and its details."""
             run_file_data = ""
-            with open(Case.the().path + "/" + Case.the().name + "_out/Run.out", "r", encoding="utf-8") as run_file:
-                run_file_data = run_file.readlines()
-
-            # Fill details window
+            try:
+                with open(Case.the().path + "/" + Case.the().name + "_out/Run.out", "r", encoding="utf-8") as run_file:
+                    run_file_data = run_file.readlines()
+            except FileNotFoundError:
+                if not Case.the().info.is_simulation_done:
+                    process.kill()            # Fill details window
+                    Case.the().info.is_simulation_done = True
+                    self.simulation_cancelled.emit()
+                    
             run_dialog.set_detail_text("".join(run_file_data))
 
             # Set percentage scale based on timemax

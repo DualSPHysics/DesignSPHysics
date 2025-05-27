@@ -94,3 +94,9 @@ def migrate_state(rename_map,default_attrs,state):
             state[attr] = default_value
     
     return state
+
+
+def is_key(obj,key):
+    if obj and key in obj:
+        return True
+    return False

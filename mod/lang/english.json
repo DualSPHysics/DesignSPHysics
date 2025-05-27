@@ -1642,5 +1642,8 @@
     "On": "On",
     "An unexpected error occurred while creating objects.\n\nDetails: {}": "An unexpected error occurred while creating objects.\n\nDetails: {}",
     "The file format is invalid or not a valid pickle file.\n\nDetails: {}": "The file format is invalid or not a valid pickle file.\n\nDetails: {}",
-    "Diameter:": "Diameter:"
+    "Diameter:": "Diameter:",
+    "An unexpected error occurred while loading the case file.\n\nDetails: {}": "An unexpected error occurred while loading the case file.\n\nDetails: {}",
+    "There was an error importing the case. You probably need to set them again.\n\nThis could be caused due to file corruption, caused by operating system based line endings or ends-of-file, or other related aspects.": "There was an error importing the case. You probably need to set them again.\n\nThis could be caused due to file corruption, caused by operating system based line endings or ends-of-file, or other related aspects.",
+    "The case data you are loading comes from a previous version ({}) of this software. They may be missing features or errors. Please check your setup carefully.": "The case data you are loading comes from a previous version ({}) of this software. They may be missing features or errors. Please check your setup carefully."
 }
