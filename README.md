@@ -147,7 +147,7 @@ To manually remove residual files:
 
 ## 📚 Documentation & Support
 
-- 📖 [DesignSPHysics Wiki](http://design.sphysics.org/wiki)
+- 📖 [DesignSPHysics Wiki](https://github.com/DualSPHysics/DesignSPHysics/wiki)
 - 💬 [DualSPHysics GitHub Discussions](https://github.com/DualSPHysics/DualSPHysics/discussions)
 - 🐛 [Report Issues on GitHub](https://github.com/DualSPHysics/DesignSPHysics/issues)
 - ✉️ Contact contributors via the [CONTRIBUTING file](CONTRIBUTING.md)
