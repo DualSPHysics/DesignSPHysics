@@ -32,7 +32,7 @@ class CustomUnpickler(pickle.Unpickler):
         import mod.dataobjects.acceleration_input.acceleration_input as accein
         import mod.dataobjects.acceleration_input.acceleration_input_data as acceindata
         import mod.dataobjects.properties.faces_property as facespro
-
+        import mod.dataobjects.flow_tool_xml_box as flowtool
         # For Modules
         # MODULE_REDIRECTS = {
         #     # Old module → New module
@@ -76,6 +76,7 @@ class CustomUnpickler(pickle.Unpickler):
             ("mod.dataobjects.acceleration_input", "AccelerationInput"): accein.AccelerationInput,
             ("mod.dataobjects.acceleration_input_data", "AccelerationInputData"): acceindata.AccelerationInputData,
             ("mod.dataobjects.faces_property", "FacesProperty"): facespro.FacesProperty,
+            ("mod.dataobjects.flow_tool_box","FlowToolBox"): flowtool.FlowToolXmlBox,
             # Add more mappings if needed
         }
 

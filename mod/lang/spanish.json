@@ -1457,5 +1457,7 @@
     "Normals properties": "Normals properties",
     "Line Length:": "Line Length:",
     "Diameter:": "Diameter:",
-    "The case data you are loading comes from a previous version ({}) of this software. They may be missing features or errors. Please check your setup carefully.": "The case data you are loading comes from a previous version ({}) of this software. They may be missing features or errors. Please check your setup carefully."
+    "The case data you are loading comes from a previous version ({}) of this software. They may be missing features or errors. Please check your setup carefully.": "The case data you are loading comes from a previous version ({}) of this software. They may be missing features or errors. Please check your setup carefully.",
+    "Surface": "Surface",
+    "Min surface": "Min surface"
 }
