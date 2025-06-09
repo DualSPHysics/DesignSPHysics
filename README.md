@@ -28,7 +28,7 @@ Visit the [official DesignSPHysics website](http://design.sphysics.org) for down
 
 ## 🚀 Latest Releases
 
-- [v0.8.1](https://github.com/DualSPHysics/DesignSPHysics/releases/tag/0.8.1) — *May 27, 2023* ([Changelog](CHANGELOG.md))
+- [v0.8.1](https://github.com/DualSPHysics/DesignSPHysics/releases/tag/0.8.1) — *May 27, 2025* ([Changelog](CHANGELOG.md))
 - [v0.7.0](https://github.com/DualSPHysics/DesignSPHysics/releases/tag/0.7.0) — *September 15, 2023*
 
 ---
