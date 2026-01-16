@@ -13,10 +13,10 @@ Visit the [official DesignSPHysics website](http://design.sphysics.org) for down
 ## 📢 News
 
 ### Upcoming Events
-- **[19th SPHERIC World Conference](https://spheric2025.upc.edu/)** — Barcelona, Spain — *June 16–19, 2025*
 - **[8th DualSPHysics Workshop](https://dual.sphysics.org/8thworkshop/)** — Ourense, Spain — *January 27–29, 2026*
 
 ### Recent Past Events
+- **[19th SPHERIC World Conference](https://spheric2025.upc.edu/)** — Barcelona, Spain — *June 16–19, 2025*
 - **[SPH Modelling for Engineering Applications](https://sites.google.com/view/hykudsph/home?authuser=0)** — Braunschweig, Germany — *March 25–27, 2025*
 - **[4th Hands-on Course on Experimental and Numerical Modelling of Wave-Structure Interaction](https://sites.google.com/unifi.it/hands-on-course-2024)** — Florence, Italy — *July 1–5, 2024*
 - **[7th DualSPHysics Workshop](https://dual.sphysics.org/7thworkshop/)** — Bari, Italy — *March 19–21, 2024*
