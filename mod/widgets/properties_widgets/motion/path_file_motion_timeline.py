@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 """DesignSPHysics File Based Motion Timeline Widget. """
 
-from PySide2 import QtCore, QtWidgets
+from mod.tools.qt_compat import QtCore, QtWidgets
 from mod.dataobjects.case import Case
 from mod.dataobjects.motion.file_gen import FileGen
 from mod.dataobjects.motion.path_file_gen import PathFileGen

@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 """DesignSPHysics Focused Piston Wave Motion Timeline Widget"""
 
-from PySide2 import QtCore, QtWidgets
+from mod.tools.qt_compat import QtCore, QtWidgets
 from mod.dataobjects.motion.focused_piston_wave_gen import FocusedPistonWaveGen
 from mod.enums import IrregularSpectrum, IrregularDiscretization
 from mod.functions import make_float

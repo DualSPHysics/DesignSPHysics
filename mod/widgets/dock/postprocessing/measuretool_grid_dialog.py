@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 """DesignSPHysics MeasureTool Grid Dialog """
 
-from PySide2 import QtCore, QtWidgets
+from mod.tools.qt_compat import QtCore, QtWidgets
 from mod.dataobjects.case import Case
 from mod.tools.dialog_tools import warning_dialog
 from mod.tools.translation_tools import __

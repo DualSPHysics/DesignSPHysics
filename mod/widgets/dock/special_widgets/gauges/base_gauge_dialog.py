@@ -1,6 +1,6 @@
-from PySide2.QtWidgets import QHBoxLayout
+from mod.tools.qt_compat import QHBoxLayout
 
-from PySide2 import QtWidgets
+from mod.tools.qt_compat import QtWidgets
 from mod.tools.freecad_tools import delete_object
 from mod.tools.translation_tools import __
 from mod.widgets.custom_widgets.value_input import ValueInput

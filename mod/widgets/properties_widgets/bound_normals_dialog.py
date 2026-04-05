@@ -4,7 +4,7 @@
 
 import FreeCADGui
 
-from PySide2 import QtWidgets, QtCore
+from mod.tools.qt_compat import QtWidgets, QtCore
 from mod.dataobjects.case import Case
 from mod.dataobjects.properties.bound_normals_property import BoundNormals
 from mod.tools.dialog_tools import info_dialog

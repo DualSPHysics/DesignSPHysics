@@ -5,7 +5,7 @@
 import FreeCAD
 import FreeCADGui
 
-from PySide2 import QtWidgets
+from mod.tools.qt_compat import QtWidgets
 
 
 from mod.tools.translation_tools import __

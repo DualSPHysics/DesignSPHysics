@@ -11,7 +11,7 @@ import FreeCADGui
 import Draft
 import Part
 
-from PySide2 import QtWidgets
+from mod.tools.qt_compat import QtWidgets
 
 from mod.dataobjects.gauges.flow_gauge import FlowGauge
 from mod.dataobjects.gauges.gauge_base import Gauge

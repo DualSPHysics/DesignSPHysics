@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 """DesignSPHysics Dock Post Processing Widget """
 
-from PySide2 import QtWidgets
+from mod.tools.qt_compat import QtWidgets
 from mod.tools.translation_tools import __
 from mod.widgets.dock.postprocessing.computeforces_dialog import ComputeForcesDialog
 from mod.widgets.dock.postprocessing.floatinginfo_dialog import FloatingInfoDialog

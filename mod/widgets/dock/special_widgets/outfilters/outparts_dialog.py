@@ -1,4 +1,4 @@
-from PySide2 import QtWidgets
+from mod.tools.qt_compat import QtWidgets
 from mod.constants import OUTFILTERS_GROUP_NAME
 from mod.dataobjects.case import Case
 

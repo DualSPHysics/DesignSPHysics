@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 """DesignSPHysics Execution Parameters Configuration Dialog."""
 import FreeCADGui
-from PySide2 import QtCore, QtWidgets
+from mod.tools.qt_compat import QtCore, QtWidgets
 
 from mod.dataobjects.configuration.application_settings import ApplicationSettings
 from mod.tools.dialog_tools import warning_dialog

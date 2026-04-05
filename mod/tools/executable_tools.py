@@ -9,7 +9,7 @@ from sys import platform
 import json
 
 # from PySide2import QtCore
-from PySide2 import QtCore
+from mod.tools.qt_compat import QtCore
 
 import FreeCADGui
 

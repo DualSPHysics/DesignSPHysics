@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 """DesignSPHysics Chrono configuration dialog."""
 
-from PySide2 import QtCore, QtWidgets
+from mod.tools.qt_compat import QtCore, QtWidgets
 from mod.dataobjects.case import Case
 from mod.dataobjects.chrono.chrono_link_coulomb_damping import ChronoLinkCoulombDamping
 from mod.dataobjects.chrono.chrono_link_hinge import ChronoLinkHinge
@@ -121,7 +121,7 @@ class ChronoConfigDialog(QtWidgets.QDialog):
         self.objectlist_table.setObjectName("Chrono objects table")
         self.objectlist_table.verticalHeader().setVisible(False)
         self.objectlist_table.horizontalHeader().setVisible(False)
-        self.objectlist_table.horizontalHeader().setResizeMode(0, QtWidgets.QHeaderView.Stretch)
+        self.objectlist_table.horizontalHeader().setSectionResizeMode(0, QtWidgets.QHeaderView.Stretch)
 
         self.objectlist_table.setEnabled(True)
 

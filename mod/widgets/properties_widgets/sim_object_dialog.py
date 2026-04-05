@@ -1,4 +1,4 @@
-from PySide2 import QtWidgets
+from mod.tools.qt_compat import QtWidgets
 from mod.dataobjects.properties.simulation_object import SimulationObject
 from mod.tools.freecad_tools import get_fc_object
 from mod.tools.translation_tools import __

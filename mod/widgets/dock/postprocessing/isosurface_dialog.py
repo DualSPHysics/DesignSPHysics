@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 """DesignSPHysics IsoSurface Config and Execution Dialog."""
 
-from PySide2 import QtWidgets, QtCore
+from mod.tools.qt_compat import QtWidgets, QtCore
 from mod.dataobjects.case import Case, mk_help_list
 from mod.dataobjects.configuration.application_settings import ApplicationSettings
 from mod.tools.post_processing_tools import isosurface_export

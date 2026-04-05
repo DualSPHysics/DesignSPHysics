@@ -1,4 +1,4 @@
-from PySide2 import QtWidgets
+from mod.tools.qt_compat import QtWidgets
 from mod.enums import InletOutletDirection, ObjectType
 from mod.tools.translation_tools import __
 from mod.widgets.dock.special_widgets.inout.zone_generator_widgets.zone_2d_direction_widget import Zone2DDirectionWidget

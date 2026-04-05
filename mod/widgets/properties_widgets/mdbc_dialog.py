@@ -1,4 +1,4 @@
-from PySide2 import QtWidgets
+from mod.tools.qt_compat import QtWidgets
 from mod.dataobjects.case import Case
 from mod.dataobjects.properties.simulation_object import SimulationObject
 from mod.tools.translation_tools import __

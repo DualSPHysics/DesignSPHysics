@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 """DesignSPHysics Irregular Flap Wave Motion timeline widget."""
 
-from PySide2 import QtCore, QtWidgets
+from mod.tools.qt_compat import QtCore, QtWidgets
 from mod.dataobjects.motion.irregular_flap_wave_gen import IrregularFlapWaveGen
 from mod.enums import IrregularDiscretization, IrregularSpectrum
 from mod.functions import make_float

@@ -2,9 +2,9 @@
 # -*- coding: utf-8 -*-
 """DesignSPHysics Inlet/Oulet Configuration Dialog """
 
-from PySide2.QtWidgets import QDialog
+from mod.tools.qt_compat import QDialog
 
-from PySide2 import QtCore, QtWidgets
+from mod.tools.qt_compat import QtCore, QtWidgets
 from mod.dataobjects.case import Case
 from mod.dataobjects.inletoutlet.inlet_outlet_config import InletOutletConfig
 from mod.dataobjects.inletoutlet.inlet_outlet_zone import InletOutletZone
@@ -180,7 +180,7 @@ class InletConfigDialog(QtWidgets.QDialog):
         self.zones_groupbox_layout = QtWidgets.QVBoxLayout()
         self.io_zones_table = QtWidgets.QTableWidget()
         self.io_zones_table.setColumnCount(1)
-        self.io_zones_table.horizontalHeader().setResizeMode(QtWidgets.QHeaderView.Stretch)
+        self.io_zones_table.horizontalHeader().setSectionResizeMode(QtWidgets.QHeaderView.Stretch)
         self.io_zones_table.verticalHeader().setDefaultSectionSize(self.MINIMUM_TABLE_SECTION_HEIGHT)
         self.io_zones_table.horizontalHeader().setVisible(False)
         self.io_zones_table.verticalHeader().setVisible(False)

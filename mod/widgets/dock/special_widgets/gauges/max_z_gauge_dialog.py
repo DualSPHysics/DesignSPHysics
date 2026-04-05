@@ -1,6 +1,6 @@
-from PySide2.QtWidgets import QHBoxLayout
+from mod.tools.qt_compat import QHBoxLayout
 
-from PySide2 import QtWidgets
+from mod.tools.qt_compat import QtWidgets
 from mod.dataobjects.gauges.max_z_gauge import MaxZGauge
 from mod.tools.dialog_tools import warning_dialog
 from mod.tools.freecad_tools import update_line

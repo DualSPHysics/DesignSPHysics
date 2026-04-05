@@ -12,7 +12,7 @@ from urllib.request import urlopen
 
 import FreeCADGui
 
-from PySide2 import QtCore, QtWidgets
+from mod.tools.qt_compat import QtCore, QtWidgets
 
 from mod.constants import APP_NAME, VERSION, REVISION, DEFAULT_WORKBENCH, GITHUB_MASTER_CONSTANTS_URL, \
     DAMPING_GROUP_NAME, SIMULATION_DOMAIN_NAME

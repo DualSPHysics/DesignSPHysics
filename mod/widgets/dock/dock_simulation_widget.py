@@ -6,8 +6,8 @@ import os
 import re
 from sys import platform
 
-from PySide2 import QtWidgets, QtCore
-from PySide2.QtWidgets import QAction
+from mod.tools.qt_compat import QtWidgets, QtCore
+from mod.tools.qt_compat import QAction
 
 from mod.dataobjects.case import Case
 from mod.dataobjects.configuration.application_settings import ApplicationSettings

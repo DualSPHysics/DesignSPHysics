@@ -1,8 +1,8 @@
 import os.path
 
-from PySide2.QtCore import Signal
+from mod.tools.qt_compat import Signal
 
-from PySide2 import QtWidgets
+from mod.tools.qt_compat import QtWidgets
 from mod.dataobjects.case import Case
 from mod.dataobjects.inletoutlet.inlet_outlet_velocity_info import InletOutletVelocityInfo
 from mod.dataobjects.inletoutlet.velocities.linear_velocity import LinearVelocity

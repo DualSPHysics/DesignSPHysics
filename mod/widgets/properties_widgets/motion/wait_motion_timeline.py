@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 """DesignSPHysics Wait Motion Timeline Widget """
 
-from PySide2 import QtCore, QtWidgets
+from mod.tools.qt_compat import QtCore, QtWidgets
 from mod.dataobjects.motion.wait_motion import WaitMotion
 from mod.tools.gui_tools import get_icon
 from mod.tools.translation_tools import __

@@ -1,4 +1,4 @@
-from PySide2 import QtWidgets, QtCore
+from mod.tools.qt_compat import QtWidgets, QtCore
 from mod.dataobjects.case import Case
 from mod.enums import ObjectType
 from mod.tools.freecad_tools import get_fc_object

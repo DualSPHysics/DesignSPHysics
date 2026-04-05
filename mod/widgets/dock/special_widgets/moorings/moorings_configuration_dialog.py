@@ -5,7 +5,7 @@
 from copy import deepcopy
 
 
-from PySide2 import QtWidgets
+from mod.tools.qt_compat import QtWidgets
 from mod.constants import MKFLUID_LIMIT
 from mod.dataobjects.case import Case
 from mod.dataobjects.moorings.moordynplus.moordynplus_body import MoorDynPlusBody
@@ -87,7 +87,7 @@ class MooringsConfigurationDialog(QtWidgets.QDialog):
         self.floating_selection_vlayout: QtWidgets.QVBoxLayout = QtWidgets.QVBoxLayout()
         self.floating_selection_label: QtWidgets.QLabel = QtWidgets.QLabel(__("Select mks to use with moorings:"))
         self.floating_selection_table: QtWidgets.QTableWidget = QtWidgets.QTableWidget(0, 1)
-        self.floating_selection_table.horizontalHeader().setResizeMode(QtWidgets.QHeaderView.Stretch)
+        self.floating_selection_table.horizontalHeader().setSectionResizeMode(QtWidgets.QHeaderView.Stretch)
         self.floating_selection_table.horizontalHeader().hide()
         self.floating_selection_table.verticalHeader().hide()
         self.floating_selection_table.setEditTriggers(QtWidgets.QAbstractItemView.NoEditTriggers)

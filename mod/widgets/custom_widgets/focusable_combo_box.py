@@ -3,7 +3,7 @@
 """ DesignSPHysics Focusable ComboBox implementation. """
 
 from mod.constants import DEFAULT_MIN_WIDGET_WIDTH, DEFAULT_MAX_WIDGET_WIDTH
-from PySide2 import QtCore, QtWidgets
+from mod.tools.qt_compat import QtCore, QtWidgets
 
 
 class FocusableComboBox(QtWidgets.QComboBox):

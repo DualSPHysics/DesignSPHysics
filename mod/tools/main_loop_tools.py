@@ -1,7 +1,7 @@
 import time
 import sys
-from PySide2.QtCore import Signal, Slot, QObject
-from PySide2 import QtCore
+from mod.tools.qt_compat import Signal, Slot, QObject
+from mod.tools.qt_compat import QtCore
 
 from mod.constants import DIVIDER, CASE_LIMITS_OBJ_NAME, GAUGES_GROUP_NAME, VRES_BOXES_GROUP_NAME, \
     IO_ZONES_GROUP_NAME, OUTFILTERS_GROUP_NAME, VARIABLES_SHEET_NAME, DAMPING_GROUP_NAME, SIMULATION_DOMAIN_NAME, HELPER_FOLDER_GROUP_NAME

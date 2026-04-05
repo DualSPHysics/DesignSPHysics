@@ -4,7 +4,7 @@
 
 import FreeCAD
 
-from PySide2 import QtWidgets
+from mod.tools.qt_compat import QtWidgets
 from mod.constants import DIVIDER
 from mod.widgets.dock.special_widgets.damping.damping_config_dialog import DampingConfigDialog
 from mod.widgets.custom_widgets.size_input import SizeInput

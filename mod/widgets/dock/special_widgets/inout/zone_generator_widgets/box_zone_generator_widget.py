@@ -1,4 +1,4 @@
-from PySide2 import QtWidgets
+from mod.tools.qt_compat import QtWidgets
 from mod.dataobjects.inletoutlet.inlet_outlet_zone_box_generator import InletOutletZoneBoxGenerator
 from mod.dataobjects.inletoutlet.inlet_outlet_zone_direction import InletOutletZone3DDirection
 from mod.dataobjects.inletoutlet.inlet_outlet_zone_rotation import InletOutletZone3DRotation

@@ -3,9 +3,9 @@
 """DesignSPHysics Dialog Tools.
 
 Contains general use standard dialogs. """
-from PySide2.QtWidgets import QDialog
+from mod.tools.qt_compat import QDialog
 
-from PySide2 import QtWidgets
+from mod.tools.qt_compat import QtWidgets
 
 from mod.tools.translation_tools import __
 

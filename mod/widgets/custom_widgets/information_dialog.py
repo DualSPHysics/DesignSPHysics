@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 """DesignSPHysics General Information Dialog"""
 
-from PySide2 import QtWidgets
+from mod.tools.qt_compat import QtWidgets
 
 
 from mod.enums import InformationDetailsMode

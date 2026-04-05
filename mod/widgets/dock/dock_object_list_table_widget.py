@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 """DesignSPHysics Object List Table Widget."""
 
-from PySide2 import QtWidgets
+from mod.tools.qt_compat import QtWidgets
 from mod.constants import CASE_LIMITS_OBJ_NAME
 from mod.dataobjects.case import Case
 from mod.tools.freecad_tools import get_fc_object
@@ -25,7 +25,7 @@ class DockObjectListTableWidget(QtWidgets.QWidget):
         self.objectlist_table = QtWidgets.QTableWidget(0, 1)
         self.objectlist_table.verticalHeader().setVisible(False)
         self.objectlist_table.horizontalHeader().setVisible(False)
-        self.objectlist_table.horizontalHeader().setResizeMode(0, QtWidgets.QHeaderView.Stretch)
+        self.objectlist_table.horizontalHeader().setSectionResizeMode(0, QtWidgets.QHeaderView.Stretch)
 
         self.objectlist_layout.addWidget(self.objectlist_label)
         self.objectlist_layout.addWidget(self.objectlist_table)

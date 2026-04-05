@@ -3,7 +3,7 @@
 """DesignSPHysics ComputeForces Config and Execution Dialog."""
 
 
-from PySide2 import QtWidgets
+from mod.tools.qt_compat import QtWidgets
 from mod.dataobjects.case import Case
 from mod.dataobjects.configuration.application_settings import ApplicationSettings
 from mod.tools.post_processing_tools import computeforces_export

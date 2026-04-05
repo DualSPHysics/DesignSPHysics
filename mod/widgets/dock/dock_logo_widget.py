@@ -5,7 +5,7 @@
 import webbrowser
 
 
-from PySide2 import QtWidgets,QtGui
+from mod.tools.qt_compat import QtWidgets,QtGui
 
 
 from mod.enums import HelpURL
@@ -24,7 +24,7 @@ class DockLogoWidget(QtWidgets.QWidget):
         self.main_layout.setContentsMargins(0, 0, 0, 0)
 
         self.logo_label = QtWidgets.QLabel()
-        self.logo_label.setPixmap(get_icon(file_name="logo.png", return_only_path=True))
+        self.logo_label.setPixmap(QtGui.QPixmap(get_icon(file_name="logo.png", return_only_path=True)))
 
         self.help_button = QtWidgets.QPushButton("Help")
         self.help_button.setToolTip(__("Push this button to open a browser with help\non how to use this tool."))

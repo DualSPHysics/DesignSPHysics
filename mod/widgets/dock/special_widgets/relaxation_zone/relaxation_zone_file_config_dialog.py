@@ -4,7 +4,7 @@
 
 from os import path
 
-from PySide2 import QtWidgets, QtCore
+from mod.tools.qt_compat import QtWidgets, QtCore
 from mod.dataobjects.case import Case
 from mod.dataobjects.relaxation_zone.relaxation_zone_file import RelaxationZoneFile
 from mod.tools.translation_tools import __

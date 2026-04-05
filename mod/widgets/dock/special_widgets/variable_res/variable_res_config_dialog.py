@@ -1,4 +1,4 @@
-from PySide2 import QtWidgets
+from mod.tools.qt_compat import QtWidgets
 from mod.dataobjects.case import Case
 from mod.tools.dialog_tools import ok_cancel_dialog, error_dialog
 from mod.tools.freecad_tools import manage_vres_bufferboxes

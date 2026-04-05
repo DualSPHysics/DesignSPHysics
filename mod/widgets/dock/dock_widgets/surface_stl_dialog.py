@@ -3,7 +3,7 @@ import shutil
 from os import path, walk, chdir
 from os.path import dirname
 
-from PySide2 import QtWidgets, QtCore
+from mod.tools.qt_compat import QtWidgets, QtCore
 from mod.dataobjects.case import Case
 from mod.tools.dialog_tools import WaitDialog, warning_dialog, ok_cancel_dialog, info_dialog
 from mod.tools.executable_tools import refocus_cwd, ensure_process_is_executable_or_fail

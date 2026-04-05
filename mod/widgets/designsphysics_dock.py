@@ -2,8 +2,8 @@
 # -*- coding: utf-8 -*-
 """Main DesignSPHysics Dock Widget """
 
-from PySide2 import QtWidgets, QtCore
-from PySide2 import QtCore, QtWidgets
+from mod.tools.qt_compat import QtWidgets, QtCore
+from mod.tools.qt_compat import QtCore, QtWidgets
 
 from mod.constants import MAIN_WIDGET_INTERNAL_NAME, APP_NAME, VERSION, VER_DATE
 from mod.dataobjects.case import Case

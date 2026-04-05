@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 """DesignSPHysics Accelerated Circular Motion Timeline widget"""
 
-from PySide2 import QtWidgets, QtCore
+from mod.tools.qt_compat import QtWidgets, QtCore
 from mod.dataobjects.motion.acc_cir_motion import AccCirMotion
 from mod.tools.gui_tools import get_icon
 from mod.tools.translation_tools import __

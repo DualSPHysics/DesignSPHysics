@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 """ 2D Mode Configuration Dialog. """
 
-from PySide2 import QtWidgets
+from mod.tools.qt_compat import QtWidgets
 
 from mod.appmode import AppMode
 from mod.tools.translation_tools import __

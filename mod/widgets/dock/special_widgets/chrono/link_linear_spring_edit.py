@@ -3,7 +3,7 @@
 """DesignSPHysics LinkLinearSprint Edit Dialog """
 
 
-from PySide2 import QtWidgets
+from mod.tools.qt_compat import QtWidgets
 from mod.dataobjects.case import Case
 from mod.tools.dialog_tools import error_dialog
 from mod.tools.translation_tools import __

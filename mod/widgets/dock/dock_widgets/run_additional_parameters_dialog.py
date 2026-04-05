@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 """DesignSPHysics Additional Parameters Dialog for running configuration. """
 
-from PySide2 import QtWidgets
+from mod.tools.qt_compat import QtWidgets
 
 from mod.tools.translation_tools import __
 

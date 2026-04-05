@@ -4,7 +4,7 @@
 import os
 import subprocess
 
-from PySide2 import QtCore
+from mod.tools.qt_compat import QtCore
 from mod.tools.script_tools import generate_ext_script
 
 from mod.tools.translation_tools import __

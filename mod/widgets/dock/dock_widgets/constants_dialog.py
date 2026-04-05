@@ -3,7 +3,7 @@
 """DesignSPHysics Constants Configuration Dialog."""
 
 
-from PySide2 import QtCore, QtWidgets
+from mod.tools.qt_compat import QtCore, QtWidgets
 from mod.dataobjects.case import Case
 from mod.dataobjects.configuration.application_settings import ApplicationSettings
 from mod.enums import HelpText

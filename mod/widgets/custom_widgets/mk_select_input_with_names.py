@@ -1,7 +1,7 @@
 #!/usr/bin/env python3.7
 # -*- coding: utf-8 -*-
 """DesignSPHysics MK selector widget"""
-from PySide2 import QtWidgets
+from mod.tools.qt_compat import QtWidgets
 from mod.constants import DEFAULT_MIN_WIDGET_WIDTH, DEFAULT_MAX_WIDGET_WIDTH
 from mod.dataobjects.case import Case
 from mod.enums import ObjectType

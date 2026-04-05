@@ -4,7 +4,7 @@
 
 import FreeCADGui
 
-from PySide2 import QtCore, QtWidgets
+from mod.tools.qt_compat import QtCore, QtWidgets
 from mod.dataobjects.case import Case
 from mod.dataobjects.motion.acc_cir_motion import AccCirMotion
 from mod.dataobjects.motion.acc_rect_motion import AccRectMotion
@@ -133,9 +133,9 @@ class MovementDialog(QtWidgets.QDialog):
         self.movement_list_table = QtWidgets.QTableWidget(1, 2)
         self.movement_list_table.setSelectionBehavior(QtWidgets.QAbstractItemView.SelectItems)
         self.movement_list_table.setSelectionMode(QtWidgets.QAbstractItemView.SingleSelection)
-        self.movement_list_table.horizontalHeader().setResizeMode(QtWidgets.QHeaderView.Stretch)
-        self.movement_list_table.horizontalHeader().setResizeMode(0, QtWidgets.QHeaderView.Stretch)
-        self.movement_list_table.horizontalHeader().setResizeMode(1, QtWidgets.QHeaderView.ResizeToContents)
+        self.movement_list_table.horizontalHeader().setSectionResizeMode(QtWidgets.QHeaderView.Stretch)
+        self.movement_list_table.horizontalHeader().setSectionResizeMode(0, QtWidgets.QHeaderView.Stretch)
+        self.movement_list_table.horizontalHeader().setSectionResizeMode(1, QtWidgets.QHeaderView.ResizeToContents)
 
         self.movement_list_table.verticalHeader().setVisible(False)
         self.movement_list_table.horizontalHeader().setVisible(False)
@@ -149,8 +149,8 @@ class MovementDialog(QtWidgets.QDialog):
         self.timeline_groupbox.setMinimumWidth(720)
 
         self.timeline_list_table = QtWidgets.QTableWidget(0, 1)
-        self.timeline_list_table.horizontalHeader().setResizeMode(QtWidgets.QHeaderView.Stretch)
-        self.timeline_list_table.verticalHeader().setResizeMode(QtWidgets.QHeaderView.ResizeToContents)
+        self.timeline_list_table.horizontalHeader().setSectionResizeMode(QtWidgets.QHeaderView.Stretch)
+        self.timeline_list_table.verticalHeader().setSectionResizeMode(QtWidgets.QHeaderView.ResizeToContents)
         self.timeline_list_table.verticalHeader().setVisible(False)
         self.timeline_list_table.horizontalHeader().setVisible(False)
         self.timeline_list_table.resizeRowsToContents()
@@ -166,7 +166,7 @@ class MovementDialog(QtWidgets.QDialog):
 
 
         self.actions_groupbox_table = QtWidgets.QTableWidget(0, 1)
-        self.actions_groupbox_table.horizontalHeader().setResizeMode(QtWidgets.QHeaderView.Stretch)
+        self.actions_groupbox_table.horizontalHeader().setSectionResizeMode(QtWidgets.QHeaderView.Stretch)
         self.actions_groupbox_table.verticalHeader().setVisible(False)
         self.actions_groupbox_table.horizontalHeader().setVisible(False)
 

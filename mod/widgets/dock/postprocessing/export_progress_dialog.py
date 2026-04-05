@@ -2,8 +2,8 @@
 # -*- coding: utf-8 -*-
 """DesignSPHysics Execution Progress Dialog."""
 
-from PySide2 import QtWidgets, QtCore
-from PySide2 import QtCore, QtWidgets
+from mod.tools.qt_compat import QtWidgets, QtCore
+from mod.tools.qt_compat import QtCore, QtWidgets
 
 from mod.tools.translation_tools import __
 

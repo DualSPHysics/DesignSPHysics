@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 """DesignSPHysics MLPiston1D Configuration Dialog. """
 
-from PySide2 import QtWidgets
+from mod.tools.qt_compat import QtWidgets
 
 from mod.tools.translation_tools import __
 from mod.tools.gui_tools import h_line_generator

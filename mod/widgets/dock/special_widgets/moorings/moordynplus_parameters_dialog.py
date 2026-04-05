@@ -4,7 +4,7 @@
 
 from uuid import UUID
 
-from PySide2 import QtWidgets, QtCore
+from mod.tools.qt_compat import QtWidgets, QtCore
 from mod.dataobjects.moorings.moordynplus.moordynplus_configuration import MoorDynPlusConfiguration
 from mod.dataobjects.moorings.moordynplus.moordynplus_line import MoorDynPlusLine
 from mod.dataobjects.moorings.moordynplus.moordynplus_line_default_configuration import MoorDynPlusLineDefaultConfiguration
@@ -196,7 +196,7 @@ class MoorDynPlusParametersDialog(QtWidgets.QDialog):
         self.body_configuration_groupbox: QtWidgets.QGroupBox = QtWidgets.QGroupBox(__("Body configuration"))
         self.body_configuration_groupbox_layout: QtWidgets.QVBoxLayout = QtWidgets.QVBoxLayout()
         self.body_configuration_table: QtWidgets.QTableWidget = QtWidgets.QTableWidget()
-        self.body_configuration_table.horizontalHeader().setResizeMode(QtWidgets.QHeaderView.Stretch)
+        self.body_configuration_table.horizontalHeader().setSectionResizeMode(QtWidgets.QHeaderView.Stretch)
         self.body_configuration_table.horizontalHeader().hide()
         self.body_configuration_table.verticalHeader().hide()
         self.body_configuration_table.setRowCount(0)
@@ -311,7 +311,7 @@ class MoorDynPlusParametersDialog(QtWidgets.QDialog):
         self.lines_table: QtWidgets.QTableWidget = QtWidgets.QTableWidget()
         self.lines_table.setRowCount(0)
         self.lines_table.setColumnCount(1)
-        self.lines_table.horizontalHeader().setResizeMode(QtWidgets.QHeaderView.Stretch)
+        self.lines_table.horizontalHeader().setSectionResizeMode(QtWidgets.QHeaderView.Stretch)
         self.lines_table.horizontalHeader().hide()
         self.lines_table.verticalHeader().hide()
         self.add_line_button: QtWidgets.QPushButton = QtWidgets.QPushButton(__("Add a new Line"))

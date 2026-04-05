@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 """DesignSPHysics Faces Configuration Dialog"""
 
-from PySide2 import QtCore, QtWidgets
+from mod.tools.qt_compat import QtCore, QtWidgets
 from mod.dataobjects.case import Case
 from mod.dataobjects.properties.faces_property import FacesProperty
 from mod.dataobjects.properties.simulation_object import SimulationObject
