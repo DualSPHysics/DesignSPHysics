@@ -1,5 +1,5 @@
 
-from PySide2 import QtWidgets, QtCore
+from PySide6 import QtWidgets, QtCore
 from mod.tools.dialog_tools import warning_dialog
 
 

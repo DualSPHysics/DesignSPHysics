@@ -9,7 +9,7 @@ operations in DesignSPHysics.
 
 import os
 
-from PySide2 import QtWidgets,QtGui
+from PySide6 import QtWidgets,QtGui
 
 
 def h_line_generator() -> QtWidgets.QFrame:

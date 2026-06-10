@@ -1,6 +1,6 @@
-from PySide2.QtWidgets import QHBoxLayout
+from PySide6.QtWidgets import QHBoxLayout
 
-from PySide2 import QtWidgets
+from PySide6 import QtWidgets
 from mod.dataobjects.gauges.force_gauge import ForceGauge
 from mod.tools.dialog_tools import warning_dialog
 from mod.enums import ObjectType

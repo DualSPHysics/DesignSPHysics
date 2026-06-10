@@ -6,7 +6,7 @@ import subprocess
 from os import listdir
 from os.path import isfile, join
 
-from PySide2 import QtCore, QtWidgets
+from PySide6 import QtCore, QtWidgets
 from mod.tools.stdout_tools import debug
 
 from mod.tools.translation_tools import __

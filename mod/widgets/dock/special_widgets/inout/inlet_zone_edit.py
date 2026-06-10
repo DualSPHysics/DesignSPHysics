@@ -2,8 +2,8 @@
 # -*- coding: utf-8 -*-
 """DesignSPHysics Inlet Zone Configuration Dialog."""
 
-# from PySide2.QtWidgets import QVBoxLayout
-from PySide2 import QtWidgets, QtCore
+# from PySide6.QtWidgets import QVBoxLayout
+from PySide6 import QtWidgets, QtCore
 from mod.dataobjects.case import Case
 from mod.dataobjects.inletoutlet.inlet_outlet_zone import InletOutletZone
 from mod.enums import InletOutletElevationType, InletOutletVelocitySpecType, InletOutletVelocityType, \

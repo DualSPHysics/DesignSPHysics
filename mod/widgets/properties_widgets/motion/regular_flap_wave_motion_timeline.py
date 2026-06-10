@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 """DesignSPHysics Regular Flap Wave Motion Timeline Widget """
 
-from PySide2 import QtCore, QtWidgets
+from PySide6 import QtCore, QtWidgets
 from mod.dataobjects.motion.regular_flap_wave_gen import RegularFlapWaveGen
 from mod.tools.gui_tools import h_line_generator
 from mod.tools.translation_tools import __

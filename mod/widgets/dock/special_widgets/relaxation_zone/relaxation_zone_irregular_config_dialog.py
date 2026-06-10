@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 """DesignSPHysics Relaxation Zone Irregular Config Dialog """
 
-from PySide2 import QtWidgets, QtCore
+from PySide6 import QtWidgets, QtCore
 from mod.dataobjects.relaxation_zone.relaxation_zone_irregular import RelaxationZoneIrregular
 from mod.enums import IrregularSpectrum, IrregularDiscretization
 from mod.tools.translation_tools import __

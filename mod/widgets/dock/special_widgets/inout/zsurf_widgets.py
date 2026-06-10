@@ -1,4 +1,4 @@
-from PySide2 import QtWidgets
+from PySide6 import QtWidgets
 from mod.dataobjects.case import Case
 from mod.tools.freecad_tools import get_fc_main_window
 from mod.tools.translation_tools import __

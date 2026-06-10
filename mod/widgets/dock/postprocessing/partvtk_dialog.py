@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 """DesignSPHysics PartVTK Config and Execution Dialog."""
 
-from PySide2 import QtWidgets, QtCore
+from PySide6 import QtWidgets, QtCore
 from mod.dataobjects.case import Case
 from mod.dataobjects.configuration.application_settings import ApplicationSettings
 from mod.tools.post_processing_tools import partvtk_export

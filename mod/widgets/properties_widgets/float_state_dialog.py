@@ -4,7 +4,7 @@
 
 import FreeCADGui
 
-from PySide2 import QtCore, QtWidgets
+from PySide6 import QtCore, QtWidgets
 from mod.dataobjects.case import Case
 from mod.dataobjects.properties.float_property import FloatProperty
 from mod.tools.dialog_tools import info_dialog

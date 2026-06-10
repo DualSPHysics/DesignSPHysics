@@ -2,9 +2,9 @@
 # -*- coding: utf-8 -*-
 """DesignSPHysics Inlet/Oulet Configuration Dialog """
 
-from PySide2.QtWidgets import QDialog
+from PySide6.QtWidgets import QDialog
 
-from PySide2 import QtCore, QtWidgets
+from PySide6 import QtCore, QtWidgets
 from mod.dataobjects.case import Case
 from mod.dataobjects.inletoutlet.inlet_outlet_config import InletOutletConfig
 from mod.dataobjects.inletoutlet.inlet_outlet_zone import InletOutletZone

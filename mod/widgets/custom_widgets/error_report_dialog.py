@@ -6,7 +6,7 @@ import webbrowser
 from platform import platform
 
 import FreeCAD
-from PySide2 import QtWidgets
+from PySide6 import QtWidgets
 
 from mod.tools.gui_tools import h_line_generator
 

@@ -4,7 +4,7 @@
 
 from uuid import UUID
 
-from PySide2 import QtWidgets, QtCore
+from PySide6 import QtWidgets, QtCore
 from mod.dataobjects.moorings.moordynplus.moordynplus_configuration import MoorDynPlusConfiguration
 from mod.dataobjects.moorings.moordynplus.moordynplus_line import MoorDynPlusLine
 from mod.dataobjects.moorings.moordynplus.moordynplus_line_default_configuration import MoorDynPlusLineDefaultConfiguration

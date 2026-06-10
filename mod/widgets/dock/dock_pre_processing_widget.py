@@ -7,8 +7,8 @@ from traceback import print_exc
 import FreeCADGui
 
 
-from PySide2 import QtCore, QtWidgets,QtGui
-from PySide2.QtWidgets import QAction
+from PySide6 import QtCore, QtWidgets,QtGui
+from PySide6.QtGui import QAction
 
 from mod.appmode import AppMode
 from mod.constants import CASE_LIMITS_OBJ_NAME, CASE_LIMITS_2D_LABEL, CASE_LIMITS_3D_LABEL, WIDTH_2D

@@ -5,9 +5,9 @@
 import FreeCAD
 import FreeCADGui
 
-from PySide2 import QtCore, QtWidgets
-from PySide2 import QtCore, QtWidgets
-from PySide2.QtWidgets import QWidget
+from PySide6 import QtCore, QtWidgets
+from PySide6 import QtCore, QtWidgets
+from PySide6.QtWidgets import QWidget
 
 from mod.dataobjects.configuration.application_settings import ApplicationSettings
 from mod.tools.translation_tools import __

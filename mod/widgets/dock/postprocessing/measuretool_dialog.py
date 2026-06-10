@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 """DesignSPHysics ComputeForces Config and Execution Dialog."""
 
-from PySide2 import QtWidgets, QtCore
+from PySide6 import QtWidgets, QtCore
 from mod.constants import MKFLUID_LIMIT
 from mod.dataobjects.configuration.application_settings import ApplicationSettings
 from mod.enums import ObjectType

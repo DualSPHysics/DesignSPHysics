@@ -1,4 +1,4 @@
-from PySide2 import QtWidgets
+from PySide6 import QtWidgets
 from mod.constants import MKFLUID_LIMIT
 from mod.dataobjects.case import Case
 from mod.dataobjects.properties.flexstruct import FlexStruct

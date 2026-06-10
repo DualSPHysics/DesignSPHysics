@@ -1,6 +1,6 @@
-from PySide2.QtWidgets import QHBoxLayout
+from PySide6.QtWidgets import QHBoxLayout
 
-from PySide2 import QtWidgets
+from PySide6 import QtWidgets
 from mod.dataobjects.outparts_filter.filters import FilterGroup, FilterPos, FilterPlane, FilterSphere, FilterCylinder, \
     TypeFilter, FilterMK
 from mod.tools.dialog_tools import warning_dialog, info_dialog, ok_cancel_dialog

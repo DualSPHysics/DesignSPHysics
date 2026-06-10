@@ -1,5 +1,5 @@
-from PySide2.QtWidgets import QDoubleSpinBox
-from PySide2.QtGui import QValidator
+from PySide6.QtWidgets import QDoubleSpinBox
+from PySide6.QtGui import QValidator
 
 from mod.tools.stdout_tools import debug
 

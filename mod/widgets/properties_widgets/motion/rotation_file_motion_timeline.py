@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 """DesignSPHysics """
 
-from PySide2 import QtCore, QtWidgets
+from PySide6 import QtCore, QtWidgets
 from mod.dataobjects.case import Case
 from mod.dataobjects.motion.rotation_file_gen import RotationFileGen
 from mod.tools.gui_tools import h_line_generator

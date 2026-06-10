@@ -3,7 +3,7 @@
 """DesignSPHysics ComputeForces Points configuration Dialog."""
 
 
-from PySide2 import QtWidgets
+from PySide6 import QtWidgets
 from mod.dataobjects.case import Case
 from mod.tools.dialog_tools import warning_dialog
 from mod.tools.stdout_tools import debug

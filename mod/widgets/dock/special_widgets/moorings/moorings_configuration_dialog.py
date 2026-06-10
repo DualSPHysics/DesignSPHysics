@@ -5,7 +5,7 @@
 from copy import deepcopy
 
 
-from PySide2 import QtWidgets
+from PySide6 import QtWidgets
 from mod.constants import MKFLUID_LIMIT
 from mod.dataobjects.case import Case
 from mod.dataobjects.moorings.moordynplus.moordynplus_body import MoorDynPlusBody

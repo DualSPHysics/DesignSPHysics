@@ -3,7 +3,7 @@
 """DesignSPHysics Faces Configuration Dialog"""
 
 
-from PySide2 import QtWidgets
+from PySide6 import QtWidgets
 from mod.dataobjects.case import Case
 from mod.dataobjects.properties.mk_based_properties import MKBasedProperties
 from mod.dataobjects.properties.simulation_object import SimulationObject

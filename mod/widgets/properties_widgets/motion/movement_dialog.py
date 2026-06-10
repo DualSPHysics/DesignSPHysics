@@ -4,7 +4,7 @@
 
 import FreeCADGui
 
-from PySide2 import QtCore, QtWidgets
+from PySide6 import QtCore, QtWidgets
 from mod.dataobjects.case import Case
 from mod.dataobjects.motion.acc_cir_motion import AccCirMotion
 from mod.dataobjects.motion.acc_rect_motion import AccRectMotion

@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 """DesignSPHysics Regular Piston Wave Motion Timeline Widget """
 
-from PySide2 import QtCore, QtWidgets
+from PySide6 import QtCore, QtWidgets
 from mod.dataobjects.motion.awas import AWAS
 from mod.dataobjects.motion.awas_correction import AWASCorrection
 from mod.dataobjects.motion.regular_piston_wave_gen import RegularPistonWaveGen

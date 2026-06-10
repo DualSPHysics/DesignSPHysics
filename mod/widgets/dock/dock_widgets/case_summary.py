@@ -3,7 +3,7 @@
 """ DesignsSPHysics Case Summary Dialog """
 
 
-from PySide2 import QtWidgets
+from PySide6 import QtWidgets
 
 from mod.constants import CASE_LIMITS_OBJ_NAME, MKFLUID_LIMIT, MKFLUID_OFFSET
 from mod.dataobjects.case import Case

@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 """DesignSPHysics Run Dialog"""
 
-from PySide2 import QtCore, QtWidgets,QtGui
+from PySide6 import QtCore, QtWidgets,QtGui
 from mod.constants import LINE_END
 from mod.tools.dialog_tools import warning_dialog
 from mod.tools.gui_tools import h_line_generator

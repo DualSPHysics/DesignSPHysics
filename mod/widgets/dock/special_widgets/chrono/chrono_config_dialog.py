@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 """DesignSPHysics Chrono configuration dialog."""
 
-from PySide2 import QtCore, QtWidgets
+from PySide6 import QtCore, QtWidgets
 from mod.dataobjects.case import Case
 from mod.dataobjects.chrono.chrono_link_coulomb_damping import ChronoLinkCoulombDamping
 from mod.dataobjects.chrono.chrono_link_hinge import ChronoLinkHinge

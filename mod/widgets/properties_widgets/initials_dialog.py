@@ -5,7 +5,7 @@
 import FreeCADGui
 
 
-from PySide2 import QtWidgets
+from PySide6 import QtWidgets
 from mod.dataobjects.case import Case
 from mod.dataobjects.properties.initials_property import InitialsProperty
 from mod.tools.dialog_tools import info_dialog

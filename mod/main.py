@@ -12,7 +12,7 @@ from urllib.request import urlopen
 
 import FreeCADGui
 
-from PySide2 import QtCore, QtWidgets
+from PySide6 import QtCore, QtWidgets
 
 from mod.constants import APP_NAME, VERSION, REVISION, DEFAULT_WORKBENCH, GITHUB_MASTER_CONSTANTS_URL, \
     DAMPING_GROUP_NAME, SIMULATION_DOMAIN_NAME
@@ -31,7 +31,7 @@ from mod.widgets.designsphysics_dock import DesignSPHysicsDock
 from mod.widgets.properties_dock_widget import PropertiesDockWidget
 
 __author__ = "Iván Martínez Estévez, Andrés Vieira"
-__copyright__ = "Copyright 2016-2023, DualSHPysics Team"
+__copyright__ = "Copyright 2016-2026, DualSHPysics Team"
 __credits__ = ["Iván Martínez Estévez", "Andrés Vieira", "Irene Fernandez Mariño", "Lorena Docasar", "Alejandro Jacobo Cabrera Crespo",
                "Orlando García Feal"]
 __license__ = "GPL"

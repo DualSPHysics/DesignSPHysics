@@ -1,4 +1,4 @@
-from PySide2 import QtWidgets
+from PySide6 import QtWidgets
 from mod.dataobjects.inletoutlet.inlet_outlet_zone_direction import InletOutletZone3DDirection
 from mod.tools.translation_tools import __
 from mod.widgets.custom_widgets.value_input import ValueInput

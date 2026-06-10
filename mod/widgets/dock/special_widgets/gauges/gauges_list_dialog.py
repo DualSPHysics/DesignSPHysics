@@ -1,4 +1,4 @@
-from PySide2 import QtWidgets
+from PySide6 import QtWidgets
 from mod.constants import GAUGES_GROUP_NAME, GAUGES_COLOR
 from mod.dataobjects.case import Case
 from mod.dataobjects.gauges.force_gauge import ForceGauge

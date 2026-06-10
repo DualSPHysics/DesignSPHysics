@@ -3,7 +3,7 @@
 """ DesignSPHysics MoorDynPlus Line Configuration Dialog. """
 
 
-from PySide2 import QtWidgets
+from PySide6 import QtWidgets
 from mod.dataobjects.moorings.moordynplus.moordynplus_fix_connection import MoorDynPlusFixConnection
 from mod.dataobjects.moorings.moordynplus.moordynplus_line import MoorDynPlusLine
 from mod.dataobjects.moorings.moordynplus.moordynplus_vessel_connection import MoorDynPlusVesselConnection

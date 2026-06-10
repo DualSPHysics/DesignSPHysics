@@ -6,7 +6,7 @@ from os.path import dirname
 from tempfile import gettempdir
 from uuid import uuid4
 
-from PySide2 import QtCore, QtWidgets
+from PySide6 import QtCore, QtWidgets
 from mod.dataobjects.case import Case
 from mod.tools.dialog_tools import error_dialog, WaitDialog, warning_dialog
 from mod.tools.executable_tools import ensure_process_is_executable_or_fail

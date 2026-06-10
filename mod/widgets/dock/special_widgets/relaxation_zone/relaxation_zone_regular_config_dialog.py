@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 """DesignSPHysics Relaxation Zone Regular Config Dialog. """
 
-from PySide2 import QtWidgets, QtCore
+from PySide6 import QtWidgets, QtCore
 from mod.dataobjects.relaxation_zone.relaxation_zone_regular import RelaxationZoneRegular
 from mod.tools.translation_tools import __
 from mod.widgets.custom_widgets.value_input import ValueInput

@@ -3,7 +3,7 @@
 """DesignSPHysics Setup Plugin Dialog """
 
 
-from PySide2 import QtWidgets
+from PySide6 import QtWidgets
 
 from mod.dataobjects.case import Case
 from mod.dataobjects.configuration.application_settings import ApplicationSettings

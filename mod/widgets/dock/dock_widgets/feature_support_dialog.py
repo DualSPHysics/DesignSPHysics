@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 """DesignSPHysics Setup Plugin Dialog """
 
-from PySide2 import QtWidgets
+from PySide6 import QtWidgets
 
 from mod.tools.stdout_tools import debug
 from mod.tools.translation_tools import __

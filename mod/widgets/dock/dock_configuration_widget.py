@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 """DesignSPHysics Dock Configuration Widget. """
 
-from PySide2 import QtWidgets
+from PySide6 import QtWidgets
 
 
 from mod.dataobjects.case import Case

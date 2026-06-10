@@ -5,7 +5,7 @@
 import glob
 from os import path
 
-from PySide2 import QtWidgets
+from PySide6 import QtWidgets
 
 from mod.tools.translation_tools import __
 from mod.tools.gui_tools import h_line_generator

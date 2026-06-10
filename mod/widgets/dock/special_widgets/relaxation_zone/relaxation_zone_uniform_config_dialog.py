@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 """DesignSPHysics Relaxation Zone Uniform Config Dialog. """
 
-from PySide2 import QtWidgets
+from PySide6 import QtWidgets
 from mod.dataobjects.relaxation_zone.relaxation_zone_uniform import RelaxationZoneUniform
 from mod.tools.translation_tools import __
 from mod.widgets.custom_widgets.size_input import SizeInput

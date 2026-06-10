@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 """DesignSPHysics Sinusoidal Circular Motion widget."""
 
-from PySide2 import QtCore, QtWidgets
+from PySide6 import QtCore, QtWidgets
 from mod.dataobjects.motion.cir_sinu_motion import CirSinuMotion
 from mod.tools.gui_tools import get_icon
 from mod.tools.translation_tools import __

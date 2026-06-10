@@ -3,7 +3,7 @@
 """DesignSPHysics LinkPointLine Edit Dialog """
 
 
-from PySide2 import QtWidgets
+from PySide6 import QtWidgets
 
 from mod.dataobjects.case import Case
 from mod.tools.dialog_tools import error_dialog

@@ -1,4 +1,4 @@
-from PySide2 import QtWidgets
+from PySide6 import QtWidgets
 from mod.dataobjects.inletoutlet.inlet_outlet_zone_rotation import InletOutletZone2DRotation
 from mod.tools.translation_tools import __
 from mod.widgets.custom_widgets.size_input import SizeInput

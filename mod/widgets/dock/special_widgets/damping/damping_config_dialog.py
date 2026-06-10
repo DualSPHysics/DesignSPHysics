@@ -4,7 +4,7 @@
 
 import FreeCAD
 
-from PySide2 import QtCore, QtWidgets
+from PySide6 import QtCore, QtWidgets
 from mod.tools.translation_tools import __
 from mod.widgets.custom_widgets.value_input import ValueInput
 from mod.widgets.custom_widgets.size_input import SizeInput

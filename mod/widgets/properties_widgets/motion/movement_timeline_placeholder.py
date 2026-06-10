@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 """DesignSPHysics Movement Timeline Placeholder Widget """
 
-from PySide2 import QtWidgets
+from PySide6 import QtWidgets
 
 from mod.tools.translation_tools import __
 

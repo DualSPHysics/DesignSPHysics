@@ -4,7 +4,7 @@
 import os
 
 import FreeCAD
-from PySide2 import QtWidgets
+from PySide6 import QtWidgets
 from mod.constants import FLOWBOXES_GROUP_NAME, FLOWBOXES_COLOR
 from mod.dataobjects.case import Case
 from mod.dataobjects.configuration.application_settings import ApplicationSettings

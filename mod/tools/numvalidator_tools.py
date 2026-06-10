@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 """ General number validators to be used in DesingSPHysics."""
 
-from PySide2 import QtCore,QtGui
+from PySide6 import QtCore,QtGui
 
 class FloatValidator(QtGui.QValidator):
     """ Validates float numbers """

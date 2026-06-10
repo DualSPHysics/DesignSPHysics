@@ -13,9 +13,10 @@ Visit the [official DesignSPHysics website](http://design.sphysics.org) for down
 ## 📢 News
 
 ### Upcoming Events
-- **[8th DualSPHysics Workshop](https://dual.sphysics.org/8thworkshop/)** — Ourense, Spain — *January 27–29, 2026*
+- **[5th Hands-on Course on Experimental and Numerical Modelling of Wave-Structure Interaction](https://sites.google.com/unifi.it/hands-on-course-2026)** — Florence, Italy — *September 14–18, 2026*
 
 ### Recent Past Events
+- **[8th DualSPHysics Workshop](https://dual.sphysics.org/8thworkshop/)** — Ourense, Spain — *January 27–29, 2026*
 - **[19th SPHERIC World Conference](https://spheric2025.upc.edu/)** — Barcelona, Spain — *June 16–19, 2025*
 - **[SPH Modelling for Engineering Applications](https://sites.google.com/view/hykudsph/home?authuser=0)** — Braunschweig, Germany — *March 25–27, 2025*
 - **[4th Hands-on Course on Experimental and Numerical Modelling of Wave-Structure Interaction](https://sites.google.com/unifi.it/hands-on-course-2024)** — Florence, Italy — *July 1–5, 2024*
@@ -165,7 +166,7 @@ We welcome contributions! Whether it’s bug fixes, new features, or documentati
 **DesignSPHysics** is released under the [GNU General Public License v3.0 or later](http://www.gnu.org/licenses/).
 
 ```
-© 2025 Ivan Martinez Estevez, Andres Vieira
+© 2026 Ivan Martinez Estevez, Andres Vieira
 
 EPHYSLAB Environmental Physics Laboratory, Universidade de Vigo  
 EPHYTECH Environmental Physics Technologies

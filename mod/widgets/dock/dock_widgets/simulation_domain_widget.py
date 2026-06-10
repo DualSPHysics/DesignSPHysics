@@ -1,4 +1,4 @@
-from PySide2 import QtWidgets
+from PySide6 import QtWidgets
 from mod.dataobjects.case import Case
 from mod.dataobjects.configuration.sd_position_property import SDPositionProperty
 from mod.dataobjects.configuration.simulation_domain import SimulationDomain

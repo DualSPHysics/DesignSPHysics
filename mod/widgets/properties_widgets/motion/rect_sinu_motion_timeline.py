@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 """DesignSPHysics Rectilinear Sinusoidal Motion Timeline """
 
-from PySide2 import QtCore, QtWidgets
+from PySide6 import QtCore, QtWidgets
 from mod.dataobjects.motion.rect_sinu_motion import RectSinuMotion
 from mod.tools.gui_tools import get_icon
 from mod.tools.translation_tools import __
