@@ -26,7 +26,7 @@ class DockDPWidget(QtWidgets.QWidget):
         self.dp_label = QtWidgets.QLabel(__("Inter-particle distance: "))
         self.dp_label.setToolTip(__("Lower DP to have more particles in the case."))
 
-        self.dp_input = SizeInput()
+        self.dp_input = SizeInput(decimals=6)
         self.dp_input.setToolTip(__("Lower DP to have more particles in the case."))
         self.dp_input.setValue(Case.the().dp)
         self.dp_input.value_changed.connect(self.on_dp_changed)
