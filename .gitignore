@@ -135,3 +135,4 @@ release-*/
 **/*.stl
 **/*.vtk
 **/*.ply
+/dualsphysics/
